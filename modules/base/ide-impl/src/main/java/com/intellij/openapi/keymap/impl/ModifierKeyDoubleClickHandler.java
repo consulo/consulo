@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.Couple;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

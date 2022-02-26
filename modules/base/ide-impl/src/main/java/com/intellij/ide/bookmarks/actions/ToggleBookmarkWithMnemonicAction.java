@@ -26,9 +26,9 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
+import consulo.ide.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.awt.UIUtil;
 
 public class ToggleBookmarkWithMnemonicAction extends ToggleBookmarkAction {

@@ -16,6 +16,7 @@
 
 package com.intellij.ide.todo.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.awt.tree.PresentationData;
@@ -44,6 +45,7 @@ public class ModuleToDoNode extends BaseToDoNode<Module> {
     super(project, value, builder);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

@@ -21,6 +21,7 @@ import consulo.ui.ex.JBColor;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 

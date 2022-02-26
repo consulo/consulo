@@ -19,7 +19,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import consulo.application.AllIcons;
 import com.intellij.ide.ActivityTracker;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.PowerSaveMode;
+import consulo.application.PowerSaveMode;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -40,11 +40,10 @@ import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.markup.*;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.AncestorListenerAdapter;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.JBColor;
@@ -68,7 +67,9 @@ import consulo.disposer.Disposable;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ide.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
@@ -930,7 +931,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
       @RequiredUIAccess
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        IdeFocusManager focusManager = IdeFocusManager.getInstance(myEditor.getProject());
+        IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance((Project)myEditor.getProject());
 
         AnActionEvent delegateEvent = AnActionEvent.createFromAnAction(delegate, e.getInputEvent(), ActionPlaces.EDITOR_INSPECTIONS_TOOLBAR, myEditor.getDataContext());
 

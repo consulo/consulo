@@ -31,7 +31,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Component;
 import consulo.ui.Label;

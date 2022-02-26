@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
-import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import org.jetbrains.annotations.NonNls;
 

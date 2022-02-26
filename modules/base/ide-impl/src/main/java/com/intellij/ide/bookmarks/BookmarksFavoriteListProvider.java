@@ -18,6 +18,7 @@ package com.intellij.ide.bookmarks;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.favoritesTreeView.AbstractFavoritesListProvider;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
@@ -76,6 +77,7 @@ public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider
     List<Bookmark> bookmarks = myBookmarkManager.getValidBookmarks();
     for (final Bookmark bookmark : bookmarks) {
       AbstractTreeNode<Bookmark> child = new AbstractTreeNode<Bookmark>(myProject, bookmark) {
+        @RequiredReadAction
         @Nonnull
         @Override
         public Collection<? extends AbstractTreeNode> getChildren() {

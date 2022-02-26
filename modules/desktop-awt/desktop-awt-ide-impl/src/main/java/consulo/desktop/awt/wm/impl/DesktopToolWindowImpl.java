@@ -15,19 +15,19 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.util.concurrent.AsyncResult;
 import consulo.component.util.BusyObject;
-import consulo.project.ui.IdeFocusManager;
 import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
+import consulo.disposer.Disposer;
+import consulo.localize.LocalizeValue;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.ex.awt.update.Activatable;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.disposer.Disposer;
-import consulo.localize.LocalizeValue;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.concurrent.AsyncResult;
 import consulo.wm.impl.ToolWindowBase;
 
 import javax.annotation.Nonnull;
@@ -89,7 +89,7 @@ public final class DesktopToolWindowImpl extends ToolWindowBase {
   public AsyncResult<Void> getReady(@Nonnull final Object requestor) {
     final AsyncResult<Void> result = AsyncResult.undefined();
     myShowing.getReady(this).doWhenDone(() -> {
-      IdeFocusManager.getInstance(myToolWindowManager.getProject()).doWhenFocusSettlesDown(() -> {
+      ProjectIdeFocusManager.getInstance(myToolWindowManager.getProject()).doWhenFocusSettlesDown(() -> {
         if (myContentManager.isDisposed()) return;
         myContentManager.getReady(requestor).notify(result);
       });

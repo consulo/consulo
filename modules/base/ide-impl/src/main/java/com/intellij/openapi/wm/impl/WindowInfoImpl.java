@@ -17,10 +17,10 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.*;
-import consulo.project.ui.wm.ToolWindowAnchor;
-import consulo.project.ui.wm.ToolWindowContentUiType;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.project.ui.wm.ToolWindowType;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.Rectangle2D;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.ToolWindowType;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ui.ex.action.AnActionEvent;

@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.ui.ModifiableCellAppearanceEx;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.application.AllIcons;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.logging.Logger;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;

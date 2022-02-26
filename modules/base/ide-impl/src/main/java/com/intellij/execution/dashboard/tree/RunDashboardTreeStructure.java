@@ -18,6 +18,7 @@ package com.intellij.execution.dashboard.tree;
 import com.intellij.execution.dashboard.DashboardGroup;
 import com.intellij.execution.dashboard.DashboardGroupingRule;
 import com.intellij.execution.dashboard.RunDashboardManager;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.TreeStructureProvider;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -69,6 +70,7 @@ public class RunDashboardTreeStructure extends AbstractTreeStructureBase {
       super(RunDashboardTreeStructure.this.myProject, new Object());
     }
 
+    @RequiredReadAction
     @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {

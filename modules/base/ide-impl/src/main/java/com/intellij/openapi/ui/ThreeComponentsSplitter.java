@@ -21,7 +21,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.ClickListener;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

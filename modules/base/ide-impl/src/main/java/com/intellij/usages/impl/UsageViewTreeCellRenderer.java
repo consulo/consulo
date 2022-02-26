@@ -28,7 +28,7 @@ import consulo.ui.ex.awt.FontUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.document.util.TextRange;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.logging.Logger;
 import consulo.navigation.ItemPresentation;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -24,8 +24,8 @@ import com.intellij.execution.filters.RegexpFilter;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.ui.Messages;
-import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.PopupHandler;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.application.CommonBundle;
 
 import javax.swing.*;

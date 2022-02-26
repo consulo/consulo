@@ -25,14 +25,16 @@ import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.function.Computable;
 import com.intellij.tasks.Task;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.ListScrollingUtil;
 import com.intellij.ui.SortedListModel;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
+import consulo.ide.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 

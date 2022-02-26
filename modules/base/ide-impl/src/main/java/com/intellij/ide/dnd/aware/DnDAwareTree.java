@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

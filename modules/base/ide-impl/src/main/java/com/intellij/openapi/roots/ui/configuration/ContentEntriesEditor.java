@@ -37,7 +37,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import consulo.ui.ex.awt.JBSplitter;
 import consulo.ui.ex.awt.OnePixelSplitter;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.ui.roots.ToolbarPanel;
 import consulo.ui.ex.awt.JBInsets;

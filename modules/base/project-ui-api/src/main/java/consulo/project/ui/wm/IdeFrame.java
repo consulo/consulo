@@ -15,17 +15,15 @@
  */
 package consulo.project.ui.wm;
 
+import consulo.application.ui.wm.FocusableFrame;
 import consulo.project.Project;
 import consulo.ui.Rectangle2D;
-import consulo.ui.Window;
 import consulo.util.dataholder.Key;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.io.File;
 
-public interface IdeFrame {
+public interface IdeFrame extends FocusableFrame {
   interface Child extends IdeFrame {
     IdeFrame getParentFrame();
   }
@@ -47,19 +45,8 @@ public interface IdeFrame {
 
   IdeRootPaneNorthExtension getNorthExtension(String key);
 
-  default JComponent getComponent() {
-    throw new AbstractMethodError(getClass().getName() + " is not implemented");
-  }
-
-  @Nonnull
-  Window getWindow();
-
   @Nullable
   BalloonLayout getBalloonLayout();
-
-  default boolean isActive() {
-    return Window.getActiveWindow() == getWindow();
-  }
 
   default boolean isInFullScreen() {
     return false;

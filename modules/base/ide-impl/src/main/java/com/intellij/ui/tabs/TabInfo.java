@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.SimpleColoredText;
 import consulo.application.AllIcons;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -50,7 +50,7 @@ import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.psi.codeStyle.NameUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.popup.PopupUpdateProcessor;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;

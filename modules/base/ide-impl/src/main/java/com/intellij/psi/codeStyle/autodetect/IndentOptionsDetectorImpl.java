@@ -13,7 +13,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;

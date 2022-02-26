@@ -28,6 +28,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.psi.search.TodoAttributesUtil;
 import com.intellij.psi.search.TodoPattern;
 import com.intellij.ui.*;
+import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ui.Table;
 import consulo.ui.ex.awt.UIUtil;

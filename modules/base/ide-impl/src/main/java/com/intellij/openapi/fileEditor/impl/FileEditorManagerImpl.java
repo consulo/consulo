@@ -64,7 +64,7 @@ import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vfs.*;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
@@ -90,7 +90,7 @@ import consulo.fileEditor.impl.*;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
 import consulo.project.event.ProjectManagerAdapter;
-import consulo.project.util.ExpirableRunnable;
+import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -277,7 +277,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Nonnull
   private AsyncResult<EditorsSplitters> getActiveSplittersAsync() {
     final AsyncResult<EditorsSplitters> result = new AsyncResult<>();
-    final IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
+    final IdeFocusManager fm = ProjectIdeFocusManager.getInstance(myProject);
     fm.doWhenFocusSettlesDown(() -> {
       if (myProject.isDisposed()) {
         result.setRejected();
@@ -300,7 +300,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
     // FIXME [VISTALL] reimpl this
     if(myProject.getApplication().isSwingApplication()) {
-      final IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
+      final IdeFocusManager fm = ProjectIdeFocusManager.getInstance(myProject);
       Component focusOwner = fm.getFocusOwner();
       if (focusOwner == null) {
         focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -891,7 +891,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
           ToolWindowManager.getInstance(myProject).activateEditorComponent();
 
           if (window.getOwner() instanceof DesktopEditorsSplitters) {
-            IdeFocusManager.getInstance(myProject).toFront(window.getOwner().getComponent());
+            ProjectIdeFocusManager.getInstance(myProject).toFront(window.getOwner().getComponent());
           }
         }
       }
@@ -971,7 +971,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   @Nonnull
   @Override
   public ActionCallback notifyPublisher(@Nonnull final Runnable runnable) {
-    final IdeFocusManager focusManager = IdeFocusManager.getInstance(myProject);
+    final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
     final AsyncResult<Void> done = new AsyncResult<>();
     return myBusyObject.execute(new ActiveRunnable() {
       @Nonnull

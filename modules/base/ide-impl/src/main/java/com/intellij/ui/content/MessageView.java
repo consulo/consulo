@@ -17,7 +17,7 @@ package com.intellij.ui.content;
 
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.ContentManager;
 
 import javax.annotation.Nonnull;

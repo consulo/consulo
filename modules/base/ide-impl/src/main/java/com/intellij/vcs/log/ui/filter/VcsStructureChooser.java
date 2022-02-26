@@ -36,7 +36,7 @@ import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;

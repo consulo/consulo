@@ -3,6 +3,7 @@ package com.intellij.ui.components.breadcrumbs;
 
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
+import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.registry.Registry;

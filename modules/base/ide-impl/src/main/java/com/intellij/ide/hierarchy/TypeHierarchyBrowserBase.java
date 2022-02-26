@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.PopupHandler;
+import consulo.ui.ex.awt.PopupHandler;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

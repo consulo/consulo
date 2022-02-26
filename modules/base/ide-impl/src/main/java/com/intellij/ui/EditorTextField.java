@@ -40,7 +40,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.openapi.wm.ex.AbstractDelegatingToRootTraversalPolicy;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

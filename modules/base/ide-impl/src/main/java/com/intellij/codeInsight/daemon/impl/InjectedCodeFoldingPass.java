@@ -20,7 +20,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.folding.impl.FoldingUpdate;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;

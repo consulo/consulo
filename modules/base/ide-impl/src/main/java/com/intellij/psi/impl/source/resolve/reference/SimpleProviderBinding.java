@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.resolve.reference;
 
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceProvider;

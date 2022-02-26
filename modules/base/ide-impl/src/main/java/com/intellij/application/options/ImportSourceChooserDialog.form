@@ -25,7 +25,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="5063d" class="com.intellij.ui.components.JBList" binding="mySourceList">
+              <component id="5063d" class="consulo.ui.ex.awt.JBList" binding="mySourceList">
                 <constraints/>
                 <properties/>
               </component>

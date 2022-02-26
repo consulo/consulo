@@ -2,10 +2,10 @@
 
 package consulo.ui.ex.awt;
 
-import com.intellij.ui.UIBundle;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.UILocalize;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.UIBundle;
 import consulo.util.collection.Lists;
 import consulo.util.lang.ObjectUtil;
 

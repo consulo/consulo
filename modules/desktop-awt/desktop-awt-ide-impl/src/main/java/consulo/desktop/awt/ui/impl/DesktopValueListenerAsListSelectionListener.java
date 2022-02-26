@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ValueComponent;
 

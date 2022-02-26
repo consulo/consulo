@@ -18,7 +18,7 @@ package com.intellij.ide.plugins;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionGroup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

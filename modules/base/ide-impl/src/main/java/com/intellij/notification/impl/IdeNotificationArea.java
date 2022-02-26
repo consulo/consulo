@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.Component;
 import consulo.ui.Label;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.ui;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.RemoteDesktopService;
+import consulo.application.ui.RemoteDesktopService;
 import com.intellij.ui.components.JBLayeredPane;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.util.Alarm;

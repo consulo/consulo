@@ -19,7 +19,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
 import consulo.ui.ex.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.RelativePoint;
 

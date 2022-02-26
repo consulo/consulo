@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;

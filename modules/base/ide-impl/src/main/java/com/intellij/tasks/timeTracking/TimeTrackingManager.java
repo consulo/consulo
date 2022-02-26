@@ -17,8 +17,10 @@ import com.intellij.tasks.timeTracking.model.WorkItem;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.project.ui.wm.*;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

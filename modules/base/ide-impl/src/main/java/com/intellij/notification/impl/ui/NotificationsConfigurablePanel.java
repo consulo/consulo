@@ -27,7 +27,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BooleanTableCellRenderer;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.SystemNotifications;
 import com.intellij.ui.TableSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;

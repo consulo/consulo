@@ -16,9 +16,9 @@
 package com.intellij.application.options;
 
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import com.intellij.ui.CollectionListModel;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.component.util.pointer.Named;
 import javax.annotation.Nonnull;

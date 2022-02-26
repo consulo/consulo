@@ -24,7 +24,7 @@ import consulo.codeEditor.markup.SeparatorPlacement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;

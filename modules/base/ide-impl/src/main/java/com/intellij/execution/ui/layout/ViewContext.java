@@ -21,7 +21,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.component.util.ActiveRunnable;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.disposer.Disposable;

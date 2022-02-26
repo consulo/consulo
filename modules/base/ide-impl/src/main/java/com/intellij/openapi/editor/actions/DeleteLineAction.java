@@ -25,7 +25,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.util.TextRange;
 import consulo.annotation.access.RequiredWriteAction;
 

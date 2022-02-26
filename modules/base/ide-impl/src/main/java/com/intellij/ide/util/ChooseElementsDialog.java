@@ -17,8 +17,8 @@ package com.intellij.ide.util;
 
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.DoubleClickListener;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

@@ -58,14 +58,14 @@
                         serviceImplementation="consulo.fileChooser.impl.FileChooserFactoryImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.web.wm.impl.WebSystemDockImpl"/>
-    <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="consulo.web.wm.impl.WebRemoteDesktopServiceImpl"/>
+    <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.web.wm.impl.WebRemoteDesktopServiceImpl"/>
 
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.UnifiedFileChooseDialogProvider" order="last"/>
 
     <applicationService serviceInterface="consulo.fileEditor.impl.text.TextEditorComponentContainerFactory"
                         serviceImplementation="consulo.fileEditor.impl.text.UnifiedTextEditorComponentContainerFactory"/>
 
-    <applicationService serviceInterface="consulo.project.ui.wm.internal.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
+    <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.web.wm.impl.WebWindowManagerImpl"/>
     <applicationService serviceInterface="consulo.dataContext.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
     <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.ide.actions.impl.UnifiedAboutManager"/>

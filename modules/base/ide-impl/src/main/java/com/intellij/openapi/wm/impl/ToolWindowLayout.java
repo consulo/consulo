@@ -16,8 +16,8 @@
 package com.intellij.openapi.wm.impl;
 
 import consulo.application.ui.UISettings;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.util.ArrayUtil;
 import java.util.HashMap;

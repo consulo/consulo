@@ -3,11 +3,11 @@ package com.intellij.ui.tree;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.*;
-import com.intellij.ide.util.treeView.ValidateableNode;
+import consulo.ui.ex.awt.tree.ValidateableNode;
 import consulo.application.progress.ProgressManager;
-import com.intellij.util.concurrency.Invoker;
-import com.intellij.util.concurrency.InvokerSupplier;
-import com.intellij.util.ui.tree.AbstractTreeModel;
+import com.intellij.util.concurrency.InvokerImpl;
+import consulo.ui.ex.util.InvokerSupplier;
+import consulo.ui.ex.awt.tree.AbstractTreeModel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -37,7 +37,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   private static final Logger LOG = Logger.getInstance(StructureTreeModel.class);
   private final Reference<Node> root = new Reference<>();
   private final String description;
-  private final Invoker invoker;
+  private final InvokerImpl invoker;
   private final Structure structure;
   private volatile Comparator<? super Node> comparator;
 
@@ -46,10 +46,10 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
   }
 
   public StructureTreeModel(@Nonnull Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, @Nonnull Disposable parent) {
-    this(structure, comparator, Invoker.forBackgroundThreadWithReadAction(parent), parent);
+    this(structure, comparator, InvokerImpl.forBackgroundThreadWithReadAction(parent), parent);
   }
 
-  public StructureTreeModel(@Nonnull Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, @Nonnull Invoker invoker, @Nonnull Disposable parent) {
+  public StructureTreeModel(@Nonnull Structure structure, @Nullable Comparator<? super NodeDescriptor> comparator, @Nonnull InvokerImpl invoker, @Nonnull Disposable parent) {
     this.structure = structure;
     this.description = format(structure.toString());
     this.invoker = invoker;
@@ -89,7 +89,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
 
   @Nonnull
   @Override
-  public final Invoker getInvoker() {
+  public final InvokerImpl getInvoker() {
     return invoker;
   }
 
@@ -572,7 +572,7 @@ public class StructureTreeModel<Structure extends AbstractTreeStructure> extends
 
   /**
    * @return a descriptive name for the instance to help a tree identification
-   * @see Invoker#Invoker(String, Disposable)
+   * @see InvokerImpl#Invoker(String, Disposable)
    */
   @Override
   public String toString() {

@@ -48,7 +48,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.document.Document;
 import consulo.document.RangeMarker;

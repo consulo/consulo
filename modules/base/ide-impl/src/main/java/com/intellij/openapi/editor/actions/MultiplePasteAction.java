@@ -20,11 +20,11 @@ import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 
 import javax.swing.*;

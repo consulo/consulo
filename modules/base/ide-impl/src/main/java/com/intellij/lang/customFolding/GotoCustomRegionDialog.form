@@ -12,7 +12,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="2f5d5" class="com.intellij.ui.components.JBList" binding="myRegionsList" custom-create="true">
+          <component id="2f5d5" class="consulo.ui.ex.awt.JBList" binding="myRegionsList" custom-create="true">
             <constraints/>
             <properties>
               <selectionMode value="0"/>

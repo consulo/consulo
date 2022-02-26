@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.beg;
 
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

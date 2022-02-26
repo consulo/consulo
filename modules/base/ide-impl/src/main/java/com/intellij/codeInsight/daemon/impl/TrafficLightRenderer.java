@@ -11,7 +11,7 @@ import com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile
 import consulo.compiler.ProblemsView;
 import com.intellij.diff.util.DiffUserDataKeys;
 import consulo.application.AllIcons;
-import com.intellij.ide.PowerSaveMode;
+import consulo.application.PowerSaveMode;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.markup.RangeHighlighter;

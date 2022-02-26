@@ -17,8 +17,8 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
-import com.intellij.openapi.ide.CopyPasteManager;
-import consulo.project.IndexNotReadyException;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.util.Iconable;

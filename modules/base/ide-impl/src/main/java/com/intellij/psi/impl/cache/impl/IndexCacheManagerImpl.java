@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ReadActionProcessor;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import consulo.application.util.function.Computable;

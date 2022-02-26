@@ -21,7 +21,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ui.FilePathChangesTreeList;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

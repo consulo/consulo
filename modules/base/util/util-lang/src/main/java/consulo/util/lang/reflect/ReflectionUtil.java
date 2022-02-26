@@ -59,6 +59,11 @@ public class ReflectionUtil {
     return callerClass;
   }
 
+  @Nullable
+  public static Method getDeclaredMethod(@Nonnull Class aClass, @Nonnull String name, @Nonnull Class... parameters) {
+    return findMethod(getClassDeclaredMethods(aClass, false), name, parameters);
+  }
+
   public static <T> T getField(@Nonnull Class objectClass, @Nullable Object object, @Nullable Class<T> fieldType, @Nonnull @NonNls String fieldName) {
     try {
       final Field field = findAssignableField(objectClass, fieldType, fieldName);

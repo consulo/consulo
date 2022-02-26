@@ -20,6 +20,7 @@ import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.ui.search.ConfigurableHit;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
+import consulo.project.ProjectBundle;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
 import consulo.configurable.Configurable;
@@ -39,11 +40,11 @@ import consulo.ui.ex.awt.NullableComponent;
 import consulo.util.lang.function.Conditions;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.LightColors;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.SearchTextField;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.speedSearch.ElementFilter;
@@ -766,7 +767,7 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
     if (configurable == null) {
       myOwnDetails.setContent(null);
-      myOwnDetails.forProject(null);
+      myOwnDetails.setProjectIconDescription(null);
 
       updateSpotlight(true);
       checkModified(oldConfigurable);
@@ -790,11 +791,11 @@ public class OptionsEditor implements DataProvider, Disposable, AWTEventListener
 
           myOwnDetails.setContent(myContentWrapper);
           myOwnDetails.setText(getBannerText(configurable));
-          if (isProjectConfigurable(configurable)) {
-            myOwnDetails.forProject(myProject);
+          if (isProjectConfigurable(configurable) && myProject != null) {
+            myOwnDetails.setProjectIconDescription(ProjectBundle.message(myProject.isDefault() ? "configurable.default.project.tooltip" : "configurable.current.project.tooltip"));
           }
           else {
-            myOwnDetails.forProject(null);
+            myOwnDetails.setProjectIconDescription(null);
           }
 
           myLoadingDecorator.stopLoading();

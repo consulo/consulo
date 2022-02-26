@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt.util;
 
+import consulo.application.ui.UISettings;
 import consulo.ui.AntialiasingType;
 import consulo.ui.ex.awt.DesktopAntialiasingType;
 

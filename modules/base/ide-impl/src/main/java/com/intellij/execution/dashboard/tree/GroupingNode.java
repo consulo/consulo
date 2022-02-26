@@ -17,6 +17,7 @@ package com.intellij.execution.dashboard.tree;
 
 import com.intellij.execution.dashboard.DashboardGroup;
 import com.intellij.execution.dashboard.DashboardNode;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
@@ -42,6 +43,7 @@ public class GroupingNode extends AbstractTreeNode<Pair<Object, DashboardGroup>>
     return getValue().getSecond();
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {

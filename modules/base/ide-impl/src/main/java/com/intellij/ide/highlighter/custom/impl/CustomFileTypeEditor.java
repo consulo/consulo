@@ -23,12 +23,13 @@ import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.GridBag;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.event.DoubleClickListener;
 
 import javax.annotation.Nonnull;
 

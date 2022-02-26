@@ -11,7 +11,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
@@ -98,7 +98,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
   Component getFocusedComponent() {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (focusOwner == null) {
-      IdeFocusManager focusManager = IdeFocusManager.getInstance(myProject);
+      IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
       IdeFrame frame = focusManager.getLastFocusedFrame();
       if (frame != null) {
         focusOwner = focusManager.getLastFocusedFor(frame);

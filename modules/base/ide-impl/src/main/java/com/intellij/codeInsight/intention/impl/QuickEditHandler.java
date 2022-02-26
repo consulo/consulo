@@ -56,7 +56,7 @@ import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import consulo.util.lang.StringHash;
 import com.intellij.openapi.util.text.StringUtil;

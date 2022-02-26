@@ -19,7 +19,7 @@ import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.application.AllIcons;
 import consulo.project.ui.wm.ToolWindowId;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import consulo.debugger.XDebuggerBundle;
 import consulo.ui.image.Image;
 

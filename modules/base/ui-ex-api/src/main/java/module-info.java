@@ -30,6 +30,7 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.awtUnsafe;
   exports consulo.ui.ex.keymap;
   exports consulo.ui.ex.keymap.event;
+  exports consulo.ui.ex.toolWindow;
 
   exports consulo.ui.ex.awtUnsafe.internal to consulo.desktop.awt.ide.impl;
 

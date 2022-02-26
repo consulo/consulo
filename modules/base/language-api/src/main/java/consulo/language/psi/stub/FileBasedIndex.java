@@ -12,7 +12,7 @@ import consulo.content.scope.SearchScope;
 import consulo.index.io.ID;
 import consulo.language.util.IncorrectOperationException;
 import consulo.module.content.ProjectFileIndex;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
 import consulo.util.lang.SystemProperties;

@@ -20,7 +20,6 @@
 package consulo.ui.ex.awt;
 
 import consulo.ui.ex.Gray;
-import consulo.application.ui.awt.UIUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -21,7 +21,7 @@ import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 

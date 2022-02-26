@@ -18,9 +18,9 @@ package consulo.web.wm.impl;
 import consulo.dataContext.DataContext;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.AsyncResult;
-import consulo.project.util.ExpirableRunnable;
+import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.internal.ApplicationIdeFocusManager;
+import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

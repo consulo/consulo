@@ -35,9 +35,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.popup.util.DetailViewImpl;
 import com.intellij.ui.popup.util.ItemWrapper;
 import com.intellij.ui.popup.util.MasterDetailPopupBuilder;
@@ -121,7 +120,7 @@ public class BookmarksAction extends AnAction implements DumbAware, MasterDetail
     final Bookmark bookmark = BookmarkManager.getInstance(project).findBookmarkForMnemonic(mnemonic);
     if (bookmark != null) {
       popup.cancel();
-      IdeFocusManager.getInstance(project).doWhenFocusSettlesDown(new Runnable() {
+      ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(new Runnable() {
         @Override
         public void run() {
           bookmark.navigate(true);

@@ -20,7 +20,7 @@ import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.EmptyRunnable;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;

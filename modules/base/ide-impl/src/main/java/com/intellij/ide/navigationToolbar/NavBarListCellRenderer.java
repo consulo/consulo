@@ -21,7 +21,7 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;

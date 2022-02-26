@@ -9,7 +9,7 @@ import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;

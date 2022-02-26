@@ -21,9 +21,9 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.ToolWindowType;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 
 public class ToggleDockModeAction extends ToggleAction implements DumbAware {
 

@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actions;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.ide.KillRingTransferable;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

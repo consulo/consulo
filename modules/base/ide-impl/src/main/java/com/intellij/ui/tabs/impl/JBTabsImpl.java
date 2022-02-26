@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import consulo.application.util.Queryable;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.*;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -71,7 +71,7 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.*;
 
-import static consulo.project.ui.IdeFocusManager.getGlobalInstance;
+import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
 
 /**
  * Consulo tab panel
@@ -203,7 +203,7 @@ public abstract class JBTabsImpl extends JComponent
   @DeprecationInfo("Use JBEditorTabs or TabbedPaneWrapper")
   @SuppressWarnings("deprecation")
   private JBTabsImpl(@Nonnull Project project, @Nonnull Disposable parent) {
-    this(project, ActionManager.getInstance(), IdeFocusManager.getInstance(project), parent);
+    this(project, ActionManager.getInstance(), ProjectIdeFocusManager.getInstance(project), parent);
   }
 
   @Deprecated
@@ -323,7 +323,7 @@ public abstract class JBTabsImpl extends JComponent
           myDragHelper.start();
 
           if (myProject != null && myFocusManager == getGlobalInstance()) {
-            myFocusManager = IdeFocusManager.getInstance(myProject);
+            myFocusManager = ProjectIdeFocusManager.getInstance(myProject);
           }
         }
       };

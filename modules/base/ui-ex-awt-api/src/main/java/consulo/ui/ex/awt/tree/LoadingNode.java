@@ -15,7 +15,7 @@
  */
 package consulo.ui.ex.awt.tree;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ui.ex.UIBundle;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -25,7 +25,7 @@ public class LoadingNode extends DefaultMutableTreeNode {
   }
 
   public static String getText() {
-    return IdeBundle.message("treenode.loading");
+    return UIBundle.message("treenode.loading");
   }
 
   public LoadingNode(String text) {

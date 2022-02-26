@@ -17,7 +17,7 @@ package com.intellij.execution.impl;
 
 import consulo.disposer.Disposable;
 import com.intellij.ui.components.JBLayeredPane;
-import com.intellij.util.ui.AbstractLayoutManager;
+import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.AnimatedIconComponent;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.ex.awt.UIUtil;

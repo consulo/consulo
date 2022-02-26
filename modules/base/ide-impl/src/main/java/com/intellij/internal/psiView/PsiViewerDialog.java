@@ -45,7 +45,7 @@ import consulo.document.util.TextRange;
 import consulo.language.file.LanguageFileType;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.ui.ex.awt.tree.AbstractTreeStructure;
-import com.intellij.ide.util.treeView.NodeRenderer;
+import consulo.ui.ex.awt.tree.NodeRenderer;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeBuilder;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeNode;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeStructure;
@@ -66,12 +66,11 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtilRt;
-import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
@@ -86,7 +85,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;
@@ -539,15 +538,15 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
   }
 
   private void focusEditor() {
-    IdeFocusManager.getInstance(myProject).requestFocus(myEditor.getContentComponent(), true);
+    ProjectIdeFocusManager.getInstance(myProject).requestFocus(myEditor.getContentComponent(), true);
   }
 
   private void focusTree() {
-    IdeFocusManager.getInstance(myProject).requestFocus(myPsiTree, true);
+    ProjectIdeFocusManager.getInstance(myProject).requestFocus(myPsiTree, true);
   }
 
   private void focusRefs() {
-    IdeFocusManager.getInstance(myProject).requestFocus(myRefs, true);
+    ProjectIdeFocusManager.getInstance(myProject).requestFocus(myRefs, true);
     if (myRefs.getModel().getSize() > 0) {
       if (myRefs.getSelectedIndex() == -1) {
         myRefs.setSelectedIndex(0);
@@ -556,7 +555,7 @@ public class PsiViewerDialog extends DialogWrapper implements DataProvider, Disp
   }
 
   private void focusBlockTree() {
-    IdeFocusManager.getInstance(myProject).requestFocus(myBlockTree, true);
+    ProjectIdeFocusManager.getInstance(myProject).requestFocus(myBlockTree, true);
   }
 
   private void initMnemonics() {

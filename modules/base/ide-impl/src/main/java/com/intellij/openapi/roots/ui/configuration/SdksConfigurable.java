@@ -35,7 +35,7 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import consulo.ide.setting.ui.MasterDetailsComponent;
-import com.intellij.openapi.ui.MasterDetailsStateService;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.function.Conditions;
 import com.intellij.ui.TreeSpeedSearch;

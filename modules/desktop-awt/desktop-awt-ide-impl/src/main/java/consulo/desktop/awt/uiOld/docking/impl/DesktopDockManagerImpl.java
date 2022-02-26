@@ -16,33 +16,14 @@
 package consulo.desktop.awt.uiOld.docking.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import consulo.application.ui.UISettings;
-import consulo.ui.ex.action.Presentation;
-import consulo.application.ApplicationManager;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.component.persist.StoragePathMacros;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import com.intellij.openapi.fileEditor.impl.DesktopDockableEditorTabbedContainer;
+import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import com.intellij.openapi.fileEditor.impl.EditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.project.Project;
 import com.intellij.openapi.ui.FrameWrapper;
-import consulo.component.util.BusyObject;
-import consulo.util.collection.MutualMap;
 import com.intellij.openapi.util.Pair;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
-import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockContainerFactory;
@@ -50,15 +31,34 @@ import com.intellij.ui.docking.DockableContent;
 import com.intellij.ui.docking.DragSession;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.IconUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.UISettings;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.component.util.BusyObject;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.impl.EditorWindow;
+import consulo.project.Project;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
+import consulo.project.ui.wm.WindowManager;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
 import consulo.ui.docking.BaseDockManager;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.popup.JWindowPopupFactory;
+import consulo.util.collection.MutualMap;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -109,7 +109,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
 
   @Override
   public String getDimensionKeyForFocus(@Nonnull String key) {
-    Component owner = IdeFocusManager.getInstance(myProject).getFocusOwner();
+    Component owner = ProjectIdeFocusManager.getInstance(myProject).getFocusOwner();
     if (owner == null) return key;
 
     DockWindow wnd = myWindows.getValue(getContainerFor(owner));

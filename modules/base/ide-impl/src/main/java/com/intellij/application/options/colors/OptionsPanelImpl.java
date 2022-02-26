@@ -22,7 +22,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.SearchableConfigurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Wrapper;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.ex.awt.JBUI;

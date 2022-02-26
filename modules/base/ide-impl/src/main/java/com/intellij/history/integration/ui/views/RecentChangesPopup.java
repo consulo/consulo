@@ -22,8 +22,8 @@ import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.LocalHistoryBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import com.intellij.ui.components.JBList;
+import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.UIUtil;
 

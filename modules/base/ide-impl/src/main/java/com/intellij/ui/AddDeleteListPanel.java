@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.StatusText;

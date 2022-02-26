@@ -19,7 +19,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.logging.Logger;
 

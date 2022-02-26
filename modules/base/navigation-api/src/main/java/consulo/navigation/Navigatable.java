@@ -15,7 +15,13 @@
  */
 package consulo.navigation;
 
+import consulo.util.dataholder.Key;
+
 public interface Navigatable {
+  static Key<Navigatable> KEY = Key.create(Navigatable.class);
+
+  static Key<Navigatable[]> KEY_OF_ARRAY = Key.create(Navigatable[].class);
+
   /**
    * Open editor and select/navigate to the object there if possible.
    * Just do nothing if navigation is not possible like in case of a package

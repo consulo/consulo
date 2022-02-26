@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.event.DoubleClickListener;
+
 import javax.annotation.Nullable;
 import java.awt.event.MouseEvent;
 import java.util.List;

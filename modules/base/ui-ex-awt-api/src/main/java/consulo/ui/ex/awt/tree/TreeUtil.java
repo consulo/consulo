@@ -4,8 +4,11 @@ package consulo.ui.ex.awt.tree;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
+import consulo.application.ui.wm.ApplicationIdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.BasicTreeUIHacking;
+import consulo.component.ComponentManager;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.ui.UIAccess;
@@ -33,6 +36,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -853,7 +857,7 @@ public final class TreeUtil {
    * @see AbstractTreeNode#isAlwaysExpand
    */
   private static boolean isAlwaysExpand(@Nonnull TreePath path) {
-    AbstractTreeNode<?> node = getLastUserObject(AbstractTreeNode.class, path);
+    consulo.ui.ex.awt.tree.TreeNode<?> node = getLastUserObject(consulo.ui.ex.awt.tree.TreeNode.class, path);
     return node != null && node.isAlwaysExpand();
   }
 
@@ -1003,14 +1007,14 @@ public final class TreeUtil {
   }
 
   @Nonnull
-  public static ActionCallback selectInTree(Project project, @Nullable DefaultMutableTreeNode node, boolean requestFocus, @Nonnull JTree tree, boolean center) {
+  public static ActionCallback selectInTree(ComponentManager project, @Nullable DefaultMutableTreeNode node, boolean requestFocus, @Nonnull JTree tree, boolean center) {
     if (node == null) return ActionCallback.DONE;
 
     final TreePath treePath = new TreePath(node.getPath());
     tree.expandPath(treePath);
     if (requestFocus) {
       ActionCallback result = new ActionCallback(2);
-      IdeFocusManager.getInstance(project).requestFocus(tree, true).notifyWhenDone(result);
+      ApplicationIdeFocusManager.getInstance().getInstanceForProject(project).requestFocus(tree, true).notifyWhenDone(result);
       selectPath(tree, treePath, center).notifyWhenDone(result);
       return result;
     }
@@ -1720,15 +1724,15 @@ public final class TreeUtil {
       }
       if (parent == null || !parent.isDescendant(path)) {
         switch (visitor.visit(path)) {
-          case Action.INTERRUPT:
+          case INTERRUPT:
             return path; // path is found
-          case Action.CONTINUE:
+          case CONTINUE:
             parent = null;
             break;
-          case Action.SKIP_CHILDREN:
+          case SKIP_CHILDREN:
             parent = path;
             break;
-          case Action.SKIP_SIBLINGS:
+          case SKIP_SIBLINGS:
             parent = path.getParentPath();
             if (parent == null) return null;
             break;

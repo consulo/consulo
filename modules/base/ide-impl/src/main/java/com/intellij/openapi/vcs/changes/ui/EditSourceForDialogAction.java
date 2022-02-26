@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.navigation.Navigatable;
-import com.intellij.util.OpenSourceUtil;
+import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 

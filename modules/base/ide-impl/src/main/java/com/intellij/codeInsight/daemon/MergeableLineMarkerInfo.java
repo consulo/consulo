@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.daemon;
 
 import consulo.codeEditor.markup.GutterIconRenderer;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
@@ -25,7 +25,7 @@ import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
 import consulo.util.collection.SmartList;

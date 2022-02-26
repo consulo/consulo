@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.HtmlChunk;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.BrowserHyperlinkListener;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.components.JBLoadingPanel;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.collection.MultiMap;

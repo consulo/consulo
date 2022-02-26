@@ -9,7 +9,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
@@ -18,7 +18,6 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.util.Consumer;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import javax.annotation.Nonnull;
@@ -115,7 +114,7 @@ public abstract class ChangeGoToChangePopupAction<Chain extends DiffRequestChain
       Change change = getSelectedChanges().get(0);
       final int index = findSelectedStep(change);
       myPopup.get().cancel();
-      IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(new Runnable() {
+      ProjectIdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(new Runnable() {
         @Override
         public void run() {
           //noinspection unchecked

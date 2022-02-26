@@ -29,7 +29,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.disposer.Disposable;
@@ -37,7 +37,6 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
@@ -281,7 +280,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
       }
     }
     else {
-      ApplicationManager.getApplication().invokeLater(() -> IdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> performAction(element, component, null, modifiers, null)));
+      ApplicationManager.getApplication().invokeLater(() -> ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> performAction(element, component, null, modifiers, null)));
     }
   }
 

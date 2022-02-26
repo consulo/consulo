@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.ide.CopyProvider;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;

@@ -3,12 +3,12 @@ package com.intellij.ui.popup;
 
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.ide.ui.popup.TreePopupStep;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.PopupBorder;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.popup.async.AsyncPopupImpl;
 import com.intellij.ui.popup.async.AsyncPopupStep;
 import com.intellij.ui.popup.list.ListPopupImpl;

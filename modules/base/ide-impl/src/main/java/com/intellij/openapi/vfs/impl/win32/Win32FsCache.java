@@ -17,8 +17,8 @@ package com.intellij.openapi.vfs.impl.win32;
 
 import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.win32.FileInfo;
-import com.intellij.openapi.util.io.win32.IdeaWin32;
+import consulo.virtualFileSystem.impl.internal.windows.FileInfo;
+import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import com.intellij.util.ArrayUtil;
@@ -38,7 +38,7 @@ import java.util.Map;
  * @author Dmitry Avdeev
  */
 class Win32FsCache {
-  private final IdeaWin32 myKernel = IdeaWin32.getInstance();
+  private final WindowsFileSystemHelper myKernel = WindowsFileSystemHelper.getInstance();
   private Reference<IntObjectMap<Map<String, FileAttributes>>> myCache;
 
   void clearCache() {

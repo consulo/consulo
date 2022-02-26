@@ -30,6 +30,9 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.project.ui.wm.*;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

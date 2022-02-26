@@ -24,7 +24,7 @@ import com.intellij.ide.plugins.PluginNode;
 import com.intellij.ide.ui.search.SearchUtil;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.options.ex.Settings;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

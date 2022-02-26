@@ -61,6 +61,7 @@ public class ExternalLibrariesNode extends ProjectViewNode<String> {
     return someChildContainsFile(file, false);
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   @RequiredUIAccess

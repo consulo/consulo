@@ -23,7 +23,7 @@ import com.intellij.openapi.options.binding.BindableConfigurable;
 import com.intellij.openapi.options.binding.ControlBinder;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.Nls;

@@ -11,7 +11,7 @@ import consulo.content.scope.SearchScope;
 import consulo.language.editor.scope.GlobalSearchScopesCore;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.util.ColoredItem;
+import consulo.ui.ex.ColoredItem;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.search.scope.NamedScope;

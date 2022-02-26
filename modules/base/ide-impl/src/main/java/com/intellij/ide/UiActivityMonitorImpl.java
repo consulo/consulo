@@ -1,19 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide;
 
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.ModalityStateListener;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import consulo.project.Project;
-import consulo.component.util.BusyObject;
 import com.intellij.util.containers.FactoryMap;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.ApplicationManager;
+import consulo.component.ComponentManager;
+import consulo.component.util.BusyObject;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Singleton;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
@@ -68,7 +71,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
 
   @Override
   public void beforeModalityStateChanged(boolean entering, @Nonnull Object modalEntity) {
-    SwingUtilities.invokeLater(() -> maybeReady());
+    SwingUtilities.invokeLater(this::maybeReady);
   }
 
   public void maybeReady() {
@@ -79,10 +82,10 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
 
   @Nonnull
   @Override
-  public BusyObject getBusy(@Nonnull Project project, @Nonnull UiActivity... toWatch) {
+  public BusyObject getBusy(@Nonnull ComponentManager project, @Nonnull UiActivity... toWatch) {
     if (!isActive()) return myEmptyBusy;
 
-    return _getBusy(project, toWatch);
+    return _getBusy((Project)project, toWatch);
   }
 
   @Nonnull
@@ -94,23 +97,23 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public void addActivity(@Nonnull final Project project, @Nonnull final UiActivity activity) {
+  public void addActivity(@Nonnull final ComponentManager project, @Nonnull final UiActivity activity) {
     addActivity(project, activity, getDefaultModalityState());
   }
 
   @Override
-  public void addActivity(@Nonnull final Project project, @Nonnull final UiActivity activity, @Nonnull final ModalityState effectiveModalityState) {
+  public void addActivity(@Nonnull final ComponentManager project, @Nonnull final UiActivity activity, @Nonnull final consulo.ui.ModalityState effectiveModalityState) {
     if (!isActive()) return;
 
 
-    UIUtil.invokeLaterIfNeeded(() -> getBusyContainer(project).addActivity(activity, effectiveModalityState));
+    UIUtil.invokeLaterIfNeeded(() -> getBusyContainer((Project)project).addActivity(activity, effectiveModalityState));
   }
 
   @Override
-  public void removeActivity(@Nonnull final Project project, @Nonnull final UiActivity activity) {
+  public void removeActivity(@Nonnull final ComponentManager project, @Nonnull final UiActivity activity) {
     if (!isActive()) return;
 
-    UIUtil.invokeLaterIfNeeded(() -> _getBusy(project).removeActivity(activity));
+    UIUtil.invokeLaterIfNeeded(() -> _getBusy((Project)project).removeActivity(activity));
   }
 
   @Override
@@ -123,7 +126,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   @Override
-  public void addActivity(@Nonnull final UiActivity activity, @Nonnull final ModalityState effectiveModalityState) {
+  public void addActivity(@Nonnull final UiActivity activity, @Nonnull final consulo.ui.ModalityState effectiveModalityState) {
     if (!isActive()) return;
 
     UIUtil.invokeLaterIfNeeded(() -> getBusyContainer(null).addActivity(activity, effectiveModalityState));
@@ -373,11 +376,11 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
       }
     }
 
-    public void addActivity(@Nonnull UiActivity activity, @Nonnull ModalityState state) {
+    public void addActivity(@Nonnull UiActivity activity, @Nonnull consulo.ui.ModalityState state) {
       getOrCreateBusy(activity);
       final Set<BusyImpl> busies = myObject2Activities.keySet();
       for (BusyImpl each : busies) {
-        each.addActivity(activity, state);
+        each.addActivity(activity, (ModalityState)state);
       }
     }
 

@@ -15,20 +15,20 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import com.intellij.openapi.wm.WeakFocusStackManager;
+import consulo.application.ui.wm.ExpirableRunnable;
+import consulo.application.ui.wm.FocusableFrame;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
-import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
-import consulo.project.util.ExpirableRunnable;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.WeakFocusStackManager;
 import consulo.util.concurrent.AsyncResult;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.awt.*;
 
@@ -51,7 +51,7 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   }
 
   @Override
-  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
+  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable ComponentManager project) {
     return IdeFocusManager.getGlobalInstance().requestFocusInProject(c, project);
   }
 
@@ -114,12 +114,12 @@ public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   }
 
   @Override
-  public Component getLastFocusedFor(IdeFrame frame) {
+  public Component getLastFocusedFor(FocusableFrame frame) {
     return IdeFocusManager.getGlobalInstance().getLastFocusedFor(frame);
   }
 
   @Override
-  public IdeFrame getLastFocusedFrame() {
+  public FocusableFrame getLastFocusedFrame() {
     return IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
   }
 

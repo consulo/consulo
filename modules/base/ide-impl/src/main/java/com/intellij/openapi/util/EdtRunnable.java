@@ -16,7 +16,7 @@
 package com.intellij.openapi.util;
 
 import consulo.ui.ex.awt.UIUtil;
-import consulo.project.util.ExpirableRunnable;
+import consulo.application.ui.wm.ExpirableRunnable;
 
 public abstract class EdtRunnable implements ExpirableRunnable {
 

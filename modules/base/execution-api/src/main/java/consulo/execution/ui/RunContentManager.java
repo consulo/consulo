@@ -21,7 +21,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.process.ProcessHandler;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

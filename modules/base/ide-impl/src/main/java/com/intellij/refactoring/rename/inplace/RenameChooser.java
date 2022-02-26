@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.codeEditor.markup.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
@@ -30,7 +30,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import com.intellij.refactoring.RefactoringSettings;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

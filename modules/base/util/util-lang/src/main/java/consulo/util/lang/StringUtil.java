@@ -1598,4 +1598,16 @@ public class StringUtil {
     escapeStringCharacters(s.length(), s, "\"", buffer);
     return buffer.toString();
   }
+
+  @Contract(value = "null -> null; !null -> !null", pure = true)
+  public static String unescapeXml(@Nullable final String text) {
+    if (text == null) return null;
+    return replace(text, REPLACES_REFS, REPLACES_DISP);
+  }
+
+  @Contract(value = "null -> null; !null -> !null", pure = true)
+  public static String escapeXml(@Nullable final String text) {
+    if (text == null) return null;
+    return replace(text, REPLACES_DISP, REPLACES_REFS);
+  }
 }

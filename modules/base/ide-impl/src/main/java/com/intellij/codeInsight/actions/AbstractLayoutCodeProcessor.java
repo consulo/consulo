@@ -28,7 +28,7 @@ import com.intellij.openapi.ui.ex.MessagesEx;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.virtualFileSystem.VirtualFile;

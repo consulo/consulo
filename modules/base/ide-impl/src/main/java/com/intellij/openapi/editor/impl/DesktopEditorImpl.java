@@ -67,10 +67,10 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -1878,7 +1878,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
   }
 
   private void requestFocus() {
-    final IdeFocusManager focusManager = IdeFocusManager.getInstance(myProject);
+    final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
     if (focusManager.getFocusOwner() != myEditorComponent) { //IDEA-64501
       focusManager.requestFocus(myEditorComponent, true);
     }

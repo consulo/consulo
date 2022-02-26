@@ -38,7 +38,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorSettings;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;

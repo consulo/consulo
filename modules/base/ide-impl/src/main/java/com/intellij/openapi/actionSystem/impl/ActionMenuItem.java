@@ -28,7 +28,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.plaf.gtk.GtkMenuItemUI;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.JBUI;

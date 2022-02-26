@@ -18,9 +18,9 @@ package com.intellij.openapi.ui;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 

@@ -21,7 +21,7 @@ import com.intellij.ide.dnd.DnDSource;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.debugger.XDebuggerBundle;
 import consulo.debugger.XSourcePosition;
 import consulo.debugger.evaluation.XDebuggerEditorsProvider;

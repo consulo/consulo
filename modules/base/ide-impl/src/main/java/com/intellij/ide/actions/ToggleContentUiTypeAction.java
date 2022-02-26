@@ -16,8 +16,8 @@
 package com.intellij.ide.actions;
 
 import consulo.ui.ex.action.Presentation;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowContentUiType;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 
 public class ToggleContentUiTypeAction extends BaseToolWindowToggleAction {
 

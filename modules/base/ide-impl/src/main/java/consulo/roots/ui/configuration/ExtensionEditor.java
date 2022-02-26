@@ -23,7 +23,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.CheckboxTreeNoPolicy;
 import com.intellij.ui.CheckedTreeNode;
 import consulo.ui.ex.awt.OnePixelSplitter;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

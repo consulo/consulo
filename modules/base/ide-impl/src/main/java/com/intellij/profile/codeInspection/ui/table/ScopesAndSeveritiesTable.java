@@ -24,7 +24,7 @@ import consulo.dataContext.DataManager;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.profile.codeInspection.ui.ScopeOrderComparator;

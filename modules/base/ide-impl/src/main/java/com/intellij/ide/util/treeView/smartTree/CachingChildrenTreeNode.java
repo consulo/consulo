@@ -18,6 +18,7 @@ package com.intellij.ide.util.treeView.smartTree;
 
 import com.intellij.ide.structureView.impl.StructureViewElementWrapper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.structureView.tree.*;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
@@ -36,6 +37,7 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
     myTreeModel = treeModel;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

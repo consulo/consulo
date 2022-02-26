@@ -28,6 +28,7 @@ import javax.swing.tree.TreePath;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class AbstractTreeBuilder implements Disposable {
   private AbstractTreeUi myUi;
@@ -121,7 +122,7 @@ public class AbstractTreeBuilder implements Disposable {
 
 
   @Nonnull
-  static AbstractTreeNode<Object> createSearchingTreeNodeWrapper() {
+  static consulo.ui.ex.awt.tree.TreeNode<Object> createSearchingTreeNodeWrapper() {
     return new AbstractTreeNodeWrapper();
   }
 
@@ -448,14 +449,14 @@ public class AbstractTreeBuilder implements Disposable {
     return promise;
   }
 
-  private static class AbstractTreeNodeWrapper extends AbstractTreeNode<Object> {
+  private static class AbstractTreeNodeWrapper extends consulo.ui.ex.awt.tree.TreeNode<Object> {
     AbstractTreeNodeWrapper() {
-      super(null, AbstractTreeNode.TREE_WRAPPER_VALUE);
+      super(consulo.ui.ex.awt.tree.TreeNode.TREE_WRAPPER_VALUE);
     }
 
     @Override
     @Nonnull
-    public Collection<AbstractTreeNode> getChildren() {
+    public Collection<consulo.ui.ex.awt.tree.TreeNode> getChildren() {
       return Collections.emptyList();
     }
 
@@ -467,7 +468,7 @@ public class AbstractTreeBuilder implements Disposable {
     public boolean equals(Object object) {
       if (object == this) return true;
       // this hack allows to find a node in a map without checking a class type
-      return object instanceof AbstractTreeNode && Comparing.equal(getEqualityObject(), ((AbstractTreeNode)object).getEqualityObject());
+      return object instanceof consulo.ui.ex.awt.tree.TreeNode && Comparing.equal(getEqualityObject(), ((consulo.ui.ex.awt.tree.TreeNode)object).getEqualityObject());
     }
   }
 
@@ -532,12 +533,12 @@ public class AbstractTreeBuilder implements Disposable {
   }
 
   @Nullable
-  public final <T> Object accept(@Nonnull Class<?> nodeClass, @Nonnull TreeVisitor<T> visitor) {
+  public final <T> Object accept(@Nonnull Class<?> nodeClass, @Nonnull Predicate<T> visitor) {
     return accept(nodeClass, getRootElement(), visitor);
   }
 
   @Nullable
-  private <T> Object accept(@Nonnull Class<?> nodeClass, Object element, @Nonnull TreeVisitor<T> visitor) {
+  private <T> Object accept(@Nonnull Class<?> nodeClass, Object element, @Nonnull Predicate<T> visitor) {
     if (element == null) {
       return null;
     }
@@ -546,7 +547,7 @@ public class AbstractTreeBuilder implements Disposable {
     if (structure == null) return null;
 
     //noinspection unchecked
-    if (nodeClass.isAssignableFrom(element.getClass()) && visitor.visit((T)element)) {
+    if (nodeClass.isAssignableFrom(element.getClass()) && visitor.test((T)element)) {
       return element;
     }
 
@@ -559,7 +560,7 @@ public class AbstractTreeBuilder implements Disposable {
     return null;
   }
 
-  public <T> boolean select(@Nonnull Class nodeClass, @Nonnull TreeVisitor<T> visitor, @Nullable Runnable onDone, boolean addToSelection) {
+  public <T> boolean select(@Nonnull Class nodeClass, @Nonnull Predicate<T> visitor, @Nullable Runnable onDone, boolean addToSelection) {
     final Object element = accept(nodeClass, visitor);
     if (element != null) {
       select(element, onDone, addToSelection);

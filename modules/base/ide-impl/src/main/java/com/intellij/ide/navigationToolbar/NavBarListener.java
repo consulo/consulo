@@ -30,7 +30,7 @@ import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.concurrent.AsyncResult;
@@ -38,7 +38,7 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.vcs.FileStatusListener;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.problems.ProblemListener;
 import consulo.language.psi.PsiManager;
@@ -316,7 +316,7 @@ public class NavBarListener
         return;
       }
 
-      final IdeFocusManager focusManager = IdeFocusManager.getInstance(myPanel.getProject());
+      final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myPanel.getProject());
       final AsyncResult<Void> firstCharTyped = new AsyncResult<>();
       focusManager.typeAheadUntil(firstCharTyped);
       myPanel.moveDown();

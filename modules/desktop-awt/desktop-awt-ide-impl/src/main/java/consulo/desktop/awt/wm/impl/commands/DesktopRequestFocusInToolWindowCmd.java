@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.impl.commands;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.FocusWatcher;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.desktop.awt.wm.impl.DesktopFloatingDecorator;
 import consulo.desktop.awt.wm.impl.DesktopToolWindowImpl;

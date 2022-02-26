@@ -2,33 +2,33 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.UiActivityMonitor;
-import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.Application;
-import consulo.project.ui.wm.event.ApplicationActivationListener;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
-import consulo.project.Project;
-import consulo.ui.ModalityState;
-import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.util.*;
-import consulo.application.util.registry.Registry;
-import consulo.application.ui.wm.FocusRequestor;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
+import com.intellij.openapi.util.EdtRunnable;
+import com.intellij.openapi.util.TimedOutCallback;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.popup.AbstractPopup;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.*;
+import consulo.application.util.registry.Registry;
+import consulo.component.ComponentManager;
+import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.project.util.Expirable;
-import consulo.project.util.ExpirableRunnable;
+import consulo.project.Project;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Inject;
@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
-public final class FocusManagerImpl implements IdeFocusManager, Disposable {
+public final class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable {
   private static final Logger LOG = Logger.getInstance(FocusManagerImpl.class);
 
   private final List<FocusRequestInfo> myRequests = new LinkedList<>();
@@ -133,7 +133,7 @@ public final class FocusManagerImpl implements IdeFocusManager, Disposable {
   }
 
   @Override
-  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable Project project) {
+  public AsyncResult<Void> requestFocusInProject(@Nonnull Component c, @Nullable ComponentManager project) {
     if (ApplicationManagerEx.getApplicationEx().isActive() || !Registry.is("suppress.focus.stealing")) {
       c.requestFocus();
     }
@@ -245,7 +245,12 @@ public final class FocusManagerImpl implements IdeFocusManager, Disposable {
     done.notify(new TimedOutCallback(Registry.intValue("actionSystem.commandProcessingTimeout"), "Typeahead request blocked", new Exception() {
       @Override
       public String getMessage() {
-        return "Time: " + (System.currentTimeMillis() - currentTime) + "; cause: " + cause + "; runnable waiting for the focus change: " + IdeEventQueue.getInstance().runnablesWaitingForFocusChangeState();
+        return "Time: " +
+               (System.currentTimeMillis() - currentTime) +
+               "; cause: " +
+               cause +
+               "; runnable waiting for the focus change: " +
+               IdeEventQueue.getInstance().runnablesWaitingForFocusChangeState();
       }
     }, true).doWhenProcessed(() -> myTypeAheadRequestors.remove(done)));
   }
@@ -294,7 +299,7 @@ public final class FocusManagerImpl implements IdeFocusManager, Disposable {
   }
 
   @Override
-  public Component getLastFocusedFor(IdeFrame frame) {
+  public Component getLastFocusedFor(FocusableFrame frame) {
     assertDispatchThread();
 
     return myLastFocused.get(frame);
@@ -424,7 +429,7 @@ public final class FocusManagerImpl implements IdeFocusManager, Disposable {
         toFocus = getFocusTargetFor(myLastFocusedFrame.getComponent());
       }
     }
-    else{
+    else {
       Optional<Component> toFocusOptional = Arrays.stream(Window.getWindows()).
               filter(window -> window instanceof RootPaneContainer).
               filter(window -> ((RootPaneContainer)window).getRootPane() != null).
@@ -463,5 +468,66 @@ public final class FocusManagerImpl implements IdeFocusManager, Disposable {
     if (Registry.is("actionSystem.assertFocusAccessFromEdt")) {
       ApplicationManager.getApplication().assertIsDispatchThread();
     }
+  }
+
+  @Override
+  @Nonnull
+  public IdeFocusManager findInstanceByComponent(@Nonnull Component c) {
+    final IdeFocusManager instance = findByComponent(c);
+    return instance != null ? instance : findInstanceByContext(null);
+  }
+
+  @Nullable
+  private IdeFocusManager findByComponent(Component c) {
+    final Component parent = UIUtil.findUltimateParent(c);
+    if (parent instanceof Window) {
+      consulo.ui.Window uiWindow = TargetAWT.from((Window)parent);
+
+      IdeFrame ideFrame = uiWindow.getUserData(IdeFrame.KEY);
+      if (ideFrame == null) {
+        return null;
+      }
+      return getInstanceSafe(ideFrame.getProject());
+    }
+    return null;
+  }
+
+  @Nonnull
+  public IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
+    IdeFocusManager instance = null;
+    if (context != null) {
+      instance = getInstanceSafe(context.getData(Project.KEY));
+    }
+
+    if (instance == null) {
+      instance = findByComponent(KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow());
+    }
+
+    if (instance == null) {
+      instance = IdeFocusManager.getGlobalInstance();
+    }
+
+    return instance;
+  }
+
+  @Nonnull
+  @Override
+  public IdeFocusManager getInstanceForProject(@Nullable ComponentManager componentManager) {
+    if (!(componentManager instanceof Project)) {
+      return this;
+    }
+    IdeFocusManager ideFocusManager = getInstanceSafe((Project)componentManager);
+    if (ideFocusManager != null) {
+      return ideFocusManager;
+    }
+    return this;
+  }
+
+  @Nullable
+  static IdeFocusManager getInstanceSafe(@Nullable Project project) {
+    if (project != null && !project.isDisposed() && project.isInitialized()) {
+      return ProjectIdeFocusManager.getInstance(project);
+    }
+    return null;
   }
 }

@@ -16,6 +16,7 @@
 
 package com.intellij.ide.todo.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.todo.ToDoSummary;
 import com.intellij.ide.todo.TodoTreeBuilder;
@@ -39,6 +40,7 @@ public class ToDoRootNode extends BaseToDoNode {
     return new SummaryNode(getProject(), summary, myBuilder);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

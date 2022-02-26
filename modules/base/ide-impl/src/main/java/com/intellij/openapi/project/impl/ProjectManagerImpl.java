@@ -44,7 +44,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.impl.ZipHandler;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.GuiUtils;
 import com.intellij.util.*;
@@ -374,7 +373,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
           if (myApplication.isActive()) {
             Window projectFrame = TargetAWT.to(WindowManager.getInstance().getWindow(project));
             if (projectFrame != null) {
-              IdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
+              ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true);
             }
           }
         }
@@ -918,7 +917,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
       if (application.isActive()) {
         consulo.ui.Window projectFrame = WindowManager.getInstance().getWindow(project);
         if (projectFrame != null) {
-          uiAccess.giveAndWaitIfNeed(() -> IdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
+          uiAccess.giveAndWaitIfNeed(() -> ProjectIdeFocusManager.getInstance(project).requestFocus(projectFrame, true));
         }
       }
 

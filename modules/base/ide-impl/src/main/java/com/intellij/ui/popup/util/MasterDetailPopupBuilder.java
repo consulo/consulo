@@ -16,18 +16,19 @@
 package com.intellij.ui.popup.util;
 
 import consulo.application.AllIcons;
+import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.SystemInfo;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.speedSearch.FilteringListModel;
 import com.intellij.util.Function;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
@@ -122,7 +123,7 @@ public class MasterDetailPopupBuilder implements MasterController {
     Runnable runnable = new Runnable() {
       @Override
       public void run() {
-        IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(new Runnable() {
+        ProjectIdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(new Runnable() {
           @Override
           public void run() {
             Object[] values = getSelectedItems();

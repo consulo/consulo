@@ -17,24 +17,25 @@ package consulo.ide.setting.ui;
 
 import consulo.application.CommonBundle;
 import consulo.application.dumb.DumbAware;
-import consulo.application.ui.awt.SideBorder;
-import consulo.application.ui.awt.UIUtil;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.ConfigurableUIMigrationUtil;
-import consulo.ide.ui.OnePixelSplitter;
 import consulo.logging.Logger;
-import consulo.project.ui.IdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.*;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
-import consulo.ui.ex.tree.Tree;
-import consulo.ui.ex.tree.TreeUtil;
 import consulo.ui.image.Image;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Comparing;
@@ -51,7 +52,6 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * @author anna
@@ -94,7 +94,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
   protected JPanel myWholePanel;
   public JPanel myNorthPanel = new JPanel(new BorderLayout());
 
-  private final List<ItemsChangeListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<ItemsChangeListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
   private final Set<MasterDetailsConfigurable> myInitializedConfigurables = new HashSet<>();
 
@@ -162,8 +162,6 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     right.add(myDetails.getComponent(), BorderLayout.CENTER);
 
     mySplitter.setSecondComponent(right);
-
-    GuiUtils.replaceJSplitPaneWithIDEASplitter(myWholePanel);
 
     myToReInitWholePanel = false;
   }
@@ -777,12 +775,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
       presentation.setEnabled(false);
       final TreePath[] selectionPath = myTree.getSelectionPaths();
       if (selectionPath != null) {
-        Object[] nodes = ContainerUtil.map2Array(selectionPath, new Function<>() {
-          @Override
-          public Object fun(TreePath treePath) {
-            return treePath.getLastPathComponent();
-          }
-        });
+        Object[] nodes = ContainerUtil.map2Array(selectionPath, treePath -> treePath.getLastPathComponent());
         if (!myCondition.value(nodes)) return;
         presentation.setEnabled(true);
       }
@@ -857,6 +850,12 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
         public void setDisplayName(String name) {
         }
 
+        @Nullable
+        @Override
+        public Image getIcon() {
+          return null;
+        }
+
         @Override
         public Object getEditableObject() {
           return null;
@@ -874,7 +873,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
 
         @RequiredUIAccess
         @Override
-        public JComponent createOptionsPanel(Disposable uiDisposable) {
+        public consulo.ui.Component createOptionsPanel(Disposable uiDisposable) {
           return null;
         }
 

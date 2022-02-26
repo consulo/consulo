@@ -25,7 +25,6 @@ import consulo.fileEditor.FileEditorStateLevel;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.ui.EditorNotifications;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -189,7 +188,7 @@ public class AsyncEditorLoader {
     myEditor.getScrollingModel().enableAnimation();
 
     if (FileEditorManager.getInstance(myProject).getSelectedTextEditor() == myEditor) {
-      IdeFocusManager.getInstance(myProject).requestFocusInProject(myTextEditor.getPreferredFocusedComponent(), myProject);
+      ProjectIdeFocusManager.getInstance(myProject).requestFocusInProject(myTextEditor.getPreferredFocusedComponent(), myProject);
     }
     EditorNotifications.getInstance(myProject).updateNotifications(myTextEditor.myFile);
   }

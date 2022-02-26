@@ -7,10 +7,9 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.project.Project;
 import com.intellij.openapi.ui.LoadingDecorator;
-import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
+import consulo.ide.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import consulo.project.ui.IdeFocusManager;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.components.JBLoadingPanel;
@@ -64,7 +63,7 @@ class ParameterInfoTaskRunnerUtil {
   }
 
   private static Component getFocusOwner(Project project) {
-    return IdeFocusManager.getInstance(project).getFocusOwner();
+    return ProjectIdeFocusManager.getInstance(project).getFocusOwner();
   }
 
   @Nonnull

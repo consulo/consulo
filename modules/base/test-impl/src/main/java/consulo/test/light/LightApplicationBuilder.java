@@ -15,7 +15,7 @@
  */
 package consulo.test.light;
 
-import com.intellij.ide.UiActivityMonitor;
+import consulo.ui.ex.UiActivityMonitor;
 import com.intellij.openapi.application.PathMacroFilter;
 import com.intellij.openapi.progress.impl.CoreProgressManager;
 import com.intellij.openapi.vfs.encoding.EncodingManager;

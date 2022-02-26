@@ -18,6 +18,7 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -33,6 +34,7 @@ public class StructureViewModuleNode extends AbstractModuleNode {
     super(project, value, viewSettings);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

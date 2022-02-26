@@ -19,7 +19,7 @@ import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchConditio
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

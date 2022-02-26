@@ -31,7 +31,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.component.extension.Extensions;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;

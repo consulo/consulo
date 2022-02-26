@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.*;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.RelativePoint;
@@ -32,7 +32,9 @@ import consulo.awt.hacking.PopupFactoryHacking;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ide.ui.popup.JBPopupFactory;
 
 import javax.annotation.Nonnull;
 

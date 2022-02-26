@@ -35,10 +35,9 @@ import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
-import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiElement;
 import com.intellij.reference.SoftReference;
 import consulo.ui.ex.awt.ClickListener;
@@ -315,7 +314,7 @@ public abstract class XDebuggerEditorBase {
   public void requestFocusInEditor() {
     JComponent preferredFocusedComponent = getPreferredFocusedComponent();
     if (preferredFocusedComponent != null) {
-      IdeFocusManager.getInstance(myProject).requestFocus(preferredFocusedComponent, true);
+      ProjectIdeFocusManager.getInstance(myProject).requestFocus(preferredFocusedComponent, true);
     }
   }
 

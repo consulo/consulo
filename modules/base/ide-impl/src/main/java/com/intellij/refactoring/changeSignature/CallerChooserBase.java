@@ -29,6 +29,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

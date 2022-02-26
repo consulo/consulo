@@ -23,7 +23,7 @@ import consulo.configurable.IdeaConfigurableUi;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.PortField;
 import com.intellij.ui.RawCommandLineEditor;

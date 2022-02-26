@@ -15,7 +15,6 @@
  */
 package consulo.project.ui.wm;
 
-import consulo.application.ui.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.ListPopup;
@@ -23,7 +22,6 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.border.Border;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
@@ -89,11 +87,5 @@ public interface StatusBarWidget extends Disposable {
     default Image getIcon() {
       return null;
     }
-  }
-
-  class WidgetBorder {
-    public static final Border ICON = JBUI.Borders.empty(0, 4);
-    public static final Border INSTANCE = JBUI.Borders.empty(0, 2);
-    public static final Border WIDE = JBUI.Borders.empty(0, 4);
   }
 }

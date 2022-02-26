@@ -35,11 +35,10 @@ import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import consulo.application.util.Queryable;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.wm.ToolWindowType;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.application.util.SystemInfo;
@@ -97,7 +96,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     myWindow = window;
     myProject = project;
     final ActionManager actionManager = ActionManager.getInstance();
-    myTabs = new JBEditorTabs(project, actionManager, IdeFocusManager.getInstance(project), this);
+    myTabs = new JBEditorTabs(project, actionManager, ProjectIdeFocusManager.getInstance(project), this);
     myTabs.setBorder(new CustomLineBorder(JBColor.border(), 1, 0, 0, 0) {
       @Override
       public Insets getBorderInsets(Component c) {
@@ -356,7 +355,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
 
   public void requestFocus(boolean forced) {
     if (myTabs != null) {
-      IdeFocusManager.getInstance(myProject).requestFocus(myTabs.getComponent(), forced);
+      ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTabs.getComponent(), forced);
     }
   }
 

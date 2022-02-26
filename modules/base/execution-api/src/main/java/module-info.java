@@ -9,6 +9,7 @@ module consulo.execution.api {
   requires transitive consulo.module.api;
   requires transitive consulo.module.content.api;
   requires transitive consulo.ui.ex.api;
+  requires transitive consulo.ui.ex.awt.api;
   requires transitive consulo.process.api;
   requires transitive consulo.project.ui.api;
   requires transitive consulo.code.editor.api;

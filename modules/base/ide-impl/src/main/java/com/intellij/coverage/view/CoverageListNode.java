@@ -2,6 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.coverage.CoverageSuitesBundle;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.navigation.NavigationItem;
@@ -47,6 +48,7 @@ public class CoverageListNode extends AbstractTreeNode {
     myFileStatusManager = FileStatusManager.getInstance(myProject);
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {

@@ -21,7 +21,6 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
-import consulo.project.ui.IdeFocusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -66,7 +65,7 @@ public class DirDiffManagerImpl extends DirDiffManager {
   }
 
   public static boolean isFromModalDialog(Project project) {
-    final Component owner = IdeFocusManager.getInstance(project).getFocusOwner();
+    final Component owner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
     if (owner != null) {
       final DialogWrapper instance = DialogWrapper.findInstance(owner);
       return instance != null && instance.isModal();

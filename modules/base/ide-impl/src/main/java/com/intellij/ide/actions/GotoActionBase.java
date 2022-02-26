@@ -32,7 +32,6 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -144,7 +143,8 @@ public abstract class GotoActionBase extends AnAction {
       return Pair.create(query, 0);
     }
 
-    final Component focusOwner = IdeFocusManager.getInstance(e == null ? null : e.getData(CommonDataKeys.PROJECT)).getFocusOwner();
+    Project project = e == null ? null : e.getData(CommonDataKeys.PROJECT);
+    final Component focusOwner = ProjectIdeFocusManager.getInstance(project).getFocusOwner();
     if (focusOwner instanceof JComponent) {
       final SpeedSearchSupply supply = SpeedSearchSupply.getSupply((JComponent)focusOwner);
       if (supply != null) {

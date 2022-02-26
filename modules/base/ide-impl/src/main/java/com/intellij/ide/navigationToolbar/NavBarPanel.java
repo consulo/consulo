@@ -19,17 +19,18 @@ import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.application.util.Queryable;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupOwner;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
@@ -41,7 +42,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
@@ -50,7 +51,6 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.Gray;
@@ -125,7 +125,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     myUpdateQueue.queueRebuildUi();
     if (!docked) {
       final ActionCallback typeAheadDone = new ActionCallback();
-      IdeFocusManager.getInstance(project).typeAheadUntil(typeAheadDone, "NavBarPanel");
+      ProjectIdeFocusManager.getInstance(project).typeAheadUntil(typeAheadDone, "NavBarPanel");
       myUpdateQueue.queueTypeAheadDone(typeAheadDone);
     }
 
@@ -356,10 +356,10 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
   public void requestSelectedItemFocus() {
     int index = myModel.getSelectedIndex();
     if (index >= 0 && index < myModel.size() && allowNavItemsFocus()) {
-      IdeFocusManager.getInstance(myProject).requestFocus(getItem(index), true);
+      ProjectIdeFocusManager.getInstance(myProject).requestFocus(getItem(index), true);
     }
     else {
-      IdeFocusManager.getInstance(myProject).requestFocus(this, true);
+      ProjectIdeFocusManager.getInstance(myProject).requestFocus(this, true);
     }
   }
 

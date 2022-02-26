@@ -27,7 +27,7 @@ import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.paths.PsiDynaReference;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.document.util.TextRange;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.ObjectPattern;

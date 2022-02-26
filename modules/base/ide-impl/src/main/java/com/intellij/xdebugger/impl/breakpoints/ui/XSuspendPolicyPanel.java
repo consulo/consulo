@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.debugger.breakpoint.SuspendPolicy;
 import consulo.debugger.XBreakpointManager;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;

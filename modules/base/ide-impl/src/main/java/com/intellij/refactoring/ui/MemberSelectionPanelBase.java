@@ -17,7 +17,7 @@ package com.intellij.refactoring.ui;
 
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.classMembers.MemberInfoBase;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
 
 import javax.swing.*;

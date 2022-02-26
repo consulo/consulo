@@ -126,10 +126,9 @@ public class DetailsComponent {
     }
   }
 
-  public void forProject(Project project) {
-    myBannerLabel.forProject(project);
+  public void setProjectIconDescription(@Nullable String toolTipText) {
+    myBannerLabel.setProjectIconDescription(toolTipText);
   }
-
   public void setPrefix(@Nullable String... prefix) {
     myPrefix = prefix;
     if (myText != null) {

@@ -2,7 +2,7 @@
 package com.intellij.ide.ui.newItemPopup;
 
 import consulo.ui.ex.awt.ScrollingUtil;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBUIScale;

@@ -26,7 +26,7 @@ import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.openapi.actionSystem.*;
 import consulo.compiler.CompilerBundle;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ui.ex.awt.OnePixelSplitter;
+import consulo.ui.ex.awt.*;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.library.Library;
@@ -34,7 +34,6 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.actions.*;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.LibrarySourceItem;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;
 import com.intellij.openapi.ui.FixedSizeButton;
-import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
@@ -50,10 +49,9 @@ import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
 import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.ThreeStateCheckBox;
-import consulo.ui.ex.awt.UIUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

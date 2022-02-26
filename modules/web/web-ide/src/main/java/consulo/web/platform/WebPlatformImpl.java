@@ -27,6 +27,7 @@ import java.net.URL;
  */
 public class WebPlatformImpl extends PlatformBase {
   public WebPlatformImpl() {
+    super(getSystemJvmProperties());
   }
 
   @Override

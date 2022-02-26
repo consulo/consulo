@@ -76,7 +76,7 @@ import com.intellij.openapi.ui.DialogWrapperDialog;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.WindowWrapper;
 import consulo.ui.ex.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
@@ -85,7 +85,6 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -584,12 +583,12 @@ public class DiffUtil {
 
   public static boolean isFocusedComponent(@Nullable Project project, @Nullable Component component) {
     if (component == null) return false;
-    return IdeFocusManager.getInstance(project).getFocusedDescendantFor(component) != null;
+    return ProjectIdeFocusManager.getInstance(project).getFocusedDescendantFor(component) != null;
   }
 
   public static void requestFocus(@Nullable Project project, @Nullable Component component) {
     if (component == null) return;
-    IdeFocusManager.getInstance(project).requestFocus(component, true);
+    ProjectIdeFocusManager.getInstance(project).requestFocus(component, true);
   }
 
   //

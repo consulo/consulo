@@ -7,7 +7,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import com.intellij.ui.components.JBTextField;
 
 import javax.annotation.Nonnull;

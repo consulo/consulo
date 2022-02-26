@@ -16,7 +16,7 @@
 package com.intellij.usageView.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.util.OpenSourceUtil;
+import consulo.ui.ex.OpenSourceUtil;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;

@@ -48,9 +48,8 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
@@ -283,7 +282,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       }
     };
 
-    IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(task);
+    ProjectIdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(task);
   }
 
   @RequiredUIAccess

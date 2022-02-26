@@ -15,7 +15,7 @@ import consulo.ui.ex.popup.JBPopup;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.ScrollingUtil;
 import com.intellij.ui.WindowMoveListener;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.annotate;
 
-import com.intellij.ide.PowerSaveMode;
+import consulo.application.PowerSaveMode;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;

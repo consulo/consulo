@@ -4,6 +4,7 @@ package consulo.ui.ex.awt.tree;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -18,6 +19,9 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -37,6 +41,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
@@ -92,7 +97,7 @@ public class AbstractTreeUi {
   private final Set<Runnable> myActiveWorkerTasks = new HashSet<>();
 
   private ProgressIndicator myProgress;
-  private AbstractTreeNode<Object> TREE_NODE_WRAPPER;
+  private consulo.ui.ex.awt.tree.TreeNode<Object> TREE_NODE_WRAPPER;
 
   private boolean myRootNodeWasQueuedToInitialize;
   private boolean myRootNodeInitialized;
@@ -1136,13 +1141,13 @@ public class AbstractTreeUi {
 
   @Nonnull
   private ActionCallback updateNodeChildren(@Nonnull final DefaultMutableTreeNode node,
-                                                                    @Nonnull final TreeUpdatePass pass,
-                                                                    @Nullable final LoadedChildren loadedChildren,
-                                                                    final boolean forcedNow,
-                                                                    final boolean toSmartExpand,
-                                                                    final boolean forceUpdate,
-                                                                    final boolean descriptorIsUpToDate,
-                                                                    final boolean updateChildren) {
+                                            @Nonnull final TreeUpdatePass pass,
+                                            @Nullable final LoadedChildren loadedChildren,
+                                            final boolean forcedNow,
+                                            final boolean toSmartExpand,
+                                            final boolean forceUpdate,
+                                            final boolean descriptorIsUpToDate,
+                                            final boolean updateChildren) {
     AbstractTreeStructure treeStructure = getTreeStructure();
     ActionCallback result = treeStructure.asyncCommit();
     result.doWhenDone(new TreeRunnable("AbstractTreeUi.updateNodeChildren: on done") {
@@ -1992,26 +1997,65 @@ public class AbstractTreeUi {
   @Nonnull
   @NonNls
   public String getStatus() {
-    return "isReady=" + isReady() + "\n" +
-           " isIdle=" + isIdle() + "\n" +
-           "  isYeildingNow=" + isYeildingNow() + "\n" +
-           "  isWorkerBusy=" + isWorkerBusy() + "\n" +
-           "  hasUpdatingChildrenNow=" + hasUpdatingChildrenNow() + "\n" +
-           "  isLoadingInBackgroundNow=" + isLoadingInBackgroundNow() + "\n" +
-           " hasPendingWork=" + hasPendingWork() + "\n" +
-           "  hasNodesToUpdate=" + hasNodesToUpdate() + "\n" +
-           "  updaterState=" + myUpdaterState + "\n" +
-           "  hasScheduledUpdates=" + hasScheduledUpdates() + "\n" +
-           "  isPostponedMode=" + getUpdater().isInPostponeMode() + "\n" +
-           " nodeActions=" + myNodeActions.keySet() + "\n" +
-           " nodeChildrenActions=" + myNodeChildrenActions.keySet() + "\n" +
-           "isReleased=" + isReleased() + "\n" +
-           " isReleaseRequested=" + isReleaseRequested() + "\n" +
-           "isCancelProcessed=" + isCancelProcessed() + "\n" +
-           " isCancelRequested=" + myCancelRequest + "\n" +
-           " isResettingToReadyNow=" + myResettingToReadyNow + "\n" +
-           "canInitiateNewActivity=" + canInitiateNewActivity() + "\n" +
-           "batchIndicators=" + myBatchIndicators;
+    return "isReady=" +
+           isReady() +
+           "\n" +
+           " isIdle=" +
+           isIdle() +
+           "\n" +
+           "  isYeildingNow=" +
+           isYeildingNow() +
+           "\n" +
+           "  isWorkerBusy=" +
+           isWorkerBusy() +
+           "\n" +
+           "  hasUpdatingChildrenNow=" +
+           hasUpdatingChildrenNow() +
+           "\n" +
+           "  isLoadingInBackgroundNow=" +
+           isLoadingInBackgroundNow() +
+           "\n" +
+           " hasPendingWork=" +
+           hasPendingWork() +
+           "\n" +
+           "  hasNodesToUpdate=" +
+           hasNodesToUpdate() +
+           "\n" +
+           "  updaterState=" +
+           myUpdaterState +
+           "\n" +
+           "  hasScheduledUpdates=" +
+           hasScheduledUpdates() +
+           "\n" +
+           "  isPostponedMode=" +
+           getUpdater().isInPostponeMode() +
+           "\n" +
+           " nodeActions=" +
+           myNodeActions.keySet() +
+           "\n" +
+           " nodeChildrenActions=" +
+           myNodeChildrenActions.keySet() +
+           "\n" +
+           "isReleased=" +
+           isReleased() +
+           "\n" +
+           " isReleaseRequested=" +
+           isReleaseRequested() +
+           "\n" +
+           "isCancelProcessed=" +
+           isCancelProcessed() +
+           "\n" +
+           " isCancelRequested=" +
+           myCancelRequest +
+           "\n" +
+           " isResettingToReadyNow=" +
+           myResettingToReadyNow +
+           "\n" +
+           "canInitiateNewActivity=" +
+           canInitiateNewActivity() +
+           "\n" +
+           "batchIndicators=" +
+           myBatchIndicators;
   }
 
   public boolean hasPendingWork() {
@@ -2159,10 +2203,10 @@ public class AbstractTreeUi {
 
   @Nonnull
   private AsyncResult<List<TreeNode>> collectNodesToInsert(final NodeDescriptor descriptor,
-                                                                                   @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
-                                                                                   final DefaultMutableTreeNode parent,
-                                                                                   final boolean addLoadingNode,
-                                                                                   @Nonnull final LoadedChildren loadedChildren) {
+                                                           @Nonnull final MutualMap<Object, Integer> elementToIndexMap,
+                                                           final DefaultMutableTreeNode parent,
+                                                           final boolean addLoadingNode,
+                                                           @Nonnull final LoadedChildren loadedChildren) {
     final AsyncResult<List<TreeNode>> result = new AsyncResult<>();
 
     final List<TreeNode> nodesToInsert = new ArrayList<>();
@@ -2905,7 +2949,7 @@ public class AbstractTreeUi {
   }
 
   private static String getLoadingNodeText() {
-    return IdeBundle.message("progress.searching");
+    return UIBundle.message("progress.searching");
   }
 
   @Nonnull
@@ -4200,9 +4244,24 @@ public class AbstractTreeUi {
           try {
             Object existing = kidsToExpand.get(i);
             LOG.error("Tree path contains equal elements at different levels:\n" +
-                      " element: '" + eachElement + "'; " + eachElement.getClass() + " (" + System.identityHashCode(eachElement) + ");\n" +
-                      "existing: '" + existing + "'; " + existing.getClass() + " (" + System.identityHashCode(existing) + "); " +
-                      "path='" + kidsToExpand + "'; tree structure=" + myTreeStructure);
+                      " element: '" +
+                      eachElement +
+                      "'; " +
+                      eachElement.getClass() +
+                      " (" +
+                      System.identityHashCode(eachElement) +
+                      ");\n" +
+                      "existing: '" +
+                      existing +
+                      "'; " +
+                      existing.getClass() +
+                      " (" +
+                      System.identityHashCode(existing) +
+                      "); " +
+                      "path='" +
+                      kidsToExpand +
+                      "'; tree structure=" +
+                      myTreeStructure);
           }
           catch (AssertionError ignored) {
           }
@@ -4920,8 +4979,8 @@ public class AbstractTreeUi {
    * @return {@code true} if element is {@code null} or if it contains a {@code null} value
    */
   private static boolean isNodeNull(Object element) {
-    if (element instanceof AbstractTreeNode) {
-      AbstractTreeNode node = (AbstractTreeNode)element;
+    if (element instanceof consulo.ui.ex.awt.tree.TreeNode) {
+      consulo.ui.ex.awt.tree.TreeNode node = (consulo.ui.ex.awt.tree.TreeNode)element;
       element = node.getValue();
     }
     return element == null;

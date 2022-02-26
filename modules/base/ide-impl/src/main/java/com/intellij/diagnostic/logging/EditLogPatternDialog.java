@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextComponentAccessor;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
@@ -114,7 +114,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     myFocusedCallback = AsyncResult.undefined();
 
     if (myProject != null) {
-      IdeFocusManager.getInstance(myProject).typeAheadUntil(myFocusedCallback);
+      ProjectIdeFocusManager.getInstance(myProject).typeAheadUntil(myFocusedCallback);
     }
 
     final Window frame = getFrame();
@@ -137,7 +137,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     final WindowAdapter focusListener = new WindowAdapter() {
       @Override
       public void windowOpened(WindowEvent e) {
-        IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
+        IdeFocusManager fm = ProjectIdeFocusManager.getInstance(myProject);
         JComponent toFocus = getPreferredFocusedComponent();
         if (toFocus == null) {
           toFocus = fm.getFocusTargetFor(myComponent);

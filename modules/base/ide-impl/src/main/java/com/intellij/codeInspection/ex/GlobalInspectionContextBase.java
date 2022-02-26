@@ -37,7 +37,7 @@ import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.psi.*;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;

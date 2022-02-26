@@ -18,13 +18,13 @@ package com.intellij.refactoring;
 import com.intellij.codeInsight.unwrap.ScopeHighlighter;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pass;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
 

@@ -38,7 +38,7 @@ import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.fileEditor.*;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.icon.IconDescriptorUpdaters;

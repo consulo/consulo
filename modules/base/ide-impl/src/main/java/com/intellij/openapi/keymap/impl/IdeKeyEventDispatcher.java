@@ -41,7 +41,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;

@@ -18,6 +18,7 @@ package consulo.ui.ex.awt.util;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
+import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.SystemProperties;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xdebugger.impl.frame.actions.XWatchesTreeActionBase;

@@ -6,6 +6,7 @@ import consulo.application.util.registry.Registry;
 import consulo.awt.hacking.JBViewportHacking;
 import consulo.ui.ex.TypingTarget;
 import consulo.ui.ex.awt.JBScrollPane.Alignment;
+import consulo.ui.ex.awt.internal.ScrollSettings;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.ComponentUtil;

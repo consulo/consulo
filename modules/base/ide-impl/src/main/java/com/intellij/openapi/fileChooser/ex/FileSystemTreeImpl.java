@@ -1,10 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileChooser.ex;
 
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.NodeDescriptor;
-import com.intellij.ide.util.treeView.NodeRenderer;
+import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
@@ -28,7 +31,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.ui.*;
-import com.intellij.ui.tree.AsyncTreeModel;
+import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;

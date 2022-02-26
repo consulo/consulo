@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.playback.PlaybackContext;
 import consulo.ui.ex.action.*;
 import consulo.util.concurrent.ActionCallback;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 
 import java.awt.*;
 import java.awt.event.InputEvent;

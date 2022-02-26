@@ -15,6 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import com.intellij.ide.favoritesTreeView.AbstractFavoritesListProvider;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
@@ -118,6 +119,7 @@ public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvid
   private void replicate(DefaultMutableTreeNode source, AbstractTreeNode destination, final List<AbstractTreeNode<Object>> destinationChildren) {
     final ArrayList<AbstractTreeNode<Object>> copyChildren = new ArrayList<AbstractTreeNode<Object>>();
     AbstractTreeNode<Object> copy = new AbstractTreeNode<Object>(myProject, source.getUserObject()) {
+      @RequiredReadAction
       @Nonnull
       @Override
       public Collection<? extends AbstractTreeNode> getChildren() {

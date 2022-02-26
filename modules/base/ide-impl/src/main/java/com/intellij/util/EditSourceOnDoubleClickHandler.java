@@ -1,31 +1,25 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.ModalityState;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.project.Project;
-import consulo.navigation.Navigatable;
-import com.intellij.ui.DoubleClickListener;
+import consulo.ui.ex.OpenSourceUtil;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandlerBase;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.tree.table.TreeTable;
-import consulo.ui.ex.awt.UIUtil;
-import com.intellij.util.ui.tree.ExpandOnDoubleClick;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import com.intellij.util.ui.tree.WideSelectionTreeUI;
-import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public final class EditSourceOnDoubleClickHandler {
-  private static final Key<Boolean> INSTALLED = Key.create("EditSourceOnDoubleClickHandlerInstalled");
 
   private EditSourceOnDoubleClickHandler() {
   }
@@ -96,24 +90,7 @@ public final class EditSourceOnDoubleClickHandler {
    * @return {@code true} to expand/collapse the node, {@code false} to navigate to source if possible
    */
   public static boolean isExpandPreferable(@Nonnull JTree tree, @Nullable TreePath path) {
-    if (path == null) return false; // path is not specified
-
-    ExpandOnDoubleClick behavior = ExpandOnDoubleClick.getBehavior(tree);
-    if (behavior == ExpandOnDoubleClick.NEVER) return false; // disable expand/collapse
-
-    TreeModel model = tree.getModel();
-    if (model == null || model.isLeaf(path.getLastPathComponent())) return false;
-    if (!UIUtil.isClientPropertyTrue(tree, INSTALLED)) return true; // expand by default if handler is not installed
-
-    // navigate to source is preferred if the tree provides a navigatable object for the given path
-    if (behavior == ExpandOnDoubleClick.NAVIGATABLE) {
-      Navigatable navigatable = TreeUtil.getNavigatable(tree, path);
-      if (navigatable != null && navigatable.canNavigateToSource()) return false;
-    }
-    if (behavior == ExpandOnDoubleClick.ALWAYS) return true;
-    // for backward compatibility
-    NodeDescriptor<?> descriptor = TreeUtil.getLastUserObject(NodeDescriptor.class, path);
-    return descriptor == null || descriptor.expandOnDoubleClick();
+    return EditSourceOnDoubleClickHandlerBase.isExpandPreferable(tree, path);
   }
 
   public static class TreeMouseListener extends DoubleClickListener {
@@ -133,13 +110,13 @@ public final class EditSourceOnDoubleClickHandler {
     @Override
     public void installOn(@Nonnull Component c, boolean allowDragWhileClicking) {
       super.installOn(c, allowDragWhileClicking);
-      myTree.putClientProperty(INSTALLED, true);
+      myTree.putClientProperty(EditSourceOnDoubleClickHandlerBase.INSTALLED, true);
     }
 
     @Override
     public void uninstall(Component c) {
       super.uninstall(c);
-      myTree.putClientProperty(INSTALLED, null);
+      myTree.putClientProperty(EditSourceOnDoubleClickHandlerBase.INSTALLED, null);
     }
 
     @Override

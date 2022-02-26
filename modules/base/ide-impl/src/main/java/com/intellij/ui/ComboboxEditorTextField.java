@@ -21,7 +21,6 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
@@ -84,7 +83,7 @@ public class ComboboxEditorTextField extends EditorTextField {
   private void repaintComboBox() {
     // TODO:
     if (UIUtil.isUnderBuildInLaF()) {
-      IdeFocusManager.getInstance(getProject()).doWhenFocusSettlesDown(new Runnable() {
+      ProjectIdeFocusManager.getInstance(getProject()).doWhenFocusSettlesDown(new Runnable() {
         @Override
         public void run() {
           final Container parent = getParent();

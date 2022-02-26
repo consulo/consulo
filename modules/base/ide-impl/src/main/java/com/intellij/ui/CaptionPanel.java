@@ -16,6 +16,8 @@
 
 package com.intellij.ui;
 
+import consulo.ui.ex.ActiveComponent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;

@@ -16,11 +16,11 @@
 package com.intellij.openapi.ui;
 
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.application.util.SystemInfo;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.awt.hacking.BasicComboBoxUIHacking;

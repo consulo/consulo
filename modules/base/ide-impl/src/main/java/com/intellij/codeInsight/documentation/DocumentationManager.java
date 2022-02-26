@@ -17,9 +17,13 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.ui.ex.awt.SwingActionDelegate;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.project.ui.wm.*;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.util.lang.function.Conditions;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
@@ -35,19 +39,18 @@ import consulo.disposer.Disposer;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
-import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
@@ -176,7 +179,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
     Component previouslyFocused = SoftReference.dereference(myFocusedBeforePopup);
     if (previouslyFocused != null && previouslyFocused.isShowing()) {
       UIUtil.runWhenFocused(previouslyFocused, () -> updateComponent(true));
-      IdeFocusManager.getInstance(myProject).requestFocus(previouslyFocused, true);
+      ProjectIdeFocusManager.getInstance(myProject).requestFocus(previouslyFocused, true);
     }
   }
 
@@ -264,7 +267,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
     Component toFocus = SoftReference.dereference(myFocusedBeforePopup);
     hint.cancel();
     if (toFocus != null) {
-      IdeFocusManager.getInstance(myProject).requestFocus(toFocus, true);
+      ProjectIdeFocusManager.getInstance(myProject).requestFocus(toFocus, true);
     }
   }
 
@@ -466,7 +469,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
           // focus toolwindow on the second actionPerformed
           boolean focus = requestFocus || CommandProcessor.getInstance().getCurrentCommand() != null;
           if (preferredFocusableComponent != null && focus) {
-            IdeFocusManager.getInstance(myProject).requestFocus(preferredFocusableComponent, true);
+            ProjectIdeFocusManager.getInstance(myProject).requestFocus(preferredFocusableComponent, true);
           }
         }
         if (!sameElement || !component.isUpToDate()) {

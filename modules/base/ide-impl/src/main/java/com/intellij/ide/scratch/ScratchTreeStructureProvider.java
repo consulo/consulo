@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.scratch;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import com.intellij.ide.projectView.*;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
@@ -192,6 +193,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       return ScratchUtil.isScratch(file);
     }
 
+    @RequiredReadAction
     @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode<?>> getChildren() {
@@ -245,6 +247,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
       return getDefaultRootsFor(getVirtualFile());
     }
 
+    @RequiredReadAction
     @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {

@@ -41,15 +41,15 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.awt.ClickListener;
 import com.intellij.ui.FilterComponent;
-import com.intellij.ui.PopupHandler;
+import consulo.ui.ex.awt.PopupHandler;
 import com.intellij.ui.TableSpeedSearch;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;
@@ -447,8 +447,7 @@ public class DirDiffPanel implements Disposable, DataProvider {
   public void focusTable() {
     final Project project = myModel.getProject();
     final IdeFocusManager focusManager = project == null || project.isDefault() ?
-                                         IdeFocusManager.getGlobalInstance() :
-                                         IdeFocusManager.getInstance(project);
+                                         IdeFocusManager.getGlobalInstance() : ProjectIdeFocusManager.getInstance(project);
     focusManager.requestFocus(myTable, true);
   }
 

@@ -20,9 +20,9 @@ import com.intellij.ide.errorTreeView.*;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.navigation.Navigatable;
-import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;

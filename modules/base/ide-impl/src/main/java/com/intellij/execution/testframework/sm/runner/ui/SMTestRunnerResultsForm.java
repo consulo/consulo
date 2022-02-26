@@ -40,11 +40,10 @@ import com.intellij.openapi.util.Pass;
 import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.OpenSourceUtil;
+import consulo.ui.ex.OpenSourceUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
@@ -743,7 +742,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
             // Request focus if necessary
             if (requestFocus) {
               //myTreeView.requestFocusInWindow();
-              IdeFocusManager.getInstance(myProject).requestFocus(myTreeView, true);
+              ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTreeView, true);
             }
           }
         });

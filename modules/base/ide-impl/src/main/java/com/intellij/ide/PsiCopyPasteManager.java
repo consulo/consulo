@@ -18,7 +18,7 @@ package com.intellij.ide;
 import com.intellij.ide.dnd.LinuxDragAndDropSupport;
 import consulo.application.Application;
 import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

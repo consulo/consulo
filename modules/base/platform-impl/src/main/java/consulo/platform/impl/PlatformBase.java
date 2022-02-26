@@ -17,6 +17,7 @@ package consulo.platform.impl;
 
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinNT;
+import consulo.platform.CpuArchitecture;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;
 
@@ -34,8 +35,6 @@ import java.util.*;
 public abstract class PlatformBase implements Platform {
   private static final String OS_NAME = System.getProperty("os.name");
   private static final String OS_VERSION = System.getProperty("os.version").toLowerCase(Locale.ROOT);
-  private static final String OS_ARCH = System.getProperty("os.arch");
-  private static final String ARCH_DATA_MODEL = System.getProperty("sun.arch.data.model");
 
   private static final String _OS_NAME = OS_NAME.toLowerCase(Locale.ROOT);
   private static final boolean isWindows = _OS_NAME.startsWith("windows");
@@ -62,11 +61,6 @@ public abstract class PlatformBase implements Platform {
 
   private static final boolean isFileSystemCaseSensitive = isUnix && !isMac || "true".equalsIgnoreCase(System.getProperty("idea.case.sensitive.fs"));
   private static final boolean areSymLinksSupported = isUnix || isWinVistaOrNewer;
-
-  public static final boolean is32Bit = ARCH_DATA_MODEL == null || ARCH_DATA_MODEL.equals("32");
-  public static final boolean is64Bit = !is32Bit;
-  public static final boolean isIntel64 = "x86_64".equals(OS_ARCH) || "amd64".equals(OS_ARCH);
-  public static final boolean isArm64 = "aarch64".equals(OS_ARCH);
 
   public static boolean isOsVersionAtLeast(@Nonnull String version) {
     return StringUtil.compareVersionNumbers(OS_VERSION, version) >= 0;
@@ -199,10 +193,40 @@ public abstract class PlatformBase implements Platform {
   }
 
   protected static class JvmImpl implements Jvm {
-    private String myJavaVersion = System.getProperty("java.version");
-    private String myJavaRuntimeVersion = StringUtil.notNullize(System.getProperty("java.runtime.version"), "n/a");
-    private String myJavaVendor = StringUtil.notNullize(System.getProperty("java.vendor"), "n/a");
-    private String myJavaName = StringUtil.notNullize(System.getProperty("java.vm.name"), "n/a");
+    private final String myJavaVersion;
+    private final String myJavaRuntimeVersion;
+    private final String myJavaVendor;
+    private final String myJavaName;
+    private final CpuArchitecture myCpuArchitecture;
+
+    protected JvmImpl(Map<String, String> jvmProperties) {
+      myJavaVersion = jvmProperties.getOrDefault("java.version", "n/a");
+      myJavaRuntimeVersion = jvmProperties.getOrDefault("java.runtime.version", "n/a");
+      myJavaVendor = jvmProperties.getOrDefault("java.vendor", "n/a");
+      myJavaName = jvmProperties.getOrDefault("java.vm.name", "n/a");
+
+      //
+
+      String osArch = jvmProperties.getOrDefault("os.arch", "");
+      if ("x86_64".equals(osArch) || "amd64".equals(osArch)) {
+        myCpuArchitecture = CpuArchitecture.X86_64;
+      }
+      else if ("i386".equals(osArch) || "x86".equals(osArch))  {
+        myCpuArchitecture = CpuArchitecture.X86;
+      }
+      else if ("arm64".equals(osArch) || "aarch64".equals(osArch)) {
+        myCpuArchitecture = CpuArchitecture.AARCH64;
+      } else {
+        String name = osArch.toUpperCase(Locale.ROOT);
+        int width = 0;
+        String sunArchModel = jvmProperties.get("sun.arch.data.model");
+        if (sunArchModel != null) {
+          width = StringUtil.parseInt(sunArchModel, 0);
+        }
+
+        myCpuArchitecture = new CpuArchitecture(name, width);
+      }
+    }
 
     @Nonnull
     @Override
@@ -246,13 +270,9 @@ public abstract class PlatformBase implements Platform {
     }
 
     @Override
-    public boolean isArm64() {
-      return isArm64;
-    }
-
-    @Override
-    public boolean isAmd64() {
-      return isIntel64;
+    @Nonnull
+    public CpuArchitecture getCpuArchitecture() {
+      return myCpuArchitecture;
     }
   }
 
@@ -283,11 +303,22 @@ public abstract class PlatformBase implements Platform {
   private final Jvm myJvm;
   private final User myUser;
 
-  protected PlatformBase() {
+  protected PlatformBase(@Nonnull Map<String, String> jvmProperties) {
     myFileSystem = createFS();
     myOperatingSystem = createOS();
-    myJvm = createJVM();
+    myJvm = createJVM(jvmProperties);
     myUser = createUser();
+  }
+
+  protected static Map<String, String> getSystemJvmProperties() {
+    Properties properties = System.getProperties();
+    Map<String, String> map = new LinkedHashMap<>();
+    for (Object key : properties.keySet()) {
+      if (key instanceof String keyString) {
+        map.put(keyString, properties.getProperty(keyString, ""));
+      }
+    }
+    return map;
   }
 
   @Nonnull
@@ -301,8 +332,8 @@ public abstract class PlatformBase implements Platform {
   }
 
   @Nonnull
-  protected Jvm createJVM() {
-    return new JvmImpl();
+  protected Jvm createJVM(@Nonnull Map<String, String> jvmProperties) {
+    return new JvmImpl(jvmProperties);
   }
 
   @Nonnull

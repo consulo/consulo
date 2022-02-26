@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
+import consulo.project.ui.wm.impl.StatusWidgetBorders;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
@@ -448,7 +449,7 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
     if (widget instanceof CustomStatusBarWidget) {
       JComponent component = ((CustomStatusBarWidget)widget).getComponent();
       if (component.getBorder() == null) {
-        component.setBorder(widget instanceof IconLikeCustomStatusBarWidget ? StatusBarWidget.WidgetBorder.ICON : StatusBarWidget.WidgetBorder.INSTANCE);
+        component.setBorder(widget instanceof IconLikeCustomStatusBarWidget ? StatusWidgetBorders.ICON : StatusWidgetBorders.INSTANCE);
       }
       // wrap with a panel, so it will fill entire status bar height
       JComponent result = component instanceof JLabel ? new NonOpaquePanel(new BorderLayout(), component) : component;

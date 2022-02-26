@@ -16,13 +16,10 @@
 package com.intellij.ide.util;
 
 import consulo.ui.ex.ExpandableItemsHandler;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.project.ui.IdeFocusManager;
+import consulo.ui.ex.awt.*;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;
-import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.ComponentWithExpandableItems;
-import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.TableCell;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;

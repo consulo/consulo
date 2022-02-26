@@ -37,7 +37,7 @@ import com.intellij.packaging.impl.elements.DirectoryPackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.awt.RelativeRectangle;
 import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.ui.treeStructure.SimpleNode;

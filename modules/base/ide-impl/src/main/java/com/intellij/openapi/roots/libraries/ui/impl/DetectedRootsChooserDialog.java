@@ -24,6 +24,7 @@ import com.intellij.openapi.ui.TitlePanel;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;

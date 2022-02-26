@@ -25,7 +25,7 @@ import consulo.application.progress.TaskInfo;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.EmptyRunnable;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.language.util.IncorrectOperationException;
 import consulo.component.messagebus.Topic;
@@ -156,7 +156,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
       }
       else {
         Disposer.dispose(this);
-        final IdeFocusManager focusManager = IdeFocusManager.getInstance(myProject);
+        final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
         focusManager.doWhenFocusSettlesDown(() -> focusManager.requestDefaultFocus(true), ModalityState.defaultModalityState());
       }
     }, getModalityState()));
@@ -339,7 +339,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
   }
 
   IdeFocusManager getFocusManager() {
-    return IdeFocusManager.getInstance(myProject);
+    return ProjectIdeFocusManager.getInstance(myProject);
   }
 
   @Override

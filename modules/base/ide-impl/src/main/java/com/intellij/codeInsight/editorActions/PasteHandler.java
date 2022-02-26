@@ -36,7 +36,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

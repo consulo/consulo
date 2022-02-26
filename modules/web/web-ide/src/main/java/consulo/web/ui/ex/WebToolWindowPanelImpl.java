@@ -15,7 +15,7 @@
  */
 package consulo.web.ui.ex;
 
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import consulo.annotation.DeprecationInfo;

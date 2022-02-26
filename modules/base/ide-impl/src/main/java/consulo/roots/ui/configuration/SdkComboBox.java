@@ -29,7 +29,7 @@ import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkTypeId;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;

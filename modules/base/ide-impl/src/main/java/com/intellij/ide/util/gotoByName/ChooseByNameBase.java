@@ -21,6 +21,8 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -37,7 +39,6 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -52,8 +53,8 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -63,8 +64,7 @@ import com.intellij.psi.codeStyle.NameUtil;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupOwner;
 import com.intellij.ui.popup.PopupPositionManager;
@@ -475,7 +475,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
                 // Ignore the loss of focus if the mouse hasn't moved between the last dropdown resize
                 // and the loss of focus event. This happens in focus follows mouse mode if the mouse is
                 // over the dropdown and it resizes to leave the mouse outside the dropdown.
-                IdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);
+                ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);
                 myFocusPoint = null;
                 return;
               }
@@ -498,13 +498,13 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             else {
               Component oppositeComponent = e.getOppositeComponent();
               if (oppositeComponent == myCheckBox) {
-                IdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);
+                ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);
                 return;
               }
               if (oppositeComponent != null && !(oppositeComponent instanceof JFrame) &&
                   myList.isShowing() &&
                   (oppositeComponent == myList || SwingUtilities.isDescendingFrom(myList, oppositeComponent))) {
-                IdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);// Otherwise me may skip some KeyEvents
+                ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);// Otherwise me may skip some KeyEvents
                 return;
               }
 
@@ -598,7 +598,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       @Override
       public boolean onClick(@Nonnull MouseEvent e, int clickCount) {
         if (!myTextField.hasFocus()) {
-          IdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);
+          ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTextField, true);
         }
 
         if (clickCount == 2) {
@@ -810,7 +810,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         return false;
       }
 
-      IdeFocusManager focusManager = IdeFocusManager.getInstance(myProject);
+      IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
       if (isDescendingFromTemporarilyFocusableToolWindow(focusManager.getFocusOwner())) {
         focusManager.requestFocus(myTextField, true);
         return false;

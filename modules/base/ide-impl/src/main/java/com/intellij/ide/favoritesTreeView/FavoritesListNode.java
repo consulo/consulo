@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
@@ -52,6 +53,7 @@ public class FavoritesListNode extends AbstractTreeNode<String> {
     return null;
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {

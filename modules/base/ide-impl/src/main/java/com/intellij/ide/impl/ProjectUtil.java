@@ -26,7 +26,6 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
@@ -149,7 +148,7 @@ public class ProjectUtil {
         f.toFront();
       }
       else {
-        IdeFocusManager.getInstance(p).requestFocus(f, true);
+        ProjectIdeFocusManager.getInstance(p).requestFocus(f, true);
       }
     }
   }

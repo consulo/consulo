@@ -18,8 +18,8 @@ package com.intellij.ide.favoritesTreeView.actions;
 import consulo.application.AllIcons;
 import com.intellij.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import consulo.project.Project;
-import com.intellij.ui.AutoScrollToSourceHandler;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.awt.AutoScrollToSourceHandler;
+import consulo.ui.ex.UIBundle;
 
 /**
  * @author Konstantin Bulenkov

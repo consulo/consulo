@@ -20,7 +20,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.UIUtil;
-import com.intellij.util.ui.tree.WideSelectionTreeUI;
+import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

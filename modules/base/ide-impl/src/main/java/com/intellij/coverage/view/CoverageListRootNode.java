@@ -2,6 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiNamedElement;
 import javax.annotation.Nonnull;
@@ -34,6 +35,7 @@ public class CoverageListRootNode extends CoverageListNode {
     return myTopLevelPackages;
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {

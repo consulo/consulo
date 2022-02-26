@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.tree.NodeDescriptor;
-import com.intellij.ide.util.treeView.NodeRenderer;
+import consulo.ui.ex.awt.tree.NodeRenderer;
 import com.intellij.openapi.fileChooser.FileElement;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.module.content.layer.ContentEntry;

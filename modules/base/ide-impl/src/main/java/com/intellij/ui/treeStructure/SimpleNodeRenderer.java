@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.treeStructure;
 
-import com.intellij.ide.util.treeView.NodeRenderer;
+import consulo.ui.ex.awt.tree.NodeRenderer;
 
 /**
  * @deprecated Use NodeRenderer instead

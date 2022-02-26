@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import consulo.application.AllIcons;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollingUtil;

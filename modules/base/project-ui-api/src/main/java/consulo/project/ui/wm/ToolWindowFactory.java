@@ -19,6 +19,7 @@ package consulo.project.ui.wm;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.annotation.Nonnull;
 

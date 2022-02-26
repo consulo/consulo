@@ -13,7 +13,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import consulo.disposer.Disposer;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;

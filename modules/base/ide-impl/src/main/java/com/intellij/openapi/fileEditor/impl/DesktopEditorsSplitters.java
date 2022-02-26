@@ -28,7 +28,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.ref.Ref;
 import consulo.ui.ex.awt.util.FocusWatcher;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;

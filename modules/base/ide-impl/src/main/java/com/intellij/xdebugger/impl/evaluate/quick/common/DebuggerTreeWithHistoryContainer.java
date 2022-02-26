@@ -23,7 +23,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.debugger.XDebuggerBundle;
 import javax.annotation.Nonnull;

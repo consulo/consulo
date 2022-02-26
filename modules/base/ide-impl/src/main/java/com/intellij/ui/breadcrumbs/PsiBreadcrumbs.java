@@ -23,7 +23,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import consulo.colorScheme.TextAttributes;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import com.intellij.ui.components.breadcrumbs.Breadcrumbs;
 import com.intellij.ui.components.breadcrumbs.Crumb;
 import consulo.application.util.concurrent.AppExecutorUtil;

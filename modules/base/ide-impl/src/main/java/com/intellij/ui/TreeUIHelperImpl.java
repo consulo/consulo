@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.EditSourceOnDoubleClickHandler;

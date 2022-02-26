@@ -44,7 +44,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.InsertPathAction;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.internal.ImageLoader;
 import com.intellij.util.ObjectUtil;

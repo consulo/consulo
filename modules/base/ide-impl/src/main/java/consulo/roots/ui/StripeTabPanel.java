@@ -17,8 +17,8 @@ package consulo.roots.ui;
 
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import com.intellij.openapi.wm.impl.StaticAnchoredButton;
 import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
 import consulo.ui.ex.awt.CustomLineBorder;

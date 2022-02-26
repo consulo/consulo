@@ -20,7 +20,7 @@ import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.*;
 import consulo.project.Project;

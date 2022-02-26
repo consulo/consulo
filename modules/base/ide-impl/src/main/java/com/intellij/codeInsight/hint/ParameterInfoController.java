@@ -27,7 +27,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon.Position;
 import com.intellij.openapi.util.Pair;

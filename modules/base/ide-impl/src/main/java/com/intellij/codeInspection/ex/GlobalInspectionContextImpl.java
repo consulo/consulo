@@ -71,7 +71,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.util.ProjectUtilCore;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.ui.notification.NotificationGroup;

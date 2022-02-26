@@ -19,17 +19,10 @@ import com.intellij.ide.FrameStateManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ui.LafManager;
 import com.intellij.ide.ui.LafManagerListener;
-import consulo.component.persist.StoragePathMacros;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.event.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.ui.MessageType;
-import consulo.ui.ex.awt.Splitter;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.EdtRunnable;
-import consulo.ui.ex.awt.util.FocusWatcher;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
@@ -37,22 +30,24 @@ import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.ui.BalloonImpl;
-import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
-import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.ui.wm.ExpirableRunnable;
+import consulo.application.ui.wm.FocusableFrame;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataContext;
 import consulo.desktop.awt.wm.impl.commands.DesktopRequestFocusInToolWindowCmd;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.fileEditor.impl.EditorsSplitters;
@@ -61,12 +56,11 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.WindowManager;
-import consulo.project.util.ExpirableRunnable;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.NotificationType;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
@@ -78,7 +72,15 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
@@ -88,6 +90,7 @@ import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.wm.impl.ToolWindowAnchorUtil;
 import consulo.wm.impl.ToolWindowManagerBase;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -149,7 +152,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         ToolWindowAnchor anchor = info.getAnchor();
         DesktopInternalDecorator another = null;
         if (source.getParent() instanceof Splitter) {
-          float sizeInSplit = anchor.isSplitVertically() ? source.getHeight() : source.getWidth();
+          float sizeInSplit = ToolWindowAnchorUtil.isSplitVertically(anchor) ? source.getHeight() : source.getWidth();
           Splitter splitter = (Splitter)source.getParent();
           if (splitter.getSecondComponent() == source) {
             sizeInSplit += splitter.getDividerWidth();
@@ -158,7 +161,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
           else {
             another = (DesktopInternalDecorator)splitter.getSecondComponent();
           }
-          if (anchor.isSplitVertically()) {
+          if (ToolWindowAnchorUtil.isSplitVertically(anchor)) {
             info.setSideWeight(sizeInSplit / (float)splitter.getHeight());
           }
           else {
@@ -170,7 +173,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
                            ? (float)source.getHeight() / (float)getToolWindowPanel().getMyLayeredPane().getHeight()
                            : (float)source.getWidth() / (float)getToolWindowPanel().getMyLayeredPane().getWidth();
         info.setWeight(paneWeight);
-        if (another != null && anchor.isSplitVertically()) {
+        if (another != null && ToolWindowAnchorUtil.isSplitVertically(anchor)) {
           paneWeight = anchor.isHorizontal()
                        ? (float)another.getHeight() / (float)getToolWindowPanel().getMyLayeredPane().getHeight()
                        : (float)another.getWidth() / (float)getToolWindowPanel().getMyLayeredPane().getWidth();
@@ -460,7 +463,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private static IdeFocusManager getFocusManagerImpl(Project project) {
-    return IdeFocusManager.getInstance(project);
+    return ProjectIdeFocusManager.getInstance(project);
   }
 
   public void projectOpened() {
@@ -828,7 +831,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     if (activeWindow instanceof DesktopFloatingDecorator) {
       IdeFocusManager ideFocusManager = IdeFocusManager.findInstanceByComponent(activeWindow);
-      IdeFrame lastFocusedFrame = ideFocusManager.getLastFocusedFrame();
+      FocusableFrame lastFocusedFrame = ideFocusManager.getLastFocusedFrame();
       JComponent frameComponent = lastFocusedFrame != null ? lastFocusedFrame.getComponent() : null;
       Window lastFocusedWindow = frameComponent != null ? SwingUtilities.getWindowAncestor(frameComponent) : null;
       activeWindow = ObjectUtil.notNull(lastFocusedWindow, activeWindow);
@@ -1131,11 +1134,11 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
    */
   @Nonnull
   public AsyncResult<Void> requestFocus(@Nonnull Component c, boolean forced) {
-    return IdeFocusManager.getInstance(myProject).requestFocus(c, forced);
+    return ProjectIdeFocusManager.getInstance(myProject).requestFocus(c, forced);
   }
 
   public void doWhenFocusSettlesDown(@Nonnull Runnable runnable) {
-    IdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(runnable);
+    ProjectIdeFocusManager.getInstance(myProject).doWhenFocusSettlesDown(runnable);
   }
 
   @Nonnull

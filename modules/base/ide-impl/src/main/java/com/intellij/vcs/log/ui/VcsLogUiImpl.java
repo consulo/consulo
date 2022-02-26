@@ -23,7 +23,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.notification.NotificationType;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -95,7 +94,7 @@ public class VcsLogUiImpl implements VcsLogUi, Disposable {
     // todo fix selection
     final VcsLogGraphTable graphTable = myMainFrame.getGraphTable();
     if (graphTable.getRowCount() > 0) {
-      IdeFocusManager.getInstance(myProject).requestFocus(graphTable, true).doWhenProcessed(() -> graphTable.setRowSelectionInterval(0, 0));
+      ProjectIdeFocusManager.getInstance(myProject).requestFocus(graphTable, true).doWhenProcessed(() -> graphTable.setRowSelectionInterval(0, 0));
     }
   }
 

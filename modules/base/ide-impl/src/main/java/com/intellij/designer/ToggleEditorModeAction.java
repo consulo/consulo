@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 
 /**
  * @author Alexander Lobas

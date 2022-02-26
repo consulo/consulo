@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.ui.FixedSizeButton;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;

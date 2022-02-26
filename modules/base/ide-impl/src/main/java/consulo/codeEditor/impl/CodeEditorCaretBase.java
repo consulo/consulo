@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.impl.DesktopSelectionModelImpl;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.document.impl.event.DocumentEventImpl;
 import com.intellij.openapi.editor.impl.softwrap.SoftWrapHelper;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.impl.DocumentUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.disposer.Disposer;

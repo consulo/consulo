@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.ideaOld;
 
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.metal.DefaultMetalTheme;

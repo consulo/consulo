@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.*;
 import com.intellij.ui.popup.util.DetailController;
@@ -50,6 +50,7 @@ import consulo.ui.decorator.SwingUIDecorator;
 import consulo.application.impl.WholeWestDialogWrapper;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.PopupHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -22,7 +22,7 @@ import consulo.disposer.Disposer;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.UserActivityWatcher;
+import consulo.ui.ex.awt.UserActivityWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.Lists;
 

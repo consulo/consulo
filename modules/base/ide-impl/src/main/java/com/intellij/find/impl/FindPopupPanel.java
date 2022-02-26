@@ -17,6 +17,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.*;
+import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.undoRedo.CommandProcessor;
 import consulo.logging.Logger;
 import consulo.document.event.DocumentListener;
@@ -38,7 +39,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.DimensionService;
@@ -58,7 +59,6 @@ import consulo.util.collection.SmartList;
 import consulo.util.lang.MathUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.VfsPresentationUtil;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
@@ -444,14 +444,14 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
       if (myCbFileFilter.isSelected()) {
         myFileMaskField.setEnabled(true);
         if (myCbFileFilter.getClientProperty("dontRequestFocus") == null) {
-          IdeFocusManager.getInstance(myProject).requestFocus(myFileMaskField, true);
+          ProjectIdeFocusManager.getInstance(myProject).requestFocus(myFileMaskField, true);
           myFileMaskField.getEditor().selectAll();
         }
       }
       else {
         myFileMaskField.setEnabled(false);
         if (myCbFileFilter.getClientProperty("dontRequestFocus") == null) {
-          IdeFocusManager.getInstance(myProject).requestFocus(mySearchComponent, true);
+          ProjectIdeFocusManager.getInstance(myProject).requestFocus(mySearchComponent, true);
         }
       }
     });
@@ -1114,10 +1114,10 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     myScopeDetailsPanel.revalidate();
     myScopeDetailsPanel.repaint();
     if (firstFocusableComponent != null) {
-      ApplicationManager.getApplication().invokeLater(() -> IdeFocusManager.getInstance(myProject).requestFocus(firstFocusableComponent, true));
+      ApplicationManager.getApplication().invokeLater(() -> ProjectIdeFocusManager.getInstance(myProject).requestFocus(firstFocusableComponent, true));
     }
     if (firstFocusableComponent == null && !mySearchComponent.isFocusOwner() && !myReplaceComponent.isFocusOwner()) {
-      ApplicationManager.getApplication().invokeLater(() -> IdeFocusManager.getInstance(myProject).requestFocus(mySearchComponent, true));
+      ApplicationManager.getApplication().invokeLater(() -> ProjectIdeFocusManager.getInstance(myProject).requestFocus(mySearchComponent, true));
     }
   }
 

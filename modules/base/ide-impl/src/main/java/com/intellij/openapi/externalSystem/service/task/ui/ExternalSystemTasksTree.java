@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Producer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
-import com.intellij.util.ui.tree.TreeModelAdapter;
+import consulo.ui.ex.awt.tree.TreeModelAdapter;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

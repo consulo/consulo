@@ -33,7 +33,7 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.openapi.wm.impl.IdePanePanel;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
-import com.intellij.ui.PopupHandler;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import com.intellij.ui.components.JBLayeredPane;
 import consulo.ui.ex.awt.JBPanel;

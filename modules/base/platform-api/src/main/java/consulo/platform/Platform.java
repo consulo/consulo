@@ -129,13 +129,20 @@ public interface Platform {
     @Nonnull
     Map<String, String> getRuntimeProperties();
 
-    boolean isArm64();
+    default boolean isArm64() {
+      return CpuArchitecture.AARCH64 == getCpuArchitecture();
+    }
 
-    boolean isAmd64();
+    default boolean isAmd64() {
+      return CpuArchitecture.X86_64 == getCpuArchitecture();
+    }
 
     default boolean isAny64Bit() {
-      return isArm64() || isAmd64();
+      return getCpuArchitecture().getWidth() == 64;
     }
+
+    @Nonnull
+    CpuArchitecture getCpuArchitecture();
   }
 
   interface User {
@@ -199,7 +206,7 @@ public interface Platform {
     }
 
     if (jvm().isArm64()) {
-      return baseName + "-arm64" + "." + extension;
+      return baseName + "-aarch64" + "." + extension;
     }
 
     return baseName + "." + extension;

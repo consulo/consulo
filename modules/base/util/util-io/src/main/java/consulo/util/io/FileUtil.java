@@ -16,6 +16,7 @@
  */
 package consulo.util.io;
 
+import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import org.jetbrains.annotations.Contract;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ public class FileUtil {
   private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
 
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
-  private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
+  private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("consulo.fs.useChannels"));
+  public static final HashingStrategy<String> PATH_HASHING_STRATEGY = OSInfo.isFileSystemCaseSensitive ? HashingStrategy.caseInsensitive() : HashingStrategy.canonical();
 
   public static final int THREAD_LOCAL_BUFFER_LENGTH = 1024 * 20;
   protected static final ThreadLocal<byte[]> BUFFER = new ThreadLocal<byte[]>() {
@@ -43,6 +46,148 @@ public class FileUtil {
       return new byte[THREAD_LOCAL_BUFFER_LENGTH];
     }
   };
+
+  public static void copy(@Nonnull File fromFile, @Nonnull File toFile, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    performCopy(fromFile, toFile, true, permissionCopier);
+  }
+
+  public static void copyContent(@Nonnull File fromFile, @Nonnull File toFile, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    performCopy(fromFile, toFile, false, permissionCopier);
+  }
+
+  private static FileOutputStream openOutputStream(@Nonnull final File file) throws IOException {
+    try {
+      return new FileOutputStream(file);
+    }
+    catch (FileNotFoundException e) {
+      final File parentFile = file.getParentFile();
+      if (parentFile == null) {
+        throw new IOException("Parent file is null for " + file.getPath(), e);
+      }
+      createParentDirs(file);
+      return new FileOutputStream(file);
+    }
+  }
+
+  @SuppressWarnings("Duplicates")
+  private static void performCopy(@Nonnull File fromFile, @Nonnull File toFile, final boolean syncTimestamp, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    if (filesEqual(fromFile, toFile)) return;
+    final FileOutputStream fos = openOutputStream(toFile);
+
+    try {
+      final FileInputStream fis = new FileInputStream(fromFile);
+      try {
+        copy(fis, fos);
+      }
+      finally {
+        fis.close();
+      }
+    }
+    finally {
+      fos.close();
+    }
+
+    if (syncTimestamp) {
+      final long timeStamp = fromFile.lastModified();
+      if (timeStamp < 0) {
+        LOG.warn("Invalid timestamp " + timeStamp + " of '" + fromFile + "'");
+      }
+      else if (!toFile.setLastModified(timeStamp)) {
+        LOG.warn("Unable to set timestamp " + timeStamp + " to '" + toFile + "'");
+      }
+    }
+
+    if (fromFile.canExecute()) {
+      clonePermissionsToExecute(fromFile.getPath(), toFile.getPath(), permissionCopier);
+    }
+  }
+
+  private static boolean clonePermissionsToExecute(@Nonnull String source, @Nonnull String target, @Nonnull FilePermissionCopier permissionCopier) {
+    try {
+      return permissionCopier.clonePermissions(source, target, true);
+    }
+    catch (Exception e) {
+      LOG.warn("Source " + source + "/Target " + target, e);
+      return false;
+    }
+  }
+
+  public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    copyDir(fromDir, toDir, true, permissionCopier);
+  }
+
+  public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, boolean copySystemFiles, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    copyDir(fromDir, toDir, copySystemFiles ? null : (FileFilter)file -> !StringUtil.startsWithChar(file.getName(), '.'), permissionCopier);
+  }
+
+  public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, @Nullable final FileFilter filter, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
+    ensureExists(toDir);
+    if (isAncestor(fromDir, toDir, true)) {
+      LOG.error(fromDir.getAbsolutePath() + " is ancestor of " + toDir + ". Can't copy to itself.");
+      return;
+    }
+    File[] files = fromDir.listFiles();
+    if (files == null) throw new IOException("Directory is invalid " + fromDir.getPath());
+    if (!fromDir.canRead()) throw new IOException("Directory is not readable " + fromDir.getPath());
+    for (File file : files) {
+      if (filter != null && !filter.accept(file)) {
+        continue;
+      }
+      if (file.isDirectory()) {
+        copyDir(file, new File(toDir, file.getName()), filter, permissionCopier);
+      }
+      else {
+        copy(file, new File(toDir, file.getName()), permissionCopier);
+      }
+    }
+  }
+
+  public static void ensureExists(@Nonnull File dir) throws IOException {
+    if (!dir.exists() && !dir.mkdirs()) {
+      throw new IOException("Cannot create directory: " + dir.getPath());
+    }
+  }
+
+  public static void copy(@Nonnull InputStream inputStream, @Nonnull OutputStream outputStream) throws IOException {
+    if (USE_FILE_CHANNELS && inputStream instanceof FileInputStream && outputStream instanceof FileOutputStream) {
+      try (FileChannel fromChannel = ((FileInputStream)inputStream).getChannel()) {
+        try (FileChannel toChannel = ((FileOutputStream)outputStream).getChannel()) {
+          fromChannel.transferTo(0, Long.MAX_VALUE, toChannel);
+        }
+      }
+    }
+    else {
+      final byte[] buffer = getThreadLocalBuffer();
+      while (true) {
+        int read = inputStream.read(buffer);
+        if (read < 0) break;
+        outputStream.write(buffer, 0, read);
+      }
+    }
+  }
+
+  public static boolean createParentDirs(@Nonnull File file) {
+    File parentPath = file.getParentFile();
+    return parentPath == null || createDirectory(parentPath);
+  }
+
+  public static boolean createDirectory(@Nonnull File path) {
+    return path.isDirectory() || path.mkdirs();
+  }
+
+  public static boolean filesEqual(@Nullable File file1, @Nullable File file2) {
+    // on MacOS java.io.File.equals() is incorrectly case-sensitive
+    return pathsEqual(file1 == null ? null : file1.getPath(), file2 == null ? null : file2.getPath());
+  }
+
+  public static boolean pathsEqual(@Nullable String path1, @Nullable String path2) {
+    if (path1 == path2) return true;
+    if (path1 == null || path2 == null) return false;
+
+    path1 = toCanonicalPath(path1);
+    path2 = toCanonicalPath(path2);
+    return PATH_HASHING_STRATEGY.equals(path1, path2);
+  }
 
   @Nonnull
   public static byte[] loadFirstAndClose(@Nonnull InputStream stream, int maxLength) throws IOException {

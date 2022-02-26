@@ -15,18 +15,18 @@
  */
 package consulo.desktop.awt.uiOld.mac;
 
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.ui.ex.UIBundle;
+import com.intellij.util.Consumer;
+import com.intellij.util.ui.OwnerOptional;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
 import consulo.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
-import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.UIBundle;
-import com.intellij.util.Consumer;
-import com.intellij.util.ui.OwnerOptional;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -45,7 +45,7 @@ public class MacFileSaverDialog implements FileSaverDialog {
   }
 
   public MacFileSaverDialog(FileSaverDescriptor descriptor, Project project) {
-    this(descriptor, IdeFocusManager.getInstance(project).getFocusOwner());
+    this(descriptor, ProjectIdeFocusManager.getInstance(project).getFocusOwner());
   }
 
   public MacFileSaverDialog(FileSaverDescriptor descriptor, Component parent) {

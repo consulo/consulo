@@ -32,7 +32,7 @@ import consulo.navigation.Navigatable;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.ui.AutoScrollToSourceHandler;
+import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import com.intellij.ui.TreeSpeedSearch;
 import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;

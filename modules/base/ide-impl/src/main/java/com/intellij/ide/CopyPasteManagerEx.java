@@ -4,7 +4,7 @@ package com.intellij.ide;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.editor.CaretStateTransferableData;
 import consulo.document.Document;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.ide.CutElementMarker;
 import com.intellij.openapi.ide.KillRingTransferable;
 import com.intellij.openapi.util.Comparing;

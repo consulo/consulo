@@ -24,7 +24,7 @@ import com.intellij.util.ContentUtilEx;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;

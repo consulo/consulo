@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
@@ -31,7 +31,7 @@ import com.intellij.openapi.vfs.impl.http.RemoteFileState;
 import com.intellij.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

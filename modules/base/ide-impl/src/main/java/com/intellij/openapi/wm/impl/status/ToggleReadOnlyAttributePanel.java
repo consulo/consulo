@@ -13,7 +13,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import com.intellij.util.Consumer;
 import com.intellij.util.io.ReadOnlyAttributeUtil;
 import consulo.fileEditor.impl.EditorsSplitters;

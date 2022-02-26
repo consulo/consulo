@@ -21,7 +21,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.PopupHandler;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

@@ -2,7 +2,7 @@
 package com.intellij.ui.treeStructure;
 
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import com.intellij.ide.util.treeView.NodeRenderer;
+import consulo.ui.ex.awt.tree.NodeRenderer;
 import com.intellij.ide.util.treeView.TreeVisitor;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

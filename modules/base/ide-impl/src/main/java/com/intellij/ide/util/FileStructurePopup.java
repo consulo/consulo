@@ -17,7 +17,7 @@ import com.intellij.ide.structureView.newStructureView.TreeModelWrapper;
 import consulo.ui.ex.awt.*;
 import consulo.application.ui.event.UISettingsListener;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.NodeRenderer;
+import consulo.ui.ex.awt.tree.NodeRenderer;
 import com.intellij.ide.util.treeView.smartTree.*;
 import consulo.navigation.LocationPresentation;
 import com.intellij.openapi.MnemonicHelper;
@@ -26,21 +26,20 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.fileEditor.structureView.tree.*;
 import consulo.ui.ex.awt.ClickListener;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.undoRedo.CommandProcessor;
 import consulo.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -53,10 +52,10 @@ import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.popup.AbstractPopup;
-import com.intellij.ui.popup.HintUpdateSupply;
+import consulo.ide.ui.popup.HintUpdateSupply;
 import com.intellij.ui.popup.PopupUpdateProcessor;
 import com.intellij.ui.speedSearch.ElementFilter;
-import com.intellij.ui.tree.AsyncTreeModel;
+import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import com.intellij.ui.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.awt.tree.Tree;
@@ -153,7 +152,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     //Stop code analyzer to speedup EDT
     DaemonCodeAnalyzer.getInstance(myProject).disableUpdateByTimer(this);
-    IdeFocusManager.getInstance(myProject).typeAheadUntil(myTreeHasBuilt, "FileStructurePopup");
+    ProjectIdeFocusManager.getInstance(myProject).typeAheadUntil(myTreeHasBuilt, "FileStructurePopup");
 
     myTreeActionsOwner = new TreeStructureActionsOwner(myTreeModel);
     myTreeActionsOwner.setActionIncluded(Sorter.ALPHA_SORTER, true);
@@ -291,7 +290,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
 
     ((AbstractPopup)myPopup).setShowHints(true);
 
-    IdeFocusManager.getInstance(myProject).requestFocus(myTree, true);
+    ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTree, true);
 
     rebuildAndSelect(false, myInitialElement).onProcessed(path -> UIUtil.invokeLaterIfNeeded(() -> {
       TreeUtil.ensureSelection(myTree);

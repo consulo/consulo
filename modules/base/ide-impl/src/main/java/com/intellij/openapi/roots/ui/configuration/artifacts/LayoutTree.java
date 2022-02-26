@@ -27,7 +27,6 @@ import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.RenameablePackagingElement;
 import com.intellij.ui.TreeSpeedSearch;
@@ -241,7 +240,7 @@ public class LayoutTree extends SimpleDnDAwareTree implements AdvancedDnDSource 
     }
 
     private void requestFocusToTree() {
-      IdeFocusManager.getInstance(myArtifactsEditor.getContext().getProject()).requestFocus(LayoutTree.this, true);
+      ProjectIdeFocusManager.getInstance((Project)myArtifactsEditor.getContext().getProject()).requestFocus(LayoutTree.this, true);
     }
   }
 }

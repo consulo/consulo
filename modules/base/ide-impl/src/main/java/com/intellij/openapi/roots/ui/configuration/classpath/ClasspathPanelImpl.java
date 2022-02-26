@@ -44,11 +44,12 @@ import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetHandler;
@@ -455,7 +456,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
         TableUtil.scrollSelectionToVisible(myEntryTable);
       }
     }
-    IdeFocusManager.getInstance(myState.getProject()).requestFocus(myEntryTable, true);
+    ProjectIdeFocusManager.getInstance(myState.getProject()).requestFocus(myEntryTable, true);
   }
 
   private int moveRow(final int row, final int increment) {

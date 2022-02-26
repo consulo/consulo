@@ -33,7 +33,7 @@ import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseStructureConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ui.ex.awt.MasterDetailsState;
-import com.intellij.openapi.ui.MasterDetailsStateService;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import com.intellij.openapi.ui.NamedConfigurable;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;

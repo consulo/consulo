@@ -21,7 +21,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.navigation.Navigatable;
 import com.intellij.pom.NavigatableWithText;
 import consulo.language.pom.PomTargetPsiElement;
-import com.intellij.util.OpenSourceUtil;
+import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;

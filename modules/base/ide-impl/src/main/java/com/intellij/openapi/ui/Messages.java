@@ -33,6 +33,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.ui.mac.MacMessages;
 import com.intellij.ui.mac.foundation.MacUtil;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.PairFunction;
 import consulo.process.cmd.ParametersListUtil;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

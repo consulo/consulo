@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
-import com.intellij.openapi.util.io.win32.IdeaWin32;
+import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.process.local.EnvironmentUtil;
 import com.intellij.util.PairConsumer;
@@ -172,7 +172,7 @@ public class StartupUtil {
     JnaLoader.load(org.slf4j.LoggerFactory.getLogger(StartupUtil.class));
 
     if (SystemInfo.isWin2kOrNewer) {
-      IdeaWin32.isAvailable();  // logging is done there
+      WindowsFileSystemHelper.isAvailable();  // logging is done there
     }
 
     if (SystemInfo.isWindows) {

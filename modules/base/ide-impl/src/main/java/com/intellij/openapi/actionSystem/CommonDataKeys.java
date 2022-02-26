@@ -42,10 +42,10 @@ public interface CommonDataKeys {
    * Returns com.intellij.openapi.editor.Editor even if focus currently is in find bar
    */
   Key<Editor> EDITOR_EVEN_IF_INACTIVE = Key.create("editor.even.if.inactive");
-  Key<Navigatable> NAVIGATABLE = Key.create("Navigatable");
-  Key<Navigatable[]> NAVIGATABLE_ARRAY = Key.create("NavigatableArray");
-  Key<VirtualFile> VIRTUAL_FILE = Key.create("virtualFile");
-  Key<VirtualFile[]> VIRTUAL_FILE_ARRAY = Key.create("virtualFileArray");
+  Key<Navigatable> NAVIGATABLE = Navigatable.KEY;
+  Key<Navigatable[]> NAVIGATABLE_ARRAY = Navigatable.KEY_OF_ARRAY;
+  Key<VirtualFile> VIRTUAL_FILE = VirtualFile.KEY;
+  Key<VirtualFile[]> VIRTUAL_FILE_ARRAY = VirtualFile.KEY_OF_ARRAY;
 
   Key<PsiElement> PSI_ELEMENT = Key.create("psi.Element");
   Key<PsiElement[]> PSI_ELEMENT_ARRAY = Key.create("psi.Element.array");

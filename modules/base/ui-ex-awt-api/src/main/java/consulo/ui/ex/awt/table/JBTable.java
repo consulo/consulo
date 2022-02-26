@@ -16,6 +16,8 @@
 package consulo.ui.ex.awt.table;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.ExpirableRunnable;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.ComponentWithExpandableItems;
 import consulo.ui.ex.ExpandableItemsHandler;
@@ -451,11 +453,9 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
       add(editorComp);
       editorComp.validate();
 
-      if (surrendersFocusOnKeyStroke()) {
+      if (surrendersFocusOnKeyStroke() && !(editorComp instanceof AbstractButton)) {
         // this replaces focus request in JTable.processKeyBinding
-        final IdeFocusManager focusManager = IdeFocusManager.findInstanceByComponent(this);
-        focusManager.setTypeaheadEnabled(false);
-        focusManager.requestFocus(editorComp, true).doWhenProcessed(() -> focusManager.setTypeaheadEnabled(true));
+        IdeFocusManager.findInstanceByComponent(this).requestFocus(editorComp, true);
       }
 
       setCellEditor(editor);

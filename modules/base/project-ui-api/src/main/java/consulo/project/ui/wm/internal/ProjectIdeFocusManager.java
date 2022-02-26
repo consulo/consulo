@@ -15,11 +15,22 @@
  */
 package consulo.project.ui.wm.internal;
 
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.ApplicationIdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.project.Project;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2018-08-24
  */
 public interface ProjectIdeFocusManager extends IdeFocusManager {
+  @Nonnull
+  static IdeFocusManager getInstance(@Nullable Project project) {
+    if (project == null || project.isDisposed() || !project.isInitialized()) return ApplicationIdeFocusManager.getInstance();
+
+    return project.getComponent(ProjectIdeFocusManager.class);
+  }
 }

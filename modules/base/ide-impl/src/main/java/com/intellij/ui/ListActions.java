@@ -2,6 +2,7 @@
 package com.intellij.ui;
 
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.SwingActionDelegate;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.JList;

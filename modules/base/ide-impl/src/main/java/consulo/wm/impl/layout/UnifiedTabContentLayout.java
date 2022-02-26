@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl.layout;
 
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import consulo.wm.impl.UnifiedToolWindowContentUI;
 
 /**

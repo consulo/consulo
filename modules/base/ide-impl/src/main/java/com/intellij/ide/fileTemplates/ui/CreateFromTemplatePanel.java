@@ -23,7 +23,7 @@ import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.annotation.DeprecationInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

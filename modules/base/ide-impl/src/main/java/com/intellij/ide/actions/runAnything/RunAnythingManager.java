@@ -9,7 +9,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.components.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;

@@ -16,6 +16,7 @@
 package consulo.ui.ex.awt.tree.table;
 
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.tree.Tree;
 
 import javax.annotation.Nullable;

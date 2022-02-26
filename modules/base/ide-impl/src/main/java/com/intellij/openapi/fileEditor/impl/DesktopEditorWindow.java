@@ -34,7 +34,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.Stack;
@@ -59,7 +59,7 @@ import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static consulo.project.ui.IdeFocusManager.getGlobalInstance;
+import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
 
 /**
  * Author: msk
@@ -870,7 +870,7 @@ public class DesktopEditorWindow extends EditorWindowBase implements EditorWindo
     }
     DesktopEditorWithProviderComposite composite = findFileComposite(file);
     if (composite == null) return false;
-    Component owner = IdeFocusManager.getInstance(myOwner.getManager().getProject()).getFocusOwner();
+    Component owner = ProjectIdeFocusManager.getInstance(myOwner.getManager().getProject()).getFocusOwner();
     if (owner == null || !SwingUtilities.isDescendingFrom(owner, composite.getSelectedEditor().getComponent())) return false;
     return !myOwner.getManager().isChanged(composite);
   }

@@ -18,10 +18,12 @@ package consulo.project.ui.wm;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.NotificationType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

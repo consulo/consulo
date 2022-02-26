@@ -22,7 +22,7 @@ import com.intellij.internal.statistic.UsageTrigger;
 import consulo.project.ui.notification.NotificationType;
 import com.intellij.notification.impl.IdeNotificationArea;
 import consulo.application.util.function.Computable;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBLabel;

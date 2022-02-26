@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 

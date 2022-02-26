@@ -33,7 +33,6 @@ import consulo.fileEditor.OpenFileDescriptor;
 import consulo.fileEditor.TextEditor;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -164,7 +163,7 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
         unfoldCurrentLine(e);
         if (focusEditor) {
           if (project.getApplication().isSwingApplication()) {
-            IdeFocusManager.getInstance(myProject).requestFocus(e.getContentComponent(), true);
+            ProjectIdeFocusManager.getInstance(myProject).requestFocus(e.getContentComponent(), true);
           }
         }
       }

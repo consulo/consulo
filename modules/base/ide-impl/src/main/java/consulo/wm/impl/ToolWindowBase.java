@@ -15,16 +15,16 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.ide.UiActivity;
-import com.intellij.ide.UiActivityMonitor;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.application.ModalityState;
-import consulo.project.ui.wm.ToolWindowAnchor;
-import consulo.project.ui.wm.ToolWindowContentUiType;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.project.ui.wm.ToolWindowType;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;

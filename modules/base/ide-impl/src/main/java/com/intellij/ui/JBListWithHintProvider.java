@@ -17,8 +17,8 @@ package com.intellij.ui;
 
 import consulo.ui.ex.popup.JBPopup;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.components.JBList;
-import com.intellij.ui.popup.HintUpdateSupply;
+import consulo.ui.ex.awt.JBList;
+import consulo.ide.ui.popup.HintUpdateSupply;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nullable;
 
@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * @author pegov
  * @deprecated
- * @see com.intellij.ui.popup.HintUpdateSupply
+ * @see HintUpdateSupply
  */
 public abstract class JBListWithHintProvider<T> extends JBList<T> {
   {

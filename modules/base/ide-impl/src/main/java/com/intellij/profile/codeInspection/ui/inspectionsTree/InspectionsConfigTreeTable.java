@@ -29,7 +29,7 @@ import com.intellij.profile.codeInspection.ui.InspectionsAggregationUtil;
 import com.intellij.profile.codeInspection.ui.ToolDescriptors;
 import com.intellij.profile.codeInspection.ui.table.ScopesAndSeveritiesTable;
 import com.intellij.profile.codeInspection.ui.table.ThreeStateCheckBoxRenderer;
-import com.intellij.ui.DoubleClickListener;
+import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.ui.ex.awt.tree.table.TreeTableTree;

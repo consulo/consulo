@@ -16,7 +16,13 @@
 package com.intellij.ide.util.treeView;
 
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
-public interface TreeVisitor<T> {
+public interface TreeVisitor<T> extends Predicate<T> {
   boolean visit(@Nonnull T node);
+
+  @Override
+  default boolean test(T node) {
+    return visit(node);
+  }
 }

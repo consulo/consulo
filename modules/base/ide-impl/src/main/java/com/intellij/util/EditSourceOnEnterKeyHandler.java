@@ -19,6 +19,8 @@ import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
+import consulo.ui.ex.OpenSourceUtil;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;

@@ -16,6 +16,7 @@
 package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import com.intellij.ui.CommonActionsPanel;
@@ -48,6 +49,7 @@ public abstract class AbstractFavoritesListProvider<T> implements FavoritesListP
     myProject = project;
     myListName = listName;
     myNode = new FavoritesListNode(project, listName, description) {
+      @RequiredReadAction
       @Nonnull
       @Override
       public Collection<? extends AbstractTreeNode> getChildren() {

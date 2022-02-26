@@ -15,7 +15,8 @@
  */
 package com.intellij.ui;
 
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.util.TableUtil;
 
 import javax.swing.*;
@@ -44,8 +45,8 @@ public class EditableRowTable{
 
     final JButton addButton = new JButton();
     addButton.setText(addMnemonics ?
-                        UIBundle.message("row.add") :
-                        UIBundle.message("row.add.without.mnemonic"));
+                      UIBundle.message("row.add") :
+                      UIBundle.message("row.add.without.mnemonic"));
     addButton.setDefaultCapable(false);
     buttonsPanel.add(addButton, gbConstraints);
 

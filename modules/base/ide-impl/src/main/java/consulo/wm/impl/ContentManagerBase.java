@@ -22,7 +22,7 @@ import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.util.EventDispatcher;
 import consulo.util.collection.SmartList;
 import consulo.disposer.Disposable;
@@ -545,7 +545,7 @@ public abstract class ContentManagerBase implements ContentManager, PropertyChan
   }
 
   protected IdeFocusManager getFocusManager() {
-    return IdeFocusManager.getInstance(myProject);
+    return ProjectIdeFocusManager.getInstance(myProject);
   }
 
   @Override

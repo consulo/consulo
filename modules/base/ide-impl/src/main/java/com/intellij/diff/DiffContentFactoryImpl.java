@@ -24,7 +24,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

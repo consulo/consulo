@@ -32,7 +32,7 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import com.intellij.ui.AncestorListenerAdapter;
 import consulo.ui.ex.content.Content;

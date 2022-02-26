@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.commander;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -36,6 +37,7 @@ public class TopLevelNode extends AbstractTreeNode {
     setIcon(AllIcons.Nodes.UpLevel);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

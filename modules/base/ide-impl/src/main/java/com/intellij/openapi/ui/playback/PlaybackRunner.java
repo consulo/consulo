@@ -16,7 +16,7 @@
 package com.intellij.openapi.ui.playback;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.UiActivityMonitor;
+import consulo.ui.ex.UiActivityMonitor;
 import consulo.disposer.Disposable;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;

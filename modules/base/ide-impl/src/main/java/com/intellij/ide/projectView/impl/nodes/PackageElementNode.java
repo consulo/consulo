@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
@@ -23,7 +24,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import consulo.component.extension.Extensions;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
@@ -78,6 +79,7 @@ public class PackageElementNode extends ProjectViewNode<PackageElement> {
     return getValue() != null && getValue().isLibraryElement();
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

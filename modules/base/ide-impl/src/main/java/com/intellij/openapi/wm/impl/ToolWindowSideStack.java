@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.impl;
 
 import consulo.logging.Logger;
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 
 import java.util.Iterator;
 import java.util.Stack;

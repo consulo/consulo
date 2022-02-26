@@ -14,18 +14,18 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
-import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.awt.util.ColorUtil;
@@ -1135,7 +1135,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       return;
     }
     if (myAutoPopupRec != null && myAutoPopupRec.contains(e.getPoint())) {
-      IdeFocusManager.getInstance(null).doWhenFocusSettlesDown(() -> showAutoPopup());
+      ProjectIdeFocusManager.getInstance((Project)null).doWhenFocusSettlesDown(() -> showAutoPopup());
     }
   }
 

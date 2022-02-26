@@ -3,6 +3,7 @@
 package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkManager;
@@ -11,19 +12,19 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.ValidateableNode;
+import consulo.ui.ex.awt.tree.ValidateableNode;
 import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.module.Module;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.StatePreservingNavigatable;
+import consulo.navigation.StatePreservingNavigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -62,6 +63,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
 
   protected abstract void updateImpl(@Nonnull PresentationData data);
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public final Collection<? extends AbstractTreeNode> getChildren() {

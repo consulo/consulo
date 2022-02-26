@@ -24,7 +24,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.search.TodoPattern;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.util.ui.Table;
 import javax.annotation.Nonnull;
 

@@ -8,7 +8,7 @@ import com.intellij.ide.projectView.ViewSettings;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.NodeDescriptor;

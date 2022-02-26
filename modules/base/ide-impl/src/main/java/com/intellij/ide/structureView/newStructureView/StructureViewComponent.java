@@ -3,6 +3,7 @@
 package com.intellij.ide.structureView.newStructureView;
 
 import com.intellij.ide.CopyPasteDelegator;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.PsiCopyPasteManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
@@ -33,36 +34,36 @@ import consulo.fileEditor.structureView.tree.*;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.AutoScrollToSourceHandler;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.tree.*;
+import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.PlaceProvider;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import com.intellij.util.EditSourceOnDoubleClickHandler;
 import consulo.util.dataholder.Key;
 import consulo.component.util.ModificationTracker;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
-import consulo.project.ui.IdeFocusManager;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.*;
-import com.intellij.ui.popup.HintUpdateSupply;
-import com.intellij.ui.tree.AsyncTreeModel;
+import consulo.ide.ui.popup.HintUpdateSupply;
 import com.intellij.ui.tree.StructureTreeModel;
-import consulo.ui.ex.awt.tree.TreeVisitor;
-import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import com.intellij.util.*;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.JBTreeTraverser;
 import consulo.ui.ex.awt.UIUtil;
-import com.intellij.util.ui.tree.TreeModelAdapter;
-import consulo.ui.ex.awt.tree.TreeUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -418,7 +419,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
         myTree.expandPath(path);
       }
       if (requestFocus) {
-        IdeFocusManager.getInstance(myProject).requestFocus(myTree, false);
+        ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTree, false);
       }
       return Promises.resolvedPromise(path);
     };
@@ -733,6 +734,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
       return value == null ? this : value;
     }
 
+    @RequiredReadAction
     @Override
     @Nonnull
     public Collection<AbstractTreeNode> getChildren() {

@@ -21,6 +21,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.project.Project;
+import consulo.project.ui.wm.impl.StatusWidgetBorders;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.text.StringUtil;
@@ -78,7 +79,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         return true;
       }
     }.installOn(myComponent, true);
-    myComponent.setBorder(WidgetBorder.WIDE);
+    myComponent.setBorder(StatusWidgetBorders.WIDE);
   }
 
   protected JPanel createComponent() {

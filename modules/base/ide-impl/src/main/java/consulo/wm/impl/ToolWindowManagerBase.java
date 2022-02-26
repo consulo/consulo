@@ -43,7 +43,7 @@ import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.startup.StartupActivity;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.*;
 import consulo.ui.Rectangle2D;
 import consulo.ui.UIAccess;
@@ -1234,7 +1234,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   @Nonnull
   @Override
   public IdeFocusManager getFocusManager() {
-    return IdeFocusManager.getInstance(myProject);
+    return ProjectIdeFocusManager.getInstance(myProject);
   }
 
   @RequiredUIAccess

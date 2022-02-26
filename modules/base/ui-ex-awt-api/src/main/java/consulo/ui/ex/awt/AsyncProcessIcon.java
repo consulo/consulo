@@ -25,10 +25,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AsyncProcessIcon extends AnimatedIconComponent {
-  private static final Image[] SMALL_ICONS = com.intellij.ui.AnimatedIcon.Default.ICONS.toArray(new Image[0]);
+  private static final Image[] SMALL_ICONS = AnimatedIcon.Default.ICONS.toArray(new Image[0]);
 
   public static final int COUNT = SMALL_ICONS.length;
-  public static final int CYCLE_LENGTH = com.intellij.ui.AnimatedIcon.Default.DELAY * SMALL_ICONS.length;
+  public static final int CYCLE_LENGTH = AnimatedIcon.Default.DELAY * SMALL_ICONS.length;
 
   public AsyncProcessIcon(@NonNls String name) {
     this(name, SMALL_ICONS, AllIcons.Process.Step_passive);
@@ -66,7 +66,7 @@ public class AsyncProcessIcon extends AnimatedIconComponent {
   }
 
   public static class Big extends AsyncProcessIcon {
-    private static final Image[] BIG_ICONS = com.intellij.ui.AnimatedIcon.Big.ICONS.toArray(new Image[0]);
+    private static final Image[] BIG_ICONS = AnimatedIcon.Big.ICONS.toArray(new Image[0]);
 
     public Big(@NonNls final String name) {
       super(name, BIG_ICONS, AllIcons.Process.Big.Step_passive);

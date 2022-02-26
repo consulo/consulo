@@ -28,9 +28,8 @@ import consulo.dataContext.DataProvider;
 import consulo.ui.ex.action.IdeActions;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.IdeFocusManager;
-import com.intellij.ui.DoubleClickListener;
-import com.intellij.ui.PopupHandler;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.util.TableUtil;
 import com.intellij.ui.table.BaseTableView;
 import com.intellij.ui.table.TableView;
@@ -188,7 +187,7 @@ public class StatisticsPanel implements DataProvider {
       public void run() {
         // Select tab if focus was requested
         if (requestFocus) {
-          IdeFocusManager.getInstance(myProject).requestFocus(myStatisticsTableView, true);
+          ProjectIdeFocusManager.getInstance(myProject).requestFocus(myStatisticsTableView, true);
         }
 
         // Select proxy in table

@@ -35,7 +35,6 @@ import com.intellij.openapi.ui.ValidationInfo;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
@@ -93,7 +92,7 @@ public class FindPopupDirectoryChooser extends JPanel {
           public void accept(List<VirtualFile> files) {
             ApplicationManager.getApplication().invokeLater(() -> {
               myFindPopupPanel.getCanClose().set(true);
-              IdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
+              ProjectIdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
               myHelper.getModel().setDirectoryName(files.get(0).getPresentableUrl());
               myDirectoryComboBox.getEditor().setItem(files.get(0).getPresentableUrl());
             });
@@ -103,7 +102,7 @@ public class FindPopupDirectoryChooser extends JPanel {
           public void cancelled() {
             ApplicationManager.getApplication().invokeLater(() -> {
               myFindPopupPanel.getCanClose().set(true);
-              IdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
+              ProjectIdeFocusManager.getInstance(myProject).requestFocus(myDirectoryComboBox.getEditor().getEditorComponent(), true);
             });
           }
         });

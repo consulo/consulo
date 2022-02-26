@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.dashboard.tree;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunManager;
 import com.intellij.execution.RunManagerEx;
@@ -88,6 +89,7 @@ class RunConfigurationNode  extends AbstractTreeNode<Pair<RunnerAndConfiguration
     }
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {

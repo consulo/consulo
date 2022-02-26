@@ -21,6 +21,8 @@ import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ModalityState;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -441,9 +443,9 @@ public class MergingUpdateQueue implements Runnable, Disposable, Activatable {
   @Nonnull
   public ModalityState getModalityState() {
     if (myModalityStateComponent == null) {
-      return ModalityState.NON_MODAL;
+      return Application.get().getNoneModalityState();
     }
-    return ModalityState.stateForComponent(myModalityStateComponent);
+    return Application.get().getModalityStateForComponent(myModalityStateComponent);
   }
 
   public void setActivationComponent(@Nonnull JComponent c) {

@@ -27,6 +27,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -207,5 +208,10 @@ public final class VirtualFileUtil {
       if (parent.equals(ancestor)) return true;
       parent = parent.getParent();
     }
+  }
+
+  @Nonnull
+  public static File virtualToIoFile(@Nonnull VirtualFile file) {
+    return new File(VirtualFilePathUtil.toPresentableUrl(file.getUrl()));
   }
 }

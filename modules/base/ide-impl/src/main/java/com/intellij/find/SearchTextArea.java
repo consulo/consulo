@@ -18,7 +18,7 @@ import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.ui.components.JBTextArea;
 import com.intellij.util.ArrayUtil;

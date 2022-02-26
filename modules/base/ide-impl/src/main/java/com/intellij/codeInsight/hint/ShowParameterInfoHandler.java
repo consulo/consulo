@@ -15,7 +15,7 @@ import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorActivityManager;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;

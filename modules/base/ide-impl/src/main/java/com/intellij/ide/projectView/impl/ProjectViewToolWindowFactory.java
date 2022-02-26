@@ -19,7 +19,7 @@ package com.intellij.ide.projectView.impl;
 import com.intellij.ide.projectView.ProjectView;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.ui.annotation.RequiredUIAccess;

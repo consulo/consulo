@@ -17,7 +17,7 @@ package consulo.desktop.awt.startup.customize;
 
 import com.intellij.ui.CheckboxTree;
 import com.intellij.ui.CheckedTreeNode;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.util.collection.MultiMap;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.container.plugin.PluginDescriptor;

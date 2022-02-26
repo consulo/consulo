@@ -15,16 +15,16 @@
  */
 package consulo.desktop.awt.application;
 
-import com.intellij.ide.RemoteDesktopService;
+import com.intellij.openapi.application.ApplicationBundle;
+import com.sun.jna.platform.win32.User32;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.RemoteDesktopService;
+import consulo.logging.Logger;
+import consulo.platform.Platform;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import com.intellij.openapi.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.application.util.SystemInfo;
-import com.sun.jna.platform.win32.User32;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -35,15 +35,14 @@ import java.awt.desktop.UserSessionListener;
 @Singleton
 public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
   private static final Logger LOG = Logger.getInstance(DesktopRemoteDesktopDetector.class);
-  private static final NotificationGroup NOTIFICATION_GROUP =
-          new NotificationGroup("Remote Desktop", NotificationDisplayType.BALLOON, false);
+  private static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Remote Desktop", NotificationDisplayType.BALLOON, false);
 
   private volatile boolean myFailureDetected;
   private volatile boolean myRemoteDesktopConnected;
 
   @Inject
   private DesktopRemoteDesktopDetector() {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       Desktop.getDesktop().addAppEventListener(new UserSessionListener() {
         @Override
         public void userSessionDeactivated(UserSessionEvent e) {
@@ -72,10 +71,9 @@ public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
           if (myRemoteDesktopConnected) {
             // We postpone notification to avoid recursive initialization of RemoteDesktopDetector
             // (in case it's initialized by request from com.intellij.notification.EventLog)
-            ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(
-                    NOTIFICATION_GROUP
-                            .createNotification(ApplicationBundle.message("remote.desktop.detected.message"), NotificationType.INFORMATION)
-                            .setTitle(ApplicationBundle.message("remote.desktop.detected.title"))));
+            ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus
+                    .notify(NOTIFICATION_GROUP.createNotification(ApplicationBundle.message("remote.desktop.detected.message"), NotificationType.INFORMATION)
+                                    .setTitle(ApplicationBundle.message("remote.desktop.detected.title"))));
           }
         }
       }

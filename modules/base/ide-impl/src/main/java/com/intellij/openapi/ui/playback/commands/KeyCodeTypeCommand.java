@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.ui.ex.TypingTarget;
 import com.intellij.openapi.ui.playback.PlaybackContext;
 import com.intellij.openapi.util.Pair;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.util.concurrent.ActionCallback;
 
 import javax.swing.*;

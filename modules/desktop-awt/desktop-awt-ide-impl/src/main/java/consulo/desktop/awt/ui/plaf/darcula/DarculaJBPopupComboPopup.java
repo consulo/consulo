@@ -11,7 +11,7 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;

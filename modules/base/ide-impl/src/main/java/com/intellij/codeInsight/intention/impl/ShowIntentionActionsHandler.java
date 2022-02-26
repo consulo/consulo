@@ -29,7 +29,7 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;

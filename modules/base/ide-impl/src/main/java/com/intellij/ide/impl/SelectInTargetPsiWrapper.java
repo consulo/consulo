@@ -19,7 +19,7 @@ import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInTarget;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.*;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 

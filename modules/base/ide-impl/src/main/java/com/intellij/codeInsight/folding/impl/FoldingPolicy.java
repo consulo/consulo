@@ -5,7 +5,7 @@ package com.intellij.codeInsight.folding.impl;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import consulo.logging.Logger;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

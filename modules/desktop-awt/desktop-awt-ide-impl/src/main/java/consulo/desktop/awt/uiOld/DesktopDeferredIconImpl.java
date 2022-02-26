@@ -20,7 +20,7 @@
 package consulo.desktop.awt.uiOld;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.ide.PowerSaveMode;
+import consulo.application.PowerSaveMode;
 import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.PaintingParent;
@@ -35,7 +35,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.ui.impl.image.DesktopImage;
 import consulo.logging.Logger;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.concurrent.EdtExecutorService;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.ide.RemoteDesktopService;
+import consulo.application.ui.RemoteDesktopService;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.project.Project;
@@ -24,9 +24,9 @@ import com.intellij.openapi.ui.ThreeComponentsSplitter;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowAnchor;
-import consulo.project.ui.wm.ToolWindowType;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.reference.SoftReference;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -41,6 +41,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
 import consulo.ui.ex.impl.ToolWindowPanelImplEx;
+import consulo.wm.impl.ToolWindowAnchorUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -667,7 +668,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         DesktopInternalDecorator first = (DesktopInternalDecorator)splitter.getFirstComponent();
         DesktopInternalDecorator second = (DesktopInternalDecorator)splitter.getSecondComponent();
         setComponent(splitter, ToolWindowAnchor.LEFT,
-                     ToolWindowAnchor.LEFT.isSplitVertically() ? first.getWindowInfo().getWeight() : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
+                     ToolWindowAnchorUtil.isSplitVertically(ToolWindowAnchor.LEFT) ? first.getWindowInfo().getWeight() : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
       }
       myLeftHorizontalSplit = uiSettings.getLeftHorizontalSplit();
     }
@@ -678,7 +679,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         DesktopInternalDecorator first = (DesktopInternalDecorator)splitter.getFirstComponent();
         DesktopInternalDecorator second = (DesktopInternalDecorator)splitter.getSecondComponent();
         setComponent(splitter, ToolWindowAnchor.RIGHT,
-                     ToolWindowAnchor.RIGHT.isSplitVertically() ? first.getWindowInfo().getWeight() : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
+                     ToolWindowAnchorUtil.isSplitVertically(ToolWindowAnchor.RIGHT) ? first.getWindowInfo().getWeight() : first.getWindowInfo().getWeight() + second.getWindowInfo().getWeight());
       }
       myRightHorizontalSplit = uiSettings.getRightHorizontalSplit();
     }
@@ -870,7 +871,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
         }
       }
       Splitter splitter = new MySplitter();
-      splitter.setOrientation(anchor.isSplitVertically());
+      splitter.setOrientation(ToolWindowAnchorUtil.isSplitVertically(anchor));
       if (!anchor.isHorizontal()) {
         splitter.setAllowSwitchOrientationByMouseClick(true);
         splitter.addPropertyChangeListener(evt -> {
@@ -901,7 +902,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
           float proportion = getPreferredSplitProportion(oldComponent.getWindowInfo().getId(), WindowInfoImpl
                   .normalizeWeigh(oldComponent.getWindowInfo().getSideWeight() / (oldComponent.getWindowInfo().getSideWeight() + myInfo.getSideWeight())));
           splitter.setProportion(proportion);
-          if (!anchor.isHorizontal() && !anchor.isSplitVertically()) {
+          if (!anchor.isHorizontal() && !ToolWindowAnchorUtil.isSplitVertically(anchor)) {
             newWeight = WindowInfoImpl.normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
           }
           else {
@@ -912,7 +913,7 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
           splitter.setFirstComponent(myNewComponent);
           splitter.setSecondComponent(oldComponent);
           splitter.setProportion(WindowInfoImpl.normalizeWeigh(myInfo.getSideWeight()));
-          if (!anchor.isHorizontal() && !anchor.isSplitVertically()) {
+          if (!anchor.isHorizontal() && !ToolWindowAnchorUtil.isSplitVertically(anchor)) {
             newWeight = WindowInfoImpl.normalizeWeigh(oldComponent.getWindowInfo().getWeight() + myInfo.getWeight());
           }
           else {

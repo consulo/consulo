@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightColors;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;

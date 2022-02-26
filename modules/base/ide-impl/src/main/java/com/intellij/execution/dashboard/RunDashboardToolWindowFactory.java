@@ -18,7 +18,7 @@ package com.intellij.execution.dashboard;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 

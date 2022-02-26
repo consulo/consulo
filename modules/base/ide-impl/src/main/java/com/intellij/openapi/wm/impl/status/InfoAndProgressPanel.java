@@ -2,10 +2,12 @@
 package com.intellij.openapi.wm.impl.status;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.PowerSaveMode;
+import consulo.application.PowerSaveMode;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.notification.EventLog;
 import consulo.application.util.SystemInfo;
+import consulo.project.ui.wm.*;
+import consulo.project.ui.wm.impl.StatusWidgetBorders;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.RelativePoint;
@@ -24,10 +26,6 @@ import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.*;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.CustomStatusBarWidget;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.StatusBarWidget;
 import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.reference.SoftReference;
 import consulo.ui.ex.awt.AnimatedIcon;
@@ -39,9 +37,9 @@ import com.intellij.ui.components.panels.HorizontalLayout;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.util.collection.JBIterable;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.ui.*;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
@@ -94,7 +92,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
       });
 
       icon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-      icon.setBorder(StatusBarWidget.WidgetBorder.INSTANCE);
+      icon.setBorder(StatusWidgetBorders.INSTANCE);
       icon.setToolTipText(ActionsBundle.message("action.ShowProcessWindow.double.click"));
       return icon;
     }

@@ -15,11 +15,11 @@
  */
 package consulo.ide.setting.bundle;
 
-import com.intellij.openapi.ui.MasterDetailsComponent;
 import consulo.configurable.ConfigurationException;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkTypeId;
+import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 

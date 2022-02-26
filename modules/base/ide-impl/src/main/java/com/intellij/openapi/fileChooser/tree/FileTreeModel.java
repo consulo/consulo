@@ -23,14 +23,14 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import com.intellij.ui.tree.Identifiable;
+import consulo.ui.ex.awt.tree.Identifiable;
 import com.intellij.ui.tree.MapBasedTree;
 import com.intellij.ui.tree.MapBasedTree.Entry;
 import com.intellij.ui.tree.MapBasedTree.UpdateResult;
-import com.intellij.util.concurrency.Invoker;
-import com.intellij.util.concurrency.InvokerSupplier;
+import com.intellij.util.concurrency.InvokerImpl;
+import consulo.ui.ex.util.InvokerSupplier;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.tree.AbstractTreeModel;
+import consulo.ui.ex.awt.tree.AbstractTreeModel;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 
@@ -57,7 +57,7 @@ import static java.util.stream.Collectors.toList;
  * @author Sergey.Malenkov
  */
 public final class FileTreeModel extends AbstractTreeModel implements Identifiable, InvokerSupplier {
-  private final Invoker invoker = Invoker.forBackgroundThreadWithReadAction(this);
+  private final InvokerImpl invoker = InvokerImpl.forBackgroundThreadWithReadAction(this);
   private final State state;
   private volatile List<Root> roots;
 
@@ -103,7 +103,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
 
   @Nonnull
   @Override
-  public Invoker getInvoker() {
+  public InvokerImpl getInvoker() {
     return invoker;
   }
 

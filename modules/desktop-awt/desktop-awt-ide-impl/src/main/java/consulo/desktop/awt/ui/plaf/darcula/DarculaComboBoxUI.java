@@ -3,7 +3,7 @@ package consulo.desktop.awt.ui.plaf.darcula;
 
 import com.intellij.openapi.ui.ComboBoxWithWidePopup;
 import com.intellij.openapi.ui.ErrorBorderCapable;
-import com.intellij.openapi.util.ColoredItem;
+import consulo.ui.ex.ColoredItem;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

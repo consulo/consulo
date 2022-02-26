@@ -37,7 +37,7 @@ import consulo.language.editor.rawHighlight.*;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.util.collection.JBIterable;

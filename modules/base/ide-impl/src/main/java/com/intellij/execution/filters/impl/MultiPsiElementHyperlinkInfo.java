@@ -8,7 +8,7 @@ import com.intellij.ide.util.gotoByName.GotoFileCellRenderer;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.WindowManager;
 import consulo.language.psi.PsiElement;

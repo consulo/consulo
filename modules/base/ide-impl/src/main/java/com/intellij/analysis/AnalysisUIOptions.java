@@ -28,7 +28,7 @@ import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
-import com.intellij.ui.AutoScrollToSourceHandler;
+import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 
 import consulo.component.persist.PersistentStateComponent;

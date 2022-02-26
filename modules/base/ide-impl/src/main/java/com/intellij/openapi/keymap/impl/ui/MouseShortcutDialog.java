@@ -25,7 +25,7 @@ import com.intellij.openapi.keymap.impl.ShortcutRestrictions;
 import com.intellij.openapi.ui.DialogWrapper;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
 import org.intellij.lang.annotations.JdkConstants;

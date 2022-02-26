@@ -2,6 +2,7 @@
 package com.intellij.openapi.wm.impl.status.widget;
 
 import com.intellij.ide.HelpTooltipManager;
+import consulo.project.ui.wm.impl.StatusWidgetBorders;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.application.util.SystemInfo;
@@ -61,7 +62,7 @@ public interface StatusBarWidgetWrapper {
       myPresentation = presentation;
       setVisible(StringUtil.isNotEmpty(myPresentation.getSelectedValue()));
       setTextAlignment(Component.CENTER_ALIGNMENT);
-      setBorder(StatusBarWidget.WidgetBorder.WIDE);
+      setBorder(StatusWidgetBorders.WIDE);
       new ClickListener() {
         private final PopupState<JBPopup> myPopupState = PopupState.forPopup();
 
@@ -108,7 +109,7 @@ public interface StatusBarWidgetWrapper {
       myPresentation = presentation;
       setTextAlignment(presentation.getAlignment());
       setVisible(!myPresentation.getText().isEmpty());
-      setBorder(StatusBarWidget.WidgetBorder.INSTANCE);
+      setBorder(StatusWidgetBorders.INSTANCE);
       Consumer<MouseEvent> clickConsumer = myPresentation.getClickConsumer();
       if (clickConsumer != null) {
         new StatusBarWidgetClickListener(clickConsumer).installOn(this, true);
@@ -139,7 +140,7 @@ public interface StatusBarWidgetWrapper {
       setTextAlignment(Component.CENTER_ALIGNMENT);
       setIcon(myPresentation.getIcon());
       setVisible(hasIcon());
-      setBorder(StatusBarWidget.WidgetBorder.ICON);
+      setBorder(StatusWidgetBorders.ICON);
       Consumer<MouseEvent> clickConsumer = myPresentation.getClickConsumer();
       if (clickConsumer != null) {
         new StatusBarWidgetClickListener(clickConsumer).installOn(this, true);

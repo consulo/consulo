@@ -10,7 +10,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.util.Comparing;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
@@ -87,7 +87,7 @@ public abstract class ToolbarUpdater implements Activatable {
       updateRunnable.run();
     }
     else {
-      final IdeFocusManager fm = IdeFocusManager.getInstance(null);
+      final IdeFocusManager fm = ProjectIdeFocusManager.getInstance((Project)null);
 
       if (!app.isHeadlessEnvironment()) {
         if (app.isDispatchThread() && myComponent.isShowing()) {

@@ -32,7 +32,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;

@@ -17,7 +17,6 @@ package com.intellij.ui;
 
 import consulo.ui.ex.action.ActionManager;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
@@ -37,7 +36,7 @@ public class JBTabsPaneImpl implements TabbedPane, SwingConstants {
   private final CopyOnWriteArraySet<ChangeListener> myListeners = new CopyOnWriteArraySet<ChangeListener>();
 
   public JBTabsPaneImpl(@Nullable Project project, int tabPlacement, @Nonnull Disposable parent) {
-    myTabs = new JBEditorTabs(project, ActionManager.getInstance(), project == null ? null : IdeFocusManager.getInstance(project), parent) {
+    myTabs = new JBEditorTabs(project, ActionManager.getInstance(), project == null ? null : ProjectIdeFocusManager.getInstance(project), parent) {
       @Override
       public boolean isAlphabeticalMode() {
         return false;

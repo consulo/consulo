@@ -6,7 +6,9 @@ import consulo.logging.Logger;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.SpeedSearchUtilBase;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 import consulo.ui.ex.awt.util.RenderingUtil;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;
@@ -113,7 +115,7 @@ public abstract class ColoredTreeCellRenderer extends SimpleColoredComponent imp
     customizeCellRenderer(tree, value, selected, expanded, leaf, row, hasFocus);
 
     if (!myUsedCustomSpeedSearchHighlighting && !AbstractTreeUi.isLoadingNode(value)) {
-      SpeedSearchUtil.applySpeedSearchHighlightingFiltered(tree, value, this, true, selected);
+      SpeedSearchUtilBase.applySpeedSearchHighlightingFiltered(tree, value, this, true, selected);
     }
   }
 

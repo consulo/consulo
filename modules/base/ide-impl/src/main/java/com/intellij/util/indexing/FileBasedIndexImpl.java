@@ -5,6 +5,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.intellij.AppTopics;
 import com.intellij.history.LocalHistory;
 import com.intellij.ide.plugins.PluginManager;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.function.*;
 import consulo.content.scope.SearchScope;
 import consulo.index.io.ID;

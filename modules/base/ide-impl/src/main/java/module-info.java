@@ -914,7 +914,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.debugger.extensions;
   exports com.intellij.ui.docking;
   exports com.intellij.ui.dualView;
-  exports com.intellij.ui.hover;
   exports com.intellij.ui.list;
   exports com.intellij.ui.mac;
   exports com.intellij.ui.mac.foundation;
@@ -929,7 +928,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.popup.mock;
   exports com.intellij.ui.popup.tree;
   exports com.intellij.ui.popup.util;
-  exports com.intellij.ui.render;
   exports com.intellij.ui.roots;
   exports com.intellij.ui.speedSearch;
   exports com.intellij.ui.stripe;
@@ -941,7 +939,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.tabs.impl.table;
   exports com.intellij.ui.tree;
   exports com.intellij.ui.tree.project;
-  exports com.intellij.ui.tree.ui;
   exports com.intellij.ui.treeStructure;
   exports com.intellij.ui.treeStructure.actions;
   exports com.intellij.ui.treeStructure.filtered;
@@ -1216,6 +1213,7 @@ open module consulo.ide.impl {
   exports consulo.progress.util;
   exports consulo.progress.util.impl;
   exports consulo.project.impl;
+  exports consulo.project.ui.wm.impl;
   exports consulo.projectView.impl;
   exports consulo.psi.impl;
   exports consulo.psi.impl.source.codeStyle;

@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.searcheverywhere;
 
 import consulo.ui.ex.awt.ScrollingUtil;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;
 

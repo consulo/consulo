@@ -2,7 +2,7 @@
 package com.intellij.ide.dnd;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.tree.TreePathUtil;
+import consulo.ui.ex.awt.tree.TreePathUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.tree.TreeNode;

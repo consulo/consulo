@@ -8,7 +8,7 @@ import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSettingList
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.application.AllIcons;
-import com.intellij.ide.PowerSaveMode;
+import consulo.application.PowerSaveMode;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
@@ -21,7 +21,7 @@ import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import com.intellij.util.Consumer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;

@@ -21,7 +21,7 @@ import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.impl.ui.Group;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.PopupHandler;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.diff.Diff;

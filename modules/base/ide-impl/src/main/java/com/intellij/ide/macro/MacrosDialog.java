@@ -25,10 +25,10 @@ import consulo.module.Module;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.DoubleClickListener;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.SeparatorFactory;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

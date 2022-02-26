@@ -15,7 +15,7 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.language.psi.*;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import com.intellij.psi.impl.search.TodoItemImpl;

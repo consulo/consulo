@@ -22,6 +22,8 @@ import com.intellij.reference.SoftReference;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import consulo.ui.ex.action.ActionPlaces;
+import consulo.ide.ui.popup.IPopupChooserBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.util.collection.SmartList;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;

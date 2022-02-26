@@ -46,7 +46,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ScrollingUtil;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.components.JBTextField;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.util.*;
@@ -80,7 +80,7 @@ import java.util.stream.Collectors;
 
 import static com.intellij.ide.actions.runAnything.RunAnythingAction.ALT_IS_PRESSED;
 import static com.intellij.ide.actions.runAnything.RunAnythingAction.SHIFT_IS_PRESSED;
-import static consulo.project.ui.IdeFocusManager.getGlobalInstance;
+import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
 import static java.awt.FlowLayout.RIGHT;
 
 public class RunAnythingPopupUI extends BigPopupUI {

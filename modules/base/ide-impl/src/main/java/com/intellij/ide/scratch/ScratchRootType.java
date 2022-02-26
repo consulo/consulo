@@ -25,7 +25,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import com.intellij.util.ObjectUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

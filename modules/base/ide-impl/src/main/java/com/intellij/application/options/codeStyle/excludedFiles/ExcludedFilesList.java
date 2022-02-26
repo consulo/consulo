@@ -17,7 +17,7 @@ import consulo.language.psi.search.scope.PackageSet;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
 import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

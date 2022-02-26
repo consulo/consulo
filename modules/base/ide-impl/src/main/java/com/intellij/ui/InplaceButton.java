@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.openapi.util.Pass;
+import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ui.BaseButtonBehavior;
 import consulo.ui.ex.awt.CenteredIcon;

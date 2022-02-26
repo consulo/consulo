@@ -18,7 +18,7 @@ package com.intellij.ui.popup;
 
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.ui.ex.awt.NonOpaquePanel;

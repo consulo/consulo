@@ -20,7 +20,7 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;

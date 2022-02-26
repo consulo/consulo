@@ -20,11 +20,11 @@ import consulo.application.AllIcons;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.Splitter;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.SimpleColoredText;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.debugger.UiDebuggerExtension;
 
 import javax.swing.*;

@@ -35,7 +35,7 @@ import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;

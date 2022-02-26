@@ -15,8 +15,7 @@
  */
 package consulo.ui.ex.awt;
 
-import com.intellij.ui.TitledSeparator;
-import com.intellij.util.ui.DialogUtil;
+import consulo.ui.ex.awt.util.DialogUtil;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -61,7 +60,7 @@ public class IdeaTitledBorder extends TitledBorder {
     label.paint(g);
 
     int separatorX = labelX + labelSize.width + TitledSeparator.SEPARATOR_LEFT_INSET;
-    int separatorY = labelY +  (UIUtil.isUnderAquaLookAndFeel() ? 2 : labelSize.height / 2 - 1);
+    int separatorY = labelY + (UIUtil.isUnderAquaLookAndFeel() ? 2 : labelSize.height / 2 - 1);
     int separatorW = Math.max(0, width - separatorX - TitledSeparator.SEPARATOR_RIGHT_INSET);
     int separatorH = 2;
 
@@ -86,8 +85,7 @@ public class IdeaTitledBorder extends TitledBorder {
 
   public void acceptMinimumSize(Component c) {
     Dimension minimumSize = getMinimumSize(c);
-    c.setMinimumSize(new Dimension(Math.max(minimumSize.width, c.getMinimumSize().width),
-                                   Math.max(minimumSize.height, c.getMinimumSize().height)));
+    c.setMinimumSize(new Dimension(Math.max(minimumSize.width, c.getMinimumSize().width), Math.max(minimumSize.height, c.getMinimumSize().height)));
   }
 
   @Override

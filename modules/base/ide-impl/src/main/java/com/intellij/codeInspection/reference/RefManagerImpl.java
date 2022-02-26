@@ -23,7 +23,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.module.content.util.ProjectUtilCore;
 import com.intellij.openapi.util.NullableFactory;

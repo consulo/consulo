@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import consulo.project.ui.wm.ToolWindowAnchor;
-import consulo.project.ui.wm.ToolWindowContentUiType;
-import consulo.project.ui.wm.ToolWindowType;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import javax.annotation.Nonnull;
 

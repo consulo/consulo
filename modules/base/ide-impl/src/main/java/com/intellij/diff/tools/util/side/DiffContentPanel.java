@@ -19,7 +19,7 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.InvisibleWrapper;
 import consulo.ui.ex.awt.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.AbstractLayoutManager;
+import consulo.ui.ex.awt.AbstractLayoutManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

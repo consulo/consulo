@@ -15,7 +15,7 @@
  */
 package consulo.web.wm.impl;
 
-import com.intellij.ide.RemoteDesktopService;
+import consulo.application.ui.RemoteDesktopService;
 import jakarta.inject.Singleton;
 
 /**

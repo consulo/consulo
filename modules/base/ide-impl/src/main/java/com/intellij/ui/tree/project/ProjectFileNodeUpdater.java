@@ -14,7 +14,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.ui.ex.concurrent.EdtExecutorService;
-import com.intellij.util.concurrency.Invoker;
+import com.intellij.util.concurrency.InvokerImpl;
 import consulo.util.collection.SmartHashSet;
 import consulo.component.messagebus.MessageBusConnection;
 
@@ -31,12 +31,12 @@ import static consulo.language.psi.PsiUtilCore.getVirtualFile;
 public abstract class ProjectFileNodeUpdater {
   private static final Logger LOG = Logger.getInstance(ProjectFileNodeUpdater.class);
   private final Ref<Set<VirtualFile>> reference = new Ref<>();
-  private final Invoker invoker;
+  private final InvokerImpl invoker;
   private volatile boolean root;
   private volatile long time;
   private volatile int size;
 
-  public ProjectFileNodeUpdater(@Nonnull Project project, @Nonnull Invoker invoker) {
+  public ProjectFileNodeUpdater(@Nonnull Project project, @Nonnull InvokerImpl invoker) {
     this.invoker = invoker;
     MessageBusConnection connection = project.getMessageBus().connect(invoker);
     connection.subscribe(PROJECT_ROOTS, new ModuleRootListener() {

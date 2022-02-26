@@ -18,7 +18,7 @@ package com.intellij.refactoring.changeSignature;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MultiLineLabelUI;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.refactoring.util.RadioUpDownListener;
 import com.intellij.ui.EditorTextField;
 

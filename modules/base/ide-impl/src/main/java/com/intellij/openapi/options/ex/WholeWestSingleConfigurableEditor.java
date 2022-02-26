@@ -21,7 +21,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.help.HelpManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;

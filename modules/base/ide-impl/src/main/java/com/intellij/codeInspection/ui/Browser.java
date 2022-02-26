@@ -38,7 +38,7 @@ import com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiModificationTracker;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;

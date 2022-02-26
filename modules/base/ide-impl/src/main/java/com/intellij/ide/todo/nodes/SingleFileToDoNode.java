@@ -16,6 +16,7 @@
 
 package com.intellij.ide.todo.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
@@ -36,6 +37,7 @@ public class SingleFileToDoNode extends BaseToDoNode<PsiFile> {
     myFileNode = new TodoFileNode(getProject(), value, myBuilder, true);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

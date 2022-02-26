@@ -64,6 +64,9 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   public static final VirtualFile[] EMPTY_ARRAY = new VirtualFile[0];
   public static final ArrayFactory<VirtualFile> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new VirtualFile[count];
 
+  public static final Key<VirtualFile> KEY = Key.create(VirtualFile.class);
+  public static final Key<VirtualFile[]> KEY_OF_ARRAY = Key.create(VirtualFile[].class);
+
   /**
    * Used as a property name in the {@link VirtualFilePropertyEvent} fired when the name of a
    * {@link VirtualFile} changes.

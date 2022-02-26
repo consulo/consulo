@@ -19,8 +19,10 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.compiler.scope.CompileScope;
 import consulo.index.io.data.IOUtil;
+import consulo.util.io.FilePermissionCopier;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.io.DataInput;
@@ -68,10 +70,10 @@ public abstract class CopyingCompiler implements PackagingCompiler {
       final String toPath = copyItem.getDestinationPath();
       try {
         if (isDirectoryCopying()) {
-          FileUtil.copyDir(copyItem.getFile(), new File(toPath));
+          FileUtil.copyDir(copyItem.getFile(), new File(toPath), FilePermissionCopier.BY_NIO2);
         }
         else {
-          FileUtil.copy(copyItem.getFile(), new File(toPath));
+          FileUtil.copy(copyItem.getFile(), new File(toPath), FilePermissionCopier.BY_NIO2);
         }
 
         successfullyProcessed.add(copyItem);
@@ -109,7 +111,7 @@ public abstract class CopyingCompiler implements PackagingCompiler {
     private final DestinationFileInfo myInfo;
 
     public CopyItem(@Nonnull VirtualFile file, @Nonnull String destinationPath) {
-      myFile = VfsUtilCore.virtualToIoFile(file);
+      myFile = VirtualFileUtil.virtualToIoFile(file);
       myInfo = new DestinationFileInfo(destinationPath, new File(destinationPath).exists());
     }
 

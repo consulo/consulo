@@ -27,7 +27,7 @@ import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.colorScheme.EffectType;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.style.StandardColors;

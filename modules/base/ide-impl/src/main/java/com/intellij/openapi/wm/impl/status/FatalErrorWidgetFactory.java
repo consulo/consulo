@@ -9,7 +9,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

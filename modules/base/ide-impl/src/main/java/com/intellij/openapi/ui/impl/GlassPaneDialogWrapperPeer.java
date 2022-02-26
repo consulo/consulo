@@ -17,7 +17,7 @@ package com.intellij.openapi.ui.impl;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.RemoteDesktopService;
+import consulo.application.ui.RemoteDesktopService;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataProvider;
@@ -32,7 +32,7 @@ import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.util.concurrent.ActionCallback;
 import consulo.application.util.SystemInfo;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;

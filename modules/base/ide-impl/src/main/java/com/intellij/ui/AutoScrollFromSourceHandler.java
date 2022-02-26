@@ -18,6 +18,7 @@ package com.intellij.ui;
 
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import com.intellij.openapi.application.ModalityState;

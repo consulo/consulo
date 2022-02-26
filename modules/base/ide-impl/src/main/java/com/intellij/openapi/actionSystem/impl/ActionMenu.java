@@ -24,7 +24,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;

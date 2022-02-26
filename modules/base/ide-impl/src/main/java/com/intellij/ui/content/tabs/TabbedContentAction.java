@@ -18,7 +18,7 @@ package com.intellij.ui.content.tabs;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.ui.ShadowAction;
 import consulo.disposer.Disposer;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;

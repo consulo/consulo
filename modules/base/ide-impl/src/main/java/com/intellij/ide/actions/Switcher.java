@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
@@ -35,8 +35,8 @@ import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.JBList;
-import com.intellij.ui.popup.PopupUpdateProcessorBase;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.popup.PopupUpdateProcessorBase;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ArrayUtil;
@@ -51,15 +51,15 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.fileEditor.impl.EditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
@@ -890,7 +890,7 @@ public class Switcher extends AnAction implements DumbAware {
             editorManager.closeFile(virtualFile, wnd, false);
           }
 
-          final IdeFocusManager focusManager = IdeFocusManager.getInstance(project);
+          final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(project);
           myAlarm.cancelAllRequests();
           myAlarm.addRequest(() -> {
             JComponent focusTarget = selectedList;
@@ -1045,10 +1045,10 @@ public class Switcher extends AnAction implements DumbAware {
       }
       else if (values.get(0) instanceof ToolWindow) {
         ToolWindow toolWindow = (ToolWindow)values.get(0);
-        IdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> toolWindow.activate(null, true, true), ModalityState.current());
+        ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> toolWindow.activate(null, true, true), ModalityState.current());
       }
       else {
-        IdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
+        ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
           final FileEditorManagerImpl manager = (FileEditorManagerImpl)FileEditorManager.getInstance(project);
           for (Object value : values) {
             if (value instanceof FileInfo) {

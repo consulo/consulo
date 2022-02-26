@@ -20,7 +20,7 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.dataContext.DataContext;
 import consulo.project.DumbService;
 import consulo.project.Project;

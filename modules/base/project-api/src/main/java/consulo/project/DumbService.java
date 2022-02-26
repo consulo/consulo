@@ -6,6 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;

@@ -2,61 +2,72 @@
 package com.intellij.ui.popup;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import consulo.application.AllIcons;
-import com.intellij.ide.*;
+import com.intellij.ide.HelpTooltip;
+import com.intellij.ide.IdeBundle;
+import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.WindowAction;
 import com.intellij.ide.ui.PopupLocationTracker;
 import com.intellij.ide.ui.ScreenAreaConsumer;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.application.util.SystemInfo;
-import consulo.component.ComponentManager;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.application.TransactionGuard;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.dataContext.DataManager;
-import consulo.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.popup.*;
-import com.intellij.openapi.util.*;
-import consulo.application.util.registry.Registry;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.WindowManager;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.ui.speedSearch.SpeedSearch;
-import com.intellij.util.*;
+import com.intellij.util.BooleanFunction;
+import com.intellij.util.FunctionUtil;
+import com.intellij.util.IJSwingUtilities;
+import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.WeakList;
-import com.intellij.util.ui.*;
+import com.intellij.util.ui.ChildFocusWatcher;
+import com.intellij.util.ui.ScrollUtil;
 import com.intellij.util.ui.accessibility.AccessibleContextUtil;
 import consulo.annotation.DeprecationInfo;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
 import consulo.application.internal.TransactionGuardEx;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
+import consulo.component.ComponentManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.WindowManager;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.ActiveComponent;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.MouseChecker;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.util.collection.WeakList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
 
@@ -1291,7 +1302,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   private IdeFocusManager getFocusManager() {
     if (myProject != null) {
-      return IdeFocusManager.getInstance(myProject);
+      return ProjectIdeFocusManager.getInstance(myProject);
     }
     if (myOwner != null) {
       return IdeFocusManager.findInstanceByComponent(myOwner);
@@ -1456,7 +1467,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
     if (myFinalRunnable != null) {
       final ActionCallback typeAheadDone = new ActionCallback();
-      IdeFocusManager.getInstance(myProject).typeAheadUntil(typeAheadDone, "Abstract Popup Disposal");
+      ProjectIdeFocusManager.getInstance(myProject).typeAheadUntil(typeAheadDone, "Abstract Popup Disposal");
 
       ModalityState modalityState = ModalityState.current();
       Runnable finalRunnable = myFinalRunnable;

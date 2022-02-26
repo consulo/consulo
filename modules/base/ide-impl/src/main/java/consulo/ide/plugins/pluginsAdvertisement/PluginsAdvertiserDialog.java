@@ -20,7 +20,7 @@ import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.ide.plugins.PluginTable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
-import com.intellij.ui.ScrollPaneFactory;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;

@@ -29,7 +29,7 @@ public class FileUtilRt {
   public static final int MEGABYTE = KILOBYTE * KILOBYTE;
 
   private static final int MAX_FILE_IO_ATTEMPTS = 10;
-  private static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("idea.fs.useChannels"));
+  protected static final boolean USE_FILE_CHANNELS = "true".equalsIgnoreCase(System.getProperty("consullo.fs.useChannels"));
 
   public static final FileFilter ALL_FILES = file -> true;
   public static final FileFilter ALL_DIRECTORIES = file -> file.isDirectory();

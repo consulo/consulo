@@ -9,7 +9,7 @@ import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.annotation.RequiredUIAccess;

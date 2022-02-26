@@ -22,7 +22,7 @@ import com.intellij.codeInsight.folding.impl.FoldingUpdate;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;

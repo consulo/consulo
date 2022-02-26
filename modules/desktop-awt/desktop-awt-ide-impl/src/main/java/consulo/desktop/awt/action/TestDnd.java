@@ -24,7 +24,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.IconUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

@@ -2,8 +2,8 @@
 
 package com.intellij.ide.projectView;
 
-import com.intellij.ide.UiActivity;
-import com.intellij.ide.UiActivityMonitor;
+import consulo.ui.ex.UiActivity;
+import consulo.ui.ex.UiActivityMonitor;
 import com.intellij.ide.favoritesTreeView.FavoritesTreeNodeDescriptor;
 import com.intellij.ide.util.treeView.*;
 import com.intellij.openapi.progress.util.StatusBarProgress;

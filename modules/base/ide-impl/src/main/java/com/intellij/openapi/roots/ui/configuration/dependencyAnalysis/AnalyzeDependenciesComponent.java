@@ -27,7 +27,7 @@ import consulo.ide.setting.ui.MasterDetailsComponent;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import com.intellij.ui.PopupHandler;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;

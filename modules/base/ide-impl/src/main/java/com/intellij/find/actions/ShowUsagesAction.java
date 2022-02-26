@@ -35,6 +35,7 @@ import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
+import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
@@ -46,15 +47,14 @@ import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.navigation.Navigatable;
@@ -66,7 +66,7 @@ import consulo.content.scope.SearchScope;
 import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.AbstractPopup;
-import com.intellij.ui.popup.HintUpdateSupply;
+import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewBundle;
@@ -1116,10 +1116,10 @@ public class ShowUsagesAction extends AnAction implements PopupAction {
                     final boolean isWarning) {
     final Project project = handler.getProject();
     //opening editor is performing in invokeLater
-    IdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
+    ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
       Runnable runnable = () -> {
         // after new editor created, some editor resizing events are still bubbling. To prevent hiding hint, invokeLater this
-        IdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> showHint(editor, hint, handler, popupPosition, maxUsages, options, isWarning));
+        ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> showHint(editor, hint, handler, popupPosition, maxUsages, options, isWarning));
       };
       if (editor == null) {
         runnable.run();

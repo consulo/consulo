@@ -24,7 +24,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.virtualFileSystem.VirtualFile;

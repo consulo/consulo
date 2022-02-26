@@ -29,7 +29,7 @@ import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.awt.event.MouseListener;
 
-import static com.intellij.openapi.editor.colors.EditorColorsUtil.getGlobalOrDefaultColor;
+import static consulo.ui.ex.awt.EditorColorsUtil.getGlobalOrDefaultColor;
 import static com.intellij.util.ObjectUtils.notNull;
 
 public class HintUtil {

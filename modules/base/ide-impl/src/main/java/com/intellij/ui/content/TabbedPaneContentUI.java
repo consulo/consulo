@@ -17,7 +17,9 @@ package com.intellij.ui.content;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataProvider;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;

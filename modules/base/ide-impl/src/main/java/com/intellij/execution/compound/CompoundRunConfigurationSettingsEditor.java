@@ -29,12 +29,12 @@ import com.intellij.openapi.actionSystem.ActionToolbarPosition;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListSeparator;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 

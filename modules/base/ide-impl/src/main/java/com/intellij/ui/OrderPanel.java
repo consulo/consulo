@@ -16,7 +16,9 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.util.TableUtil;

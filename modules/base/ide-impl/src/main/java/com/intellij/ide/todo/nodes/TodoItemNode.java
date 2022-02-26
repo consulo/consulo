@@ -2,6 +2,7 @@
 
 package com.intellij.ide.todo.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.todo.HighlightedRegionProvider;
 import com.intellij.ide.todo.SmartTodoItemPointer;
@@ -71,6 +72,7 @@ public final class TodoItemNode extends BaseToDoNode<SmartTodoItemPointer> imple
     return myHighlightedRegions;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

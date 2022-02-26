@@ -31,7 +31,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsManager;
-import com.intellij.openapi.editor.colors.EditorColorsUtil;
+import consulo.ui.ex.awt.EditorColorsUtil;
 import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -50,14 +50,14 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.DimensionService;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -799,7 +799,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
   private DataContext getDataContext() {
     Component referenceComponent;
     if (myReferenceComponent == null) {
-      referenceComponent = IdeFocusManager.getInstance(myManager.myProject).getFocusOwner();
+      referenceComponent = ProjectIdeFocusManager.getInstance(myManager.myProject).getFocusOwner();
       myReferenceComponent = new WeakReference<>(referenceComponent);
     }
     else {

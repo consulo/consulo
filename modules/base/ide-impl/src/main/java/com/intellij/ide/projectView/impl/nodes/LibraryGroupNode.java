@@ -16,6 +16,7 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.awt.tree.PresentationData;
@@ -60,6 +61,7 @@ public class LibraryGroupNode extends ProjectViewNode<LibraryGroupElement> {
     this(project, (LibraryGroupElement)value, viewSettings);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

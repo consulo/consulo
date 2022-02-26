@@ -46,6 +46,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.disposer.Disposable;
 import consulo.document.util.TextRange;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.Ref;

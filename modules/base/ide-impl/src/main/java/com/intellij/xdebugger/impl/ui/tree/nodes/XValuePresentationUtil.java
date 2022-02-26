@@ -21,7 +21,7 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.JBColor;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.debugger.frame.presentation.XValuePresentation;
 import javax.annotation.Nonnull;

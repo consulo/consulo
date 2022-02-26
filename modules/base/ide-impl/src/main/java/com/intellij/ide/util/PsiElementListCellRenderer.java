@@ -2,8 +2,8 @@
 package com.intellij.ide.util;
 
 import consulo.ui.ex.ColoredItemPresentation;
-import com.intellij.openapi.ui.popup.IPopupChooserBuilder;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.popup.IPopupChooserBuilder;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.problems.WolfTheProblemSolver;
@@ -22,7 +22,7 @@ import consulo.component.util.Iconable;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;

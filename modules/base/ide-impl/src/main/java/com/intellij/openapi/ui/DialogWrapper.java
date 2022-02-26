@@ -29,18 +29,17 @@ import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.*;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import com.intellij.ui.components.JBOptionButton;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.util.DialogUtil;
@@ -50,6 +49,8 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.BalloonBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.util.lang.TimeoutUtil;
@@ -1905,7 +1906,7 @@ public abstract class DialogWrapper {
       ValidationInfo info = doValidate();
       if (info != null) {
         if (info.component != null && info.component.isVisible()) {
-          IdeFocusManager.getInstance(null).requestFocus(info.component, true);
+          ProjectIdeFocusManager.getInstance((Project)null).requestFocus(info.component, true);
         }
         DialogEarthquakeShaker.shake((JDialog)getPeer().getWindow());
         startTrackingValidation();

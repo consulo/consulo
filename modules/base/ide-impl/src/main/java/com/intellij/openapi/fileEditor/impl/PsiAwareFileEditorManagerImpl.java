@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.ide.PowerSaveMode;
+import consulo.application.PowerSaveMode;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.PsiDocumentManager;

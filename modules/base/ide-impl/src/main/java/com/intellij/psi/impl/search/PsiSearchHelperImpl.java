@@ -37,7 +37,7 @@ import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.scope.PsiSearchScopeUtil;
 import consulo.content.scope.SearchScope;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import com.intellij.openapi.util.*;

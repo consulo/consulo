@@ -20,6 +20,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.JBColor;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -110,10 +111,10 @@ class Banner extends NonOpaquePanel implements PropertyChangeListener {
     repaint();
   }
 
-  public void forProject(Project project) {
-    if (project != null) {
+  public void setProjectIconDescription(@Nullable String toolTipText) {
+    if (toolTipText != null) {
       myProjectIcon.setVisible(true);
-      myProjectIcon.setToolTipText(ProjectBundle.message(project.isDefault() ? "configurable.default.project.tooltip" : "configurable.current.project.tooltip"));
+      myProjectIcon.setToolTipText(toolTipText);
     }
     else {
       myProjectIcon.setVisible(false);

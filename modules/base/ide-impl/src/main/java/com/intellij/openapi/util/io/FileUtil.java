@@ -15,15 +15,18 @@
  */
 package com.intellij.openapi.util.io;
 
-import consulo.application.CommonBundle;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.*;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.PairProcessor;
+import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
 import com.intellij.util.text.StringFactory;
+import consulo.application.CommonBundle;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
@@ -38,6 +41,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.reflect.Method;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -493,7 +497,21 @@ public class FileUtil extends FileUtilRt {
   }
 
   public static void copy(@Nonnull InputStream inputStream, @Nonnull OutputStream outputStream) throws IOException {
-    FileUtilRt.copy(inputStream, outputStream);
+    if (USE_FILE_CHANNELS && inputStream instanceof FileInputStream && outputStream instanceof FileOutputStream) {
+      try (FileChannel fromChannel = ((FileInputStream)inputStream).getChannel()) {
+        try (FileChannel toChannel = ((FileOutputStream)outputStream).getChannel()) {
+          fromChannel.transferTo(0, Long.MAX_VALUE, toChannel);
+        }
+      }
+    }
+    else {
+      final byte[] buffer = getThreadLocalBuffer();
+      while (true) {
+        int read = inputStream.read(buffer);
+        if (read < 0) break;
+        outputStream.write(buffer, 0, read);
+      }
+    }
   }
 
   public static void copy(@Nonnull InputStream inputStream, int maxSize, @Nonnull OutputStream outputStream) throws IOException {
@@ -540,12 +558,7 @@ public class FileUtil extends FileUtilRt {
   }
 
   public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, boolean copySystemFiles) throws IOException {
-    copyDir(fromDir, toDir, copySystemFiles ? null : new FileFilter() {
-      @Override
-      public boolean accept(@Nonnull File file) {
-        return !StringUtil.startsWithChar(file.getName(), '.');
-      }
-    });
+    copyDir(fromDir, toDir, copySystemFiles ? null : (FileFilter)file -> !StringUtil.startsWithChar(file.getName(), '.'));
   }
 
   public static void copyDir(@Nonnull File fromDir, @Nonnull File toDir, @Nullable final FileFilter filter) throws IOException {

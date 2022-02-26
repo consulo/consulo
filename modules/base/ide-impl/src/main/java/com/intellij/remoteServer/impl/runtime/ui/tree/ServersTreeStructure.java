@@ -1,5 +1,6 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.DefaultRunExecutor;
@@ -97,6 +98,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
       super(doGetProject(), new Object());
     }
 
+    @RequiredReadAction
     @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {
@@ -120,6 +122,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
       super(doGetProject(), server);
     }
 
+    @RequiredReadAction
     @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {
@@ -284,6 +287,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
       return "deployment:" + getValue().getName();
     }
 
+    @RequiredReadAction
     @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {
@@ -328,6 +332,7 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
       myDeploymentNode = deploymentNode;
     }
 
+    @RequiredReadAction
     @Nonnull
     @Override
     public Collection<? extends AbstractTreeNode> getChildren() {

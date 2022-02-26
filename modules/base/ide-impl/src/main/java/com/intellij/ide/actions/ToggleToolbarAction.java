@@ -21,7 +21,7 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;

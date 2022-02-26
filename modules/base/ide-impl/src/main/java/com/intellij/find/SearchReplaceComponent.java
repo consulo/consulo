@@ -22,7 +22,6 @@ import consulo.ui.ex.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.components.JBTextArea;
@@ -230,14 +229,14 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
     new DumbAwareAction() {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        Component focusOwner = IdeFocusManager.getInstance(myProject).getFocusOwner();
+        Component focusOwner = ProjectIdeFocusManager.getInstance(myProject).getFocusOwner();
         if (UIUtil.isAncestor(SearchReplaceComponent.this, focusOwner)) focusOwner.transferFocus();
       }
     }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0)), this);
     new DumbAwareAction() {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        Component focusOwner = IdeFocusManager.getInstance(myProject).getFocusOwner();
+        Component focusOwner = ProjectIdeFocusManager.getInstance(myProject).getFocusOwner();
         if (UIUtil.isAncestor(SearchReplaceComponent.this, focusOwner)) focusOwner.transferFocusBackward();
       }
     }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK)), this);
@@ -260,7 +259,7 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
 
   public void requestFocusInTheSearchFieldAndSelectContent(Project project) {
     mySearchTextComponent.selectAll();
-    IdeFocusManager.getInstance(project).requestFocus(mySearchTextComponent, true);
+    ProjectIdeFocusManager.getInstance(project).requestFocus(mySearchTextComponent, true);
     if (myReplaceTextComponent != null) {
       myReplaceTextComponent.selectAll();
     }
@@ -370,7 +369,7 @@ public class SearchReplaceComponent extends EditorHeaderComponent implements Dat
           close();
         }
         else {
-          IdeFocusManager.getInstance(myProject).requestFocus(myTargetComponent, true);
+          ProjectIdeFocusManager.getInstance(myProject).requestFocus(myTargetComponent, true);
           addTextToRecent(mySearchTextComponent);
         }
       }

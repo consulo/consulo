@@ -34,6 +34,8 @@ import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.DefaultActionGroup;

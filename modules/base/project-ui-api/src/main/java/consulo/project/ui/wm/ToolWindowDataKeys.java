@@ -22,6 +22,7 @@ import consulo.util.dataholder.Key;
  * @author VISTALL
  * @since 2020-06-07
  */
+@Deprecated
 public interface ToolWindowDataKeys {
-  Key<Content> CONTENT = Key.create("ToolWindow.Content");
+  Key<Content> CONTENT = Content.KEY;
 }

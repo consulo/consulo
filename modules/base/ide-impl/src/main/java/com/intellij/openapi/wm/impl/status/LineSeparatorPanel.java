@@ -7,7 +7,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

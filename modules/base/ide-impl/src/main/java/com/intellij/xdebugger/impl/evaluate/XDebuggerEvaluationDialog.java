@@ -34,7 +34,6 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;
@@ -140,7 +139,7 @@ public class XDebuggerEvaluationDialog extends DialogWrapper {
     new AnAction() {
       @Override
       public void actionPerformed(AnActionEvent e) {
-        IdeFocusManager.getInstance(mySession.getProject()).requestFocus(myTreePanel.getTree(), true);
+        ProjectIdeFocusManager.getInstance(mySession.getProject()).requestFocus(myTreePanel.getTree(), true);
       }
     }.registerCustomShortcutSet(new CustomShortcutSet(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_DOWN_MASK)), getRootPane(),
                                 myDisposable);

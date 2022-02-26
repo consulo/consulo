@@ -33,6 +33,9 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.Rectangle2D;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

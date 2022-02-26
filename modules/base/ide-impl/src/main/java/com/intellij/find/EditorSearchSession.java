@@ -27,7 +27,6 @@ import consulo.codeEditor.SelectionModel;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.ArrayUtil;
@@ -438,7 +437,7 @@ public class EditorSearchSession implements SearchSession, DataProvider, Selecti
 
   @Override
   public void close() {
-    IdeFocusManager.getInstance(getProject()).requestFocus(myEditor.getContentComponent(), false);
+    ProjectIdeFocusManager.getInstance(getProject()).requestFocus(myEditor.getContentComponent(), false);
 
     myLivePreviewController.dispose();
     myEditor.setHeaderComponent(null);

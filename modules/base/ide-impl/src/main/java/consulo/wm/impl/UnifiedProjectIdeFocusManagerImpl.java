@@ -20,8 +20,8 @@ import consulo.project.Project;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.project.util.ExpirableRunnable;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.ExpirableRunnable;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import jakarta.inject.Singleton;
 

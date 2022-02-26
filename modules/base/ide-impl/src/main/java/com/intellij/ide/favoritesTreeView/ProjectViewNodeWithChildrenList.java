@@ -18,6 +18,7 @@ package com.intellij.ide.favoritesTreeView;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 
@@ -39,6 +40,7 @@ public abstract class ProjectViewNodeWithChildrenList<T> extends ProjectViewNode
     myChildren = new ArrayList<AbstractTreeNode>();
   }
 
+  @RequiredReadAction
   @Nonnull
   @Override
   public Collection<? extends AbstractTreeNode> getChildren() {

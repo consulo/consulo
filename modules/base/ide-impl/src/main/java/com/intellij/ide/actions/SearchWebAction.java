@@ -6,7 +6,7 @@ import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.CopyProvider;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.text.StringUtil;

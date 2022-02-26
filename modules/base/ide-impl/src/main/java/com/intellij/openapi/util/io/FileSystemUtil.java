@@ -18,6 +18,7 @@ package com.intellij.openapi.util.io;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
 import consulo.util.io.FileAttributes;
+import consulo.virtualFileSystem.internal.FileSystemMediator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,22 +39,12 @@ public final class FileSystemUtil {
 
   private static final Logger LOG = Logger.getInstance(FileSystemUtil.class);
 
-  public static interface Mediator {
-    @Nullable
-    FileAttributes getAttributes(@Nonnull String path) throws IOException;
-
-    @Nullable
-    String resolveSymLink(@Nonnull String path) throws IOException;
-
-    boolean clonePermissions(@Nonnull String source, @Nonnull String target, boolean execOnly) throws IOException;
-  }
-
   @Nonnull
-  private static Mediator ourMediator = Nio2MediatorImpl.ourInstance;
+  private static FileSystemMediator ourMediator = Nio2MediatorImpl.ourInstance;
 
   private static boolean ourLocked;
 
-  public static void setMediatorLock(@Nullable Mediator newMediator) {
+  public static void setMediatorLock(@Nullable FileSystemMediator newMediator) {
     if (ourLocked) {
       throw new IllegalArgumentException("locked");
     }
@@ -153,7 +144,7 @@ public final class FileSystemUtil {
   }
 
 
-  private static class Nio2MediatorImpl implements Mediator {
+  private static class Nio2MediatorImpl implements FileSystemMediator {
     private static final Nio2MediatorImpl ourInstance = new Nio2MediatorImpl();
 
     private final LinkOption[] myNoFollowLinkOptions = {LinkOption.NOFOLLOW_LINKS};
@@ -246,7 +237,7 @@ public final class FileSystemUtil {
   }
 
   @Nonnull
-  private static String getMediatorName(Mediator mediator) {
+  private static String getMediatorName(FileSystemMediator mediator) {
     return mediator.getClass().getSimpleName().replace("MediatorImpl", "");
   }
 }

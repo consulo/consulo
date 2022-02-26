@@ -8,7 +8,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ThreeState;
 import consulo.application.impl.BaseApplication;

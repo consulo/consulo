@@ -35,7 +35,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

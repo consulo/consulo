@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ui.AbstractTableCellEditor;

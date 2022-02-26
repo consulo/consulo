@@ -20,9 +20,10 @@ import com.intellij.openapi.application.ModalityState;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.ContentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
@@ -64,7 +65,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
    */
   @Deprecated
   @DeprecationInfo("Desktop only")
-  Key<Component> CONTEXT_COMPONENT = Key.create("contextComponent");
+  Key<Component> CONTEXT_COMPONENT = UIExAWTDataKey.CONTEXT_COMPONENT;
   /**
    * Returns java.awt.Component currently in focus, DataContext should be retrieved for
    */
@@ -78,7 +79,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
   Key<Object[]> SELECTED_ITEMS = Key.create("selectedItems");
   Key<Rectangle> DOMINANT_HINT_AREA_RECTANGLE = Key.create("dominant.hint.rectangle");
   Key<ContentManager> CONTENT_MANAGER = Key.create("contentManager");
-  Key<ToolWindow> TOOL_WINDOW = Key.create("TOOL_WINDOW");
+  Key<ToolWindow> TOOL_WINDOW = ToolWindow.KEY;
   Key<StatusBar> STATUS_BAR = Key.create("STATUS_BAR");
   Key<TreeExpander> TREE_EXPANDER = Key.create("treeExpander");
   Key<ExporterToTextFile> EXPORTER_TO_TEXT_FILE = Key.create("exporterToTextFile");

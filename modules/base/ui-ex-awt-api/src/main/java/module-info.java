@@ -9,16 +9,17 @@ module consulo.ui.ex.awt.api {
   requires transitive consulo.application.ui.api;
   requires transitive consulo.ui.ex.api;
   requires transitive consulo.color.scheme.api;
+  requires transitive consulo.base.localize.library;
 
   requires consulo.desktop.awt.hacking;
 
   requires imgscalr.lib;
+  requires com.sun.jna;
 
   exports consulo.ui.ex.awt;
   exports consulo.ui.ex.awt.accessibility;
   exports consulo.ui.ex.awt.event;
   exports consulo.ui.ex.awt.html;
-  exports consulo.ui.ex.awt.internal;
   exports consulo.ui.ex.awt.paint;
   exports consulo.ui.ex.awt.scroll;
   exports consulo.ui.ex.awt.table;
@@ -26,4 +27,7 @@ module consulo.ui.ex.awt.api {
   exports consulo.ui.ex.awt.tree.table;
   exports consulo.ui.ex.awt.update;
   exports consulo.ui.ex.awt.util;
+
+  exports consulo.ui.ex.awt.internal to consulo.ide.impl;
+  exports consulo.ui.ex.awt.internal.laf to consulo.ide.impl;
 }

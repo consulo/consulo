@@ -30,7 +30,7 @@ import consulo.ui.ex.TableCell;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.text.DateFormatUtil;
-import com.intellij.util.ui.AbstractLayoutManager;
+import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;

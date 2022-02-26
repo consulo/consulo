@@ -8,7 +8,7 @@ import consulo.component.persist.Storage;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.util.ScreenUtil;

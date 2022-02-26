@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.popup.HintUpdateSupply;
+import consulo.ide.ui.popup.HintUpdateSupply;
 import javax.annotation.Nullable;
 
 import javax.swing.tree.TreeModel;

@@ -20,7 +20,7 @@ import com.intellij.openapi.ui.JBListUpdater;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.usages.UsageView;
 import javax.annotation.Nonnull;

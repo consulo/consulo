@@ -31,7 +31,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.*;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 

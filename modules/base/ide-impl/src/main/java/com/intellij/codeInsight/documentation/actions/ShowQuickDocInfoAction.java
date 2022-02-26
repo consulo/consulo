@@ -28,7 +28,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutter;
 import consulo.language.psi.*;
 import consulo.application.dumb.DumbAware;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

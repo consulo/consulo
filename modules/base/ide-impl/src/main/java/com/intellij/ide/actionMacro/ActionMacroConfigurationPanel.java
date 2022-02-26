@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import java.util.HashSet;
 import consulo.disposer.Disposable;
 

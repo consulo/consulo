@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import static com.intellij.ui.tree.TreePathUtil.toTreeNodes;
+import static consulo.ui.ex.awt.tree.TreePathUtil.toTreeNodes;
 
 /**
  * @author yole

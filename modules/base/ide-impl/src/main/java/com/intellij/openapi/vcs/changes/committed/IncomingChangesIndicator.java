@@ -29,6 +29,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.*;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 

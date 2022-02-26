@@ -19,7 +19,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import consulo.util.lang.EmptyRunnable;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;

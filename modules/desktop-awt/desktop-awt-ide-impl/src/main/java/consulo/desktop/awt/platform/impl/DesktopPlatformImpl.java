@@ -56,6 +56,7 @@ class DesktopPlatformImpl extends PlatformBase {
   }
 
   public DesktopPlatformImpl() {
+    super(getSystemJvmProperties());
   }
 
   @Override

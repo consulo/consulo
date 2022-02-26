@@ -43,7 +43,7 @@ import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;

@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.ex;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 
 import java.awt.datatransfer.StringSelection;
 

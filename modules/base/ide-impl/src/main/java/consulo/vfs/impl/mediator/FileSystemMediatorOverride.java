@@ -15,10 +15,13 @@
  */
 package consulo.vfs.impl.mediator;
 
+import consulo.virtualFileSystem.impl.internal.mediator.JnaUnixMediatorImpl;
+import consulo.virtualFileSystem.internal.FileSystemMediator;
 import consulo.util.jna.JnaLoader;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileSystemUtil;
-import com.intellij.openapi.util.io.win32.IdeaWin32;
+import consulo.virtualFileSystem.impl.internal.mediator.IdeaWin32MediatorImpl;
+import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
@@ -37,10 +40,10 @@ public class FileSystemMediatorOverride {
   }
 
   @Nullable
-  private static FileSystemUtil.Mediator getMediator() {
+  private static FileSystemMediator getMediator() {
     if (!Boolean.getBoolean(FORCE_USE_NIO2_KEY)) {
       try {
-        if (SystemInfo.isWindows && IdeaWin32.isAvailable()) {
+        if (SystemInfo.isWindows && WindowsFileSystemHelper.isAvailable()) {
           return check(new IdeaWin32MediatorImpl());
         }
         else if ((SystemInfo.isLinux || SystemInfo.isMac || SystemInfo.isSolaris || SystemInfo.isFreeBSD) && JnaLoader.isLoaded()) {
@@ -55,7 +58,7 @@ public class FileSystemMediatorOverride {
     return null;
   }
 
-  private static FileSystemUtil.Mediator check(final FileSystemUtil.Mediator mediator) throws Exception {
+  private static FileSystemMediator check(final FileSystemMediator mediator) throws Exception {
     final String quickTestPath = SystemInfo.isWindows ? "C:\\" : "/";
     mediator.getAttributes(quickTestPath);
     return mediator;

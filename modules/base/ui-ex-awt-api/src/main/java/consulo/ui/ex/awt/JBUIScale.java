@@ -15,10 +15,10 @@
  */
 package consulo.ui.ex.awt;
 
-import consulo.application.ui.awt.internal.DetectRetinaKit;
-import consulo.application.ui.awt.internal.JreHiDpiUtil;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.internal.DetectRetinaKit;
+import consulo.ui.ex.awt.internal.JreHiDpiUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
 import consulo.util.lang.SystemProperties;

@@ -57,7 +57,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="f1a29" class="com.intellij.ui.components.JBList" binding="mySchemeList">
+          <component id="f1a29" class="consulo.ui.ex.awt.JBList" binding="mySchemeList">
             <constraints/>
             <properties/>
           </component>

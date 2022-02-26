@@ -42,13 +42,13 @@ import consulo.component.util.ActiveRunnable;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import com.intellij.ui.UIBundle;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import consulo.ui.ex.awt.NonOpaquePanel;
@@ -64,7 +64,7 @@ import com.intellij.ui.tabs.TabsListener;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.AbstractLayoutManager;
+import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -1484,7 +1484,7 @@ public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Fac
                                  final LayoutAttractionPolicy defaultPolicy,
                                  final boolean afterInitialized,
                                  final boolean activate) {
-    IdeFocusManager.getInstance(getProject()).doWhenFocusSettlesDown(() -> myInitialized.processOnDone(() -> {
+    ProjectIdeFocusManager.getInstance(getProject()).doWhenFocusSettlesDown(() -> myInitialized.processOnDone(() -> {
       Content content = findContent(contentId);
       if (content == null) return;
 

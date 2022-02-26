@@ -70,15 +70,14 @@ import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import consulo.ui.ex.awt.SplitterProportionsData;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.*;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import consulo.module.content.ProjectRootManager;
-import consulo.project.ui.IdeFocusManager;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowContentUiType;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
@@ -87,9 +86,9 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.AutoScrollFromSourceHandler;
-import com.intellij.ui.AutoScrollToSourceHandler;
+import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 import com.intellij.ui.GuiUtils;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.ui.content.ContentManagerAdapter;
@@ -530,7 +529,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
 
     myAutoScrollToSourceHandler.install(newPane.myTree);
 
-    IdeFocusManager.getInstance(myProject).requestFocusInProject(newPane.getComponentToFocus(), myProject);
+    ProjectIdeFocusManager.getInstance(myProject).requestFocusInProject(newPane.getComponentToFocus(), myProject);
 
     newPane.restoreExpandedPaths();
     if (selectedPsiElement != null && newSubId != null) {

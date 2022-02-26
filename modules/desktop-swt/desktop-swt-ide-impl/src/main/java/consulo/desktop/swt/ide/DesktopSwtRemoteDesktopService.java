@@ -15,7 +15,7 @@
  */
 package consulo.desktop.swt.ide;
 
-import com.intellij.ide.RemoteDesktopService;
+import consulo.application.ui.RemoteDesktopService;
 
 /**
  * @author VISTALL

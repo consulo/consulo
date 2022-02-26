@@ -10,7 +10,7 @@ import com.intellij.util.ui.FilePathSplittingPolicy;
 import consulo.ui.ex.JBColor;
 import consulo.component.util.Iconable;
 import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.util.TextAttributesUtil;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.module.content.ProjectFileIndex;

@@ -22,6 +22,8 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.vcs.ChangeListColumn;
 import com.intellij.openapi.vcs.VcsBundle;

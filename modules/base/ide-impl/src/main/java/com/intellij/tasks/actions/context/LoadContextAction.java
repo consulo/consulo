@@ -18,7 +18,7 @@ package com.intellij.tasks.actions.context;
 
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;

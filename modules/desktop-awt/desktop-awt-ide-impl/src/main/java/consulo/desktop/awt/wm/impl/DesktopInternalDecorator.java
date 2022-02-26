@@ -18,35 +18,38 @@ package consulo.desktop.awt.wm.impl;
 import com.intellij.ide.actions.ResizeToolWindowAction;
 import com.intellij.ide.actions.ToggleToolbarAction;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.*;
-import consulo.dataContext.DataProvider;
-import consulo.application.dumb.DumbAware;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.application.util.Queryable;
-import consulo.ui.ex.*;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.WindowInfo;
 import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.ui.UIBundle;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.Splitter;
-import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.UIBundle;
 import com.intellij.util.EventDispatcher;
-import consulo.ui.ex.awt.JBUI;
+import consulo.application.dumb.DumbAware;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.Queryable;
+import consulo.application.util.SystemInfo;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.project.ui.IdeFocusManager;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.project.ui.wm.*;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.Gray;
+import consulo.ui.ex.IdeGlassPane;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.NonOpaquePanel;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.toolWindow.*;
 import consulo.util.dataholder.Key;
+import consulo.wm.impl.ToolWindowAnchorUtil;
 import consulo.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
 
@@ -144,7 +147,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
 
   @Override
   public boolean isFocused() {
-    IdeFocusManager fm = IdeFocusManager.getInstance(myProject);
+    IdeFocusManager fm = ProjectIdeFocusManager.getInstance(myProject);
     Component component = fm.getFocusedDescendantFor(myToolWindow.getComponent());
     if (component != null) return true;
 
@@ -800,7 +803,7 @@ public final class DesktopInternalDecorator extends JPanel implements Queryable,
     @Nonnull
     @Override
     public Cursor getCursor() {
-      final boolean isVerticalCursor = myInfo.isDocked() ? myInfo.getAnchor().isSplitVertically() : myInfo.getAnchor().isHorizontal();
+      final boolean isVerticalCursor = myInfo.isDocked() ? ToolWindowAnchorUtil.isSplitVertically(myInfo.getAnchor()) : myInfo.getAnchor().isHorizontal();
       return isVerticalCursor ? Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR) : Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR);
     }
   }

@@ -17,6 +17,7 @@
 package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.ide.IdeBundle;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectTreeStructure;
@@ -102,6 +103,7 @@ public class FavoritesTreeStructure extends ProjectTreeStructure {
 
   private AbstractTreeNode<String> getEmptyScreen() {
     return new AbstractTreeNode<String>(myProject, IdeBundle.message("favorites.empty.screen")) {
+      @RequiredReadAction
       @Override
       @Nonnull
       public Collection<AbstractTreeNode> getChildren() {

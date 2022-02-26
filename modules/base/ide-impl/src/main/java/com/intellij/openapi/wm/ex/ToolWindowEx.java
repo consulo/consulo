@@ -17,8 +17,8 @@ package com.intellij.openapi.wm.ex;
 
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-import consulo.project.ui.wm.ToolWindow;
-import consulo.project.ui.wm.ToolWindowType;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import kava.beans.PropertyChangeListener;

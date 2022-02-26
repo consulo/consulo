@@ -65,7 +65,7 @@ import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.action.ActionManager;

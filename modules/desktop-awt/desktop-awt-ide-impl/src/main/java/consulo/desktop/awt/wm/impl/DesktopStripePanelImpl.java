@@ -21,7 +21,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.wm.ToolWindowAnchor;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;

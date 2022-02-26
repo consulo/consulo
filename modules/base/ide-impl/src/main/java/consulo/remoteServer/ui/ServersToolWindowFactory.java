@@ -16,7 +16,7 @@
 package consulo.remoteServer.ui;
 
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import com.intellij.remoteServer.impl.runtime.ui.ServersToolWindowContent;
 import consulo.ui.ex.content.Content;

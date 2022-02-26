@@ -35,7 +35,6 @@ import com.intellij.openapi.diff.DiffBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.WindowWrapper;
-import consulo.project.ui.IdeFocusManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -104,7 +103,7 @@ public class DiffManagerImpl extends DiffManagerEx {
   }
 
   private static boolean isFromDialog(@Nullable Project project) {
-    return DialogWrapper.findInstance(IdeFocusManager.getInstance(project).getFocusOwner()) != null;
+    return DialogWrapper.findInstance(ProjectIdeFocusManager.getInstance(project).getFocusOwner()) != null;
   }
 
   @Nonnull

@@ -33,6 +33,7 @@ import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.Comparing;
 import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.ex.awt.MasterDetailsState;
+import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.util.lang.function.Condition;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.search.scope.packageSet.*;

@@ -37,6 +37,7 @@ import javax.swing.plaf.TreeUI;
 import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.text.Position;
 import javax.swing.tree.*;
+import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.awt.dnd.Autoscroll;
 import java.awt.event.*;

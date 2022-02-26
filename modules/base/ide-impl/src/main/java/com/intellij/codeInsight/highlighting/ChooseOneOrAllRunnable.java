@@ -19,9 +19,9 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.popup.JBPopup;
 

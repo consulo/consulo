@@ -16,6 +16,7 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
@@ -37,6 +38,7 @@ public class ModuleListNode extends ProjectViewNode<Module> {
     super(project, value, viewSettings);
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Collection<AbstractTreeNode> getChildren() {

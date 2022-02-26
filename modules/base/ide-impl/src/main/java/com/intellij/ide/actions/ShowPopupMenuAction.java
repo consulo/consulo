@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.PopupAction;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.RelativePoint;
 

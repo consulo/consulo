@@ -23,7 +23,7 @@ import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.document.util.TextRange;
 import consulo.application.util.LineTokenizer;
 import jakarta.inject.Singleton;

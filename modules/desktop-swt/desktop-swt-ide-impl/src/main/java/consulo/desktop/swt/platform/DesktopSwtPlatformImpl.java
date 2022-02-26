@@ -26,6 +26,10 @@ import java.net.URL;
  * @since 29/04/2021
  */
 public class DesktopSwtPlatformImpl extends PlatformBase {
+  public DesktopSwtPlatformImpl() {
+    super(getSystemJvmProperties());
+  }
+
   @Override
   public void openInBrowser(@Nonnull URL url) {
     throw new UnsupportedOperationException();

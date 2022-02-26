@@ -31,7 +31,6 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import consulo.project.ui.IdeFocusManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
@@ -60,7 +59,7 @@ public class RunnerLayoutUiImpl implements consulo.disposer.Disposable.Parent, R
     myLayout = RunnerLayoutSettings.getInstance().getLayout(runnerId);
     consulo.disposer.Disposer.register(parent, this);
 
-    myContentUI = new RunnerContentUi(project, this, ActionManager.getInstance(), IdeFocusManager.getInstance(project), myLayout,
+    myContentUI = new RunnerContentUi(project, this, ActionManager.getInstance(), ProjectIdeFocusManager.getInstance(project), myLayout,
                                       runnerTitle + " - " + sessionName);
     consulo.disposer.Disposer.register(this, myContentUI);
 

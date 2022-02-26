@@ -22,10 +22,10 @@ import consulo.codeEditor.ScrollType;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -22,7 +22,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.AbstractTreeStructure;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.ide.CopyPasteManager;
+import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;

@@ -19,7 +19,7 @@ import consulo.language.Language;
 import consulo.language.LanguageExtension;
 import consulo.language.psi.*;
 import consulo.language.psi.ReferenceProvidersRegistry;
-import consulo.project.IndexNotReadyException;
+import consulo.application.dumb.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.pattern.ElementPattern;
 import com.intellij.psi.*;

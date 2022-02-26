@@ -19,7 +19,6 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
@@ -43,10 +42,10 @@ public class FocusTextFilterAction extends DumbAwareAction {
     Project project = e.getRequiredData(CommonDataKeys.PROJECT);
     MainFrame mainFrame = ((VcsLogUiImpl)e.getRequiredData(VcsLogDataKeys.VCS_LOG_UI)).getMainFrame();
     if (mainFrame.getTextFilter().getTextEditor().hasFocus()) {
-      IdeFocusManager.getInstance(project).requestFocus(mainFrame.getGraphTable(), true);
+      ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getGraphTable(), true);
     }
     else {
-      IdeFocusManager.getInstance(project).requestFocus(mainFrame.getTextFilter(), true);
+      ProjectIdeFocusManager.getInstance(project).requestFocus(mainFrame.getTextFilter(), true);
     }
   }
 }

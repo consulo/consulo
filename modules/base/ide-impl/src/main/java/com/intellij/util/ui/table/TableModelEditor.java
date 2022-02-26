@@ -21,7 +21,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.ui.table.TableView;

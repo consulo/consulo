@@ -1,24 +1,23 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.popup;
 
-import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ui.JBListUpdater;
-import com.intellij.openapi.ui.ListComponentUpdater;
-import com.intellij.openapi.ui.popup.PopupChooserBuilder;
-import consulo.util.dataholder.Key;
-import consulo.project.ui.IdeFocusManager;
 import com.intellij.ui.ListUtil;
-import consulo.ui.ex.awt.ScrollingUtil;
-import com.intellij.ui.components.JBList;
-import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.speedSearch.ListWithFilter;
-import com.intellij.util.BooleanFunction;
 import com.intellij.util.Consumer;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.dataContext.DataProvider;
+import consulo.ide.ui.popup.ListComponentUpdater;
+import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.InputEvent;
@@ -28,6 +27,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * @author yole
@@ -82,7 +82,7 @@ class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T
 
   @Nullable
   @Override
-  public BooleanFunction<KeyEvent> getKeyEventHandler() {
+  public Predicate<KeyEvent> getKeyEventHandler() {
     return InputEvent::isConsumed;
   }
 

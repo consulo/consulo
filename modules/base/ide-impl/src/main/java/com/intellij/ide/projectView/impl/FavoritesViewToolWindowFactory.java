@@ -19,7 +19,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesPanel;
 import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.ui.ex.content.Content;

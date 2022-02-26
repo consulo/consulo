@@ -16,13 +16,13 @@
 package com.intellij.ui.components.editors;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.JBList;
+import consulo.ui.ex.awt.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.EmptyIcon;

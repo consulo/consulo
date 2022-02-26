@@ -7,7 +7,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.RelativePoint;
@@ -106,7 +105,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
     }
 
     final Project project = myPanel.getProject();
-    IdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
+    ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
       Window wnd = SwingUtilities.windowForComponent(myPanel);
       if (wnd == null) return;
 
@@ -115,7 +114,7 @@ public class NavBarUpdateQueue extends MergingUpdateQueue {
       if (!wnd.isActive()) {
         IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(myPanel);
         if (frame != null) {
-          focus = IdeFocusManager.getInstance(project).getLastFocusedFor(frame);
+          focus = ProjectIdeFocusManager.getInstance(project).getLastFocusedFor(frame);
         }
       }
       else {

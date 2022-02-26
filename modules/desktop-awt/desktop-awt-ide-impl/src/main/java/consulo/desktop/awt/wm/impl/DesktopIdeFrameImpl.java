@@ -17,6 +17,7 @@ package consulo.desktop.awt.wm.impl;
 
 import com.intellij.ide.AppLifecycleListener;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.ProjectUtil;

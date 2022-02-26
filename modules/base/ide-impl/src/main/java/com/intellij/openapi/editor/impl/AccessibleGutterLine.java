@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.markup.ActiveGutterRenderer;
 import consulo.codeEditor.markup.LineMarkerRenderer;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataContext;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.paint.LinePainter2D;

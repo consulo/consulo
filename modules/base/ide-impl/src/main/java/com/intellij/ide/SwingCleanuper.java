@@ -22,7 +22,7 @@ import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.project.ui.IdeFocusManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.awt.util.Alarm;

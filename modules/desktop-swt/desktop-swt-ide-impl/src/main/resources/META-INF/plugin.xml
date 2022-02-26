@@ -28,7 +28,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory" serviceImplementation="consulo.actionSystem.impl.UnifiedActionToolbarFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ide.RemoteDesktopService" serviceImplementation="consulo.desktop.swt.ide.DesktopSwtRemoteDesktopService"/>
+    <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.desktop.swt.ide.DesktopSwtRemoteDesktopService"/>
 
     <applicationService serviceInterface="consulo.codeEditor.EditorFactory" serviceImplementation="consulo.desktop.swt.editor.impl.DesktopSwtEditorFactoryImpl"/>
 
@@ -62,7 +62,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue" serviceImplementation="consulo.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
-    <applicationService serviceInterface="consulo.project.ui.wm.internal.ApplicationIdeFocusManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtApplicationIdeFocusManagerImpl" lazy="false"/>
+    <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtApplicationIdeFocusManagerImpl" lazy="false"/>
 
     <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.desktop.swt.wm.impl.DesktopSwtSystemDockImpl"/>
 
