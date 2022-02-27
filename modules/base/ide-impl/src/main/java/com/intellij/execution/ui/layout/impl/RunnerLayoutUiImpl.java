@@ -16,27 +16,24 @@
 
 package com.intellij.execution.ui.layout.impl;
 
-import consulo.execution.ui.layout.RunnerLayoutUi;
-import consulo.execution.ui.layout.LayoutAttractionPolicy;
-import consulo.execution.ui.layout.LayoutStateDefaults;
-import consulo.execution.ui.layout.LayoutViewOptions;
-import consulo.execution.ui.layout.PlaceInGrid;
+import com.intellij.ui.switcher.QuickActionProvider;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.execution.ui.layout.*;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.ComponentWithActions;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataProvider;
-import consulo.project.Project;
-import consulo.ui.ex.ComponentWithActions;
-import consulo.util.concurrent.ActionCallback;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerListener;
-import com.intellij.ui.switcher.QuickActionProvider;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.ActionCallback;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

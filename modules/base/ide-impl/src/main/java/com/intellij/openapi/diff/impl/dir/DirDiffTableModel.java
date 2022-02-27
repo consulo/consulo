@@ -15,42 +15,42 @@
  */
 package com.intellij.openapi.diff.impl.dir;
 
-import consulo.application.CommonBundle;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.diff.*;
 import com.intellij.internal.statistic.UsageTrigger;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.application.WriteAction;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import com.intellij.openapi.diff.impl.dir.actions.popup.WarnOnDeletion;
-import consulo.application.progress.EmptyProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.Messages;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsBundle;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.util.TableUtil;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLoadingPanel;
-import consulo.ui.ex.awt.table.JBTable;
-import consulo.util.lang.TimeoutUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.application.WriteAction;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.awt.table.JBTable;
+import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.popup.Balloon;
+import consulo.util.lang.TimeoutUtil;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -283,7 +283,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
 
   private void reportException(final String htmlContent) {
     Runnable balloonShower = () -> {
-      Balloon balloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(htmlContent, MessageType.WARNING, null).
+      Balloon balloon = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(htmlContent, NotificationType.WARNING, null).
               setShowCallout(false).setHideOnClickOutside(true).setHideOnAction(true).setHideOnFrameResize(true).setHideOnKeyOutside(true).
               createBalloon();
       final Rectangle rect = myPanel.getPanel().getBounds();

@@ -3,7 +3,6 @@ package com.intellij.ui.popup;
 
 import consulo.ide.ui.popup.PopupChooserBuilder;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.util.Consumer;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.swing.*;
@@ -13,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * @author yole
@@ -37,7 +37,7 @@ class PopupTreeAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T
       TreePath path = myTree.getSelectionModel().getLeadSelectionPath();
       T component = (T)path.getLastPathComponent();
       if (component != null) {
-        callback.consume(component);
+        callback.accept(component);
       }
     });
   }
@@ -53,7 +53,7 @@ class PopupTreeAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T
         }
       }
       if (!selection.isEmpty()) {
-        callback.consume(selection);
+        callback.accept(selection);
       }
     });
   }

@@ -5,7 +5,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.ui.ex.awt.GraphicsConfig;
-import com.intellij.openapi.ui.popup.IconButton;
+import consulo.ide.ui.popup.IconButton;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import com.intellij.ui.InplaceButton;

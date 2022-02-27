@@ -15,29 +15,29 @@
  */
 package com.intellij.designer;
 
-import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.awt.*;
-import consulo.project.Project;
 import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.impl.AnchoredButton;
 import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
-import com.intellij.ui.*;
+import com.intellij.ui.InplaceButton;
 import com.intellij.ui.tabs.TabsUtil;
+import consulo.application.AllIcons;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.SystemInfo;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.ui.ex.toolWindow.ToolWindowType;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
+import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.util.ui.ToolwindowPaintUtil;
 import consulo.wm.impl.ToolWindowContentUI;
 

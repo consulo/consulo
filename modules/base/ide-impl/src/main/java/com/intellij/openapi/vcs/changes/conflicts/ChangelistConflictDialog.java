@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vcs.readOnlyHandler.FileListRenderer;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

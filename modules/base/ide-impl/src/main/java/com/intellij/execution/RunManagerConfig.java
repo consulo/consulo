@@ -16,11 +16,11 @@
 
 package com.intellij.execution;
 
-import com.intellij.ide.util.PropertiesComponent;
+import consulo.project.ProjectPropertiesComponent;
 import org.jetbrains.annotations.NonNls;
 
 public class RunManagerConfig {
-  private final PropertiesComponent myPropertiesComponent;
+  private final ProjectPropertiesComponent myPropertiesComponent;
   public static final int MIN_RECENT_LIMIT = 0;
 
   @NonNls
@@ -28,7 +28,7 @@ public class RunManagerConfig {
   @NonNls
   private static final String RESTART_REQUIRES_CONFIRMATION = "restartRequiresConfirmation";
 
-  public RunManagerConfig(PropertiesComponent propertiesComponent) {
+  public RunManagerConfig(ProjectPropertiesComponent propertiesComponent) {
     myPropertiesComponent = propertiesComponent;
   }
 

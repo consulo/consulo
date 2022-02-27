@@ -3,10 +3,9 @@ package com.intellij.ui.popup;
 
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ui.JBListUpdater;
-import com.intellij.ui.ListUtil;
+import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.speedSearch.ListWithFilter;
-import com.intellij.util.Consumer;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.ide.ui.popup.ListComponentUpdater;
@@ -27,6 +26,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -57,7 +57,7 @@ class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T
     myBuilder.setItemChoosenCallback(() -> {
       Object selectedValue = myList.getSelectedValue();
       if (selectedValue != null) {
-        callback.consume((T)selectedValue);
+        callback.accept((T)selectedValue);
       }
     });
   }
@@ -66,7 +66,7 @@ class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T
   public void setItemsChosenCallback(Consumer<? super Set<T>> callback) {
     myBuilder.setItemChoosenCallback(() -> {
       List<T> list = myList.getSelectedValuesList();
-      callback.consume(list != null ? new HashSet<>(list) : Collections.emptySet());
+      callback.accept(list != null ? new HashSet<>(list) : Collections.<T>emptySet());
     });
   }
 
@@ -120,7 +120,7 @@ class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T
   public void setItemSelectedCallback(Consumer<? super T> c) {
     myList.addListSelectionListener(e -> {
       Object selectedValue = myList.getSelectedValue();
-      c.consume((T)selectedValue);
+      c.accept((T)selectedValue);
     });
   }
 

@@ -303,7 +303,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
             int result = 0;
             while (node.getParent() != null) {
               result++;
-              node = node.getParent();
+              node = (AbstractTreeNode)node.getParent();
             }
             return result;
           }

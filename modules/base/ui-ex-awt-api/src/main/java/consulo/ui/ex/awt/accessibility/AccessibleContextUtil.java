@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui.accessibility;
+package consulo.ui.ex.awt.accessibility;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.accessibility.Accessible;
 import javax.annotation.Nonnull;

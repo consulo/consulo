@@ -15,8 +15,6 @@
  */
 package com.intellij.openapi.externalSystem.util;
 
-import consulo.dataContext.DataManager;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.ExternalSystemUiAware;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
@@ -25,21 +23,22 @@ import com.intellij.openapi.externalSystem.model.project.ExternalProjectPojo;
 import com.intellij.openapi.externalSystem.service.task.ui.ExternalSystemTasksTreeModel;
 import com.intellij.openapi.externalSystem.service.ui.DefaultExternalSystemUiAware;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
-import com.intellij.openapi.ui.MessageType;
+import com.intellij.util.ui.GridBag;
+import consulo.application.ApplicationManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ui.ex.RelativePoint;
-import com.intellij.util.ui.GridBag;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.dataContext.DataContext;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -66,7 +65,7 @@ public class ExternalSystemUiUtil {
    * @param messageType  balloon message type
    * @param message      message to show
    */
-  public static void showBalloon(@Nonnull JComponent component, @Nonnull MessageType messageType, @Nonnull String message) {
+  public static void showBalloon(@Nonnull JComponent component, @Nonnull NotificationType messageType, @Nonnull String message) {
     final BalloonBuilder builder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, messageType, null)
       .setDisposable(ApplicationManager.getApplication())
       .setFadeoutTime(BALLOON_FADEOUT_TIME);

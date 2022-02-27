@@ -36,7 +36,7 @@ import com.intellij.ui.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.platform.base.icon.PlatformIconGroup;

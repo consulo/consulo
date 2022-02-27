@@ -36,7 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-import static com.intellij.ide.util.treeView.TreeState.expand;
+import static consulo.ui.ex.awt.tree.TreeState.expand;
 import static com.intellij.ui.tree.project.ProjectFileNode.findArea;
 
 class AsyncProjectViewSupport {

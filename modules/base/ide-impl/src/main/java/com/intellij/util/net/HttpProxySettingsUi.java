@@ -18,13 +18,9 @@ package com.intellij.util.net;
 import com.google.common.net.HostAndPort;
 import com.google.common.net.InetAddresses;
 import com.google.common.net.InternetDomainName;
-import consulo.application.ApplicationManager;
-import consulo.configurable.IdeaConfigurableUi;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.PortField;
 import com.intellij.ui.RawCommandLineEditor;
 import com.intellij.ui.RelativeFont;
@@ -32,10 +28,13 @@ import com.intellij.ui.components.JBRadioButton;
 import com.intellij.util.io.HttpRequests;
 import com.intellij.util.proxy.CommonProxy;
 import com.intellij.util.proxy.JavaProxyProperty;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.FocusableFrame;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.configurable.IdeaConfigurableUi;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -194,7 +193,7 @@ class HttpProxySettingsUi implements IdeaConfigurableUi<HttpConfigurable> {
               myCheckButton.setEnabled(canEnableConnectionCheck());
             }
             else {
-              IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
+              FocusableFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
               if (frame == null) {
                 return;
               }

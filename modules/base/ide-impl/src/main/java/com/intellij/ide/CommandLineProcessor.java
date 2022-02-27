@@ -110,7 +110,7 @@ public class CommandLineProcessor {
         return aProject;
       }
     }
-    IdeFrame frame = IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
+    IdeFrame frame = (IdeFrame)IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
     Project project = frame == null ? null : frame.getProject();
     return project != null ? project : projects[0];
   }

@@ -353,7 +353,7 @@ public class GuiUtils {
     ApplicationManager.getApplication().invokeAndWait(runnable);
   }
 
-  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull ModalityState modalityState) {
+  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState) {
     Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();
@@ -362,7 +362,7 @@ public class GuiUtils {
     }
   }
 
-  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull ModalityState modalityState, @Nonnull BooleanSupplier expired) {
+  public static void invokeLaterIfNeeded(@Nonnull @RequiredUIAccess Runnable runnable, @Nonnull consulo.ui.ModalityState modalityState, @Nonnull BooleanSupplier expired) {
     Application application = Application.get();
     if (application.isDispatchThread()) {
       runnable.run();

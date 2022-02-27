@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import com.intellij.util.ui.ListTableModel;
 import consulo.ui.ex.awt.UIUtil;

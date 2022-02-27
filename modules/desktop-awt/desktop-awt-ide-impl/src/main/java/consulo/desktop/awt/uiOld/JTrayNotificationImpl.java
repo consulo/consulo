@@ -33,7 +33,7 @@ final class JTrayNotificationImpl implements SystemNotificationsImpl.Notifier {
     myTrayIcon = new TrayIcon(AppUIUtil.loadWindowIcon(false), tooltip);
     myTrayIcon.setImageAutoSize(true);
     myTrayIcon.addActionListener(e -> {
-      IdeFrame frame = IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
+      IdeFrame frame = (IdeFrame)IdeFocusManager.getGlobalInstance().getLastFocusedFrame();
 
       if(frame != null) {
         consulo.ui.Window window = frame.getWindow();

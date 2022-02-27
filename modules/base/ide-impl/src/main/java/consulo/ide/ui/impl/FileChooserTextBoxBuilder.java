@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.ui;
+package consulo.ide.ui.impl;
 
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserFactory;
-import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.fileChooser.FileChooser;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserFactory;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.platform.base.localize.UILocalize;
+import consulo.project.Project;
 import consulo.ui.PseudoComponent;
 import consulo.ui.TextBox;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.event.ClickEvent;
 import consulo.ui.event.ClickListener;
-import consulo.fileChooser.FileChooser;
 import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

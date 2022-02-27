@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.*;
-import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.util.concurrent.ActionCallback;

@@ -70,7 +70,7 @@ public class FavoritesTreeUtil {
 //          final int idx = getIndex(treeNode.getParent().getChildren(), treeNode);
 //          if (idx == -1) return null;
           result.add(treeNode.getIndex());
-          treeNode = treeNode.getParent();
+          treeNode = (AbstractTreeNode)treeNode.getParent();
         }
         Collections.reverse(result);
         return result;
@@ -99,7 +99,7 @@ public class FavoritesTreeUtil {
         AbstractTreeNode treeNode = ((FavoritesTreeNodeDescriptor)uo).getElement();
         while ((!(treeNode instanceof FavoritesListNode)) && treeNode != null) {
           result.add(treeNode);
-          treeNode = treeNode.getParent();
+          treeNode = (AbstractTreeNode)treeNode.getParent();
         }
         Collections.reverse(result);
         return result;
@@ -116,7 +116,7 @@ public class FavoritesTreeUtil {
       if (current instanceof FavoritesListNode) {
         return (FavoritesListNode)current;
       }
-      current = current.getParent();
+      current = (AbstractTreeNode)current.getParent();
     }
     return null;
   }
@@ -124,7 +124,7 @@ public class FavoritesTreeUtil {
   static FavoritesListProvider getProvider(@Nonnull FavoritesManager manager, @Nonnull FavoritesTreeNodeDescriptor descriptor) {
     AbstractTreeNode treeNode = descriptor.getElement();
     while (treeNode != null && (!(treeNode instanceof FavoritesListNode))) {
-      treeNode = treeNode.getParent();
+      treeNode = (AbstractTreeNode)treeNode.getParent();
     }
     if (treeNode != null) {
       final String name = ((FavoritesListNode)treeNode).getValue();

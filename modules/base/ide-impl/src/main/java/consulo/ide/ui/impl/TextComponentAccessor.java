@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.ui;
+package consulo.ide.ui.impl;
 
 import consulo.ui.Component;
 import consulo.ui.TextBox;

@@ -6,7 +6,7 @@ import com.intellij.ide.actions.runAnything.groups.RunAnythingCompletionGroup;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingGroup;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingHelpGroup;
 import com.intellij.ide.actions.runAnything.groups.RunAnythingRecentGroup;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 

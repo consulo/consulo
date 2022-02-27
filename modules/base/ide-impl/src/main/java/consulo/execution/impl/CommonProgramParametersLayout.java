@@ -23,7 +23,7 @@ import com.intellij.util.PathUtil;
 import consulo.application.AllIcons;
 import consulo.execution.ExecutionBundle;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.ide.ui.FileChooserTextBoxBuilder;
+import consulo.ide.ui.impl.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.module.Module;
 import consulo.platform.base.icon.PlatformIconGroup;

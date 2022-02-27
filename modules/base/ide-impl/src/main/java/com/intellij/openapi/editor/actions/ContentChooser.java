@@ -29,7 +29,7 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;
-import com.intellij.ui.speedSearch.FilteringListModel;
+import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.util.Alarm;

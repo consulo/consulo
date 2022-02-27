@@ -2,7 +2,6 @@
 package consulo.desktop.awt.uiOld.components.fields;
 
 import consulo.ide.ui.popup.JBPopupFactory;
-import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.UIUtil;
@@ -11,6 +10,7 @@ import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent.Exten
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

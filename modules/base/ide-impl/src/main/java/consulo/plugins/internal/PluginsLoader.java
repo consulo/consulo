@@ -20,7 +20,6 @@ import com.intellij.ide.StartupProgress;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.BuildNumber;
-import com.intellij.openapi.util.Couple;
 import consulo.application.util.SystemInfo;
 import consulo.component.util.graph.*;
 import consulo.util.collection.SmartList;
@@ -32,6 +31,7 @@ import consulo.container.impl.classloader.PluginClassLoaderFactory;
 import consulo.container.plugin.*;
 import consulo.container.util.StatCollector;
 import consulo.logging.Logger;
+import consulo.util.lang.Couple;
 import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;

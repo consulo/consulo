@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui;
+package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.ItemRemovable;
 

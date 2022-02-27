@@ -20,6 +20,7 @@ import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.PopupUpdateProcessorBase;
 import consulo.util.dataholder.Key;
@@ -62,7 +63,7 @@ public abstract class HintUpdateSupply {
   }
 
   public static void installDataContextHintUpdateSupply(@Nonnull JComponent component) {
-    installHintUpdateSupply(component, o -> o instanceof PsiElement ? (PsiElement)o : DataManager.getInstance().getDataContext(component).getData(CommonDataKeys.PSI_ELEMENT));
+    installHintUpdateSupply(component, o -> o instanceof PsiElement ? (PsiElement)o : DataManager.getInstance().getDataContext(component).getData(PsiElement.KEY));
   }
 
   public static void installHintUpdateSupply(@Nonnull final JComponent component, final Function<Object, PsiElement> provider) {

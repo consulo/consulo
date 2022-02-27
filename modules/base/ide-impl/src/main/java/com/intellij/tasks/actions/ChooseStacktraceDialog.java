@@ -20,7 +20,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.tasks.Comment;
 import com.intellij.tasks.Task;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.intellij.util.ArrayUtil;

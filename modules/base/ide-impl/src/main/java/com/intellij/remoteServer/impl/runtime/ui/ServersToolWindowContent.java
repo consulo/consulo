@@ -12,6 +12,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.awt.tree.TreeNode;
 import consulo.util.dataholder.Key;
 import com.intellij.remoteServer.impl.runtime.ui.tree.ServersTreeStructure;
 import consulo.project.Project;
@@ -288,7 +289,7 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
         myBuilder.select(ServersTreeStructure.DeploymentNodeImpl.class, new TreeVisitor<ServersTreeStructure.DeploymentNodeImpl>() {
           @Override
           public boolean visit(@Nonnull ServersTreeStructure.DeploymentNodeImpl node) {
-            AbstractTreeNode parent = node.getParent();
+            TreeNode parent = node.getParent();
             return parent instanceof ServersTreeStructure.RemoteServerNode &&
                    ((ServersTreeStructure.RemoteServerNode)parent).getValue().equals(connection.getServer())
                    && node.getValue().getName().equals(deploymentName);

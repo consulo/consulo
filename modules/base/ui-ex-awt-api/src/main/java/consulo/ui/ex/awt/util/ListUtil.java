@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt.util;
 
-import consulo.util.lang.function.Condition;
-import com.intellij.ui.speedSearch.FilteringListModel;
+import consulo.ui.ex.awt.CollectionListModel;
+import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.speedSearch.FilteringListModel;
+import consulo.util.lang.function.Condition;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

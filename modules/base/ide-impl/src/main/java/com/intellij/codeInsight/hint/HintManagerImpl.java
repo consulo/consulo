@@ -38,7 +38,7 @@ import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.BitUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.util.TimerUtil;
-import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentEvent;

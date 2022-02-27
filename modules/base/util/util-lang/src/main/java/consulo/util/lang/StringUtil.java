@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  * Based on IDEA code
@@ -94,12 +95,41 @@ public class StringUtil {
   private static final String[] REPLACES_REFS = {"&lt;", "&gt;", "&amp;", "&#39;", "&quot;"};
   private static final String[] REPLACES_DISP = {"<", ">", "&", "'", "\""};
 
+  private static final Pattern EOL_SPLIT_KEEP_SEPARATORS = Pattern.compile("(?<=(\r\n|\n))|(?<=\r)(?=[^\n])");
+  private static final Pattern EOL_SPLIT_PATTERN = Pattern.compile(" *(\r|\n|\r\n)+ *");
+  private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
+  private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
 
   @Nonnull
   @Contract(pure = true)
   public static String escapeToRegexp(@Nonnull String text) {
     final StringBuilder result = new StringBuilder(text.length());
     return escapeToRegexp(text, result).toString();
+  }
+
+  /**
+   * Splits string by lines.
+   *
+   * @param string String to split
+   * @return array of strings
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String[] splitByLines(@Nonnull String string) {
+    return splitByLines(string, true);
+  }
+
+  /**
+   * Splits string by lines. If several line separators are in a row corresponding empty lines
+   * are also added to result if {@code excludeEmptyStrings} is {@code false}.
+   *
+   * @param string String to split
+   * @return array of strings
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String[] splitByLines(@Nonnull String string, boolean excludeEmptyStrings) {
+    return (excludeEmptyStrings ? EOL_SPLIT_PATTERN : EOL_SPLIT_PATTERN_WITH_EMPTY).split(string);
   }
 
   @Contract(pure = true)

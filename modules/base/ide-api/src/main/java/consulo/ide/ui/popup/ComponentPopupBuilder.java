@@ -1,25 +1,25 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.ui.popup;
 
-import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.Pair;
-import com.intellij.ui.ActiveComponent;
-import com.intellij.util.BooleanFunction;
 import consulo.application.util.function.Processor;
+import consulo.project.Project;
+import consulo.ui.ex.ActiveComponent;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupListener;
+import consulo.util.lang.Pair;
+import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * @author max
@@ -143,7 +143,7 @@ public interface ComponentPopupBuilder {
    * Allows to define custom strategy for processing {@link JBPopup#dispatchKeyEvent(KeyEvent)}.
    */
   @Nonnull
-  ComponentPopupBuilder setKeyEventHandler(@Nonnull BooleanFunction<? super KeyEvent> handler);
+  ComponentPopupBuilder setKeyEventHandler(@Nonnull Predicate<? super KeyEvent> handler);
 
   @Nonnull
   ComponentPopupBuilder setShowBorder(boolean show);

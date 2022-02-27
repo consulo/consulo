@@ -21,7 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.readOnlyHandler.FileListRenderer;
 import com.intellij.openapi.vcs.readOnlyHandler.ReadOnlyStatusDialog;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

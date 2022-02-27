@@ -20,6 +20,7 @@ import consulo.util.lang.function.Condition;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * User: lex
@@ -71,17 +72,17 @@ public interface InternalIterator<T>{
   }
 
   class Filtering<T> implements InternalIterator<T> {
-    private final Condition<? super T> myFilter;
+    private final Predicate<? super T> myFilter;
     private final InternalIterator<T> myIterator;
 
-    public Filtering(InternalIterator<T> iterator, Condition<? super T> filter) {
+    public Filtering(InternalIterator<T> iterator, Predicate<? super T> filter) {
       myIterator = iterator;
       myFilter = filter;
     }
 
     @Override
     public boolean visit(T value) {
-      return !myFilter.value(value) || myIterator.visit(value);
+      return !myFilter.test(value) || myIterator.visit(value);
     }
 
     public static <T> InternalIterator<T> create(InternalIterator<T> iterator, Condition<T> filter) {

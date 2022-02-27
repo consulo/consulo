@@ -15,7 +15,8 @@
  */
 package com.intellij.ui;
 
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
+import consulo.ui.ex.awt.util.ListUtil;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

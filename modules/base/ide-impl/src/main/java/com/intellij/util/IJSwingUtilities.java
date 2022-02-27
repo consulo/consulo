@@ -188,7 +188,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
 
   @Nullable
   public static <T extends Component> T findParentOfType(Component focusOwner, Class<T> aClass) {
-    return (T)ContainerUtil.find(getParents(focusOwner), (FilteringIterator.InstanceOf<T>)FilteringIterator.instanceOf(aClass));
+    return (T)ContainerUtil.find(getParents(focusOwner), FilteringIterator.instanceOf(aClass));
 
   }
   @Nullable

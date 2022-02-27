@@ -28,7 +28,7 @@ import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import com.intellij.openapi.wm.WindowInfo;
+import consulo.ui.ex.toolWindow.WindowInfo;
 import com.intellij.openapi.wm.impl.AnchoredButton;
 import com.intellij.openapi.wm.impl.DesktopStripeButtonUI;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;

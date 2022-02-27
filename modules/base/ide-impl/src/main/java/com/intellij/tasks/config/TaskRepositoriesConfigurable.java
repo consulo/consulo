@@ -11,6 +11,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
+import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;

@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.util.TableUtil;
 import com.intellij.ui.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 import com.intellij.util.ui.ListTableModel;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

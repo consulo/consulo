@@ -15,12 +15,13 @@
  */
 package com.intellij.ui;
 
-import consulo.ui.ex.action.ActionManager;
-import consulo.project.Project;
 import com.intellij.ui.tabs.*;
 import com.intellij.ui.tabs.impl.JBEditorTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.action.ActionManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

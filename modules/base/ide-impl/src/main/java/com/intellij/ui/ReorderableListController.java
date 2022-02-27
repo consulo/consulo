@@ -20,6 +20,8 @@ import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.ui.ex.awt.SortedListModel;
+import consulo.ui.ex.awt.util.ListUtil;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.IconUtil;

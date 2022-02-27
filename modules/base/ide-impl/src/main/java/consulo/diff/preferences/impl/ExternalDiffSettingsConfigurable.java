@@ -20,7 +20,7 @@ import com.intellij.openapi.diff.DiffBundle;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
-import consulo.ide.ui.FileChooserTextBoxBuilder;
+import consulo.ide.ui.impl.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.DiffLocalize;

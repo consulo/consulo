@@ -15,31 +15,32 @@
  */
 package com.intellij.openapi.progress.util;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.application.impl.ModalityStateEx;
+import com.intellij.openapi.util.Comparing;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.TaskInfo;
-import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
-import consulo.util.lang.EmptyRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.application.progress.ProgressIndicatorEx;
-import consulo.language.util.IncorrectOperationException;
 import consulo.component.messagebus.Topic;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.progress.util.ProgressDialog;
 import consulo.progress.util.ProgressDialogFactory;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.DeprecatedMethodException;
-import javax.annotation.Nonnull;
+import consulo.util.lang.EmptyRunnable;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;

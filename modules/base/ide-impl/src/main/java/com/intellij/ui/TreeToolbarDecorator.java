@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.treeStructure.SimpleNode;
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 import com.intellij.util.ui.EditableTreeModel;
 import com.intellij.util.ui.ElementProducer;
 import consulo.ui.ex.awt.tree.TreeUtil;

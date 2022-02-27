@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.ui.ListUtil;
+import consulo.ui.ex.awt.util.ListUtil;
 
 import javax.swing.*;
 

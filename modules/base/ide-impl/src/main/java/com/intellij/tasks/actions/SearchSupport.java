@@ -29,7 +29,7 @@ import consulo.application.util.function.Computable;
 import com.intellij.tasks.Task;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.ListScrollingUtil;
-import com.intellij.ui.SortedListModel;
+import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.ui.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;

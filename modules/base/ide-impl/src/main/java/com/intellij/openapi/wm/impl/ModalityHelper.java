@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import consulo.logging.Logger;
+import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
+import consulo.logging.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +70,7 @@ public class ModalityHelper {
     return result;
   }
 
-  public static JDialog getBlockerForFrame(final IdeFrame ideFrame) {
+  public static JDialog getBlockerForFrame(final FocusableFrame ideFrame) {
     if (ideFrame == null) return null;
     Component c = ideFrame.getComponent();
     if (c == null) return null;

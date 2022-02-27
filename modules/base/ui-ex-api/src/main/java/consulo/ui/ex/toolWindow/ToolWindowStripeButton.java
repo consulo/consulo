@@ -15,7 +15,6 @@
  */
 package consulo.ui.ex.toolWindow;
 
-import com.intellij.openapi.wm.WindowInfo;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

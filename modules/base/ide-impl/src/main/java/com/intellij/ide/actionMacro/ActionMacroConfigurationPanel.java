@@ -18,6 +18,7 @@ package com.intellij.ide.actionMacro;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.keymap.Keymap;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.ui.Messages;

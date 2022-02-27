@@ -15,11 +15,11 @@
  */
 package consulo.builtInServer.impl.net.json;
 
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
 import com.intellij.util.BitUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.ui.wm.FocusableFrame;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.builtInServer.json.JsonGetRequestHandler;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ import java.awt.*;
  * @since 27.10.2015
  */
 public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
-  public static boolean activateFrame(@Nullable final IdeFrame ideFrame) {
+  public static boolean activateFrame(@Nullable final FocusableFrame ideFrame) {
     if (ideFrame == null) {
       return false;
     }
@@ -71,7 +71,7 @@ public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
   @Nonnull
   @Override
   public JsonResponse handle() {
-    final IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
+    final FocusableFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
     return activateFrame(frame) ? JsonResponse.asSuccess(null) : JsonResponse.asError("No Frame");
   }
 }

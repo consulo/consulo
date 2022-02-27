@@ -17,8 +17,9 @@ package com.intellij.openapi.diff.impl.dir;
 
 import com.intellij.ide.diff.*;
 import com.intellij.openapi.diff.DirDiffManager;
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;
@@ -26,7 +27,6 @@ import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

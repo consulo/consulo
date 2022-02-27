@@ -123,7 +123,7 @@ public class ArchivesBuilder {
   private ArchivePackageInfo[] sortArchives() {
     final DFSTBuilder<ArchivePackageInfo> builder = new DFSTBuilder<>(GraphGenerator.create(CachingSemiGraph.create(new ArchivesGraph())));
     if (!builder.isAcyclic()) {
-      final Pair<ArchivePackageInfo, ArchivePackageInfo> dependency = builder.getCircularDependency();
+      final consulo.util.lang.Pair<ArchivePackageInfo, ArchivePackageInfo> dependency = builder.getCircularDependency();
       String message = CompilerBundle
               .message("packaging.compiler.error.cannot.build.circular.dependency.found.between.0.and.1", dependency.getFirst().getPresentableDestination(),
                        dependency.getSecond().getPresentableDestination());

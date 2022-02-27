@@ -2,6 +2,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.Comparing;
+import consulo.ui.ex.awt.SortedListModel;
 
 import javax.swing.*;
 import java.util.Comparator;

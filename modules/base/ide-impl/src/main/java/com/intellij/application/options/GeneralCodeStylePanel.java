@@ -18,36 +18,32 @@ package com.intellij.application.options;
 
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.application.options.codeStyle.excludedFiles.ExcludedFilesList;
-import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.plain.PlainTextFileType;
-import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import consulo.project.ProjectManager;
-import com.intellij.openapi.ui.MessageType;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBCheckBox;
-import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.components.fields.CommaSeparatedIntegersField;
 import com.intellij.ui.components.fields.IntegerField;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.configurable.ConfigurationException;
+import consulo.disposer.Disposer;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.language.Language;
+import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.language.plain.PlainTextFileType;
+import consulo.logging.Logger;
+import consulo.project.ProjectManager;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.BalloonBuilder;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -343,7 +339,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   }
 
   private static void showError(final JTextField field, final String message) {
-    BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, MessageType.ERROR, null);
+    BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, NotificationType.ERROR, null);
     balloonBuilder.setFadeoutTime(1500);
     final Balloon balloon = balloonBuilder.createBalloon();
     final Rectangle rect = field.getBounds();

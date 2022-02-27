@@ -1,21 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
-import consulo.ui.ex.action.TimerListener;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.util.Comparing;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.ex.action.TimerListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.event.KeymapManagerListener;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.lang.ref.WeakReference;
@@ -87,7 +88,7 @@ public abstract class ToolbarUpdater implements Activatable {
       updateRunnable.run();
     }
     else {
-      final IdeFocusManager fm = ProjectIdeFocusManager.getInstance((Project)null);
+      final IdeFocusManager fm = ApplicationIdeFocusManager.getInstance();
 
       if (!app.isHeadlessEnvironment()) {
         if (app.isDispatchThread() && myComponent.isShowing()) {

@@ -1,51 +1,52 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
-import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionButtonComponent;
+import com.intellij.openapi.actionSystem.RightAlignedToolbarAction;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.ui.awt.RelativeRectangle;
+import com.intellij.ui.switcher.QuickActionProvider;
+import com.intellij.util.IJSwingUtilities;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.util.registry.Registry;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.localize.LocalizeValue;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.Size;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.paint.LinePainter2D;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.util.TextWithMnemonic;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.project.ui.wm.WindowManager;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import consulo.ui.ex.awt.util.ColorUtil;
-import com.intellij.ui.awt.RelativeRectangle;
-import consulo.ui.ex.awt.paint.LinePainter2D;
-import com.intellij.ui.switcher.QuickActionProvider;
-import com.intellij.util.IJSwingUtilities;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
-import consulo.ui.Size;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
+import consulo.util.concurrent.CancellablePromise;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.TestOnly;
-import consulo.util.concurrent.CancellablePromise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -1135,7 +1136,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
       return;
     }
     if (myAutoPopupRec != null && myAutoPopupRec.contains(e.getPoint())) {
-      ProjectIdeFocusManager.getInstance((Project)null).doWhenFocusSettlesDown(() -> showAutoPopup());
+      ApplicationIdeFocusManager.getInstance().doWhenFocusSettlesDown(() -> showAutoPopup());
     }
   }
 

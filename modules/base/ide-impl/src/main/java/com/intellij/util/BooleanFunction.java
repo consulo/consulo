@@ -15,9 +15,17 @@
  */
 package com.intellij.util;
 
+import java.util.function.Predicate;
+
 /**
  * @author mike
  */
-public interface BooleanFunction<S> {
-    boolean fun(S s);
+@FunctionalInterface
+public interface BooleanFunction<S> extends Predicate<S> {
+  boolean fun(S s);
+
+  @Override
+  default boolean test(S s) {
+    return fun(s);
+  }
 }

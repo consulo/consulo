@@ -43,6 +43,9 @@ import javax.annotation.Nullable;
 public interface PsiElement extends UserDataHolder {
   PsiElement[] EMPTY_ARRAY = new PsiElement[0];
 
+  Key<PsiElement> KEY = Key.create(PsiElement.class);
+  Key<PsiElement[]> KEY_OF_ARRAY = Key.create(PsiElement[].class);
+
   ArrayFactory<PsiElement> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiElement[count];
 
   /**

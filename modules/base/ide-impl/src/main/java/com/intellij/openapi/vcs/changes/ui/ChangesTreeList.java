@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.CopyProvider;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.ide.util.treeView.TreeState;
+import consulo.ui.ex.awt.tree.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffBundle;

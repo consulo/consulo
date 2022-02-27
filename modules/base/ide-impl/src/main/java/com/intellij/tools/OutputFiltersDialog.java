@@ -26,6 +26,7 @@ import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ScrollingUtil;
+import consulo.ui.ex.awt.util.ListUtil;
 
 import javax.annotation.Nonnull;
 

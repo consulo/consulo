@@ -5,7 +5,7 @@ import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.TreeExpander;
 import com.intellij.ide.actions.ContextHelpAction;
 import consulo.ui.ex.awt.*;
-import com.intellij.ide.util.treeView.TreeState;
+import consulo.ui.ex.awt.tree.TreeState;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

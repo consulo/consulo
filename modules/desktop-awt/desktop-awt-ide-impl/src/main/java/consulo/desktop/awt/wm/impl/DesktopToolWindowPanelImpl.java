@@ -15,32 +15,28 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import com.intellij.openapi.ui.ThreeComponentsSplitter;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.wm.impl.WindowInfoImpl;
+import com.intellij.reference.SoftReference;
+import com.intellij.ui.components.JBLayeredPane;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Splitter;
-import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.ui.ex.toolWindow.ToolWindowType;
-import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.reference.SoftReference;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import com.intellij.ui.components.JBLayeredPane;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
-import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
+import consulo.ui.ex.awt.Splitter;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.impl.ToolWindowPanelImplEx;
+import consulo.ui.ex.toolWindow.*;
 import consulo.wm.impl.ToolWindowAnchorUtil;
 
 import javax.annotation.Nonnull;
@@ -230,8 +226,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    */
   @RequiredUIAccess
   @Override
-  public final void addButton(final ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
-    final WindowInfoImpl copiedInfo = info.copy();
+  public final void addButton(final ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
+    final WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
     myId2Button.put(copiedInfo.getId(), (DesktopStripeButton)button);
     myButton2Info.put((DesktopStripeButton)button, copiedInfo);
 
@@ -265,8 +261,8 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
    */
   @Override
   @RequiredUIAccess
-  public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, final boolean dirtyMode) {
-    final WindowInfoImpl copiedInfo = info.copy();
+  public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, final boolean dirtyMode) {
+    final WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
     final String id = copiedInfo.getId();
 
     myDecorator2Info.put((DesktopInternalDecorator)decorator, copiedInfo);
@@ -275,14 +271,14 @@ public final class DesktopToolWindowPanelImpl extends JBLayeredPane implements U
     if (info.isDocked()) {
       WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
       if (sideInfo == null) {
-        new AddDockedComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode).run();
+        new AddDockedComponentCmd((DesktopInternalDecorator)decorator, (WindowInfoImpl)info, dirtyMode).run();
       }
       else {
-        new AddAndSplitDockedComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode).run();
+        new AddAndSplitDockedComponentCmd((DesktopInternalDecorator)decorator, (WindowInfoImpl)info, dirtyMode).run();
       }
     }
     else if (info.isSliding()) {
-      new AddSlidingComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode).run();
+      new AddSlidingComponentCmd((DesktopInternalDecorator)decorator, (WindowInfoImpl)info, dirtyMode).run();
     }
     else {
       throw new IllegalArgumentException("Unknown window type: " + info.getType());

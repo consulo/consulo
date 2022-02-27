@@ -17,8 +17,8 @@ package consulo.ide.newProject.ui;
 
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.disposer.Disposable;
-import consulo.ide.ui.FileChooserTextBoxBuilder;
-import consulo.ide.ui.TextComponentAccessor;
+import consulo.ide.ui.impl.FileChooserTextBoxBuilder;
+import consulo.ide.ui.impl.TextComponentAccessor;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.Component;

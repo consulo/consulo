@@ -23,12 +23,12 @@ import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.ui.LoadingDecorator;
-import com.intellij.openapi.util.Couple;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
+import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
@@ -399,7 +399,7 @@ public class VcsLogGraphTable extends TableWithProgress implements DataProvider,
   public void viewportSet(JViewport viewport) {
     viewport.addChangeListener(e -> {
       AbstractTableModel model = getModel();
-      Couple<Integer> visibleRows = ScrollingUtil.getVisibleRows(this);
+      consulo.util.lang.Couple<Integer> visibleRows = ScrollingUtil.getVisibleRows(this);
       model.fireTableChanged(new TableModelEvent(model, visibleRows.first - 1, visibleRows.second, GraphTableModel.ROOT_COLUMN));
     });
   }

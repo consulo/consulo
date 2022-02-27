@@ -15,13 +15,14 @@
  */
 package com.intellij.ui;
 
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListener;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
 import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

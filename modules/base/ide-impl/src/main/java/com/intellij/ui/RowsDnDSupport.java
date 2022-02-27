@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.ide.dnd.*;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.Function;
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

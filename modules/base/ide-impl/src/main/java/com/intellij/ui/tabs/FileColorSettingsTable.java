@@ -18,7 +18,7 @@ package com.intellij.ui.tabs;
 
 import com.intellij.ui.FileColorManager;
 import consulo.ui.ex.awt.table.JBTable;
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

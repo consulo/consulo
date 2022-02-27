@@ -138,7 +138,7 @@ public abstract class CachingChildrenTreeNode <Value> extends AbstractTreeNode<V
 
     Collection<AbstractTreeNode> result = new LinkedHashSet<AbstractTreeNode>();
     for (AbstractTreeNode child : children) {
-      AbstractTreeNode parent = child.getParent();
+      AbstractTreeNode parent = (AbstractTreeNode)child.getParent();
       if (parent != this) {
         if (!result.contains(parent)) result.add(parent);
       }

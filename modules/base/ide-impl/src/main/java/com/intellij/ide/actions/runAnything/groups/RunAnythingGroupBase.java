@@ -3,7 +3,7 @@ package com.intellij.ide.actions.runAnything.groups;
 
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import com.intellij.util.text.Matcher;
 
 import javax.annotation.Nonnull;

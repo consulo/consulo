@@ -14,7 +14,6 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.popup.*;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -29,7 +28,7 @@ import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ChildFocusWatcher;
 import com.intellij.util.ui.ScrollUtil;
-import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -47,6 +46,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.ui.popup.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
@@ -62,14 +62,13 @@ import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ide.ui.popup.MouseChecker;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.collection.WeakList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -81,6 +80,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static java.awt.event.MouseEvent.*;
@@ -153,7 +153,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
   private Runnable myFinalRunnable;
   private Runnable myOkHandler;
   @Nullable
-  private BooleanFunction<? super KeyEvent> myKeyEventHandler;
+  private Predicate<? super KeyEvent> myKeyEventHandler;
 
   protected boolean myOk;
   private final List<Runnable> myResizeListeners = new ArrayList<>();
@@ -262,7 +262,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                                @Nullable String adText,
                                int adTextAlignment,
                                boolean headerAlwaysFocusable,
-                               @Nonnull List<? extends Pair<ActionListener, KeyStroke>> keyboardActions,
+                               @Nonnull List<? extends consulo.util.lang.Pair<ActionListener, KeyStroke>> keyboardActions,
                                Component settingsButtons,
                                @Nullable final Processor<? super JBPopup> pinCallback,
                                boolean mayBeParent,
@@ -270,7 +270,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
                                boolean showBorder,
                                Color borderColor,
                                boolean cancelOnWindowDeactivation,
-                               @Nullable BooleanFunction<? super KeyEvent> keyEventHandler) {
+                               @Nullable Predicate<? super KeyEvent> keyEventHandler) {
     assert !requestFocus || focusable : "Incorrect argument combination: requestFocus=true focusable=false";
 
     all.add(this);
@@ -1952,8 +1952,8 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   @Override
   public boolean dispatchKeyEvent(@Nonnull KeyEvent e) {
-    BooleanFunction<? super KeyEvent> handler = myKeyEventHandler;
-    if (handler != null && handler.fun(e)) {
+    Predicate<? super KeyEvent> handler = myKeyEventHandler;
+    if (handler != null && handler.test(e)) {
       return true;
     }
     if (isCloseRequest(e) && myCancelKeyEnabled && !mySpeedSearch.isHoldingFilter()) {

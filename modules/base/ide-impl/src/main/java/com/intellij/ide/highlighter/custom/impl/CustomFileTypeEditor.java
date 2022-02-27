@@ -30,6 +30,7 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.util.ListUtil;
 
 import javax.annotation.Nonnull;
 

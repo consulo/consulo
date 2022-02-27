@@ -15,13 +15,13 @@
  */
 package com.intellij.tools;
 
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.MessageType;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.project.Project;
+import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.popup.Balloon;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -60,7 +60,7 @@ class ToolSelectDialog extends DialogWrapper {
     catch (IOException e) {
       String message = ToolsBundle.message("tools.failed.to.save.changes.0", StringUtil.decapitalize(e.getMessage()));
       final JLayeredPane pane = myToolsPanel.getRootPane().getLayeredPane();
-      JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, MessageType.ERROR, null)
+      JBPopupFactory.getInstance().createHtmlTextBalloonBuilder(message, NotificationType.ERROR, null)
         .setShowCallout(false).setFadeoutTime(3000).setHideOnAction(true).setHideOnClickOutside(true).setHideOnKeyOutside(true).
         createBalloon().show(new RelativePoint(pane, new Point(pane.getWidth(), 0)), Balloon.Position.above);
       return;

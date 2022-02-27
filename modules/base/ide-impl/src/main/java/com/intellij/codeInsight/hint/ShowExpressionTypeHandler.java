@@ -20,7 +20,7 @@ import com.intellij.refactoring.IntroduceTargetChooser;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
-import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.ui.annotation.RequiredUIAccess;

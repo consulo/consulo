@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.ide.CopyProvider;
 import com.intellij.ide.dnd.DnDAware;
-import com.intellij.ide.util.treeView.TreeState;
+import consulo.ui.ex.awt.tree.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;

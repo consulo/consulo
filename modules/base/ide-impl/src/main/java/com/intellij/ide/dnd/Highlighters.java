@@ -16,13 +16,13 @@
 package com.intellij.ide.dnd;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.ui.MessageType;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.NotificationType;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.Balloon;
 import consulo.ui.image.Image;
 
 import javax.swing.*;
@@ -135,9 +135,9 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
   public abstract static class BaseTextHighlighter implements DropTargetHighlighter {
 
     private Balloon myCurrentBalloon;
-    private MessageType myMessageType;
+    private NotificationType myMessageType;
 
-    public BaseTextHighlighter(MessageType type) {
+    public BaseTextHighlighter(NotificationType type) {
       myMessageType = type;
     }
 
@@ -180,7 +180,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
   public static class TextHighlighter extends BaseTextHighlighter {
 
     public TextHighlighter() {
-      super(MessageType.INFO);
+      super(NotificationType.INFO);
     }
 
     public int getMask() {
@@ -190,7 +190,7 @@ public class Highlighters implements DnDEvent.DropTargetHighlightingType {
 
   private static class ErrorTextHighlighter extends BaseTextHighlighter {
     public ErrorTextHighlighter() {
-      super(MessageType.ERROR);
+      super(NotificationType.ERROR);
     }
 
     public int getMask() {

@@ -115,7 +115,7 @@ public abstract class AbstractListBuilder {
     if (myCurrentParent == myShownRoot.getParent()) {
       return;
     }
-    final AbstractTreeNode element = myCurrentParent.getParent();
+    final AbstractTreeNode element = (AbstractTreeNode)myCurrentParent.getParent();
     if (element == null) {
       return;
     }
@@ -161,7 +161,7 @@ public abstract class AbstractListBuilder {
     try {
       AbstractTreeNode node = goDownToElement(element, virtualFile);
       if (node == null) return;
-      AbstractTreeNode parentElement = node.getParent();
+      AbstractTreeNode parentElement = (AbstractTreeNode)node.getParent();
       if (parentElement == null) return;
 
       buildList(parentElement);
@@ -323,7 +323,7 @@ public abstract class AbstractListBuilder {
     while (true) {
       parentDescriptor.update();
       if (parentDescriptor.getValue() != null) break;
-      parentDescriptor = parentDescriptor.getParent();
+      parentDescriptor = (AbstractTreeNode)parentDescriptor.getParent();
     }
 
     final Object[] children = getChildren(parentDescriptor);

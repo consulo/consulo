@@ -15,22 +15,23 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.ui.EditorNotifications;
+import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.document.Document;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.Semaphore;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;
+import consulo.component.ProcessCanceledException;
+import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.language.psi.PsiDocumentManager;
-import com.intellij.ui.EditorNotifications;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.application.util.Semaphore;
 import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 

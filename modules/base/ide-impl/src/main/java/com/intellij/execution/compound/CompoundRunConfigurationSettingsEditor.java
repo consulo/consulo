@@ -30,6 +30,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.popup.ListSeparator;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;

@@ -15,14 +15,16 @@
  */
 package com.intellij.vcs.log.ui.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import com.intellij.vcs.log.ui.frame.MainFrame;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+
 import javax.annotation.Nonnull;
 
 public class FocusTextFilterAction extends DumbAwareAction {

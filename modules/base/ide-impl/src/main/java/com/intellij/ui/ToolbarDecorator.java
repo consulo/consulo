@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.awt.*;
 import com.intellij.ui.table.TableView;
 import consulo.util.collection.SmartList;
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 import com.intellij.util.ui.ElementProducer;
 import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;

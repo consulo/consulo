@@ -16,7 +16,7 @@
 package consulo.desktop.swt.wm.impl;
 
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import com.intellij.openapi.wm.WindowInfo;
+import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.desktop.swt.ui.impl.SWTComponentDelegate;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;

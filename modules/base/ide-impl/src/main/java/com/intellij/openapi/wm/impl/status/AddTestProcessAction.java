@@ -15,24 +15,23 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
-import consulo.ui.NotificationType;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.application.dumb.DumbAware;
 import consulo.application.progress.PerformInBackgroundOption;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.application.dumb.DumbAware;
+import consulo.component.ProcessCanceledException;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.RelativePoint;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -52,7 +51,7 @@ public class AddTestProcessAction extends AnAction implements DumbAware {
                                                                                                       "Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend " +
                                                                                                       "Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend " +
                                                                                                       "Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend Load up on guns bring your friends it's fun to loose and to pretend " +
-                                                                                                      "", MessageType.INFO, null);
+                                                                                                      "", NotificationType.INFO, null);
 
     JFrame wnd = (JFrame)KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusedWindow();
     JRootPane ro = wnd.getRootPane();

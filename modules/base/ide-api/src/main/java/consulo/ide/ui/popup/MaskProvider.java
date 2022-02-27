@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.intellij.ide.util.treeView;
+package consulo.ide.ui.popup;
 
-import javax.annotation.Nonnull;
+import java.awt.*;
 
-public interface NodeDescriptorProvidingKey {
-  @Nonnull
-  Object getKey();
+public interface MaskProvider {
+  Shape getMask(Dimension size);
 }

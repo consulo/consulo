@@ -32,6 +32,7 @@ import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.table.TableView;
 import com.intellij.util.ui.*;
 import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.awt.EditableModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

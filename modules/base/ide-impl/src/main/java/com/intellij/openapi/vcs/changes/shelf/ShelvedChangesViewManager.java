@@ -26,7 +26,7 @@ import consulo.application.CommonBundle;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;
-import com.intellij.ide.util.treeView.TreeState;
+import consulo.ui.ex.awt.tree.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui.table;
 
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;

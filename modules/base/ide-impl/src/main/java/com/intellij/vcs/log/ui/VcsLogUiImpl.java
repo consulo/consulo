@@ -16,7 +16,6 @@ import com.intellij.vcs.log.ui.frame.VcsLogGraphTable;
 import com.intellij.vcs.log.ui.tables.GraphTableModel;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.disposer.Disposable;
@@ -24,6 +23,8 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

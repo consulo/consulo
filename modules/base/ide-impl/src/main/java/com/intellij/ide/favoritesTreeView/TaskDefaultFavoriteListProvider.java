@@ -17,20 +17,20 @@ package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.keymap.KeymapUtil;
+import com.intellij.util.Consumer;
+import consulo.application.ApplicationManager;
+import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
-import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.awt.tree.Tree;
-import com.intellij.util.Consumer;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -163,14 +163,14 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
     AbstractTreeNode current = treeNode;
     while (current != null && (!(current instanceof FavoritesRootNode))) {
       result.add(current);
-      current = current.getParent();
+      current = (AbstractTreeNode)current.getParent();
     }
     Collections.reverse(result);
     return result;
   }
 
   public static List<AbstractTreeNode> getPathToUsualNode(final AbstractTreeNode treeNode, final Tree tree) {
-    final AbstractTreeNode parent = treeNode.getParent();
+    final AbstractTreeNode parent = (AbstractTreeNode)treeNode.getParent();
     if (parent instanceof ProjectViewNodeWithChildrenList) {
       final List<AbstractTreeNode> pathToSelected = FavoritesTreeUtil.getLogicalPathToSelected(tree);
       if (pathToSelected.isEmpty()) {

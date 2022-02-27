@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.wm;
+package consulo.ui.ex.toolWindow;
 
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
-import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.Rectangle2D;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

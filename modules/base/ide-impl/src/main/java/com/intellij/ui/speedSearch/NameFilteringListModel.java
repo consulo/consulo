@@ -19,13 +19,14 @@
  */
 package com.intellij.ui.speedSearch;
 
+import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.function.Computable;
+import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Function;
 
 import javax.swing.*;
+import java.util.function.Function;
 
 /**
  * @param <T> list elements generic type
@@ -51,7 +52,7 @@ public class NameFilteringListModel<T> extends FilteringListModel<T> {
     super(model);
     myPattern = pattern;
     myNamer = namer;
-    setFilter(namer != null ? (Condition<T>)t -> filter.value(namer.fun(t)) : null);
+    setFilter(namer != null ? t -> filter.value(namer.apply(t)) : null);
   }
 
   @Override
@@ -59,7 +60,7 @@ public class NameFilteringListModel<T> extends FilteringListModel<T> {
     super.addToFiltered(elt);
 
     if (myNamer != null) {
-      String name = myNamer.fun(elt);
+      String name = myNamer.apply(elt);
       if (name != null) {
         String filterString = StringUtil.toUpperCase(myPattern.compute());
         String candidateString = StringUtil.toUpperCase(name);

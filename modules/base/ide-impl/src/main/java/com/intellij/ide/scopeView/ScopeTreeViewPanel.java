@@ -34,7 +34,7 @@ import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.ide.util.EditorHelper;
-import com.intellij.ide.util.treeView.TreeState;
+import consulo.ui.ex.awt.tree.TreeState;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.search.scope.*;
 import consulo.ui.ex.action.ActionPlaces;

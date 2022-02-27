@@ -12,6 +12,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.ui.ex.awt.tree.TreeNode;
 import consulo.ui.ex.awt.tree.ValidateableNode;
 import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;
@@ -92,7 +93,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   }
 
   protected boolean isMarkReadOnly() {
-    final AbstractTreeNode<?> parent = getParent();
+    final TreeNode parent = getParent();
     if (parent == null) {
       return false;
     }

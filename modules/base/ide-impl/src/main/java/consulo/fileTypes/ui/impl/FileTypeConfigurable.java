@@ -40,6 +40,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.util.ListUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;

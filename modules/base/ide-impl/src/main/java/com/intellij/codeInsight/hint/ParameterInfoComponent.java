@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.util.Function;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.TestOnly;

@@ -18,8 +18,6 @@ package consulo.ui.ex.toolWindow;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.wm.WindowInfo;
-import com.intellij.openapi.wm.impl.InternalDecoratorListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.ide.util.treeView.TreeState;
+import consulo.ui.ex.awt.tree.TreeState;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;

@@ -5,13 +5,15 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.runAnything.RunAnythingUtil;
 import com.intellij.ide.actions.runAnything.items.RunAnythingActionItem;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.application.ApplicationManager;
+import consulo.dataContext.DataContext;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.ApplicationManager;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -35,7 +37,7 @@ public abstract class RunAnythingAnActionProvider<V extends AnAction> extends Ru
 
   private static void performRunAnythingAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {
     ApplicationManager.getApplication().invokeLater(
-            () -> ProjectIdeFocusManager.getInstance((Project)RunAnythingUtil.fetchProject(dataContext)).doWhenFocusSettlesDown(() -> performAction(action, dataContext)));
+            () -> ProjectIdeFocusManager.getInstance(RunAnythingUtil.fetchProject(dataContext)).doWhenFocusSettlesDown(() -> performAction(action, dataContext)));
   }
 
   private static void performAction(@Nonnull AnAction action, @Nonnull DataContext dataContext) {

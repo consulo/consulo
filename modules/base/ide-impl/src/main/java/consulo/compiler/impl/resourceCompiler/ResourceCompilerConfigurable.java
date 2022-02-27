@@ -25,6 +25,7 @@ import com.intellij.openapi.ui.InputValidatorEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.*;
+import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;

@@ -1,27 +1,28 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
-import consulo.application.Application;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
+import com.intellij.ui.EditorTextField;
+import com.intellij.util.ArrayUtil;
+import consulo.application.Application;
+import consulo.application.ui.wm.FocusableFrame;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.Editor;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.document.FileDocumentManager;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.WindowManager;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.EditorTextField;
-import com.intellij.util.ArrayUtil;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,7 +100,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     if (focusOwner == null) {
       IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
-      IdeFrame frame = focusManager.getLastFocusedFrame();
+      FocusableFrame frame = focusManager.getLastFocusedFrame();
       if (frame != null) {
         focusOwner = focusManager.getLastFocusedFor(frame);
       }

@@ -22,6 +22,7 @@ import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.Rectangle2D;
+import consulo.ui.ex.toolWindow.WindowInfo;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

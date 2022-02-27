@@ -15,6 +15,7 @@
  */
 package consulo.ide.setting.ui;
 
+import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -22,6 +23,7 @@ import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.ConfigurableUIMigrationUtil;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -30,7 +32,6 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.image.Image;
@@ -763,7 +764,7 @@ public abstract class MasterDetailsComponent implements Configurable, MasterDeta
     }
 
     public MyDeleteAction(Condition<Object[]> availableCondition) {
-      super(CommonBundle.message("button.delete"), CommonBundle.message("button.delete"), IconUtil.getRemoveIcon());
+      super(CommonBundle.message("button.delete"), CommonBundle.message("button.delete"), AllIcons.General.Remove);
       registerCustomShortcutSet(CommonShortcuts.DELETE, myTree);
       myCondition = availableCondition;
     }

@@ -32,11 +32,12 @@ import com.intellij.diff.tools.fragmented.UnifiedDiffTool;
 import com.intellij.diff.tools.simple.SimpleDiffTool;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.diff.DiffBundle;
-import consulo.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.WindowWrapper;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
 

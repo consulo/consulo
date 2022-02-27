@@ -15,6 +15,8 @@
  */
 package com.intellij.util.ui;
 
+import consulo.ui.ex.awt.EditableModel;
+
 import javax.swing.*;
 
 /**

@@ -16,7 +16,7 @@
 package consulo.sandboxPlugin.ui;
 
 import consulo.disposer.Disposable;
-import consulo.ide.ui.FileChooserTextBoxBuilder;
+import consulo.ide.ui.impl.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.*;

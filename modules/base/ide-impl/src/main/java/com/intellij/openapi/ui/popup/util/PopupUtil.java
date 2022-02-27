@@ -16,28 +16,28 @@
 package com.intellij.openapi.ui.popup.util;
 
 import com.intellij.openapi.actionSystem.ActionButtonComponent;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.*;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.RelativePoint;
+import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
 import com.intellij.util.ReflectionUtil;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.FocusableFrame;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.awt.hacking.PopupFactoryHacking;
 import consulo.disposer.Disposable;
+import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.plaf.basic.ComboPopup;
@@ -100,15 +100,15 @@ public class PopupUtil {
       }
     }
 
-    final IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
+    final FocusableFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
     if (frame != null) return frame.getComponent();
     return JOptionPane.getRootFrame();
   }
 
-  public static void showBalloonForActiveFrame(@Nonnull final String message, final MessageType type) {
+  public static void showBalloonForActiveFrame(@Nonnull final String message, final NotificationType type) {
     final Runnable runnable = new Runnable() {
       public void run() {
-        final IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
+        final IdeFrame frame = (IdeFrame)IdeFocusManager.findInstance().getLastFocusedFrame();
         if (frame == null) {
           final Project[] projects = ProjectManager.getInstance().getOpenProjects();
           final Project project = projects == null || projects.length == 0 ? ProjectManager.getInstance().getDefaultProject() : projects[0];
@@ -126,7 +126,7 @@ public class PopupUtil {
     UIUtil.invokeLaterIfNeeded(runnable);
   }
 
-  public static void showBalloonForActiveComponent(@Nonnull final String message, final MessageType type) {
+  public static void showBalloonForActiveComponent(@Nonnull final String message, final NotificationType type) {
     Runnable runnable = new Runnable() {
       public void run() {
         Window[] windows = Window.getWindows();
@@ -143,7 +143,7 @@ public class PopupUtil {
         }
 
         if (targetWindow == null) {
-          final IdeFrame frame = IdeFocusManager.findInstance().getLastFocusedFrame();
+          final IdeFrame frame = (IdeFrame)IdeFocusManager.findInstance().getLastFocusedFrame();
           if (frame == null) {
             final Project[] projects = ProjectManager.getInstance().getOpenProjects();
             final Project project = projects == null || projects.length == 0 ? ProjectManager.getInstance().getDefaultProject() : projects[0];
@@ -164,7 +164,7 @@ public class PopupUtil {
     UIUtil.invokeLaterIfNeeded(runnable);
   }
 
-  public static void showBalloonForComponent(@Nonnull Component component, @Nonnull final String message, final MessageType type,
+  public static void showBalloonForComponent(@Nonnull Component component, @Nonnull final String message, final NotificationType type,
                                              final boolean atTop, @Nullable final Disposable disposable) {
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
     if (popupFactory == null) return;

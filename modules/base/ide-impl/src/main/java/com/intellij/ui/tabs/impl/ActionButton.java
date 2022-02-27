@@ -18,7 +18,7 @@ package com.intellij.ui.tabs.impl;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.ui.popup.IconButton;
+import consulo.ide.ui.popup.IconButton;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pass;
 import com.intellij.ui.InplaceButton;

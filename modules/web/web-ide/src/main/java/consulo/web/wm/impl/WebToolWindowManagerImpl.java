@@ -20,7 +20,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.InternalDecoratorListener;
+import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.component.messagebus.MessageBusConnection;

@@ -20,7 +20,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ui.*;

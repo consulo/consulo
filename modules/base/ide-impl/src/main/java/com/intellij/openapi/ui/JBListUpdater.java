@@ -2,7 +2,7 @@
 package com.intellij.openapi.ui;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import consulo.ide.ui.popup.ListComponentUpdater;

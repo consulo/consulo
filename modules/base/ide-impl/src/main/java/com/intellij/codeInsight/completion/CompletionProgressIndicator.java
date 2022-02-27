@@ -70,7 +70,6 @@ import java.util.function.Supplier;
 /**
  * Please don't use this class directly from plugins.
  */
-//@ApiStatus.Internal
 public class CompletionProgressIndicator extends ProgressIndicatorBase implements CompletionProcessEx, Disposable {
   private static final Logger LOG = Logger.getInstance(CompletionProgressIndicator.class);
   private final Editor myEditor;

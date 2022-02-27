@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.ui.popup;
+package consulo.ui.ex.awt.tree;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
 
-public interface MaskProvider {
-
-  Shape getMask(Dimension size);
-
+public interface NodeDescriptorProvidingKey {
+  @Nonnull
+  Object getKey();
 }

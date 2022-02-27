@@ -5,19 +5,18 @@
  */
 package com.intellij.ui.speedSearch;
 
-import consulo.dataContext.DataProvider;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.SearchTextField;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.dataContext.DataProvider;
 import consulo.ui.ex.UIBundle;
-import com.intellij.util.Function;
 import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -26,6 +25,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.awt.*;
 import java.awt.event.FocusEvent;
+import java.util.function.Function;
 
 public class ListWithFilter<T> extends JPanel implements DataProvider {
   private final JList<T> myList;

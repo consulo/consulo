@@ -3,9 +3,8 @@ package com.intellij.ui.popup;
 
 import consulo.ide.ui.popup.PopupChooserBuilder;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.tree.table.TreeTable;
-import com.intellij.util.Consumer;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.tree.table.TreeTable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,12 +30,12 @@ class PopupTableAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<
   }
 
   @Override
-  public void setItemChosenCallback(Consumer<? super T> callback) {
+  public void setItemChosenCallback(java.util.function.Consumer<? super T> callback) {
     throw new UnsupportedOperationException("setItemChosenCallback with element callback is not implemented for tables yet");
   }
 
   @Override
-  public void setItemsChosenCallback(Consumer<? super Set<T>> callback) {
+  public void setItemsChosenCallback(java.util.function.Consumer<? super Set<T>> callback) {
     throw new UnsupportedOperationException("setItemsChosenCallback with element callback is not implemented for tables yet");
   }
 

@@ -18,20 +18,20 @@ package com.intellij.dvcs.push.ui;
 import com.intellij.dvcs.push.PushTarget;
 import com.intellij.dvcs.push.PushTargetPanel;
 import com.intellij.dvcs.push.RepositoryNodeListener;
-import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.ValidationInfo;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.components.JBCheckBox;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -89,7 +89,7 @@ public class RepositoryWithBranchPanel<T extends PushTarget> extends NonOpaquePa
         ValidationInfo error = myDestPushTargetPanelComponent.verify();
         if (error != null) {
           //noinspection ConstantConditions
-          PopupUtil.showBalloonForComponent(error.component, error.message, MessageType.WARNING, false, project);
+          PopupUtil.showBalloonForComponent(error.component, error.message, NotificationType.WARNING, false, project);
         }
         return error == null;
       }

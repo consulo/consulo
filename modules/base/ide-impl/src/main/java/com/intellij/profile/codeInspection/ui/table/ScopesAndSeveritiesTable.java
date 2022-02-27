@@ -37,7 +37,7 @@ import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 

@@ -34,7 +34,7 @@ import java.util.Locale;
 public class JnaUnixMediatorImpl implements FileSystemMediator {
   private static final Logger LOG = Logger.getInstance(JnaUnixMediatorImpl.class);
 
-  static final String COARSE_TIMESTAMP = "idea.io.coarse.ts";
+  static final String COARSE_TIMESTAMP = "consulo.io.coarse.ts";
 
   @SuppressWarnings({"OctalInteger", "SpellCheckingInspection"})
   private interface LibC extends Library {
@@ -88,7 +88,7 @@ public class JnaUnixMediatorImpl implements FileSystemMediator {
   private final int myGid;
   private final boolean myCoarseTs = SystemProperties.getBooleanProperty(COARSE_TIMESTAMP, false);
 
-  JnaUnixMediatorImpl() throws Exception {
+  public JnaUnixMediatorImpl() throws Exception {
     if (SystemInfo.isLinux) {
       if ("arm".equals(SystemInfo.OS_ARCH)) {
         if (SystemInfo.is32Bit) {

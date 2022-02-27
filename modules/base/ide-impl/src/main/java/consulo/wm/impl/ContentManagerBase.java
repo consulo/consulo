@@ -15,26 +15,27 @@
  */
 package consulo.wm.impl;
 
+import com.intellij.openapi.util.Comparing;
+import com.intellij.util.EventDispatcher;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.ActiveRunnable;
 import consulo.component.util.BusyObject;
-import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataProvider;
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.*;
-import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.util.EventDispatcher;
-import consulo.util.collection.SmartList;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.UIAccess;
+import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import kava.beans.PropertyChangeEvent;

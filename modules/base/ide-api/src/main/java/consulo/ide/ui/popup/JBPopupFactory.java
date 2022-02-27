@@ -2,7 +2,6 @@
 
 package consulo.ide.ui.popup;
 
-import com.intellij.codeInsight.hint.HintManager;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;

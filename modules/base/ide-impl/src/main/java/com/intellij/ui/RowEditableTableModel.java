@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.EditableModel;
+
 import javax.swing.table.TableModel;
 
 /**
@@ -22,7 +24,7 @@ import javax.swing.table.TableModel;
  * @author Konstantin Bulenkov
  *
  *  @deprecated
- * @see com.intellij.util.ui.EditableModel
+ * @see EditableModel
  */
 public interface RowEditableTableModel extends TableModel {
   void addRow();

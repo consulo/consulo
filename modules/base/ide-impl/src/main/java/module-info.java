@@ -60,6 +60,7 @@ open module consulo.ide.impl {
   requires transitive consulo.ide.api;
   requires transitive consulo.component.impl;
   requires transitive consulo.ui.ex.awt.api;
+  requires transitive consulo.virtual.file.system.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -674,7 +675,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
   exports com.intellij.openapi.util;
   exports com.intellij.openapi.util.io;
-  exports com.intellij.openapi.util.io.win32;
   exports com.intellij.openapi.util.process;
   exports com.intellij.openapi.util.text;
   exports com.intellij.openapi.vcs;
@@ -914,7 +914,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.debugger.extensions;
   exports com.intellij.ui.docking;
   exports com.intellij.ui.dualView;
-  exports com.intellij.ui.list;
   exports com.intellij.ui.mac;
   exports com.intellij.ui.mac.foundation;
   exports com.intellij.ui.mac.touchbar;
@@ -973,7 +972,6 @@ open module consulo.ide.impl {
   exports com.intellij.util.io.socketConnection.impl;
   exports com.intellij.util.io.storage;
   exports com.intellij.util.io.zip;
-  exports com.intellij.util.loader;
   exports com.intellij.util.net;
   exports com.intellij.util.net.ssl;
   exports com.intellij.util.properties;
@@ -1183,8 +1181,8 @@ open module consulo.ide.impl {
   //exports consulo.ide.settings;
   exports consulo.ide.settings.impl;
   exports consulo.ide.tipOfDay;
-  exports consulo.ide.ui;
   exports consulo.ide.ui.laf;
+  exports consulo.ide.ui.impl;
   exports consulo.ide.updateSettings;
   exports consulo.ide.updateSettings.impl;
   exports consulo.ide.util;
@@ -1292,6 +1290,5 @@ open module consulo.ide.impl {
   exports org.jetbrains.io;
   exports consulo.module.extension.ui;
 
-  exports consulo.ui.ex.toolWindow;
   exports consulo.options.impl;
 }

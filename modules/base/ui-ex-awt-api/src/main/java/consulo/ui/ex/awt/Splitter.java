@@ -412,11 +412,11 @@ public class Splitter extends JPanel implements Splittable {
     //myDivider.revalidate();
   }
 
-  static boolean isNull(Component component) {
+  public static boolean isNull(Component component) {
     return NullableComponent.Check.isNull(component);
   }
 
-  static void hideNull(Component component) {
+  public static void hideNull(Component component) {
     if (component instanceof NullableComponent) {
       if (!component.getBounds().equals(myNullBounds)) {
         component.setBounds(myNullBounds);

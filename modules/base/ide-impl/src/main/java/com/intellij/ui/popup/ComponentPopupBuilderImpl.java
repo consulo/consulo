@@ -16,11 +16,9 @@
 package com.intellij.ui.popup;
 
 import consulo.application.ApplicationManager;
+import consulo.ide.ui.popup.*;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
 import consulo.application.util.function.Computable;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
-import consulo.ide.ui.popup.MouseChecker;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.ActiveComponent;
@@ -39,6 +37,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author anna
@@ -80,11 +79,11 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
   private boolean myShowBorder = true;
   private boolean myFocusable = true;
   private ActiveComponent myCommandButton;
-  private List<? extends Pair<ActionListener, KeyStroke>> myKeyboardActions = Collections.emptyList();
+  private List<? extends consulo.util.lang.Pair<ActionListener, KeyStroke>> myKeyboardActions = Collections.emptyList();
   private Component mySettingsButtons;
   private boolean myMayBeParent;
   private int myAdAlignment = SwingConstants.LEFT;
-  private BooleanFunction<? super KeyEvent> myKeyEventHandler;
+  private Predicate<? super KeyEvent> myKeyEventHandler;
   private Color myBorderColor;
   private boolean myNormalWindowLevel;
   private
@@ -198,7 +197,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setKeyboardActions(@Nonnull List<? extends Pair<ActionListener, KeyStroke>> keyboardActions) {
+  public ComponentPopupBuilder setKeyboardActions(@Nonnull List<? extends consulo.util.lang.Pair<ActionListener, KeyStroke>> keyboardActions) {
     myKeyboardActions = keyboardActions;
     return this;
   }
@@ -225,7 +224,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Nonnull
   @Override
-  public ComponentPopupBuilder setKeyEventHandler(@Nonnull BooleanFunction<? super KeyEvent> handler) {
+  public ComponentPopupBuilder setKeyEventHandler(@Nonnull Predicate<? super KeyEvent> handler) {
     myKeyEventHandler = handler;
     return this;
   }

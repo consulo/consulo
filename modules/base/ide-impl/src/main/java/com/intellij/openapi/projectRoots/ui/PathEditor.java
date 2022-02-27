@@ -25,6 +25,7 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.util.ListUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;

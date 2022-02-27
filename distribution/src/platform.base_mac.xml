@@ -71,6 +71,10 @@
         <include>consulo:consulo-file-editor-api</include>
         <include>consulo:consulo-compiler-artifact-api</include>
         <include>consulo:consulo-color-scheme-api</include>
+        <include>consulo:consulo-ui-ex-awt-api</include>
+        <include>consulo:consulo-virtual-file-system-impl</include>
+        <include>consulo:consulo-component-impl</include>
+        <include>consulo:consulo-ide-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

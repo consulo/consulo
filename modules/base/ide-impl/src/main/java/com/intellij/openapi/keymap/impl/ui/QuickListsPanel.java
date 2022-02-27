@@ -28,6 +28,7 @@ import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.util.ListUtil;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

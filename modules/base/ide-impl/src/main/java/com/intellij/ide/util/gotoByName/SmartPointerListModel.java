@@ -17,7 +17,7 @@ package com.intellij.ide.util.gotoByName;
 
 import consulo.ui.ex.awt.tree.TreeAnchorizer;
 import consulo.application.ApplicationManager;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.swing.*;

@@ -29,7 +29,7 @@ import com.intellij.openapi.help.HelpManager;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;
-import com.intellij.util.ui.EditableModel;
+import consulo.ui.ex.awt.EditableModel;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

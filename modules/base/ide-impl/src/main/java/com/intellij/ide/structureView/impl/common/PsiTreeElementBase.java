@@ -6,7 +6,7 @@ import com.intellij.ide.structureView.StructureViewFactoryEx;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.customRegions.CustomRegionStructureUtil;
 import consulo.ui.ex.awt.tree.AbstractTreeUi;
-import com.intellij.ide.util.treeView.NodeDescriptorProvidingKey;
+import consulo.ui.ex.awt.tree.NodeDescriptorProvidingKey;
 import consulo.ui.ex.awt.tree.TreeAnchorizer;
 import consulo.navigation.ItemPresentation;
 import consulo.component.util.Iconable;

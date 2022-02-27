@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.ui.popup;
+package consulo.ide.ui.popup;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

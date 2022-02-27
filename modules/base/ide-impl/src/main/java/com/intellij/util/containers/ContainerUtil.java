@@ -883,19 +883,19 @@ public class ContainerUtil extends ContainerUtilRt {
   @Nullable
   @Contract(pure = true)
   public static <T> T find(@Nonnull Iterator<? extends T> iterator, @Nonnull final T equalTo) {
-    return find(iterator, new Condition<T>() {
+    return find(iterator, new java.util.function.Predicate<T>() {
       @Override
-      public boolean value(final T object) {
+      public boolean test(final T object) {
         return equalTo == object || equalTo.equals(object);
       }
     });
   }
 
   @Nullable
-  public static <T, V extends T> V find(@Nonnull Iterator<V> iterator, @Nonnull Condition<T> condition) {
+  public static <T, V extends T> V find(@Nonnull Iterator<V> iterator, @Nonnull java.util.function.Predicate<T> condition) {
     while (iterator.hasNext()) {
       V value = iterator.next();
-      if (condition.value(value)) return value;
+      if (condition.test(value)) return value;
     }
     return null;
   }
@@ -2088,37 +2088,37 @@ public class ContainerUtil extends ContainerUtilRt {
   }
 
   @Contract(pure = true)
-  public static <T> boolean and(@Nonnull T[] iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean and(@Nonnull T[] iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
     return and(Arrays.asList(iterable), condition);
   }
 
   @Contract(pure = true)
-  public static <T> boolean and(@Nonnull Iterable<? extends T> iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean and(@Nonnull Iterable<? extends T> iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
     for (final T t : iterable) {
-      if (!condition.value(t)) return false;
+      if (!condition.test(t)) return false;
     }
     return true;
   }
 
   @Contract(pure = true)
-  public static <T> boolean exists(@Nonnull T[] iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean exists(@Nonnull T[] iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
     return or(Arrays.asList(iterable), condition);
   }
 
   @Contract(pure = true)
-  public static <T> boolean exists(@Nonnull Iterable<? extends T> iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean exists(@Nonnull Iterable<? extends T> iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
     return or(iterable, condition);
   }
 
   @Contract(pure = true)
-  public static <T> boolean or(@Nonnull T[] iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean or(@Nonnull T[] iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
     return or(Arrays.asList(iterable), condition);
   }
 
   @Contract(pure = true)
-  public static <T> boolean or(@Nonnull Iterable<? extends T> iterable, @Nonnull Condition<? super T> condition) {
+  public static <T> boolean or(@Nonnull Iterable<? extends T> iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
     for (final T t : iterable) {
-      if (condition.value(t)) return true;
+      if (condition.test(t)) return true;
     }
     return false;
   }

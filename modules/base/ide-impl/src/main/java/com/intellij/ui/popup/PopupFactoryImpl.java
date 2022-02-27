@@ -1,50 +1,48 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.popup;
 
-import consulo.application.CommonBundle;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import consulo.codeEditor.CaretModel;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.VisualPosition;
-import consulo.dataContext.DataContext;
-import consulo.ide.ui.popup.*;
-import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.EmptyRunnable;
-import consulo.ui.ex.util.TextWithMnemonic;
-import consulo.project.ui.wm.WindowManager;
-import com.intellij.ui.CollectionListModel;
-import consulo.ui.ex.awt.util.ColorUtil;
 import com.intellij.ui.HintHint;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.mock.MockConfirmation;
 import com.intellij.ui.popup.tree.TreePopupImpl;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBUI;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.VisualPosition;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
+import consulo.ide.ui.popup.*;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.*;
+import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.function.Condition;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -173,7 +171,8 @@ public class PopupFactoryImpl extends JBPopupFactory {
                             final int maxRowCount,
                             final Condition<? super AnAction> preselectActionCondition,
                             @Nullable final String actionPlace) {
-      this(title, actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, disposeCallback, maxRowCount, preselectActionCondition, actionPlace, null, false);
+      this(title, actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, disposeCallback, maxRowCount, preselectActionCondition, actionPlace, null,
+           false);
     }
 
     public ActionGroupPopup(String title,
@@ -608,7 +607,11 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
   @Nonnull
   @Override
-  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull final String htmlContent, @Nullable final Image icon, Color textColor, final Color fillColor, @Nullable final HyperlinkListener listener) {
+  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull final String htmlContent,
+                                                     @Nullable final Image icon,
+                                                     Color textColor,
+                                                     final Color fillColor,
+                                                     @Nullable final HyperlinkListener listener) {
     JEditorPane text = IdeTooltipManager.initPane(htmlContent, new HintHint().setTextFg(textColor).setAwtTooltip(true), null);
 
     if (listener != null) {
@@ -645,7 +648,8 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
   @Nonnull
   @Override
-  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, MessageType messageType, @Nullable HyperlinkListener listener) {
+  public BalloonBuilder createHtmlTextBalloonBuilder(@Nonnull String htmlContent, NotificationType type, @Nullable HyperlinkListener listener) {
+    MessageType messageType = MessageType.from(type);
     return createHtmlTextBalloonBuilder(htmlContent, messageType.getDefaultIcon(), messageType.getPopupBackground(), listener);
   }
 

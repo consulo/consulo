@@ -5,7 +5,7 @@ import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.psi.codeStyle.NameUtil;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import com.intellij.util.Function;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

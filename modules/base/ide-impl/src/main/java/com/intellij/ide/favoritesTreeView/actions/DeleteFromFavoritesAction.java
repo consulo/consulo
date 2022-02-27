@@ -143,7 +143,7 @@ public class DeleteFromFavoritesAction extends AnAction implements DumbAware {
   private static int getDeep(AbstractTreeNode node) {
     int result = 0;
     while (node != null) {
-      node = node.getParent();
+      node = (AbstractTreeNode)node.getParent();
       result++;
     }
     return result;

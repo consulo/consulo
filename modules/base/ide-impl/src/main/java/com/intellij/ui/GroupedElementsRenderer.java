@@ -5,7 +5,7 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.OpaquePanel;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
-import com.intellij.util.ui.accessibility.AccessibleContextUtil;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 

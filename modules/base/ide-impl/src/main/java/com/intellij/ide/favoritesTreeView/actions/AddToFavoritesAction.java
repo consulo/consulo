@@ -171,7 +171,7 @@ public class AddToFavoritesAction extends AnAction {
         if (pane != null && pane.getSelectedDescriptor() != null && pane.getSelectedDescriptor().getElement() instanceof AbstractTreeNode) {
           AbstractTreeNode abstractTreeNode = ((AbstractTreeNode)pane.getSelectedDescriptor().getElement());
           while (abstractTreeNode != null && !(abstractTreeNode.getParent() instanceof AbstractModuleNode)) {
-            abstractTreeNode = abstractTreeNode.getParent();
+            abstractTreeNode = (AbstractTreeNode)abstractTreeNode.getParent();
           }
           if (abstractTreeNode != null) {
             containingModule = ((AbstractModuleNode)abstractTreeNode.getParent()).getValue();

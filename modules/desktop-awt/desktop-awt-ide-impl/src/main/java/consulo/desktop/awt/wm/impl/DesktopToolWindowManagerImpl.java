@@ -26,7 +26,7 @@ import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
-import com.intellij.openapi.wm.impl.InternalDecoratorListener;
+import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.ui.BalloonImpl;

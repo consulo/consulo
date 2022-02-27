@@ -35,6 +35,14 @@ import java.util.function.Predicate;
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
 
+  @Nonnull
+  public static <T> List<T> collect(@Nonnull Iterator<T> iterator) {
+    if (!iterator.hasNext()) return List.of();
+    List<T> list = new ArrayList<T>();
+    addAll(list, iterator);
+    return list;
+  }
+
   @Contract(pure = true)
   public static <T, U extends T> U findInstance(@Nonnull Iterable<? extends T> iterable, @Nonnull Class<? extends U> aClass) {
     return findInstance(iterable.iterator(), aClass);

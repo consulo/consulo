@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.disposer.Disposable;
-import consulo.ide.ui.FileChooserTextBoxBuilder;
+import consulo.ide.ui.impl.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ProjectLocalize;
 import consulo.language.content.LanguageContentFolderScopes;

@@ -16,33 +16,34 @@
 package com.intellij.lang.customFolding;
 
 import com.intellij.ide.IdeBundle;
-import consulo.language.Language;
 import com.intellij.lang.folding.*;
-import com.intellij.openapi.actionSystem.*;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.PopupAction;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.language.Language;
+import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
+import consulo.ui.NotificationType;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.Balloon;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.disposer.Disposer;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import java.util.HashSet;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.undoRedo.CommandProcessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -126,7 +127,7 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
   private static void notifyCustomRegionsUnavailable(@Nonnull Editor editor, @Nonnull Project project) {
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
     Balloon balloon =
-            popupFactory.createHtmlTextBalloonBuilder(IdeBundle.message("goto.custom.region.message.unavailable"), MessageType.INFO, null).setFadeoutTime(2000)
+            popupFactory.createHtmlTextBalloonBuilder(IdeBundle.message("goto.custom.region.message.unavailable"), NotificationType.INFO, null).setFadeoutTime(2000)
                     .setHideOnClickOutside(true).setHideOnKeyOutside(true).createBalloon();
     Disposer.register(project, balloon);
     balloon.show(popupFactory.guessBestPopupLocation(editor), Balloon.Position.below);

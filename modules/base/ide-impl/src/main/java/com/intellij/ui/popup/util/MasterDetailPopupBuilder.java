@@ -15,26 +15,26 @@
  */
 package com.intellij.ui.popup.util;
 
+import com.intellij.ui.ColoredListCellRenderer;
+import com.intellij.ui.InplaceButton;
+import com.intellij.util.Function;
 import consulo.application.AllIcons;
+import consulo.application.util.SystemInfo;
+import consulo.ide.ui.popup.IconButton;
+import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.project.Project;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.Gray;
-import consulo.ui.ex.awt.*;
-import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
-import consulo.application.util.SystemInfo;
-import com.intellij.ui.*;
-import consulo.ui.ex.awt.JBList;
-import com.intellij.ui.speedSearch.FilteringListModel;
-import com.intellij.util.Function;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.PopupChooserBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;

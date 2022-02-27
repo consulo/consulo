@@ -4,8 +4,12 @@ module consulo.container.impl {
 
   // add temp dependency
   requires transitive java.scripting;
+  // required by gson
+  requires transitive java.sql;
   // this dependency fix batik runtime
   requires transitive jdk.xml.dom;
+  // required consulo-util-lang
+  requires transitive jdk.unsupported;
 
   exports consulo.container.impl;
   exports consulo.container.impl.classloader;

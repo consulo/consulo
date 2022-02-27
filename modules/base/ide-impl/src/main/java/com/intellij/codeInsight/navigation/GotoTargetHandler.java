@@ -40,7 +40,7 @@ import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
-import com.intellij.ui.CollectionListModel;
+import consulo.ui.ex.awt.CollectionListModel;
 import com.intellij.ui.ColoredListCellRenderer;
 import com.intellij.ui.JBListWithHintProvider;
 import com.intellij.ui.popup.AbstractPopup;

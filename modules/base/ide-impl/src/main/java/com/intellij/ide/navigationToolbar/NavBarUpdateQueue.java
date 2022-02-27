@@ -1,24 +1,24 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.navigationToolbar;
 
-import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.application.util.registry.Registry;
-import consulo.project.ui.wm.IdeFrame;
 import com.intellij.ui.LightweightHint;
+import com.intellij.util.Consumer;
+import consulo.application.util.registry.Registry;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.project.Project;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.Consumer;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.util.concurrent.ActionCallback;
 
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicBoolean;

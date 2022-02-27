@@ -1,41 +1,33 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ide.util.treeView;
+package consulo.ui.ex.awt.tree;
 
-import consulo.navigation.NavigationItem;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
-import consulo.ui.ex.tree.TreeRunnable;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Progressive;
-import com.intellij.openapi.util.*;
-import consulo.util.lang.StringHash;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.reference.SoftReference;
-import consulo.ui.ex.awt.tree.TreeVisitor;
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.ObjectUtils;
-import consulo.util.collection.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.JBIterable;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.util.xml.serializer.XmlSerializer;
-import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.util.xml.serializer.annotation.Tag;
 import consulo.logging.Logger;
+import consulo.navigation.NavigationItem;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.JBIterable;
+import consulo.util.collection.SmartList;
 import consulo.util.concurrent.ActionCallback;
-import consulo.util.dataholder.Key;
-import org.jdom.Element;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;
 import consulo.util.concurrent.Promises;
+import consulo.util.dataholder.Key;
+import consulo.util.jdom.JDOMUtil;
+import consulo.util.lang.*;
+import consulo.util.lang.ref.SoftReference;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.JDOMExternalizable;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.XmlSerializer;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.util.xml.serializer.annotation.Tag;
+import org.jdom.Element;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -141,7 +133,7 @@ public class TreeState implements JDOMExternalizable {
     for (Element element : root.getChildren(name)) {
       for (Element child : element.getChildren(PATH_TAG)) {
         PathElement[] path = XmlSerializer.deserialize(child, PathElement[].class);
-        list.add(ContainerUtil.immutableList(path));
+        list.add(List.of(path));
       }
     }
   }
@@ -216,7 +208,7 @@ public class TreeState implements JDOMExternalizable {
     if (userObject == null) return "";
     Object value = userObject instanceof NodeDescriptorProvidingKey
                    ? ((NodeDescriptorProvidingKey)userObject).getKey()
-                   : userObject instanceof AbstractTreeNode ? ((AbstractTreeNode)userObject).getValue() : userObject;
+                   : userObject instanceof TreeNode ? ((TreeNode)userObject).getValue() : userObject;
     if (value instanceof NavigationItem) {
       try {
         String name = ((NavigationItem)value).getName();
@@ -394,7 +386,7 @@ public class TreeState implements JDOMExternalizable {
     private final AbstractTreeBuilder myBuilder;
 
     BuilderFacade(AbstractTreeBuilder builder) {
-      super(ObjectUtils.notNull(builder.getTree()));
+      super(ObjectUtil.notNull(builder.getTree()));
       myBuilder = builder;
     }
 
