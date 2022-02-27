@@ -78,7 +78,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
 
     MessageBusConnection connection = project.getMessageBus().connect();
 
-    connection.subscribe(UISettingsListener.TOPIC, uiSettings -> trimToSize());
+    connection.subscribe(UISettingsListener.TOPIC, this::trimToSize);
 
     connection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, new FileEditorManagerListener.Before.Adapter() {
       @Override
@@ -151,7 +151,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
         }
       }
       addEntry(HistoryEntry.createHeavy(myProject, file, providers, states, providers[selectedProviderIndex]));
-      trimToSize();
+      trimToSize(UISettings.getInstance());
     }
   }
 
@@ -306,9 +306,10 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
   /**
    * If total number of files in history more then <code>UISettings.RECENT_FILES_LIMIT</code>
    * then removes the oldest ones to fit the history to new size.
+   * @param uiSettings
    */
-  private synchronized void trimToSize() {
-    final int limit = UISettings.getInstance().RECENT_FILES_LIMIT + 1;
+  private synchronized void trimToSize(UISettings uiSettings) {
+    final int limit = uiSettings.RECENT_FILES_LIMIT + 1;
     while (myEntriesList.size() > limit) {
       HistoryEntry removed = myEntriesList.remove(0);
       removed.destroy();
@@ -333,7 +334,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
           LOG.error(anyException);
         }
       }
-      trimToSize();
+      trimToSize(UISettings.getInstance());
     });
   }
 

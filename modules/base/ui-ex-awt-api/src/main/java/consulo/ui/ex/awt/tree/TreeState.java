@@ -61,7 +61,7 @@ public class TreeState implements JDOMExternalizable {
   }
 
   @Tag("item")
-  static class PathElement {
+  public static class PathElement {
     @Attribute("name")
     public String id;
     @Attribute("type")
@@ -73,11 +73,11 @@ public class TreeState implements JDOMExternalizable {
     final int index;
 
     @SuppressWarnings("unused")
-    PathElement() {
+    public PathElement() {
       this(null, null, -1, null);
     }
 
-    PathElement(String itemId, String itemType, int itemIndex, Object userObject) {
+    public PathElement(String itemId, String itemType, int itemIndex, Object userObject) {
       id = itemId;
       type = itemType;
 

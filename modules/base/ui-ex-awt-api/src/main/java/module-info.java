@@ -30,5 +30,7 @@ module consulo.ui.ex.awt.api {
   exports consulo.ui.ex.awt.speedSearch;
 
   exports consulo.ui.ex.awt.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl;
-  exports consulo.ui.ex.awt.internal.laf to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.ui.ex.awt.internal.laf;
+
+  opens consulo.ui.ex.awt.tree to consulo.util.xml.serializer;
 }

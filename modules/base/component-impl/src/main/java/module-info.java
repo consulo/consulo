@@ -13,6 +13,6 @@ module consulo.component.impl {
   requires consulo.util.nodep;
 
   exports consulo.component.impl to consulo.ide.impl, consulo.test.impl;
-  exports consulo.component.impl.extension to consulo.ide.impl, consulo.test.impl;
+  exports consulo.component.impl.extension to consulo.ide.impl, consulo.test.impl, consulo.util.xml.serializer;
   exports consulo.component.impl.messagebus to consulo.ide.impl, consulo.test.impl;
 }

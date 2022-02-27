@@ -1,5 +1,5 @@
 <!--
-  - Copyright 2013-2016 consulo.io
+  - Copyright 2013-2022 consulo.io
   -
   - Licensed under the Apache License, Version 2.0 (the "License");
   - you may not use this file except in compliance with the License.
@@ -2812,6 +2812,9 @@
     <applicationService serviceInterface="consulo.virtualFileSystem.RawFileLoader" serviceImplementation="consulo.virtualFileSystem.impl.RawFileLoaderImpl"/>
     <projectService serviceInterface="consulo.language.impl.psi.internal.FormattingService" serviceImplementation="consulo.ide.impl.language.psi.FormattingServiceImpl"/>
     <projectService serviceInterface="consulo.fileEditor.OpenFileDescriptorFactory" serviceImplementation="consulo.ide.impl.fileEditor.OpenFileDescriptorFactoryImpl"/>
+
+    <applicationService serviceInterface="consulo.application.ui.UIFontManager" serviceImplementation="consulo.application.ui.impl.UIFontManagerImpl" />
+    <applicationService serviceInterface="consulo.ui.ex.util.InvokerFactory" serviceImplementation="consulo.ide.ui.ex.impl.util.InvokerFactoryImpl" />
   </extensions>
 
   <applicationListeners>

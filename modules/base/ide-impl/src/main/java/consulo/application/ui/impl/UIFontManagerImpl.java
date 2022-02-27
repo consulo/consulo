@@ -17,6 +17,8 @@ package consulo.application.ui.impl;
 
 import consulo.application.ui.UIFontManager;
 import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -27,6 +29,7 @@ import javax.annotation.Nullable;
  * @since 21-Feb-22
  */
 @Singleton
+@State(name = "UIFontManager", storages = @Storage("ui.font.xml"))
 public class UIFontManagerImpl implements UIFontManager, PersistentStateComponent<UIFontManagerImpl.State> {
   public static class State {
     public String fontName;
