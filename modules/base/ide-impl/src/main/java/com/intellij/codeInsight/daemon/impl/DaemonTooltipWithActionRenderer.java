@@ -20,30 +20,32 @@ import com.intellij.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.LineTooltipRenderer;
 import com.intellij.codeInsight.hint.TooltipGroup;
-import consulo.application.AllIcons;
-import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.PopupAction;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.TooltipAction;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
-import consulo.ui.ex.awt.JBLabel;
+import com.intellij.ui.BalloonImpl;
+import com.intellij.ui.HintHint;
+import com.intellij.ui.HyperlinkLabel;
+import com.intellij.ui.LightweightHint;
 import com.intellij.util.ui.GridBag;
+import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.application.ui.UIFontManager;
+import consulo.application.util.SystemInfo;
+import consulo.codeEditor.Editor;
+import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Html;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.GraphicsConfig;
+import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.*;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -385,7 +387,7 @@ public class DaemonTooltipWithActionRenderer extends DaemonTooltipRenderer {
     if (toolTipFont == null || SystemInfo.isWindows) return toolTipFont;
 
     //if font was changed from default we dont have a good heuristic to customize it
-    if (JBUI.Fonts.label() != toolTipFont || UISettings.getInstance().OVERRIDE_NONIDEA_LAF_FONTS) return toolTipFont;
+    if (JBUI.Fonts.label() != toolTipFont || UIFontManager.getInstance().isOverrideFont()) return toolTipFont;
 
     if (SystemInfo.isMac) {
       return toolTipFont.deriveFont(toolTipFont.getSize() - 1f);

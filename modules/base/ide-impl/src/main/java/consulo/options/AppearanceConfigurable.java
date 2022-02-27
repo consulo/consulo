@@ -237,7 +237,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     isModified |= component.myAllowMergeButtons.getValue() != settings.ALLOW_MERGE_BUTTONS;
     isModified |= component.myCycleScrollingCheckBox.getValue() != settings.CYCLE_SCROLLING;
 
-    isModified |= component.myOverrideLAFFonts.getValue() != settings.OVERRIDE_NONIDEA_LAF_FONTS;
+    isModified |= component.myOverrideLAFFonts.getValue() != uiFontManager.isOverrideFont();
 
     isModified |= component.myDisableMnemonics.getValue() != settings.DISABLE_MNEMONICS;
     isModified |= component.myDisableMnemonicInControlsCheckBox.getValue() != settings.DISABLE_MNEMONICS_IN_CONTROLS;
@@ -271,7 +271,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     component.myFontCombo.setValue(uiFontManager.getFontName());
     component.myAntialiasingInIDE.setValue(settings.IDE_AA_TYPE);
     component.myAntialiasingInEditor.setValue(settings.EDITOR_AA_TYPE);
-    component.myFontSizeCombo.setValue(Integer.toString(settings.FONT_SIZE));
+    component.myFontSizeCombo.setValue(Integer.toString(uiFontManager.getFontSize()));
     component.myPresentationModeFontSize.setValue(Integer.toString(settings.PRESENTATION_MODE_FONT_SIZE));
     component.myAnimateWindowsCheckBox.setValue(settings.ANIMATE_WINDOWS);
     component.myWindowShortcutsCheckBox.setValue(settings.SHOW_TOOL_WINDOW_NUMBERS);
@@ -285,7 +285,7 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     component.myHideNavigationPopupsCheckBox.setValue(settings.HIDE_NAVIGATION_ON_FOCUS_LOSS);
     component.myAltDNDCheckBox.setValue(settings.DND_WITH_PRESSED_ALT_ONLY);
     component.myLafComboBox.setValue(StyleManager.get().getCurrentStyle());
-    component.myOverrideLAFFonts.setValue(settings.OVERRIDE_NONIDEA_LAF_FONTS);
+    component.myOverrideLAFFonts.setValue(uiFontManager.isOverrideFont());
     component.myDisableMnemonics.setValue(settings.DISABLE_MNEMONICS);
     component.myUseSmallLabelsOnTabs.setValue(settings.USE_SMALL_LABELS_ON_TABS);
     component.myWidescreenLayoutCheckBox.setValue(settings.WIDESCREEN_SUPPORT);
@@ -343,10 +343,10 @@ public class AppearanceConfigurable extends SimpleConfigurable<AppearanceConfigu
     settings.ALLOW_MERGE_BUTTONS = component.myAllowMergeButtons.getValue();
     update |= settings.CYCLE_SCROLLING != component.myCycleScrollingCheckBox.getValue();
     settings.CYCLE_SCROLLING = component.myCycleScrollingCheckBox.getValue();
-    if (settings.OVERRIDE_NONIDEA_LAF_FONTS != component.myOverrideLAFFonts.getValue()) {
+    if (uiFontManager.isOverrideFont() != component.myOverrideLAFFonts.getValue()) {
       shouldUpdateUI = true;
     }
-    settings.OVERRIDE_NONIDEA_LAF_FONTS = component.myOverrideLAFFonts.getValue();
+    uiFontManager.setOverrideFont(component.myOverrideLAFFonts.getValue());
     settings.MOVE_MOUSE_ON_DEFAULT_BUTTON = component.myMoveMouseOnDefaultButtonCheckBox.getValue();
     settings.HIDE_NAVIGATION_ON_FOCUS_LOSS = component.myHideNavigationPopupsCheckBox.getValue();
     settings.DND_WITH_PRESSED_ALT_ONLY = component.myAltDNDCheckBox.getValue();

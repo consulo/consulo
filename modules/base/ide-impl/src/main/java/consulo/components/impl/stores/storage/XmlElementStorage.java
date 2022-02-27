@@ -53,7 +53,7 @@ public abstract class XmlElementStorage extends StateStorageBase<StorageData> {
     super(pathMacroSubstitutor);
 
     myFileSpec = fileSpec;
-    myRoamingType = roamingType == null ? RoamingType.PER_USER : roamingType;
+    myRoamingType = roamingType == null ? RoamingType.DEFAULT : roamingType;
     myRootElementName = rootElementName;
     myStreamProvider = myRoamingType == RoamingType.DISABLED ? null : streamProvider;
   }

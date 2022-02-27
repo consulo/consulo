@@ -145,7 +145,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
       public String getName(@Nonnull ShelvedChangeList immutableElement) {
         return immutableElement.getName();
       }
-    }, RoamingType.PER_USER);
+    }, RoamingType.DEFAULT);
 
     myCleaningFuture = JobScheduler.getScheduler().scheduleWithFixedDelay(new Runnable() {
       @Override

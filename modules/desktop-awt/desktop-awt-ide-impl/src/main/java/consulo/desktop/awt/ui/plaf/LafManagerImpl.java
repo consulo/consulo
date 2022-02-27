@@ -101,7 +101,7 @@ import java.util.*;
  * @author Eugene Belyaev
  * @author Vladimir Kondratyev
  */
-@State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_PLATFORM))
+@State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_OS))
 @Singleton
 public final class LafManagerImpl extends LafManager implements Disposable, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(LafManagerImpl.class);

@@ -144,7 +144,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
     }
 
     //we are not yet initialized completely ("open directory", etc)
-    StateStorage storage = getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.PER_USER);
+    StateStorage storage = getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.DEFAULT);
     if (!(storage instanceof VfsFileBasedStorage)) {
       return null;
     }
@@ -206,7 +206,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Nonnull
   private XmlElementStorage getDefaultFileStorage() {
     // XmlElementStorage if default project, otherwise FileBasedStorage
-    XmlElementStorage storage = (XmlElementStorage)getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.PER_USER);
+    XmlElementStorage storage = (XmlElementStorage)getStateStorageManager().getStateStorage(StoragePathMacros.DEFAULT_FILE, RoamingType.DEFAULT);
     assert storage != null;
     return storage;
   }

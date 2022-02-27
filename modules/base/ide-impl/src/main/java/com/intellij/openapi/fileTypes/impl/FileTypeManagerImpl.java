@@ -240,7 +240,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       public String getName(@Nonnull FileType immutableElement) {
         return immutableElement.getId();
       }
-    }, RoamingType.PER_USER);
+    }, RoamingType.DEFAULT);
 
     initStandardFileTypes();
 

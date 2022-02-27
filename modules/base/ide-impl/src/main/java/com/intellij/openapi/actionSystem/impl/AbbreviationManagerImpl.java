@@ -31,7 +31,7 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 @Singleton
-@State(name = "AbbreviationManager", storages = @Storage(value = "abbreviations.xml", roamingType = RoamingType.PER_PLATFORM))
+@State(name = "AbbreviationManager", storages = @Storage(value = "abbreviations.xml", roamingType = RoamingType.PER_OS))
 public class AbbreviationManagerImpl extends AbbreviationManager implements PersistentStateComponent<Element> {
   private final Map<String, List<String>> myAbbreviation2ActionId = new HashMap<>();
   private final Map<String, LinkedHashSet<String>> myActionId2Abbreviations = new HashMap<>();

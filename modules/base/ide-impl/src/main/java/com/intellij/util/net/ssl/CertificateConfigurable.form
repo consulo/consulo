@@ -14,7 +14,7 @@
         </constraints>
         <properties/>
         <clientProperties>
-          <BorderFactoryClass class="java.lang.String" value="com.intellij.ui.IdeBorderFactory$PlainSmallWithoutIndent"/>
+          <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithoutIndent"/>
         </clientProperties>
         <border type="etched" title="Accepted certificates"/>
         <children/>
@@ -26,7 +26,7 @@
         </constraints>
         <properties/>
         <clientProperties>
-          <BorderFactoryClass class="java.lang.String" value="com.intellij.ui.IdeBorderFactory$PlainSmallWithIndent"/>
+          <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
         <border type="none"/>
         <children>

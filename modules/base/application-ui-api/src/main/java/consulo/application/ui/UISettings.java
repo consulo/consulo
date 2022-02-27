@@ -84,15 +84,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
    */
   public static final int ANIMATION_DURATION = 300; // Milliseconds
 
-  //@Property(filter = FontFilter.class)
-  @Deprecated
-  public String FONT_FACE;
-  //@Property(filter = FontFilter.class)
-  @Deprecated
-  public int FONT_SIZE;
-  @Deprecated
-  public boolean OVERRIDE_NONIDEA_LAF_FONTS = false;
-
   public int RECENT_FILES_LIMIT = 50;
   public int CONSOLE_COMMAND_HISTORY_LIMIT = 300;
   public boolean OVERRIDE_CONSOLE_CYCLE_BUFFER_SIZE = false;
@@ -225,16 +216,11 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
       ALPHA_MODE_RATIO = 0.5f;
     }
 
-    validateFont();
-
     if (MAX_CLIPBOARD_CONTENTS <= 0) {
       MAX_CLIPBOARD_CONTENTS = 5;
     }
 
     fireUISettingsChanged();
-  }
-
-  protected void validateFont() {
   }
 
   public int getEditorTabLimit() {
@@ -367,10 +353,6 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
 
   public void setRightHorizontalSplit(boolean value) {
     RIGHT_HORIZONTAL_SPLIT = value;
-  }
-
-  public int getFontSize() {
-    return FONT_SIZE;
   }
 
   public boolean getShowIconInQuickNavigation() {

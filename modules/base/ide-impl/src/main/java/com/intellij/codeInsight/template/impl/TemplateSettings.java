@@ -254,7 +254,7 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
       public String getName(@Nonnull TemplateGroup immutableElement) {
         return immutableElement.getName();
       }
-    }, RoamingType.PER_USER);
+    }, RoamingType.DEFAULT);
 
     for (TemplateGroup group : mySchemesManager.loadSchemes()) {
       for (TemplateImpl template : group.getElements()) {

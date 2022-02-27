@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * @since 2018-06-28
  */
 @Singleton
-@State(name = "FileOperateDialogSettings", storages = @Storage(value = "ide.file.dialog.xml", roamingType = RoamingType.PER_PLATFORM))
+@State(name = "FileOperateDialogSettings", storages = @Storage(value = "ide.file.dialog.xml", roamingType = RoamingType.PER_OS))
 public class FileOperateDialogSettings implements PersistentStateComponent<FileOperateDialogSettings.State> {
   public static class State {
     public String myFileChooseDialogId = FileOperateDialogProvider.APPLICATION_ID;

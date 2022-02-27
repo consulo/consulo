@@ -23,7 +23,7 @@
         </constraints>
         <properties/>
         <clientProperties>
-          <BorderFactoryClass class="java.lang.String" value="com.intellij.ui.IdeBorderFactory$PlainSmallWithoutIndentWithoutInsets"/>
+          <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithoutIndentWithoutInsets"/>
         </clientProperties>
         <border type="none" title="Problem files"/>
         <children>

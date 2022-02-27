@@ -38,7 +38,7 @@ public abstract class BaseToolManager<T extends Tool> {
   public BaseToolManager(ActionManager actionManagerEx, SchemesManagerFactory factory) {
     myActionManager = actionManagerEx;
 
-    mySchemesManager = factory.createSchemesManager(getSchemesPath(), createProcessor(), RoamingType.PER_USER);
+    mySchemesManager = factory.createSchemesManager(getSchemesPath(), createProcessor(), RoamingType.DEFAULT);
 
     mySchemesManager.loadSchemes();
     registerActions();

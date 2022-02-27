@@ -294,9 +294,9 @@ public class ExternalStorage {
   @Nonnull
   public static String buildFileSpec(@Nonnull RoamingType roamingType, @Nonnull String fileSpec) {
     switch (roamingType) {
-      case PER_PLATFORM:
+      case PER_OS:
         return "$OS$/" + getOsPrefix() + "/" + fileSpec;
-      case PER_USER:
+      case DEFAULT:
         return "$GLOBAL$/" + fileSpec;
       default:
         throw new UnsupportedOperationException(roamingType.name());

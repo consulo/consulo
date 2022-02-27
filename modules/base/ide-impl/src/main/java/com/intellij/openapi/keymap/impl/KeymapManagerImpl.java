@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @State(name = "KeymapManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
-                                                          "/keymap.xml", roamingType = RoamingType.PER_PLATFORM), additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH)
+                                                          "/keymap.xml", roamingType = RoamingType.PER_OS), additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH)
 @Singleton
 public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element> {
   static final String KEYMAPS_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/keymaps";
@@ -78,7 +78,7 @@ public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStat
       public String getName(@Nonnull Keymap immutableElement) {
         return immutableElement.getName();
       }
-    }, RoamingType.PER_USER);
+    }, RoamingType.DEFAULT);
 
     List<Keymap> keymaps = defaultKeymap.getKeymaps();
     for (Keymap keymap : keymaps) {

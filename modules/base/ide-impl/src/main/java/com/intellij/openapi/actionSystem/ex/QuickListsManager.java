@@ -76,7 +76,7 @@ public class QuickListsManager {
         scheme.writeExternal(element);
         return element;
       }
-    }, RoamingType.PER_USER);
+    }, RoamingType.DEFAULT);
 
     for (BundledQuickListsProvider provider : BundledQuickListsProvider.EP_NAME.getExtensions()) {
       for (final String path : provider.getBundledListsRelativePaths()) {

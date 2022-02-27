@@ -142,7 +142,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
       public String getName(@Nonnull Profile immutableElement) {
         return immutableElement.getName();
       }
-    }, RoamingType.PER_USER);
+    }, RoamingType.DEFAULT);
     mySeverityRegistrar = new SeverityRegistrarImpl(application.getMessageBus());
   }
 

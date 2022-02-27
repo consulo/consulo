@@ -18,7 +18,7 @@
         </constraints>
         <properties/>
         <clientProperties>
-          <BorderFactoryClass class="java.lang.String" value="com.intellij.ui.IdeBorderFactory$PlainSmallWithIndent"/>
+          <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
         <border type="etched" title-resource-bundle="messages/IdeBundle" title-key="file.encoding.option.properties.files"/>
         <children>
@@ -59,7 +59,7 @@
         </constraints>
         <properties/>
         <clientProperties>
-          <BorderFactoryClass class="java.lang.String" value="com.intellij.ui.IdeBorderFactory$PlainSmallWithIndent"/>
+          <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
         <border type="none"/>
         <children/>
@@ -71,7 +71,7 @@
         </constraints>
         <properties/>
         <clientProperties>
-          <BorderFactoryClass class="java.lang.String" value="com.intellij.ui.IdeBorderFactory$PlainSmallWithIndent"/>
+          <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
         <border type="etched" title-resource-bundle="messages/IdeBundle" title-key="file.encoding.option.BOM"/>
         <children>

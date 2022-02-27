@@ -65,7 +65,7 @@ public class StateComponentInfo<T> {
       state = getStateSpec(o.getClass());
 
       if (state == null) {
-        RoamingType type = o instanceof RoamingTypeDisabled ? RoamingType.DISABLED : RoamingType.PER_USER;
+        RoamingType type = o instanceof RoamingTypeDisabled ? RoamingType.DISABLED : RoamingType.DEFAULT;
         String name = BaseComponentManager.getComponentName(o);
         String file;
         if (project == null) {

@@ -72,7 +72,7 @@ public abstract class CodeStyleSchemesImpl extends CodeStyleSchemes {
       }
     };
 
-    mySchemesManager = schemesManagerFactory.createSchemesManager(CODE_STYLES_DIR_PATH, processor, RoamingType.PER_USER);
+    mySchemesManager = schemesManagerFactory.createSchemesManager(CODE_STYLES_DIR_PATH, processor, RoamingType.DEFAULT);
 
     init();
     addScheme(new CodeStyleSchemeImpl(DEFAULT_SCHEME_NAME, true, null));

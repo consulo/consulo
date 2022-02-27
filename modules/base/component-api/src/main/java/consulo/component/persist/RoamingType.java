@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,18 @@
 package consulo.component.persist;
 
 public enum RoamingType {
+  /**
+   * Stored only locally, not shared and not exportable (Export Settings dialog)
+   */
   DISABLED,
-  PER_PLATFORM,
-  PER_USER
+
+  /**
+   * Stored per operating system (Mac OS X, Linux, FreeBSD, Unix, Windows)
+   */
+  PER_OS,
+
+  /**
+   * Default, shared.
+   */
+  DEFAULT,
 }

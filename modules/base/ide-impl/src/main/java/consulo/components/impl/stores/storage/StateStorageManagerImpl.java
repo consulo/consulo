@@ -232,7 +232,7 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
       throw new IllegalArgumentException("Extension is missing for storage file: " + filePath);
     }
 
-    if (roamingType == RoamingType.PER_USER && fileSpec.equals(StoragePathMacros.WORKSPACE_FILE)) {
+    if (roamingType == RoamingType.DEFAULT && fileSpec.equals(StoragePathMacros.WORKSPACE_FILE)) {
       roamingType = RoamingType.DISABLED;
     }
 

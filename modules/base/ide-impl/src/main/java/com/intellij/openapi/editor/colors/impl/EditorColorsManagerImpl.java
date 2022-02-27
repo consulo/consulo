@@ -54,7 +54,7 @@ import java.util.*;
 @State(
         name = "EditorColorsManagerImpl",
         // make roamingType per platform, due user can use light laf on one platform, and dark on other
-        storages = @Storage(value = "colors.scheme.xml", roamingType = RoamingType.PER_PLATFORM),
+        storages = @Storage(value = "colors.scheme.xml", roamingType = RoamingType.PER_OS),
         additionalExportFile = EditorColorsManagerImpl.FILE_SPEC
 )
 public class EditorColorsManagerImpl extends EditorColorsManager implements PersistentStateComponent<EditorColorsManagerImpl.State> {
@@ -121,7 +121,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
       public String getName(@Nonnull EditorColorsScheme immutableElement) {
         return immutableElement.getName();
       }
-    }, RoamingType.PER_USER);
+    }, RoamingType.DEFAULT);
 
     addDefaultSchemes();
 

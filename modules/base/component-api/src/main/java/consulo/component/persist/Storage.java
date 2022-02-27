@@ -37,7 +37,7 @@ public @interface Storage {
   /**
    * You must not store components with different roaming types in one file ({@link #value()}).
    */
-  RoamingType roamingType() default RoamingType.PER_USER;
+  RoamingType roamingType() default RoamingType.DEFAULT;
 
   Class<? extends StateSplitterEx> stateSplitter() default StateSplitterEx.class;
 }
