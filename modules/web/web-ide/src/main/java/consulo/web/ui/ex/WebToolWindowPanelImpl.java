@@ -255,8 +255,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
   @RequiredUIAccess
   @Override
-  public void addButton(ToolWindowStripeButton button, @Nonnull WindowInfoImpl info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
-    final WindowInfoImpl copiedInfo = info.copy();
+  public void addButton(ToolWindowStripeButton button, @Nonnull WindowInfo info, @Nonnull Comparator<ToolWindowStripeButton> comparator) {
+    final WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
     myId2Button.put(copiedInfo.getId(), (WebToolWindowStripeButtonImpl)button);
     new AddToolStripeButtonCmd((WebToolWindowStripeButtonImpl)button, copiedInfo, comparator).run();
   }
@@ -306,8 +306,8 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
 
   @RequiredUIAccess
   @Override
-  public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfoImpl info, boolean dirtyMode) {
-    final WindowInfoImpl copiedInfo = info.copy();
+  public void addDecorator(@Nonnull ToolWindowInternalDecorator decorator, @Nonnull WindowInfo info, boolean dirtyMode) {
+    final WindowInfoImpl copiedInfo = ((WindowInfoImpl)info).copy();
     final String id = copiedInfo.getId();
 
     myDecorator2Info.put(decorator, copiedInfo);
@@ -316,7 +316,7 @@ public class WebToolWindowPanelImpl extends VaadinComponentDelegate<WebToolWindo
     if (info.isDocked()) {
       WindowInfoImpl sideInfo = getDockedInfoAt(info.getAnchor(), !info.isSplit());
       if (sideInfo == null) {
-        new AddDockedComponentCmd(decorator, info, dirtyMode).run();
+        new AddDockedComponentCmd(decorator, (WindowInfoImpl)info, dirtyMode).run();
       }
       else {
         //return new AddAndSplitDockedComponentCmd((DesktopInternalDecorator)decorator, info, dirtyMode, finishCallBack);

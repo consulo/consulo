@@ -15,6 +15,9 @@
  */
 package consulo.web.wm.impl;
 
+import consulo.application.ui.wm.FocusableFrame;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
 import consulo.ui.ModalityState;
 import consulo.util.concurrent.AsyncResult;
@@ -24,6 +27,7 @@ import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -98,7 +102,7 @@ public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusMan
   }
 
   @Override
-  public Component getLastFocusedFor(IdeFrame frame) {
+  public Component getLastFocusedFor(FocusableFrame frame) {
     return null;
   }
 
@@ -113,5 +117,23 @@ public class WebApplicationIdeFocusManagerImpl implements ApplicationIdeFocusMan
 
   @Override
   public void dispose() {
+  }
+
+  @Nonnull
+  @Override
+  public IdeFocusManager findInstanceByComponent(@Nonnull Component c) {
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public IdeFocusManager findInstanceByContext(@Nullable DataContext context) {
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public IdeFocusManager getInstanceForProject(@Nullable ComponentManager componentManager) {
+    return this;
   }
 }
