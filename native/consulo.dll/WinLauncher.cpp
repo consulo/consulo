@@ -49,7 +49,7 @@ bool need64BitJRE = true;
 #define BITS_STR "x86-64"
 #elif _M_ARM64
 bool need64BitJRE = true;
-#define BITS_STR "AArch64"
+#define BITS_STR "AARCH64"
 #else
 bool need64BitJRE = false;
 #define BITS_STR "x86"
