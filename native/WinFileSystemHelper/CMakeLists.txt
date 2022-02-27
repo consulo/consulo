@@ -36,6 +36,6 @@ include_directories(${JAVA_HOME}/include ${JAVA_HOME}/include/win32)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/IdeaWin32.rc ${CMAKE_CURRENT_BINARY_DIR}/IdeaWin32.rc @ONLY)
 
-add_library(windows-file-system-helper SHARED IdeaWin32.c IdeaWin32.h ${CMAKE_CURRENT_BINARY_DIR}/IdeaWin32.rc)
+add_library(windows-file-system-helper SHARED IdeaWin32.c consulo_virtualFileSystem_impl_internal_windows_WindowsFileSystemHelper.h ${CMAKE_CURRENT_BINARY_DIR}/IdeaWin32.rc)
 
 set_target_properties(windows-file-system-helper PROPERTIES OUTPUT_NAME ${FILE_NAME})

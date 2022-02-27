@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.Arrays;
 
 public final class NativeLibraryLoader {
+  // TODO [VISTALL] make loading by classloader, override consulo.container.impl.classloader.PluginClassLoaderImpl.findLibrary() method
   public static void loadLibrary(@Nonnull String libName) {
     Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
 

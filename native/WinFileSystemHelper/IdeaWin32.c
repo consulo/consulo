@@ -1,6 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-#include "IdeaWin32.h"
+#include "consulo_virtualFileSystem_impl_internal_windows_WindowsFileSystemHelper.h"
 #include <stdbool.h>
 #include <windows.h>
 
@@ -12,7 +12,7 @@ static jfieldID attributesID = NULL;
 static jfieldID timestampID = NULL;
 static jfieldID lengthID = NULL;
 
-#define FILE_INFO_CLASS "com/intellij/openapi/util/io/win32/FileInfo"
+#define FILE_INFO_CLASS "consulo/virtualFileSystem/impl/internal/windows/FileInfo"
 #define BROKEN_SYMLINK_ATTR ((DWORD)-1)
 #define IS_SET(flags, flag) (((flags) & (flag)) == (flag))
 #define FILE_SHARE_ALL (FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE)
@@ -24,7 +24,7 @@ static jobjectArray CopyObjectArray(JNIEnv *env, jobjectArray src, jclass aClass
 
 // interface methods
 
-JNIEXPORT void JNICALL Java_com_intellij_openapi_util_io_win32_IdeaWin32_initIDs(JNIEnv *env, jclass cls) {
+JNIEXPORT void JNICALL Java_consulo_virtualFileSystem_impl_internal_windows_WindowsFileSystemHelper_initIDs(JNIEnv *env, jclass cls) {
   __GetFinalPathNameByHandle = (GetFinalPathNameByHandlePtr)GetProcAddress(GetModuleHandleW(L"kernel32.dll"), "GetFinalPathNameByHandleW");
 
   jclass fileInfoClass = (*env)->FindClass(env, FILE_INFO_CLASS);
@@ -38,7 +38,7 @@ JNIEXPORT void JNICALL Java_com_intellij_openapi_util_io_win32_IdeaWin32_initIDs
   lengthID = (*env)->GetFieldID(env, fileInfoClass, "length", "J");
 }
 
-JNIEXPORT jobject JNICALL Java_com_intellij_openapi_util_io_win32_IdeaWin32_getInfo0(JNIEnv *env, jobject method, jstring path) {
+JNIEXPORT jobject JNICALL Java_consulo_virtualFileSystem_impl_internal_windows_WindowsFileSystemHelper_getInfo0(JNIEnv *env, jobject method, jstring path) {
   wchar_t *winPath = ToWinPath(env, path, false);
   if (winPath == NULL) {
     return NULL;
@@ -82,7 +82,7 @@ JNIEXPORT jobject JNICALL Java_com_intellij_openapi_util_io_win32_IdeaWin32_getI
   return result;
 }
 
-JNIEXPORT jstring JNICALL Java_com_intellij_openapi_util_io_win32_IdeaWin32_resolveSymLink0(JNIEnv *env, jobject method, jstring path) {
+JNIEXPORT jstring JNICALL Java_consulo_virtualFileSystem_impl_internal_windows_WindowsFileSystemHelper_resolveSymLink0(JNIEnv *env, jobject method, jstring path) {
   if (__GetFinalPathNameByHandle == NULL) {
     return path;  // links not supported
   }
@@ -129,7 +129,7 @@ JNIEXPORT jstring JNICALL Java_com_intellij_openapi_util_io_win32_IdeaWin32_reso
   return result;
 }
 
-JNIEXPORT jobjectArray JNICALL Java_com_intellij_openapi_util_io_win32_IdeaWin32_listChildren0(JNIEnv *env, jobject method, jstring path) {
+JNIEXPORT jobjectArray JNICALL Java_consulo_virtualFileSystem_impl_internal_windows_WindowsFileSystemHelper_listChildren0(JNIEnv *env, jobject method, jstring path) {
   jclass fileInfoClass = (*env)->FindClass(env, FILE_INFO_CLASS);
   if (fileInfoClass == NULL) {
     return NULL;
