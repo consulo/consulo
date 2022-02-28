@@ -196,20 +196,25 @@ public interface Platform {
   void openDirectoryInFileManager(@Nonnull File file);
 
   @Nonnull
+  default String mapExecutableName(@Nonnull String baseName) {
+    if (jvm().isAmd64()) {
+      return baseName + "64";
+    }
+
+    if (jvm().isArm64()) {
+      return baseName + "-aarch64";
+    }
+
+    return baseName;
+  }
+
+  @Nonnull
   default String mapWindowsExecutable(@Nonnull String baseName, @Nonnull String extension) {
     if (!os().isWindows()) {
       throw new IllegalArgumentException("Must be Windows");
     }
 
-    if (jvm().isAmd64()) {
-      return baseName + "64" + "." + extension;
-    }
-
-    if (jvm().isArm64()) {
-      return baseName + "-aarch64" + "." + extension;
-    }
-
-    return baseName + "." + extension;
+    return mapExecutableName(baseName) + "." + extension;
   }
 
   @Nonnull

@@ -1,28 +1,28 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.impl.local;
 
-import consulo.process.local.OSProcessHandler;
-import consulo.process.ProcessOutputTypes;
 import com.intellij.ide.actions.ShowFilePathAction;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ShutDownTracker;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.util.io.CharsetToolkit;
 import com.intellij.openapi.vfs.local.FileWatcherNotificationSink;
 import com.intellij.openapi.vfs.local.PluggableFileWatcher;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
-import consulo.util.lang.TimeoutUtil;
+import com.sun.jna.Platform;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
+import consulo.component.util.NativeLibraryLoader;
+import consulo.logging.Logger;
+import consulo.process.ProcessOutputTypes;
 import consulo.process.io.BaseDataReader;
 import consulo.process.io.BaseOutputReader;
-import com.sun.jna.Platform;
-import consulo.container.boot.ContainerPathManager;
-import consulo.logging.Logger;
+import consulo.process.local.OSProcessHandler;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.dataholder.Key;
+import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.ShutDownTracker;
+import consulo.util.lang.TimeoutUtil;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -43,8 +43,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class NativeFileWatcherImpl extends PluggableFileWatcher {
   private static final Logger LOG = Logger.getInstance(NativeFileWatcherImpl.class);
 
-  private static final String PROPERTY_WATCHER_DISABLED = "idea.filewatcher.disabled";
-  private static final String PROPERTY_WATCHER_EXECUTABLE_PATH = "idea.filewatcher.executable.path";
+  private static final String PROPERTY_WATCHER_DISABLED = "consulo.filewatcher.disabled";
+  private static final String PROPERTY_WATCHER_EXECUTABLE_PATH = "consulo.filewatcher.executable.path";
   private static final File PLATFORM_NOT_SUPPORTED = new File("(platform not supported)");
   private static final String ROOTS_COMMAND = "ROOTS";
   private static final String EXIT_COMMAND = "EXIT";
@@ -127,27 +127,34 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
   /**
    * Subclasses should override this method to provide a custom binary to run.
    */
-  @Nullable
+  @Nonnull
   public static File getExecutable() {
     String execPath = System.getProperty(PROPERTY_WATCHER_EXECUTABLE_PATH);
     if (execPath != null) return new File(execPath);
 
-    String[] names = null;
-    if (SystemInfo.isWindows) {
-      if ("win32-x86".equals(Platform.RESOURCE_PREFIX)) names = new String[]{"fsnotifier.exe"};
-      else if ("win32-x86-64".equals(Platform.RESOURCE_PREFIX)) names = new String[]{"fsnotifier64.exe", "fsnotifier.exe"};
-    }
-    else if (SystemInfo.isMac) {
-      names = new String[]{"fsnotifier"};
-    }
-    else if (SystemInfo.isLinux) {
-      if ("linux-x86".equals(Platform.RESOURCE_PREFIX)) names = new String[]{"fsnotifier"};
-      else if ("linux-x86-64".equals(Platform.RESOURCE_PREFIX)) names = new String[]{"fsnotifier64"};
-      else if ("linux-arm".equals(Platform.RESOURCE_PREFIX)) names = new String[]{"fsnotifier-arm"};
-    }
-    if (names == null) return PLATFORM_NOT_SUPPORTED;
+    consulo.platform.Platform platform = consulo.platform.Platform.current();
+    consulo.platform.Platform.OperatingSystem os = platform.os();
+    consulo.platform.Platform.Jvm jvm = platform.jvm();
 
-    return Arrays.stream(names).map(ContainerPathManager.get()::findBinFile).filter(Objects::nonNull).findFirst().orElse(null);
+    String fileName = null;
+    if (os.isWindows()) {
+      fileName = platform.mapWindowsExecutable("fsnotifier", "exe");
+    }
+    else if (os.isMac()) {
+      fileName = "fsnotifier";
+    }
+    else if (os.isLinux()) {
+      if ("linux-x86".equals(Platform.RESOURCE_PREFIX)) {
+        fileName = "fsnotifier";
+      }
+      else if ("linux-x86-64".equals(Platform.RESOURCE_PREFIX)) {
+        fileName = "fsnotifier64";
+      }
+      else if ("linux-arm".equals(Platform.RESOURCE_PREFIX)) fileName = "fsnotifier-arm";
+    }
+    if (fileName == null) return PLATFORM_NOT_SUPPORTED;
+
+    return NativeLibraryLoader.findExecutable(fileName);
   }
 
   /* internal stuff */
@@ -318,8 +325,12 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
       super.notifyProcessTerminated(exitCode);
 
       String message = "Watcher terminated with exit code " + exitCode;
-      if (myIsShuttingDown) LOG.info(message);
-      else LOG.warn(message);
+      if (myIsShuttingDown) {
+        LOG.info(message);
+      }
+      else {
+        LOG.warn(message);
+      }
 
       myProcessHandler = null;
 

@@ -35,4 +35,18 @@ public final class NativeLibraryLoader {
 
     System.load(libPath);
   }
+
+  @Nonnull
+  public static File findExecutable(@Nonnull String fileName) {
+    Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
+
+    PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
+    if (plugin == null) {
+      throw new IllegalArgumentException("Can't find plugin for class " + callerClass);
+    }
+
+    File nativePluginDirectory = new File(plugin.getPath(), "native");
+
+    return new File(nativePluginDirectory, fileName);
+  }
 }
