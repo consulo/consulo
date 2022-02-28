@@ -16,14 +16,12 @@
 package consulo.project.ui.notification;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.messagebus.Topic;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -39,19 +37,15 @@ public interface Notifications {
   void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType, boolean shouldLog);
   void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType, boolean shouldLog, boolean shouldReadAloud);
 
-  @SuppressWarnings({"UtilityClassWithoutPrivateConstructor"})
   class Bus {
     /**
      * Registration is OPTIONAL: STICKY_BALLOON display type will be used by default.
      */
-    @SuppressWarnings("JavaDoc")
     public static void register(@Nonnull final String group_id, @Nonnull final NotificationDisplayType defaultDisplayType) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) return;
-      //noinspection SSBasedInspection
-      SwingUtilities.invokeLater(() -> {
-        Application app = ApplicationManager.getApplication();
-        if (!app.isDisposed()) {
-          app.getMessageBus().syncPublisher(TOPIC).register(group_id, defaultDisplayType);
+      Application application = Application.get();
+      application.getLastUIAccess().give(() -> {
+        if (!application.isDisposed()) {
+          application.getMessageBus().syncPublisher(TOPIC).register(group_id, defaultDisplayType);
         }
       });
     }
@@ -61,12 +55,7 @@ public interface Notifications {
     }
 
     public static void notify(@Nonnull final Notification notification, @Nullable final Project project) {
-      if (ApplicationManager.getApplication().isUnitTestMode()) {
-        doNotify(notification, project);
-      }
-      else {
-        project.getApplication().getLastUIAccess().giveIfNeed(() -> doNotify(notification, project));
-      }
+      Application.get().getLastUIAccess().giveIfNeed(() -> doNotify(notification, project));
     }
 
     private static void doNotify(Notification notification, @Nullable Project project) {
