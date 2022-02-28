@@ -230,6 +230,10 @@
       <artifactId>jna-jpms</artifactId>
     </dependency>
     <dependency>
+      <groupId>jgraph</groupId>
+      <artifactId>jgraph</artifactId>
+    </dependency>
+    <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna-platform-jpms</artifactId>
     </dependency>
