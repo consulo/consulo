@@ -18,6 +18,7 @@ package consulo.desktop.awt.uiOld.win;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
 import consulo.application.Application;
+import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
 import consulo.desktop.awt.wm.impl.dock.DesktopSystemDockImpl;
 import consulo.platform.Platform;
@@ -41,13 +42,13 @@ public class WinDockDelegate implements DesktopSystemDockImpl.Delegate {
 
   @Override
   public void updateRecentProjectsMenu() {
-    //if (ApplicationProperties.isInSandbox()) {
-    //  return;
-    //}
+    if (ApplicationProperties.isInSandbox()) {
+      return;
+    }
 
     // we need invoke it in own thread, due we don't want it call inside UI thread, or Write thread (if it separate)
     myExecutorService.execute(() -> {
-      RecentTasks.clear(myApplication);
+      RecentTasksManager.clear(myApplication);
 
       final AnAction[] recentProjectActions = RecentProjectsManager.getInstance().getRecentProjectsActions(false);
 
@@ -61,14 +62,14 @@ public class WinDockDelegate implements DesktopSystemDockImpl.Delegate {
         throw new IllegalArgumentException("Executable is not exists. Path: " + exePath.getPath());
       }
 
-      String launcher = RecentTasks.getShortenPath(myApplication, exePath.getPath());
+      String launcher = RecentTasksManager.getShortenPath(myApplication, exePath.getPath());
       Task[] tasks = new Task[recentProjectActions.length];
       for (int i = 0; i < recentProjectActions.length; i++) {
         ReopenProjectAction rpa = (ReopenProjectAction)recentProjectActions[i];
-        tasks[i] = new Task(launcher, RecentTasks.getShortenPath(myApplication, rpa.getProjectPath()), rpa.getTemplatePresentation().getText());
+        tasks[i] = new Task(launcher, RecentTasksManager.getShortenPath(myApplication, rpa.getProjectPath()), rpa.getTemplatePresentation().getText());
       }
 
-      RecentTasks.addTasks(myApplication, "Recent", tasks);
+      RecentTasksManager.addTasks(myApplication, "Recent", tasks);
     });
   }
 

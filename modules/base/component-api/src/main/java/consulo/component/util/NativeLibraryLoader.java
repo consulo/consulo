@@ -9,10 +9,15 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 public final class NativeLibraryLoader {
   // TODO [VISTALL] make loading by classloader, override consulo.container.impl.classloader.PluginClassLoaderImpl.findLibrary() method
-  public static void loadLibrary(@Nonnull String libName) {
+
+  /**
+   * @param systemLoad must be referenced to System::load, this need for fixing caller from stacktrace (from target classloader, not NativeLibraryLoader classloader)
+   */
+  public static void loadLibrary(@Nonnull String libName, Consumer<String> systemLoad) {
     Class<?> callerClass = ReflectionUtil.getGrandCallerClass();
 
     PluginDescriptor plugin = PluginManager.getPlugin(callerClass);
@@ -33,7 +38,7 @@ public final class NativeLibraryLoader {
       throw new UnsatisfiedLinkError("'" + libFileName + "' not found in '" + nativePluginDirectory + "' among " + Arrays.toString(nativePluginDirectory.list()));
     }
 
-    System.load(libPath);
+    systemLoad.accept(libPath);
   }
 
   @Nonnull

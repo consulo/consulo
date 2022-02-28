@@ -38,7 +38,7 @@ public class WindowsFileSystemHelper {
     WindowsFileSystemHelper instance = null;
     if (Platform.current().os().isWindows7OrNewer() && Boolean.parseBoolean(System.getProperty("consulo.use.native.fs.for.win", "true"))) {
       try {
-        NativeLibraryLoader.loadLibrary("windows-file-system-helper");
+        NativeLibraryLoader.loadLibrary("windows-file-system-helper", System::load);
         instance = new WindowsFileSystemHelper();
         LOG.info("Native filesystem for Windows is operational");
       }
