@@ -16,12 +16,11 @@
 package consulo.desktop.awt.uiOld.win;
 
 import consulo.application.Application;
+import consulo.component.util.NativeLibraryLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RecentTasks {
@@ -39,10 +38,8 @@ public class RecentTasks {
       try {
         ContainerPathManager containerPathManager = ContainerPathManager.get();
 
-        String libraryName = Platform.current().mapLibraryName("jumpListBridge");
+        NativeLibraryLoader.loadLibrary("jumplistbridge");
 
-        System.load(new File(containerPathManager.getBinPath(), libraryName).getAbsolutePath());
-        
         initialize(application.getName().get() + "." + containerPathManager.getConfigPath().hashCode());
 
         ourInitializeState.compareAndSet(INITIALIZING, INITIALIZED);

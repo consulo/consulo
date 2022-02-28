@@ -17,12 +17,11 @@ package consulo.desktop.awt.uiOld.win;
 
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.ide.ReopenProjectAction;
-import consulo.ui.ex.action.AnAction;
 import consulo.application.Application;
-import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
-import consulo.platform.Platform;
 import consulo.desktop.awt.wm.impl.dock.DesktopSystemDockImpl;
+import consulo.platform.Platform;
+import consulo.ui.ex.action.AnAction;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;
@@ -42,9 +41,9 @@ public class WinDockDelegate implements DesktopSystemDockImpl.Delegate {
 
   @Override
   public void updateRecentProjectsMenu() {
-    if (ApplicationProperties.isInSandbox()) {
-      return;
-    }
+    //if (ApplicationProperties.isInSandbox()) {
+    //  return;
+    //}
 
     // we need invoke it in own thread, due we don't want it call inside UI thread, or Write thread (if it separate)
     myExecutorService.execute(() -> {

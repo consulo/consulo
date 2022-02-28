@@ -18,10 +18,9 @@
   * @author Denis Fokin
   */
 
-#include "stdafx.h"
 #include <windows.h>
 #include <Objbase.h>
-#include "jumplistbridge.h"
+#include "consulo_desktop_awt_uiOld_win_RecentTasks.h"
 #include <ShObjIdl.h>
 #include <Objectarray.h>
 #include <Knownfolders.h>
@@ -61,7 +60,7 @@ PCWSTR jetBrainsAppId;
 * Method:    initialize
 * Signature: (Ljava/lang/String;)V
 */
-JNIEXPORT void JNICALL Java_com_intellij_ui_win_RecentTasks_initialize
+JNIEXPORT void JNICALL Java_consulo_desktop_awt_uiOld_win_RecentTasks_initialize
 	(JNIEnv * jEnv, jclass clz, jstring jAppId) {
 		jetBrainsAppId = jstowsz(jEnv, jAppId);
 		SetCurrentProcessExplicitAppUserModelID(jetBrainsAppId);
@@ -73,7 +72,7 @@ JNIEXPORT void JNICALL Java_com_intellij_ui_win_RecentTasks_initialize
 * Method:    clearNative
 * Signature: ()V
 */
-JNIEXPORT void JNICALL Java_com_intellij_ui_win_RecentTasks_clearNative
+JNIEXPORT void JNICALL Java_consulo_desktop_awt_uiOld_win_RecentTasks_clearNative
 	(JNIEnv *, jclass) {
 
 		ICustomDestinationList * pcdl;
@@ -164,7 +163,7 @@ LPCWSTR getShortPath (LPCWSTR lpszPath) {
 * Method:    getShortenPath
 * Signature: ([Ljava/lang/String;)[Ljava/lang/String;
 */
-JNIEXPORT jstring JNICALL Java_com_intellij_ui_win_RecentTasks_getShortenPath
+JNIEXPORT jstring JNICALL Java_consulo_desktop_awt_uiOld_win_RecentTasks_getShortenPath
 	(JNIEnv * jEnv, jclass c, jstring path)
 {
 
@@ -194,7 +193,7 @@ JNIEXPORT jstring JNICALL Java_com_intellij_ui_win_RecentTasks_getShortenPath
 * Method:    addTasksNativeForCategory
 * Signature: (Ljava/lang/String;[Lcom/intellij/ui/win/RecentTasks/Task;)V
 */
-JNIEXPORT void JNICALL Java_com_intellij_ui_win_RecentTasks_addTasksNativeForCategory
+JNIEXPORT void JNICALL Java_consulo_desktop_awt_uiOld_win_RecentTasks_addTasksNativeForCategory
 	(JNIEnv * jEnv, jclass c, jstring cn, jobjectArray linksArray)
 {
 	LPCWSTR categoryName = (wchar_t*) jEnv->GetStringChars(cn, 0);
