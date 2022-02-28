@@ -205,26 +205,30 @@ public abstract class PlatformBase implements Platform {
       myJavaVendor = jvmProperties.getOrDefault("java.vendor", "n/a");
       myJavaName = jvmProperties.getOrDefault("java.vm.name", "n/a");
 
-      //
-
       String osArch = jvmProperties.getOrDefault("os.arch", "");
-      if ("x86_64".equals(osArch) || "amd64".equals(osArch)) {
-        myCpuArchitecture = CpuArchitecture.X86_64;
-      }
-      else if ("i386".equals(osArch) || "x86".equals(osArch))  {
-        myCpuArchitecture = CpuArchitecture.X86;
-      }
-      else if ("arm64".equals(osArch) || "aarch64".equals(osArch)) {
-        myCpuArchitecture = CpuArchitecture.AARCH64;
-      } else {
-        String name = osArch.toUpperCase(Locale.ROOT);
-        int width = 0;
-        String sunArchModel = jvmProperties.get("sun.arch.data.model");
-        if (sunArchModel != null) {
-          width = StringUtil.parseInt(sunArchModel, 0);
-        }
+      switch (osArch) {
+        case "x86_64":
+        case "amd64":
+          myCpuArchitecture = CpuArchitecture.X86_64;
+          break;
+        case "i386":
+        case "x86":
+          myCpuArchitecture = CpuArchitecture.X86;
+          break;
+        case "arm64":
+        case "aarch64":
+          myCpuArchitecture = CpuArchitecture.AARCH64;
+          break;
+        default:
+          String name = osArch.toUpperCase(Locale.ROOT);
+          int width = 0;
+          String sunArchModel = jvmProperties.get("sun.arch.data.model");
+          if (sunArchModel != null) {
+            width = StringUtil.parseInt(sunArchModel, 0);
+          }
 
-        myCpuArchitecture = new CpuArchitecture(name, width);
+          myCpuArchitecture = new CpuArchitecture(name, width);
+          break;
       }
     }
 
@@ -271,7 +275,7 @@ public abstract class PlatformBase implements Platform {
 
     @Override
     @Nonnull
-    public CpuArchitecture getCpuArchitecture() {
+    public CpuArchitecture arch() {
       return myCpuArchitecture;
     }
   }

@@ -130,19 +130,19 @@ public interface Platform {
     Map<String, String> getRuntimeProperties();
 
     default boolean isArm64() {
-      return CpuArchitecture.AARCH64 == getCpuArchitecture();
+      return CpuArchitecture.AARCH64 == arch();
     }
 
     default boolean isAmd64() {
-      return CpuArchitecture.X86_64 == getCpuArchitecture();
+      return CpuArchitecture.X86_64 == arch();
     }
 
     default boolean isAny64Bit() {
-      return getCpuArchitecture().getWidth() == 64;
+      return arch().getWidth() == 64;
     }
 
     @Nonnull
-    CpuArchitecture getCpuArchitecture();
+    CpuArchitecture arch();
   }
 
   interface User {
@@ -215,8 +215,11 @@ public interface Platform {
   @Nonnull
   default String mapLibraryName(@Nonnull String libName) {
     String baseName = libName;
-    if (jvm().isAny64Bit()) {
-      baseName = baseName.replace("32", "") + "64";
+    if (jvm().isAmd64()) {
+      baseName = baseName + "64";
+    }
+    else if (jvm().isArm64()) {
+      baseName = baseName + "-aarch64";
     }
 
     String fileName = System.mapLibraryName(baseName);
