@@ -1130,7 +1130,6 @@ open module consulo.ide.impl {
   exports consulo.codeEditor.impl;
   exports consulo.codeEditor.impl.softwrap.mapping;
   exports consulo.codeEditor.notifications;
-  exports consulo.execution.console;
   exports consulo.execution.impl;
   exports consulo.execution.testframework.thrift.runner;
   exports consulo.execution.ui.editor;
