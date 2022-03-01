@@ -1,0 +1,42 @@
+#include <windows.h>
+
+#define FILE_VERSION      3,0,0,0
+#define FILE_VERSION_STR  "3.0.0.0"
+#define APP_VERSION       3,0,0,0
+#define APP_VERSION_STR   "14"
+
+#pragma code_page(65001)
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704b0"
+        BEGIN
+            VALUE "CompanyName", "consulo.io"
+            VALUE "FileDescription", "Command line runner"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "runnerw.exe"
+            VALUE "LegalCopyright", "Copyright (C) 2013-2022 consulo.io"
+            VALUE "OriginalFilename", "runnerw.exe"
+            VALUE "ProductName", "Consulo"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200
+    END
+END
+

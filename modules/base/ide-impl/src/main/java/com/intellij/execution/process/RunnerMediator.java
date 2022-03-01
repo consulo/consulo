@@ -15,13 +15,13 @@
  */
 package com.intellij.execution.process;
 
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
 import consulo.application.util.SystemInfo;
-import consulo.container.boot.ContainerPathManager;
+import consulo.component.util.NativeFileLoader;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.internal.UnixProcessManager;
 
 import javax.annotation.Nonnull;
@@ -76,7 +76,7 @@ public class RunnerMediator {
   }
 
   public ProcessHandler createProcess(@Nonnull final GeneralCommandLine commandLine, final boolean useSoftKill) throws ExecutionException {
-    if (SystemInfo.isWindows) {
+    if (Platform.current().os().isWindows()) {
       injectRunnerCommand(commandLine);
     }
 
@@ -85,7 +85,8 @@ public class RunnerMediator {
 
   @Nullable
   public static String getRunnerPath() {
-    if (!Platform.current().os().isWindows()) {
+    Platform platform = Platform.current();
+    if (!platform.os().isWindows()) {
       throw new IllegalStateException("There is no need of runner under unix based OS");
     }
     final String path = System.getenv(CONSULO_RUNNERW);
@@ -95,7 +96,7 @@ public class RunnerMediator {
       }
       LOG.warn("Cannot locate " + RUNNERW_BASENAME + " by " + CONSULO_RUNNERW + " environment variable (" + path + ")");
     }
-    File runnerw = new File(ContainerPathManager.get().getBinPath(), Platform.current().mapWindowsExecutable(RUNNERW_BASENAME, "exe"));
+    File runnerw = NativeFileLoader.findExecutable(platform.mapWindowsExecutable(RUNNERW_BASENAME, "exe"));
     if (runnerw.exists()) {
       return runnerw.getPath();
     }
