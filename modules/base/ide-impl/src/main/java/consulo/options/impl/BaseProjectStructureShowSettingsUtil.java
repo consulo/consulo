@@ -15,12 +15,11 @@
  */
 package consulo.options.impl;
 
-import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import consulo.ide.base.BaseShowSettingsUtil;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.project.Project;
 import consulo.roots.ui.configuration.impl.DefaultLibrariesConfigurator;
 
 import javax.annotation.Nonnull;
@@ -30,7 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 19/04/2021
  */
-public abstract class BaseProjectStructureShowSettingsUtil extends BaseShowSettingsUtil implements ProjectStructureSettingsUtil {
+public abstract class BaseProjectStructureShowSettingsUtil extends BaseShowSettingsUtil {
   private ModulesConfiguratorImpl myModulesConfigurator;
   private LibrariesConfigurator myLibrariesConfigurator;
 

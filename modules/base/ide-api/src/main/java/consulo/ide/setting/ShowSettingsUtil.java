@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.function.Consumer;
 
-public abstract class ShowSettingsUtil {
+public abstract class ShowSettingsUtil implements ProjectStructureSettingsUtil {
   public static final String DIMENSION_KEY = "OptionsEditor";
 
   public static ShowSettingsUtil getInstance() {
