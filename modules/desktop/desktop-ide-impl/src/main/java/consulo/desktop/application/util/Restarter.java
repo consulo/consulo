@@ -15,22 +15,23 @@
  */
 package consulo.desktop.application.util;
 
-import consulo.application.Application;
-import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtilRt;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
-import consulo.util.lang.TimeoutUtil;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.WString;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
+import consulo.application.Application;
 import consulo.application.ApplicationProperties;
+import consulo.application.util.SystemInfo;
+import consulo.component.util.NativeFileLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.platform.Platform;
+import consulo.util.lang.TimeoutUtil;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -41,13 +42,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings({"UseOfSystemOutOrSystemErr", "CallToPrintStackTrace"})
 public class Restarter {
   private Restarter() {
   }
 
   private static int getRestartCode() {
-    String s = System.getProperty("jb.restart.code");
+    String s = System.getProperty("consulo.restart.code");
+    if (s == null) {
+      // obsolete option
+      s = System.getProperty("jb.restart.code");
+    }
+
     if (s != null) {
       try {
         return Integer.parseInt(s);
@@ -119,7 +124,10 @@ public class Restarter {
     final String[] argv = argv_ptr.getWideStringArray(0, argc.getValue());
     kernel32.LocalFree(argv_ptr);
 
-    doScheduleRestart(new File(ContainerPathManager.get().getBinPath(), "restarter.exe"), ContainerPathManager.get().getAppHomeDirectory(), commands -> {
+    String restarterExe = Platform.current().mapWindowsExecutable("restarter", "exe");
+    File restarterFilePath = NativeFileLoader.findExecutable(restarterExe);
+
+    doScheduleRestart(restarterFilePath, ContainerPathManager.get().getAppHomeDirectory(), commands -> {
       Collections.addAll(commands, String.valueOf(pid), String.valueOf(beforeRestart.length));
       Collections.addAll(commands, beforeRestart);
       Collections.addAll(commands, String.valueOf(argc.getValue()));
@@ -162,9 +170,9 @@ public class Restarter {
   }
 
   public static File createTempExecutable(File executable) throws IOException {
-    String ext = FileUtilRt.getExtension(executable.getName());
-    File copy = FileUtilRt.createTempFile(FileUtilRt.getNameWithoutExtension(executable.getName()), StringUtil.isEmptyOrSpaces(ext) ? ".tmp" : ("." + ext), false);
-    FileUtilRt.copy(executable, copy);
+    String ext = FileUtil.getExtension(executable.getName());
+    File copy = FileUtil.createTempFile(FileUtil.getNameWithoutExtension(executable.getName()), StringUtil.isEmptyOrSpaces(ext) ? ".tmp" : ("." + ext), false);
+    FileUtil.copy(executable, copy);
     if (!copy.setExecutable(executable.canExecute())) throw new IOException("Cannot make file executable: " + copy);
     return copy;
   }

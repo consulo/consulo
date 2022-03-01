@@ -12,7 +12,7 @@ import com.sun.jna.Platform;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
-import consulo.component.util.NativeLibraryLoader;
+import consulo.component.util.NativeFileLoader;
 import consulo.logging.Logger;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.io.BaseDataReader;
@@ -154,7 +154,7 @@ public class NativeFileWatcherImpl extends PluggableFileWatcher {
     }
     if (fileName == null) return PLATFORM_NOT_SUPPORTED;
 
-    return NativeLibraryLoader.findExecutable(fileName);
+    return NativeFileLoader.findExecutable(fileName);
   }
 
   /* internal stuff */

@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public final class NativeLibraryLoader {
+public final class NativeFileLoader {
   // TODO [VISTALL] make loading by classloader, override consulo.container.impl.classloader.PluginClassLoaderImpl.findLibrary() method
 
   /**

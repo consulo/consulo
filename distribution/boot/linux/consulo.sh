@@ -13,7 +13,7 @@ while true ; do
 
   . "$CONSULO_HOME/bin/launcher.sh"
 
-  eval "$JDK/bin/java" $ALL_JVM_ARGS -Djb.restart.code=88 $MAIN_CLASS_NAME "$@"
+  eval "$JDK/bin/java" $ALL_JVM_ARGS -Dconsulo.restart.code=88 $MAIN_CLASS_NAME "$@"
 
   test $? -ne 88 && break
 done

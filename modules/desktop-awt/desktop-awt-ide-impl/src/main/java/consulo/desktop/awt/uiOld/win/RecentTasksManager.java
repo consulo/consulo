@@ -16,7 +16,7 @@
 package consulo.desktop.awt.uiOld.win;
 
 import consulo.application.Application;
-import consulo.component.util.NativeLibraryLoader;
+import consulo.component.util.NativeFileLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 
@@ -42,7 +42,7 @@ public class RecentTasksManager {
       try {
         ContainerPathManager containerPathManager = ContainerPathManager.get();
 
-        NativeLibraryLoader.loadLibrary("jumplistbridge", System::load);
+        NativeFileLoader.loadLibrary("jumplistbridge", System::load);
 
         RecentTasks.initialize(application.getName().get() + "." + containerPathManager.getConfigPath().hashCode());
 
