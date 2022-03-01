@@ -15,22 +15,42 @@
  */
 package com.intellij.execution.process;
 
+import com.intellij.execution.configurations.PtyCommandLine;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
+import consulo.process.ProcessConsoleType;
+import consulo.process.ProcessHandler;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.ProcessHandlerFactory;
 import consulo.process.local.OSProcessHandler;
+import consulo.process.local.ProcessHandlerFactory;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
 @Singleton
 public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
-
   @Nonnull
   @Override
   @SuppressWarnings("deprecation")
-  public OSProcessHandler createProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
-    return new OSProcessHandler(commandLine);
+  public ProcessHandler createProcessHandler(@Nonnull GeneralCommandLine commandLine, @Nonnull ProcessConsoleType processConsoleType) throws ExecutionException {
+    switch (processConsoleType) {
+      case BUILTIN:
+        return new OSProcessHandler(commandLine);
+      case EXTERNAL_EMULATION:
+        PtyCommandLine ptyCommandLine = new PtyCommandLine(commandLine);
+        OSProcessHandler handler = new ColoredProcessHandler(ptyCommandLine);
+        handler.setHasPty(true);
+        return handler;
+      case EXTERNAL:
+        Platform.OperatingSystem os = Platform.current().os();
+        if (!os.isWindows()) {
+          throw new ExecutionException("Can't create process with EXTERNAL console at OS " + os.name());
+        }
+
+        return RunnerMediator.getInstance().createProcess(commandLine, true);
+      default:
+        throw new IllegalArgumentException("Unknown console type " + processConsoleType);
+    }
   }
 
   @Override

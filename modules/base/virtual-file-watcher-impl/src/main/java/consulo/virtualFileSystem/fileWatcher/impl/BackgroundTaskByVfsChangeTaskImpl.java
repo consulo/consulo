@@ -31,11 +31,11 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.process.local.OSProcessHandler;
 import consulo.process.local.ProcessHandlerFactory;
 import consulo.project.Project;
 import consulo.ui.UIAccess;
@@ -137,7 +137,7 @@ public class BackgroundTaskByVfsChangeTaskImpl implements BackgroundTaskByVfsCha
       commandLine.setPassParentEnvironment(myParameters.isPassParentEnvs());
       commandLine.getEnvironment().putAll(myParameters.getEnvs());
 
-      OSProcessHandler processHandler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
+      ProcessHandler processHandler = ProcessHandlerFactory.getInstance().createProcessHandler(commandLine);
       processHandler.addProcessListener(new ProcessAdapter() {
         @Override
         public void onTextAvailable(ProcessEvent event, Key outputType) {
