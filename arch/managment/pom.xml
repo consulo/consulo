@@ -591,7 +591,7 @@
         <plugin>
           <groupId>consulo.maven</groupId>
           <artifactId>maven-consulo-plugin</artifactId>
-          <version>2-SNAPSHOT</version>
+          <version>3-SNAPSHOT</version>
           <extensions>true</extensions>
         </plugin>
       </plugins>
