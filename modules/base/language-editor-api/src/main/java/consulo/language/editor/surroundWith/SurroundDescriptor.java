@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.surroundWith;
+package consulo.language.editor.surroundWith;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 
 /**

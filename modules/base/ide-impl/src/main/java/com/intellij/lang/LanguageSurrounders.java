@@ -19,7 +19,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.lang.surroundWith.SurroundDescriptor;
+import consulo.language.editor.surroundWith.SurroundDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.language.LanguageExtension;
 

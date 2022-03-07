@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.postfix.templates;
 
-import com.intellij.lang.surroundWith.Surrounder;
+import consulo.language.editor.surroundWith.Surrounder;
 import consulo.codeEditor.Editor;
 import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;

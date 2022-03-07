@@ -507,7 +507,6 @@ open module consulo.ide.impl {
   exports com.intellij.lang.parser;
   exports com.intellij.lang.pratt;
   exports com.intellij.lang.refactoring;
-  exports com.intellij.lang.surroundWith;
   exports com.intellij.model.search;
   exports com.intellij.model.search.impl;
   exports com.intellij.moduleDependencies;

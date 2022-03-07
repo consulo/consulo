@@ -3,7 +3,7 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.template.CustomLiveTemplate;
 import consulo.language.Language;
-import com.intellij.lang.surroundWith.Surrounder;
+import consulo.language.editor.surroundWith.Surrounder;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

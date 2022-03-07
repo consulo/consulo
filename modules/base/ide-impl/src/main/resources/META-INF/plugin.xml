@@ -545,7 +545,7 @@
     <extensionPoint name="rearranger.ui" interface="com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent$Factory"/>
 
     <extensionPoint name="lang.surroundDescriptor" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.surroundWith.SurroundDescriptor"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.surroundWith.SurroundDescriptor"/>
     </extensionPoint>
 
     <extensionPoint name="lang.unwrapDescriptor" beanClass="consulo.language.LanguageExtensionPoint">
