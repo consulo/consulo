@@ -15,15 +15,15 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import consulo.application.CommonBundle;
 import com.intellij.ide.ui.LafManager;
+import consulo.application.CommonBundle;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.image.Image;
 import consulo.desktop.awt.ui.util.AWTIconLoader;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,8 +41,8 @@ public class CustomizeUIThemeStepPanel extends AbstractCustomizeWizardStep {
   public CustomizeUIThemeStepPanel() {
     setLayout(new BorderLayout(10, 10));
 
-    myLafNames.put(LIGHT, AWTIconLoader.INSTANCE.getIcon("/icon/_light/consulo.platform.base.PlatformIconGroup/lafs/LightPreview.png", PlatformIconGroup.class));
-    myLafNames.put(DARK, AWTIconLoader.INSTANCE.getIcon("/icon/_light/consulo.platform.base.PlatformIconGroup/lafs/DarkPreview.png", PlatformIconGroup.class));
+    myLafNames.put(LIGHT, AWTIconLoader.INSTANCE.getIcon("/ICON-LIB/light/consulo.platform.base.PlatformIconGroup/lafs/LightPreview.png", PlatformIconGroup.class));
+    myLafNames.put(DARK, AWTIconLoader.INSTANCE.getIcon("/ICON-LIB/light/consulo.platform.base.PlatformIconGroup/lafs/DarkPreview.png", PlatformIconGroup.class));
 
     myColumnMode = true;
     JPanel buttonsPanel = new JPanel(new GridLayout(myLafNames.size(), 1, 5, 5));
