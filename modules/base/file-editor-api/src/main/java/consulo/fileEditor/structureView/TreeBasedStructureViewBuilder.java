@@ -49,7 +49,7 @@ public abstract class TreeBasedStructureViewBuilder implements StructureViewBuil
   public StructureView createStructureView(FileEditor fileEditor, @Nonnull Project project) {
     final StructureViewModel model = createStructureViewModel(fileEditor instanceof TextEditor ? ((TextEditor)fileEditor).getEditor() : null);
     StructureView view = StructureViewFactory.getInstance(project).createStructureView(fileEditor, model, project, isRootNodeShown());
-    Disposer.register(view, model::dispose);
+    Disposer.register(view, model);
     return view;
   }
 
