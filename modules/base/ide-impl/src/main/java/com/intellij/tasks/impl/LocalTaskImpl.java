@@ -27,7 +27,7 @@ import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
-import icons.TasksIcons;
+import com.intellij.tasks.TasksIcons;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -25,7 +25,7 @@ import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import com.intellij.vcs.log.util.BekUtil;
-import icons.VcsLogIcons;
+import com.intellij.vcs.log.VcsLogIcons;
 import javax.annotation.Nonnull;
 
 public class IntelliSortChooserToggleAction extends ToggleAction implements DumbAware {

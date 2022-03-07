@@ -17,7 +17,7 @@ package com.intellij.vcs.log.ui.actions;
 
 import com.intellij.vcs.log.ui.VcsLogUiImpl;
 import consulo.ui.image.Image;
-import icons.VcsLogIcons;
+import com.intellij.vcs.log.VcsLogIcons;
 
 import javax.annotation.Nonnull;
 

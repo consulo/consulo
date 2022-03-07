@@ -20,7 +20,7 @@ import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.data.MainVcsLogUiProperties;
 import com.intellij.vcs.log.data.VcsLogUiProperties;
-import icons.VcsLogIcons;
+import com.intellij.vcs.log.VcsLogIcons;
 import javax.annotation.Nonnull;
 
 public class ShowLongEdgesAction extends BooleanPropertyToggleAction {

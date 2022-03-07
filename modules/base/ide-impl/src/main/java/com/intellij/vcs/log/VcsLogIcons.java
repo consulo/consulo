@@ -1,4 +1,4 @@
-package icons;
+package com.intellij.vcs.log;
 
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;

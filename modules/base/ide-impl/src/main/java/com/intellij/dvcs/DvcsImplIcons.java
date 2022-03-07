@@ -1,4 +1,4 @@
-package icons;
+package com.intellij.dvcs;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.platform.base.icon.PlatformIconGroup;

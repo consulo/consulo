@@ -35,7 +35,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Condition;
-import icons.DvcsImplIcons;
+import com.intellij.dvcs.DvcsImplIcons;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

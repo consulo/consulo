@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package icons;
+package com.intellij.tasks;
 
 import consulo.application.AllIcons;
 import consulo.task.impl.icon.TaskImplIconGroup;

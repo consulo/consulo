@@ -19,7 +19,7 @@ import consulo.application.Application;
 import com.intellij.openapi.externalSystem.ExternalSystemUiAware;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ui.image.Image;
-import icons.ExternalSystemIcons;
+import consulo.externalSystem.ExternalSystemIcons;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

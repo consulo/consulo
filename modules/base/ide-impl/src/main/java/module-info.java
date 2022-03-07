@@ -1276,7 +1276,6 @@ open module consulo.ide.impl {
   exports consulo.wm.impl.layout;
   exports consulo.wm.impl.status;
   exports consulo.wm.impl.welcomeScreen;
-  exports icons;
   exports org.intellij.plugins.intelliLang;
   exports org.intellij.plugins.intelliLang.inject;
   exports org.intellij.plugins.intelliLang.inject.config;

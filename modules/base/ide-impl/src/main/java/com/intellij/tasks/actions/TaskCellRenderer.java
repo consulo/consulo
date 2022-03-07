@@ -14,7 +14,7 @@ import com.intellij.util.text.MatcherHolder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
-import icons.TasksIcons;
+import com.intellij.tasks.TasksIcons;
 
 import javax.swing.*;
 import java.awt.*;

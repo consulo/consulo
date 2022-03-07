@@ -26,7 +26,7 @@ import com.intellij.util.ui.ListTableModel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.ImageEffects;
-import icons.TasksIcons;
+import com.intellij.tasks.TasksIcons;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

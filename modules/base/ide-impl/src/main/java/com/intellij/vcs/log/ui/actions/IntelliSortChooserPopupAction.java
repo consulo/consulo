@@ -34,7 +34,7 @@ import com.intellij.vcs.log.data.VcsLogUiProperties;
 import com.intellij.vcs.log.graph.PermanentGraph;
 import com.intellij.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.wm.impl.ToolWindowContentUI;
-import icons.VcsLogIcons;
+import com.intellij.vcs.log.VcsLogIcons;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

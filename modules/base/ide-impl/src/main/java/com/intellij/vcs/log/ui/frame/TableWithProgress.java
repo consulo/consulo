@@ -18,7 +18,7 @@ package com.intellij.vcs.log.ui.frame;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.AsyncProcessIcon;
 import consulo.ui.image.Image;
-import icons.VcsLogIcons;
+import com.intellij.vcs.log.VcsLogIcons;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

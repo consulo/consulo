@@ -30,7 +30,7 @@ import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsLog;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.impl.VcsLogUtil;
-import icons.DvcsImplIcons;
+import com.intellij.dvcs.DvcsImplIcons;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
