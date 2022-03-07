@@ -17,17 +17,17 @@
 /*
  * @author max
  */
-package com.intellij.openapi.fileTypes;
+package consulo.language.editor.highlight;
 
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 public abstract class SingleLazyInstanceSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
   private SyntaxHighlighter myValue;
 
+  @Override
   @Nonnull
   public final SyntaxHighlighter getSyntaxHighlighter(final Project project, final VirtualFile virtualFile) {
     if (myValue == null) {
@@ -36,6 +36,6 @@ public abstract class SingleLazyInstanceSyntaxHighlighterFactory extends SyntaxH
     return myValue;
   }
 
-  protected abstract @Nonnull
-  SyntaxHighlighter createHighlighter();
+  @Nonnull
+  protected abstract SyntaxHighlighter createHighlighter();
 }
