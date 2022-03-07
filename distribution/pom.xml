@@ -387,6 +387,10 @@
       <artifactId>winp</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.jdom</groupId>
       <artifactId>jdom-xpath-jaxen</artifactId>
     </dependency>

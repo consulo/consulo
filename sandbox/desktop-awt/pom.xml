@@ -342,5 +342,9 @@
       <groupId>org.jvnet.winp</groupId>
       <artifactId>winp</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+    </dependency>
   </dependencies>
 </project>
