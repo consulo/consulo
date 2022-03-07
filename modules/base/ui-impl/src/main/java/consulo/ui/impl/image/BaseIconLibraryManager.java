@@ -54,8 +54,8 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
   private static final Logger LOG = Logger.getInstance(BaseIconLibraryManager.class);
 
-  public static final String ICON_DIRECTORY = "icon/";
-  public static final String ICON_DIRECTORY_LIB_START = ICON_DIRECTORY + "_";
+  public static final String ICON_DIRECTORY = "ICON-LIB/";
+  public static final String ICON_DIRECTORY_LIB_START = ICON_DIRECTORY;
   public static final String ICON_LIBRARY_MARKER = ICON_DIRECTORY + "marker.txt";
 
   private final AtomicLong myModificationCount = new AtomicLong();

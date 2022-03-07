@@ -111,8 +111,8 @@ public abstract class ApplicationStarter {
 
     libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
 
-    libraryStats.markWith("localize.initialize", () -> localizeManager.initialize(filesWithMarkers.get(LocalizeManagerImpl.LOCALIZE_LIBRARY_MARKER)));
-    libraryStats.markWith("icon.initialize", () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_LIBRARY_MARKER)));
+    libraryStats.markWith("localize.initialize", () -> localizeManager.initialize(filesWithMarkers.get(LocalizeManagerImpl.LOCALIZE_DIRECTORY)));
+    libraryStats.markWith("icon.initialize", () -> iconLibraryManager.initialize(filesWithMarkers.get(BaseIconLibraryManager.ICON_DIRECTORY)));
 
     libraryStats.dump("Libraries", LOG::info);
     
@@ -126,8 +126,8 @@ public abstract class ApplicationStarter {
         continue;
       }
 
-      searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_LIBRARY_MARKER);
-      searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_LIBRARY_MARKER);
+      searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, LocalizeManagerImpl.LOCALIZE_DIRECTORY);
+      searchMarkerInClassLoaderMarker(pluginDescriptor, filesWithMarkers, BaseIconLibraryManager.ICON_DIRECTORY);
     }
   }
 
