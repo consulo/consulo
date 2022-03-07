@@ -1,7 +1,6 @@
 module consulo.hacking.java.base {
   requires jsr305;
   requires consulo.logging.api;
-  requires consulo.util.lang;
 
-  exports consulo.hacking.java.base to consulo.disposer.impl;
+  exports consulo.hacking.java.base to consulo.disposer.impl, consulo.component.api;
 }

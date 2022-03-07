@@ -60,6 +60,11 @@ public class ReflectionUtil {
   }
 
   @Nullable
+  public static Field getDeclaredField(@Nonnull Class aClass, @NonNls @Nonnull final String name) {
+    return processFields(aClass, field -> name.equals(field.getName()));
+  }
+
+  @Nullable
   public static Method getDeclaredMethod(@Nonnull Class aClass, @Nonnull String name, @Nonnull Class... parameters) {
     return findMethod(getClassDeclaredMethods(aClass, false), name, parameters);
   }

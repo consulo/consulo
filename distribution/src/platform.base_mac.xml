@@ -159,6 +159,7 @@
         <include>org.glassfish.jaxb:txw2</include>
         <include>com.sun.istack:istack-commons-runtime</include>
         <include>jakarta.activation:jakarta.activation-api</include>
+        <include>com.ibm.icu:icu4j</include>
       </includes>
     </dependencySet>
   </dependencySets>

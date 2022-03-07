@@ -91,6 +91,16 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-injecting-api</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.ibm.icu</groupId>
+      <artifactId>icu4j</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-hacking-java-base</artifactId>
+      <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
   </dependencies>

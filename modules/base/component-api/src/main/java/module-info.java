@@ -18,6 +18,9 @@ module consulo.component.api {
   requires transitive consulo.platform.api;
   requires transitive consulo.util.jdom;
   requires transitive org.jdom;
+
+  requires static consulo.hacking.java.base;
+  requires static com.ibm.icu;
   
   requires consulo.injecting.api;
 
