@@ -105,7 +105,7 @@ public final class UnicodeCharacterRegistry {
   }
 
   // FIXME [VISTALL] ProviderICU4J return bigger list of characters, we can fallback to ProviderFromJava
-  private static Provider ourProvider = new ProviderICU4J();
+  private static Provider ourProvider = Boolean.getBoolean("consulo.use.java.unicode.registry") ? new ProviderFromJava() : new ProviderICU4J();
 
   private static List<UnicodeCharacter> ourCharacters;
 
