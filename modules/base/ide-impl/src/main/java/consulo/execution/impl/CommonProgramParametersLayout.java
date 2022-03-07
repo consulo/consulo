@@ -76,7 +76,7 @@ public class CommonProgramParametersLayout<P extends CommonProgramRunConfigurati
 
     myWorkDirectoryBox = workDirBuilder.build();
     myWorkDirectoryBox.getComponent()
-            .addFirstExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlineVariables(), PlatformIconGroup.generalInlineVariablesHover(), event -> showMacroDialog()));
+            .addFirstExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlinevariables(), PlatformIconGroup.generalInlinevariableshover(), event -> showMacroDialog()));
 
     builder.addLabeled(ExecutionBundle.message("run.configuration.working.directory.label"), myWorkDirectoryBox.getComponent());
 

@@ -176,11 +176,11 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   private static Image getActionIcon(IconState iconState) {
     switch (iconState) {
       case ApplicationUpdate:
-        return PlatformIconGroup.ideNotificationIdeUpdate();
+        return PlatformIconGroup.ideNotificationIdeupdate();
       case ApplicationComponentUpdate:
-        return PlatformIconGroup.ideNotificationPluginUpdate();
+        return PlatformIconGroup.ideNotificationPluginupdate();
       case RestartRequired:
-        return PlatformIconGroup.ideNotificationRestartRequiredUpdate();
+        return PlatformIconGroup.ideNotificationRestartrequiredupdate();
     }
     return AllIcons.General.GearPlain;
   }

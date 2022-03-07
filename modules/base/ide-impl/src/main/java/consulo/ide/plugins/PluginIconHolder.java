@@ -39,7 +39,7 @@ public class PluginIconHolder {
 
   private static final Logger LOG = Logger.getInstance(PluginIconHolder.class);
 
-  private static final Supplier<Image> ourDecoratedDefaultImage = NotNullLazyValue.createValue(() -> decorateIcon(PlatformIconGroup.nodesPluginBig()));
+  private static final Supplier<Image> ourDecoratedDefaultImage = NotNullLazyValue.createValue(() -> decorateIcon(PlatformIconGroup.nodesPluginbig()));
 
   @Nonnull
   public static Image get(@Nonnull PluginDescriptor pluginDescriptor) {
@@ -70,7 +70,7 @@ public class PluginIconHolder {
   private static Image initializeImage(@Nonnull PluginDescriptor pluginDescriptor) {
     byte[] iconBytes = pluginDescriptor.getIconBytes(StyleManager.get().getCurrentStyle().isDark());
     if (iconBytes.length == 0) {
-      return decorateIcon(PlatformIconGroup.nodesPluginBig());
+      return decorateIcon(PlatformIconGroup.nodesPluginbig());
     }
 
     try {
@@ -81,6 +81,6 @@ public class PluginIconHolder {
       LOG.warn(e);
     }
 
-    return decorateIcon(PlatformIconGroup.nodesPluginBig());
+    return decorateIcon(PlatformIconGroup.nodesPluginbig());
   }
 }

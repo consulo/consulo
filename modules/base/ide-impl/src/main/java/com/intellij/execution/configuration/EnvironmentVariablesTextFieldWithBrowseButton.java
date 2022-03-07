@@ -57,7 +57,7 @@ public class EnvironmentVariablesTextFieldWithBrowseButton implements UserActivi
     myTextBox = TextBoxWithExtensions.create();
     myTextBox.setPlaceholder(LocalizeValue.localizeTODO("Separate variables with semicolon: VAR=value; VAR1=value1"));
 
-    myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlineVariables(), PlatformIconGroup.generalInlineVariablesHover(),
+    myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlinevariables(), PlatformIconGroup.generalInlinevariableshover(),
                                                                    event -> new MyEnvironmentVariablesDialog().showAsync()));
 
     myTextBox.addValueListener(event -> {

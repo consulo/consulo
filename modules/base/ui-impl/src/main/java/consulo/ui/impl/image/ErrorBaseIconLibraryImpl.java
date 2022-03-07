@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,38 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.plugins.whatsNew;
+package consulo.ui.impl.image;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.localize.LocalizeValue;
-import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.ui.style.StandardColors;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
+ * Library implementation, used when catch some problem with initializing default libraries
+ *
  * @author VISTALL
- * @since 15/11/2021
+ * @since 07-Mar-22
  */
-public class WhatsNewVirtualFileType implements FileType {
-  public static final WhatsNewVirtualFileType INSTANCE = new WhatsNewVirtualFileType();
-
-  @Nonnull
-  @Override
-  public String getId() {
-    return "WHATS_NEW";
+class ErrorBaseIconLibraryImpl extends BaseIconLibraryImpl {
+  ErrorBaseIconLibraryImpl(@Nonnull BaseIconLibraryManager baseIconLibraryManager) {
+    super("", baseIconLibraryManager);
   }
 
-  @Nonnull
+  @Nullable
   @Override
-  public LocalizeValue getDescription() {
-    return LocalizeValue.of();
-  }
-
-  @Nonnull
-  @Override
-  public Image getIcon() {
-    return ImageEffects.layered(PlatformIconGroup.filetypesText(), PlatformIconGroup.actionsNew());
+  protected Image createImage(@Nonnull byte[] _1xData, @Nullable byte[] _2xdata, boolean isSVG, int width, int height, String groupId, String imageId) {
+    return ImageEffects.colorFilled(width, height, StandardColors.RED);
   }
 }

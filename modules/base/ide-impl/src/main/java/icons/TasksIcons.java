@@ -24,9 +24,9 @@ public class TasksIcons {
   public static final Image Clock = TaskImplIconGroup.clock();
   public static final Image Exception = TaskImplIconGroup.exception();
   @Deprecated
-  public static final Image SavedContext = TaskImplIconGroup.savedContext();
-  public static final Image StartTimer = TaskImplIconGroup.startTimer();
-  public static final Image StopTimer = TaskImplIconGroup.stopTimer();
+  public static final Image SavedContext = TaskImplIconGroup.savedcontext();
+  public static final Image StartTimer = TaskImplIconGroup.starttimer();
+  public static final Image StopTimer = TaskImplIconGroup.stoptimer();
   @Deprecated
   public static final Image Unknown = AllIcons.FileTypes.Unknown;
 }

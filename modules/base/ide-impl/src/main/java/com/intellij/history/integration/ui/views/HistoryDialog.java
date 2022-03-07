@@ -542,7 +542,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
 
   private class CreatePatchAction extends MyAction {
     public CreatePatchAction() {
-      super(message("action.create.patch"), null, PlatformIconGroup.fileTypesPatch());
+      super(message("action.create.patch"), null, PlatformIconGroup.filetypesPatch());
     }
 
     @Override

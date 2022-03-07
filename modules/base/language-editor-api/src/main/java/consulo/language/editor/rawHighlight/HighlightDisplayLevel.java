@@ -136,12 +136,12 @@ public class HighlightDisplayLevel {
 
   @Nonnull
   private static Image createErrorIcon(@Nonnull TextAttributesKey textAttributesKey) {
-    return ImageEffects.colorize(PlatformIconGroup.generalInspectionsError(), buildColorValue(textAttributesKey));
+    return ImageEffects.colorize(PlatformIconGroup.generalInspectionserror(), buildColorValue(textAttributesKey));
   }
 
   @Nonnull
   private static Image createWarningIcon(@Nonnull TextAttributesKey textAttributesKey) {
-    return ImageEffects.colorize(PlatformIconGroup.generalInspectionsWarning(), buildColorValue(textAttributesKey));
+    return ImageEffects.colorize(PlatformIconGroup.generalInspectionswarning(), buildColorValue(textAttributesKey));
   }
 
   @Nonnull

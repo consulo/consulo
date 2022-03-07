@@ -78,7 +78,7 @@ public abstract class ContentFolderTypeProvider {
 
   @Nonnull
   public Image getChildDirectoryIcon() {
-    return PlatformIconGroup.nodesTreeOpen();
+    return PlatformIconGroup.nodesTreeopen();
   }
 
   @Nullable

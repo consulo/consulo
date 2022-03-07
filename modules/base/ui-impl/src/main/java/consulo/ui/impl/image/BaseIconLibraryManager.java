@@ -15,7 +15,6 @@
  */
 package consulo.ui.impl.image;
 
-import consulo.annotation.ReviewAfterMigrationToJRE;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
@@ -66,6 +65,8 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
 
   private String myActiveLibraryId;
   private BaseIconLibraryImpl myActiveLibrary;
+
+  private ErrorBaseIconLibraryImpl myErrorLibrary = new ErrorBaseIconLibraryImpl(this);
 
   @Nonnull
   @Override
@@ -139,7 +140,8 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
     }
 
     if (myActiveLibrary == null) {
-      throw new Error("There no default active library. Distribution broken");
+      LOG.error("There no default active library. Distribution broken");
+      return myErrorLibrary;
     }
     return myActiveLibrary;
   }
@@ -182,7 +184,6 @@ public abstract class BaseIconLibraryManager implements IconLibraryManager {
   }
 
   @Nonnull
-  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
   private static Map<String, IconLibraryDescriptor> getAllDescriptors() {
     Map<String, IconLibraryDescriptor> list = new HashMap<>();
 

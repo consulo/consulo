@@ -58,8 +58,8 @@ public class CloseTab extends AnAction implements DumbAware {
   public void update(final AnActionEvent e) {
     boolean pinned = isPinned();
 
-    e.getPresentation().setIcon(pinned ? PlatformIconGroup.actionsPinTab() : AllIcons.Actions.Close);
-    e.getPresentation().setHoveredIcon(pinned ? PlatformIconGroup.actionsPinTab() : AllIcons.Actions.CloseHovered);
+    e.getPresentation().setIcon(pinned ? PlatformIconGroup.actionsPintab() : AllIcons.Actions.Close);
+    e.getPresentation().setHoveredIcon(pinned ? PlatformIconGroup.actionsPintab() : AllIcons.Actions.CloseHovered);
     e.getPresentation().setVisible(UISettings.getInstance().getShowCloseButton() || pinned);
     if (pinned) {
       e.getPresentation().setText(IdeBundle.message("action.unpin.tab"));

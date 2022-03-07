@@ -58,7 +58,7 @@ public class PatchFileType implements FileType {
   @Override
   @Nonnull
   public Image getIcon() {
-    return PlatformIconGroup.fileTypesPatch();
+    return PlatformIconGroup.filetypesPatch();
   }
 
   public static boolean isPatchFile(@Nullable VirtualFile vFile) {

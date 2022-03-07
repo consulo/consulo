@@ -112,7 +112,7 @@ public final class IconDescriptorUpdaters {
       if(file != null) {
         return VirtualFileManager.getInstance().getBaseFileIcon(file);
       }
-      return PlatformIconGroup.nodesNodePlaceholder();
+      return PlatformIconGroup.nodesNodeplaceholder();
     }
 
     PsiFile containingFile = element.getContainingFile();
@@ -122,7 +122,7 @@ public final class IconDescriptorUpdaters {
         return virtualFile.getFileType().getIcon();
       }
     }
-    return PlatformIconGroup.nodesNodePlaceholder();
+    return PlatformIconGroup.nodesNodeplaceholder();
   }
 
   @Nonnull

@@ -25,7 +25,6 @@ import consulo.ui.style.StandardColors;
 import consulo.ui.util.LightDarkColorValue;
 
 import javax.annotation.Nonnull;
-import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -46,13 +45,13 @@ public final class ExcludedContentFolderTypeProvider extends ContentFolderTypePr
   @Nonnull
   @Override
   public Image getIcon() {
-    return PlatformIconGroup.modulesExcludeRoot();
+    return PlatformIconGroup.modulesExcluderoot();
   }
 
   @Nonnull
   @Override
   public Image getChildDirectoryIcon() {
-    return PlatformIconGroup.modulesExcludeRoot();
+    return PlatformIconGroup.modulesExcluderoot();
   }
 
   @Nonnull

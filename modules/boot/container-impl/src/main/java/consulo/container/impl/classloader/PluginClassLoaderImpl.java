@@ -280,7 +280,6 @@ class PluginClassLoaderImpl extends UrlClassLoader implements PluginClassLoader,
   }
 
   @Override
-
   public Enumeration<URL> findOwnResources(String name) throws IOException {
     return super.findResources(name);
   }

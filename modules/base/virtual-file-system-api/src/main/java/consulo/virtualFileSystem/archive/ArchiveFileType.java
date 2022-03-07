@@ -67,7 +67,7 @@ public abstract class ArchiveFileType implements FileType {
   @Nonnull
   @Override
   public Image getIcon() {
-    return PlatformIconGroup.fileTypesArchive();
+    return PlatformIconGroup.filetypesArchive();
   }
 
   @Override

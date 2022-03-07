@@ -90,11 +90,11 @@ public final class IntelliJMetalLookAndFeel extends MetalLookAndFeel {
     defaults.put("OptionPane.informationIcon", AllIcons.General.InformationDialog);
     defaults.put("OptionPane.warningIcon", AllIcons.General.WarningDialog);
     defaults.put("OptionPane.questionIcon", AllIcons.General.QuestionDialog);
-    defaults.put("Tree.openIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
-    defaults.put("Tree.closedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
-    defaults.put("Tree.leafIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
-    defaults.put("Tree.expandedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
-    defaults.put("Tree.collapsedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeClosed()));
+    defaults.put("Tree.openIcon", TargetAWT.to(PlatformIconGroup.nodesTreeclosed()));
+    defaults.put("Tree.closedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeclosed()));
+    defaults.put("Tree.leafIcon", TargetAWT.to(PlatformIconGroup.nodesTreeclosed()));
+    defaults.put("Tree.expandedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeclosed()));
+    defaults.put("Tree.collapsedIcon", TargetAWT.to(PlatformIconGroup.nodesTreeclosed()));
     defaults.put("Table.ancestorInputMap", new UIDefaults.LazyInputMap(new Object[] {
                        "ctrl C", "copy",
                        "ctrl V", "paste",

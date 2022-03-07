@@ -93,7 +93,7 @@ public class CommonProgramParametersPanel extends JPanel implements PanelWithAnc
 
     myWorkDirectoryBox = workDirBuilder.build();
     myWorkDirectoryBox.getComponent()
-            .addFirstExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlineVariables(), PlatformIconGroup.generalInlineVariablesHover(), event -> showMacroDialog()));
+            .addFirstExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.generalInlinevariables(), PlatformIconGroup.generalInlinevariableshover(), event -> showMacroDialog()));
 
     myWorkingDirectoryComponent = LabeledComponent.create((JComponent)TargetAWT.to(myWorkDirectoryBox.getComponent()), ExecutionBundle.message("run.configuration.working.directory.label"));
     myEnvVariablesComponent = new EnvironmentVariablesComponent();

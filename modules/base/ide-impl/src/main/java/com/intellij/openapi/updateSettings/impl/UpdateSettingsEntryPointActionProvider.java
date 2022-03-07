@@ -56,7 +56,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
 
       presentation.setEnabledAndVisible(true);
       presentation.setDisabledMnemonic(true);
-      presentation.setIcon(myIsPlatform ? PlatformIconGroup.ideNotificationIdeUpdate() : PlatformIconGroup.ideNotificationPluginUpdate());
+      presentation.setIcon(myIsPlatform ? PlatformIconGroup.ideNotificationIdeupdate() : PlatformIconGroup.ideNotificationPluginupdate());
     }
   }
 
@@ -64,7 +64,7 @@ public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPoin
     private final UpdateSettings myUpdateSettings;
 
     private RestartConsuloAction(UpdateSettings updateSettings) {
-      super(LocalizeValue.localizeTODO("Restart " + Application.get().getName()), LocalizeValue.empty(), PlatformIconGroup.ideNotificationRestartRequiredUpdate());
+      super(LocalizeValue.localizeTODO("Restart " + Application.get().getName()), LocalizeValue.empty(), PlatformIconGroup.ideNotificationRestartrequiredupdate());
       myUpdateSettings = updateSettings;
     }
 

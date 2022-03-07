@@ -202,8 +202,8 @@ public class ServersTreeStructure extends AbstractTreeStructureBase {
     @Nullable
     private Image getStatusIcon(final ConnectionStatus status) {
       switch (status) {
-        case CONNECTED: return PlatformIconGroup.remoteServersResumeScaled();
-        case DISCONNECTED: return PlatformIconGroup.remoteServersSuspendScaled();
+        case CONNECTED: return PlatformIconGroup.remoteserversResumescaled();
+        case DISCONNECTED: return PlatformIconGroup.remoteserversSuspendscaled();
         default: return null;
       }
     }

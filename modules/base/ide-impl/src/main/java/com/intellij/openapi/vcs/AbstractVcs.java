@@ -80,7 +80,7 @@ public abstract class AbstractVcs<ComList extends CommittedChangeList> extends S
 
   @Nonnull
   public Image getIcon() {
-    return PlatformIconGroup.toolwindowsToolWindowChanges();
+    return PlatformIconGroup.toolwindowsToolwindowchanges();
   }
 
   // acts as adapter

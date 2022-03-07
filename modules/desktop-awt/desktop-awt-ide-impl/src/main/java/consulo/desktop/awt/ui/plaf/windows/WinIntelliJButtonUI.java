@@ -60,7 +60,7 @@ public class WinIntelliJButtonUI extends DarculaButtonUI {
   @Override
   public void paint(Graphics g, JComponent c) {
     if (UIUtil.isHelpButton(c)) {
-      Icon help = TargetAWT.to(WindowsIconGroup.winHelp());
+      Icon help = TargetAWT.to(WindowsIconGroup.winhelp());
       Insets i = c.getInsets();
       help.paintIcon(c, g, i.left, i.top + (c.getHeight() - help.getIconHeight()) / 2);
     }

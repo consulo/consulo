@@ -496,7 +496,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @Nonnull
   @Override
   public Image getBigIcon() {
-    return ApplicationProperties.isInSandbox() ? PlatformIconGroup.consuloBigSandbox() : PlatformIconGroup.consuloBig();
+    return ApplicationProperties.isInSandbox() ? PlatformIconGroup.consulobigsandbox() : PlatformIconGroup.consulobig();
   }
 
   @Nonnull

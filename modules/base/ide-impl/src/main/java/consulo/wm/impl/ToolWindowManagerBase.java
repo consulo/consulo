@@ -1264,41 +1264,41 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
     ToolWindowType type = info.getType();
     if (type == ToolWindowType.FLOATING || type == ToolWindowType.WINDOWED) {
-      return PlatformIconGroup.actionsMoveToWindow();
+      return PlatformIconGroup.actionsMovetowindow();
     }
 
     ToolWindowAnchor anchor = info.getAnchor();
     boolean splitMode = info.isSplit();
     if (anchor == ToolWindowAnchor.BOTTOM) {
       if (splitMode) {
-        return PlatformIconGroup.actionsMoveToBottomRight();
+        return PlatformIconGroup.actionsMovetobottomright();
       }
       else {
-        return PlatformIconGroup.actionsMoveToBottomLeft();
+        return PlatformIconGroup.actionsMovetobottomleft();
       }
     }
     else if (anchor == ToolWindowAnchor.LEFT) {
       if (splitMode) {
-        return PlatformIconGroup.actionsMoveToLeftBottom();
+        return PlatformIconGroup.actionsMovetoleftbottom();
       }
       else {
-        return PlatformIconGroup.actionsMoveToLeftTop();
+        return PlatformIconGroup.actionsMovetolefttop();
       }
     }
     else if (anchor == ToolWindowAnchor.RIGHT) {
       if (splitMode) {
-        return PlatformIconGroup.actionsMoveToRightBottom();
+        return PlatformIconGroup.actionsMovetorightbottom();
       }
       else {
-        return PlatformIconGroup.actionsMoveToRightTop();
+        return PlatformIconGroup.actionsMovetorighttop();
       }
     }
     else if (anchor == ToolWindowAnchor.TOP) {
       if (splitMode) {
-        return PlatformIconGroup.actionsMoveToTopRight();
+        return PlatformIconGroup.actionsMovetotopright();
       }
       else {
-        return PlatformIconGroup.actionsMoveToTopLeft();
+        return PlatformIconGroup.actionsMovetotopleft();
       }
     }
     return super.getLocationIcon(toolWindowId, fallbackImage);

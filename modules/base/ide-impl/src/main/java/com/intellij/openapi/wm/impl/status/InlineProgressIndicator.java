@@ -117,8 +117,8 @@ public class InlineProgressIndicator extends ProgressIndicatorBase implements Di
   }
 
   private ProgressButton createCancelButton() {
-    Image icon = myCompact ? PlatformIconGroup.processStopSmall() : PlatformIconGroup.processStop();
-    Image hoveredIcon = myCompact ? PlatformIconGroup.processStopSmallHovered() : PlatformIconGroup.processStopSmallHovered();
+    Image icon = myCompact ? PlatformIconGroup.processStopsmall() : PlatformIconGroup.processStop();
+    Image hoveredIcon = myCompact ? PlatformIconGroup.processStopsmallhovered() : PlatformIconGroup.processStopsmallhovered();
 
     InplaceButton cancelButton = new InplaceButton(new IconButton(myInfo.getCancelTooltipText(), icon, hoveredIcon), e -> cancelRequest()).setFillBg(false);
 

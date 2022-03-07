@@ -8,7 +8,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 
 public class AttachToProcessAction extends AttachToProcessActionBase {
   public AttachToProcessAction() {
-    super(XDebuggerBundle.message("xdebugger.attach.action"), XDebuggerBundle.message("xdebugger.attach.action.description"), PlatformIconGroup.debuggerAttachToProcess(),
+    super(XDebuggerBundle.message("xdebugger.attach.action"), XDebuggerBundle.message("xdebugger.attach.action.description"), PlatformIconGroup.debuggerAttachtoprocess(),
           () -> XAttachDebuggerProvider.getAttachDebuggerProviders(), () -> XAttachHostProvider.EP.getExtensionList(), XDebuggerBundle.message("xdebugger.attach.popup.selectDebugger.title"));
   }
 }

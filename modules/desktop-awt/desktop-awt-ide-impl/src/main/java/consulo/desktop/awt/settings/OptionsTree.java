@@ -89,7 +89,7 @@ public class OptionsTree implements Disposable, OptionsEditorColleague {
         Configurable configurable = baseNode.getConfigurable();
 
         if (OptionsEditor.isProjectConfigurable(configurable)) {
-          myProjectIcon.setIcon(TargetAWT.to(PlatformIconGroup.generalProjectConfigurable()));
+          myProjectIcon.setIcon(TargetAWT.to(PlatformIconGroup.generalProjectconfigurable()));
         }
       }
       return this;

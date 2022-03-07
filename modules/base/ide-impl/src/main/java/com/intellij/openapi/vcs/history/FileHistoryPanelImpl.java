@@ -1410,7 +1410,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
 
     public MyCreatePatch() {
       super(VcsBundle.message("action.name.create.patch.for.selected.revisions"),
-            VcsBundle.message("action.description.create.patch.for.selected.revisions"), PlatformIconGroup.fileTypesPatch());
+            VcsBundle.message("action.description.create.patch.for.selected.revisions"), PlatformIconGroup.filetypesPatch());
       myUsualDelegate = new CreatePatchFromChangesAction();
     }
 

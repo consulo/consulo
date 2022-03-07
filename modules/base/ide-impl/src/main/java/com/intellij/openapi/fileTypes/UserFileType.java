@@ -77,7 +77,7 @@ public abstract class UserFileType<T extends UserFileType> implements FileType, 
       }
 
       if (icon == null) {
-        icon = PlatformIconGroup.fileTypesCustom();
+        icon = PlatformIconGroup.filetypesCustom();
       }
       myIcon = icon;
     }

@@ -134,7 +134,7 @@ public abstract class BaseSdkEditor implements UnnamedConfigurable {
 
     boolean changePathSupported = !mySdk.isPredefined() && ((SdkType)mySdk.getSdkType()).supportsUserAdd() && !(mySdk.getSdkType() instanceof UnknownSdkType);
     if (changePathSupported) {
-      myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderOpened(), null, e -> doSelectHomePath()));
+      myHomeComponent.setExtensions(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderopened(), null, e -> doSelectHomePath()));
     }
 
     myHomeFieldLabel = new JLabel(ProjectBundle.message("sdk.configure.type.home.path"));

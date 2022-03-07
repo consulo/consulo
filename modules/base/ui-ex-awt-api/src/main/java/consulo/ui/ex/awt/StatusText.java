@@ -20,7 +20,7 @@ public abstract class StatusText {
   public static final SimpleTextAttributes DEFAULT_ATTRIBUTES = SimpleTextAttributes.GRAYED_ATTRIBUTES;
   public static final String DEFAULT_EMPTY_TEXT = UIBundle.message("message.nothingToShow");
 
-  public static final LocalizeValue DEFAULT_EMPTY_TEXT_VALUE = UILocalize.messageNothingToShow();
+  public static final LocalizeValue DEFAULT_EMPTY_TEXT_VALUE = UILocalize.messageNothingtoshow();
 
   private static final int Y_GAP = 2;
 

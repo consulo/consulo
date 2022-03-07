@@ -71,7 +71,7 @@ public class Bookmark implements Navigatable {
 
   @Nonnull
   public static Image getDefaultIcon(boolean gutter) {
-    return gutter ? PlatformIconGroup.actionsBookmarkSmall() : PlatformIconGroup.actionsBookmark();
+    return gutter ? PlatformIconGroup.actionsBookmarksmall() : PlatformIconGroup.actionsBookmark();
   }
 
   @Nonnull

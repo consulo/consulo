@@ -228,7 +228,7 @@ public class NewRecentProjectPanel extends RecentProjectPanel {
             if (isGroup) {
               final ProjectGroup group = ((ProjectGroupActionGroup)value).getGroup();
               name.setText(" " + group.getName());
-              name.setIcon(TargetAWT.to(group.isExpanded() ? PlatformIconGroup.nodesFolderOpened() : PlatformIconGroup.nodesFolder()));
+              name.setIcon(TargetAWT.to(group.isExpanded() ? PlatformIconGroup.nodesFolderopened() : PlatformIconGroup.nodesFolder()));
               name.setFont(name.getFont().deriveFont(Font.BOLD));
               add(name);
 

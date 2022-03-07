@@ -67,7 +67,7 @@ public final class FileChooserTextBoxBuilder {
         FileChooserFactory.getInstance().installFileCompletion(myTextBox, myFileChooserDescriptor, true, builder.myDisposable);
       }
 
-      myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderOpenedTransparent(), PlatformIconGroup.nodesFolderOpened(), new ClickListener() {
+      myTextBox.addLastExtension(new TextBoxWithExtensions.Extension(false, PlatformIconGroup.nodesFolderopenedtransparent(), PlatformIconGroup.nodesFolderopened(), new ClickListener() {
         @RequiredUIAccess
         @Override
         public void clicked(@Nonnull ClickEvent e) {
