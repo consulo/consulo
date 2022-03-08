@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.agent;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.remoteServer.agent.RemoteAgent;
 
 import java.io.File;

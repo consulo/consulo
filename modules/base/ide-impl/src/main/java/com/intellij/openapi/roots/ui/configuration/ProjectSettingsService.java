@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.ui.configuration;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.module.Module;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;

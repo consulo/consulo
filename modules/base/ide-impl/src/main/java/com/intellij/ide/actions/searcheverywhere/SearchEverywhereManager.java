@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.searcheverywhere;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;

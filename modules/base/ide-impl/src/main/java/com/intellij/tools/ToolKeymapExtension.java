@@ -16,7 +16,7 @@
 
 package com.intellij.tools;
 
-import com.intellij.openapi.keymap.KeyMapBundle;
+import consulo.ui.ex.keymap.KeyMapBundle;
 
 public class ToolKeymapExtension extends BaseToolKeymapExtension {
 

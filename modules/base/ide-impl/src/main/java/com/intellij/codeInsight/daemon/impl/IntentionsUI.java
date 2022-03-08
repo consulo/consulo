@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.intention.impl.CachedIntentions;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

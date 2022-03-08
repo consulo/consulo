@@ -16,7 +16,10 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.codeInsight.TailType;
-import com.intellij.codeInsight.completion.InsertHandler;
+import consulo.language.editor.completion.InsertHandler;
+import consulo.language.editor.completion.AutoCompletionPolicy;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.LookupElement;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
@@ -25,7 +28,7 @@ import javax.swing.*;
 /**
  * @author peter
  */
-public abstract class MutableLookupElement<T> extends LookupElement{
+public abstract class MutableLookupElement<T> extends LookupElement {
   @Override
   @Nonnull
   public abstract T getObject();
@@ -53,7 +56,7 @@ public abstract class MutableLookupElement<T> extends LookupElement{
   public abstract MutableLookupElement<T> setTailType(@Nonnull TailType type);
 
   /**
-   * Use {@link com.intellij.codeInsight.completion.CompletionResultSet#caseInsensitive()} instead
+   * Use {@link CompletionResultSet#caseInsensitive()} instead
    * @param caseSensitive
    * @return
    */

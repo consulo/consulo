@@ -18,7 +18,7 @@ package com.intellij.diff;
 import com.intellij.diff.chains.DiffRequestChain;
 import com.intellij.diff.merge.MergeRequest;
 import com.intellij.diff.requests.DiffRequest;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

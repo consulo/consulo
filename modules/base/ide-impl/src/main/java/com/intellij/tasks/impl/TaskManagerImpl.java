@@ -17,7 +17,7 @@ package com.intellij.tasks.impl;
 
 import com.intellij.openapi.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.*;
+import consulo.ide.ServiceManager;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.component.persist.State;

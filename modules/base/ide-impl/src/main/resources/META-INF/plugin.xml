@@ -828,11 +828,11 @@
     </extensionPoint>
 
     <extensionPoint name="weigher" beanClass="com.intellij.psi.WeigherExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.Weigher"/>
+      <with attribute="implementationClass" implements="consulo.language.Weigher"/>
     </extensionPoint>
 
     <extensionPoint name="completion.contributor" beanClass="com.intellij.codeInsight.completion.CompletionContributorEP">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.completion.CompletionContributor"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.completion.CompletionContributor"/>
     </extensionPoint>
 
     <extensionPoint name="completion.confidence" beanClass="com.intellij.codeInsight.completion.CompletionConfidenceEP">
@@ -1679,7 +1679,7 @@
     <referencesSearch implementation="com.intellij.psi.impl.search.CachesBasedRefSearcher"/>
     <referencesSearch implementation="com.intellij.psi.impl.search.NonPhysicalReferenceSearcher"/>
 
-    <applicationService serviceInterface="com.intellij.codeInsight.completion.CompletionService"
+    <applicationService serviceInterface="consulo.language.editor.completion.CompletionService"
                         serviceImplementation="com.intellij.codeInsight.completion.impl.CompletionServiceImpl"/>
 
     <applicationService serviceInterface="com.intellij.lang.cacheBuilder.CacheBuilderRegistry"
@@ -2660,7 +2660,7 @@
     <applicationService serviceInterface="consulo.application.AsyncExecutionService" serviceImplementation="com.intellij.openapi.application.impl.AsyncExecutionServiceImpl"/>
 
     <projectService serviceImplementation="com.intellij.codeInsight.daemon.impl.ErrorStripeUpdateManager"/>
-    <projectService serviceInterface="com.intellij.codeInsight.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl"/>
+    <projectService serviceInterface="consulo.language.editor.AutoPopupController" serviceImplementation="com.intellij.codeInsight.AutoPopupControllerImpl"/>
     <daemon.tooltipActionProvider order="last" id="defaultProvider" implementation="com.intellij.codeInsight.daemon.impl.DaemonTooltipActionProvider"/>
 
     <fileBasedIndex.providedLocator implementation="com.intellij.index.BasicProvidedExtensionLocator"/>

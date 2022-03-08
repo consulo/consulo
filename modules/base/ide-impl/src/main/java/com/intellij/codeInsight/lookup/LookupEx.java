@@ -15,6 +15,9 @@
  */
 package com.intellij.codeInsight.lookup;
 
+import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.LookupElement;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.InputEvent;

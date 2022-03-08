@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import com.intellij.openapi.util.Comparing;

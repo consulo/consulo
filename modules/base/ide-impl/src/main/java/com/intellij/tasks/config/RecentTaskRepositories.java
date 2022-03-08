@@ -15,9 +15,9 @@
  */
 package com.intellij.tasks.config;
 
-import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.tasks.TaskRepository;

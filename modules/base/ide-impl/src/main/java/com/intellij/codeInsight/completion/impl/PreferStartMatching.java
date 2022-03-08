@@ -1,8 +1,8 @@
 package com.intellij.codeInsight.completion.impl;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementWeigher;
-import com.intellij.codeInsight.lookup.WeighingContext;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementWeigher;
+import consulo.language.editor.completion.WeighingContext;
 import javax.annotation.Nonnull;
 
 /**

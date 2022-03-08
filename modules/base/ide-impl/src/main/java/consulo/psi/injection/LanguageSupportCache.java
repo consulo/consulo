@@ -16,7 +16,7 @@
 
 package consulo.psi.injection;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

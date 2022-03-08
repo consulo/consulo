@@ -16,7 +16,7 @@
 package consulo.compiler.impl;
 
 import consulo.compiler.CompilerPaths;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;

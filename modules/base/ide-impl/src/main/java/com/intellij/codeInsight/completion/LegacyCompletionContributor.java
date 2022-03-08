@@ -15,7 +15,11 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.CompletionType;
 import consulo.logging.Logger;
 import com.intellij.openapi.paths.PsiDynaReference;
 import consulo.util.lang.ref.Ref;

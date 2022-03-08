@@ -18,7 +18,7 @@ package org.intellij.plugins.intelliLang.inject;
 
 import com.intellij.codeInsight.completion.CompletionUtilCoreImpl;
 import consulo.language.Language;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;

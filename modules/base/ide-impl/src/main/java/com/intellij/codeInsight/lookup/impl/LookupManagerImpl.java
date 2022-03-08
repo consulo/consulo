@@ -3,8 +3,8 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.CodeInsightSettings;
-import com.intellij.codeInsight.completion.CompletionProcess;
-import com.intellij.codeInsight.completion.CompletionService;
+import consulo.language.editor.completion.CompletionProcess;
+import consulo.language.editor.completion.CompletionService;
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.EditorHintListener;
@@ -16,6 +16,10 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
+import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.event.LookupEvent;
+import consulo.language.editor.completion.event.LookupListener;
 import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;

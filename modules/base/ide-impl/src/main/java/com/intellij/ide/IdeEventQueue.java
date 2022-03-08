@@ -23,7 +23,7 @@ import com.intellij.idea.ApplicationStarter;
 import com.intellij.openapi.application.*;
 import com.intellij.openapi.application.impl.InvocationUtil2;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
 import com.intellij.openapi.keymap.KeyboardSettingsExternalizable;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;

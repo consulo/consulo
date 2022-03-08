@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.ActionToolbarPosition;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.actionSystem.ex.QuickListsManager;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.keymap.KeyMapBundle;
+import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ui.ex.awt.*;

@@ -27,7 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;

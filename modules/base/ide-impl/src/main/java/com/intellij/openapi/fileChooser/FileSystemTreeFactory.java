@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser;
 
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

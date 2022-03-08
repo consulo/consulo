@@ -17,12 +17,13 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.LookupItem;
-import com.intellij.codeInsight.lookup.LookupElementPresentation;
+import consulo.language.editor.completion.LookupElementPresentation;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.completion.LookupElement;
 
 /**
  * @author yole
- * @deprecated use {@link com.intellij.codeInsight.lookup.LookupElement#renderElement(com.intellij.codeInsight.lookup.LookupElementPresentation)}
+ * @deprecated use {@link LookupElement#renderElement(LookupElementPresentation)}
  */
 @Deprecated
 public interface ElementLookupRenderer<T> {

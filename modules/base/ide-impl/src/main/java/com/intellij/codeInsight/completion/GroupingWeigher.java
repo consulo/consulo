@@ -16,7 +16,9 @@
 
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.CompletionLocation;
+import consulo.language.editor.completion.CompletionWeigher;
+import consulo.language.editor.completion.LookupElement;
 import javax.annotation.Nonnull;
 
 /**

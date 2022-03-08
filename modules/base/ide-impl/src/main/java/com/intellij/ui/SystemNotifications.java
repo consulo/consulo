@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import javax.annotation.Nonnull;
 
 /**

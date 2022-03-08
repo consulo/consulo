@@ -4,7 +4,7 @@ package com.intellij.openapi.editor.actionSystem;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.editor.*;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.Editor;

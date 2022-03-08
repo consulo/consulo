@@ -16,6 +16,8 @@
 
 package com.intellij.codeInsight.completion;
 
+import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.OffsetMap;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
 

@@ -13,6 +13,7 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.WriteAction;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
+import consulo.language.editor.completion.*;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;

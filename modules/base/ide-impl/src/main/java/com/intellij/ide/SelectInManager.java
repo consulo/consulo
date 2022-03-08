@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 

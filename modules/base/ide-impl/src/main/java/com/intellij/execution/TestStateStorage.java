@@ -15,7 +15,7 @@
  */
 package com.intellij.execution;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtilRt;

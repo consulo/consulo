@@ -5,7 +5,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.completion.CodeCompletionFeatures;
 import com.intellij.codeInsight.completion.ShowHideIntentionIconLookupAction;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementAction;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.AllIcons;

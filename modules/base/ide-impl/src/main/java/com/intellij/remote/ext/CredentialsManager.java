@@ -15,7 +15,7 @@
  */
 package com.intellij.remote.ext;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.remote.CredentialsType;
 import com.intellij.remote.RemoteSdkAdditionalData;
 import org.jdom.Element;

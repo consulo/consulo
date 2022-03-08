@@ -16,26 +16,30 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.Classifier;
-import com.intellij.codeInsight.lookup.LookupElement;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
-import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.language.editor.completion.CompletionLocation;
+import consulo.language.editor.completion.CompletionWeigher;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.util.ProcessingContext;
+import consulo.logging.Logger;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.MultiMap;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
  * @author peter
  */
 public class StatisticsWeigher extends CompletionWeigher {
+  public static final Key<CompletionStatistician> STATISTICS_KEY = Key.create("completion");
+
   private static final Logger LOG = Logger.getInstance(StatisticsWeigher.class);
   private static final Key<StatisticsInfo> BASE_STATISTICS_INFO = Key.create("Base statistics info");
 
@@ -185,7 +189,7 @@ public class StatisticsWeigher extends CompletionWeigher {
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       LOG.assertTrue(!ApplicationManager.getApplication().isDispatchThread());
     }
-    StatisticsInfo info = StatisticsManager.serialize(CompletionService.STATISTICS_KEY, item, location);
+    StatisticsInfo info = StatisticsManager.serialize(STATISTICS_KEY, item, location);
     return info == null ? StatisticsInfo.EMPTY : info;
   }
 

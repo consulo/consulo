@@ -2,11 +2,11 @@
 
 package com.intellij.codeInsight.hint;
 
-import com.intellij.codeInsight.AutoPopupController;
+import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager;
-import com.intellij.codeInsight.lookup.Lookup;
+import consulo.language.editor.completion.Lookup;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.ide.IdeTooltip;
 import com.intellij.injected.editor.EditorWindow;

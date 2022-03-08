@@ -15,6 +15,7 @@
  */
 package com.intellij.profile.codeInspection;
 
+import consulo.ide.ServiceManager;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -31,7 +32,6 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.*;
 import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;

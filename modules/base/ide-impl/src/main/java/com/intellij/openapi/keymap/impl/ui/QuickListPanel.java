@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.ex.QuickList;
-import com.intellij.openapi.keymap.KeyMapBundle;
+import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.ui.*;

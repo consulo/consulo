@@ -16,9 +16,9 @@
 
 package com.intellij.codeEditor.printing;
 
-import com.intellij.openapi.components.*;
 import consulo.component.persist.StoragePathMacros;
 import consulo.colorScheme.EditorColorsManager;
+import consulo.ide.ServiceManager;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;

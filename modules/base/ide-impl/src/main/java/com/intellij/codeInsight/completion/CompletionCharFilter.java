@@ -25,7 +25,7 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.lookup.CharFilter;
-import com.intellij.codeInsight.lookup.Lookup;
+import consulo.language.editor.completion.Lookup;
 
 public class CompletionCharFilter extends CharFilter {
 

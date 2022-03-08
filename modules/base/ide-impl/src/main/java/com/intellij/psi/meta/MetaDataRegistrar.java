@@ -16,7 +16,7 @@
 
 package com.intellij.psi.meta;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.language.pattern.ElementPattern;
 import com.intellij.psi.filters.ElementFilter;
 import consulo.language.psi.meta.PsiMetaData;

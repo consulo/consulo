@@ -15,7 +15,7 @@
  */
 package com.intellij.packageDependencies;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.scope.NamedScopesHolder;

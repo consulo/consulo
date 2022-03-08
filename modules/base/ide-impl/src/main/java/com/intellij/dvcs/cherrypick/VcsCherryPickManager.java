@@ -16,7 +16,7 @@
 package com.intellij.dvcs.cherrypick;
 
 import com.google.common.collect.Lists;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsKey;

@@ -19,7 +19,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

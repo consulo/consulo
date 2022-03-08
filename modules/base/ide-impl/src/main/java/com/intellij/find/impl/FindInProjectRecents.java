@@ -17,11 +17,11 @@ package com.intellij.find.impl;
 
 import com.intellij.find.FindInProjectSettings;
 import com.intellij.find.FindSettings;
-import com.intellij.openapi.components.*;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
 import jakarta.inject.Singleton;

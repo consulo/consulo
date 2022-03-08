@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template;
 
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.LookupElement;
 import javax.annotation.Nullable;
 
 public abstract class Expression {

@@ -1,27 +1,31 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import consulo.language.file.inject.DocumentWindow;
+import consulo.language.editor.completion.Lookup;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.language.ast.FileASTNode;
-import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
-import consulo.document.Document;
+import com.intellij.openapi.util.text.StringUtil;
 import consulo.codeEditor.Editor;
+import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.RangeMarkerEx;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.ast.FileASTNode;
+import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.OffsetMap;
 import consulo.language.file.FileViewProvider;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.impl.DebugUtil;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.impl.DebugUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.util.lang.ImmutableCharSequence;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Contract;
 
 import java.util.List;
@@ -151,7 +155,7 @@ class CompletionAssertions {
     private RangeMarkerSpy spy;
 
     WatchingInsertionContext(OffsetMap offsetMap, PsiFile file, char completionChar, List<LookupElement> items, Editor editor) {
-      super(offsetMap, completionChar, items.toArray(LookupElement.EMPTY_ARRAY), file, editor, shouldAddCompletionChar(completionChar));
+      super(offsetMap, completionChar, items.toArray(LookupElement.EMPTY_ARRAY), file, editor, Lookup.shouldAddCompletionChar(completionChar));
     }
 
     @Override

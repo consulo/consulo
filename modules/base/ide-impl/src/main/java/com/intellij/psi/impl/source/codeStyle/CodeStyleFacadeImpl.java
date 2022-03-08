@@ -79,11 +79,6 @@ public abstract class CodeStyleFacadeImpl implements CodeStyleFacade {
   }
 
   @Override
-  public boolean isUnsuitableCodeStyleConfigurable(final Configurable c) {
-    return false;
-  }
-
-  @Override
   public int getRightMargin(Language language) {
     return CodeStyle.getProjectOrDefaultSettings(myProject).getRightMargin(language);
   }

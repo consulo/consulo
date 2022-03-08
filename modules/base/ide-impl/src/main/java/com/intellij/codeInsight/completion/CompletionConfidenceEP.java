@@ -19,6 +19,7 @@ import consulo.language.Language;
 import consulo.language.LanguageExtension;
 import consulo.language.LanguageExtensionPoint;
 import consulo.container.plugin.PluginIds;
+import consulo.language.editor.completion.CompletionContributor;
 
 import javax.annotation.Nonnull;
 import java.util.List;

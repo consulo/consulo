@@ -3,8 +3,8 @@
 package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.TailType;
-import com.intellij.codeInsight.lookup.Lookup;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.*;
 import com.intellij.codeInsight.lookup.LookupValueWithPsiElement;
 import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.featureStatistics.FeatureUsageTracker;

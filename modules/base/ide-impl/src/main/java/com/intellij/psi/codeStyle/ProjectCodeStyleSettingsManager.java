@@ -16,7 +16,7 @@
 
 package com.intellij.psi.codeStyle;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;

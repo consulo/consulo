@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;

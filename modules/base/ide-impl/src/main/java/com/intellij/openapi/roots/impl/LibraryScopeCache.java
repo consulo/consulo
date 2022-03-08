@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.module.Module;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import com.intellij.openapi.module.impl.scopes.SdkScope;

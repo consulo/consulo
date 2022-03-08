@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.template.macro;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.ExpressionContext;

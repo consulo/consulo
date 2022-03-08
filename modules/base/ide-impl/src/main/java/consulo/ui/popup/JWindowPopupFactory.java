@@ -15,7 +15,7 @@
  */
 package consulo.ui.popup;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.ui.Window;
 
 import javax.swing.*;

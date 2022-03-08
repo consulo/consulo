@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.lookup.impl;
 
-import com.intellij.codeInsight.AutoPopupController;
+import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.FileModificationService;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
@@ -15,6 +15,11 @@ import com.intellij.codeInsight.template.impl.actions.NextVariableAction;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.ui.UISettings;
 import consulo.codeEditor.event.*;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementPresentation;
+import consulo.language.editor.completion.PrefixMatcher;
+import consulo.language.editor.completion.event.LookupEvent;
+import consulo.language.editor.completion.event.LookupListener;
 import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.lang.LangBundle;

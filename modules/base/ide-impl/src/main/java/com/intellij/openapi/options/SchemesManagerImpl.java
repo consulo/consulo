@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import consulo.component.persist.RoamingType;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.extension.AbstractExtensionPointBean;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;

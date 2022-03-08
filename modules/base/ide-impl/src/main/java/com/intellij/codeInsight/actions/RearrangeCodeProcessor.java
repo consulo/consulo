@@ -17,7 +17,7 @@ package com.intellij.codeInsight.actions;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.document.Document;
 import consulo.codeEditor.SelectionModel;
 import consulo.project.Project;

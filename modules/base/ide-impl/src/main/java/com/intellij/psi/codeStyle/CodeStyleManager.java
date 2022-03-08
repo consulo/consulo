@@ -3,7 +3,7 @@ package com.intellij.psi.codeStyle;
 
 import com.intellij.formatting.FormattingMode;
 import consulo.language.ast.ASTNode;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;

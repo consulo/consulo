@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.actions;
 
-import com.intellij.openapi.keymap.KeyMapBundle;
+import consulo.ui.ex.keymap.KeyMapBundle;
 import com.intellij.openapi.keymap.KeymapExtension;
 import com.intellij.openapi.keymap.KeymapGroup;
 import com.intellij.openapi.keymap.impl.ui.Group;

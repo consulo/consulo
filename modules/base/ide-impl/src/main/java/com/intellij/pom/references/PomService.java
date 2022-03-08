@@ -15,7 +15,7 @@
  */
 package com.intellij.pom.references;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.language.pom.PomTarget;
 import consulo.language.psi.PsiElement;

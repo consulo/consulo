@@ -15,13 +15,13 @@
  */
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.codeInsight.AutoPopupController;
-import com.intellij.codeInsight.completion.CompletionInitializationContext;
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.completion.OffsetMap;
+import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.OffsetMap;
 import com.intellij.codeInsight.completion.PrioritizedLookupElement;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementDecorator;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementDecorator;
 import com.intellij.codeInsight.template.TemplateLookupSelectionHandler;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;

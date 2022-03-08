@@ -17,7 +17,7 @@ package com.intellij.diagnostic;
 
 import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;

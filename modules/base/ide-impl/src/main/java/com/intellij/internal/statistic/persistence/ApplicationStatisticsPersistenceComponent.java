@@ -17,13 +17,13 @@
 package com.intellij.internal.statistic.persistence;
 
 import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 

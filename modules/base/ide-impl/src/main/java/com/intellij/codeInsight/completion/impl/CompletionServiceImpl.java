@@ -4,6 +4,7 @@ package com.intellij.codeInsight.completion.impl;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.*;
 import consulo.application.ApplicationManager;
+import consulo.language.editor.completion.*;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
@@ -13,10 +14,9 @@ import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.Weigher;
-import com.intellij.psi.WeighingService;
+import consulo.language.Weigher;
+import consulo.language.WeighingService;
 import consulo.language.impl.DebugUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.ExceptionUtil;
 import jakarta.inject.Singleton;
 
@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  * @author peter

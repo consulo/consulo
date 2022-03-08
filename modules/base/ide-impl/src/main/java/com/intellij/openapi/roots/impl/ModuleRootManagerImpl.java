@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;

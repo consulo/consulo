@@ -13,7 +13,7 @@ import consulo.colorScheme.EffectType;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;

@@ -1,33 +1,33 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.completion;
 
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.inject.InjectedLanguageManager;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.util.Pair;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import com.intellij.psi.util.PsiUtilBase;
+import com.intellij.reference.SoftReference;
 import consulo.application.WriteAction;
 import consulo.codeEditor.Caret;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.document.impl.DocumentImpl;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.document.impl.DocumentImpl;
+import consulo.language.editor.completion.*;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.psi.internal.PsiFileEx;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.impl.psi.internal.PsiFileEx;
-import consulo.language.impl.psi.PsiFileImpl;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
-import com.intellij.reference.SoftReference;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
 import java.util.Objects;
 
 /**

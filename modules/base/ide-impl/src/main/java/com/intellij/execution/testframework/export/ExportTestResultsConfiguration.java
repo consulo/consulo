@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.testframework.export;
 
-import com.intellij.openapi.components.*;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.annotation.Attribute;
 

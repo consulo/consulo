@@ -5,7 +5,7 @@ import consulo.application.util.SystemInfo;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.util.*;

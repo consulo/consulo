@@ -16,7 +16,7 @@
 package com.intellij.psi.util.proximity;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.Weigher;
+import consulo.language.Weigher;
 import com.intellij.psi.util.ProximityLocation;
 import javax.annotation.Nonnull;
 

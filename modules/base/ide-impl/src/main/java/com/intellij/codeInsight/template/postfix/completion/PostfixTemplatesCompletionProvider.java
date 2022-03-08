@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.template.postfix.completion;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.PrefixMatcher;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.PrefixMatcher;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
@@ -13,7 +13,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.pattern.StandardPatterns;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.ProcessingContext;
-import consulo.codeInsight.completion.CompletionProvider;
+import consulo.language.editor.completion.CompletionProvider;
 import javax.annotation.Nonnull;
 
 import static com.intellij.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor.getPostfixLiveTemplate;

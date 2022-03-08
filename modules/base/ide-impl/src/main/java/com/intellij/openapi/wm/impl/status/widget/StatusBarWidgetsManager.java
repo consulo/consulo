@@ -3,7 +3,7 @@ package com.intellij.openapi.wm.impl.status.widget;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.project.ui.wm.StatusBar;

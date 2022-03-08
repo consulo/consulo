@@ -19,7 +19,7 @@ import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.IntInlineKeyDescriptor;

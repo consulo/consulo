@@ -18,7 +18,7 @@ package com.intellij.codeInsight.template.impl;
 
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.completion.CompletionUtil;
-import com.intellij.codeInsight.completion.OffsetKey;
+import consulo.language.editor.completion.OffsetKey;
 import com.intellij.codeInsight.completion.OffsetsInFile;
 import com.intellij.codeInsight.template.*;
 import consulo.language.Language;

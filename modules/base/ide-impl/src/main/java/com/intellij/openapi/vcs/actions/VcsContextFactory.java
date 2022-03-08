@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.LocalChangeList;

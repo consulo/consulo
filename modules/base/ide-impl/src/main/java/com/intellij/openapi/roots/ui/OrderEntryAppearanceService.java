@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;

@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.hints.InlayParameterHintsProvider;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCustomElementRenderer;

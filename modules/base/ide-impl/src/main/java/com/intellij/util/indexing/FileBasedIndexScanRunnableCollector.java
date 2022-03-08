@@ -15,7 +15,7 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.content.ContentIterator;

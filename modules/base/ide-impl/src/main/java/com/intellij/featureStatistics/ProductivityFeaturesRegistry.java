@@ -15,7 +15,7 @@
  */
 package com.intellij.featureStatistics;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import javax.annotation.Nonnull;
 
 import java.util.Set;

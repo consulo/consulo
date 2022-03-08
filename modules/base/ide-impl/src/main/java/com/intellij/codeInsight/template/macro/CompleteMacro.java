@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.macro;
 
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
-import com.intellij.codeInsight.completion.CompletionType;
+import consulo.language.editor.completion.CompletionType;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;

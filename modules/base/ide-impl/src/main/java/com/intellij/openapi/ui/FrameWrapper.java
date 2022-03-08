@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.WindowState;
 import com.intellij.openapi.util.WindowStateService;

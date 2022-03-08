@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.artifacts;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;

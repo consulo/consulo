@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.openapi.vcs.VcsRoot;

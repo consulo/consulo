@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.psi.PsiElement;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
 import consulo.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings;

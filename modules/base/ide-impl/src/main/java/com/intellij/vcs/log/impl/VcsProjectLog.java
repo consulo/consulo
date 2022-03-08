@@ -17,7 +17,7 @@ package com.intellij.vcs.log.impl;
 
 import com.intellij.ide.caches.CachesInvalidator;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import consulo.disposer.Disposer;

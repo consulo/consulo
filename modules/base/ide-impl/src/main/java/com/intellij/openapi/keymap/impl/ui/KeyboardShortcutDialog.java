@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.keymap.KeyMapBundle;
+import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;

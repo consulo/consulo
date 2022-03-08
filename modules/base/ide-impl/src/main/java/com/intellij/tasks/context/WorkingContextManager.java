@@ -19,7 +19,7 @@ package com.intellij.tasks.context;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;

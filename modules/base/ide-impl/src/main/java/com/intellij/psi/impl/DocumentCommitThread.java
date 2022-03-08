@@ -3,7 +3,7 @@ package com.intellij.psi.impl;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.document.impl.DocumentEx;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;

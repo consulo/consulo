@@ -16,7 +16,7 @@
 
 package com.intellij.util;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.project.Project;

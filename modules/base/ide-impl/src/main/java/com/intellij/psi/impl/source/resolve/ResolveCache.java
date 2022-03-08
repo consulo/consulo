@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source.resolve;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.language.psi.*;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;

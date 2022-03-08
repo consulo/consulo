@@ -3,7 +3,7 @@ package com.intellij.ide.util;
 
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import com.intellij.navigation.NavigationItemFileStatus;
-import com.intellij.navigation.PsiElementNavigationItem;
+import consulo.language.psi.PsiElementNavigationItem;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.problems.WolfTheProblemSolver;
 import com.intellij.ui.ColoredListCellRenderer;

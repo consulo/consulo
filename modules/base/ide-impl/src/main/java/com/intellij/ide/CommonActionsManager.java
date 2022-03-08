@@ -16,7 +16,7 @@
 package com.intellij.ide;
 
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 
 import javax.swing.*;

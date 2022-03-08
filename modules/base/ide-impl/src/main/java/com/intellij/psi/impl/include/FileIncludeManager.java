@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.include;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;

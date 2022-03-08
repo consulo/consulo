@@ -1,9 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementPresentation;
-import com.intellij.codeInsight.lookup.WeighingContext;
+import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.WeighingContext;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;

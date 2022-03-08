@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight;
 
-import com.intellij.codeInsight.completion.InsertionContext;
+import consulo.language.editor.completion.InsertionContext;
 import consulo.codeEditor.Editor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -16,10 +16,10 @@
 
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.components.*;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import consulo.project.ProjectBundle;
 import consulo.content.library.LibraryTablePresentation;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;

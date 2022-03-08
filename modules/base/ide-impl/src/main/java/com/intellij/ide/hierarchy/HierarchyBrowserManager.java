@@ -18,10 +18,10 @@ package com.intellij.ide.hierarchy;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.impl.ContentManagerWatcher;
-import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;

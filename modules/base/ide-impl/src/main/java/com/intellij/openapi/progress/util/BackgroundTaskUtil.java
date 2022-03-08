@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

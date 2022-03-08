@@ -1,7 +1,6 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
 import com.intellij.codeInsight.template.CustomLiveTemplate;
 import com.intellij.codeInsight.template.CustomLiveTemplateBase;
@@ -12,6 +11,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.completion.*;
 import consulo.language.pattern.PatternCondition;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.pattern.StandardPatterns;
@@ -20,7 +20,6 @@ import consulo.language.plain.psi.PsiPlainTextFile;
 import com.intellij.ui.EditorTextField;
 import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.codeInsight.completion.CompletionProvider;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.TestOnly;

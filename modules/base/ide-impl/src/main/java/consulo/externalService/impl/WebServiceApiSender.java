@@ -16,7 +16,7 @@
 package consulo.externalService.impl;
 
 import com.google.gson.Gson;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.externalService.*;
 import consulo.platform.base.localize.DiagnosticLocalize;
 import consulo.util.lang.ObjectUtil;

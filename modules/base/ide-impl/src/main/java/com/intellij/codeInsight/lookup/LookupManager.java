@@ -2,8 +2,10 @@
 
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.LookupElement;
 import consulo.project.Project;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.disposer.Disposable;

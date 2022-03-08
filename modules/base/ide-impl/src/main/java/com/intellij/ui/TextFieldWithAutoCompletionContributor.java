@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.AutoCompletionPolicy;
+import consulo.language.editor.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;

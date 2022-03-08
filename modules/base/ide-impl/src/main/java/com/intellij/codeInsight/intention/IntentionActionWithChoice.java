@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.intention;
 
+import consulo.language.editor.completion.Lookup;
 import consulo.language.editor.intention.IntentionAction;
 
 import javax.annotation.Nonnull;
@@ -15,7 +16,7 @@ import java.util.List;
  * <p>
  * For example, it can add variants right into quickfix popup eliminating
  * need for user to click on quickfix and then to choose specific variation
- * in {@link com.intellij.codeInsight.lookup.Lookup}.
+ * in {@link Lookup}.
  *
  * @see com.intellij.spellchecker.quickfixes.ChangeTo for reference implementation
  * @see com.intellij.codeInsight.intention.choice.DefaultIntentionActionWithChoice for

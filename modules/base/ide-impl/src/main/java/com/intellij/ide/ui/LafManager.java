@@ -16,7 +16,7 @@
 
 package com.intellij.ide.ui;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.disposer.Disposable;
 import consulo.ui.style.Style;
 

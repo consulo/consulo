@@ -17,21 +17,20 @@ package com.intellij.openapi.editor;
 
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeStyle.CodeStyleFacade;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
-import consulo.document.FileDocumentManager;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.codeEditor.*;
-import consulo.project.Project;
-import consulo.application.util.LineTokenizer;
-import consulo.language.psi.PsiDocumentManager;
 import com.intellij.util.Producer;
+import consulo.application.ApplicationManager;
+import consulo.application.util.LineTokenizer;
+import consulo.codeEditor.*;
 import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.ReadOnlyFragmentModificationException;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
+import consulo.ui.ex.awt.CopyPasteManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -41,11 +40,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EditorModificationUtil {
-  private EditorModificationUtil() { }
+  private EditorModificationUtil() {
+  }
 
   public static void deleteSelectedText(Editor editor) {
     SelectionModel selectionModel = editor.getSelectionModel();
-    if(!selectionModel.hasSelection()) return;
+    if (!selectionModel.hasSelection()) return;
 
     int selectionStart = selectionModel.getSelectionStart();
     int selectionEnd = selectionModel.getSelectionEnd();
@@ -63,12 +63,7 @@ public class EditorModificationUtil {
   }
 
   public static void deleteSelectedTextForAllCarets(@Nonnull final Editor editor) {
-    editor.getCaretModel().runForEachCaret(new CaretAction() {
-      @Override
-      public void perform(Caret caret) {
-        deleteSelectedText(editor);
-      }
-    });
+    editor.getCaretModel().runForEachCaret(caret -> deleteSelectedText(editor));
   }
 
   public static void zeroWidthBlockSelectionAtCaretColumn(final Editor editor, final int startLine, final int endLine) {
@@ -127,13 +122,15 @@ public class EditorModificationUtil {
       if (selectionModel.hasSelection()) {
         oldOffset = selectionModel.getSelectionStart();
         document.replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), s);
-      } else {
+      }
+      else {
         document.insertString(oldOffset, s);
       }
-    } else {
+    }
+    else {
       deleteSelectedText(editor);
       int lineNumber = editor.getCaretModel().getLogicalPosition().line;
-      if (lineNumber >= document.getLineCount()){
+      if (lineNumber >= document.getLineCount()) {
         return insertStringAtCaretNoScrolling(editor, s, false, toMoveCaret, s.length());
       }
 
@@ -142,7 +139,7 @@ public class EditorModificationUtil {
     }
 
     int offset = oldOffset + filler.length() + caretShift;
-    if (toMoveCaret){
+    if (toMoveCaret) {
       editor.getCaretModel().moveToOffset(offset, true);
       selectionModel.removeSelection();
     }
@@ -196,7 +193,8 @@ public class EditorModificationUtil {
     try {
       return (String)content.getTransferData(DataFlavor.stringFlavor);
     }
-    catch (UnsupportedFlavorException | IOException ignore) { }
+    catch (UnsupportedFlavorException | IOException ignore) {
+    }
 
     return null;
   }
@@ -214,13 +212,14 @@ public class EditorModificationUtil {
     }
     return content;
   }
+
   /**
    * Calculates difference in columns between current editor caret position and end of the logical line fragment displayed
    * on a current visual line.
    *
-   * @param editor    target editor
-   * @return          difference in columns between current editor caret position and end of the logical line fragment displayed
-   *                  on a current visual line
+   * @param editor target editor
+   * @return difference in columns between current editor caret position and end of the logical line fragment displayed
+   * on a current visual line
    */
   public static int calcAfterLineEnd(Editor editor) {
     Document document = editor.getDocument();
@@ -331,8 +330,7 @@ public class EditorModificationUtil {
    * Inserts given string at each caret's position. Effective caret shift will be equal to <code>caretShift</code> for each caret.
    */
   public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @Nonnull final String str, final boolean toProcessOverwriteMode, final int caretShift)
-          throws ReadOnlyFragmentModificationException
-  {
+          throws ReadOnlyFragmentModificationException {
     editor.getCaretModel().runForEachCaret(new CaretAction() {
       @Override
       public void perform(Caret caret) {
@@ -368,8 +366,7 @@ public class EditorModificationUtil {
   }
 
   @Nonnull
-  public static List<CaretState> calcBlockSelectionState(@Nonnull Editor editor,
-                                                         @Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
+  public static List<CaretState> calcBlockSelectionState(@Nonnull Editor editor, @Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
     int startLine = Math.max(Math.min(blockStart.line, editor.getDocument().getLineCount() - 1), 0);
     int endLine = Math.max(Math.min(blockEnd.line, editor.getDocument().getLineCount() - 1), 0);
     int step = endLine < startLine ? -1 : 1;
@@ -384,9 +381,7 @@ public class EditorModificationUtil {
       int lineWidth = lineEndPosition.column;
       if (startColumn > lineWidth && endColumn > lineWidth && !editor.isColumnMode()) {
         LogicalPosition caretPos = new LogicalPosition(line, Math.min(startColumn, endColumn));
-        caretStates.add(new CaretState(caretPos,
-                                       lineEndPosition,
-                                       lineEndPosition));
+        caretStates.add(new CaretState(caretPos, lineEndPosition, lineEndPosition));
       }
       else {
         LogicalPosition startPos = new LogicalPosition(line, editor.isColumnMode() ? startColumn : Math.min(startColumn, lineWidth));
@@ -399,7 +394,7 @@ public class EditorModificationUtil {
     }
     if (hasSelection && !editor.isColumnMode()) { // filtering out lines without selection
       Iterator<CaretState> caretStateIterator = caretStates.iterator();
-      while(caretStateIterator.hasNext()) {
+      while (caretStateIterator.hasNext()) {
         CaretState state = caretStateIterator.next();
         //noinspection ConstantConditions
         if (state.getSelectionStart().equals(state.getSelectionEnd())) {
@@ -420,7 +415,7 @@ public class EditorModificationUtil {
 
   /**
    * @return true when not viewer
-   *         false otherwise, additionally information hint with warning would be shown
+   * false otherwise, additionally information hint with warning would be shown
    */
   public static boolean checkModificationAllowed(Editor editor) {
     if (!editor.isViewer()) return true;

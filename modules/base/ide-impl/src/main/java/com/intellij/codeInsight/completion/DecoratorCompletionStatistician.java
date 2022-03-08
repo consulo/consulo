@@ -15,10 +15,12 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementDecorator;
+import consulo.language.editor.completion.CompletionLocation;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementDecorator;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
+import consulo.language.editor.completion.CompletionService;
 
 /**
  * @author peter
@@ -28,7 +30,7 @@ public class DecoratorCompletionStatistician extends CompletionStatistician{
   @Override
   public StatisticsInfo serialize(final LookupElement element, final CompletionLocation location) {
     if (element instanceof LookupElementDecorator) {
-      return StatisticsManager.serialize(CompletionService.STATISTICS_KEY, ((LookupElementDecorator)element).getDelegate(), location);
+      return StatisticsManager.serialize(StatisticsWeigher.STATISTICS_KEY, ((LookupElementDecorator)element).getDelegate(), location);
     }
     return null;
   }

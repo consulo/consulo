@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service.project;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.service.ExternalSystemFacadeManager;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;

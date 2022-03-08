@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.listeners;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 

@@ -1078,16 +1078,10 @@ open module consulo.ide.impl {
   exports consulo.bundle.impl;
   exports consulo.bundle.ui;
   exports consulo.codeInsight;
-  exports consulo.codeInsight.completion;
-  //exports consulo.codeInsight.daemon;
   exports consulo.codeInsight.daemon.impl;
-  //exports consulo.codeInsight.navigation;
   exports consulo.codeInsight.navigation.actions;
-  //exports consulo.codeInsight.template;
   exports consulo.codeInsight.template.impl;
-  //exports consulo.codeInsight.template.postfix;
   exports consulo.codeInsight.template.postfix.settings;
-  //exports consulo.codeInspection;
   exports consulo.codeInspection.ui;
   exports consulo.codeStyle;
   exports consulo.command.impl;

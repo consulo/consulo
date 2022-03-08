@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.passwordSafe;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 
 /**
  * The password safe component. It allows storing, removing, and retrieving the passwords.

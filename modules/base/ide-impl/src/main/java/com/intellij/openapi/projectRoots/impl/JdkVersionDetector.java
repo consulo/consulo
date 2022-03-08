@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.projectRoots.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.util.NotNullFunction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

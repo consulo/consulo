@@ -11,7 +11,7 @@ import consulo.project.ui.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;

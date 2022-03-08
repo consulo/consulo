@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.completion.actions;
 
 import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
-import com.intellij.codeInsight.completion.CompletionType;
+import consulo.language.editor.completion.CompletionType;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

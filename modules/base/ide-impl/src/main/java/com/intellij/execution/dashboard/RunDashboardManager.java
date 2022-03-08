@@ -17,7 +17,7 @@ package com.intellij.execution.dashboard;
 
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.toolWindow.ToolWindow;

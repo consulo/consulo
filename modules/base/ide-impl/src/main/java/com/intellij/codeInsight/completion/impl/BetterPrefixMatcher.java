@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.completion.impl;
 
-import com.intellij.codeInsight.completion.CompletionResult;
-import com.intellij.codeInsight.completion.CompletionResultSet;
-import com.intellij.codeInsight.completion.PrefixMatcher;
+import consulo.language.editor.completion.CompletionResult;
+import consulo.language.editor.completion.CompletionResultSet;
+import consulo.language.editor.completion.PrefixMatcher;
 import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.MinusculeMatcher;
 import com.intellij.util.containers.FList;

@@ -17,9 +17,10 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementPresentation;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementPresentation;
 import com.intellij.navigation.ChooseByNameContributor;
+import consulo.language.editor.completion.*;
 import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
@@ -32,7 +33,6 @@ import com.intellij.psi.search.FilenameIndex;
 import com.intellij.util.ArrayUtil;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
-import consulo.codeInsight.completion.CompletionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;

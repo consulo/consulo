@@ -1,7 +1,10 @@
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.AutoPopupController;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.annotation.UsedInPlugin;
+import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.completion.InsertHandler;
+import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.LookupElement;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
@@ -12,6 +15,7 @@ import consulo.language.psi.PsiDocumentManager;
 /**
  * @author zolotov
  */
+@UsedInPlugin
 public class AddSpaceInsertHandler implements InsertHandler<LookupElement> {
   public final static InsertHandler<LookupElement> INSTANCE = new AddSpaceInsertHandler(false);
   public final static InsertHandler<LookupElement> INSTANCE_WITH_AUTO_POPUP = new AddSpaceInsertHandler(true);
@@ -28,6 +32,7 @@ public class AddSpaceInsertHandler implements InsertHandler<LookupElement> {
     myTriggerAutoPopup = triggerAutoPopup;
   }
 
+  @Override
   public void handleInsert(InsertionContext context, LookupElement item) {
     Editor editor = context.getEditor();
     char completionChar = context.getCompletionChar();

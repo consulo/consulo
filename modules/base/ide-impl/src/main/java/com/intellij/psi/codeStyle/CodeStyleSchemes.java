@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 
 /**
  * @author MYakovlev

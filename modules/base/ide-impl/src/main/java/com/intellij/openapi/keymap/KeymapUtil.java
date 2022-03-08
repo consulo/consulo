@@ -15,24 +15,22 @@
  */
 package com.intellij.openapi.keymap;
 
-import consulo.application.AllIcons;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
-import consulo.application.util.registry.RegistryValue;
-import consulo.application.util.registry.RegistryValueListener;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AllIcons;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
+import consulo.application.util.registry.RegistryValue;
+import consulo.application.util.registry.RegistryValueListener;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.action.util.MacKeymapUtil;
 import consulo.ui.ex.action.util.ShortcutUtil;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.image.Image;
+import consulo.util.xml.serializer.InvalidDataException;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -61,34 +59,7 @@ public class KeymapUtil {
   }
 
   public static String getShortcutText(@Nonnull Shortcut shortcut) {
-    String s = "";
-
-    if (shortcut instanceof KeyboardShortcut) {
-      KeyboardShortcut keyboardShortcut = (KeyboardShortcut)shortcut;
-
-      String acceleratorText = getKeystrokeText(keyboardShortcut.getFirstKeyStroke());
-      if (!acceleratorText.isEmpty()) {
-        s = acceleratorText;
-      }
-
-      acceleratorText = getKeystrokeText(keyboardShortcut.getSecondKeyStroke());
-      if (!acceleratorText.isEmpty()) {
-        s += ", " + acceleratorText;
-      }
-    }
-    else if (shortcut instanceof MouseShortcut) {
-      MouseShortcut mouseShortcut = (MouseShortcut)shortcut;
-      s = getMouseShortcutText(mouseShortcut.getButton(), mouseShortcut.getModifiers(), mouseShortcut.getClickCount());
-    }
-    else if (shortcut instanceof KeyboardModifierGestureShortcut) {
-      final KeyboardModifierGestureShortcut gestureShortcut = (KeyboardModifierGestureShortcut)shortcut;
-      s = gestureShortcut.getType() == KeyboardGestureAction.ModifierType.dblClick ? "Press, release and hold " : "Hold ";
-      s += getKeystrokeText(gestureShortcut.getStroke());
-    }
-    else {
-      throw new IllegalArgumentException("unknown shortcut class: " + shortcut.getClass().getCanonicalName());
-    }
-    return s;
+    return consulo.ui.ex.keymap.util.KeymapUtil.getShortcutText(shortcut);
   }
 
   public static Image getShortcutIcon(Shortcut shortcut) {
@@ -110,12 +81,7 @@ public class KeymapUtil {
    * @return string representation of passed mouse shortcut.
    */
   public static String getMouseShortcutText(int button, @JdkConstants.InputEventMask int modifiers, int clickCount) {
-    if (clickCount < 3) {
-      return KeyMapBundle.message("mouse." + (clickCount == 1 ? "" : "double.") + "click.shortcut.text", getModifiersText(mapNewModifiers(modifiers)), button);
-    }
-    else {
-      throw new IllegalStateException("unknown clickCount: " + clickCount);
-    }
+    return consulo.ui.ex.keymap.util.KeymapUtil.getMouseShortcutText(button, modifiers, clickCount);
   }
 
   @Nonnull
@@ -146,55 +112,8 @@ public class KeymapUtil {
     return new MouseShortcut(button, modifiers, 1);
   }
 
-  @JdkConstants.InputEventMask
-  private static int mapNewModifiers(@JdkConstants.InputEventMask int modifiers) {
-    if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0) {
-      modifiers |= InputEvent.SHIFT_MASK;
-    }
-    if ((modifiers & InputEvent.ALT_DOWN_MASK) != 0) {
-      modifiers |= InputEvent.ALT_MASK;
-    }
-    if ((modifiers & InputEvent.ALT_GRAPH_DOWN_MASK) != 0) {
-      modifiers |= InputEvent.ALT_GRAPH_MASK;
-    }
-    if ((modifiers & InputEvent.CTRL_DOWN_MASK) != 0) {
-      modifiers |= InputEvent.CTRL_MASK;
-    }
-    if ((modifiers & InputEvent.META_DOWN_MASK) != 0) {
-      modifiers |= InputEvent.META_MASK;
-    }
-
-    return modifiers;
-  }
-
   public static String getKeystrokeText(KeyStroke accelerator) {
     return ShortcutUtil.getKeystrokeText(accelerator);
-  }
-
-  private static String getModifiersText(@JdkConstants.InputEventMask int modifiers) {
-    if (SystemInfo.isMac) {
-      //try {
-      //  Class appleLaf = Class.forName(APPLE_LAF_AQUA_LOOK_AND_FEEL_CLASS_NAME);
-      //  Method getModifiers = appleLaf.getMethod(GET_KEY_MODIFIERS_TEXT_METHOD, int.class, boolean.class);
-      //  return (String)getModifiers.invoke(appleLaf, modifiers, Boolean.FALSE);
-      //}
-      //catch (Exception e) {
-      //  if (SystemInfo.isMacOSLeopard) {
-      //    return getKeyModifiersTextForMacOSLeopard(modifiers);
-      //  }
-      //
-      //  // OK do nothing here.
-      //}
-      return MacKeymapUtil.getModifiersText(modifiers);
-    }
-
-    final String keyModifiersText = KeyEvent.getKeyModifiersText(modifiers);
-    if (keyModifiersText.isEmpty()) {
-      return keyModifiersText;
-    }
-    else {
-      return keyModifiersText + "+";
-    }
   }
 
   /**
@@ -230,9 +149,7 @@ public class KeymapUtil {
 
   @Nonnull
   public static String getFirstKeyboardShortcutText(@Nonnull AnAction action) {
-    Shortcut[] shortcuts = action.getShortcutSet().getShortcuts();
-    KeyboardShortcut shortcut = ContainerUtil.findInstance(shortcuts, KeyboardShortcut.class);
-    return shortcut == null ? "" : getShortcutText(shortcut);
+    return consulo.ui.ex.keymap.util.KeymapUtil.getFirstKeyboardShortcutText(action);
   }
 
 

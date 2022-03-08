@@ -2,9 +2,10 @@
 
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.completion.InsertionContext;
+import consulo.language.editor.completion.InsertHandler;
+import consulo.language.editor.completion.InsertionContext;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.completion.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SmartPointerManager;
@@ -242,7 +243,7 @@ public final class LookupElementBuilder extends LookupElement {
   /**
    * @param caseSensitive if this lookup item should be completed in the same letter case as prefix
    * @return modified builder
-   * @see com.intellij.codeInsight.completion.CompletionResultSet#caseInsensitive()
+   * @see CompletionResultSet#caseInsensitive()
    */
   @Contract(pure = true)
   @Nonnull

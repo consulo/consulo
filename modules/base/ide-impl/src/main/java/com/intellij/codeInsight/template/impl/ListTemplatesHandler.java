@@ -18,7 +18,8 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.completion.PlainPrefixMatcher;
+import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.PlainPrefixMatcher;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.lookup.*;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
@@ -33,6 +34,8 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.event.LookupEvent;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

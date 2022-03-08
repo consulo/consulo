@@ -15,9 +15,9 @@
  */
 package com.intellij.refactoring.rename.inplace;
 
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.InsertHandler;
+import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.ExpressionContext;

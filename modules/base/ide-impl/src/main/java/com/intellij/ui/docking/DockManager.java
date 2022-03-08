@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.docking;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 

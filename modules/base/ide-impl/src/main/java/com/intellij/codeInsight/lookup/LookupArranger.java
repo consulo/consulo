@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.codeInsight.completion.LookupElementListPresenter;
-import com.intellij.codeInsight.completion.PrefixMatcher;
+import consulo.language.editor.completion.*;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.util.dataholder.Key;

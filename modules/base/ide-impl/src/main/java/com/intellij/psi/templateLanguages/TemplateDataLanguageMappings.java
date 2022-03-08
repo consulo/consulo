@@ -19,7 +19,7 @@ import consulo.language.DependentLanguage;
 import consulo.language.InjectableLanguage;
 import consulo.language.Language;
 import com.intellij.lang.LanguagePerFileMappings;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.language.template.TemplateLanguage;

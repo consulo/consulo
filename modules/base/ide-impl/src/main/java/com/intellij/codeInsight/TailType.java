@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight;
 
-import com.intellij.codeInsight.completion.InsertionContext;
+import consulo.language.editor.completion.InsertionContext;
 import consulo.language.Language;
 import consulo.codeEditor.CaretModel;
 import consulo.document.Document;

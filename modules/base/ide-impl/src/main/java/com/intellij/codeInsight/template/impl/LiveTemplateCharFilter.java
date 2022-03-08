@@ -17,8 +17,8 @@ package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.lookup.CharFilter;
-import com.intellij.codeInsight.lookup.Lookup;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.LookupElement;
 
 /**
  * @author peter

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.actions;
 
 import consulo.language.editor.util.ColorGenerator;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;

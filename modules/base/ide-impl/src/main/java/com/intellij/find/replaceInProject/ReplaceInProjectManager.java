@@ -10,7 +10,7 @@ import com.intellij.find.impl.FindManagerImpl;
 import consulo.application.WriteAction;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.ui.Messages;

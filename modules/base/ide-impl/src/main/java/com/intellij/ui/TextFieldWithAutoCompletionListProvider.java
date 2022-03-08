@@ -15,11 +15,11 @@
  */
 package com.intellij.ui;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.completion.PlainPrefixMatcher;
-import com.intellij.codeInsight.completion.PrefixMatcher;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.InsertHandler;
+import consulo.language.editor.completion.PlainPrefixMatcher;
+import consulo.language.editor.completion.PrefixMatcher;
+import consulo.language.editor.completion.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import consulo.ui.image.Image;
 

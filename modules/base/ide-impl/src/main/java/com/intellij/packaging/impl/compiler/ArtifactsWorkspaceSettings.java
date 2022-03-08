@@ -15,10 +15,10 @@
  */
 package com.intellij.packaging.impl.compiler;
 
-import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;

@@ -16,9 +16,10 @@
 
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementDecorator;
-import com.intellij.openapi.util.ClassConditionKey;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementDecorator;
+import consulo.language.editor.completion.ClassConditionKey;
+import consulo.language.editor.completion.CompletionService;
 
 /**
  * Use only when you want to control lookup sorting & preference in simple cases when you have control over ALL the items in lookup.

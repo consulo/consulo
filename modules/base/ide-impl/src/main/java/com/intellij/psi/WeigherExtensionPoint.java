@@ -19,6 +19,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.application.Application;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.KeyedLazyInstance;
+import consulo.language.Weigher;
 import consulo.util.xml.serializer.annotation.Attribute;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,6 @@
 package com.intellij.openapi.keymap;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.*;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import javax.annotation.Nonnull;
@@ -25,6 +24,7 @@ import javax.annotation.Nullable;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import jakarta.inject.Singleton;
 
 import java.awt.*;

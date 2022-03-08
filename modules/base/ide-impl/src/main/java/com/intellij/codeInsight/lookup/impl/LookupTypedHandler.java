@@ -2,16 +2,16 @@
 
 package com.intellij.codeInsight.lookup.impl;
 
-import com.intellij.codeInsight.AutoPopupController;
+import consulo.language.editor.AutoPopupController;
 import com.intellij.codeInsight.completion.CodeCompletionFeatures;
 import com.intellij.codeInsight.completion.CompletionPhase;
 import com.intellij.codeInsight.completion.CompletionProgressIndicator;
-import com.intellij.codeInsight.completion.PrefixMatcher;
+import consulo.language.editor.completion.PrefixMatcher;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.editorActions.AutoHardWrapHandler;
 import com.intellij.codeInsight.editorActions.TypedHandler;
 import com.intellij.codeInsight.lookup.CharFilter;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.LookupElement;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction;
 import com.intellij.codeInsight.template.impl.TemplateSettings;

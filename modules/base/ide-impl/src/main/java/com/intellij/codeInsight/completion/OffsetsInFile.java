@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
+import consulo.language.editor.completion.OffsetMap;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.impl.DocumentImpl;

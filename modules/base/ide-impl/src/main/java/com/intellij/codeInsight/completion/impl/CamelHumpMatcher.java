@@ -3,8 +3,8 @@ package com.intellij.codeInsight.completion.impl;
 
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.completion.CompletionUtil;
-import com.intellij.codeInsight.completion.PrefixMatcher;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.PrefixMatcher;
+import consulo.language.editor.completion.LookupElement;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;

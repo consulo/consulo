@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

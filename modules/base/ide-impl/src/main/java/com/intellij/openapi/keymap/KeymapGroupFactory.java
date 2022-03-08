@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.keymap;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.ui.image.Image;
 
 /**

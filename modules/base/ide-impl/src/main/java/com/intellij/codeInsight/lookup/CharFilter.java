@@ -25,6 +25,8 @@
 package com.intellij.codeInsight.lookup;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.completion.Lookup;
+
 import javax.annotation.Nullable;
 
 public abstract class CharFilter {

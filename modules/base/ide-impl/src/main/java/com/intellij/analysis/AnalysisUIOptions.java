@@ -16,6 +16,7 @@
 
 package com.intellij.analysis;
 
+import consulo.ide.ServiceManager;
 import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.ui.InspectionResultsView;
 import consulo.application.AllIcons;
@@ -24,7 +25,6 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import com.intellij.openapi.components.*;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;

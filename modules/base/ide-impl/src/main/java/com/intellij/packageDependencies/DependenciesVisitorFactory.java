@@ -20,7 +20,7 @@
  */
 package com.intellij.packageDependencies;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.PsiRecursiveElementVisitor;

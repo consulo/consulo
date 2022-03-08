@@ -17,7 +17,7 @@ package com.intellij.ide.scratch;
 
 import consulo.language.Language;
 import com.intellij.lang.PerFileMappings;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

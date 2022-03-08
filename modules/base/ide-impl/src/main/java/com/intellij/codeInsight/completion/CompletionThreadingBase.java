@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.completion.CompletionProcess;
 
 import java.util.Objects;
 

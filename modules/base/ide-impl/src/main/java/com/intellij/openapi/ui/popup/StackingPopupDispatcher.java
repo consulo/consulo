@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui.popup;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.ui.ex.popup.JBPopup;
 
 import java.awt.*;

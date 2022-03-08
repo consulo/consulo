@@ -1,8 +1,8 @@
 package com.intellij.util;
 
-import com.intellij.codeInsight.completion.CompletionContributor;
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.language.psi.PsiFile;

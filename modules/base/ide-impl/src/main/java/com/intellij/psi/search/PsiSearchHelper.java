@@ -16,7 +16,7 @@
 package com.intellij.psi.search;
 
 import com.intellij.concurrency.AsyncFuture;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 import consulo.application.progress.ProgressIndicator;

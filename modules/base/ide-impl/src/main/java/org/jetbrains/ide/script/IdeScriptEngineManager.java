@@ -15,7 +15,7 @@
  */
 package org.jetbrains.ide.script;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

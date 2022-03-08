@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion.impl;
 
-import com.intellij.psi.ForceableComparable;
+import consulo.language.ForceableComparable;
 
 /**
 * @author peter

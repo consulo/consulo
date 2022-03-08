@@ -1,7 +1,7 @@
 package com.intellij.execution.process;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.EffectType;

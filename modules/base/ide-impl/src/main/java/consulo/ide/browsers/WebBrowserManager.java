@@ -16,7 +16,7 @@
 package consulo.ide.browsers;
 
 import com.intellij.ide.browsers.WebBrowser;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 
 import javax.annotation.Nonnull;
 import java.util.List;

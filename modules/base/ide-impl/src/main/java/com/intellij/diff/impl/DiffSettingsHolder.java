@@ -18,7 +18,7 @@ package com.intellij.diff.impl;
 import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUtil;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.util.xml.serializer.annotation.MapAnnotation;

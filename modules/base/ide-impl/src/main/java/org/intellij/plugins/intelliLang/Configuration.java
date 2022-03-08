@@ -24,7 +24,7 @@ import com.intellij.openapi.command.undo.GlobalUndoableAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.command.undo.UndoableAction;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.*;
 import consulo.language.psi.PsiCompiledElement;

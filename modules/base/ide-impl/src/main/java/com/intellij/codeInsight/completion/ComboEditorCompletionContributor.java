@@ -15,7 +15,8 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.language.editor.completion.*;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import consulo.document.Document;
 import consulo.application.dumb.DumbAware;
@@ -34,6 +35,7 @@ public class ComboEditorCompletionContributor extends CompletionContributor impl
 
   public static final Key<Boolean> CONTINUE_RUN_COMPLETION = Key.create("CONTINUE_RUN_COMPLETION");
 
+  @RequiredReadAction
   @Override
   public void fillCompletionVariants(@Nonnull final CompletionParameters parameters, @Nonnull final CompletionResultSet result) {
     if (parameters.getInvocationCount() == 0) {

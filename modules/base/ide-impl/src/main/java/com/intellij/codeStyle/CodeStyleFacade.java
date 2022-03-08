@@ -19,18 +19,17 @@
  */
 package com.intellij.codeStyle;
 
-import consulo.language.Language;
-import com.intellij.openapi.components.ServiceManager;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.language.psi.PsiFile;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.configurable.Configurable;
-import consulo.project.Project;
 import consulo.codeStyle.ApplicationCodeStyleFacade;
 import consulo.codeStyle.ProjectCodeStyleFacade;
-import javax.annotation.Nonnull;
+import consulo.document.Document;
+import consulo.ide.ServiceManager;
+import consulo.language.Language;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface CodeStyleFacade {
@@ -109,6 +108,4 @@ public interface CodeStyleFacade {
    */
   @Deprecated
   public abstract String getLineSeparator();
-
-  public abstract boolean isUnsuitableCodeStyleConfigurable(Configurable c);
 }

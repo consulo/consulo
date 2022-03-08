@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service.ui;
 
-import com.intellij.codeInsight.completion.CompletionResultSet;
+import consulo.language.editor.completion.CompletionResultSet;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.codeEditor.Editor;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.StreamUtil;

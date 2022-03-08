@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.completion.actions;
 
 import com.intellij.codeInsight.completion.CodeCompletionFeatures;
-import com.intellij.codeInsight.completion.CompletionType;
+import consulo.language.editor.completion.CompletionType;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.ui.ex.action.AnActionEvent;
 

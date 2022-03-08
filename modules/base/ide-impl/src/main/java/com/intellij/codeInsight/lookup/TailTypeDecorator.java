@@ -16,8 +16,11 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.codeInsight.TailType;
-import com.intellij.codeInsight.completion.InsertionContext;
+import consulo.language.editor.completion.InsertionContext;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementDecorator;
+
 import javax.annotation.Nullable;
 
 /**

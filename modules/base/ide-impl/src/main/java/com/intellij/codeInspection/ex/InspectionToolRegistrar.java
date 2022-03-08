@@ -19,7 +19,7 @@ package com.intellij.codeInspection.ex;
 import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.codeInspection.InspectionToolsFactory;
 import com.intellij.codeInspection.LocalInspectionEP;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;

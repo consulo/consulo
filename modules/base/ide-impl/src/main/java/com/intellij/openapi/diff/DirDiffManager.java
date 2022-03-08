@@ -18,7 +18,7 @@ package com.intellij.openapi.diff;
 import com.intellij.ide.diff.DiffElement;
 import com.intellij.ide.diff.DirDiffModel;
 import com.intellij.ide.diff.DirDiffSettings;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -18,7 +18,7 @@ package consulo.compiler.impl;
 import com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl;
 import consulo.compiler.CompileContext;
 import consulo.compiler.TranslatingCompiler;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.util.lang.Trinity;

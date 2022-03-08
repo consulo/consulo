@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.lookup.impl;
 
-import com.intellij.codeInsight.lookup.Lookup;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ui.ex.popup.PopupStep;

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 
 /**
  * @author yole

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 
 import javax.annotation.Nonnull;
 

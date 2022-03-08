@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.template;
 
-import com.intellij.codeInsight.completion.CompletionParameters;
-import com.intellij.codeInsight.completion.CompletionResultSet;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionResultSet;
 import com.intellij.codeInsight.template.impl.CustomLiveTemplateLookupElement;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;

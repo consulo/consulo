@@ -2,9 +2,9 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.codeInsight.AutoPopupController;
+import consulo.language.editor.AutoPopupController;
 import com.intellij.codeInsight.CodeInsightSettings;
-import com.intellij.codeInsight.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.highlight.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
 import consulo.language.editor.highlight.NontrivialBraceMatcher;

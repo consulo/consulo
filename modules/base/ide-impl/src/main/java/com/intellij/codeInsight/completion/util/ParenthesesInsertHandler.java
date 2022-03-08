@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.completion.util;
 
-import com.intellij.codeInsight.completion.InsertHandler;
-import com.intellij.codeInsight.completion.InsertionContext;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.InsertHandler;
+import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.LookupElement;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.util.text.StringUtil;

@@ -20,7 +20,7 @@
  */
 package com.intellij.xdebugger.impl.evaluate.quick.common;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.event.EditorMouseAdapter;

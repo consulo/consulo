@@ -25,7 +25,7 @@ import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
-import com.intellij.navigation.PsiElementNavigationItem;
+import consulo.language.psi.PsiElementNavigationItem;
 import com.intellij.openapi.actionSystem.DataSink;
 import consulo.ui.ex.action.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;

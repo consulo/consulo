@@ -17,7 +17,7 @@ package com.intellij.psi.templateLanguages;
 
 import consulo.language.Language;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;

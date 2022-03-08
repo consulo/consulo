@@ -14,6 +14,7 @@ module consulo.ide.api {
   requires transitive consulo.language.api;
   requires transitive consulo.code.editor.api;
 
+  exports consulo.ide;
   exports consulo.ide.setting;
   exports consulo.ide.setting.module;
   exports consulo.ide.setting.bundle;

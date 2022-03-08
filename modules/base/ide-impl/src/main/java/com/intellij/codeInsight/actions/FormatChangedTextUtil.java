@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.actions;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.module.ModifiableModuleModel;

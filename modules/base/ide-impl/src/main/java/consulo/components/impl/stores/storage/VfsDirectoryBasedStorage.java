@@ -19,6 +19,7 @@ import consulo.application.Application;
 import com.intellij.openapi.components.*;
 import consulo.component.persist.StateSplitterEx;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.application.util.function.ThrowableComputable;

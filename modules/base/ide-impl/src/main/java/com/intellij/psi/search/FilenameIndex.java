@@ -2,7 +2,7 @@
 
 package com.intellij.psi.search;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.content.scope.SearchScope;

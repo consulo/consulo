@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.impl.status.widget;
 
 import consulo.application.ui.UISettings;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.ui.wm.StatusBarWidgetFactory;

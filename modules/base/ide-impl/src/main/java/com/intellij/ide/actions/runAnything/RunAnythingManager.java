@@ -6,7 +6,7 @@ import com.intellij.ide.actions.BigPopupUI;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ide.ui.popup.JBPopupFactory;

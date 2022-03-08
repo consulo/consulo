@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.documentation.actions.ShowQuickDocInfoAction;
 import com.intellij.codeInsight.hint.actions.ShowImplementationsAction;
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.*;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.lang.LangBundle;
 import consulo.ui.ex.action.IdeActions;

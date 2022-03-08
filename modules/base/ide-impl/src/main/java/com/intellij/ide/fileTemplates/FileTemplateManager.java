@@ -16,7 +16,7 @@
 
 package com.intellij.ide.fileTemplates;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.annotation.DeprecationInfo;

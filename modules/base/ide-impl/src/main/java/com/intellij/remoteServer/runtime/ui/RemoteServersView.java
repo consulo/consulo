@@ -15,7 +15,7 @@
  */
 package com.intellij.remoteServer.runtime.ui;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import com.intellij.remoteServer.runtime.ServerConnection;
 import javax.annotation.Nonnull;

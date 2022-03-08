@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.editor.richcopy.settings;
 
-import com.intellij.openapi.components.*;
 import consulo.component.persist.StoragePathMacros;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.ide.ServiceManager;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;

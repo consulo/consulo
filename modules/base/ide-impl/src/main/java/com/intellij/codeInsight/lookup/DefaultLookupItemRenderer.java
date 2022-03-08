@@ -16,6 +16,9 @@
 package com.intellij.codeInsight.lookup;
 
 import consulo.component.util.Iconable;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementPresentation;
+import consulo.language.editor.completion.LookupElementRenderer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.PsiUtilCore;
@@ -30,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * @author peter
  */
-public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>{
+public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem> {
   public static final DefaultLookupItemRenderer INSTANCE = new DefaultLookupItemRenderer();
 
   @Override

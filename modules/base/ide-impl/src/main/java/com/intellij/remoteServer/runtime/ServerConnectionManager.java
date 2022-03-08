@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.runtime;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
 import javax.annotation.Nonnull;

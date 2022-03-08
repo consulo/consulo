@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
 import javax.annotation.Nonnull;

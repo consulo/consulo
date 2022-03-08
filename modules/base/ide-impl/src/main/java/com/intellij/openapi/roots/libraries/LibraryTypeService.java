@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.content.library.LibraryType;
 import consulo.content.library.NewLibraryConfiguration;
 import consulo.project.Project;

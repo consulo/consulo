@@ -22,7 +22,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.virtualFileSystem.RawFileLoader;

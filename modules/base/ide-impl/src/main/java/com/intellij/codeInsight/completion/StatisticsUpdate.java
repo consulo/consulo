@@ -15,9 +15,11 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.Lookup;
-import com.intellij.codeInsight.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupEvent;
+import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.event.LookupEvent;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
 import consulo.application.ApplicationManager;

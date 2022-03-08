@@ -18,6 +18,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.FocusChangeListenerImpl;
+import consulo.language.editor.completion.CompletionContributor;
+import consulo.language.editor.completion.CompletionType;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiDocumentManager;

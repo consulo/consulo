@@ -16,7 +16,10 @@
 
 package com.intellij.codeInsight.lookup;
 
-public abstract class LookupAdapter implements LookupListener{
+import consulo.language.editor.completion.event.LookupEvent;
+import consulo.language.editor.completion.event.LookupListener;
+
+public abstract class LookupAdapter implements LookupListener {
   @Override
   public void itemSelected(LookupEvent event){
   }

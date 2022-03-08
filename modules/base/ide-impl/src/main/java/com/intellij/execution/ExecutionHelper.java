@@ -27,7 +27,7 @@ import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

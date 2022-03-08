@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.ide.errorTreeView.HotfixData;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.annotate.AnnotationProvider;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;

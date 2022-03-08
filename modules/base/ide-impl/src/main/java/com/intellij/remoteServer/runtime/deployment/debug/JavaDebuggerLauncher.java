@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.runtime.deployment.debug;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 
 /**
  * @author nik

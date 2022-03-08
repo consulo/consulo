@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 

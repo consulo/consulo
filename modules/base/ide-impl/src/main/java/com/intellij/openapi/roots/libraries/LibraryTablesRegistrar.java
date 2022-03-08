@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.content.library.LibraryTable;
 import consulo.project.Project;
 import consulo.annotation.DeprecationInfo;

@@ -44,7 +44,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;

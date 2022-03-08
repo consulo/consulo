@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.actions;
 
-import com.intellij.codeInsight.lookup.Lookup;
+import consulo.language.editor.completion.Lookup;
 import com.intellij.codeInsight.lookup.LookupManager;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

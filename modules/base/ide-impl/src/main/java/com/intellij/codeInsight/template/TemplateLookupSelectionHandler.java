@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template;
 
-import com.intellij.codeInsight.lookup.LookupElement;
+import consulo.language.editor.completion.LookupElement;
 import consulo.document.Document;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;

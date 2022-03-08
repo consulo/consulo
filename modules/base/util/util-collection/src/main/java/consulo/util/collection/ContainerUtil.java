@@ -48,6 +48,12 @@ public class ContainerUtil {
     return findInstance(iterable.iterator(), aClass);
   }
 
+  @Nullable
+  @Contract(pure = true)
+  public static <T, U extends T> U findInstance(@Nonnull T[] array, @Nonnull Class<U> aClass) {
+    return findInstance(Arrays.asList(array), aClass);
+  }
+
   public static <T, U extends T> U findInstance(@Nonnull Iterator<? extends T> iterator, @Nonnull Class<? extends U> aClass) {
     //noinspection unchecked
     return (U)find(iterator, FilteringIterator.instanceOf(aClass));

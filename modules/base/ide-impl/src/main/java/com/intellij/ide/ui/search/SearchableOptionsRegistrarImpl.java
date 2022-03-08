@@ -17,23 +17,22 @@
 package com.intellij.ide.ui.search;
 
 import com.intellij.application.options.CodeStyle;
-import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationBundle;
-import consulo.configurable.Configurable;
-import consulo.configurable.SearchableConfigurable;
-import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.util.io.ResourceUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
+import consulo.configurable.Configurable;
+import consulo.configurable.SearchableConfigurable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.io.ResourceUtil;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -274,10 +273,6 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
     if (helpIds != null) {
       for (Iterator<Configurable> it = contentHits.iterator(); it.hasNext(); ) {
         Configurable configurable = it.next();
-        if (CodeStyleFacade.getInstance(project).isUnsuitableCodeStyleConfigurable(configurable)) {
-          it.remove();
-          continue;
-        }
         if (!(configurable instanceof SearchableConfigurable && helpIds.contains(((SearchableConfigurable)configurable).getId()))) {
           it.remove();
         }

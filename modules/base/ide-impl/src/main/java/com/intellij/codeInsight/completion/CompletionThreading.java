@@ -3,6 +3,7 @@ package com.intellij.codeInsight.completion;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.language.editor.completion.CompletionResult;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

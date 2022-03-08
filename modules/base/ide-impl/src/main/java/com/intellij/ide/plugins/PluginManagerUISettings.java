@@ -16,7 +16,7 @@
 package com.intellij.ide.plugins;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.application.progress.PerformInBackgroundOption;

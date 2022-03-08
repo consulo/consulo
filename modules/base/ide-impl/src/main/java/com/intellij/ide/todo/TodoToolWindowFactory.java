@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;

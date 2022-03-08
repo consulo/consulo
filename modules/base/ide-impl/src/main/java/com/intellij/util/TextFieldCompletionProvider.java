@@ -1,6 +1,6 @@
 package com.intellij.util;
 
-import com.intellij.codeInsight.completion.CompletionResultSet;
+import consulo.language.editor.completion.CompletionResultSet;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;

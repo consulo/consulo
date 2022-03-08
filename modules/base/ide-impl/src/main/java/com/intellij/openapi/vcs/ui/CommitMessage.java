@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.ui;
 
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.plain.PlainTextLanguage;

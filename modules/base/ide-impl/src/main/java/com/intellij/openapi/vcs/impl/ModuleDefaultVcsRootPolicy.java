@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

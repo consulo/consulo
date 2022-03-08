@@ -17,7 +17,7 @@ package com.intellij.openapi.options;
 
 import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.annotation.DeprecationInfo;
 

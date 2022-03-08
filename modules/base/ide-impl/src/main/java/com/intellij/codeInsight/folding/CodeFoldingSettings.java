@@ -1,6 +1,6 @@
 package com.intellij.codeInsight.folding;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 
 public class CodeFoldingSettings {
   public boolean COLLAPSE_IMPORTS = true;

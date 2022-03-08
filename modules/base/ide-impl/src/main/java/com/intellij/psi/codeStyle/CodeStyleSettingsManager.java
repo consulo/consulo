@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle;
 
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.DifferenceFilter;

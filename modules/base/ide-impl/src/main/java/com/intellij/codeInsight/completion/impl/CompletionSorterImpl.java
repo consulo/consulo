@@ -15,8 +15,10 @@
  */
 package com.intellij.codeInsight.completion.impl;
 
-import com.intellij.codeInsight.completion.CompletionSorter;
+import consulo.language.editor.completion.CompletionSorter;
 import com.intellij.codeInsight.lookup.*;
+import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.LookupElementWeigher;
 import consulo.util.lang.function.Condition;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

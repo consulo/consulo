@@ -3,7 +3,7 @@ package consulo.builtInServer.impl.ide;
 import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.component.persist.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.configurable.Configurable;

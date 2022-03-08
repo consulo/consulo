@@ -16,7 +16,7 @@
 package com.intellij.openapi.keymap.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.xml.serializer.InvalidDataException;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.dnd;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 
 import javax.swing.*;
 import java.awt.*;

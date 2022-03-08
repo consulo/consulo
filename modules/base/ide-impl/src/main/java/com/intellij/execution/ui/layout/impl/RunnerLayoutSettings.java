@@ -16,11 +16,11 @@
 
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.openapi.components.*;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

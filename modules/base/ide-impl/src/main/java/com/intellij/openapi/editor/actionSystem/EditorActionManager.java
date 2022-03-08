@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.actionSystem;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.document.Document;
 import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.ui.ex.action.IdeActions;

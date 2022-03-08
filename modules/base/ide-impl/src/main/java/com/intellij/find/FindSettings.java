@@ -16,7 +16,7 @@
 
 package com.intellij.find;
 
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import javax.annotation.Nonnull;
 
 import java.util.List;

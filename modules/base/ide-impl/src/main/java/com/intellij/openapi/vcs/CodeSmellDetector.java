@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs;
 
 import com.intellij.codeInsight.CodeSmellInfo;
-import com.intellij.openapi.components.ServiceManager;
+import consulo.ide.ServiceManager;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
