@@ -54,6 +54,16 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-language-impl</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-execution-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-language-api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -65,6 +75,21 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-ui-ex-awt-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-file-editor-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-debugger-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-language-editor-api</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
