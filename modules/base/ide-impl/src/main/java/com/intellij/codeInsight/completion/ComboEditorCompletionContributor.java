@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.completion.*;
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.*;
 import consulo.document.Document;
 import consulo.application.dumb.DumbAware;
 import consulo.util.dataholder.Key;

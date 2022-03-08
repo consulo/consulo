@@ -2,6 +2,7 @@
 package consulo.language.editor.completion;
 
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.StandardPatterns;
 import org.jetbrains.annotations.Contract;

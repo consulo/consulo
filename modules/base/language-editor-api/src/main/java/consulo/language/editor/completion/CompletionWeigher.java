@@ -16,6 +16,7 @@
 package consulo.language.editor.completion;
 
 import consulo.language.Weigher;
+import consulo.language.editor.completion.lookup.LookupElement;
 
 import javax.annotation.Nonnull;
 

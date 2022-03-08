@@ -15,7 +15,7 @@
  */
 package com.intellij.util.textCompletion;
 
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import javax.annotation.Nonnull;
 
 import java.util.Comparator;

@@ -15,8 +15,8 @@
  */
 package com.intellij.refactoring.introduce.inplace;
 
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.TextResult;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;

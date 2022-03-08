@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.completion;
+package consulo.language.editor.completion.lookup;
+
+import consulo.language.editor.completion.WeighingContext;
+import consulo.language.editor.completion.lookup.LookupElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

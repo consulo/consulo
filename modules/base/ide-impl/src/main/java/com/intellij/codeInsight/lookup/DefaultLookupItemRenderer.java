@@ -16,9 +16,7 @@
 package com.intellij.codeInsight.lookup;
 
 import consulo.component.util.Iconable;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementPresentation;
-import consulo.language.editor.completion.LookupElementRenderer;
+import consulo.language.editor.completion.lookup.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.PsiUtilCore;
@@ -117,7 +115,7 @@ public class DefaultLookupItemRenderer extends LookupElementRenderer<LookupItem>
     else if (o instanceof PsiMetaData) {
       name = ((PsiMetaData)o).getName();
     }
-    else if (o instanceof PresentableLookupValue ) {
+    else if (o instanceof PresentableLookupValue) {
       name = ((PresentableLookupValue)o).getPresentation();
     }
     else {

@@ -1,8 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.language.editor.completion;
+package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
+import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.OffsetKey;
+import consulo.language.editor.completion.OffsetMap;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;

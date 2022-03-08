@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.externalSystem.service.ui;
 
-import consulo.language.editor.completion.InsertionContext;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;

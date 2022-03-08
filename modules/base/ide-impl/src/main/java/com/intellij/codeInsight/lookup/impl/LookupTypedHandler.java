@@ -11,7 +11,7 @@ import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.editorActions.AutoHardWrapHandler;
 import com.intellij.codeInsight.editorActions.TypedHandler;
 import com.intellij.codeInsight.lookup.CharFilter;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction;
 import com.intellij.codeInsight.template.impl.TemplateSettings;

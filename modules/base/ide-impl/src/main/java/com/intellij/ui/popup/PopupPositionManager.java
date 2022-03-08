@@ -1,9 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.popup;
 
-import consulo.language.editor.completion.event.LookupEvent;
+import consulo.language.editor.completion.lookup.event.LookupEvent;
 import com.intellij.codeInsight.lookup.LookupEx;
-import consulo.language.editor.completion.event.LookupListener;
+import consulo.language.editor.completion.lookup.event.LookupListener;
 import com.intellij.codeInsight.lookup.LookupManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;

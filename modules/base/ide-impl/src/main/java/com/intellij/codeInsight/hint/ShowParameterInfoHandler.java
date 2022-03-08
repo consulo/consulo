@@ -4,8 +4,8 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.completion.Lookup;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupManager;
 import consulo.language.Language;
 import com.intellij.lang.parameterInfo.LanguageParameterInfo;

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
 import com.intellij.openapi.util.Pair;
 import consulo.language.editor.completion.CompletionParameters;
 

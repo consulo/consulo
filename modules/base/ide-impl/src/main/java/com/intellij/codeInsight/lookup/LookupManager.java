@@ -2,18 +2,18 @@
 
 package com.intellij.codeInsight.lookup;
 
-import consulo.ide.ServiceManager;
-import consulo.codeEditor.Editor;
-import consulo.language.editor.completion.Lookup;
-import consulo.language.editor.completion.LookupElement;
-import consulo.project.Project;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
+import consulo.ide.ServiceManager;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.project.Project;
+import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import kava.beans.PropertyChangeListener;
 
 public abstract class LookupManager {
   public static LookupManager getInstance(@Nonnull Project project) {

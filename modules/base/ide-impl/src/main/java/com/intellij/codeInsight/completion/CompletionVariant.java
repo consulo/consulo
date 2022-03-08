@@ -16,9 +16,9 @@
 
 package com.intellij.codeInsight.completion;
 
-import consulo.language.editor.completion.TailType;
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.TailType;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

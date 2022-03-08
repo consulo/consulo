@@ -20,6 +20,7 @@ import com.intellij.codeInsight.hint.actions.ShowImplementationsAction;
 import consulo.language.editor.completion.*;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.lang.LangBundle;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.ui.ex.action.IdeActions;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

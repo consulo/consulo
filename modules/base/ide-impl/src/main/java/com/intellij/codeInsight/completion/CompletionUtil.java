@@ -2,13 +2,15 @@
 
 package com.intellij.codeInsight.completion;
 
-import consulo.language.editor.completion.TailType;
-import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.lookup.TailType;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.*;
-import com.intellij.codeInsight.lookup.LookupValueWithPsiElement;
+import consulo.language.editor.completion.lookup.LookupValueWithPsiElement;
 import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.language.Language;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;

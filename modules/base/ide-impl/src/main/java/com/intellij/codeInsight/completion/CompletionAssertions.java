@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.completion;
 
-import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.lookup.Lookup;
 import com.intellij.injected.editor.EditorWindow;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
@@ -13,8 +13,8 @@ import consulo.document.impl.RangeMarkerEx;
 import consulo.document.util.TextRange;
 import consulo.language.ast.FileASTNode;
 import consulo.language.editor.completion.CompletionInitializationContext;
-import consulo.language.editor.completion.InsertionContext;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.OffsetMap;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;

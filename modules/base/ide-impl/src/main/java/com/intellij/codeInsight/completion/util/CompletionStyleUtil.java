@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.completion.util;
 
 import com.intellij.application.options.CodeStyle;
-import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.Language;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import consulo.language.psi.PsiUtilCore;

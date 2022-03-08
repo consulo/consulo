@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.completion;
+
+package consulo.language.editor.completion.lookup;
+
+import consulo.language.psi.PsiElement;
 
 /**
- * @author peter
+ * @author Maxim.Mossienko
+ * Use {@link LookupElementBuilder}
  */
-public abstract class LookupElementRenderer<T extends LookupElement> {
-  public abstract void renderElement(final T element, LookupElementPresentation presentation);
+@Deprecated
+public interface LookupValueWithPsiElement {
+  PsiElement getElement();
 }

@@ -16,7 +16,7 @@
 
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.disposer.Disposable;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ide.ServiceManager;

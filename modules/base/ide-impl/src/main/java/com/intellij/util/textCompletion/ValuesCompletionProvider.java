@@ -17,9 +17,12 @@ package com.intellij.util.textCompletion;
 
 import com.intellij.codeInsight.lookup.CharFilter;
 import consulo.language.editor.completion.*;
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.application.dumb.DumbAware;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.completion.lookup.LookupElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.completion;
+package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
-import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -16,12 +16,12 @@
 
 package com.intellij.codeInsight.completion;
 
-import consulo.language.editor.completion.TailType;
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.TailType;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;
-import com.intellij.codeInsight.lookup.LookupValueWithUIHint;
-import com.intellij.codeInsight.lookup.PresentableLookupValue;
+import consulo.language.editor.completion.lookup.LookupValueWithUIHint;
+import consulo.language.editor.completion.lookup.PresentableLookupValue;
 import com.intellij.codeInsight.template.Template;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.plain.psi.PsiPlainText;

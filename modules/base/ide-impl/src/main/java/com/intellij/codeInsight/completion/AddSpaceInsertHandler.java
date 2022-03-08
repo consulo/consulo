@@ -2,9 +2,9 @@ package com.intellij.codeInsight.completion;
 
 import consulo.annotation.UsedInPlugin;
 import consulo.language.editor.AutoPopupController;
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.InsertionContext;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;

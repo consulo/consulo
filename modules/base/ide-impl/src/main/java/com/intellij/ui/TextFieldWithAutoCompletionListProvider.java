@@ -16,11 +16,11 @@
 package com.intellij.ui;
 
 import consulo.language.editor.completion.CompletionParameters;
-import consulo.language.editor.completion.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertHandler;
 import consulo.language.editor.completion.PlainPrefixMatcher;
 import consulo.language.editor.completion.PrefixMatcher;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

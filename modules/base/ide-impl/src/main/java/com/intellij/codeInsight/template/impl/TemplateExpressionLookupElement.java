@@ -17,11 +17,11 @@ package com.intellij.codeInsight.template.impl;
 
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.completion.CompletionInitializationContext;
-import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.OffsetMap;
-import consulo.language.editor.completion.PrioritizedLookupElement;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementDecorator;
+import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementDecorator;
 import com.intellij.codeInsight.template.TemplateLookupSelectionHandler;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;

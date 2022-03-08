@@ -17,9 +17,9 @@ package com.intellij.vcs.log.ui.actions;
 
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

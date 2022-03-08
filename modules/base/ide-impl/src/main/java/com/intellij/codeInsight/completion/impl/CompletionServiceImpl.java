@@ -5,6 +5,8 @@ import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.*;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

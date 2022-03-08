@@ -15,6 +15,9 @@
  */
 package consulo.language.editor.completion;
 
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementDecorator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

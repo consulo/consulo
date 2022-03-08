@@ -5,7 +5,7 @@ import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import consulo.codeEditor.Editor;
 import consulo.language.Language;
-import consulo.language.editor.completion.TailType;
+import consulo.language.editor.completion.lookup.TailType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;

@@ -14,12 +14,28 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.lookup;
+package consulo.language.editor.completion.lookup;
+
+import javax.annotation.Nullable;
+import java.awt.*;
 
 /**
  * @author maxim
- * @deprecated use LookupElementBuilder
+ * @deprecated use InsertHandler
  */
-public interface PresentableLookupValue {
-  String getPresentation();
+@Deprecated(forRemoval = true)
+public interface LookupValueWithUIHint extends PresentableLookupValue {
+  @Nullable
+  default String getTypeHint() {
+    return null;
+  }
+
+  @Nullable
+  default Color getColorHint() {
+    return null;
+  }
+
+  default boolean isBold() {
+    return false;
+  }
 }

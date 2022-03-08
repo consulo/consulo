@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInsight.lookup;
 
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementDecorator;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementDecorator;
 
 /**
  * @author peter

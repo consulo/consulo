@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionWeigher;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
 import com.intellij.openapi.util.NullableComputable;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.util.proximity.PsiProximityComparator;

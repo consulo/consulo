@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.completion;
+package consulo.language.editor.completion.lookup;
 
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -4,7 +4,7 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
-import consulo.language.editor.completion.TailType;
+import consulo.language.editor.completion.lookup.TailType;
 
 public class EqTailType extends TailType {
   public static final TailType INSTANCE = new EqTailType();

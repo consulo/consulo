@@ -14,7 +14,7 @@
 
 package com.intellij.lang.parameterInfo;
 
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

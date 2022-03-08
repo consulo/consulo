@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.lookup;
+package consulo.language.editor.completion.lookup;
 
 /**
- * @author Maxim.Mossienko
+ * @author maxim
+ * @deprecated use LookupElementBuilder
  */
-public interface LookupValueWithPriority {
-  int NORMAL = 0;
-  int HIGHER = 1;
-  int HIGH = 2;
-
-  int getPriority();
+@Deprecated(forRemoval = true)
+public interface PresentableLookupValue {
+  String getPresentation();
 }

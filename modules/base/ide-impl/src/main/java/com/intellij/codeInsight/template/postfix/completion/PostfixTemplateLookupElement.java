@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.postfix.completion;
 
-import consulo.language.editor.completion.LookupElementPresentation;
+import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import com.intellij.codeInsight.template.impl.CustomLiveTemplateLookupElement;
 import com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;

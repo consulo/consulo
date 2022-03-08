@@ -13,29 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.editor.completion.lookup;
 
-package com.intellij.codeInsight.lookup;
-
-import javax.annotation.Nullable;
-
-import java.awt.*;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementPresentation;
 
 /**
- * @author maxim
- * @deprecated use InsertHandler
+ * @author peter
  */
-public interface LookupValueWithUIHint extends PresentableLookupValue {
-  @Nullable
-  default String getTypeHint() {
-    return null;
-  }
-
-  @Nullable
-  default Color getColorHint() {
-    return null;
-  }
-
-  default boolean isBold() {
-    return false;
-  }
+public abstract class LookupElementRenderer<T extends LookupElement> {
+  public abstract void renderElement(final T element, LookupElementPresentation presentation);
 }

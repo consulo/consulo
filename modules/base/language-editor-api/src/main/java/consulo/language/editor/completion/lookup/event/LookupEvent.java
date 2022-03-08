@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.completion.event;
+package consulo.language.editor.completion.lookup.event;
 
-import consulo.language.editor.completion.Lookup;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupElement;
 
 import javax.annotation.Nullable;
 import java.util.EventObject;

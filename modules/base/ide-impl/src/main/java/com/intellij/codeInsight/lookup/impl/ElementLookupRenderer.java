@@ -17,9 +17,9 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.LookupItem;
-import consulo.language.editor.completion.LookupElementPresentation;
+import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
 
 /**
  * @author yole

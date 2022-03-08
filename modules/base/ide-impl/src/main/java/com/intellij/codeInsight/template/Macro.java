@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template;
 
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.component.extension.ExtensionPointName;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

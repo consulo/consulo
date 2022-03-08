@@ -3,6 +3,7 @@ package consulo.language.editor.completion;
 
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 

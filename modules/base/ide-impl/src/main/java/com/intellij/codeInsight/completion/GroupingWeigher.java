@@ -18,8 +18,8 @@ package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionWeigher;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.PrioritizedLookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.PrioritizedLookupElement;
 
 import javax.annotation.Nonnull;
 

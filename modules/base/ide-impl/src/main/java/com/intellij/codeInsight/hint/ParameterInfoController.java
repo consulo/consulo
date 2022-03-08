@@ -6,7 +6,7 @@ import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager;
-import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.lookup.Lookup;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.ide.IdeTooltip;
 import com.intellij.injected.editor.EditorWindow;

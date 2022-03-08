@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.completion.impl;
 
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementWeigher;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

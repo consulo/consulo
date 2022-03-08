@@ -17,8 +17,9 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementPresentation;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import com.intellij.navigation.ChooseByNameContributor;
 import consulo.language.editor.completion.*;
 import consulo.ui.ex.action.IdeActions;

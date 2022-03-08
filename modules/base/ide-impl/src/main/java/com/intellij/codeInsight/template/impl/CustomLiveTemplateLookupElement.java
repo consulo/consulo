@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.impl;
 
-import consulo.language.editor.completion.InsertionContext;
+import consulo.language.editor.completion.lookup.InsertionContext;
 import com.intellij.codeInsight.template.CustomLiveTemplateBase;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import consulo.codeEditor.Editor;

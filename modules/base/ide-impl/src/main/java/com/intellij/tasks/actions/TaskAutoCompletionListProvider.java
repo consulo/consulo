@@ -16,10 +16,10 @@
 package com.intellij.tasks.actions;
 
 import consulo.language.editor.completion.CompletionParameters;
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.InsertionContext;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.document.Document;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

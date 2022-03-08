@@ -3,6 +3,8 @@ package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.WeighingContext;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import javax.annotation.Nonnull;

@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.lookup;
-
-import consulo.language.editor.completion.LookupElementBuilder;
-import consulo.language.psi.PsiElement;
+package consulo.language.editor.completion.lookup;
 
 /**
  * @author Maxim.Mossienko
- * Use {@link LookupElementBuilder}
+ *
+ * @see PrioritizedLookupElement
  */
-@Deprecated
-public interface LookupValueWithPsiElement {
-  PsiElement getElement();
+@Deprecated(forRemoval = true)
+public interface LookupValueWithPriority {
+  int NORMAL = 0;
+  int HIGHER = 1;
+  int HIGH = 2;
+
+  int getPriority();
 }

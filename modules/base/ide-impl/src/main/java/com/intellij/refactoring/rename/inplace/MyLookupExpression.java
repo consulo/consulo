@@ -15,10 +15,10 @@
  */
 package com.intellij.refactoring.rename.inplace;
 
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.InsertionContext;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import com.intellij.codeInsight.template.Expression;
 import com.intellij.codeInsight.template.ExpressionContext;
 import com.intellij.codeInsight.template.Result;

@@ -1,8 +1,8 @@
 package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.editor.completion.Lookup;
-import consulo.language.editor.completion.LookupElementPresentation;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

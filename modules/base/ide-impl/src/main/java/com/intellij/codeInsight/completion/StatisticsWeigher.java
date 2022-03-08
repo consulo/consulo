@@ -23,7 +23,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionWeigher;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
 import consulo.util.collection.JBIterable;

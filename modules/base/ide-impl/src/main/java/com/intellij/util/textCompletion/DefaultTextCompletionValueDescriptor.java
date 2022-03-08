@@ -15,9 +15,9 @@
  */
 package com.intellij.util.textCompletion;
 
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementBuilder;
+import consulo.language.editor.completion.lookup.InsertHandler;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.image.Image;
 

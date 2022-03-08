@@ -25,7 +25,7 @@
 package com.intellij.codeInsight.lookup;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.lookup.Lookup;
 
 import javax.annotation.Nullable;
 

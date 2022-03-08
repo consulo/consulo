@@ -16,7 +16,7 @@
 package com.intellij.refactoring;
 
 import com.intellij.codeInsight.lookup.CharFilter;
-import consulo.language.editor.completion.Lookup;
+import consulo.language.editor.completion.lookup.Lookup;
 
 /**
  * @author peter

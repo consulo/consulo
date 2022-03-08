@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.lookup;
 
+import consulo.language.editor.completion.lookup.PresentableLookupValue;
 import consulo.project.Project;
 
 /**

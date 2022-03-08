@@ -22,6 +22,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.lookup.*;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

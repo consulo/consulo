@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.CompletionLocation;
-import consulo.language.editor.completion.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElement;
 import com.intellij.psi.statistics.Statistician;
 import com.intellij.psi.statistics.StatisticsInfo;
 

@@ -1,6 +1,7 @@
 package consulo.language.editor.completion;
 
 import consulo.application.progress.ProgressManager;
+import consulo.language.editor.completion.lookup.LookupElement;
 
 import javax.annotation.Nonnull;
 import java.util.*;

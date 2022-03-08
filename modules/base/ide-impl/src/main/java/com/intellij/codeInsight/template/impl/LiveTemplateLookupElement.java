@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.template.impl;
 
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementPresentation;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import com.intellij.codeInsight.lookup.RealLookupElementPresentation;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

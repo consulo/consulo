@@ -16,11 +16,10 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.CompletionLocation;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementDecorator;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementDecorator;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
-import consulo.language.editor.completion.CompletionService;
 
 /**
  * @author peter
