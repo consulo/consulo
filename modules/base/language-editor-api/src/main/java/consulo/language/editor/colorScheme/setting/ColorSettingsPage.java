@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options.colors;
+package consulo.language.editor.colorScheme.setting;
 
+import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.highlight.SyntaxHighlighter;

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options.colors;
+package consulo.language.editor.colorScheme.setting;
 
-import consulo.language.Language;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.language.Language;
+
 import javax.annotation.Nullable;
 
 public interface RainbowColorSettingsPage extends ColorSettingsPage {

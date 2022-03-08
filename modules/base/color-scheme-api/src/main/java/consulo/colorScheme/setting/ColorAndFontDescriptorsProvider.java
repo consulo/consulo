@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options.colors;
+package consulo.colorScheme.setting;
 
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.TextAttributesKey;
@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
  * @since 1/19/12 1:10 PM
  */
 public interface ColorAndFontDescriptorsProvider {
-
   ExtensionPointName<ColorAndFontDescriptorsProvider> EP_NAME = ExtensionPointName.create("consulo.colorAndFontDescriptorProvider");
   
   /**
@@ -49,7 +48,9 @@ public interface ColorAndFontDescriptorsProvider {
    * @return the list of color descriptors.
    */
   @Nonnull
-  ColorDescriptor[] getColorDescriptors();
+  default ColorDescriptor[] getColorDescriptors() {
+    return ColorDescriptor.EMPTY_ARRAY;
+  }
 
   /**
    * Returns the title of the page, shown as text in the dialog tab.

@@ -21,9 +21,9 @@ import consulo.language.editor.rawHighlight.SeveritiesProvider;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.OptionsBundle;
-import com.intellij.openapi.options.colors.AttributesDescriptor;
-import com.intellij.openapi.options.colors.ColorAndFontDescriptorsProvider;
-import com.intellij.openapi.options.colors.ColorSettingsPage;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.localize.LocalizeValue;
 

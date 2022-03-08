@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options.colors;
+package consulo.colorScheme.setting;
 
-import consulo.colorScheme.TextAttributesKey;
 import consulo.annotation.DeprecationInfo;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * Describes a text attribute key the attributes for which can be configured in a custom
  * colors and fonts page.
  *
- * @see ColorSettingsPage#getAttributeDescriptors()
+ * @see ColorAndFontDescriptorsProvider#getAttributeDescriptors()
  */
 public final class AttributesDescriptor {
   private final TextAttributesKey myKey;

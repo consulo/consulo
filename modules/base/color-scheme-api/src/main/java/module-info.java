@@ -9,5 +9,6 @@ module consulo.color.scheme.api {
   requires transitive consulo.application.api;
 
   exports consulo.colorScheme;
+  exports consulo.colorScheme.setting;
   exports consulo.colorScheme.event;
 }

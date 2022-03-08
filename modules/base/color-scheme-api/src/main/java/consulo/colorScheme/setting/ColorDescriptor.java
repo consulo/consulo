@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.options.colors;
+package consulo.colorScheme.setting;
 
-import consulo.colorScheme.EditorColorKey;
 import consulo.annotation.DeprecationInfo;
+import consulo.colorScheme.EditorColorKey;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * Describes a color which can be configured in a custom colors and fonts page.
  *
- * @see ColorSettingsPage#getColorDescriptors()
+ * @see ColorAndFontDescriptorsProvider#getColorDescriptors()
  */
 public final class ColorDescriptor {
   public static final ColorDescriptor[] EMPTY_ARRAY = new ColorDescriptor[0];

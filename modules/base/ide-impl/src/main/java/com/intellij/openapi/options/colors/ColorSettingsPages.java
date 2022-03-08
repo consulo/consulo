@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.options.colors;
 
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.ide.ServiceManager;
 import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.util.Pair;
@@ -38,7 +40,7 @@ public abstract class ColorSettingsPages {
    *
    * @param page the instance of the page to register.
    *
-   * @deprecated Color settings pages should be registered as extensions with {@link com.intellij.openapi.options.colors.ColorSettingsPage#EP_NAME}
+   * @deprecated Color settings pages should be registered as extensions with {@link ColorSettingsPage#EP_NAME}
    */
   public abstract void registerPage(ColorSettingsPage page);
 

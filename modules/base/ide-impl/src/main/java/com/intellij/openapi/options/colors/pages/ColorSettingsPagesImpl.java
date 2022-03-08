@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.options.colors.pages;
 
-import consulo.colorScheme.TextAttributesKey;
-import com.intellij.openapi.options.colors.AttributesDescriptor;
-import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.options.colors.ColorSettingsPages;
 import com.intellij.openapi.util.Pair;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

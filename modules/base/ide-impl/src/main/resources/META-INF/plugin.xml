@@ -911,9 +911,9 @@
 
     <extensionPoint name="referenceProviderType" beanClass="consulo.component.extension.KeyedLazyInstanceEP"/>
 
-    <extensionPoint name="colorSettingsPage" interface="com.intellij.openapi.options.colors.ColorSettingsPage"/>
+    <extensionPoint name="colorSettingsPage" interface="consulo.language.editor.colorScheme.setting.ColorSettingsPage"/>
     <extensionPoint name="colorAndFontPanelFactory" interface="com.intellij.application.options.colors.ColorAndFontPanelFactory"/>
-    <extensionPoint name="colorAndFontDescriptorProvider" interface="com.intellij.openapi.options.colors.ColorAndFontDescriptorsProvider"/>
+    <extensionPoint name="colorAndFontDescriptorProvider" interface="consulo.colorScheme.setting.ColorAndFontDescriptorsProvider"/>
 
     <extensionPoint name="codeInsight.parameterInfo" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.parameterInfo.ParameterInfoHandler"/>

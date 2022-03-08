@@ -16,47 +16,46 @@
 package com.intellij.ui;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.document.event.DocumentEvent;
-import consulo.document.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import consulo.document.Document;
+import com.intellij.openapi.wm.ex.AbstractDelegatingToRootTraversalPolicy;
+import com.intellij.util.IJSwingUtilities;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.*;
-import consulo.ui.ex.DocumentBasedComponent;
-import consulo.ui.ex.TextComponent;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
 import consulo.language.plain.PlainTextFileType;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.openapi.wm.ex.AbstractDelegatingToRootTraversalPolicy;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.DocumentBasedComponent;
+import consulo.ui.ex.TextComponent;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -91,7 +90,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
     @Override
     public void mouseClicked(MouseEvent e) {
-      if(myMouseListeners != null) {
+      if (myMouseListeners != null) {
         myMouseListeners.mouseClicked(e);
       }
     }

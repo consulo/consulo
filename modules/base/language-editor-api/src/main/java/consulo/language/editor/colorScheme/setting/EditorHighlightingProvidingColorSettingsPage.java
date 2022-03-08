@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package com.intellij.openapi.options.colors;
+package consulo.language.editor.colorScheme.setting;
 
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.highlight.EditorHighlighter;
