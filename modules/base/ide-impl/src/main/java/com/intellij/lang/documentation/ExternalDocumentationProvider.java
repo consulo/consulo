@@ -20,6 +20,7 @@
  */
 package com.intellij.lang.documentation;
 
+import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nullable;

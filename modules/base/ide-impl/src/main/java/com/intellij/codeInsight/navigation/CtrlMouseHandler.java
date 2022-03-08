@@ -11,7 +11,7 @@ import com.intellij.codeInsight.navigation.actions.GotoDeclarationAction;
 import com.intellij.codeInsight.navigation.actions.GotoTypeDeclarationAction;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.injected.editor.EditorWindow;
-import com.intellij.lang.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.codeEditor.event.*;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight;
+package consulo.language.editor.completion;
 
-import consulo.language.editor.completion.InsertionContext;
 import consulo.codeEditor.Editor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -61,7 +60,6 @@ public class CharTailType extends TailType {
     return (int)myChar;
   }
 
-  @NonNls
   public String toString() {
     return "CharTailType:\'" + myChar + "\'";
   }

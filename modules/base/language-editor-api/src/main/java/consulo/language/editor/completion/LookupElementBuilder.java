@@ -1,19 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.intellij.codeInsight.lookup;
+package consulo.language.editor.completion;
 
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.InsertionContext;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.editor.completion.*;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiNamedElement;
-import consulo.language.psi.SmartPointerManager;
-import consulo.language.psi.SmartPsiElementPointer;
-import consulo.language.psi.PsiUtilCore;
 import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.language.psi.*;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -26,7 +19,7 @@ import java.util.Set;
 /**
  * @author peter
  * @see LookupElementDecorator
- * @see com.intellij.codeInsight.completion.PrioritizedLookupElement
+ * @see PrioritizedLookupElement
  */
 public final class LookupElementBuilder extends LookupElement {
   @Nonnull

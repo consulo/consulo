@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.documentation;
+package consulo.language.editor.documentation;
 
-import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import consulo.language.editor.completion.LookupElementBuilder;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;

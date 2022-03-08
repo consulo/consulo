@@ -15,7 +15,7 @@
  */
 package com.intellij.tasks.doc;
 
-import com.intellij.lang.documentation.AbstractDocumentationProvider;
+import consulo.language.editor.documentation.AbstractDocumentationProvider;
 import com.intellij.lang.documentation.ExternalDocumentationProvider;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

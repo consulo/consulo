@@ -16,11 +16,12 @@
 
 package com.intellij.codeInsight.lookup;
 
+import consulo.language.editor.completion.LookupElementBuilder;
 import consulo.language.psi.PsiElement;
 
 /**
  * @author Maxim.Mossienko
- * Use {@link com.intellij.codeInsight.lookup.LookupElementBuilder}
+ * Use {@link LookupElementBuilder}
  */
 @Deprecated
 public interface LookupValueWithPsiElement {

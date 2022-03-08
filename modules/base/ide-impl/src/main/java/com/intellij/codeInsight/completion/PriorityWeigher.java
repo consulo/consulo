@@ -20,6 +20,8 @@ import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionWeigher;
 import consulo.language.editor.completion.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;
+import consulo.language.editor.completion.PrioritizedLookupElement;
+
 import javax.annotation.Nonnull;
 
 /**

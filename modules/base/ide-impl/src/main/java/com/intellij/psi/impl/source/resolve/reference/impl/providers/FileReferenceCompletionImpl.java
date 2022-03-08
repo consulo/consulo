@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.source.resolve.reference.impl.providers;
 
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import consulo.language.editor.completion.LookupElementBuilder;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiElement;

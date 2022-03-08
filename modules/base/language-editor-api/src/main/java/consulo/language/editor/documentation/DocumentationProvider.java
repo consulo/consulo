@@ -1,15 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.lang.documentation;
+package consulo.language.editor.documentation;
 
-import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
-import com.intellij.codeInsight.documentation.DocumentationManagerUtil;
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**

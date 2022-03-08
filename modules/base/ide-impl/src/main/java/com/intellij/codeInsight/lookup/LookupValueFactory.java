@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.lookup;
 
 import consulo.component.util.Iconable;
+import consulo.language.editor.completion.LookupElementBuilder;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -24,7 +25,7 @@ import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
- * Use {@link com.intellij.codeInsight.lookup.LookupElementBuilder}
+ * Use {@link LookupElementBuilder}
  */
 @Deprecated
 public class LookupValueFactory {

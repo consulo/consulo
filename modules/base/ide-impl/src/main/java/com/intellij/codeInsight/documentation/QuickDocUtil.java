@@ -4,7 +4,7 @@ package com.intellij.codeInsight.documentation;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.codeInsight.navigation.DocPreviewUtil;
 import com.intellij.concurrency.SensitiveProgressWrapper;
-import com.intellij.lang.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.editor.EditorMouseHoverPopupManager;

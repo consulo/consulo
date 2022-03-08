@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight.lookup;
+package consulo.language.editor.completion;
 
-import com.intellij.codeInsight.TailType;
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.AutoCompletionPolicy;
-import consulo.language.editor.completion.CompletionResultSet;
-import consulo.language.editor.completion.LookupElement;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

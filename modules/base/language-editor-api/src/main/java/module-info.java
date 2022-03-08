@@ -15,6 +15,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.annotation;
   exports consulo.language.editor.completion;
   exports consulo.language.editor.completion.event;
+  exports consulo.language.editor.documentation;
   exports consulo.language.editor.gutter;
   exports consulo.language.editor.highlight;
   exports consulo.language.editor.rawHighlight;

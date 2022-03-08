@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.TailType;
+import consulo.language.editor.completion.TailType;
 import consulo.language.editor.completion.Lookup;
 import consulo.language.editor.completion.*;
 import com.intellij.codeInsight.lookup.LookupValueWithPsiElement;

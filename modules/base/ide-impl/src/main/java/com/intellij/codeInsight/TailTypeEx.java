@@ -17,6 +17,7 @@
 package com.intellij.codeInsight;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.completion.TailType;
 import org.jetbrains.annotations.NonNls;
 
 /**

@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.completion;
-
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementDecorator;
-import consulo.language.editor.completion.ClassConditionKey;
-import consulo.language.editor.completion.CompletionService;
+package consulo.language.editor.completion;
 
 /**
  * Use only when you want to control lookup sorting & preference in simple cases when you have control over ALL the items in lookup.

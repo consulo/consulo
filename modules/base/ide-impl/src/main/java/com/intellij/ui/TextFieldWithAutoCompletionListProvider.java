@@ -20,7 +20,7 @@ import consulo.language.editor.completion.InsertHandler;
 import consulo.language.editor.completion.PlainPrefixMatcher;
 import consulo.language.editor.completion.PrefixMatcher;
 import consulo.language.editor.completion.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import consulo.language.editor.completion.LookupElementBuilder;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

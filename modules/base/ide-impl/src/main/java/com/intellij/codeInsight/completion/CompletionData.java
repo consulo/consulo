@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.TailType;
+import consulo.language.editor.completion.TailType;
 import consulo.language.editor.completion.InsertHandler;
 import consulo.language.editor.completion.LookupElement;
 import com.intellij.codeInsight.lookup.LookupItem;

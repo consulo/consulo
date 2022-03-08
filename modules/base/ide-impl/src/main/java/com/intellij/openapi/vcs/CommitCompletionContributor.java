@@ -19,7 +19,7 @@ import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import consulo.language.editor.completion.LookupElementBuilder;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;

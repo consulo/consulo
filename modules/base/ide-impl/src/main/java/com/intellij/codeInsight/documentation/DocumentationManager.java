@@ -49,6 +49,8 @@ import consulo.disposer.Disposer;
 import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.DocumentationProviderEx;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.*;
 import consulo.language.psi.search.scope.NamedScope;

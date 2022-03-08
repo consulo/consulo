@@ -19,7 +19,7 @@ import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.InsertHandler;
 import consulo.language.editor.completion.InsertionContext;
 import consulo.language.editor.completion.LookupElement;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import consulo.language.editor.completion.LookupElementBuilder;
 import consulo.document.Document;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

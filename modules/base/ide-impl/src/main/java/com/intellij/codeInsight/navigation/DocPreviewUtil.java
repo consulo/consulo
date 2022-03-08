@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.navigation;
 
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
-import com.intellij.lang.documentation.DocumentationProvider;
+import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtilRt;

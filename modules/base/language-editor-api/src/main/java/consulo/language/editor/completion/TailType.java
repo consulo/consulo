@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight;
+package consulo.language.editor.completion;
 
-import consulo.language.editor.completion.InsertionContext;
-import consulo.language.Language;
 import consulo.codeEditor.CaretModel;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
+import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import consulo.language.psi.PsiUtilCore;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -42,7 +38,7 @@ public abstract class TailType {
     Document document = editor.getDocument();
     int textLength = document.getTextLength();
     CharSequence chars = document.getCharsSequence();
-    if (tailOffset == textLength || !overwrite || chars.charAt(tailOffset) != c){
+    if (tailOffset == textLength || !overwrite || chars.charAt(tailOffset) != c) {
       document.insertString(tailOffset, String.valueOf(c));
     }
     return moveCaret(editor, tailOffset, 1);
@@ -56,7 +52,7 @@ public abstract class TailType {
     return tailOffset + delta;
   }
 
-  public static final TailType UNKNOWN = new TailType(){
+  public static final TailType UNKNOWN = new TailType() {
     @Override
     public int processTail(final Editor editor, final int tailOffset) {
       return tailOffset;
@@ -68,7 +64,7 @@ public abstract class TailType {
 
   };
 
-  public static final TailType NONE = new TailType(){
+  public static final TailType NONE = new TailType() {
     @Override
     public int processTail(final Editor editor, final int tailOffset) {
       return tailOffset;
@@ -80,39 +76,16 @@ public abstract class TailType {
   };
 
   public static final TailType SEMICOLON = new CharTailType(';');
-  @Deprecated public static final TailType EXCLAMATION = new CharTailType('!');
+  @Deprecated
+  public static final TailType EXCLAMATION = new CharTailType('!');
 
-  public static final TailType COMMA = new TailType(){
-    @Override
-    public int processTail(final Editor editor, int tailOffset) {
-      CommonCodeStyleSettings styleSettings = getLocalCodeStyleSettings(editor, tailOffset);
-      if (styleSettings.SPACE_BEFORE_COMMA) tailOffset = insertChar(editor, tailOffset, ' ');
-      tailOffset = insertChar(editor, tailOffset, ',');
-      if (styleSettings.SPACE_AFTER_COMMA) tailOffset = insertChar(editor, tailOffset, ' ');
-      return tailOffset;
-    }
-
-    public String toString() {
-      return "COMMA";
-    }
-  };
-
-  protected static CommonCodeStyleSettings getLocalCodeStyleSettings(Editor editor, int tailOffset) {
-    final PsiFile psiFile = getFile(editor);
-    Language language = PsiUtilCore.getLanguageAtOffset(psiFile, tailOffset);
-
-    final Project project = editor.getProject();
-    assert project != null;
-    return CodeStyleSettingsManager.getSettings(project).getCommonSettings(language);
-  }
-
-  protected static FileType getFileType(Editor editor) {
+  public static FileType getFileType(Editor editor) {
     PsiFile psiFile = getFile(editor);
     return psiFile.getFileType();
   }
 
   @Nonnull
-  private static PsiFile getFile(Editor editor) {
+  public static PsiFile getFile(Editor editor) {
     Project project = editor.getProject();
     assert project != null;
     PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
@@ -151,7 +124,7 @@ public abstract class TailType {
   public static final TailType DOT = new CharTailType('.');
 
   public static final TailType CASE_COLON = new CharTailType(':');
-  public static final TailType COND_EXPR_COLON = new TailType(){
+  public static final TailType COND_EXPR_COLON = new TailType() {
     @Override
     public int processTail(final Editor editor, final int tailOffset) {
       Document document = editor.getDocument();
@@ -172,38 +145,6 @@ public abstract class TailType {
       return "COND_EXPR_COLON";
     }
   };
-
-  public static final TailType EQ = new TailTypeEQ();
-
-  public static class TailTypeEQ extends TailType {
-
-    protected boolean isSpaceAroundAssignmentOperators(Editor editor, int tailOffset) {
-      return CodeStyleSettingsManager.getSettings(editor.getProject()).SPACE_AROUND_ASSIGNMENT_OPERATORS;
-    }
-
-    @Override
-    public int processTail(final Editor editor, int tailOffset) {
-      Document document = editor.getDocument();
-      int textLength = document.getTextLength();
-      CharSequence chars = document.getCharsSequence();
-      if (tailOffset < textLength - 1 && chars.charAt(tailOffset) == ' ' && chars.charAt(tailOffset + 1) == '='){
-        return moveCaret(editor, tailOffset, 2);
-      }
-      if (tailOffset < textLength && chars.charAt(tailOffset) == '='){
-        return moveCaret(editor, tailOffset, 1);
-      }
-      if (isSpaceAroundAssignmentOperators(editor, tailOffset)) {
-        document.insertString(tailOffset, " =");
-        tailOffset = moveCaret(editor, tailOffset, 2);
-        tailOffset = insertChar(editor, tailOffset, ' ');
-      }
-      else{
-        document.insertString(tailOffset, "=");
-        tailOffset = moveCaret(editor, tailOffset, 1);
-      }
-      return tailOffset;
-    }
-  }
 
   public static final TailType LPARENTH = new CharTailType('(');
 

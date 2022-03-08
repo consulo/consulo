@@ -16,26 +16,19 @@
 
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.codeInsight.CharTailType;
-import com.intellij.codeInsight.TailType;
-import consulo.language.editor.completion.InsertHandler;
-import consulo.language.editor.completion.InsertionContext;
 import com.intellij.codeInsight.lookup.impl.ElementLookupRenderer;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
-import consulo.language.editor.completion.ClassConditionKey;
-import com.intellij.openapi.util.Comparing;
-import consulo.language.editor.completion.AutoCompletionPolicy;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementPresentation;
+import consulo.language.editor.completion.*;
 import consulo.util.dataholder.Key;
-import com.intellij.util.containers.ContainerUtil;
-import java.util.HashMap;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -201,9 +194,9 @@ public class LookupItem<T> extends MutableLookupElement<T> implements Comparable
   public static TailType getDefaultTailType(final char completionChar) {
     switch(completionChar){
       case '.': return new CharTailType('.', false);
-      case ',': return TailType.COMMA;
+      case ',': return CommaTailType.INSTANCE;
       case ';': return TailType.SEMICOLON;
-      case '=': return TailType.EQ;
+      case '=': return EqTailType.INSTANCE;
       case ' ': return TailType.SPACE;
       case ':': return TailType.CASE_COLON; //?
     }

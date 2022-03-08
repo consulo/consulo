@@ -472,7 +472,7 @@
 
     <extensionPoint name="lang.documentationProvider"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.documentation.DocumentationProvider"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.documentation.DocumentationProvider"/>
     </extensionPoint>
 
     <extensionPoint name="lang.namesValidator"
@@ -1046,7 +1046,7 @@
     <extensionPoint name="metaDataContributor" interface="com.intellij.psi.meta.MetaDataContributor"/>
 
     <extensionPoint name="documentationProvider"
-                    interface="com.intellij.lang.documentation.DocumentationProvider"/>
+                    interface="consulo.language.editor.documentation.DocumentationProvider"/>
 
     <extensionPoint name="lang.documentationFixer" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.documentation.DocCommentFixer"/>

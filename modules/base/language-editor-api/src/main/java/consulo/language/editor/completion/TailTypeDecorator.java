@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight.lookup;
+package consulo.language.editor.completion;
 
-import com.intellij.codeInsight.TailType;
-import consulo.language.editor.completion.InsertionContext;
-import com.intellij.psi.impl.source.PostprocessReformattingAspect;
-import consulo.language.editor.completion.LookupElement;
-import consulo.language.editor.completion.LookupElementDecorator;
+import consulo.language.psi.PsiDocumentManager;
 
 import javax.annotation.Nullable;
 
@@ -46,16 +42,11 @@ public abstract class TailTypeDecorator<T extends LookupElement> extends LookupE
 
   @Override
   public void handleInsert(InsertionContext context) {
-    final LookupElement delegate = getDelegate();
-    final TailType tailType = computeTailType(context);
+    TailType tailType = computeTailType(context);
 
-    final LookupItem lookupItem = delegate.as(LookupItem.CLASS_CONDITION_KEY);
-    if (lookupItem != null && tailType != null) {
-      lookupItem.setTailType(TailType.UNKNOWN);
-    }
-    delegate.handleInsert(context);
+    getDelegate().handleInsert(context);
     if (tailType != null && tailType.isApplicable(context)) {
-      PostprocessReformattingAspect.getInstance(context.getProject()).doPostponedFormatting();
+      PsiDocumentManager.getInstance(context.getProject()).doPostponedOperationsAndUnblockDocument(context.getDocument());
       int tailOffset = context.getTailOffset();
       if (tailOffset < 0) {
         throw new AssertionError("tailOffset < 0: delegate=" + getDelegate() + "; this=" + this + "; tail=" + tailType);
@@ -63,5 +54,4 @@ public abstract class TailTypeDecorator<T extends LookupElement> extends LookupE
       tailType.processTail(context.getEditor(), tailOffset);
     }
   }
-
 }

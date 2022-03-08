@@ -19,7 +19,7 @@ import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.completion.CompletionInitializationContext;
 import consulo.language.editor.completion.InsertionContext;
 import consulo.language.editor.completion.OffsetMap;
-import com.intellij.codeInsight.completion.PrioritizedLookupElement;
+import consulo.language.editor.completion.PrioritizedLookupElement;
 import consulo.language.editor.completion.LookupElement;
 import consulo.language.editor.completion.LookupElementDecorator;
 import com.intellij.codeInsight.template.TemplateLookupSelectionHandler;

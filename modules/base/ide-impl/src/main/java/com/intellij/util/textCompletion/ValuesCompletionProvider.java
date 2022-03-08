@@ -17,7 +17,7 @@ package com.intellij.util.textCompletion;
 
 import com.intellij.codeInsight.lookup.CharFilter;
 import consulo.language.editor.completion.*;
-import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import consulo.language.editor.completion.LookupElementBuilder;
 import consulo.application.dumb.DumbAware;
 import com.intellij.util.containers.ContainerUtil;
 
