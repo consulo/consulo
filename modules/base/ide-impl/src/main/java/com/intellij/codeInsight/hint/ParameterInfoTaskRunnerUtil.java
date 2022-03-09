@@ -7,12 +7,13 @@ import com.intellij.ui.components.JBLoadingPanel;
 import consulo.application.NonBlockingReadAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.event.VisibleAreaListener;
 import consulo.codeEditor.impl.EditorInternal;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.RelativePoint;
@@ -112,7 +113,7 @@ class ParameterInfoTaskRunnerUtil {
       Disposer.register(disposable, popup);
       ScheduledFuture<?> showPopupFuture = EdtScheduledExecutorService.getInstance().schedule(() -> {
         if (!popup.isDisposed() && !popup.isVisible() && !editor.isDisposed()) {
-          RelativePoint popupPosition = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
+          RelativePoint popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
           loadingPanel.startLoading();
           popup.show(popupPosition);
         }

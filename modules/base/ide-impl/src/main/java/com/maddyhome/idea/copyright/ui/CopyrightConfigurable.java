@@ -18,7 +18,7 @@ package com.maddyhome.idea.copyright.ui;
 
 import consulo.application.AllIcons;
 import consulo.application.WriteAction;
-import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.*;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -30,9 +30,6 @@ import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.JBTextField;
-import consulo.ui.ex.awt.JBUI;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;

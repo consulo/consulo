@@ -15,9 +15,9 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.CheckBoxList;
 import com.intellij.ui.EditorNotifications;

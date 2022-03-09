@@ -4,6 +4,8 @@ package consulo.ui.ex.awt.tree;
 import consulo.application.util.Queryable;
 import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
+import consulo.ui.ex.tree.LeafState;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.Comparing;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

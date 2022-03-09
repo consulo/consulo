@@ -26,6 +26,7 @@ import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionButtonComponent;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

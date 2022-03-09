@@ -19,7 +19,7 @@ import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;

@@ -21,7 +21,7 @@
 package com.intellij.execution.configuration;
 
 import consulo.execution.ExecutionBundle;
-import com.intellij.openapi.ui.LabeledComponent;
+import consulo.ui.ex.awt.LabeledComponent;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.UserActivityProviderComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

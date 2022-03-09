@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
 import consulo.module.Module;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import javax.annotation.Nonnull;

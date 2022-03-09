@@ -19,7 +19,7 @@ import com.intellij.application.options.codeStyle.arrangement.color.ArrangementC
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.util.containers.ContainerUtil;

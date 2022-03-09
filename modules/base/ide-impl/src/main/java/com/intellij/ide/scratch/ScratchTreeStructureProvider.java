@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.ui.ex.awt.tree.PresentationData;
 import consulo.virtualFileSystem.event.AsyncFileListener;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VFileCopyEvent;

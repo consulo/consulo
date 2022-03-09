@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
-import com.intellij.openapi.ui.JBPopupMenu;
+import consulo.ui.ex.awt.JBPopupMenu;
 import com.intellij.openapi.util.SystemInfoRt;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;

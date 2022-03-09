@@ -20,7 +20,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.usageView.UsageViewBundle;
 import javax.annotation.Nonnull;
 

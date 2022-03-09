@@ -2,7 +2,7 @@
 package com.intellij.ui;
 
 import consulo.ui.ex.awt.tree.LoadingNode;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;

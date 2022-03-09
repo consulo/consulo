@@ -20,7 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.util.Alarm;
 import javax.annotation.Nonnull;
 

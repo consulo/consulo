@@ -17,9 +17,9 @@ package com.intellij.tasks.timeTracking;
 
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.ui.ex.awt.ValidationInfo;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskRepository;
 

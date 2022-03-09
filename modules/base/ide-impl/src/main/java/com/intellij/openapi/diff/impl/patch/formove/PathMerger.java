@@ -19,7 +19,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FilePathImpl;
 import com.intellij.openapi.vcs.changes.patch.RelativePathCalculator;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
 

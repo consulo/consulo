@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.table.JBTable;

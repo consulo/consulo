@@ -17,7 +17,7 @@
 package com.intellij.openapi.ui;
 
 import consulo.application.AllIcons;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;

@@ -26,7 +26,7 @@ import consulo.project.event.ProjectManagerListener;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.io.CharsetToolkit;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;

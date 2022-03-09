@@ -17,6 +17,7 @@
 package consulo.ui.ex.awt.tree;
 
 import consulo.logging.Logger;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.collection.ContainerUtil;
 
 import javax.swing.*;

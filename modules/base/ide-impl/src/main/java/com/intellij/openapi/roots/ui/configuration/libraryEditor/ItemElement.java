@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 import consulo.application.AllIcons;
 import com.intellij.ide.IconUtilEx;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;

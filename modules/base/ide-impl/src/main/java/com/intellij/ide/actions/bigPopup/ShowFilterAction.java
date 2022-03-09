@@ -11,7 +11,7 @@ import consulo.ui.ex.action.Toggleable;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;

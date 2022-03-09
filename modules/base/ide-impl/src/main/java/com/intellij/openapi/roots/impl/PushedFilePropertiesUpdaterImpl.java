@@ -27,7 +27,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.impl.psi.internal.PsiManagerEx;
 import consulo.language.impl.file.internal.FileManagerImpl;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.psi.stub.FileBasedIndex;
 import com.intellij.util.indexing.FileBasedIndexProjectHandler;

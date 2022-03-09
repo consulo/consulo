@@ -16,7 +16,7 @@ import com.intellij.openapi.vfs.impl.local.DirectoryAccessChecker;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
 import com.intellij.openapi.vfs.newvfs.ChildInfoImpl;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;

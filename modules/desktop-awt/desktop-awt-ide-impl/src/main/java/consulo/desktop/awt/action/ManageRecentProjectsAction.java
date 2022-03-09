@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.desktop.awt.welcomeScreen.NewRecentProjectPanel;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

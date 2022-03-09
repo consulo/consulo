@@ -21,7 +21,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.platform.Platform;

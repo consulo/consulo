@@ -50,7 +50,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.base.BaseDataManager;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;

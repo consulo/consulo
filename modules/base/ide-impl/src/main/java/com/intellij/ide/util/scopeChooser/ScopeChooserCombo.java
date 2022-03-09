@@ -5,7 +5,7 @@ import consulo.dataContext.DataManager;
 import consulo.component.util.WeighedItem;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packageDependencies.DependencyValidationManager;

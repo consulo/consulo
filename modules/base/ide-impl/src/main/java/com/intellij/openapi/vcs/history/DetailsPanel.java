@@ -50,7 +50,7 @@ class DetailsPanel extends HtmlPanel implements DataProvider, CopyProvider {
     myProject = project;
     myStatusText = new StatusText() {
       @Override
-      protected boolean isStatusVisible() {
+      public boolean isStatusVisible() {
         return StringUtil.isEmpty(myText);
       }
     };

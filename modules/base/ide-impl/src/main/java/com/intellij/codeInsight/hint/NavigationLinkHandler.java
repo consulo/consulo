@@ -19,7 +19,7 @@ import com.intellij.codeInsight.highlighting.TooltipLinkHandler;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

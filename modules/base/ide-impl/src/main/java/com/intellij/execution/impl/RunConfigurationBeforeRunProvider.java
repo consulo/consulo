@@ -30,7 +30,7 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;

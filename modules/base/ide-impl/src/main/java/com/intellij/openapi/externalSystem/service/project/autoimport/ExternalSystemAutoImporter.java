@@ -41,7 +41,7 @@ import com.intellij.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;

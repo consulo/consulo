@@ -27,7 +27,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;

@@ -13,7 +13,6 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.ui.popup.*;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -21,13 +20,13 @@ import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.ui.speedSearch.SpeedSearch;
-import com.intellij.util.BooleanFunction;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ChildFocusWatcher;
 import com.intellij.util.ui.ScrollUtil;
+import consulo.codeEditor.EditorPopupHelper;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;
@@ -46,7 +45,6 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ui.popup.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
@@ -61,7 +59,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
@@ -603,7 +601,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   @Nonnull
   private RelativePoint guessBestPopupLocation(@Nonnull Editor editor) {
-    RelativePoint preferredLocation = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
+    RelativePoint preferredLocation = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
     Dimension targetSize = getSizeForPositioning();
     Point preferredPoint = preferredLocation.getScreenPoint();
     Point result = getLocationAboveEditorLineIfPopupIsClippedAtTheBottom(preferredPoint, targetSize, editor);

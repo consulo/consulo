@@ -18,7 +18,7 @@ package consulo.bundle.impl;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.content.bundle.SdkType;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.bundle.PredefinedBundlesProvider;
 

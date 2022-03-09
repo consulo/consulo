@@ -610,7 +610,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.fileTypes;
   exports com.intellij.openapi.fileTypes.ex;
   exports com.intellij.openapi.fileTypes.impl;
-  exports com.intellij.openapi.help;
   exports com.intellij.openapi.ide;
   exports com.intellij.openapi.keymap;
   exports com.intellij.openapi.keymap.ex;
@@ -1106,9 +1105,6 @@ open module consulo.ide.impl {
   exports consulo.desktop.editor;
   exports consulo.desktop.editor.impl;
   exports consulo.desktop.editor.impl.ui;
-  //exports consulo.desktop.ui;
-  exports consulo.desktop.ui.swing;
-  //exports consulo.desktop.util;
   exports consulo.desktop.util.awt;
   exports consulo.desktop.util.awt.graphics;
   exports consulo.desktop.util.awt.laf;
@@ -1150,7 +1146,6 @@ open module consulo.ide.impl {
   exports consulo.fileTypes;
   exports consulo.fileTypes.impl;
   exports consulo.fileTypes.ui.impl;
-  exports consulo.help.impl;
   exports consulo.ide.actions;
   exports consulo.ide.actions.impl;
   exports consulo.ide.actions.webSearch;
@@ -1221,25 +1216,17 @@ open module consulo.ide.impl {
   exports consulo.roots.ui.configuration.classpath;
   exports consulo.roots.ui.configuration.extension;
   exports consulo.roots.ui.configuration.impl;
-  //exports consulo.roots.ui.configuration.projectRoot;
   exports consulo.roots.ui.configuration.projectRoot.daemon;
   exports consulo.roots.ui.configuration.projectRoot.moduleLayerActions;
   exports consulo.roots.ui.configuration.session.internal;
-  //exports consulo.security;
   exports consulo.security.impl;
   exports consulo.start;
   exports consulo.startup;
   exports consulo.startup.customize;
-  //exports consulo.task;
-  //exports consulo.task.api;
   exports consulo.task.api.repository;
-  //exports consulo.tasks;
   exports consulo.tasks.impl;
-  //exports consulo.ui;
   exports consulo.ui.app;
-  //exports consulo.ui.app.impl;
   exports consulo.ui.app.impl.settings;
-  exports consulo.ui.decorator;
   exports consulo.ui.dialog;
   exports consulo.ui.dialog.action;
   exports consulo.ui.dialog.impl;
@@ -1247,18 +1234,14 @@ open module consulo.ide.impl {
   exports consulo.ui.docking.impl;
   exports consulo.ui.ex.impl;
   exports consulo.ui.popup;
-  //exports consulo.ui.tree;
   exports consulo.ui.tree.impl;
   exports consulo.ui.wizard;
   exports consulo.util;
   exports consulo.util.containers;
   exports consulo.util.io2;
-  //exports consulo.util.jdom;
   exports consulo.util.jdom.interner;
   exports consulo.util.pointers;
   exports consulo.util.ui;
-  //exports consulo.vcs;
-  //exports consulo.vcs.changes;
   exports consulo.vcs.changes.ui;
   exports consulo.vfs.impl.archive;
   exports consulo.vfs.impl.mediator;
@@ -1280,6 +1263,8 @@ open module consulo.ide.impl {
   exports org.jetbrains.ide.script;
   exports org.jetbrains.io;
   exports consulo.module.extension.ui;
+
+  exports consulo.application.ui.impl;
 
   exports consulo.options.impl;
 }

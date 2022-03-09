@@ -3,7 +3,7 @@ package com.intellij.ide.util;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.util.PatternUtil;

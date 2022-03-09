@@ -30,7 +30,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;

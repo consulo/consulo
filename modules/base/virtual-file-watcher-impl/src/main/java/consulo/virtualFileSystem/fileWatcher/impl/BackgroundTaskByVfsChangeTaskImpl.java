@@ -22,7 +22,7 @@ import com.intellij.openapi.components.ExpandMacroToPathMap;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;

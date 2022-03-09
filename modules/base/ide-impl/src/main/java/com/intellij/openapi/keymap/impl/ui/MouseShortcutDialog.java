@@ -22,7 +22,7 @@ import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.Keymap;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.impl.ShortcutRestrictions;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ScrollPaneFactory;

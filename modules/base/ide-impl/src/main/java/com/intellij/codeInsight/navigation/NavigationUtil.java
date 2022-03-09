@@ -40,7 +40,7 @@ import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import consulo.util.lang.ref.Ref;

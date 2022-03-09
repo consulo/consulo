@@ -29,15 +29,13 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.*;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.*;
 import com.intellij.ui.mac.MacMessages;
 import com.intellij.ui.mac.foundation.MacUtil;
-import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.PairFunction;
 import consulo.process.cmd.ParametersListUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -310,7 +308,7 @@ public class Messages {
   }
 
   /**
-   * @see com.intellij.openapi.ui.DialogWrapper#DialogWrapper(Project, boolean)
+   * @see DialogWrapper#DialogWrapper(Project, boolean)
    */
   public static void showMessageDialog(@Nullable Project project, String message, @Nonnull String title, @Nullable Image icon) {
     try {
@@ -1055,7 +1053,7 @@ public class Messages {
   }
 
   /**
-   * @see com.intellij.openapi.ui.DialogWrapper#DialogWrapper(Project, boolean)
+   * @see DialogWrapper#DialogWrapper(Project, boolean)
    * @deprecated It looks awful!
    */
   @Deprecated

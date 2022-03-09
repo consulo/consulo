@@ -29,7 +29,7 @@ import consulo.execution.ExecutionBundle;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.VcsException;

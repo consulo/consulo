@@ -25,7 +25,7 @@ import consulo.ide.ServiceManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.vcs.AbstractVcs;

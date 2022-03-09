@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.readOnlyHandler.FileListRenderer;
 import com.intellij.openapi.vcs.readOnlyHandler.ReadOnlyStatusDialog;

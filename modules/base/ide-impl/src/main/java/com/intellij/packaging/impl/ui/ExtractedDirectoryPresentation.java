@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.ui;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.awt.tree.PresentationData;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.packaging.impl.elements.ExtractedDirectoryPackagingElement;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;

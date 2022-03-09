@@ -17,8 +17,8 @@ package com.intellij.ide.errorTreeView;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
-import consulo.ui.ex.awt.tree.AbstractTreeStructure;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;

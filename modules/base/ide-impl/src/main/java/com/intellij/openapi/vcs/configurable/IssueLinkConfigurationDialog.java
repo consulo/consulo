@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.configurable;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.IssueNavigationLink;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import javax.annotation.Nullable;

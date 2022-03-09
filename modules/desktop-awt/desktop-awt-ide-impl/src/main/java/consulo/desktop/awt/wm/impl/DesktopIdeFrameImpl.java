@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.SideBorder;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.MnemonicHelper;
+import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

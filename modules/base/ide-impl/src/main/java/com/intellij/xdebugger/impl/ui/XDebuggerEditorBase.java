@@ -37,7 +37,7 @@ import consulo.debugger.evaluation.EvaluationMode;
 import consulo.debugger.evaluation.XDebuggerEditorsProvider;
 import consulo.debugger.evaluation.XDebuggerEditorsProviderBase;
 import consulo.document.Document;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.LanguageUtil;

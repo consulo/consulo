@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.impl.local;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.dumb.DumbAware;

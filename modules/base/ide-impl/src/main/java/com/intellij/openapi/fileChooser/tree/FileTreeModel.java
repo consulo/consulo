@@ -18,7 +18,7 @@ package com.intellij.openapi.fileChooser.tree;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;

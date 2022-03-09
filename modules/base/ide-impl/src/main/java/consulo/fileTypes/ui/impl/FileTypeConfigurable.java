@@ -28,7 +28,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.openapi.ui.DialogBuilder;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;

@@ -47,7 +47,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowManager;

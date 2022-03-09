@@ -21,7 +21,7 @@ import com.intellij.lang.folding.*;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

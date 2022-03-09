@@ -17,11 +17,11 @@ package com.intellij.ide.plugins;
 
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.JBTextArea;
+import consulo.ui.ex.awt.JBTextArea;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.ui.components.panels.VerticalLayout;
 import com.intellij.util.text.DateFormatUtil;

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.update;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.changes.Change;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;

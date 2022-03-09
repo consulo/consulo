@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.util;
 
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 
 import javax.swing.*;
 import javax.swing.text.Document;

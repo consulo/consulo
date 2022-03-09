@@ -16,9 +16,9 @@
 package com.intellij.refactoring.extractSuperclass;
 
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.help.HelpManager;
+import consulo.application.ui.HelpManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

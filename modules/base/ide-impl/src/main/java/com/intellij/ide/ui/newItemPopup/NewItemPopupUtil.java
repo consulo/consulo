@@ -2,7 +2,7 @@
 package com.intellij.ide.ui.newItemPopup;
 
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

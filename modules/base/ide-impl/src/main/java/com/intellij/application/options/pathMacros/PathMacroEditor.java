@@ -16,10 +16,10 @@
 package com.intellij.application.options.pathMacros;
 
 import consulo.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.TextComponentAccessor;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.application.ui.HelpManager;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.TextComponentAccessor;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import javax.annotation.Nonnull;
 

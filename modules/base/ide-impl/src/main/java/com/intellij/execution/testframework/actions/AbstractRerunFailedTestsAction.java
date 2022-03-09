@@ -17,6 +17,7 @@ package com.intellij.execution.testframework.actions;
 
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.process.ExecutionException;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunnerRegistry;
@@ -35,7 +36,6 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 import consulo.ui.ex.ComponentContainer;
-import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Getter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -192,7 +192,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
         }
       });
       //noinspection ConstantConditions
-      JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle("Restart Failed Tests").setMovable(false).setResizable(false).setRequestFocus(true)
+      new PopupChooserBuilder<Executor>(list).setTitle("Restart Failed Tests").setMovable(false).setResizable(false).setRequestFocus(true)
               .setItemChoosenCallback(new Runnable() {
                 @Override
                 public void run() {

@@ -18,7 +18,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;

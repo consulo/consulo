@@ -32,7 +32,7 @@ import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vcs.changes.ui.RollbackProgressModifier;
 import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 
 import java.util.ArrayList;
 import java.util.Collections;

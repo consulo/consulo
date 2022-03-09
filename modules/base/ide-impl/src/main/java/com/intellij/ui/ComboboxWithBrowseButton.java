@@ -17,8 +17,8 @@ package com.intellij.ui;
 
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
-import com.intellij.openapi.ui.TextComponentAccessor;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.TextComponentAccessor;
 
 import javax.swing.*;
 import java.awt.*;

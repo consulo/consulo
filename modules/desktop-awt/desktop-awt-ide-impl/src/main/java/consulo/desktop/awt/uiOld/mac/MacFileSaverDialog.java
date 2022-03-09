@@ -16,7 +16,7 @@
 package consulo.desktop.awt.uiOld.mac;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ui.ex.UIBundle;
 import com.intellij.util.Consumer;
 import com.intellij.util.ui.OwnerOptional;

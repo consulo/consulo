@@ -23,7 +23,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ComboboxSpeedSearch;
 import consulo.ui.ex.awt.PopupHandler;

@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import com.intellij.packaging.ui.PackagingElementWeights;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -22,7 +22,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.Query;

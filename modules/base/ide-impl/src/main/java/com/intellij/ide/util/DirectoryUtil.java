@@ -18,7 +18,7 @@ package com.intellij.ide.util;
 
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;

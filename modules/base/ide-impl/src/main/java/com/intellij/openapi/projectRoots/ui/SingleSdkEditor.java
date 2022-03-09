@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import com.intellij.openapi.roots.ui.configuration.SdksConfigurable;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.disposer.Disposer;
 

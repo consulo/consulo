@@ -29,7 +29,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileEvent;

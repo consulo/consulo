@@ -2,27 +2,29 @@
 package com.intellij.openapi.progress.util;
 
 import com.intellij.ide.IdeEventQueue;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.DialogWrapperDialog;
-import com.intellij.openapi.ui.DialogWrapperPeer;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
-import consulo.application.util.SystemInfo;
-import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.PopupBorder;
 import com.intellij.ui.TitlePanel;
 import com.intellij.ui.WindowMoveListener;
+import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
+import consulo.component.ComponentManager;
+import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.DialogWrapperDialog;
+import consulo.ui.ex.awt.internal.DialogWrapperPeer;
+import consulo.ui.ex.awt.internal.DialogWrapperPeerFactory;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposer;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -350,23 +352,17 @@ public class ProgressDialog implements consulo.progress.util.ProgressDialog {
 
     @Nonnull
     @Override
-    protected DialogWrapperPeer createPeer(final boolean canBeParent, final boolean applicationModalIfPossible) {
-      return createPeer(null, canBeParent, applicationModalIfPossible);
-    }
-
-    @Nonnull
-    @Override
-    protected DialogWrapperPeer createPeer(final consulo.ui.Window owner, final boolean canBeParent, final boolean applicationModalIfPossible) {
+    protected DialogWrapperPeer createPeer(final ComponentManager project, final boolean canBeParent, final boolean applicationModalIfPossible) {
       if (useLightPopup()) {
         try {
           return new GlassPaneDialogWrapperPeer(this, canBeParent);
         }
         catch (GlassPaneDialogWrapperPeer.GlasspanePeerUnavailableException e) {
-          return super.createPeer(WindowManager.getInstance().suggestParentWindow(myProgressWindow.myProject), canBeParent, applicationModalIfPossible);
+          return DialogWrapperPeerFactory.getInstance().createPeer(this, WindowManager.getInstance().suggestParentWindow(myProgressWindow.myProject), canBeParent, applicationModalIfPossible);
         }
       }
       else {
-        return super.createPeer(WindowManager.getInstance().suggestParentWindow(myProgressWindow.myProject), canBeParent, applicationModalIfPossible);
+        return DialogWrapperPeerFactory.getInstance().createPeer(this, WindowManager.getInstance().suggestParentWindow(myProgressWindow.myProject), canBeParent, applicationModalIfPossible);
       }
     }
 
@@ -376,10 +372,10 @@ public class ProgressDialog implements consulo.progress.util.ProgressDialog {
 
     @Nonnull
     @Override
-    protected DialogWrapperPeer createPeer(final Project project, final boolean canBeParent) {
+    protected DialogWrapperPeer createPeer(final ComponentManager project, final boolean canBeParent) {
       if (System.getProperty("vintage.progress") == null) {
         try {
-          return new GlassPaneDialogWrapperPeer(this, project, canBeParent);
+          return new GlassPaneDialogWrapperPeer(this, (Project)project, canBeParent);
         }
         catch (GlassPaneDialogWrapperPeer.GlasspanePeerUnavailableException e) {
           return super.createPeer(project, canBeParent);

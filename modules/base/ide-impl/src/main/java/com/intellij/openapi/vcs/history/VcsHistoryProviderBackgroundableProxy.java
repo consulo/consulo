@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.impl.BackgroundableActionEnabledHandler;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vcs.impl.VcsBackgroundableActions;
 import com.intellij.openapi.vcs.impl.VcsBackgroundableComputable;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.vcs.history.VcsHistoryProviderEx;

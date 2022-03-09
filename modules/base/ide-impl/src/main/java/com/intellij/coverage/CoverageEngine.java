@@ -13,7 +13,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

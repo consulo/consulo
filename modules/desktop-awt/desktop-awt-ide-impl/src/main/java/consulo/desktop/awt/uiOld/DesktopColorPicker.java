@@ -17,7 +17,7 @@ package consulo.desktop.awt.uiOld;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

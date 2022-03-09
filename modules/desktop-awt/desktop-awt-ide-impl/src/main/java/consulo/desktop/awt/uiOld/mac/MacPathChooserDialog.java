@@ -28,7 +28,7 @@ import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;

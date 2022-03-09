@@ -19,7 +19,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ModulesAlphaComparator;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.ui.ComboboxSpeedSearch;
 import com.intellij.ui.SortedComboBoxModel;
 import javax.annotation.Nonnull;

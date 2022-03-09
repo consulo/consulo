@@ -16,7 +16,7 @@
 package com.intellij.dvcs.push.ui;
 
 import com.intellij.dvcs.push.VcsPushReferenceStrategy;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 
 import javax.swing.*;
 import java.awt.*;

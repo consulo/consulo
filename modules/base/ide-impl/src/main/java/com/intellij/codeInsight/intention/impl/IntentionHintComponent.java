@@ -42,7 +42,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.event.JBPopupListener;

@@ -44,7 +44,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceRange;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.ObjectUtil;

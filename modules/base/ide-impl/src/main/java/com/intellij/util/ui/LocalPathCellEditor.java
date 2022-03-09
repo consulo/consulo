@@ -15,10 +15,10 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.util.Consumer;
 import com.intellij.util.PathUtil;
 import consulo.fileChooser.FileChooserDescriptor;

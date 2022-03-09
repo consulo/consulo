@@ -1,7 +1,7 @@
 package com.intellij.application.options;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

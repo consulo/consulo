@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.scopeChooser;
 
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 
 /**
  * User: anna

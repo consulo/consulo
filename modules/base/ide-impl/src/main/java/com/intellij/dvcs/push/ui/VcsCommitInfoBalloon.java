@@ -17,9 +17,9 @@ package com.intellij.dvcs.push.ui;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.ide.BrowserUtil;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.ui.HyperlinkAdapter;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;

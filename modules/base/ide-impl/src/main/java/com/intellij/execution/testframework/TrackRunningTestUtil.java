@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework;
 
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pass;

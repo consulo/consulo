@@ -19,7 +19,7 @@ package com.intellij.ide.fileTemplates.ui;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
-import com.intellij.openapi.ui.DialogWrapperPeer;
+import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.awt.util.ScreenUtil;

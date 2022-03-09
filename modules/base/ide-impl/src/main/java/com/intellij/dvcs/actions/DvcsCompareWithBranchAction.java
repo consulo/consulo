@@ -18,30 +18,29 @@ package com.intellij.dvcs.actions;
 import com.intellij.dvcs.DvcsUtil;
 import com.intellij.dvcs.repo.AbstractRepositoryManager;
 import com.intellij.dvcs.repo.Repository;
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
-import consulo.logging.Logger;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.Task;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.VcsNotifier;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.history.VcsDiffUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.vcsUtil.VcsUtil;
-import javax.annotation.Nonnull;
-
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.Task;
+import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.JBList;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collection;
@@ -70,7 +69,7 @@ public abstract class DvcsCompareWithBranchAction<T extends Repository> extends 
     List<String> branchNames = getBranchNamesExceptCurrent(repository);
 
     JBList list = new JBList(branchNames);
-    JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle("Select branch to compare")
+    new PopupChooserBuilder<>(list).setTitle("Select branch to compare")
             .setItemChoosenCallback(new OnBranchChooseRunnable(project, file, presentableRevisionName, list)).setAutoselectOnMouseMove(true)
             .setFilteringEnabled(new Function<Object, String>() {
               @Override

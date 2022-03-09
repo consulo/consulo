@@ -17,6 +17,7 @@ package com.intellij.openapi.ui;
 
 import consulo.component.util.Iconable;
 import consulo.application.util.SystemInfo;
+import consulo.ui.ex.awt.ComboBoxWithWidePopup;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.ui.SimpleColoredRenderer;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -17,6 +17,7 @@ package consulo.ui.ex.awt.tree;
 
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.tree.NodeDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

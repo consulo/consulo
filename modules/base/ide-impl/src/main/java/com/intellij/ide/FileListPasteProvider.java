@@ -23,7 +23,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

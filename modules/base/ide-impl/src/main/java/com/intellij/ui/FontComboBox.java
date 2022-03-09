@@ -18,7 +18,7 @@ package com.intellij.ui;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.ui.FontInfo;
 

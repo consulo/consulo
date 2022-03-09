@@ -17,7 +17,7 @@ package com.intellij.profile.codeInspection.ui;
 
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.psi.search.scope.NonProjectFilesScope;
 import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.psi.search.scope.NamedScope;

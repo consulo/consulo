@@ -23,7 +23,7 @@ import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.CheckoutProvider;
 import com.intellij.openapi.vcs.VcsKey;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;

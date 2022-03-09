@@ -21,7 +21,7 @@ import com.intellij.execution.ui.layout.actions.CloseViewAction;
 import com.intellij.execution.ui.layout.actions.MinimizeViewAction;
 import com.intellij.execution.ui.layout.actions.RestoreViewAction;
 import com.intellij.ide.actions.CloseAction;
-import com.intellij.openapi.ui.AbstractPainter;
+import consulo.ui.ex.awt.internal.AbstractPainter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.docking.DockContainer;

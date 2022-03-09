@@ -13,8 +13,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.ui.wm.*;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -172,7 +171,7 @@ public class ToolWindowsWidget implements CustomStatusBarWidget, StatusBarWidget
         }
 
         list.setSelectedIndex(list.getItemsCount() - 1);
-        PopupChooserBuilder<ToolWindow> builder = JBPopupFactory.getInstance().createListPopupBuilder(list);
+        PopupChooserBuilder<ToolWindow> builder = new PopupChooserBuilder<>(list);
         popup = builder.setAutoselectOnMouseMove(true).setRequestFocus(false).setItemChosenCallback((selectedValue) -> {
           if (popup != null) popup.closeOk(null);
           selectedValue.activate(null, true, true);

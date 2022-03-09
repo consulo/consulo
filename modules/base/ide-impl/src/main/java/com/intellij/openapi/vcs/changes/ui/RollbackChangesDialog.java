@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.vcs.VcsBundle;

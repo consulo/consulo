@@ -8,7 +8,7 @@ import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

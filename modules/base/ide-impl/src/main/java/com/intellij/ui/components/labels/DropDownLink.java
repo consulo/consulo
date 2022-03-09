@@ -2,10 +2,10 @@
 package com.intellij.ui.components.labels;
 
 import consulo.application.AllIcons;
-import consulo.ide.ui.popup.IPopupChooserBuilder;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.util.PopupState;
 import consulo.ui.ex.awt.JBUIScale;

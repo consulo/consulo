@@ -23,7 +23,7 @@ import consulo.configurable.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.ConfigurableUIMigrationUtil;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.SimpleTextAttributes;

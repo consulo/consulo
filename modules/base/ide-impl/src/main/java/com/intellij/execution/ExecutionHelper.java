@@ -34,7 +34,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

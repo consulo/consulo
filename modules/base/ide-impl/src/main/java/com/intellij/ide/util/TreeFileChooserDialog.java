@@ -34,7 +34,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.ex.WindowManagerEx;

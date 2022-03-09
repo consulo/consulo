@@ -16,7 +16,7 @@
 package com.intellij.ide.util;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.annotation.DeprecationInfo;

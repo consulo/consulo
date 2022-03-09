@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.WriteAction;
 import consulo.language.util.ModuleUtilCore;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.Comparing;
 import consulo.project.ui.wm.CustomStatusBarWidget;

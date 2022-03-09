@@ -65,6 +65,7 @@ import consulo.language.content.LanguageContentFolderScopes;
 import consulo.ui.UIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;

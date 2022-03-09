@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.MnemonicHelper;
+import consulo.ui.ex.awt.internal.MnemonicHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBCurrentTheme;

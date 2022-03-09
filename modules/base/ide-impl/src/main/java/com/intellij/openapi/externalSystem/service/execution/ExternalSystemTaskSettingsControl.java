@@ -29,7 +29,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.RawCommandLineEditor;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 import com.intellij.util.ui.GridBag;
 import consulo.disposer.Disposable;
 

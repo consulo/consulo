@@ -24,12 +24,12 @@ import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationManagerEx;
 import com.intellij.openapi.application.impl.LaterInvocator;
 import com.intellij.openapi.command.CommandProcessorEx;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.DialogWrapperDialog;
-import com.intellij.openapi.ui.DialogWrapperPeer;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.internal.DialogWrapperDialog;
+import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import com.intellij.openapi.ui.impl.AbstractDialog;
 import com.intellij.openapi.ui.impl.HeadlessDialog;
-import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
+import consulo.ui.ex.popup.StackingPopupDispatcher;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
@@ -61,7 +61,7 @@ import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
@@ -283,7 +283,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
   @Override
   @SuppressWarnings("SSBasedInspection")
-  protected void dispose() {
+  public void dispose() {
     LOG.assertTrue(EventQueue.isDispatchThread(), "Access is allowed from event dispatch thread only");
     for (Runnable runnable : myDisposeActions) {
       runnable.run();

@@ -19,7 +19,7 @@ package com.intellij.ui.debugger;
 import consulo.ui.ex.action.ActionManager;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.tabs.JBTabs;

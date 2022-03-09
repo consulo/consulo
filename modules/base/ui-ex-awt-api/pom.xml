@@ -49,6 +49,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-file-chooser-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>consulo-desktop-awt-hacking</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>

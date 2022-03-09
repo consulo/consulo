@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Couple;
 import com.intellij.ui.*;
 import com.intellij.ui.popup.util.DetailController;
@@ -46,7 +46,7 @@ import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeContro
 import com.intellij.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheckboxTree;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.application.impl.WholeWestDialogWrapper;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;

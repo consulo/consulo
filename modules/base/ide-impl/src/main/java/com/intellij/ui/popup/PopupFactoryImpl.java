@@ -27,7 +27,7 @@ import consulo.codeEditor.VisualPosition;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.ide.ui.popup.*;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -111,21 +111,6 @@ public class PopupFactoryImpl extends JBPopupFactory {
     }
 
     return null;
-  }
-
-  @Override
-  protected PopupChooserBuilder.PopupComponentAdapter createPopupComponentAdapter(PopupChooserBuilder builder, JList list) {
-    return new PopupListAdapter(builder, list);
-  }
-
-  @Override
-  protected PopupChooserBuilder.PopupComponentAdapter createPopupComponentAdapter(PopupChooserBuilder builder, JTree tree) {
-    return new PopupTreeAdapter(builder, tree);
-  }
-
-  @Override
-  protected PopupChooserBuilder.PopupComponentAdapter createPopupComponentAdapter(PopupChooserBuilder builder, JTable table) {
-    return new PopupTableAdapter(builder, table);
   }
 
   @Nonnull
@@ -417,13 +402,13 @@ public class PopupFactoryImpl extends JBPopupFactory {
   @Nonnull
   @Override
   public TreePopup createTree(JBPopup parent, @Nonnull TreePopupStep aStep, Object parentValue) {
-    return new TreePopupImpl(aStep.getProject(), parent, aStep, parentValue);
+    return new TreePopupImpl((Project)aStep.getProject(), parent, aStep, parentValue);
   }
 
   @Nonnull
   @Override
   public TreePopup createTree(@Nonnull TreePopupStep aStep) {
-    return new TreePopupImpl(aStep.getProject(), null, aStep, null);
+    return new TreePopupImpl((Project)aStep.getProject(), null, aStep, null);
   }
 
   @Nonnull
@@ -532,13 +517,11 @@ public class PopupFactoryImpl extends JBPopupFactory {
     return new RelativePoint(component, popupMenuPoint);
   }
 
-  @Override
   public boolean isBestPopupLocationVisible(@Nonnull Editor editor) {
     return getVisibleBestPopupLocation(editor) != null;
   }
 
   @Nonnull
-  @Override
   public RelativePoint guessBestPopupLocation(@Nonnull Editor editor) {
     Point p = getVisibleBestPopupLocation(editor);
     if (p == null) {

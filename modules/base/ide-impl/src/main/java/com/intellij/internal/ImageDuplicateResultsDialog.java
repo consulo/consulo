@@ -18,6 +18,7 @@ package com.intellij.internal;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
 import consulo.application.AllIcons;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
@@ -28,13 +29,13 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
@@ -172,7 +173,7 @@ public class ImageDuplicateResultsDialog extends DialogWrapper {
           });
           final JBList modules = new JBList(all);
           modules.installCellRenderer(modulesRenderer);
-          JBPopupFactory.getInstance().createListPopupBuilder(modules)
+          new PopupChooserBuilder<>(modules)
             .setTitle("Add Resource Module")
             .setFilteringEnabled(new Function<Object, String>() {
               @Override

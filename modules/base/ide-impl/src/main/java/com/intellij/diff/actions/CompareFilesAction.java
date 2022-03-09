@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.virtualFileSystem.archive.ArchiveFileType;

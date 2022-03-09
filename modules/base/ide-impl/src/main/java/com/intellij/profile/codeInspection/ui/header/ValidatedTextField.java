@@ -16,7 +16,7 @@
 package com.intellij.profile.codeInspection.ui.header;
 
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;

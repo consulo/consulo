@@ -9,7 +9,7 @@ import com.intellij.ide.util.gotoByName.*;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import com.intellij.ide.util.scopeChooser.ScopeDescriptor;
 import consulo.navigation.NavigationItem;
-import com.intellij.openapi.MnemonicHelper;
+import consulo.ui.ex.awt.internal.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;

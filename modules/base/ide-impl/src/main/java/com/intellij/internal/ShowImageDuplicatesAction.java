@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.FilenameIndex;
 

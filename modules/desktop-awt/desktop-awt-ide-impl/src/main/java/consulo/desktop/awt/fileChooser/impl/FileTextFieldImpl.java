@@ -13,10 +13,10 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.*;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.virtualFileSystem.VirtualFile;
@@ -342,7 +342,7 @@ public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileT
       }
     });
     myList.getSelectionModel().clearSelection();
-    final PopupChooserBuilder<LookupFile> builder = JBPopupFactory.getInstance().createListPopupBuilder(myList);
+    final PopupChooserBuilder<LookupFile> builder = new PopupChooserBuilder<>(myList);
     builder.addListener(new JBPopupListener() {
       @Override
       public void beforeShown(@Nonnull LightweightWindowEvent event) {

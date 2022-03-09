@@ -18,7 +18,7 @@ package com.intellij.ui;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUI;

@@ -12,7 +12,7 @@ import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.TreePopup;
-import consulo.ide.ui.popup.TreePopupStep;
+import consulo.ui.ex.popup.TreePopupStep;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.NextStepHandler;
 import com.intellij.ui.popup.WizardPopup;

@@ -37,7 +37,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.psi.codeStyle.CodeStyleManager;

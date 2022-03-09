@@ -26,6 +26,7 @@ import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.util.concurrent.ActionCallback;
 import org.jetbrains.annotations.NonNls;
 

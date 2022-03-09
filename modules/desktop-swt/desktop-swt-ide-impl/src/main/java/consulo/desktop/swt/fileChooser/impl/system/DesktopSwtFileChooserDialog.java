@@ -15,7 +15,7 @@
  */
 package consulo.desktop.swt.fileChooser.impl.system;
 
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.component.ComponentManager;
 import consulo.desktop.swt.ui.impl.TargetSWT;
 import consulo.fileChooser.FileChooserDescriptor;

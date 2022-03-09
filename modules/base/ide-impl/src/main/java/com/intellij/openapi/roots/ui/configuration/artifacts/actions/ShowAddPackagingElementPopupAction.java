@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementType;

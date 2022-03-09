@@ -23,7 +23,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;

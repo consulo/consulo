@@ -25,7 +25,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.impl.psi.internal.PsiModificationTrackerImpl;
 import com.intellij.psi.injection.Injectable;

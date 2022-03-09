@@ -27,7 +27,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;

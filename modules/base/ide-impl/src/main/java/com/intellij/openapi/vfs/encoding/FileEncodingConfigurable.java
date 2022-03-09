@@ -12,7 +12,7 @@ import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.Trinity;
 import consulo.util.io.CharsetToolkit;

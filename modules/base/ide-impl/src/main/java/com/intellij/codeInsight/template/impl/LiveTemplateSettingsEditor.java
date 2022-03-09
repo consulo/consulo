@@ -36,7 +36,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

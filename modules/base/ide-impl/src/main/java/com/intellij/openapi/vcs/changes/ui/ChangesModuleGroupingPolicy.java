@@ -22,7 +22,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nullable;
 

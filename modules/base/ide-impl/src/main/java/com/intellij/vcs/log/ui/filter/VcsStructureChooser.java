@@ -26,7 +26,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ChangeListManager;

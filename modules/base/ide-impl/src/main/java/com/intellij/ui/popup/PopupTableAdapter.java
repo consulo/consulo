@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui.popup;
 
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.table.TreeTable;
@@ -15,11 +15,11 @@ import java.util.Set;
 /**
  * @author yole
  */
-class PopupTableAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T> {
+public class PopupTableAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T> {
   private final PopupChooserBuilder myBuilder;
   private final JTable myTable;
 
-  PopupTableAdapter(PopupChooserBuilder builder, JTable table) {
+  public PopupTableAdapter(PopupChooserBuilder builder, JTable table) {
     myBuilder = builder;
     myTable = table;
   }

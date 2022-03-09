@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import com.intellij.openapi.help.HelpManager;
+import consulo.application.ui.HelpManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsBundle;

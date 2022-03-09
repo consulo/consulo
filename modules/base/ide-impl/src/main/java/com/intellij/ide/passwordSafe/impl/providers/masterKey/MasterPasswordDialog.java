@@ -18,7 +18,7 @@ package com.intellij.ide.passwordSafe.impl.providers.masterKey;
 import com.intellij.ide.passwordSafe.MasterPasswordUnavailableException;
 import com.intellij.ide.passwordSafe.PasswordSafeException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

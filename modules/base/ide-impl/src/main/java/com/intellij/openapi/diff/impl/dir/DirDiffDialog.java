@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.dir;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.table.JBTable;
 import javax.annotation.Nonnull;

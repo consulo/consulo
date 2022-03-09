@@ -16,18 +16,16 @@
 package com.intellij.ui.popup;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.ui.popup.*;
-import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.Pair;
-import consulo.ui.ex.ActiveComponent;
-import com.intellij.util.BooleanFunction;
 import consulo.application.util.function.Processor;
+import consulo.component.ComponentManager;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.popup.JBPopup;
+import consulo.project.Project;
+import consulo.ui.ex.ActiveComponent;
+import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.image.Image;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -160,10 +158,10 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setDimensionServiceKey(final Project project, final String key, final boolean useForXYLocation) {
+  public ComponentPopupBuilder setDimensionServiceKey(final ComponentManager project, final String key, final boolean useForXYLocation) {
     myDimensionServiceKey = key;
     myUseDimServiceForXYLocation = useForXYLocation;
-    myProject = project;
+    myProject = (Project)project;
     return this;
   }
 
@@ -231,8 +229,8 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setProject(Project project) {
-    myProject = project;
+  public ComponentPopupBuilder setProject(ComponentManager project) {
+    myProject = (Project)project;
     return this;
   }
 
@@ -257,7 +255,7 @@ public class ComponentPopupBuilderImpl implements ComponentPopupBuilder {
 
   @Override
   @Nonnull
-  public ComponentPopupBuilder setRequestFocusCondition(@Nonnull Project project, @Nonnull Condition<? super Project> condition) {
+  public ComponentPopupBuilder setRequestFocusCondition(@Nonnull ComponentManager project, @Nonnull Condition<? super ComponentManager> condition) {
     myRequestFocus = condition.value(project);
     return this;
   }

@@ -20,7 +20,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.document.util.ProperTextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

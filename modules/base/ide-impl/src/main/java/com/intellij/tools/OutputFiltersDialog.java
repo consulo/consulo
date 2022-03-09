@@ -19,8 +19,8 @@
  */
 package com.intellij.tools;
 
-import com.intellij.openapi.help.HelpManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.application.ui.HelpManager;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;

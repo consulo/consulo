@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.VcsBundle;

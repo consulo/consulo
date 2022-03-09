@@ -33,7 +33,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.MorphColor;
 import consulo.disposer.Disposable;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;

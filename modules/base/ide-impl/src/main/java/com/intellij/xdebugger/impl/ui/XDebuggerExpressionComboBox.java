@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.ui.EditorComboBoxEditor;
 import com.intellij.ui.EditorComboBoxRenderer;
 import com.intellij.ui.EditorTextField;

@@ -28,7 +28,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;

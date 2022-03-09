@@ -50,7 +50,7 @@
         <border type="none"/>
         <children/>
       </grid>
-      <component id="59206" class="com.intellij.openapi.ui.FixedSizeButton" binding="myChooseColorButton" custom-create="true">
+      <component id="59206" class="consulo.ui.ex.awt.FixedSizeButton" binding="myChooseColorButton" custom-create="true">
         <constraints>
           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

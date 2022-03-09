@@ -19,7 +19,7 @@ package com.intellij.ui.tabs;
 import com.intellij.notification.impl.ui.StickyButton;
 import com.intellij.notification.impl.ui.StickyButtonUI;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.psi.search.scope.NamedScope;

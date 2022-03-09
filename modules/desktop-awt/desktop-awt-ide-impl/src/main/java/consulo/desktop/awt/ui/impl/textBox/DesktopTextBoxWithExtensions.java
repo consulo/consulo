@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl.textBox;
 
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextField;
 import com.intellij.ui.roots.ScalableIconComponent;

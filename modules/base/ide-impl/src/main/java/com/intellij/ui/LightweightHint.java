@@ -8,7 +8,7 @@ import com.intellij.ide.TooltipEvent;
 import consulo.logging.Logger;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.application.util.registry.Registry;

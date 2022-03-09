@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import com.intellij.openapi.ui.ErrorBorderCapable;
+import consulo.ui.ex.awt.ErrorBorderCapable;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.MacUIUtil;

@@ -18,7 +18,7 @@ package com.intellij.diagnostic;
 import com.intellij.diagnostic.VMOptions.MemoryKind;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBLabel;

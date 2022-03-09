@@ -21,7 +21,7 @@ import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;

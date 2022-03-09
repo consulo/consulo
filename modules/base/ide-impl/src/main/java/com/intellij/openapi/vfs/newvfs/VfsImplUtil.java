@@ -15,27 +15,20 @@
  */
 package com.intellij.openapi.vfs.newvfs;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.impl.ArchiveHandler;
-import consulo.virtualFileSystem.event.VFileCreateEvent;
-import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.event.VFileMoveEvent;
-import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import com.intellij.util.Consumer;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;
 import consulo.vfs.impl.archive.ArchiveFileSystemBase;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.event.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -183,17 +176,13 @@ public class VfsImplUtil {
   private static final Map<String, Set<String>> ourDominatorsMap = Maps.newHashMap(FileUtil.PATH_HASHING_STRATEGY);
 
   @Nonnull
-  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs,
-                                                        @Nonnull VirtualFile entryFile,
-                                                        @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
+  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull VirtualFile entryFile, @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
     String localPath = vfs.extractLocalPath(vfs.extractRootPath(entryFile.getPath()));
     return getHandler(vfs, localPath, producer);
   }
 
   @Nonnull
-  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs,
-                                                        @Nonnull String localPath,
-                                                        @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
+  public static <T extends ArchiveHandler> T getHandler(@Nonnull ArchiveFileSystem vfs, @Nonnull String localPath, @Nonnull PairFunction<String, ArchiveFileSystemBase, T> producer) {
     checkSubscription();
 
     ArchiveHandler handler;

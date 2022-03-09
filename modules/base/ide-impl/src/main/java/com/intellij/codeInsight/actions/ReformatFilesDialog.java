@@ -19,7 +19,7 @@ package com.intellij.codeInsight.actions;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.SearchScope;
 import javax.annotation.Nonnull;

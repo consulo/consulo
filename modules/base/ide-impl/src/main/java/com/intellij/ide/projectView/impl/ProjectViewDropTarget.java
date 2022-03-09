@@ -14,7 +14,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.editor.refactoring.RefactoringActionHandler;

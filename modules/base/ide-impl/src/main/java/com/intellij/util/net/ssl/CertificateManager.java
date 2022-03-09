@@ -10,7 +10,7 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.StreamUtil;
 import consulo.application.util.registry.Registry;

@@ -27,7 +27,7 @@ import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.ModuleRootManager;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtilRt;

@@ -19,7 +19,7 @@ package com.intellij.ui.popup;
 import com.intellij.ide.IdeEventQueue;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.popup.JBPopup;
-import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
+import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.util.collection.WeakList;
 import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Inject;

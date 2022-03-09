@@ -19,7 +19,7 @@ import consulo.application.WriteAction;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VfsBundle;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;

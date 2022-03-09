@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.highlighter.custom.impl;
 
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ide.IdeBundle;
 import consulo.application.CommonBundle;

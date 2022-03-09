@@ -3,7 +3,7 @@ package com.intellij.ide.scratch;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.LangBundle;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PerFileMappings;

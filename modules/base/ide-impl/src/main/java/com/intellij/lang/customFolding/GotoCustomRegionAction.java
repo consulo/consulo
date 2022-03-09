@@ -23,9 +23,10 @@ import com.intellij.openapi.actionSystem.PopupAction;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorPopupHelper;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiDocumentManager;
@@ -130,6 +131,6 @@ public class GotoCustomRegionAction extends AnAction implements DumbAware, Popup
             popupFactory.createHtmlTextBalloonBuilder(IdeBundle.message("goto.custom.region.message.unavailable"), NotificationType.INFO, null).setFadeoutTime(2000)
                     .setHideOnClickOutside(true).setHideOnKeyOutside(true).createBalloon();
     Disposer.register(project, balloon);
-    balloon.show(popupFactory.guessBestPopupLocation(editor), Balloon.Position.below);
+    balloon.show(EditorPopupHelper.getInstance().guessBestPopupLocation(editor), Balloon.Position.below);
   }
 }

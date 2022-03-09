@@ -40,7 +40,7 @@ import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

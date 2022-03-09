@@ -6,8 +6,8 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.DiskQueryRelay;
-import com.intellij.openapi.vfs.LocalFileOperationsHandler;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileOperationsHandler;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.SafeWriteRequestor;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
@@ -152,7 +152,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Override
   @Nullable
-  protected String normalize(@Nonnull String path) {
+  public String normalize(@Nonnull String path) {
     if (path.isEmpty()) {
       try {
         path = new File("").getCanonicalPath();
@@ -592,7 +592,7 @@ public abstract class LocalFileSystemBase extends LocalFileSystem {
 
   @Nonnull
   @Override
-  protected String extractRootPath(@Nonnull String path) {
+  public String extractRootPath(@Nonnull String path) {
     if (path.isEmpty()) {
       try {
         path = new File("").getCanonicalPath();

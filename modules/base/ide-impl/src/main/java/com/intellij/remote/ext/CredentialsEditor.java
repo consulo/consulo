@@ -15,7 +15,7 @@
  */
 package com.intellij.remote.ext;
 
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.ui.ex.awt.ValidationInfo;
 
 import javax.swing.*;
 

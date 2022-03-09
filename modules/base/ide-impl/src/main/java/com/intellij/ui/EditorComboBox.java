@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.TextComponentAccessor;
+import consulo.ui.ex.awt.TextComponentAccessor;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBInsets;

@@ -29,7 +29,7 @@ import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;

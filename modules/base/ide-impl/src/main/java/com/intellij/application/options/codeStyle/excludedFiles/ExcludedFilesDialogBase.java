@@ -3,7 +3,7 @@ package com.intellij.application.options.codeStyle.excludedFiles;
 
 import com.intellij.formatting.fileSet.FileSetDescriptor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import javax.annotation.Nullable;
 
 public abstract class ExcludedFilesDialogBase extends DialogWrapper {

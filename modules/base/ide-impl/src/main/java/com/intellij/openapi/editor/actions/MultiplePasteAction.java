@@ -23,7 +23,7 @@ import consulo.document.FileDocumentManager;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 

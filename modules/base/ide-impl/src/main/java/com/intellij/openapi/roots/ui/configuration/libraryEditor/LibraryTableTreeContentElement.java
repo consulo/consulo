@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -18,10 +18,10 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.help.HelpManager;
+import consulo.application.ui.HelpManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.*;

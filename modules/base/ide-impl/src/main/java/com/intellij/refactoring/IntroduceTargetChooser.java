@@ -17,8 +17,8 @@ package com.intellij.refactoring;
 
 import com.intellij.codeInsight.unwrap.ScopeHighlighter;
 import consulo.codeEditor.Editor;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import com.intellij.openapi.util.Pass;
@@ -110,7 +110,7 @@ public class IntroduceTargetChooser {
       }
     });
 
-    JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle(title).setMovable(false).setResizable(false).setRequestFocus(true).setItemChoosenCallback(new Runnable() {
+    JBPopup popup = new PopupChooserBuilder<>(list).setTitle(title).setMovable(false).setResizable(false).setRequestFocus(true).setItemChoosenCallback(new Runnable() {
       @Override
       public void run() {
         callback.pass((T)list.getSelectedValue());

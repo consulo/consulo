@@ -25,7 +25,7 @@ import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

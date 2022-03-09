@@ -44,7 +44,7 @@
               </component>
             </children>
           </grid>
-          <component id="a31a5" class="com.intellij.openapi.ui.TextFieldWithBrowseButton" binding="myProfilesIniPathField">
+          <component id="a31a5" class="consulo.ui.ex.awt.TextFieldWithBrowseButton" binding="myProfilesIniPathField">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="2" use-parent-layout="false">
                 <preferred-size width="350" height="-1"/>

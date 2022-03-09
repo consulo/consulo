@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.VcsRoot;
 import com.intellij.openapi.vcs.diff.DiffProvider;
 import com.intellij.openapi.vcs.diff.ItemLatestState;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import com.intellij.vcsUtil.VcsUtil;

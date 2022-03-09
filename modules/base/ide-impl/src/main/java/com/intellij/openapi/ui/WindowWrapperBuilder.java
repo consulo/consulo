@@ -4,6 +4,8 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.WindowWrapper.Mode;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.awt.DialogWrapper;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -128,7 +130,7 @@ public class WindowWrapperBuilder {
         default:
           throw new IllegalArgumentException(builder.myMode.toString());
       }
-      myDialog.init();
+      myDialog.initPublic();
       Disposer.register(myDialog.getDisposable(), this);
     }
 

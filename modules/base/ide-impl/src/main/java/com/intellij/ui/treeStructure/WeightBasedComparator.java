@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.treeStructure;
 
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.util.text.StringUtil;
 
 import java.util.Comparator;

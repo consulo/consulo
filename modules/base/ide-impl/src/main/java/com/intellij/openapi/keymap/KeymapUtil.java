@@ -161,18 +161,7 @@ public class KeymapUtil {
   }
 
   public static String getShortcutsText(Shortcut[] shortcuts) {
-    if (shortcuts.length == 0) {
-      return "";
-    }
-    StringBuilder buffer = new StringBuilder();
-    for (int i = 0; i < shortcuts.length; i++) {
-      Shortcut shortcut = shortcuts[i];
-      if (i > 0) {
-        buffer.append(' ');
-      }
-      buffer.append(getShortcutText(shortcut));
-    }
-    return buffer.toString();
+    return consulo.ui.ex.keymap.util.KeymapUtil.getShortcutsText(shortcuts);
   }
 
   /**

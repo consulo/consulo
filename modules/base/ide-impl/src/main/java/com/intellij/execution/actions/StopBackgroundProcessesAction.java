@@ -3,6 +3,7 @@ package com.intellij.execution.actions;
 
 import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -13,7 +14,6 @@ import consulo.application.progress.TaskInfo;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
 import com.intellij.openapi.util.Pair;
 import consulo.project.ui.wm.IdeFrame;
@@ -68,7 +68,7 @@ public class StopBackgroundProcessesAction extends DumbAwareAction implements An
       }
     }));
 
-    JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list).setMovable(true)
+    JBPopup popup = new PopupChooserBuilder<StopAction.HandlerItem>(list).setMovable(true)
             .setTitle(handlerItems.size() == 1 ? ExecutionBundle.message("confirm.background.process.stop") : ExecutionBundle.message("stop.background.process"))
             .setNamerForFiltering(o -> o.displayName).setItemChoosenCallback(() -> {
               List valuesList = list.getSelectedValuesList();

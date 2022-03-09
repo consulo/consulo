@@ -32,7 +32,7 @@ import com.intellij.openapi.ui.InputValidator;
 import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import com.intellij.openapi.ui.Messages;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import consulo.util.lang.function.Conditions;

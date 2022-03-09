@@ -41,7 +41,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.toolWindow.ToolWindowPanel;
 

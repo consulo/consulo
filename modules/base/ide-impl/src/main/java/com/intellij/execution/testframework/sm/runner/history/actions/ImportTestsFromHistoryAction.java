@@ -21,7 +21,7 @@ import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties
 import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ui.image.Image;

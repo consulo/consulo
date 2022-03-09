@@ -1,18 +1,16 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui;
 
-import consulo.language.psi.PsiElement;
+import com.intellij.ui.speedSearch.NameFilteringListModel;
+import consulo.ui.ex.popup.ListComponentUpdater;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;
-import com.intellij.ui.speedSearch.NameFilteringListModel;
-import consulo.ide.ui.popup.ListComponentUpdater;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.util.List;
 
-public class JBListUpdater implements ListComponentUpdater {
+public class JBListUpdater<T> implements ListComponentUpdater<T> {
   private final JBList myComponent;
 
   public JBListUpdater(JBList component) {
@@ -31,7 +29,7 @@ public class JBListUpdater implements ListComponentUpdater {
   }
 
   @Override
-  public void replaceModel(@Nonnull List<? extends PsiElement> data) {
+  public void replaceModel(@Nonnull List<? extends T> data) {
     final Object selectedValue = myComponent.getSelectedValue();
     final int index = myComponent.getSelectedIndex();
     ListModel model = myComponent.getModel();

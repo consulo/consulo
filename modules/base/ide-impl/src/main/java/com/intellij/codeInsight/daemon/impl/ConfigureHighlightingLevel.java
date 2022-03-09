@@ -31,7 +31,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;

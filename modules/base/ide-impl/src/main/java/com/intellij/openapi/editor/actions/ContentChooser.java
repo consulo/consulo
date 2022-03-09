@@ -25,7 +25,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;

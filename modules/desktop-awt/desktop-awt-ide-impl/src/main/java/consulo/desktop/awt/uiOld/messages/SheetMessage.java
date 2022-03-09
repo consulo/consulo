@@ -16,7 +16,7 @@
 package consulo.desktop.awt.uiOld.messages;
 
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;

@@ -35,7 +35,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UIFontManager;
 import consulo.application.util.SystemInfo;
 import consulo.codeEditor.Editor;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.Html;
 import consulo.ui.ex.JBColor;

@@ -35,7 +35,7 @@ import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
 import com.intellij.util.containers.ContainerUtil;

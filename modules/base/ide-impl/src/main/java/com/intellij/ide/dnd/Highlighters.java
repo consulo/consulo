@@ -17,7 +17,7 @@ package com.intellij.ide.dnd;
 
 import consulo.application.AllIcons;
 import consulo.application.util.registry.Registry;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;

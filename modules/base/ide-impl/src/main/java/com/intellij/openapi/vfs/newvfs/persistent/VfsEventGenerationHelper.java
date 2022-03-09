@@ -11,7 +11,7 @@ import consulo.module.content.ProjectFileIndex;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.io.FileAttributes;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.ChildInfoImpl;

@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBScrollPane;
-import com.intellij.ui.components.JBTextArea;
+import consulo.ui.ex.awt.JBTextArea;
 import com.intellij.util.ArrayUtil;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;

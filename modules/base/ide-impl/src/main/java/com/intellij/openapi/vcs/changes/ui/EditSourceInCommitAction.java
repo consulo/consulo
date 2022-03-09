@@ -20,7 +20,7 @@ import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.OpenSourceUtil;
 

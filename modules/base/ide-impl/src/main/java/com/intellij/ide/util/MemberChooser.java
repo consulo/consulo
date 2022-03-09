@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;

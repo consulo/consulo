@@ -2,7 +2,7 @@
 package com.intellij.xdebugger.attach;
 
 import com.intellij.execution.process.CapturingProcessHandler;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessInfo;
 import consulo.process.cmd.GeneralCommandLine;

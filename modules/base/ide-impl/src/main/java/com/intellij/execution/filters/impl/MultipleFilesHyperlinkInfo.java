@@ -32,7 +32,7 @@ import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.WindowManager;
 import consulo.language.psi.PsiElement;

@@ -6,6 +6,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Progressive;
 import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;

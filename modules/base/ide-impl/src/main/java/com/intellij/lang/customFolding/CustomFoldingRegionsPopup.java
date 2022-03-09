@@ -22,8 +22,7 @@ import consulo.codeEditor.ScrollType;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import javax.annotation.Nonnull;
@@ -52,7 +51,7 @@ public class CustomFoldingRegionsPopup {
     myRegionsList.setModel(new MyListModel(orderByPosition(descriptors)));
     myRegionsList.setSelectedIndex(0);
 
-    final PopupChooserBuilder popupBuilder = JBPopupFactory.getInstance().createListPopupBuilder(myRegionsList);
+    final PopupChooserBuilder popupBuilder = new PopupChooserBuilder<>(myRegionsList);
     myPopup = popupBuilder
             .setTitle(IdeBundle.message("goto.custom.region.command"))
             .setResizable(false)

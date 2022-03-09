@@ -20,8 +20,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.codeEditor.markup.*;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
@@ -99,7 +99,7 @@ abstract class RenameChooser {
       }
     });
 
-    JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle("String occurrences found").setMovable(false).setResizable(false).setRequestFocus(true)
+    JBPopup popup = new PopupChooserBuilder<>(list).setTitle("String occurrences found").setMovable(false).setResizable(false).setRequestFocus(true)
             .setItemChoosenCallback(new Runnable() {
               @Override
               public void run() {

@@ -17,7 +17,7 @@ package com.intellij.ide.passwordSafe.impl.providers.masterKey;
 
 import com.intellij.ide.passwordSafe.HelpID;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

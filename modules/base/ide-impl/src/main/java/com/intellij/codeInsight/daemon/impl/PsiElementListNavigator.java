@@ -11,11 +11,11 @@ import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import consulo.ide.ui.popup.ListComponentUpdater;
-import consulo.ide.ui.popup.IPopupChooserBuilder;
+import consulo.ui.ex.popup.ListComponentUpdater;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
@@ -250,7 +250,7 @@ public class PsiElementListNavigator {
 
       if (myListUpdaterTask != null) {
         ListComponentUpdater popupUpdater = builder.getBackgroundUpdater();
-        myListUpdaterTask.init(popup, new ListComponentUpdater() {
+        myListUpdaterTask.init(popup, new ListComponentUpdater<>() {
           @Override
           public void replaceModel(@Nonnull List<? extends PsiElement> data) {
             updatedTargetsList.set(data.toArray(NavigatablePsiElement.EMPTY_ARRAY));

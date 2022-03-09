@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.TextAccessor;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;

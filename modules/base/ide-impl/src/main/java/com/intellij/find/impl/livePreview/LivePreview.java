@@ -28,7 +28,7 @@ import consulo.codeEditor.event.SelectionListener;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;

@@ -46,7 +46,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;

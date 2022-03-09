@@ -7,6 +7,8 @@ import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Progressive;
 import consulo.disposer.Disposable;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.concurrent.EdtExecutorService;

@@ -6,7 +6,7 @@ import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

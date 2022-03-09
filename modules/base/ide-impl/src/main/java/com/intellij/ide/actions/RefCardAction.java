@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.help.HelpManager;
+import consulo.application.ui.HelpManager;
 import consulo.application.dumb.DumbAware;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;

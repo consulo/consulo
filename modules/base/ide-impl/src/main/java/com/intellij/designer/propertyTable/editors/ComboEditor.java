@@ -16,7 +16,7 @@
 package com.intellij.designer.propertyTable.editors;
 
 import com.intellij.designer.propertyTable.PropertyEditor;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 
 import javax.swing.*;
 import javax.swing.border.Border;

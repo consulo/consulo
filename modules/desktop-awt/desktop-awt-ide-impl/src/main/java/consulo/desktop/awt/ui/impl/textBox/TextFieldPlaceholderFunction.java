@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 import com.intellij.util.BooleanFunction;
 
 /**

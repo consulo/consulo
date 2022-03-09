@@ -13,7 +13,7 @@ import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.actions.IconWithTextAction;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.Splitter;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.TaskRepository;

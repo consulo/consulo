@@ -3,7 +3,7 @@ package com.intellij.ide.todo;
 
 import com.intellij.ide.todo.nodes.SummaryNode;
 import com.intellij.ide.todo.nodes.TodoItemNode;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import com.intellij.ui.HighlightableCellRenderer;
 import com.intellij.ui.HighlightedRegion;

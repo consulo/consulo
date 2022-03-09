@@ -15,35 +15,34 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
-import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import consulo.application.TransactionGuard;
-import consulo.dataContext.DataContext;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.util.TextWithMnemonic;
-import consulo.ui.ex.action.*;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PausesStat;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.TransactionGuard;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
+import consulo.language.util.ModuleUtilCore;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.util.TextWithMnemonic;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -359,16 +358,7 @@ public class ActionUtil {
   }
 
   public static void registerForEveryKeyboardShortcut(@Nonnull JComponent component, @Nonnull ActionListener action, @Nonnull ShortcutSet shortcuts) {
-    for (Shortcut shortcut : shortcuts.getShortcuts()) {
-      if (shortcut instanceof KeyboardShortcut) {
-        KeyboardShortcut ks = (KeyboardShortcut)shortcut;
-        KeyStroke first = ks.getFirstKeyStroke();
-        KeyStroke second = ks.getSecondKeyStroke();
-        if (second == null) {
-          component.registerKeyboardAction(action, first, JComponent.WHEN_IN_FOCUSED_WINDOW);
-        }
-      }
-    }
+    consulo.ui.ex.action.util.ActionUtil.registerForEveryKeyboardShortcut(component, action, shortcuts);
   }
 
   /**

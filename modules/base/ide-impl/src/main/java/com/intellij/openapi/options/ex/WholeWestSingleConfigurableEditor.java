@@ -18,7 +18,7 @@ package com.intellij.openapi.options.ex;
 import consulo.application.CommonBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.help.HelpManager;
+import consulo.application.ui.HelpManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.application.dumb.IndexNotReadyException;

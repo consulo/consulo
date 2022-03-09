@@ -38,7 +38,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

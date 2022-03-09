@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import consulo.language.psi.PsiFile;

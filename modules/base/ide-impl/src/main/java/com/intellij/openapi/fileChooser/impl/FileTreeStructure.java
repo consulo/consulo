@@ -16,14 +16,14 @@
 
 package com.intellij.openapi.fileChooser.impl;
 
-import consulo.ui.ex.awt.tree.AbstractTreeStructure;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import com.intellij.openapi.fileChooser.ex.RootFileElement;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import consulo.virtualFileSystem.archive.ArchiveFileType;

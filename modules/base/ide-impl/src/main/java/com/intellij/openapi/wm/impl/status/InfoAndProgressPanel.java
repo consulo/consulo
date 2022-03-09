@@ -37,7 +37,7 @@ import com.intellij.ui.components.panels.HorizontalLayout;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.collection.JBIterable;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;

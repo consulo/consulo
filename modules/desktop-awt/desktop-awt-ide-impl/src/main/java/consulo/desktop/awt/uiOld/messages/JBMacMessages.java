@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.uiOld.messages;
 
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.mac.MacMessages;
 import consulo.ui.ex.awt.UIUtil;

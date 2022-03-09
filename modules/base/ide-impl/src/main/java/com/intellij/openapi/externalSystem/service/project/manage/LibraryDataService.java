@@ -17,7 +17,7 @@ import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;

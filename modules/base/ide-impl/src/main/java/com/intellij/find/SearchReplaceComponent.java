@@ -2,7 +2,7 @@
 package com.intellij.find;
 
 import com.intellij.find.editorHeaderActions.*;
-import com.intellij.openapi.actionSystem.ActionButtonComponent;
+import consulo.ui.ex.internal.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
@@ -13,7 +13,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.ListFocusTraversalPolicy;
 import com.intellij.ui.SearchTextField;
-import com.intellij.ui.components.JBTextArea;
+import consulo.ui.ex.awt.JBTextArea;
 import com.intellij.ui.mac.TouchbarDataKeys;
 import com.intellij.util.BooleanFunction;
 import com.intellij.util.EventDispatcher;

@@ -17,7 +17,7 @@ package com.intellij.find.impl;
 
 import com.intellij.find.FindModel;
 import com.intellij.find.FindSettings;
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.ui.ex.awt.ValidationInfo;
 import com.intellij.openapi.util.Pair;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;

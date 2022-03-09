@@ -28,7 +28,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.Weighted;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.logging.Logger;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.Painter;

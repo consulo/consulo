@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  */
 public interface ApplicationPropertiesComponent extends PropertiesComponent {
   @Nonnull
-  static PropertiesComponent getInstance() {
+  static ApplicationPropertiesComponent getInstance() {
     return Application.get().getInstance(ApplicationPropertiesComponent.class);
   }
 }

@@ -7,6 +7,7 @@ import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.container.boot.ContainerPathManager;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;

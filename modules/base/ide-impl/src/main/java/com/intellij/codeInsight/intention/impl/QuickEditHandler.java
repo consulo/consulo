@@ -56,7 +56,7 @@ import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.*;
 import consulo.util.lang.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
@@ -248,7 +248,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
         }.registerCustomShortcutSet(CommonShortcuts.ESCAPE, component);
         Disposer.register(myNewFile.getProject(), balloon);
         final Balloon.Position position = QuickEditAction.getBalloonPosition(myEditor);
-        RelativePoint point = JBPopupFactory.getInstance().guessBestPopupLocation(myEditor);
+        RelativePoint point = EditorPopupHelper.getInstance().guessBestPopupLocation(myEditor);
         if (position == Balloon.Position.above) {
           final Point p = point.getPoint();
           point = new RelativePoint(point.getComponent(), new Point(p.x, p.y - myEditor.getLineHeight()));

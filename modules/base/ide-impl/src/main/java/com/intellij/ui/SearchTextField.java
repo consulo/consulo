@@ -18,20 +18,20 @@ package com.intellij.ui;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ui.JBMenuItem;
-import com.intellij.openapi.ui.JBPopupMenu;
+import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ui.ex.awt.JBMenuItem;
+import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.JBList;
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -429,7 +429,7 @@ public class SearchTextField extends JPanel {
     if (myPopup == null || !myPopup.isVisible()) {
       final JList list = new JBList(myModel);
       final Runnable chooseRunnable = createItemChosenCallback(list);
-      myPopup = JBPopupFactory.getInstance().createListPopupBuilder(list).setMovable(false).setRequestFocus(true).setItemChoosenCallback(chooseRunnable).createPopup();
+      myPopup = new PopupChooserBuilder<>(list).setMovable(false).setRequestFocus(true).setItemChoosenCallback(chooseRunnable).createPopup();
       if (isShowing()) {
         myPopup.showUnderneathOf(getPopupLocationComponent());
       }

@@ -15,9 +15,9 @@
  */
 package com.intellij.tools;
 
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;

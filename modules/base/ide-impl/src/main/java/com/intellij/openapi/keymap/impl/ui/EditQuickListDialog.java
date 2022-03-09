@@ -18,7 +18,7 @@ package com.intellij.openapi.keymap.impl.ui;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 
 import javax.swing.*;
 

@@ -16,8 +16,8 @@
 package com.intellij.ide.actions;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.MultiLineLabelUI;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsBundle;

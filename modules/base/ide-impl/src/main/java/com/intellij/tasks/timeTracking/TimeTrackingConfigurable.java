@@ -3,7 +3,7 @@ package com.intellij.tasks.timeTracking;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 

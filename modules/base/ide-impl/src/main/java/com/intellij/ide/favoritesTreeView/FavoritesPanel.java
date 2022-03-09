@@ -20,7 +20,7 @@ import com.intellij.ide.dnd.aware.DnDAwareTree;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;

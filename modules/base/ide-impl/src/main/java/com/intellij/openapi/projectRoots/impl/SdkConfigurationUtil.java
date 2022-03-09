@@ -26,7 +26,7 @@ import consulo.content.bundle.SdkType;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.FileAppearanceService;
 import com.intellij.openapi.ui.Messages;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;

@@ -5,8 +5,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.application.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
@@ -37,7 +36,7 @@ public class Utils {
       }
     };
 
-    final PopupChooserBuilder builder = JBPopupFactory.getInstance().createListPopupBuilder(list);
+    final PopupChooserBuilder builder = new PopupChooserBuilder<>(list);
     if (title != null) {
       builder.setTitle(title);
     }

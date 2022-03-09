@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.MorphColor;
 import consulo.ui.ex.awt.BuildInLookAndFeel;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.style.StyleManager;
 
 import javax.annotation.Nonnull;

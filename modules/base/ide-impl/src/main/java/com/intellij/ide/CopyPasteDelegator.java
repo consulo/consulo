@@ -14,7 +14,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.function.Conditions;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.refactoring.copy.CopyHandler;
 import com.intellij.refactoring.move.MoveCallback;

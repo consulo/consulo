@@ -19,8 +19,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pass;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.containers.ContainerUtil;
@@ -134,7 +134,7 @@ public abstract class OccurrencesChooser<T> {
       }
     });
 
-    JBPopup popup = JBPopupFactory.getInstance().createListPopupBuilder(list).setTitle("Multiple occurrences found").setMovable(false).setResizable(false).setRequestFocus(true)
+    JBPopup popup = new PopupChooserBuilder<>(list).setTitle("Multiple occurrences found").setMovable(false).setResizable(false).setRequestFocus(true)
             .setItemChoosenCallback(new Runnable() {
               @Override
               public void run() {

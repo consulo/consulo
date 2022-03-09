@@ -24,7 +24,7 @@ import consulo.process.ProcessHandler;
 import com.intellij.execution.ui.RunContentManagerImpl;
 import com.intellij.ide.GeneralSettings;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.util.ArrayUtil;
 

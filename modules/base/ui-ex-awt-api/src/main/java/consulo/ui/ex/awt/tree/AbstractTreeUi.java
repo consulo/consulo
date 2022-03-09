@@ -22,6 +22,8 @@ import consulo.logging.Logger;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;

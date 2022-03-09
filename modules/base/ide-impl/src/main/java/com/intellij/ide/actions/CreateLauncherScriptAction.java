@@ -28,7 +28,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

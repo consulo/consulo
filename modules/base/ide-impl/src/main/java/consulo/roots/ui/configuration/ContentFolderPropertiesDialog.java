@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentFolder;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.AnActionButton;

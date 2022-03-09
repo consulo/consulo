@@ -36,6 +36,7 @@ import consulo.logging.Logger;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;

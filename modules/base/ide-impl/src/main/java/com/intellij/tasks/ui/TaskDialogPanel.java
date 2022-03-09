@@ -20,7 +20,7 @@ import javax.swing.JComponent;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.ui.ex.awt.ValidationInfo;
 
 /**
  * @author Dmitry Avdeev

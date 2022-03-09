@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.changes.patch.ApplyPatchDifferentiatedDialog;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchExecutor;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchMode;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.project.ui.notification.NotificationType;

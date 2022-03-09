@@ -17,7 +17,7 @@ package com.intellij.ide.impl;
 
 import consulo.application.CommonBundle;
 import com.intellij.ide.GeneralSettings;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.Alert;
 import consulo.ui.AlertValueRemember;
 

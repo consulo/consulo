@@ -44,7 +44,7 @@ import com.intellij.refactoring.listeners.impl.RefactoringListenerManagerImpl;
 import com.intellij.refactoring.listeners.impl.RefactoringTransaction;
 import com.intellij.refactoring.ui.ConflictsDialog;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;

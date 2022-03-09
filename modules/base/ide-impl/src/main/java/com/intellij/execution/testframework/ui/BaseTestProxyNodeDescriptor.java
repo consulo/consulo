@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.ui;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

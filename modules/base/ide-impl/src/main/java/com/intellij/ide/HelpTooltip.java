@@ -3,9 +3,9 @@ package com.intellij.ide;
 
 import consulo.ui.ex.action.Shortcut;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;

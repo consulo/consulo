@@ -15,8 +15,8 @@
  */
 package com.intellij.util.net;
 
-import com.intellij.openapi.MnemonicHelper;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awt.DialogWrapper;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

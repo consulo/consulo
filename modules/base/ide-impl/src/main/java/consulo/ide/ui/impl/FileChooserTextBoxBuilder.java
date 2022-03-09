@@ -17,7 +17,7 @@ package consulo.ide.ui.impl;
 
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.util.Function;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;

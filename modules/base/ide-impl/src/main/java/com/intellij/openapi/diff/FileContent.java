@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.LineSeparator;
 import consulo.logging.Logger;

@@ -15,11 +15,13 @@
  */
 package com.intellij.ui;
 
+import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
-import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
-import com.intellij.openapi.ui.TextComponentAccessor;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.TextComponentAccessor;
+import consulo.ui.ex.awt.TextFieldWithHistory;
+
 import javax.annotation.Nullable;
 
 /**
@@ -33,7 +35,7 @@ public class TextFieldWithHistoryWithBrowseButton extends ComponentWithBrowseBut
   @Override
   public void addBrowseFolderListener(@Nullable String title,
                                       @Nullable String description,
-                                      @Nullable Project project,
+                                      @Nullable ComponentManager project,
                                       FileChooserDescriptor fileChooserDescriptor,
                                       TextComponentAccessor<TextFieldWithHistory> accessor) {
     super.addBrowseFolderListener(title, description, project, fileChooserDescriptor, accessor);
@@ -43,7 +45,7 @@ public class TextFieldWithHistoryWithBrowseButton extends ComponentWithBrowseBut
   @Override
   public void addBrowseFolderListener(@Nullable String title,
                                       @Nullable String description,
-                                      @Nullable Project project,
+                                      @Nullable ComponentManager project,
                                       FileChooserDescriptor fileChooserDescriptor,
                                       TextComponentAccessor<TextFieldWithHistory> accessor,
                                       boolean autoRemoveOnHide) {

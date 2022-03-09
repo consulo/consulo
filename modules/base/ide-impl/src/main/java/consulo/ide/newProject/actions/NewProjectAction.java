@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;

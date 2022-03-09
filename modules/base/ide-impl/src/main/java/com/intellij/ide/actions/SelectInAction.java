@@ -21,7 +21,7 @@ import com.intellij.ide.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

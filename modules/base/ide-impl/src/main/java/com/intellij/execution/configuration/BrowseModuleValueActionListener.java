@@ -17,8 +17,8 @@
 package com.intellij.execution.configuration;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
-import com.intellij.ui.TextAccessor;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.TextAccessor;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

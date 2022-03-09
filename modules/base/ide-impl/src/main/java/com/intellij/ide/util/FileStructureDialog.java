@@ -28,7 +28,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.psi.util.PsiUtilBase;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import com.intellij.openapi.ui.ComboBoxWithWidePopup;
+import consulo.ui.ex.awt.ComboBoxWithWidePopup;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.disposer.Disposable;
 import consulo.ui.*;

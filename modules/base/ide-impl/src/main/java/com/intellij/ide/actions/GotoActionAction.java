@@ -31,7 +31,7 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.*;

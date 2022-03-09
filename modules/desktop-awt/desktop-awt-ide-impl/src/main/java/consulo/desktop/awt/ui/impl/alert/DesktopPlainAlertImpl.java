@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.alert;
 
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.ui.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;

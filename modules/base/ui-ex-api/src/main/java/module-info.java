@@ -24,6 +24,7 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.action.util;
   exports consulo.ui.ex.content;
   exports consulo.ui.ex.content.event;
+  exports consulo.ui.ex.tree;
   exports consulo.ui.ex.util;
   exports consulo.ui.ex.event;
   exports consulo.ui.ex.concurrent;
@@ -33,6 +34,7 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.keymap.util;
   exports consulo.ui.ex.toolWindow;
 
+  exports consulo.ui.ex.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.ui.ex.awt.api;
   exports consulo.ui.ex.awtUnsafe.internal to consulo.desktop.awt.ide.impl;
 
   uses TargetAWTFacade;

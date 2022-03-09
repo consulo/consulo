@@ -21,7 +21,7 @@ package com.intellij.openapi.util.process;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.logging.Logger;
 
 import java.util.concurrent.ExecutionException;

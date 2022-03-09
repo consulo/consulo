@@ -24,7 +24,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.psi.search.TodoAttributes;
 import com.intellij.psi.search.TodoAttributesUtil;
 import com.intellij.psi.search.TodoPattern;

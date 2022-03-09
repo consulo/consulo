@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;

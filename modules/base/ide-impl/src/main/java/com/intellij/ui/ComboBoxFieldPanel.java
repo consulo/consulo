@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 

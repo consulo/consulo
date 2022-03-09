@@ -22,7 +22,7 @@ import consulo.compiler.artifact.ModifiableArtifact;
 import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;

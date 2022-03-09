@@ -25,7 +25,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;

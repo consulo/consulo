@@ -15,15 +15,12 @@
  */
 package com.intellij.openapi.ui.popup.util;
 
-import com.intellij.openapi.actionSystem.ActionButtonComponent;
-import com.intellij.openapi.ui.popup.StackingPopupDispatcher;
 import com.intellij.util.ReflectionUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.awt.hacking.PopupFactoryHacking;
 import consulo.disposer.Disposable;
-import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -33,9 +30,8 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.popup.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -115,7 +111,8 @@ public class PopupUtil {
           final JFrame jFrame = WindowManager.getInstance().getFrame(project);
           if (jFrame != null) {
             showBalloonForComponent(jFrame, message, type, true, project);
-          } else {
+          }
+          else {
             LOG.info("Can not get component to show message: " + message);
           }
           return;
@@ -150,13 +147,15 @@ public class PopupUtil {
             final JFrame jFrame = WindowManager.getInstance().getFrame(project);
             if (jFrame != null) {
               showBalloonForComponent(jFrame, message, type, true, project);
-            } else {
+            }
+            else {
               LOG.info("Can not get component to show message: " + message);
             }
             return;
           }
           showBalloonForComponent(frame.getComponent(), message, type, true, frame.getProject());
-        } else {
+        }
+        else {
           showBalloonForComponent(targetWindow, message, type, true, null);
         }
       }
@@ -164,8 +163,7 @@ public class PopupUtil {
     UIUtil.invokeLaterIfNeeded(runnable);
   }
 
-  public static void showBalloonForComponent(@Nonnull Component component, @Nonnull final String message, final NotificationType type,
-                                             final boolean atTop, @Nullable final Disposable disposable) {
+  public static void showBalloonForComponent(@Nonnull Component component, @Nonnull final String message, final NotificationType type, final boolean atTop, @Nullable final Disposable disposable) {
     final JBPopupFactory popupFactory = JBPopupFactory.getInstance();
     if (popupFactory == null) return;
     BalloonBuilder balloonBuilder = popupFactory.createHtmlTextBalloonBuilder(message, type, null);
@@ -189,28 +187,9 @@ public class PopupUtil {
 
   public static boolean isComboPopupKeyEvent(@Nonnull ComponentEvent event, @Nonnull JComboBox comboBox) {
     final Component component = event.getComponent();
-    if(!comboBox.isPopupVisible() || component == null) return false;
+    if (!comboBox.isPopupVisible() || component == null) return false;
     ComboPopup popup = ReflectionUtil.getField(comboBox.getUI().getClass(), comboBox.getUI(), ComboPopup.class, "popup");
     return popup != null && SwingUtilities.isDescendingFrom(popup.getList(), component);
-  }
-
-  public static boolean handleEscKeyEvent() {
-    MenuSelectionManager menuSelectionManager = MenuSelectionManager.defaultManager();
-    MenuElement[] selectedPath = menuSelectionManager.getSelectedPath();
-    if (selectedPath.length > 0) { // hide popup menu if any
-      menuSelectionManager.clearSelectedPath();
-      return true;
-    }
-    else {
-      if (ApplicationManager.getApplication() == null) {
-        return false;
-      }
-      final StackingPopupDispatcher popupDispatcher = StackingPopupDispatcher.getInstance();
-      if (popupDispatcher != null && !popupDispatcher.isPopupFocused()) {
-        return false;
-      }
-      return true;
-    }
   }
 
   public static void showForActionButtonEvent(@Nonnull JBPopup popup, @Nonnull AnActionEvent e) {

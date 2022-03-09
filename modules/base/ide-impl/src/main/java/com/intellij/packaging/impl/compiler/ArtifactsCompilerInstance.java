@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.Artifact;

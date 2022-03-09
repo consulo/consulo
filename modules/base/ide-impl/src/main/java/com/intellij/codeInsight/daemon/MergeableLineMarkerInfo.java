@@ -16,8 +16,7 @@
 package com.intellij.codeInsight.daemon;
 
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
@@ -140,7 +139,7 @@ public abstract class MergeableLineMarkerInfo<T extends PsiElement> extends Line
           });
           final JBList list = new JBList(infos);
           list.setFixedCellHeight(UIUtil.getListFixedCellHeight());
-          PopupChooserBuilder builder = JBPopupFactory.getInstance().createListPopupBuilder(list);
+          PopupChooserBuilder builder = new PopupChooserBuilder<>(list);
           if (!markers.get(0).configurePopupAndRenderer(builder, list, infos)) {
             list.installCellRenderer(new NotNullFunction<Object, JComponent>() {
               @Nonnull

@@ -37,7 +37,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;

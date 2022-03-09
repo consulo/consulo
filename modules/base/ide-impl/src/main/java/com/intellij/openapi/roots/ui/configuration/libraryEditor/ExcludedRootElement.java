@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFileManager;
 

@@ -18,9 +18,9 @@ package com.intellij.dvcs.push.ui;
 import com.intellij.dvcs.push.*;
 import com.intellij.dvcs.repo.Repository;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.OptionAction;
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.OptionAction;
+import consulo.ui.ex.awt.ValidationInfo;
 import net.miginfocom.swing.MigLayout;
 import javax.annotation.Nonnull;
 

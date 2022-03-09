@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.popup.util.MinimizeButton;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.StatusBarEx;
@@ -28,9 +28,9 @@ import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 

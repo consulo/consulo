@@ -25,7 +25,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;

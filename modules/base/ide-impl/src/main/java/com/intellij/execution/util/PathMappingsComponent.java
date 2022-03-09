@@ -1,8 +1,8 @@
 package com.intellij.execution.util;
 
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.LabeledComponent;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.LabeledComponent;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.UserActivityProviderComponent;
 import com.intellij.util.PathMappingSettings;
 import com.intellij.util.containers.ContainerUtil;

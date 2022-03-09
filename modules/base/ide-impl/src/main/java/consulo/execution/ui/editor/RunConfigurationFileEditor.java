@@ -23,7 +23,7 @@ import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectEx;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.Splitter;
 import consulo.virtualFileSystem.VirtualFile;

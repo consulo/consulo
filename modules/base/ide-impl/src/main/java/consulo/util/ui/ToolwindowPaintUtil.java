@@ -17,7 +17,7 @@ package consulo.util.ui;
 
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 
 import java.awt.*;
 

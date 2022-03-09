@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 

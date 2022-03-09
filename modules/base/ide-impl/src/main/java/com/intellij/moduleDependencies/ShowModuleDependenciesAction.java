@@ -24,7 +24,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.content.Content;

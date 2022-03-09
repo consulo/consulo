@@ -26,6 +26,8 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.MouseEventAdapter;
 import consulo.ui.ex.awt.internal.DarkThemeCalculator;
 import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 

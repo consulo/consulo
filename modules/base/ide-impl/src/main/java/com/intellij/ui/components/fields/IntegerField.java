@@ -16,7 +16,7 @@
 package com.intellij.ui.components.fields;
 
 import consulo.configurable.ConfigurationException;
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 import com.intellij.ui.components.fields.valueEditors.IntegerValueEditor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

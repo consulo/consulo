@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy;
 import com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Functions;
 import com.intellij.util.containers.ContainerUtil;

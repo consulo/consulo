@@ -16,7 +16,7 @@
 package consulo.desktop.awt.settings;
 
 import consulo.ui.ex.awt.tree.PresentationData;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
@@ -41,7 +41,7 @@ import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
 import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;
 import consulo.util.concurrent.Promise;

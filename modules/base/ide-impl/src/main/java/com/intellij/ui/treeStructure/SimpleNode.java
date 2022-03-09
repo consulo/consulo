@@ -16,14 +16,14 @@
 package com.intellij.ui.treeStructure;
 
 import consulo.ui.ex.awt.tree.PresentationData;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FileStatus;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.tree.LeafState;
+import consulo.ui.ex.tree.LeafState;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;

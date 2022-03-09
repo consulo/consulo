@@ -29,7 +29,7 @@ import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.packaging.impl.artifacts.state.ArtifactManagerState;
 import com.intellij.packaging.impl.artifacts.state.ArtifactPropertiesState;

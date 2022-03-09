@@ -21,7 +21,7 @@ import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NullableFunction;

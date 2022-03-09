@@ -21,7 +21,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.EnvVariablesTable;
 import com.intellij.execution.util.EnvironmentVariable;
 import com.intellij.openapi.ui.DialogBuilder;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.ui.HyperlinkLabel;
 import consulo.ui.ex.UserActivityProviderComponent;
 import com.intellij.util.EventDispatcher;

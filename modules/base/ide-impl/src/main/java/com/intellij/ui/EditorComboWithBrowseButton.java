@@ -17,8 +17,10 @@ package com.intellij.ui;
 
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.ex.awt.TextAccessor;
+
 import javax.annotation.Nonnull;
 
 import java.awt.event.ActionListener;

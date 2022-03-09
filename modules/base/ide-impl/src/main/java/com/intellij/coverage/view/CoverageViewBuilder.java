@@ -2,7 +2,7 @@ package com.intellij.coverage.view;
 
 import com.intellij.ide.commander.AbstractListBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import com.intellij.ide.util.treeView.AlphaComparator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

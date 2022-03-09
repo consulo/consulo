@@ -16,6 +16,7 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import consulo.application.ApplicationManager;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;

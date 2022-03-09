@@ -41,6 +41,7 @@ import consulo.components.impl.stores.storage.DirectoryStorageData;
 import consulo.components.impl.stores.storage.VfsDirectoryBasedStorage;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;

@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.changes.FilePathsHelper;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

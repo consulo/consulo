@@ -21,7 +21,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.help.HelpManager;
+import consulo.application.ui.HelpManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;

@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.StandardProgressIndicator;
 import consulo.application.progress.WrappedProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.Semaphore;

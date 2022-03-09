@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.Pair;
 import consulo.debugger.XDebuggerBundle;
 import consulo.debugger.XSourcePosition;

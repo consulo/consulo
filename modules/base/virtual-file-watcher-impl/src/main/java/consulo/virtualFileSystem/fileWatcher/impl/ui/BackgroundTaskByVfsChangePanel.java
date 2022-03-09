@@ -16,7 +16,7 @@
 package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
 import com.intellij.execution.ui.CommonProgramParametersPanel;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.UIUtil;

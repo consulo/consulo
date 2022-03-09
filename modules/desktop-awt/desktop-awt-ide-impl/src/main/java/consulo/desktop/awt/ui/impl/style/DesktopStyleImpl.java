@@ -24,7 +24,7 @@ import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.desktop.awt.ui.plaf.LafWithIconLibrary;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.desktop.awt.ui.impl.image.DesktopImage;
 import consulo.ui.image.IconLibraryManager;
 import consulo.ui.image.Image;

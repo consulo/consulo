@@ -1,12 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.ui;
 
-import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;

@@ -17,7 +17,7 @@
 package com.intellij.tasks.actions;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.tasks.Comment;
 import com.intellij.tasks.Task;
 import consulo.ui.ex.awt.CollectionListModel;

@@ -20,7 +20,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.TipAndTrickBean;
 import com.intellij.ide.util.TipUIUtil;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBLabel;

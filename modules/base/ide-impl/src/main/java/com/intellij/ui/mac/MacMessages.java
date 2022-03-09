@@ -16,7 +16,7 @@
 package com.intellij.ui.mac;
 
 import consulo.ide.ServiceManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.Window;
 

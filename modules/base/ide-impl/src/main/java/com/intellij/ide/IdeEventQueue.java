@@ -30,7 +30,7 @@ import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeyState;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.ui.JBPopupMenu;
+import consulo.ui.ex.awt.JBPopupMenu;
 import com.intellij.openapi.util.*;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;

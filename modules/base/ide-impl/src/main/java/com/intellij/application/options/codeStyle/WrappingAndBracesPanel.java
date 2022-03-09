@@ -17,7 +17,7 @@ package com.intellij.application.options.codeStyle;
 
 import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.psi.codeStyle.*;
 import com.intellij.psi.codeStyle.presentation.CodeStyleBoundedIntegerSettingPresentation;
 import com.intellij.psi.codeStyle.presentation.CodeStyleSelectSettingPresentation;

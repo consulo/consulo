@@ -21,7 +21,7 @@ package com.intellij.ide.todo;
 
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.todo.nodes.ModuleToDoNode;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 
 import java.util.Comparator;
 

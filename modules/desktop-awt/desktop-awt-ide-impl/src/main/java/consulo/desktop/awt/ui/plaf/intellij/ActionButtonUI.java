@@ -16,7 +16,6 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
@@ -30,6 +29,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionButtonComponent;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

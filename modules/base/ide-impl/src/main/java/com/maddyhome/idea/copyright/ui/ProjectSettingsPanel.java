@@ -24,7 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.configurable.Configurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;
-import com.intellij.openapi.ui.LabeledComponent;
+import consulo.ui.ex.awt.LabeledComponent;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.packageDependencies.DefaultScopesProvider;
 import com.intellij.packageDependencies.DependencyValidationManager;

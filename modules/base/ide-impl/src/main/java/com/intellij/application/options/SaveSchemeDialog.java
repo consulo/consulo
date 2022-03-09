@@ -21,7 +21,7 @@ package com.intellij.application.options;
 
 import consulo.application.CommonBundle;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.ui.ex.awt.JBUI;

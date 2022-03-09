@@ -19,7 +19,7 @@ import com.intellij.ide.impl.ProjectUtil;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.impl.ProjectOpenProcessors;

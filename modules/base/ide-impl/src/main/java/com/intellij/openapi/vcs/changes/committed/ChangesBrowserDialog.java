@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.committed;
 import consulo.application.CommonBundle;
 import com.intellij.openapi.application.ModalityState;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.util.AsynchConsumer;

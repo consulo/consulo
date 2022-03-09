@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.changes.ChangeList;

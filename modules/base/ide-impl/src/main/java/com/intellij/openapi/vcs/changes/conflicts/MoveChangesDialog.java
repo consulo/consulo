@@ -21,7 +21,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.ui.ChangeNodeDecorator;

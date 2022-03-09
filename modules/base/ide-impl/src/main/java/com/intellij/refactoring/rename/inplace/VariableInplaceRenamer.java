@@ -28,7 +28,7 @@ import consulo.codeEditor.SelectionModel;
 import consulo.application.progress.ProgressManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;

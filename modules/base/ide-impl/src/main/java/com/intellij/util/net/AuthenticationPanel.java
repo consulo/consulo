@@ -15,6 +15,8 @@
  */
 package com.intellij.util.net;
 
+import consulo.ui.ex.awt.DialogWrapper;
+
 import javax.annotation.Nullable;
 
 import javax.swing.*;
@@ -67,7 +69,7 @@ public class AuthenticationPanel extends JPanel {
 
   /**
    * @return the component which should be focused when the dialog appears on the screen. May be used in dialogs.
-   * @see com.intellij.openapi.ui.DialogWrapper#getPreferredFocusedComponent()
+   * @see DialogWrapper#getPreferredFocusedComponent()
    */
   public JComponent getPreferredFocusedComponent() {
     return getLogin().isEmpty() ? myLoginTextField : myPasswordTextField;

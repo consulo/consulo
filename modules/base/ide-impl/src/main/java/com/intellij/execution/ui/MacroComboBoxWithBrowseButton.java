@@ -21,10 +21,10 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
-import com.intellij.openapi.ui.TextComponentAccessor;
-import com.intellij.ui.TextAccessor;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.TextComponentAccessor;
+import consulo.ui.ex.awt.TextAccessor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -52,7 +52,7 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
       @Nullable
       @Override
       protected Project getProject() {
-        Project project = super.getProject();
+        Project project = (Project)super.getProject();
         if (project != null) return project;
         Module module = getModule();
         return module == null ? null : module.getProject();

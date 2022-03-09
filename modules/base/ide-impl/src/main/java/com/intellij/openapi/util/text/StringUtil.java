@@ -19,6 +19,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;
+import consulo.util.lang.CharFilter;
 import consulo.util.lang.CharSequenceSubSequence;
 import consulo.util.lang.MergingCharSequence;
 import com.intellij.util.text.StringFactory;

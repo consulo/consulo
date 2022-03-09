@@ -39,7 +39,7 @@ import consulo.application.progress.Task;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.SystemInfo;

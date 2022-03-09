@@ -2,7 +2,7 @@ package com.intellij.diagnostic.errordialog;
 
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.diagnostic.IdeErrorsDialog;
-import com.intellij.openapi.ui.LabeledComponent;
+import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
 

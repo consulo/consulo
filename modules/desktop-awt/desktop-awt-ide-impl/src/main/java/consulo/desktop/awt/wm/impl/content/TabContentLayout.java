@@ -4,7 +4,7 @@ package consulo.desktop.awt.wm.impl.content;
 import com.intellij.ide.dnd.DnDSupport;
 import com.intellij.ide.dnd.DnDTarget;
 import consulo.ui.ex.action.AnAction;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.UIBundle;

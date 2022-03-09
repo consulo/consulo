@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.tasks.CustomTaskState;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskRepository;

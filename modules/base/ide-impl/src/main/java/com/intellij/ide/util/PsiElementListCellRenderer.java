@@ -2,8 +2,8 @@
 package com.intellij.ide.util;
 
 import consulo.ui.ex.ColoredItemPresentation;
-import consulo.ide.ui.popup.IPopupChooserBuilder;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.problems.WolfTheProblemSolver;

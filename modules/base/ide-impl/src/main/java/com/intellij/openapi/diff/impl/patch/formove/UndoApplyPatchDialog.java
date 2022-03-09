@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.patch.formove;
 
 import consulo.application.AllIcons;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.ui.FilePathChangesTreeList;

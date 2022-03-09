@@ -18,8 +18,6 @@ package com.intellij.openapi.ui;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
-import consulo.ide.ServiceManager;
-import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.WindowState;
 import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -29,6 +27,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
@@ -37,12 +36,14 @@ import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
-import consulo.ui.decorator.SwingUIDecorator;
 import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ImageUtil;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor;
+import consulo.ui.ex.internal.InternalPopupUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
@@ -243,7 +244,7 @@ public class FrameWrapper implements Disposable, DataProvider {
     ActionListener closeAction = new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (!PopupUtil.handleEscKeyEvent()) {
+        if (!InternalPopupUtil.handleEscKeyEvent()) {
           // if you remove this line problems will start happen on Mac OS X
           // 2 projects opened, call Cmd+D on the second opened project and then Esc.
           // Weird situation: 2nd IdeFrame will be active, but focus will be somewhere inside the 1st IdeFrame

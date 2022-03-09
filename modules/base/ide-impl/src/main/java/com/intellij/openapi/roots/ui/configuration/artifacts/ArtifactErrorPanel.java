@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ConfigurationErrorQuickFix;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.util.containers.ContainerUtil;

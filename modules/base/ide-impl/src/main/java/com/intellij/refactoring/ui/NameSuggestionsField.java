@@ -24,7 +24,7 @@ import consulo.document.event.DocumentListener;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import consulo.document.util.TextRange;
 import com.intellij.ui.EditorComboBoxEditor;
 import com.intellij.ui.EditorComboBoxRenderer;

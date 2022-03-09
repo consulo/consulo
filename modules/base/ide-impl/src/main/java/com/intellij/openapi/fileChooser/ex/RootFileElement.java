@@ -19,7 +19,7 @@ import com.intellij.execution.wsl.WSLUtil;
 import com.intellij.openapi.fileChooser.FileElement;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 

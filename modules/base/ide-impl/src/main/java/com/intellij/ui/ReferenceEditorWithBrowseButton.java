@@ -21,9 +21,10 @@ import consulo.document.event.DocumentListener;
 import consulo.document.impl.event.DocumentEventImpl;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.TextAccessor;
 
 import java.awt.event.ActionListener;
 import java.util.List;

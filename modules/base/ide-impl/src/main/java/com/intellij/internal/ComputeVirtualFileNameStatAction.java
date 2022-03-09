@@ -25,7 +25,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 
 import javax.swing.*;

@@ -12,7 +12,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.index.io.data.DataExternalizer;

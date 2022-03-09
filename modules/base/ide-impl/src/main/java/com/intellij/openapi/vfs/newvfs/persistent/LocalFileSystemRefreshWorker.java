@@ -11,7 +11,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import consulo.application.util.concurrent.AppExecutorUtil;

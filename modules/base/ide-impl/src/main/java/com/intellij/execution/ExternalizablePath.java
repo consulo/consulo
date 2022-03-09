@@ -18,7 +18,7 @@ package com.intellij.execution;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

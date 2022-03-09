@@ -27,7 +27,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.Computable;
 import consulo.util.xml.serializer.InvalidDataException;

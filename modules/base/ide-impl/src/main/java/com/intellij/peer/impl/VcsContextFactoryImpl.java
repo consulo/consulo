@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.actions.VcsContextFactory;
 import com.intellij.openapi.vcs.actions.VcsContextWrapper;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.changes.LocalChangeListImpl;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.NotNullFunction;
 import jakarta.inject.Singleton;

@@ -17,7 +17,7 @@ package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import com.intellij.openapi.MnemonicHelper;
+import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
@@ -37,7 +37,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.decorator.SwingUIDecorator;
+import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.ui.Rectangle2D;
 

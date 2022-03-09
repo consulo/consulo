@@ -21,7 +21,7 @@ import com.intellij.openapi.command.CommandProcessorEx;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.ui.ex.UIBundle;
 import com.intellij.util.ArrayUtil;

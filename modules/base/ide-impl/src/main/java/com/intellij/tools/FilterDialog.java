@@ -21,8 +21,8 @@ package com.intellij.tools;
 
 import com.intellij.execution.filters.InvalidExpressionException;
 import com.intellij.execution.filters.RegexpFilter;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.JBPopupMenu;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBPopupMenu;
 import com.intellij.openapi.ui.Messages;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.PopupHandler;

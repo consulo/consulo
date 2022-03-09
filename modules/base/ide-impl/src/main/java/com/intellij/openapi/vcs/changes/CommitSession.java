@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.swing.*;

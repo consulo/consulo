@@ -2,21 +2,22 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.intention.AbstractIntentionAction;
-import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.PriorityAction;
-import com.intellij.openapi.actionSystem.*;
-import consulo.codeEditor.Editor;
+import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
-import consulo.component.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorPopupHelper;
+import consulo.component.util.Iconable;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiFile;
-import consulo.ui.ex.RelativePoint;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +38,7 @@ class GutterIntentionAction extends AbstractIntentionAction implements Comparabl
 
   @Override
   public void invoke(@Nonnull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-    final RelativePoint relativePoint = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
+    final RelativePoint relativePoint = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
     myAction.actionPerformed(new AnActionEvent(relativePoint.toMouseEvent(), ((EditorEx)editor).getDataContext(), ActionPlaces.INTENTION_MENU, new Presentation(), ActionManager.getInstance(), 0));
   }
 

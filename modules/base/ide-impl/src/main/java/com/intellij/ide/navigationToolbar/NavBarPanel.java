@@ -41,7 +41,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;

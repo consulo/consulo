@@ -17,8 +17,8 @@ package consulo.ui.ex.awt;
 
 import consulo.navigation.Navigatable;
 import consulo.ui.ex.awt.tree.ExpandOnDoubleClick;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

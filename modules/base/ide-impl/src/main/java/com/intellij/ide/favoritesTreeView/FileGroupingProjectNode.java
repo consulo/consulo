@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

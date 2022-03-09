@@ -17,7 +17,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.ui.content.TabbedContent;

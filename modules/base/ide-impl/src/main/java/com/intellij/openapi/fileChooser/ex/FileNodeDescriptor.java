@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.ex;
 
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

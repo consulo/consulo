@@ -5,7 +5,7 @@ import com.intellij.openapi.components.PathMacroManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.ui.TextBrowseFolderListener;
+import consulo.ui.ex.awt.TextBrowseFolderListener;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -18,7 +18,7 @@ public class MacroAwareTextBrowseFolderListener extends TextBrowseFolderListener
   @Nonnull
   @Override
   protected String expandPath(@Nonnull String path) {
-    Project project = getProject();
+    Project project = (Project)getProject();
     if (project != null) {
       path = PathMacroManager.getInstance(project).expandPath(path);
     }

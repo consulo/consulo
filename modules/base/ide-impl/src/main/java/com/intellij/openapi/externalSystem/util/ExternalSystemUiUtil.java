@@ -27,7 +27,7 @@ import com.intellij.util.ui.GridBag;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.ActionManager;

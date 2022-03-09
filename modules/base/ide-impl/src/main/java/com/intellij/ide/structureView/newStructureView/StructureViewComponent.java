@@ -60,6 +60,7 @@ import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.PlaceProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.*;

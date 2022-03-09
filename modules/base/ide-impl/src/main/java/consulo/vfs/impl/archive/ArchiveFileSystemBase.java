@@ -79,7 +79,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
   }
 
   @Override
-  protected String normalize(@Nonnull String path) {
+  public String normalize(@Nonnull String path) {
     final int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
     if (jarSeparatorIndex > 0) {
       final String root = path.substring(0, jarSeparatorIndex);
@@ -90,7 +90,7 @@ public abstract class ArchiveFileSystemBase extends ArchiveFileSystem implements
 
   @Nonnull
   @Override
-  protected String extractRootPath(@Nonnull String path) {
+  public String extractRootPath(@Nonnull String path) {
     final int jarSeparatorIndex = path.indexOf(URLUtil.ARCHIVE_SEPARATOR);
     assert jarSeparatorIndex >= 0 : "Path passed to ArchiveFileSystem must have archive separator '!/': " + path;
     return path.substring(0, jarSeparatorIndex + URLUtil.ARCHIVE_SEPARATOR.length());

@@ -25,7 +25,7 @@ package com.intellij.openapi.vcs.changes.actions;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.ChangeListManager;

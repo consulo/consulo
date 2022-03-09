@@ -24,7 +24,7 @@ import consulo.ui.ex.JBColor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.psi.search.TodoAttributesUtil;
 import com.intellij.psi.search.TodoPattern;
 import com.intellij.ui.*;

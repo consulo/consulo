@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.text.StringUtil;

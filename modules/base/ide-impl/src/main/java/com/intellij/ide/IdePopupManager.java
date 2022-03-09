@@ -3,7 +3,7 @@ package com.intellij.ide;
 
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
-import com.intellij.openapi.ui.popup.IdePopupEventDispatcher;
+import consulo.ui.ex.popup.IdePopupEventDispatcher;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;

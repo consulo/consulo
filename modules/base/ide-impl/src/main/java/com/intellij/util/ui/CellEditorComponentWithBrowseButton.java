@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import consulo.application.ui.wm.IdeFocusManager;
 
 import javax.swing.*;

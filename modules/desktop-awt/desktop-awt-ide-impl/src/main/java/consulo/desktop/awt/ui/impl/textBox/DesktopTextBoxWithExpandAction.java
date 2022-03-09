@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;

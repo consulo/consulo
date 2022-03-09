@@ -58,6 +58,7 @@ import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileProvider;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.PropertyKey;

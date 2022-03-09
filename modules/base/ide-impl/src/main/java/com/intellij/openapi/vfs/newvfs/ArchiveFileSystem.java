@@ -15,8 +15,7 @@
  */
 package com.intellij.openapi.vfs.newvfs;
 
-import consulo.virtualFileSystem.StandardFileSystems;
-import consulo.virtualFileSystem.VfsBundle;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.util.io.BufferExposingByteArrayInputStream;
@@ -28,7 +27,6 @@ import com.intellij.util.io.URLUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

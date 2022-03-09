@@ -16,7 +16,7 @@ import com.intellij.ide.passwordSafe.PasswordSafe;
 import com.intellij.ide.passwordSafe.config.PasswordSafeSettings;
 import com.intellij.ide.passwordSafe.impl.PasswordSafeImpl;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.net.AuthenticationPanel;
 import javax.annotation.Nonnull;

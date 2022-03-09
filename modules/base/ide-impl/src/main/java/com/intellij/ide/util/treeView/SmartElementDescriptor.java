@@ -23,7 +23,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.vcs.FileStatusManager;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;

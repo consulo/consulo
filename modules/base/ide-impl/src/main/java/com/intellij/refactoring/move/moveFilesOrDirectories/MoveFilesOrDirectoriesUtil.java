@@ -23,7 +23,7 @@ import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.RefactoringSettings;

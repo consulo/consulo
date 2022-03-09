@@ -41,7 +41,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.util.dataholder.Key;

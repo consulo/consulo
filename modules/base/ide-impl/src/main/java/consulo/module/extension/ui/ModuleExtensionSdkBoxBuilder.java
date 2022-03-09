@@ -22,7 +22,7 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkTypeId;
-import com.intellij.openapi.ui.LabeledComponent;
+import consulo.ui.ex.awt.LabeledComponent;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import com.intellij.util.NullableFunction;

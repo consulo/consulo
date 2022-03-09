@@ -17,7 +17,7 @@ package com.intellij.internal.encodings;
 
 import consulo.logging.Logger;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.fileChooser.FileChooser;

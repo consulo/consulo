@@ -17,6 +17,7 @@
 package com.intellij.ide.ui.search;
 
 import com.intellij.application.options.SkipSelfSearchComponent;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.JBColor;
 import consulo.configurable.Configurable;
 import consulo.ui.ex.awt.MasterDetails;
@@ -26,7 +27,6 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
@@ -545,8 +545,7 @@ public class SearchUtil {
           }
         }
       };
-      final JBPopup popup = JBPopupFactory.getInstance()
-        .createListPopupBuilder(list)
+      final JBPopup popup = new PopupChooserBuilder<>(list)
         .setItemChoosenCallback(onChosen)
         .setRequestFocus(down != 0)
         .createPopup();

@@ -29,7 +29,7 @@ import com.intellij.openapi.editor.*;
 import consulo.document.FileDocumentManager;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiCompiledElement;

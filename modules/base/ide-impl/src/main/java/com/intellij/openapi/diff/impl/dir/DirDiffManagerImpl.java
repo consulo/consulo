@@ -17,7 +17,7 @@ package com.intellij.openapi.diff.impl.dir;
 
 import com.intellij.ide.diff.*;
 import com.intellij.openapi.diff.DirDiffManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.virtualFileSystem.VirtualFile;

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.committed;
 
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.VcsBundle;
 
 import javax.swing.*;

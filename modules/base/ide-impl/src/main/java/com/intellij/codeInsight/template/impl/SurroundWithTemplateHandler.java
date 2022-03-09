@@ -14,7 +14,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

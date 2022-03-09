@@ -5,7 +5,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.browsers.OpenUrlHyperlinkInfo;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.util.io.URLUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.content.scope.SearchScope;

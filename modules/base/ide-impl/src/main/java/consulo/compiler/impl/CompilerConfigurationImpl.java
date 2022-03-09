@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.project.content.WatchedRootsProvider;
 import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.impl.LightFilePointer;

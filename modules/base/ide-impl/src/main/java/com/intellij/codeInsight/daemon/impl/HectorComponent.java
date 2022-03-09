@@ -32,7 +32,7 @@ import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.language.file.FileViewProvider;

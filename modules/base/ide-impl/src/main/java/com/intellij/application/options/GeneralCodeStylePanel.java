@@ -31,7 +31,7 @@ import com.intellij.ui.components.fields.IntegerField;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.plain.PlainTextFileType;

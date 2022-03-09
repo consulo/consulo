@@ -21,7 +21,7 @@ import com.intellij.ide.RecentProjectsManager;
 import com.intellij.openapi.project.ex.ProjectEx;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;

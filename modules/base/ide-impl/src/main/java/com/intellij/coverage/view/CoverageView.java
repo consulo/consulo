@@ -13,7 +13,7 @@ import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;

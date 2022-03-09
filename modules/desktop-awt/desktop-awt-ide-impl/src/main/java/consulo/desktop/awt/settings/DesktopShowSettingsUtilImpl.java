@@ -27,7 +27,7 @@ import consulo.project.internal.DefaultProjectFactory;
 import consulo.project.Project;
 import consulo.content.bundle.SdkTable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.util.Function;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;

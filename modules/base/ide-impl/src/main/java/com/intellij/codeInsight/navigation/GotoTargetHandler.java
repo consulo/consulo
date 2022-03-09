@@ -33,7 +33,7 @@ import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.application.util.function.Computable;
 import consulo.util.lang.ref.Ref;
 import consulo.navigation.Navigatable;

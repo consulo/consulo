@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.util.NullableLazyValue;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.SystemProperties;
 import javax.annotation.Nullable;

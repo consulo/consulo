@@ -10,7 +10,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.ui.components.JBCheckBox;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;

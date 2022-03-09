@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.Splitter;

@@ -12,7 +12,7 @@ import com.intellij.openapi.vcs.changes.ContentRevision;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.util.Consumer;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;

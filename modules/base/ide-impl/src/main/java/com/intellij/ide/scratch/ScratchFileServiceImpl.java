@@ -27,7 +27,7 @@ import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;

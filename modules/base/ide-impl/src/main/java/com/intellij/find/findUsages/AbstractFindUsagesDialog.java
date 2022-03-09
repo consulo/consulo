@@ -19,7 +19,7 @@ import com.intellij.find.FindBundle;
 import com.intellij.find.FindSettings;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.SeparatorFactory;

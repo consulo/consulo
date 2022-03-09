@@ -18,7 +18,7 @@ package com.intellij.openapi.fileChooser.tree;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.application.ModalityState;
 import consulo.logging.Logger;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;

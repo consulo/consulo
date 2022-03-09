@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementType;

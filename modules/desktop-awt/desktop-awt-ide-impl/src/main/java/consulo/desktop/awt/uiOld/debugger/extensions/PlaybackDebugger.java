@@ -36,6 +36,7 @@ import com.intellij.openapi.vfs.*;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.io.CharsetToolkit;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;

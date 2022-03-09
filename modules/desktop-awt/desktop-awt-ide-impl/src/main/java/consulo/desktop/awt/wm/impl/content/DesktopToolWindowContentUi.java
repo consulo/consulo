@@ -33,7 +33,7 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.toolWindow.ToolWindow;

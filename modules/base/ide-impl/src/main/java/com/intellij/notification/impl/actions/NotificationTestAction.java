@@ -25,7 +25,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import com.intellij.openapi.util.NotWorkingIconLoader;
 import com.intellij.openapi.util.text.StringUtil;

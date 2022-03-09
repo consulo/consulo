@@ -34,7 +34,7 @@ import consulo.document.FileDocumentManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

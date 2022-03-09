@@ -18,7 +18,7 @@ package com.intellij.dvcs.push.ui;
 import com.intellij.dvcs.push.PushTarget;
 import com.intellij.dvcs.push.PushTargetPanel;
 import com.intellij.dvcs.push.RepositoryNodeListener;
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.ui.ex.awt.ValidationInfo;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.containers.ContainerUtil;

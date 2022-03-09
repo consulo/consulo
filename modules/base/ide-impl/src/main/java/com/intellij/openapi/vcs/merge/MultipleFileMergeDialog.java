@@ -31,7 +31,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import com.intellij.openapi.project.ex.ProjectManagerEx;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;

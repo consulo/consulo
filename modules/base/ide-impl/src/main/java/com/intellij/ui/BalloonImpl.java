@@ -6,7 +6,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.ui.PopupLocationTracker;
 import com.intellij.ide.ui.ScreenAreaConsumer;
-import com.intellij.openapi.MnemonicHelper;
+import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.PositionTracker;

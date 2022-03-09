@@ -40,7 +40,7 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.content.event.ContentManagerListener;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBPanelWithEmptyText;

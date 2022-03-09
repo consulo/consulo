@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.CharFilter;
+import consulo.util.lang.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

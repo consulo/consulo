@@ -39,7 +39,7 @@ import consulo.project.Project;
 import consulo.colorScheme.EffectType;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import consulo.document.Document;

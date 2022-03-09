@@ -29,7 +29,7 @@ import consulo.ui.ex.awt.util.ListUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.ex.http.HttpFileSystem;

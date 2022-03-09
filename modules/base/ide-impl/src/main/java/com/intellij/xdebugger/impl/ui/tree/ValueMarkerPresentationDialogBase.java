@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.FixedSizeButton;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.FixedSizeButton;
 import com.intellij.ui.*;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SimpleColoredComponent;

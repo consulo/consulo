@@ -5,7 +5,7 @@ import com.intellij.codeInsight.daemon.impl.FileStatusMap;
 import com.intellij.openapi.application.*;
 import consulo.application.WriteAction;
 import consulo.virtualFileSystem.event.AsyncFileListener;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;

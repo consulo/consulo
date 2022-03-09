@@ -22,7 +22,7 @@ import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationInfo;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.util.text.StringUtil;

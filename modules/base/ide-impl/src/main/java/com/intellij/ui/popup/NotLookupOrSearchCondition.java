@@ -16,6 +16,7 @@
 
 package com.intellij.ui.popup;
 
+import consulo.component.ComponentManager;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
@@ -27,16 +28,16 @@ import java.awt.*;
 /**
  * @author yole
  */
-public class NotLookupOrSearchCondition implements Condition<Project> {
+public class NotLookupOrSearchCondition implements Condition<ComponentManager> {
   public static NotLookupOrSearchCondition INSTANCE = new NotLookupOrSearchCondition();
 
   private NotLookupOrSearchCondition() {
   }
 
   @Override
-  public boolean value(final Project project) {
-    final Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent(project);
+  public boolean value(final ComponentManager project) {
+    final Component focusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent((Project)project);
     boolean fromQuickSearch =  focusedComponent != null && focusedComponent.getParent() instanceof ChooseByNameBase.JPanelProvider;
-    return !fromQuickSearch && LookupManager.getInstance(project).getActiveLookup() == null;
+    return !fromQuickSearch && LookupManager.getInstance((Project)project).getActiveLookup() == null;
   }
 }

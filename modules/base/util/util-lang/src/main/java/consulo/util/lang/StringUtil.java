@@ -108,6 +108,26 @@ public class StringUtil {
   }
 
   /**
+   * Strip out all characters not accepted by given filter
+   *
+   * @param s      e.g. "/n    my string "
+   * @param filter e.g. {@link CharFilter#NOT_WHITESPACE_FILTER}
+   * @return stripped string e.g. "mystring"
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String strip(@Nonnull final String s, @Nonnull final CharFilter filter) {
+    final StringBuilder result = new StringBuilder(s.length());
+    for (int i = 0; i < s.length(); i++) {
+      char ch = s.charAt(i);
+      if (filter.accept(ch)) {
+        result.append(ch);
+      }
+    }
+    return result.toString();
+  }
+
+  /**
    * Splits string by lines.
    *
    * @param string String to split

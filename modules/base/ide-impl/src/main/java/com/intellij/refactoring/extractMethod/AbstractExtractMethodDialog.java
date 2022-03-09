@@ -19,7 +19,7 @@ import com.intellij.codeInsight.codeFragment.CodeFragment;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.MethodSignatureComponent;

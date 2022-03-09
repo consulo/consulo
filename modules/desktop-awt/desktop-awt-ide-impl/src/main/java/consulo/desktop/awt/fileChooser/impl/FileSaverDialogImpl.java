@@ -174,7 +174,7 @@ public class FileSaverDialogImpl extends FileChooserDialogImpl implements FileSa
   }
 
   @Override
-  protected void setOKActionEnabled(boolean isEnabled) {
+  public void setOKActionEnabled(boolean isEnabled) {
     //double check. FileChooserFactoryImpl sets enable ok button 
     super.setOKActionEnabled(isFileNameExist());
   }

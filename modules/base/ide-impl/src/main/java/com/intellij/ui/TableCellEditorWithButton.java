@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.ui.FixedSizeButton;
+import consulo.ui.ex.awt.FixedSizeButton;
 import consulo.application.ui.wm.IdeFocusManager;
 
 import javax.swing.*;

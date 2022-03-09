@@ -1199,7 +1199,7 @@
     <extensionPoint name="searchScopesProvider" interface="com.intellij.psi.search.SearchScopeProvider"/>
     <extensionPoint name="findInProjectExtension" interface="com.intellij.find.impl.FindInProjectExtension"/>
 
-    <extensionPoint name="uiDecorator" interface="consulo.ui.decorator.UIDecorator"/>
+    <extensionPoint name="uiDecorator" interface="consulo.ui.ex.UIDecorator"/>
 
     <extensionPoint name="statusBarWidgetProvider" interface="consulo.project.ui.wm.StatusBarWidgetProvider"/>
     <extensionPoint name="statusBarWidgetFactory" interface="consulo.project.ui.wm.StatusBarWidgetFactory"/>
@@ -1265,7 +1265,7 @@
 
     <applicationService serviceInterface="consulo.ui.ex.awt.CopyPasteManager"
                         serviceImplementation="com.intellij.ide.CopyPasteManagerEx"/>
-    <applicationService serviceInterface="consulo.ide.ui.popup.JBPopupFactory"
+    <applicationService serviceInterface="consulo.ui.ex.popup.JBPopupFactory"
                         serviceImplementation="com.intellij.ui.popup.PopupFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.fileEditor.ex.FileEditorProviderManager"
                         serviceImplementation="com.intellij.openapi.fileEditor.impl.FileEditorProviderManagerImpl"/>
@@ -1450,7 +1450,7 @@
                         serviceImplementation="com.intellij.psi.search.scope.packageSet.PackageSetFactoryImpl"/>
 
     <scopeParserExtension implementation="com.intellij.psi.search.scope.packageSet.FilePackageSetParserExtension"/>
-    <applicationService serviceInterface="com.intellij.openapi.ui.popup.StackingPopupDispatcher"
+    <applicationService serviceInterface="consulo.ui.ex.popup.StackingPopupDispatcher"
                         serviceImplementation="com.intellij.ui.popup.StackingPopupDispatcherImpl"/>
 
 
@@ -2804,7 +2804,7 @@
 
     <projectService serviceInterface="com.intellij.codeInsight.folding.CodeFoldingManager" serviceImplementation="com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.help.HelpManager" serviceImplementation="consulo.help.impl.HelpManagerImpl"/>
+    <applicationService serviceInterface="consulo.application.ui.HelpManager" serviceImplementation="consulo.application.ui.impl.HelpManagerImpl"/>
 
     <applicationService serviceInterface="consulo.process.DefaultCharsetProvider" serviceImplementation="consulo.process.impl.DefaultCharsetProviderImpl"/>
     <applicationService serviceInterface="consulo.project.ui.notification.internal.NotificationActionInvoker"

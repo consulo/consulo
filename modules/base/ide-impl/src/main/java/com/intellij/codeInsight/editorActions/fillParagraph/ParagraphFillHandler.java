@@ -6,7 +6,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
-import com.intellij.openapi.util.text.CharFilter;
+import consulo.util.lang.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.codeStyle.CodeFormatterFacade;

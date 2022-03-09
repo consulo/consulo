@@ -15,10 +15,13 @@
  */
 package consulo.desktop.awt.ui.dialog;
 
+import consulo.application.ApplicationManager;
+import consulo.component.ComponentManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.DialogWrapperPeer;
-import com.intellij.openapi.ui.DialogWrapperPeerFactory;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.internal.DialogWrapperPeer;
+import consulo.ui.ex.awt.internal.DialogWrapperPeerFactory;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.inject.Singleton;
 
@@ -29,13 +32,18 @@ import java.awt.*;
 @Singleton
 public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
   @Override
-  public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent) {
-    return new DialogWrapperPeerImpl(wrapper, project, canBeParent);
+  public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable ComponentManager project, boolean canBeParent) {
+    return createPeer(wrapper, project, canBeParent, DialogWrapper.IdeModalityType.IDE);
   }
 
   @Override
-  public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable Project project, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType) {
-    return new DialogWrapperPeerImpl(wrapper, project, canBeParent, ideModalityType);
+  public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable ComponentManager project, boolean canBeParent, DialogWrapper.IdeModalityType ideModalityType) {
+    consulo.ui.Window owner = null;
+    if (ApplicationManager.getApplication() != null) {
+      owner = project != null ? WindowManager.getInstance().suggestParentWindow((Project)project) : WindowManager.getInstance().findVisibleWindow();
+    }
+
+    return createPeer(wrapper, owner, canBeParent, ideModalityType);
   }
 
   @Override

@@ -15,6 +15,7 @@
  */
 package consulo.ui.ex.awt.tree;
 
+import consulo.ui.ex.tree.NodeDescriptor;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

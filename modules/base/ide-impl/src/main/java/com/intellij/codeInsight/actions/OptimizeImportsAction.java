@@ -30,7 +30,7 @@ import consulo.dataContext.DataContext;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.ui.ex.action.AnAction;

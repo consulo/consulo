@@ -25,7 +25,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.component.extension.Extensions;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;

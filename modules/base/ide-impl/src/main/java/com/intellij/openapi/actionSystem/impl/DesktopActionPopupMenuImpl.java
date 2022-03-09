@@ -24,7 +24,7 @@ import consulo.application.Application;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.ui.JBPopupMenu;
+import consulo.ui.ex.awt.JBPopupMenu;
 import com.intellij.openapi.util.Getter;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.awt.util.ComponentUtil;

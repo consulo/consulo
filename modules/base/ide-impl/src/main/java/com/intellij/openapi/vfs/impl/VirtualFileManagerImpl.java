@@ -19,7 +19,7 @@ import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.application.ModalityState;
 import consulo.virtualFileSystem.StandardFileSystems;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
-import com.intellij.openapi.vfs.newvfs.CachingVirtualFileSystem;
+import consulo.virtualFileSystem.CachingVirtualFileSystem;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;

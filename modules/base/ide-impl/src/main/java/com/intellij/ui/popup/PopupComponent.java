@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.popup;
 
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import consulo.application.util.SystemInfo;

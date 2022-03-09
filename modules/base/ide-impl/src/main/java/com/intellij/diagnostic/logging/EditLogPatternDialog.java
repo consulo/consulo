@@ -18,9 +18,9 @@ package com.intellij.diagnostic.logging;
 
 import com.intellij.diagnostic.DiagnosticBundle;
 import consulo.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.TextComponentAccessor;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.TextComponentAccessor;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.UIBundle;
 

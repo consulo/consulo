@@ -15,7 +15,7 @@
  */
 package com.intellij.webcore.packaging;
 
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.JBLabel;
 import javax.annotation.Nonnull;

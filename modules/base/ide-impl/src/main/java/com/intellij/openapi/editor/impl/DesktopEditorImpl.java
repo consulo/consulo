@@ -25,7 +25,7 @@ import com.intellij.openapi.editor.impl.view.EditorView;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.ui.AbstractPainter;
+import consulo.ui.ex.awt.internal.AbstractPainter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;

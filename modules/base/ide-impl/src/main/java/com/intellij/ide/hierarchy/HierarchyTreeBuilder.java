@@ -17,7 +17,7 @@
 package com.intellij.ide.hierarchy;
 
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.awt.tree.NodeDescriptor;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.TreeBuilderUtil;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;

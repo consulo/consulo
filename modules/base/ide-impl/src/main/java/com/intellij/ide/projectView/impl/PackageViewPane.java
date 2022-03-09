@@ -34,7 +34,7 @@ import com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode;
 import com.intellij.ide.util.DeleteHandler;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.ui.ex.awt.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.darcula;
 
-import com.intellij.openapi.actionSystem.ActionButtonComponent;
+import consulo.ui.ex.internal.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.JBInsets;

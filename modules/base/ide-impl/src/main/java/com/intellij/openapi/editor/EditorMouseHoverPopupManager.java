@@ -39,7 +39,7 @@ import com.intellij.openapi.progress.util.ProgressIndicatorBase;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.disposer.Disposable;

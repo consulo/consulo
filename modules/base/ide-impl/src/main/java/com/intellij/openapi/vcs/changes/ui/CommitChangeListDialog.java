@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.awt.*;
 import consulo.component.util.localize.BundleBase;
 import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeysEx;
@@ -31,7 +31,6 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
-import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -45,16 +44,12 @@ import com.intellij.openapi.vcs.ui.Refreshable;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.SplitterWithSecondHideable;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.AbstractLayoutManager;
 import com.intellij.util.ui.GridBag;
-import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

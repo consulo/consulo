@@ -17,7 +17,7 @@ package consulo.desktop.awt.startup.customize;
 
 import com.intellij.ide.startup.StartupActionScriptManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;

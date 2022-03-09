@@ -33,7 +33,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;

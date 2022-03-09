@@ -16,8 +16,8 @@
 package consulo.desktop.awt.ui.impl.validableComponent;
 
 import com.intellij.openapi.ui.ComponentValidator;
-import com.intellij.openapi.ui.ValidationInfo;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
+import consulo.ui.ex.awt.ValidationInfo;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ref.Ref;
 import com.intellij.reference.SoftReference;

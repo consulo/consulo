@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactTypeCellRenderer;
 import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeComponent;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.compiler.artifact.ArtifactType;

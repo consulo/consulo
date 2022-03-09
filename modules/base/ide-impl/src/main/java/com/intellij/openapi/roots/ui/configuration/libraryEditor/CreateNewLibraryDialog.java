@@ -22,7 +22,7 @@ import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryType;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.ui.ListCellRendererWrapper;
 import com.intellij.util.ui.FormBuilder;
 import consulo.ide.setting.module.LibrariesConfigurator;

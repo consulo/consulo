@@ -16,8 +16,8 @@
 package com.intellij.ui.tabs.impl;
 
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.ui.JBMenuItem;
-import com.intellij.openapi.ui.JBPopupMenu;
+import consulo.ui.ex.awt.JBMenuItem;
+import consulo.ui.ex.awt.JBPopupMenu;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.Getter;
 import com.intellij.ui.switcher.QuickActionProvider;

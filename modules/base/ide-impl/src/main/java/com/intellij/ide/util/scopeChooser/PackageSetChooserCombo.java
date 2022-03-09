@@ -17,8 +17,8 @@ package com.intellij.ide.util.scopeChooser;
 
 import com.intellij.ui.ListCellRendererWrapper;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComponentWithBrowseButton;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.ComponentWithBrowseButton;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.packageDependencies.DefaultScopesProvider;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.search.scope.NamedScope;

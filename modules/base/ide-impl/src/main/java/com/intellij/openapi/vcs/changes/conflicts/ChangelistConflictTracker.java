@@ -30,7 +30,7 @@ import com.intellij.openapi.util.ZipperUpdater;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.openapi.vcs.changes.*;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotifications;
 import consulo.ui.ex.awt.util.Alarm;

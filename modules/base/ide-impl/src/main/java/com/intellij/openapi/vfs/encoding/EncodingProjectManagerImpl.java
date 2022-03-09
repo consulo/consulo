@@ -35,7 +35,7 @@ import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;

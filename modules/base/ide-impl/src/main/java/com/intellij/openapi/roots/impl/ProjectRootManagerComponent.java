@@ -39,7 +39,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.*;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.virtualFileSystem.StandardFileSystems;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import com.intellij.util.containers.ContainerUtil;
@@ -54,9 +54,6 @@ import consulo.logging.Logger;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileSystem;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

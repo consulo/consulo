@@ -14,7 +14,7 @@ import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

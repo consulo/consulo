@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

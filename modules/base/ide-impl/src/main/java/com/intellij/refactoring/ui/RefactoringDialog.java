@@ -17,7 +17,7 @@ package com.intellij.refactoring.ui;
 
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.SystemInfo;
 import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;

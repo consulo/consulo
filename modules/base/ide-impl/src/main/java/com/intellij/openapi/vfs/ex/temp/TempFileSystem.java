@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFileSystem;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.VfsImplUtil;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
@@ -57,7 +57,7 @@ public class TempFileSystem extends NewVirtualFileSystem implements RefreshableF
 
   @Nonnull
   @Override
-  protected String extractRootPath(@Nonnull final String path) {
+  public String extractRootPath(@Nonnull final String path) {
     //return path.startsWith("/") ? "/" : "";
     return "/";
   }

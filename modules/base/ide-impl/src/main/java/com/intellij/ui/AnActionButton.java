@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.internal.ActionButtonComponent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.UIUtil;

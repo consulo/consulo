@@ -21,7 +21,7 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.NotificationType;

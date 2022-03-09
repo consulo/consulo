@@ -48,7 +48,7 @@ import com.intellij.openapi.vcs.update.ActionInfo;
 import com.intellij.openapi.vcs.update.UpdateInfoTree;
 import com.intellij.openapi.vcs.update.UpdatedFiles;
 import com.intellij.openapi.vcs.update.UpdatedFilesListener;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.toolWindow.ToolWindow;

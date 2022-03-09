@@ -21,7 +21,7 @@ import consulo.module.*;
 import com.intellij.openapi.module.impl.LoadedModuleDescriptionImpl;
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.ui.*;
 
 import javax.annotation.Nonnull;

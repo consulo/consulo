@@ -47,7 +47,7 @@ import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBList;
-import com.intellij.ui.components.JBTextField;
+import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;

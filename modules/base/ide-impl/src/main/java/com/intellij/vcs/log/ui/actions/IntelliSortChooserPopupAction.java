@@ -15,10 +15,10 @@
  */
 package com.intellij.vcs.log.ui.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;

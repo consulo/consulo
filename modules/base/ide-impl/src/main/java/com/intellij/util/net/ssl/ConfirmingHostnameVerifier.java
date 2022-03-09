@@ -1,6 +1,6 @@
 package com.intellij.util.net.ssl;
 
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import javax.annotation.Nonnull;
 

@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.openapi.actionSystem.ActionButtonComponent;
+import consulo.ui.ex.internal.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.RightAlignedToolbarAction;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
@@ -20,11 +20,10 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ui.popup.ComponentPopupBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;

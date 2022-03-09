@@ -29,7 +29,7 @@ import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.SearchTextField;

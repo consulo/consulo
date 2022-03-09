@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Comparator;
 
-import static com.intellij.ui.GuiUtils.getTextWithoutMnemonicEscaping;
+import static consulo.ui.ex.awt.internal.GuiUtils.getTextWithoutMnemonicEscaping;
 
 /**
  * Implement this interface and register it as extension to checkoutProvider extension point in order to provide checkout

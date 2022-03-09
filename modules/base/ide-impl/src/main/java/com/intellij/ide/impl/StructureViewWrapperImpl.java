@@ -40,7 +40,7 @@ import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.content.Content;

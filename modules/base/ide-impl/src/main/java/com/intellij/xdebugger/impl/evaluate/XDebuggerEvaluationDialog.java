@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.evaluate;
 
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;

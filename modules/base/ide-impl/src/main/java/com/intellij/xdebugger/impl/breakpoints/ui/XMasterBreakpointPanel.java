@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import consulo.project.Project;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.ui.popup.util.DetailView;
 import consulo.debugger.breakpoint.XBreakpoint;
 import consulo.debugger.XBreakpointManager;

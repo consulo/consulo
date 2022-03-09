@@ -18,6 +18,7 @@ package consulo.ui.app;
 import consulo.disposer.Disposer;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.Layout;
@@ -33,7 +34,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 25-Oct-17
  * <p>
- * Wrapper like {@link com.intellij.openapi.ui.DialogWrapper} but for Consulo UI
+ * Wrapper like {@link DialogWrapper} but for Consulo UI
  */
 public abstract class WindowWrapper {
   private Window myWindow;

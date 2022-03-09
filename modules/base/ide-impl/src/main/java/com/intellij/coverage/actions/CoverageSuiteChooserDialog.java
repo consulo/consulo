@@ -6,7 +6,7 @@ import consulo.logging.Logger;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.ui.EnumComboBoxModel;
 import net.miginfocom.swing.MigLayout;
 import javax.annotation.Nonnull;

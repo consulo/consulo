@@ -7,7 +7,7 @@ import consulo.disposer.Disposer;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.content.TabbedContent;
 import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;

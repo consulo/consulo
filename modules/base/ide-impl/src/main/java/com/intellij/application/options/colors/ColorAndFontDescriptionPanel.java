@@ -21,7 +21,7 @@ import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.CollectionComboBoxModel;

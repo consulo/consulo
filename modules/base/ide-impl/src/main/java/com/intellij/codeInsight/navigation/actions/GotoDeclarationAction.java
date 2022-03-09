@@ -16,7 +16,6 @@
 package com.intellij.codeInsight.navigation.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
-import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.navigation.NavigationUtil;
@@ -26,33 +25,33 @@ import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import consulo.component.extension.ExtensionException;
-import consulo.component.extension.Extensions;
-import consulo.language.psi.*;
-import consulo.application.dumb.DumbAware;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.ide.ui.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
-import consulo.navigation.Navigatable;
-import consulo.language.psi.resolve.PsiElementProcessor;
-import consulo.language.psi.PsiUtilCore;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.dumb.DumbAware;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeInsight.TargetElementUtil;
 import consulo.codeInsight.TargetElementUtilEx;
 import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
+import consulo.component.extension.ExtensionException;
+import consulo.component.extension.Extensions;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.JBPopup;
 
 import javax.annotation.Nonnull;
@@ -98,7 +97,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
           PsiElement element = findElementToShowUsagesOf(editor, editor.getCaretModel().getOffset());
           if (element != null) {
             ShowUsagesAction showUsages = (ShowUsagesAction)ActionManager.getInstance().getAction(ShowUsagesAction.ID);
-            RelativePoint popupPosition = JBPopupFactory.getInstance().guessBestPopupLocation(editor);
+            RelativePoint popupPosition = EditorPopupHelper.getInstance().guessBestPopupLocation(editor);
             showUsages.startFindUsages(element, popupPosition, editor, ShowUsagesAction.getUsagesPageSize());
             return;
           }

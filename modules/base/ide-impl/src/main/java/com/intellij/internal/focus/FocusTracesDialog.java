@@ -17,7 +17,7 @@ package com.intellij.internal.focus;
 
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.wm.impl.FocusRequestInfo;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.table.JBTable;

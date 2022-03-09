@@ -23,10 +23,7 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.*;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
-import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.*;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.Language;
 import com.intellij.lang.LanguageNamesValidation;
@@ -39,7 +36,6 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import consulo.undoRedo.util.UndoUtil;
-import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
@@ -59,11 +55,11 @@ import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ide.ui.popup.JBPopupFactory;
+import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
@@ -825,14 +821,15 @@ public abstract class InplaceRefactoring {
     myBalloon.show(new PositionTracker<Balloon>(topLevelEditor.getContentComponent()) {
       @Override
       public RelativePoint recalculateLocation(Balloon object) {
-        if (myTarget != null && !popupFactory.isBestPopupLocationVisible(topLevelEditor)) {
+        EditorPopupHelper editorPopupHelper = EditorPopupHelper.getInstance();
+        if (myTarget != null && !editorPopupHelper.isBestPopupLocationVisible(topLevelEditor)) {
           return myTarget;
         }
         if (myCaretRangeMarker != null && myCaretRangeMarker.isValid()) {
           topLevelEditor.putUserData(PopupFactoryImpl.ANCHOR_POPUP_POSITION,
                                      topLevelEditor.offsetToVisualPosition(myCaretRangeMarker.getStartOffset()));
         }
-        final RelativePoint target = popupFactory.guessBestPopupLocation(topLevelEditor);
+        final RelativePoint target = editorPopupHelper.guessBestPopupLocation(topLevelEditor);
         final Point screenPoint = target.getScreenPoint();
         int y = screenPoint.y;
         if (target.getPoint().getY() > topLevelEditor.getLineHeight() + myBalloon.getPreferredSize().getHeight()) {

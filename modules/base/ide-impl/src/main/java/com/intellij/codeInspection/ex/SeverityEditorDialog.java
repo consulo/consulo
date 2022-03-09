@@ -38,7 +38,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;

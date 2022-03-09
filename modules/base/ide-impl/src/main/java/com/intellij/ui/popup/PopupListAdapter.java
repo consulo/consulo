@@ -8,8 +8,8 @@ import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
-import consulo.ide.ui.popup.ListComponentUpdater;
-import consulo.ide.ui.popup.PopupChooserBuilder;
+import consulo.ui.ex.popup.ListComponentUpdater;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.util.dataholder.Key;
@@ -32,12 +32,12 @@ import java.util.function.Predicate;
 /**
  * @author yole
  */
-class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T> {
+public class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T> {
   private final JList myList;
   private final PopupChooserBuilder myBuilder;
   private ListWithFilter myListWithFilter;
 
-  PopupListAdapter(PopupChooserBuilder builder, JList list) {
+  public PopupListAdapter(PopupChooserBuilder builder, JList list) {
     myBuilder = builder;
     myList = list;
   }
@@ -107,8 +107,8 @@ class PopupListAdapter<T> implements PopupChooserBuilder.PopupComponentAdapter<T
   }
 
   @Override
-  public ListComponentUpdater getBackgroundUpdater() {
-    return new JBListUpdater((JBList)(myList));
+  public ListComponentUpdater<T> getBackgroundUpdater() {
+    return new JBListUpdater<>((JBList)(myList));
   }
 
   @Override

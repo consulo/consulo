@@ -24,7 +24,7 @@ import consulo.component.extension.Extensions;
 import consulo.component.ProcessCanceledException;
 import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.refactoring.RefactoringBundle;

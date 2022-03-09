@@ -18,9 +18,9 @@ package com.intellij.util.net;
 import consulo.application.CommonBundle;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogWrapper;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.lang.ref.Ref;
-import com.intellij.ui.GuiUtils;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.util.ObjectUtil;
 import consulo.logging.Logger;
 
