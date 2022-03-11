@@ -20,25 +20,17 @@ import com.intellij.ide.actions.SettingsEntryPointAction;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.ide.plugins.PluginNode;
 import com.intellij.ide.plugins.RepositoryHelper;
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.notification.*;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.Application;
+import com.intellij.notification.NotificationAction;
 import com.intellij.openapi.application.ApplicationInfo;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.progress.ProgressIndicator;
+import consulo.component.ProcessCanceledException;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -50,8 +42,17 @@ import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
+import consulo.platform.CpuArchitecture;
+import consulo.platform.Platform;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -68,20 +69,62 @@ public class PlatformOrPluginUpdateChecker {
 
   private static final NotificationGroup ourGroup = new NotificationGroup("Platform Or Plugins Update", NotificationDisplayType.STICKY_BALLOON, false);
 
+  // windows ids
   private static final PluginId ourWinNoJre = PluginId.getId("consulo-win-no-jre");
   private static final PluginId ourWin = PluginId.getId("consulo-win");
   private static final PluginId ourWin64 = PluginId.getId("consulo-win64");
-  // dummy zip ids
+  private static final PluginId ourWinA64 = PluginId.getId("consulo-winA64");
+
+  // windows dummy zip ids
   private static final PluginId ourWinNoJreZip = PluginId.getId("consulo-win-no-jre-zip");
   private static final PluginId ourWinZip = PluginId.getId("consulo-win-zip");
   private static final PluginId ourWin64Zip = PluginId.getId("consulo-win64-zip");
+  private static final PluginId ourWinA64Zip = PluginId.getId("consulo-winA64-zip");
+
+  // linux ids
   private static final PluginId ourLinuxNoJre = PluginId.getId("consulo-linux-no-jre");
   private static final PluginId ourLinux = PluginId.getId("consulo-linux");
   private static final PluginId ourLinux64 = PluginId.getId("consulo-linux64");
-  private static final PluginId ourMacNoJre = PluginId.getId("consulo-mac-no-jre");
-  private static final PluginId ourMac64 = PluginId.getId("consulo-mac64");
 
-  private static final PluginId[] ourPlatformIds = {ourWinNoJre, ourWin, ourWin64, ourLinuxNoJre, ourLinux, ourLinux64, ourMacNoJre, ourMac64, ourWinNoJreZip, ourWinZip, ourWin64Zip};
+  // mac ids
+  private static final PluginId ourMac64NoJre = PluginId.getId("consulo-mac-no-jre");
+  private static final PluginId ourMacA64NoJre = PluginId.getId("consulo-macA64-no-jre");
+  private static final PluginId ourMac64 = PluginId.getId("consulo-mac64");
+  private static final PluginId ourMacA64 = PluginId.getId("consulo-macA64");
+
+  private static final PluginId[] ourPlatformIds = {
+          // win no jre (tar)
+          ourWinNoJre,
+          // win x32 (tar)
+          ourWin,
+          // win x64 (tar)
+          ourWin64,
+          // win ARM64 (tar)
+          ourWinA64,
+          // linux no jre (tar)
+          ourLinuxNoJre,
+          // linux x32 (tar)
+          ourLinux,
+          // linux x64 (tar)
+          ourLinux64,
+          // mac x64 no jre (tar)
+          ourMac64NoJre,
+          // mac x64 with jre (tar)
+          ourMac64,
+          // win no jre (zip)
+          ourWinNoJreZip,
+          // win x32 (zip)
+          ourWinZip,
+          // win x64 (zip)
+          ourWin64Zip,
+          // win ARM64 (zip)
+          ourWinA64Zip,
+          // mac ARM64 no jre (tar)
+          ourMacA64NoJre,
+          // mac ARM64 with jre (tar)
+          ourMacA64,
+          // ...
+  };
 
   private static final String ourForceJREBuild = "force.jre.build.on.update";
   private static final String ourForceJREBuildVersion = "force.jre.build.on.update.version";
@@ -89,15 +132,46 @@ public class PlatformOrPluginUpdateChecker {
   @Nonnull
   public static PluginId getPlatformPluginId() {
     boolean isJreBuild = isJreBuild();
-    boolean is64Bit = SystemInfo.is64Bit;
-    if (SystemInfo.isWindows) {
-      return isJreBuild ? (is64Bit ? ourWin64 : ourWin) : ourWinNoJre;
+
+    Platform platform = Platform.current();
+    Platform.OperatingSystem os = platform.os();
+    CpuArchitecture arch = platform.jvm().arch();
+
+    if (os.isWindows()) {
+      if (isJreBuild) {
+        if (arch == CpuArchitecture.AARCH64) {
+          return ourWinA64;
+        }
+        else if (arch == CpuArchitecture.X86_64) {
+          return ourWin64;
+        }
+        else if (arch == CpuArchitecture.X86) {
+          return ourWin;
+        }
+      }
+
+      return ourWinNoJre;
     }
-    else if (SystemInfo.isMac) {
-      return isJreBuild ? ourMac64 : ourMacNoJre;
+    else if (os.isMac()) {
+      if (arch == CpuArchitecture.AARCH64) {
+        return isJreBuild ? ourMacA64 : ourMacA64NoJre;
+      }
+      return isJreBuild ? ourMac64 : ourMac64NoJre;
     }
     else {
-      return isJreBuild ? (is64Bit ? ourLinux64 : ourLinux) : ourLinuxNoJre;
+      if (isJreBuild) {
+        if (arch == CpuArchitecture.AARCH64) {
+          // TODO [VISTALL] linux aarch64 support?
+        }
+        else if (arch == CpuArchitecture.X86_64) {
+          return ourLinux64;
+        }
+        else if (arch == CpuArchitecture.X86) {
+          return ourLinux;
+        }
+      }
+
+      return ourLinuxNoJre;
     }
   }
 
@@ -107,24 +181,24 @@ public class PlatformOrPluginUpdateChecker {
 
   public static boolean isForceBundledJreAtUpdate() {
     validateForceBundledJreVersion();
-    return PropertiesComponent.getInstance().getBoolean(ourForceJREBuild);
+    return ApplicationPropertiesComponent.getInstance().getBoolean(ourForceJREBuild);
   }
 
   public static void setForceBundledJreAtUpdate() {
-    PropertiesComponent.getInstance().setValue(ourForceJREBuildVersion, ApplicationInfo.getInstance().getBuild().toString());
-    PropertiesComponent.getInstance().setValue(ourForceJREBuild, true);
+    ApplicationPropertiesComponent.getInstance().setValue(ourForceJREBuildVersion, ApplicationInfo.getInstance().getBuild().toString());
+    ApplicationPropertiesComponent.getInstance().setValue(ourForceJREBuild, true);
   }
 
   /**
    * Validate force bundle jre flag. If flag set version changed - it will be dropped
    */
   private static void validateForceBundledJreVersion() {
-    String oldVer = PropertiesComponent.getInstance().getValue(ourForceJREBuildVersion);
+    String oldVer = ApplicationPropertiesComponent.getInstance().getValue(ourForceJREBuildVersion);
 
     String curVer = ApplicationInfo.getInstance().getBuild().toString();
 
     if (!Objects.equals(oldVer, curVer)) {
-      PropertiesComponent.getInstance().unsetValue(ourForceJREBuild);
+      ApplicationPropertiesComponent.getInstance().unsetValue(ourForceJREBuild);
     }
   }
 
