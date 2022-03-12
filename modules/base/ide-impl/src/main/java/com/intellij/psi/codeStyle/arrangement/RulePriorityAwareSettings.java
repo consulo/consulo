@@ -16,6 +16,8 @@
 package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.ArrangementSettings;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;

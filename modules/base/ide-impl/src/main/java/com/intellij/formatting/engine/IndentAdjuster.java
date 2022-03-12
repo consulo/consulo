@@ -16,8 +16,9 @@
 package com.intellij.formatting.engine;
 
 import com.intellij.formatting.*;
-import com.intellij.psi.codeStyle.CodeStyleConstraints;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.internal.*;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

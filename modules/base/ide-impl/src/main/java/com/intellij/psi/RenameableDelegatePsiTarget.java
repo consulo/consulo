@@ -16,7 +16,7 @@
 package com.intellij.psi;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.PomRenameableTarget;
+import consulo.language.pom.PomRenameableTarget;
 import consulo.language.psi.PsiNamedElement;
 
 import javax.annotation.Nonnull;

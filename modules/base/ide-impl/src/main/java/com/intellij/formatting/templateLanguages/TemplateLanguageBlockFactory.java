@@ -15,10 +15,10 @@
  */
 package com.intellij.formatting.templateLanguages;
 
-import com.intellij.formatting.Alignment;
-import com.intellij.formatting.Wrap;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Wrap;
 import consulo.language.ast.ASTNode;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,6 +15,7 @@
  */
 package consulo.util.lang.reflect;
 
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
@@ -34,6 +35,33 @@ public class ReflectionUtil {
 
   public static boolean isAssignable(@Nonnull Class<?> ancestor, @Nonnull Class<?> descendant) {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);
+  }
+
+  public static boolean comparePublicNonFinalFields(@Nonnull Object first, @Nonnull Object second) {
+    Set<Field> firstFields = Set.of(first.getClass().getFields());
+    for (Field field : second.getClass().getFields()) {
+      if (firstFields.contains(field)) {
+        if (isPublic(field) && !isFinal(field)) {
+          try {
+            if (!Comparing.equal(field.get(first), field.get(second))) {
+              return false;
+            }
+          }
+          catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  private static boolean isPublic(final Member field) {
+    return Modifier.isPublic(field.getModifiers());
+  }
+
+  private static boolean isFinal(final Member field) {
+    return Modifier.isFinal(field.getModifiers());
   }
 
   @Nonnull

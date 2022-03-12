@@ -16,6 +16,10 @@
 package com.intellij.formatting;
 
 import com.intellij.util.SequentialTask;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.internal.AbstractBlockWrapper;
+import consulo.language.codeStyle.internal.LeafBlockWrapper;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

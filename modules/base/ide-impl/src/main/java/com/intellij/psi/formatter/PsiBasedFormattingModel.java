@@ -16,8 +16,9 @@
 
 package com.intellij.psi.formatter;
 
-import com.intellij.formatting.Block;
-import com.intellij.formatting.FormattingDocumentModel;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormatterUtil;
+import consulo.language.codeStyle.FormattingDocumentModel;
 import com.intellij.formatting.FormattingModelEx;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.file.inject.DocumentWindow;

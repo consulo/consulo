@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.highlighting.HighlightHandlerBase;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandler;
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandlerBase;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
 import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesHandler;
@@ -35,8 +35,8 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeInsight.TargetElementUtil;
-import consulo.codeInsight.TargetElementUtilEx;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.TargetElementUtilExtender;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
@@ -89,7 +89,7 @@ public class IdentifierHighlighterPass extends TextEditorHighlightingPass {
       if (!myHighlightUsagesHandler.highlightReferences()) return;
     }
 
-    Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilEx.ELEMENT_NAME_ACCEPTED, TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED);
+    Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED, TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED);
     PsiElement myTarget = TargetElementUtil.findTargetElement(myEditor, flags, myCaretOffset);
 
     if (myTarget == null) {

@@ -16,15 +16,15 @@
 
 package com.intellij.formatting.blocks;
 
-import com.intellij.formatting.Block;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Spacing;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
 import consulo.language.ast.ASTNode;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.formatter.common.AbstractBlock;
+import consulo.language.codeStyle.AbstractBlock;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

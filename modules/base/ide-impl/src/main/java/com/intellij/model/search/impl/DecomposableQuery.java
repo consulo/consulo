@@ -1,6 +1,6 @@
 package com.intellij.model.search.impl;
 
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import javax.annotation.Nonnull;
 
 // from kotlin

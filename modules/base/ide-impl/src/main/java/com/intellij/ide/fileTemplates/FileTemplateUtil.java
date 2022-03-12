@@ -33,7 +33,7 @@ import consulo.application.util.function.ThrowableComputable;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import com.intellij.util.ArrayUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;

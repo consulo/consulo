@@ -22,32 +22,17 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import consulo.application.CommonBundle;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;
-import consulo.ui.ex.awt.tree.TreeState;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.ApplicationManager;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataSink;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.application.ModalityState;
-import consulo.project.ProjectComponent;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.Change;
@@ -58,19 +43,37 @@ import com.intellij.openapi.vcs.changes.patch.PatchFileType;
 import com.intellij.openapi.vcs.changes.patch.RelativePathCalculator;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentI;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.navigation.Navigatable;
-import com.intellij.pom.NavigatableAdapter;
-import com.intellij.ui.*;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.ContentFactory;
-import consulo.ui.ex.awt.tree.Tree;
+import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.text.DateFormatUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.project.ProjectComponent;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeState;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -354,12 +357,12 @@ public class ShelvedChangesViewManager implements ProjectComponent {
         }
         for (final ShelvedChange shelvedChange : shelvedChanges) {
           if (shelvedChange.getBeforePath() != null && ! FileStatus.ADDED.equals(shelvedChange.getFileStatus())) {
-            final NavigatableAdapter navigatable = new NavigatableAdapter() {
+            final Navigatable navigatable = new Navigatable() {
               @Override
               public void navigate(boolean requestFocus) {
                 final VirtualFile vf = shelvedChange.getBeforeVFUnderProject(myProject);
                 if (vf != null) {
-                  navigate(myProject, vf, true);
+                  OpenFileDescriptorFactory.getInstance(myProject).builder(vf).build().navigate(requestFocus);
                 }
               }
             };

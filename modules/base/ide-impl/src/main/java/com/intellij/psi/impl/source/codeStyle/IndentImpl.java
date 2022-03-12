@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.source.codeStyle;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.Indent;
 
 public class IndentImpl implements Indent{

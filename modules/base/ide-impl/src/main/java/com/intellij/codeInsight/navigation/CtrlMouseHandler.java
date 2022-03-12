@@ -66,7 +66,7 @@ import com.intellij.util.Consumer;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 import consulo.logging.Logger;
 import org.intellij.lang.annotations.JdkConstants;
 import org.jetbrains.annotations.TestOnly;

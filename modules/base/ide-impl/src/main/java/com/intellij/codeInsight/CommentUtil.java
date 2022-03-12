@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.formatting.IndentData;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.internal.IndentData;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.CommentUtilCore;

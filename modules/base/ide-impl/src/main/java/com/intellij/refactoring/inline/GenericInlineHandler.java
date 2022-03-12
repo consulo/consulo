@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.inline;
 
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 import consulo.language.Language;
 import com.intellij.lang.refactoring.InlineHandler;
 import com.intellij.lang.refactoring.InlineHandlers;

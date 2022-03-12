@@ -16,7 +16,12 @@
 package com.intellij.formatting;
 
 import consulo.document.Document;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.internal.AbstractBlockWrapper;
+import consulo.language.codeStyle.internal.AlignmentImpl;
+import consulo.language.codeStyle.internal.LeafBlockWrapper;
+
 import javax.annotation.Nonnull;
 
 import java.util.Map;
@@ -70,7 +75,7 @@ public interface BlockAlignmentProcessor {
     @Nonnull
     public final AlignmentImpl                                        alignment;
     @Nonnull
-    public final LeafBlockWrapper                                     targetBlock;
+    public final LeafBlockWrapper targetBlock;
     @Nonnull
     public final Map<AbstractBlockWrapper, Set<AbstractBlockWrapper>> alignmentMappings;
     @Nonnull

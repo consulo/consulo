@@ -16,6 +16,7 @@
 package com.intellij.concurrency;
 
 import com.google.common.util.concurrent.SettableFuture;
+import consulo.util.concurrent.ResultConsumer;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;

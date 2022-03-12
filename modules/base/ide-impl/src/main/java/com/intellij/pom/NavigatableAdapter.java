@@ -27,11 +27,14 @@ import consulo.virtualFileSystem.VirtualFile;
  *
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public abstract class NavigatableAdapter implements Navigatable {
+  @Override
   public boolean canNavigate() {
     return true;
   }
 
+  @Override
   public boolean canNavigateToSource() {
     return true;
   }

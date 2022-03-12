@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting.alignment;
 
-import com.intellij.formatting.Alignment;
+import consulo.language.codeStyle.Alignment;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

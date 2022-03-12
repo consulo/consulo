@@ -16,8 +16,8 @@
 
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.internal.IndentHelper;
 import consulo.language.psi.PsiFile;

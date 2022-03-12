@@ -44,7 +44,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.NavigatableWithText;
+import consulo.language.pom.NavigatableWithText;
 import com.intellij.ui.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.awt.tree.Tree;

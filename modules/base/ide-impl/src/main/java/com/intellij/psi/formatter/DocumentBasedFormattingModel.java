@@ -16,9 +16,9 @@
 
 package com.intellij.psi.formatter;
 
-import com.intellij.formatting.Block;
-import com.intellij.formatting.FormattingDocumentModel;
-import com.intellij.formatting.FormattingModel;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingDocumentModel;
+import consulo.language.codeStyle.FormattingModel;
 import com.intellij.formatting.FormattingModelEx;
 import com.intellij.formatting.FormattingModelWithShiftIndentInsideDocumentRange;
 import consulo.language.ast.ASTNode;
@@ -29,8 +29,8 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.impl.psi.CodeEditUtil;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

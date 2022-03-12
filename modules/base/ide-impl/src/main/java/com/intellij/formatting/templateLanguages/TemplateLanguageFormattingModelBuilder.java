@@ -20,14 +20,15 @@ import static com.intellij.formatting.templateLanguages.BlockUtil.buildChildWrap
 import static com.intellij.formatting.templateLanguages.BlockUtil.filterBlocksByRange;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
 import consulo.document.util.TextRange;
+import consulo.language.codeStyle.*;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
-import com.intellij.psi.formatter.common.AbstractBlock;
+import consulo.language.codeStyle.AbstractBlock;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import javax.annotation.Nonnull;
 

@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.editorActions.enter;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -34,9 +34,9 @@ import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import javax.annotation.Nonnull;

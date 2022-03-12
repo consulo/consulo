@@ -8,7 +8,7 @@ import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.util.lang.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.codeStyle.CodeFormatterFacade;
 import consulo.language.ast.IElementType;
 import consulo.language.plain.psi.PsiPlainTextFile;

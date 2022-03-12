@@ -17,9 +17,9 @@
 package com.intellij.application.options;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static com.intellij.psi.codeStyle.CodeStyleDefaults.DEFAULT_CONTINUATION_INDENT_SIZE;
+import static consulo.language.codeStyle.CodeStyleDefaults.DEFAULT_CONTINUATION_INDENT_SIZE;
 
 /**
  * @author yole

@@ -17,6 +17,7 @@ package com.intellij.formatting;
 
 import consulo.document.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.codeStyle.FormatTextRange;
 
 import java.util.ArrayList;
 import java.util.List;

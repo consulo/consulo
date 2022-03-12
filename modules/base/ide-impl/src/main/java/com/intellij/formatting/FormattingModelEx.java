@@ -17,6 +17,7 @@ package com.intellij.formatting;
 
 import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
+import consulo.language.codeStyle.FormattingModel;
 
 /**
  * @author yole

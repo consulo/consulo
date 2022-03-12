@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
 import com.intellij.psi.codeStyle.CodeStyleSchemes;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

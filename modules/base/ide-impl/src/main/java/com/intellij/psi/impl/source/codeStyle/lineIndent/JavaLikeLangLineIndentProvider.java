@@ -15,14 +15,14 @@
  */
 package com.intellij.psi.impl.source.codeStyle.lineIndent;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.formatting.Indent;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.Indent;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.project.Project;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import com.intellij.psi.impl.source.codeStyle.SemanticEditorPosition;
 import com.intellij.psi.impl.source.codeStyle.SemanticEditorPosition.SyntaxElement;
@@ -32,8 +32,8 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.intellij.formatting.Indent.Type;
-import static com.intellij.formatting.Indent.Type.*;
+import static consulo.language.codeStyle.Indent.Type;
+import static consulo.language.codeStyle.Indent.Type.*;
 import static com.intellij.psi.impl.source.codeStyle.lineIndent.JavaLikeLangLineIndentProvider.JavaLikeElement.*;
 
 /**

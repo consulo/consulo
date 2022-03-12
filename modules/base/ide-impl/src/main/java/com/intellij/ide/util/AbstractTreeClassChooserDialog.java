@@ -47,7 +47,7 @@ import com.intellij.ui.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FindSymbolParameters;
 import consulo.ui.ex.awt.UIUtil;

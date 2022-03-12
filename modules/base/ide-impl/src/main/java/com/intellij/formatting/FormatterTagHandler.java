@@ -18,10 +18,12 @@ package com.intellij.formatting;
 import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Block;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiRecursiveElementVisitor;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

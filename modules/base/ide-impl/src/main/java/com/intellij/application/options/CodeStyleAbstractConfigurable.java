@@ -19,7 +19,7 @@ import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

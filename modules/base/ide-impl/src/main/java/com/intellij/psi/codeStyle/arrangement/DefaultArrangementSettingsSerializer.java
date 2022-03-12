@@ -16,10 +16,11 @@
 package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
+import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import com.intellij.psi.codeStyle.arrangement.match.*;
 import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.codeStyle.arrangement.ArrangementSettings;
 import consulo.logging.Logger;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -76,7 +77,7 @@ public class DefaultArrangementSettingsSerializer implements ArrangementSettings
   @Nonnull
   private final Mixin                                    myMixin;
   @Nonnull
-  private final ArrangementSettings                      myDefaultSettings;
+  private final ArrangementSettings myDefaultSettings;
 
   public DefaultArrangementSettingsSerializer(@Nonnull StdArrangementSettings defaultSettings) {
     this(Mixin.NULL, defaultSettings);

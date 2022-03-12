@@ -1,12 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.formatting;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.lang.LanguageFormattingRestriction;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.LanguageFormattingRestriction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiInvalidElementAccessException;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 
 public class ExcludedFileFormattingRestriction implements LanguageFormattingRestriction {

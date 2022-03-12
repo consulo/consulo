@@ -363,7 +363,6 @@ open module consulo.ide.impl {
   exports com.intellij.formatting.alignment;
   exports com.intellij.formatting.blocks;
   exports com.intellij.formatting.engine;
-  exports com.intellij.formatting.fileSet;
   exports com.intellij.formatting.templateLanguages;
   //exports com.intellij.framework;
   exports com.intellij.framework.detection;
@@ -764,7 +763,6 @@ open module consulo.ide.impl {
   exports com.intellij.psi.codeStyle;
   exports com.intellij.psi.codeStyle.arrangement;
   exports com.intellij.psi.codeStyle.arrangement.engine;
-  exports com.intellij.psi.codeStyle.arrangement.group;
   exports com.intellij.psi.codeStyle.arrangement.match;
   exports com.intellij.psi.codeStyle.arrangement.model;
   exports com.intellij.psi.codeStyle.arrangement.std;

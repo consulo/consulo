@@ -18,7 +18,7 @@ package com.intellij.find.findUsages;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ReadActionProcessor;
+import consulo.application.util.ReadActionProcessor;
 import consulo.project.Project;
 import com.intellij.openapi.util.NullableComputable;
 import consulo.document.util.TextRange;

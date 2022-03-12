@@ -15,7 +15,8 @@
  */
 package com.intellij.psi.formatter.common;
 
-import com.intellij.formatting.Block;
+import consulo.language.codeStyle.AbstractBlock;
+import consulo.language.codeStyle.Block;
 import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;

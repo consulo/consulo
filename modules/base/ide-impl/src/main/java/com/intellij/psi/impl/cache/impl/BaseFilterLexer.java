@@ -20,7 +20,7 @@ import consulo.language.lexer.DelegateLexer;
 import consulo.language.lexer.Lexer;
 import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
 import com.intellij.psi.search.IndexPattern;
-import com.intellij.psi.search.UsageSearchContext;
+import consulo.language.psi.search.UsageSearchContext;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

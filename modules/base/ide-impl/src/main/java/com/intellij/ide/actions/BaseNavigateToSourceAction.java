@@ -19,7 +19,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.navigation.Navigatable;
-import com.intellij.pom.NavigatableWithText;
+import consulo.language.pom.NavigatableWithText;
 import consulo.language.pom.PomTargetPsiElement;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.annotation.RequiredUIAccess;

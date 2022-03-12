@@ -5,12 +5,15 @@ import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
+import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * @author VISTALL
@@ -110,5 +113,42 @@ public final class ExtensionList<E, C extends ComponentManager> {
     checkComponent(component);
 
     component.getExtensionPoint(getId()).processWithPluginDescriptor(consumer);
+  }
+
+  @Nullable
+  public <R> R computeSafeIfAny(@Nonnull C componentManager, @Nonnull Function<? super E, ? extends R> processor) {
+    for (E extension : getExtensionList(componentManager)) {
+      try {
+        R result = processor.apply(extension);
+        if (result != null) {
+          return result;
+        }
+      }
+      catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          throw ControlFlowException.rethrow(e);
+        }
+        PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, extension.getClass());
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  public E findFirstSafe(@Nonnull C componentManager, @Nonnull Predicate<E> predicate) {
+    for (E extension : getExtensionList(componentManager)) {
+      try {
+        if (predicate.test(extension)) {
+          return extension;
+        }
+      }
+      catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          throw ControlFlowException.rethrow(e);
+        }
+        PluginExceptionUtil.logPluginError(LOG, e.getMessage(), e, extension.getClass());
+      }
+    }
+    return null;
   }
 }

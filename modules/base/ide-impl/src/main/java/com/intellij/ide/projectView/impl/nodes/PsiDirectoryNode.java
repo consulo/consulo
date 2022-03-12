@@ -36,7 +36,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.NavigatableWithText;
+import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiPackageHelper;
 import consulo.ui.ex.SimpleTextAttributes;

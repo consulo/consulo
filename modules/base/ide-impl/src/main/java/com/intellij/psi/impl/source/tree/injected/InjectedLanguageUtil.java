@@ -2,55 +2,57 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.psi.PsiFileBase;
-import consulo.document.util.ProperTextRange;
-import consulo.language.file.inject.DocumentWindow;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.language.file.inject.VirtualFileWindow;
-import consulo.language.ast.ASTNode;
-import consulo.language.Language;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.MultiHostRegistrar;
-import consulo.codeEditor.Caret;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.impl.DocumentEx;
-import consulo.colorScheme.TextAttributes;
-import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.Getter;
+import com.intellij.openapi.util.Pair;
+import com.intellij.psi.injection.ReferenceInjector;
+import com.intellij.reference.SoftReference;
+import com.intellij.util.ObjectUtil;
+import com.intellij.util.containers.ConcurrentList;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.EditorInternal;
+import consulo.colorScheme.TextAttributes;
+import consulo.document.Document;
+import consulo.document.impl.DocumentEx;
+import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditorManager;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
 import consulo.language.file.FileViewProvider;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.impl.DebugUtil;
+import consulo.language.impl.file.AbstractFileViewProvider;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.psi.PsiFileBase;
+import consulo.language.impl.psi.internal.BooleanRunnable;
+import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
+import consulo.language.impl.psi.internal.PsiManagerEx;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.*;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.*;
-import consulo.util.lang.Trinity;
-import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.psi.internal.BooleanRunnable;
-import consulo.language.impl.DebugUtil;
-import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
-import consulo.language.impl.psi.internal.PsiManagerEx;
-import consulo.language.impl.psi.DummyHolder;
-import com.intellij.psi.injection.ReferenceInjector;
-import consulo.language.ast.IElementType;
-import com.intellij.reference.SoftReference;
-import consulo.language.file.light.LightVirtualFile;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ConcurrentList;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.codeEditor.impl.EditorInternal;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.util.lang.Trinity;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -785,8 +787,8 @@ public class InjectedLanguageUtil {
     VirtualFile oldInjectedVFile = provider.getVirtualFile();
     VirtualFile hostVirtualFile = hostViewProvider.getVirtualFile();
     BooleanRunnable runnable = InjectionRegistrarImpl
-            .reparse(languageVersion, (DocumentWindowImpl)injectedDocument, injectedPsiFile, (VirtualFileWindow)oldInjectedVFile, hostVirtualFile, hostPsiFile, (DocumentEx)hostDocument, indicator, oldRoot,
-                     newRoot, documentManager);
+            .reparse(languageVersion, (DocumentWindowImpl)injectedDocument, injectedPsiFile, (VirtualFileWindow)oldInjectedVFile, hostVirtualFile, hostPsiFile, (DocumentEx)hostDocument, indicator,
+                     oldRoot, newRoot, documentManager);
     if (runnable == null) {
       EditorWindowImpl.disposeEditorFor(injectedDocument);
     }

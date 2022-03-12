@@ -2,14 +2,14 @@
 package com.intellij.application.options.codeStyle.excludedFiles;
 
 import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
-import com.intellij.formatting.fileSet.FileSetDescriptor;
-import com.intellij.formatting.fileSet.NamedScopeDescriptor;
+import consulo.language.codeStyle.fileSet.FileSetDescriptor;
+import consulo.language.codeStyle.fileSet.NamedScopeDescriptor;
 import com.intellij.ide.util.scopeChooser.EditScopesDialog;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.psi.codeStyle.CodeStyleScheme;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;

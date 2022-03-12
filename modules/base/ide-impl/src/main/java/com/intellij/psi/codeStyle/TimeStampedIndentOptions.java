@@ -17,6 +17,8 @@ package com.intellij.psi.codeStyle;
 
 
 import consulo.document.Document;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+
 import javax.annotation.Nonnull;
 
 

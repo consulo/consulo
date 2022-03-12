@@ -34,6 +34,7 @@ module consulo.language.api {
   exports consulo.language.psi.resolve;
   exports consulo.language.psi.scope;
   exports consulo.language.psi.stub;
+  exports consulo.language.psi.search;
   exports consulo.language.psi.search.scope;
   exports consulo.language.psi.stub.internal to consulo.ide.impl, consulo.language.impl;
 

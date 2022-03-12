@@ -15,13 +15,13 @@
  */
 package com.intellij.formatting.templateLanguages;
 
-import com.intellij.formatting.*;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
+import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.formatter.common.AbstractBlock;
+import consulo.language.codeStyle.AbstractBlock;
 import consulo.language.psi.OuterLanguageElement;
 
 import javax.annotation.Nonnull;

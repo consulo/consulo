@@ -38,7 +38,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.NavigatableWithText;
+import consulo.language.pom.NavigatableWithText;
 import consulo.content.bundle.SdkUtil;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.module.content.layer.orderEntry.OrderEntryType;

@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.navigation;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.ContainerProvider;
+import consulo.language.psi.search.ContainerProvider;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
@@ -28,7 +28,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

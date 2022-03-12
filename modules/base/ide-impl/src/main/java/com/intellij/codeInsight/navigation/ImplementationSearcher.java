@@ -30,10 +30,10 @@ import consulo.content.scope.SearchScope;
 import com.intellij.psi.search.searches.DefinitionsScopedSearch;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.CommonProcessors;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.codeInsight.TargetElementUtil;
-import consulo.codeInsight.TargetElementUtilEx;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.TargetElementUtilExtender;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -46,8 +46,8 @@ public class ImplementationSearcher {
   PsiElement[] searchImplementations(Editor editor, PsiElement element, int offset) {
     boolean onRef = ApplicationManager.getApplication().runReadAction((Computable<Boolean>)() -> {
       Set<String> flags = ContainerUtil.newHashSet(getFlags());
-      flags.remove(TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED);
-      flags.remove(TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
+      flags.remove(TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED);
+      flags.remove(TargetElementUtilExtender.LOOKUP_ITEM_ACCEPTED);
 
       return TargetElementUtil.findTargetElement(editor, flags, offset) == null;
     });

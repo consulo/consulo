@@ -19,7 +19,7 @@ package com.intellij.codeInsight.completion;
 import consulo.language.editor.completion.lookup.TailType;
 import consulo.language.editor.completion.lookup.InsertHandler;
 import consulo.language.editor.completion.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupItem;
+import consulo.language.editor.completion.lookup.LookupItem;
 import consulo.language.editor.completion.lookup.LookupValueWithUIHint;
 import consulo.language.editor.completion.lookup.PresentableLookupValue;
 import com.intellij.codeInsight.template.Template;

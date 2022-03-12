@@ -20,7 +20,7 @@ import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import consulo.content.ContentFolderTypeProvider;
 
 import javax.annotation.Nonnull;

@@ -31,7 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.psi.codeStyle.CodeStyleSettingsChangeEvent;
 import com.intellij.psi.codeStyle.CodeStyleSettingsListener;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import com.intellij.ui.EditorNotifications;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.mac.MacGestureSupportForEditor;

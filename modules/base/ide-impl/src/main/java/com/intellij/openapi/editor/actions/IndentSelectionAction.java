@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.document.impl.DocumentUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotation.access.RequiredWriteAction;

@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.psi.ElementDescriptionLocation;
-import com.intellij.psi.ElementDescriptionProvider;
+import consulo.language.psi.ElementDescriptionLocation;
+import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import com.intellij.psi.meta.PsiPresentableMetaData;
 import javax.annotation.Nonnull;

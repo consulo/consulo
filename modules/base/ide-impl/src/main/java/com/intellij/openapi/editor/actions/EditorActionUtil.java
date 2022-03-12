@@ -44,7 +44,7 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.ast.IElementType;
 import com.intellij.util.EditorPopupHandler;
 import com.intellij.util.text.CharArrayUtil;

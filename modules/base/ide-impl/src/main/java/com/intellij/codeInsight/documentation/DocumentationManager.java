@@ -43,7 +43,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.popup.JBPopupFactory;

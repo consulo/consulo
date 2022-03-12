@@ -29,7 +29,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

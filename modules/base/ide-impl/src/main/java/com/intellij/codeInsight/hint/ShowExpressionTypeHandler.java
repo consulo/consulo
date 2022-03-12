@@ -22,7 +22,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

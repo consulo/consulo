@@ -18,6 +18,8 @@ package com.intellij.formatting.engine;
 import com.intellij.formatting.*;
 import consulo.document.util.TextRange;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.internal.*;
 
 import java.util.HashSet;
 import java.util.List;

@@ -4,7 +4,7 @@ package com.intellij.application.options.codeStyle;
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.Nls;
 
 public class OtherFileTypesCodeStyleConfigurable extends CodeStyleAbstractConfigurable {

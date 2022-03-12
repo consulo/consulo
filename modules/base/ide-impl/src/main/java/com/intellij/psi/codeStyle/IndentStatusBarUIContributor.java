@@ -1,12 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.util.text.HtmlBuilder;
 import com.intellij.openapi.util.text.HtmlChunk;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
+import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import com.intellij.psi.codeStyle.modifier.CodeStyleStatusBarUIContributor;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;

@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle.arrangement.additional;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.intellij.ui.EnumComboBoxModel;
 import com.intellij.ui.OptionGroup;
 import javax.annotation.Nonnull;

@@ -17,10 +17,10 @@
 package com.intellij.application.options;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import com.intellij.ui.OptionGroup;
 import com.intellij.ui.components.fields.IntegerField;
 import javax.annotation.Nonnull;
@@ -28,10 +28,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
-import static com.intellij.psi.codeStyle.CodeStyleConstraints.*;
-import static com.intellij.psi.codeStyle.CodeStyleDefaults.DEFAULT_INDENT_SIZE;
-import static com.intellij.psi.codeStyle.CodeStyleDefaults.DEFAULT_TAB_SIZE;
-import static com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider.SettingsType.INDENT_SETTINGS;
+import static consulo.language.codeStyle.CodeStyleConstraints.*;
+import static consulo.language.codeStyle.CodeStyleDefaults.DEFAULT_INDENT_SIZE;
+import static consulo.language.codeStyle.CodeStyleDefaults.DEFAULT_TAB_SIZE;
+import static consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider.SettingsType.INDENT_SETTINGS;
 
 @SuppressWarnings({"Duplicates", "deprecation", "DeprecatedIsStillUsed"})
 public class IndentOptionsEditor extends OptionGroup implements CodeStyleSettingsCustomizable {

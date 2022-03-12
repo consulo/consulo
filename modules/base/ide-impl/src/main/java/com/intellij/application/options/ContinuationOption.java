@@ -13,8 +13,8 @@
 // limitations under the License.
 package com.intellij.application.options;
 
-import com.intellij.psi.codeStyle.CodeStyleConstraints;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleConstraints;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.intellij.ui.components.fields.IntegerField;
 import com.intellij.ui.components.fields.valueEditors.ValueEditor;
 import javax.annotation.Nonnull;

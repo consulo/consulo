@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.generation;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
@@ -27,7 +27,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.formatting.IndentData;
+import consulo.language.codeStyle.internal.IndentData;
 import com.intellij.ide.highlighter.custom.CustomFileTypeLexer;
 import com.intellij.lang.*;
 import consulo.codeEditor.Caret;
@@ -50,8 +50,8 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;
 import com.intellij.psi.*;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.templateLanguages.MultipleLangCommentProvider;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.ast.IElementType;

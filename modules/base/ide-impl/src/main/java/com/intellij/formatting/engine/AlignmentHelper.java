@@ -21,6 +21,11 @@ import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.document.Document;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.internal.AbstractBlockWrapper;
+import consulo.language.codeStyle.internal.AlignmentImpl;
+import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;
 

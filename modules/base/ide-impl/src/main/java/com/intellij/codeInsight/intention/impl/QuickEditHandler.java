@@ -18,68 +18,67 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.codeInsight.editorActions.CopyPastePreProcessor;
 import com.intellij.codeInsight.lookup.LookupManager;
 import com.intellij.codeInsight.template.TemplateManager;
-import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.document.util.ProperTextRange;
-import consulo.codeEditor.*;
-import consulo.language.psi.ElementManipulators;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.Language;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.ApplicationManager;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorActionManager;
-import consulo.document.ReadonlyFragmentModificationHandler;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.RangeMarker;
-import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.event.EditorFactoryAdapter;
-import consulo.codeEditor.event.EditorFactoryEvent;
-import consulo.document.impl.DocumentEx;
-import consulo.component.extension.Extensions;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.document.Document;
-import consulo.document.util.Segment;
-import consulo.document.util.TextRange;
-import consulo.language.psi.*;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.action.IdeActions;
-import consulo.util.lang.Trinity;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.JBPopupFactory;
-import com.intellij.openapi.util.*;
-import consulo.util.lang.StringHash;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
-import consulo.language.impl.psi.internal.FileContextUtil;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.impl.source.tree.injected.Place;
-import consulo.language.file.light.LightVirtualFile;
-import consulo.ui.ex.RelativePoint;
-import consulo.document.impl.DocumentUtil;
-import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.text.CharArrayUtil;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.EditorFactoryEvent;
+import consulo.component.extension.Extensions;
+import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.ReadOnlyFragmentModificationException;
+import consulo.document.ReadonlyFragmentModificationHandler;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.document.impl.DocumentEx;
+import consulo.document.impl.DocumentUtil;
+import consulo.document.util.ProperTextRange;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.language.Language;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.impl.psi.internal.FileContextUtil;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.CommonShortcuts;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.StringHash;
+import consulo.util.lang.Trinity;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -128,9 +127,15 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
     PsiFileFactory factory = PsiFileFactory.getInstance(project);
     String text = InjectedLanguageManager.getInstance(project).getUnescapedText(injectedFile);
-    String newFileName =
-            StringUtil.notNullize(language.getDisplayName(), "Injected") + " Fragment " + "(" +
-            origFile.getName() + ":" + firstShred.getHost().getTextRange().getStartOffset() + ")" + "." + fileType.getDefaultExtension();
+    String newFileName = StringUtil.notNullize(language.getDisplayName(), "Injected") +
+                         " Fragment " +
+                         "(" +
+                         origFile.getName() +
+                         ":" +
+                         firstShred.getHost().getTextRange().getStartOffset() +
+                         ")" +
+                         "." +
+                         fileType.getDefaultExtension();
 
     // preserve \r\n as it is done in MultiHostRegistrarImpl
     myNewFile = factory.createFileFromText(newFileName, language, text, true, false);
@@ -142,8 +147,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
     myNewVirtualFile.setOriginalFile(origFile.getVirtualFile());
     // suppress possible errors as in injected mode
-    myNewFile.putUserData(InjectedLanguageUtil.FRANKENSTEIN_INJECTION,
-                          injectedFile.getUserData(InjectedLanguageUtil.FRANKENSTEIN_INJECTION));
+    myNewFile.putUserData(InjectedLanguageUtil.FRANKENSTEIN_INJECTION, injectedFile.getUserData(InjectedLanguageUtil.FRANKENSTEIN_INJECTION));
     myNewFile.putUserData(FileContextUtil.INJECTED_IN_ELEMENT, shreds.getHostPointer());
     myNewDocument = PsiDocumentManager.getInstance(project).getDocument(myNewFile);
     assert myNewDocument != null;
@@ -160,7 +164,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
       @Override
       public void editorCreated(@Nonnull EditorFactoryEvent event) {
         if (event.getEditor().getDocument() != myNewDocument) return;
-        myEditorCount ++;
+        myEditorCount++;
         final EditorActionHandler editorEscape = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_ESCAPE);
         if (!myAction.isShowInBalloon()) {
           new AnAction() {
@@ -168,10 +172,10 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
             @Override
             public void update(AnActionEvent e) {
               Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
-              e.getPresentation().setEnabled(
-                      editor != null && LookupManager.getActiveLookup(editor) == null &&
-                      TemplateManager.getInstance(myProject).getActiveTemplate(editor) == null &&
-                      (editorEscape == null || !editorEscape.isEnabled(editor, e.getDataContext())));
+              e.getPresentation().setEnabled(editor != null &&
+                                             LookupManager.getActiveLookup(editor) == null &&
+                                             TemplateManager.getInstance(myProject).getActiveTemplate(editor) == null &&
+                                             (editorEscape == null || !editorEscape.isEnabled(editor, e.getDataContext())));
             }
 
             @RequiredUIAccess
@@ -186,7 +190,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
       @Override
       public void editorReleased(@Nonnull EditorFactoryEvent event) {
         if (event.getEditor().getDocument() != myNewDocument) return;
-        if (-- myEditorCount > 0) return;
+        if (--myEditorCount > 0) return;
 
         if (Boolean.TRUE.equals(myNewVirtualFile.getUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN))) return;
 
@@ -196,9 +200,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
     if ("JAVA".equals(firstShred.getHost().getLanguage().getID())) {
       PsiLanguageInjectionHost.Shred lastShred = ContainerUtil.getLastItem(shreds);
-      myAltFullRange = myOrigDocument.createRangeMarker(
-              firstShred.getHostRangeMarker().getStartOffset(),
-              lastShred.getHostRangeMarker().getEndOffset());
+      myAltFullRange = myOrigDocument.createRangeMarker(firstShred.getHostRangeMarker().getStartOffset(), lastShred.getHostRangeMarker().getEndOffset());
       myAltFullRange.setGreedyToLeft(true);
       myAltFullRange.setGreedyToRight(true);
 
@@ -213,9 +215,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
   }
 
   public boolean isValid() {
-    boolean valid = myNewVirtualFile.isValid() &&
-                    (myAltFullRange == null && myInjectedFile.isValid() ||
-                     myAltFullRange != null && myAltFullRange.isValid());
+    boolean valid = myNewVirtualFile.isValid() && (myAltFullRange == null && myInjectedFile.isValid() || myAltFullRange != null && myAltFullRange.isValid());
     if (valid) {
       for (Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer> t : myMarkers) {
         if (!t.first.isValid() || !t.second.isValid() || t.third.getElement() == null) {
@@ -231,14 +231,9 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     if (myAction.isShowInBalloon()) {
       final JComponent component = myAction.createBalloonComponent(myNewFile);
       if (component != null) {
-        final Balloon balloon = JBPopupFactory.getInstance().createBalloonBuilder(component)
-                .setShadow(true)
-                .setAnimationCycle(0)
-                .setHideOnClickOutside(true)
-                .setHideOnKeyOutside(true)
-                .setHideOnAction(false)
-                .setFillColor(UIUtil.getControlColor())
-                .createBalloon();
+        final Balloon balloon =
+                JBPopupFactory.getInstance().createBalloonBuilder(component).setShadow(true).setAnimationCycle(0).setHideOnClickOutside(true).setHideOnKeyOutside(true).setHideOnAction(false)
+                        .setFillColor(UIUtil.getControlColor()).createBalloon();
         new AnAction() {
           @RequiredUIAccess
           @Override
@@ -351,15 +346,12 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(myProject);
     int curOffset = -1;
     for (PsiLanguageInjectionHost.Shred shred : shreds) {
-      final RangeMarker rangeMarker = myNewDocument.createRangeMarker(
-              shred.getRange().getStartOffset() + shred.getPrefix().length(),
-              shred.getRange().getEndOffset() - shred.getSuffix().length());
+      final RangeMarker rangeMarker = myNewDocument.createRangeMarker(shred.getRange().getStartOffset() + shred.getPrefix().length(), shred.getRange().getEndOffset() - shred.getSuffix().length());
       final TextRange rangeInsideHost = shred.getRangeInsideHost();
       PsiLanguageInjectionHost host = shred.getHost();
       RangeMarker origMarker = myOrigDocument.createRangeMarker(rangeInsideHost.shiftRight(host.getTextRange().getStartOffset()));
       SmartPsiElementPointer<PsiLanguageInjectionHost> elementPointer = smartPointerManager.createSmartPsiElementPointer(host);
-      Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer> markers =
-              Trinity.<RangeMarker, RangeMarker, SmartPsiElementPointer>create(origMarker, rangeMarker, elementPointer);
+      Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer> markers = Trinity.<RangeMarker, RangeMarker, SmartPsiElementPointer>create(origMarker, rangeMarker, elementPointer);
       myMarkers.add(markers);
 
       origMarker.setGreedyToRight(true);
@@ -422,15 +414,14 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
   private void commitToOriginalInner() {
     final String text = myNewDocument.getText();
-    final Map<PsiLanguageInjectionHost, Set<Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer>>> map = ContainerUtil
-            .classify(myMarkers.iterator(),
-                      new Convertor<Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer>, PsiLanguageInjectionHost>() {
-                        @Override
-                        public PsiLanguageInjectionHost convert(final Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer> o) {
-                          final PsiElement element = o.third.getElement();
-                          return (PsiLanguageInjectionHost)element;
-                        }
-                      });
+    final Map<PsiLanguageInjectionHost, Set<Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer>>> map =
+            ContainerUtil.classify(myMarkers.iterator(), new Convertor<Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer>, PsiLanguageInjectionHost>() {
+              @Override
+              public PsiLanguageInjectionHost convert(final Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer> o) {
+                final PsiElement element = o.third.getElement();
+                return (PsiLanguageInjectionHost)element;
+              }
+            });
     PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
     documentManager.commitDocument(myOrigDocument); // commit here and after each manipulator update
     int localInsideFileCursor = 0;
@@ -449,7 +440,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
           //append unchanged inter-markers fragment
           sb.append(hostText.substring(insideHost.getEndOffset(), localInsideHost.getStartOffset()));
         }
-        sb.append(localInsideFile.getEndOffset() <= text.length() && !localInsideFile.isEmpty()? localInsideFile.substring(text) : "");
+        sb.append(localInsideFile.getEndOffset() <= text.length() && !localInsideFile.isEmpty() ? localInsideFile.substring(text) : "");
         localInsideFileCursor = localInsideFile.getEndOffset();
         insideHost = insideHost == null ? localInsideHost : insideHost.union(localInsideHost);
       }
@@ -467,7 +458,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     int count = 0;
     for (RangeMarker o : ContainerUtil.reverse(((DocumentEx)myNewDocument).getGuardedBlocks())) {
       String replacement = o.getUserData(REPLACEMENT_KEY);
-      String tempText = "REPLACE"+(count++)+Long.toHexString(StringHash.calc(replacement));
+      String tempText = "REPLACE" + (count++) + Long.toHexString(StringHash.calc(replacement));
       newText = newText.substring(0, o.getStartOffset()) + tempText + newText.substring(o.getEndOffset());
       replacementMap.put(tempText, replacement);
     }
@@ -493,8 +484,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
       @Override
       public void run() {
         try {
-          CodeStyleManager.getInstance(myProject).reformatRange(
-                  origPsiFile, hostStartOffset, myAltFullRange.getEndOffset(), true);
+          CodeStyleManager.getInstance(myProject).reformatRange(origPsiFile, hostStartOffset, myAltFullRange.getEndOffset(), true);
         }
         catch (IncorrectOperationException e) {
           //LOG.error(e);
@@ -520,7 +510,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
   private static void fixDocumentQuotes(Document doc, int offset) {
     if (doc.getCharsSequence().charAt(offset) == '\'') {
-      doc.replaceString(offset, offset+1, "\"");
+      doc.replaceString(offset, offset + 1, "\"");
     }
   }
 
@@ -539,8 +529,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
       return range.intersects(myAltFullRange.getStartOffset(), myAltFullRange.getEndOffset());
     }
     else if (!myMarkers.isEmpty()) {
-      TextRange hostRange = TextRange.create(myMarkers.get(0).first.getStartOffset(),
-                                             myMarkers.get(myMarkers.size()-1).first.getEndOffset());
+      TextRange hostRange = TextRange.create(myMarkers.get(0).first.getStartOffset(), myMarkers.get(myMarkers.size() - 1).first.getEndOffset());
       return range.intersects(hostRange);
     }
     return false;

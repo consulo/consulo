@@ -45,7 +45,7 @@ import consulo.language.psi.PsiReference;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 import javax.annotation.Nullable;
 
 import java.awt.*;

@@ -34,9 +34,9 @@ import consulo.project.Project;
 import consulo.document.Document;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.WhiteSpaceFormattingStrategy;
-import com.intellij.psi.formatter.WhiteSpaceFormattingStrategyFactory;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.WhiteSpaceFormattingStrategy;
+import consulo.language.codeStyle.WhiteSpaceFormattingStrategyFactory;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

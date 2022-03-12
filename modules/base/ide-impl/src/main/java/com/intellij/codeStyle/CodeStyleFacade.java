@@ -25,6 +25,7 @@ import consulo.codeStyle.ProjectCodeStyleFacade;
 import consulo.document.Document;
 import consulo.ide.ServiceManager;
 import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyle;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -78,7 +79,7 @@ public interface CodeStyleFacade {
   }
 
   /**
-   * @deprecated Use {@link com.intellij.application.options.CodeStyle#getIndentSize(PsiFile)} instead.
+   * @deprecated Use {@link CodeStyle#getIndentSize(PsiFile)} instead.
    */
   @Deprecated
   public abstract int getIndentSize(FileType fileType);

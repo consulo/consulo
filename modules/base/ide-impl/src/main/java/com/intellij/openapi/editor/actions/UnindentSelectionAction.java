@@ -34,7 +34,7 @@ import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.annotation.access.RequiredWriteAction;
 
 public class UnindentSelectionAction extends EditorAction {

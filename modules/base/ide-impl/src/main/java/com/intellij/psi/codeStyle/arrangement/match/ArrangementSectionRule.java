@@ -34,13 +34,13 @@ import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Se
  * @author Svetlana.Zemlyanskaya
  */
 public class ArrangementSectionRule implements Cloneable {
-  @javax.annotation.Nullable
+  @Nullable
   private final String myStartComment;
-  @javax.annotation.Nullable
+  @Nullable
   private final String myEndComment;
   private final List<StdArrangementMatchRule> myMatchRules;
 
-  private ArrangementSectionRule(@javax.annotation.Nullable String start, @javax.annotation.Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
+  private ArrangementSectionRule(@Nullable String start, @Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
     myStartComment = start;
     myEndComment = end;
     myMatchRules = rules;
@@ -54,11 +54,11 @@ public class ArrangementSectionRule implements Cloneable {
     return create(null, null, rules);
   }
 
-  public static ArrangementSectionRule create(@javax.annotation.Nullable String start, @javax.annotation.Nullable String end, @Nonnull StdArrangementMatchRule... rules) {
+  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, @Nonnull StdArrangementMatchRule... rules) {
     return create(start, end, ContainerUtil.newArrayList(rules));
   }
 
-  public static ArrangementSectionRule create(@javax.annotation.Nullable String start, @Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
+  public static ArrangementSectionRule create(@Nullable String start, @Nullable String end, @Nonnull List<StdArrangementMatchRule> rules) {
     final List<StdArrangementMatchRule> matchRules = ContainerUtil.newArrayList();
     if (StringUtil.isNotEmpty(start)) {
       matchRules.add(createSectionRule(start, START_SECTION));
@@ -70,8 +70,8 @@ public class ArrangementSectionRule implements Cloneable {
     return new ArrangementSectionRule(start, end, matchRules);
   }
 
-  @javax.annotation.Nullable
-  private static StdArrangementMatchRule createSectionRule(@javax.annotation.Nullable String comment, @Nonnull ArrangementSettingsToken token) {
+  @Nullable
+  private static StdArrangementMatchRule createSectionRule(@Nullable String comment, @Nonnull ArrangementSettingsToken token) {
     if (StringUtil.isEmpty(comment)) {
       return null;
     }
@@ -81,12 +81,12 @@ public class ArrangementSectionRule implements Cloneable {
     return new StdArrangementMatchRule(new StdArrangementEntryMatcher(condition));
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getStartComment() {
     return myStartComment;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getEndComment() {
     return myEndComment;
   }

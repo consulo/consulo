@@ -25,7 +25,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.psi.CustomHighlighterTokenType;
-import com.intellij.psi.search.UsageSearchContext;
+import consulo.language.psi.search.UsageSearchContext;
 import consulo.language.ast.TokenSet;
 import consulo.application.util.function.Processor;
 import consulo.language.psi.stub.FileContent;

@@ -2,9 +2,10 @@
 package com.intellij.application.options.codeStyle.cache;
 
 import consulo.disposer.Disposable;
+import consulo.language.codeStyle.internal.CodeStyleCachingService;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;

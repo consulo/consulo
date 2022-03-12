@@ -2,7 +2,7 @@
 package com.intellij.model.search;
 
 import consulo.project.Project;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import javax.annotation.Nonnull;
 
 /**

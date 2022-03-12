@@ -13,7 +13,7 @@ import consulo.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.search.UsageSearchContext;
+import consulo.language.psi.search.UsageSearchContext;
 import consulo.language.psi.PsiUtilCore;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.indexing.*;

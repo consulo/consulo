@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.impl.DirectoryIndex;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import consulo.logging.Logger;
 import consulo.language.content.LanguageContentFolderScopes;
 

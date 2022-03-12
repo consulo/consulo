@@ -15,6 +15,7 @@
  */
 package com.intellij.psi.codeStyle.arrangement;
 
+import consulo.language.codeStyle.arrangement.ArrangementSettings;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

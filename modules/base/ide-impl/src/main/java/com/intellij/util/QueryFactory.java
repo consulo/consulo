@@ -16,6 +16,7 @@
 package com.intellij.util;
 
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.Query;
 import consulo.util.collection.HashingStrategy;
 
 import javax.annotation.Nonnull;

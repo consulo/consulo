@@ -30,7 +30,7 @@ import consulo.component.util.Iconable;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.NavigatableWithText;
+import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;

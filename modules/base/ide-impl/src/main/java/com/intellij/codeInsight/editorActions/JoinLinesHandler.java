@@ -2,15 +2,15 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import com.intellij.formatting.FormatterEx;
-import com.intellij.formatting.FormattingModel;
-import com.intellij.formatting.FormattingModelBuilder;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.dataContext.DataManager;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
@@ -30,7 +30,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.document.impl.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;

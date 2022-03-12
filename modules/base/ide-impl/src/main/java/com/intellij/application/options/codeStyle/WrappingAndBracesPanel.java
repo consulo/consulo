@@ -17,8 +17,12 @@ package com.intellij.application.options.codeStyle;
 
 import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
+import consulo.language.codeStyle.CodeStyleConstraints;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.ui.ex.awt.ComboBox;
-import com.intellij.psi.codeStyle.*;
 import com.intellij.psi.codeStyle.presentation.CodeStyleBoundedIntegerSettingPresentation;
 import com.intellij.psi.codeStyle.presentation.CodeStyleSelectSettingPresentation;
 import com.intellij.psi.codeStyle.presentation.CodeStyleSettingPresentation;

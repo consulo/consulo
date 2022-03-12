@@ -33,7 +33,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.psi.impl.source.tree.injected.InjectedCaret;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

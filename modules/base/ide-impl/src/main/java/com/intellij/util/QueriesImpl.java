@@ -3,6 +3,8 @@ package com.intellij.util;
 
 import com.intellij.model.search.impl.TransformationKt;
 import com.intellij.model.search.impl.XQuery;
+import consulo.application.util.Queries;
+import consulo.application.util.Query;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

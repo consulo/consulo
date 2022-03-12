@@ -15,7 +15,9 @@
  */
 package com.intellij.formatting.engine;
 
-import com.intellij.formatting.*;
+import consulo.language.codeStyle.CoreFormatterUtil;
+import consulo.language.codeStyle.internal.*;
+
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;

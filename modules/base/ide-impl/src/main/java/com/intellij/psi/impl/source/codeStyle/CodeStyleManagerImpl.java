@@ -2,15 +2,16 @@
 
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import com.intellij.formatting.*;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.VisualPosition;
 import consulo.language.*;
+import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.lang.*;
 import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
 import consulo.language.impl.psi.internal.IndentHelper;
 import consulo.language.inject.InjectedLanguageManager;
@@ -32,7 +33,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.Indent;
 import com.intellij.psi.codeStyle.*;
-import com.intellij.psi.formatter.FormatterUtil;
+import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.impl.psi.CheckUtil;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import consulo.language.impl.psi.SourceTreeToPsiMap;

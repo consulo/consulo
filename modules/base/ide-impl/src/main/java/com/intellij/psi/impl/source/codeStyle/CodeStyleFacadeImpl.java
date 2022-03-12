@@ -19,13 +19,12 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.configurable.Configurable;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.psi.codeStyle.CodeStyleManager;

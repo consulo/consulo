@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.impl.source.codeStyle.lineIndent;
 
-import com.intellij.formatting.FormattingMode;
+import consulo.language.codeStyle.FormattingMode;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

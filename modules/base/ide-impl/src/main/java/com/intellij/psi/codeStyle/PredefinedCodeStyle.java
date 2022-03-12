@@ -18,6 +18,8 @@ package com.intellij.psi.codeStyle;
 
 import consulo.language.Language;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.codeStyle.CodeStyleSettings;
+
 import javax.annotation.Nonnull;
 
 /**

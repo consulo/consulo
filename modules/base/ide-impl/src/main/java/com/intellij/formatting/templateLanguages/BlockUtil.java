@@ -15,10 +15,10 @@
  */
 package com.intellij.formatting.templateLanguages;
 
-import com.intellij.formatting.ASTBlock;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Spacing;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.Spacing;
 import consulo.language.ast.ASTNode;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;

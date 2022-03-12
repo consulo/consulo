@@ -15,23 +15,23 @@
  */
 package com.intellij.psi.impl.source.codeStyle.lineIndent;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.IndentImpl;
-import com.intellij.formatting.IndentInfo;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.Indent;
+import consulo.language.codeStyle.internal.IndentImpl;
+import consulo.language.codeStyle.internal.IndentInfo;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.impl.source.codeStyle.SemanticEditorPosition;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.intellij.formatting.Indent.Type.*;
+import static consulo.language.codeStyle.Indent.Type.*;
 
 public class IndentCalculator {
 

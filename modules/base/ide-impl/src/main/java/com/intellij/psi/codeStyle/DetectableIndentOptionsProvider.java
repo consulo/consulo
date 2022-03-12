@@ -1,10 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.lang.LangBundle;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.FileIndentOptionsProvider;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
@@ -38,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
+import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import static com.intellij.psi.codeStyle.DetectAndAdjustIndentOptionsTask.getDefaultIndentOptions;
 
 /**

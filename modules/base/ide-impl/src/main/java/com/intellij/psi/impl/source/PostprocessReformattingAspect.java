@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.impl.source;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.formatting.FormatTextRanges;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.FormatTextRanges;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
@@ -41,7 +41,7 @@ import consulo.language.pom.event.TreeChangeEvent;
 import consulo.language.impl.pom.internal.ChangeInfoImpl;
 import consulo.language.impl.pom.internal.TreeChangeImpl;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.ExternalFormatProcessor;
 import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
 import consulo.language.impl.psi.internal.PsiManagerEx;

@@ -15,7 +15,7 @@
  */
 package com.intellij.formatting.engine;
 
-import com.intellij.formatting.IndentImpl;
+import consulo.language.codeStyle.internal.IndentImpl;
 
 public class ExpandableIndent extends IndentImpl {
   private boolean myEnforceIndent;

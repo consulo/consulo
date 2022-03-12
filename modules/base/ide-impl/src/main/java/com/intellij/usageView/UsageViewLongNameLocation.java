@@ -16,8 +16,8 @@
 
 package com.intellij.usageView;
 
-import com.intellij.psi.ElementDescriptionLocation;
-import com.intellij.psi.ElementDescriptionProvider;
+import consulo.language.psi.ElementDescriptionLocation;
+import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiDirectory;
 import com.intellij.psi.impl.file.PsiPackageHelper;

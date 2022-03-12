@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
@@ -41,7 +41,7 @@ import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
-import com.intellij.psi.formatter.FormatterUtil;
+import consulo.language.codeStyle.FormatterUtil;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;

@@ -22,7 +22,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
-import com.intellij.psi.search.PsiSearchHelper;
+import consulo.language.psi.search.PsiSearchHelper;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.usageView.UsageViewUtil;

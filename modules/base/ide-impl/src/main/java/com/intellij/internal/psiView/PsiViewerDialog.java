@@ -15,14 +15,14 @@
  */
 package com.intellij.internal.psiView;
 
-import com.intellij.formatting.ASTBlock;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.FormattingModel;
-import com.intellij.formatting.FormattingModelBuilder;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.FormattingModelBuilder;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeBuilder;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeNode;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeStructure;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
@@ -32,8 +32,8 @@ import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.search.FilenameIndex;
 import com.intellij.ui.*;

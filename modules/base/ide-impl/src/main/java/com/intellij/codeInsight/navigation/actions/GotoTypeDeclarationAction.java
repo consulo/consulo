@@ -26,8 +26,8 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
-import consulo.codeInsight.TargetElementUtil;
-import consulo.codeInsight.TargetElementUtilEx;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.TargetElementUtilExtender;
 import consulo.component.extension.Extensions;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -106,7 +106,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   @Nullable
   @RequiredReadAction
   public static PsiElement[] findSymbolTypes(Editor editor, int offset) {
-    Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilEx.REFERENCED_ELEMENT_ACCEPTED, TargetElementUtilEx.ELEMENT_NAME_ACCEPTED, TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
+    Set<String> flags = ContainerUtil.newHashSet(TargetElementUtilExtender.REFERENCED_ELEMENT_ACCEPTED, TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED, TargetElementUtilExtender.LOOKUP_ITEM_ACCEPTED);
     PsiElement targetElement = TargetElementUtil.findTargetElement(editor, flags, offset);
 
     if (targetElement != null) {

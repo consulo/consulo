@@ -20,6 +20,8 @@ import consulo.component.ComponentManager;
 import consulo.document.Document;
 import consulo.document.StripTrailingSpacesFilter;
 import consulo.document.StripTrailingSpacesFilterFactory;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;

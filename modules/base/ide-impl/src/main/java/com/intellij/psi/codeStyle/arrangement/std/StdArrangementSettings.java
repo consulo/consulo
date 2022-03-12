@@ -15,9 +15,9 @@
  */
 package com.intellij.psi.codeStyle.arrangement.std;
 
-import com.intellij.psi.codeStyle.arrangement.ArrangementSettings;
+import consulo.language.codeStyle.arrangement.ArrangementSettings;
 import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
-import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
+import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;

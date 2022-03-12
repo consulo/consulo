@@ -21,7 +21,7 @@ import com.intellij.application.options.codeStyle.arrangement.util.TitleWithTool
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
+import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import com.intellij.util.ui.GridBag;
 import org.jetbrains.annotations.NonNls;

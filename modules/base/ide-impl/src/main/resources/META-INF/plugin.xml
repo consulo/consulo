@@ -415,7 +415,7 @@
     </extensionPoint>
 
     <extensionPoint name="codeStyleSettingsProvider"
-                    interface="com.intellij.psi.codeStyle.CodeStyleSettingsProvider"/>
+                    interface="consulo.language.codeStyle.setting.CodeStyleSettingsProvider"/>
 
     <extensionPoint name="codeStyleIndentHelperExtension"
                     interface="consulo.psi.impl.source.codeStyle.IndentHelperExtension"/>
@@ -529,12 +529,12 @@
     <extensionPoint name="lang.ast.compositeFactory" interface="consulo.language.impl.ast.ASTCompositeFactory"/>
 
     <extensionPoint name="lang.formatter" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.formatting.FormattingModelBuilder"/>
+      <with attribute="implementationClass" implements="consulo.language.codeStyle.FormattingModelBuilder"/>
     </extensionPoint>
 
     <extensionPoint name="externalFormatProcessor" interface="com.intellij.psi.codeStyle.ExternalFormatProcessor"/>
 
-    <extensionPoint name="lang.formatter.restriction" interface="com.intellij.lang.LanguageFormattingRestriction"/>
+    <extensionPoint name="lang.formatter.restriction" interface="consulo.language.codeStyle.LanguageFormattingRestriction"/>
     <extensionPoint name="lang.importOptimizer" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.editor.refactoring.ImportOptimizer"/>
     </extensionPoint>
@@ -601,7 +601,7 @@
     <extensionPoint name="useScopeEnlarger" interface="com.intellij.psi.search.UseScopeEnlarger"/>
     <extensionPoint name="resolveScopeEnlarger" interface="com.intellij.psi.ResolveScopeEnlarger"/>
     <extensionPoint name="resolveScopeProvider" interface="com.intellij.psi.ResolveScopeProvider"/>
-    <extensionPoint name="codeUsageScopeOptimizer" interface="com.intellij.psi.search.ScopeOptimizer"/>
+    <extensionPoint name="codeUsageScopeOptimizer" interface="consulo.language.psi.search.ScopeOptimizer"/>
 
     <extensionPoint name="gotoClassContributor"
                     interface="com.intellij.navigation.ChooseByNameContributor"/>
@@ -640,7 +640,7 @@
       <with attribute="implementationClass" implements="com.intellij.codeInsight.hint.DeclarationRangeHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="highlightUsagesHandlerFactory" interface="com.intellij.codeInsight.highlighting.HighlightUsagesHandlerFactory"/>
+    <extensionPoint name="highlightUsagesHandlerFactory" interface="consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory"/>
 
     <extensionPoint name="usageTargetProvider"
                     interface="com.intellij.usages.UsageTargetProvider"/>
@@ -739,7 +739,7 @@
     <extensionPoint name="refactoring.changeSignatureUsageProcessor"
                     interface="com.intellij.refactoring.changeSignature.ChangeSignatureUsageProcessor"/>
 
-    <extensionPoint name="elementDescriptionProvider" interface="com.intellij.psi.ElementDescriptionProvider"/>
+    <extensionPoint name="elementDescriptionProvider" interface="consulo.language.psi.ElementDescriptionProvider"/>
 
     <extensionPoint name="structureViewBuilder"
                     beanClass="consulo.component.extension.KeyedFactoryEPBean">
@@ -821,7 +821,7 @@
     <extensionPoint name="psi.directoryMethodProxy" interface="consulo.language.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
-    <extensionPoint name="pom.declarationSearcher" interface="com.intellij.pom.PomDeclarationSearcher"/>
+    <extensionPoint name="pom.declarationSearcher" interface="consulo.language.pom.PomDeclarationSearcher"/>
 
     <extensionPoint name="statistician" beanClass="com.intellij.psi.statistics.StatisticsExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.psi.statistics.Statistician"/>
@@ -866,7 +866,7 @@
 
     <extensionPoint name="lang.whiteSpaceFormattingStrategy"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.formatter.WhiteSpaceFormattingStrategy"/>
+      <with attribute="implementationClass" implements="consulo.language.codeStyle.WhiteSpaceFormattingStrategy"/>
     </extensionPoint>
 
     <extensionPoint name="lang.indentStrategy"
@@ -925,16 +925,16 @@
 
     <extensionPoint name="preloadingActivity" interface="com.intellij.openapi.application.PreloadingActivity"/>
 
-    <extensionPoint name="codeInsight.containerProvider" interface="com.intellij.codeInsight.ContainerProvider"/>
+    <extensionPoint name="codeInsight.containerProvider" interface="consulo.language.psi.search.ContainerProvider"/>
 
     <extensionPoint name="codeInsight.fillParagraph" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.fillParagraph.ParagraphFillHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="fileTypeIndentOptionsProvider" interface="com.intellij.psi.codeStyle.FileTypeIndentOptionsProvider"/>
-    <extensionPoint name="fileIndentOptionsProvider" interface="com.intellij.psi.codeStyle.FileIndentOptionsProvider"/>
+    <extensionPoint name="fileTypeIndentOptionsProvider" interface="consulo.language.codeStyle.setting.FileTypeIndentOptionsProvider"/>
+    <extensionPoint name="fileIndentOptionsProvider" interface="consulo.language.codeStyle.FileIndentOptionsProvider"/>
     <extensionPoint name="referenceImporter" interface="com.intellij.codeInsight.daemon.ReferenceImporter"/>
-    <extensionPoint name="elementLookupRenderer" interface="com.intellij.codeInsight.lookup.impl.ElementLookupRenderer"/>
+    <extensionPoint name="elementLookupRenderer" interface="consulo.language.editor.completion.lookup.ElementLookupRenderer"/>
 
     <extensionPoint name="qualifiedNameProvider" interface="com.intellij.ide.actions.QualifiedNameProvider"/>
 
@@ -1055,7 +1055,7 @@
     <extensionPoint name="templateCompletionProcessor"
                     interface="com.intellij.codeInsight.template.macro.TemplateCompletionProcessor"/>
 
-    <extensionPoint name="targetElementUtilEx" interface="consulo.codeInsight.TargetElementUtilEx"/>
+    <extensionPoint name="targetElementUtilEx" interface="consulo.language.editor.TargetElementUtilExtender"/>
 
     <extensionPoint name="statementUpDownMover" interface="com.intellij.codeInsight.editorActions.moveUpDown.StatementUpDownMover"/>
 
@@ -1101,7 +1101,7 @@
 
     <extensionPoint name="filePropertyPusher" interface="com.intellij.openapi.roots.impl.FilePropertyPusher"/>
 
-    <extensionPoint name="langCodeStyleSettingsProvider" interface="com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider"/>
+    <extensionPoint name="langCodeStyleSettingsProvider" interface="consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider"/>
 
     <extensionPoint name="codeStyleSettingsModifier" interface="com.intellij.psi.codeStyle.modifier.CodeStyleSettingsModifier"/>
 
@@ -1742,12 +1742,12 @@
     <applicationService serviceInterface="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings"
                         serviceImplementation="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl"/>
 
-    <applicationService serviceInterface="com.intellij.util.Queries" serviceImplementation="com.intellij.util.QueriesImpl"/>
+    <applicationService serviceInterface="consulo.application.util.Queries" serviceImplementation="com.intellij.util.QueriesImpl"/>
 
-    <projectService serviceInterface="com.intellij.pom.references.PomService"
+    <projectService serviceInterface="consulo.language.pom.PomService"
                     serviceImplementation="com.intellij.pom.references.PomServiceImpl"/>
 
-    <projectService serviceInterface="com.intellij.psi.search.PsiSearchHelper"
+    <projectService serviceInterface="consulo.language.psi.search.PsiSearchHelper"
                     serviceImplementation="com.intellij.psi.impl.search.PsiSearchHelperImpl"/>
 
     <projectService serviceInterface="com.intellij.psi.search.PsiTodoSearchHelper"
@@ -1808,8 +1808,8 @@
                         serviceImplementation="com.intellij.usageView.UsageTreeColorsScheme"/>
 
 
-    <applicationService serviceInterface="com.intellij.psi.codeStyle.AppCodeStyleSettingsManager"
-                        serviceImplementation="com.intellij.psi.codeStyle.AppCodeStyleSettingsManager"/>
+    <applicationService serviceInterface="consulo.language.codeStyle.AppCodeStyleSettingsManager"
+                        serviceImplementation="consulo.language.codeStyle.AppCodeStyleSettingsManager"/>
 
     <applicationService serviceInterface="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"
                         serviceImplementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"/>
@@ -1859,8 +1859,8 @@
     <projectService serviceInterface="com.intellij.ui.EditorTextFieldProvider"
                     serviceImplementation="com.intellij.ui.EditorTextFieldProviderImpl"/>
 
-    <projectService serviceInterface="com.intellij.psi.codeStyle.ProjectCodeStyleSettingsManager"
-                    serviceImplementation="com.intellij.psi.codeStyle.ProjectCodeStyleSettingsManager"/>
+    <projectService serviceInterface="consulo.language.codeStyle.ProjectCodeStyleSettingsManager"
+                    serviceImplementation="consulo.language.codeStyle.ProjectCodeStyleSettingsManager"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile"
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile"/>
@@ -2570,7 +2570,7 @@
 
     <moduleRootsProcessor implementation="consulo.roots.impl.NullModuleDirModuleRootsProcessor" order="last"/>
 
-    <targetElementUtilEx implementation="consulo.codeInsight.TargetElementUtilExImpl"/>
+    <targetElementUtilEx implementation="consulo.codeInsight.DefaultTargetElementUtilExtender" order="last"/>
 
     <bidiRegionsSeparator language="" implementationClass="com.intellij.openapi.editor.bidi.PlainTextBidiRegionsSeparator"/>
 
@@ -2684,7 +2684,7 @@
 
     <applicationService serviceInterface="com.intellij.codeInsight.editorActions.TabOutScopesTracker" serviceImplementation="com.intellij.codeInsight.editorActions.TabOutScopesTrackerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.formatting.Formatter" serviceImplementation="com.intellij.formatting.FormatterImpl"/>
+    <applicationService serviceInterface="consulo.language.codeStyle.Formatter" serviceImplementation="com.intellij.formatting.FormatterImpl"/>
     <applicationService serviceInterface="com.intellij.util.gist.GistManager" serviceImplementation="com.intellij.util.gist.GistManagerImpl"/>
 
     <editorFactoryDocumentListener implementation="com.intellij.openapi.command.impl.DocumentUndoProvider"/>
@@ -2767,7 +2767,7 @@
     <statusBarWidgetFactory id="writeActionWidget" implementation="com.intellij.openapi.wm.impl.status.WriteThreadIndicatorWidgetFactory" order="after fatalErrorWidget"/>
     <statusBarWidgetFactory id="memoryUsageWidget" implementation="com.intellij.openapi.wm.impl.status.MemoryIndicatorWidgetFactory" order="last"/>
 
-    <projectService serviceInterface="com.intellij.application.options.codeStyle.cache.CodeStyleCachingService"
+    <projectService serviceInterface="consulo.language.codeStyle.internal.CodeStyleCachingService"
                     serviceImplementation="com.intellij.application.options.codeStyle.cache.CodeStyleCachingServiceImpl"/>
 
     <projectService serviceImplementation="com.intellij.ide.favoritesTreeView.FavoritesManager"/>

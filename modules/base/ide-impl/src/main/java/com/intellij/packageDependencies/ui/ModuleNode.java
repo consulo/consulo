@@ -21,7 +21,7 @@ import consulo.application.AllIcons;
 import consulo.module.Module;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.pom.NavigatableWithText;
+import consulo.language.pom.NavigatableWithText;
 import consulo.language.psi.PsiFile;
 import consulo.ui.image.Image;
 

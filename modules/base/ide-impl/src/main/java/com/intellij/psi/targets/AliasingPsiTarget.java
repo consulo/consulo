@@ -16,7 +16,7 @@
 package com.intellij.psi.targets;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.PomRenameableTarget;
+import consulo.language.pom.PomRenameableTarget;
 import com.intellij.psi.DelegatePsiTarget;
 import consulo.language.psi.PsiNamedElement;
 import com.intellij.refactoring.RefactoringFactory;

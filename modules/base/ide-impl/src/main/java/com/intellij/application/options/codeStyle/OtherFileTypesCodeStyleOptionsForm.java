@@ -23,8 +23,8 @@ import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.configurable.ConfigurationException;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

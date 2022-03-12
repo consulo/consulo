@@ -15,9 +15,9 @@
  */
 package com.intellij.psi.formatter;
 
-import com.intellij.formatting.Wrap;
-import com.intellij.formatting.WrapType;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.Wrap;
+import consulo.language.codeStyle.WrapType;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 
 /**
  * Misc. code wrapping functions

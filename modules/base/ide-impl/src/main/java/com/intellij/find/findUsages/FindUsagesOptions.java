@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.psi.search.PredefinedSearchScopeProvider;
 import consulo.project.content.scope.ProjectScopes;
-import com.intellij.psi.search.SearchRequestCollector;
+import consulo.language.psi.search.SearchRequestCollector;
 import consulo.content.scope.SearchScope;
 import consulo.annotation.access.RequiredReadAction;
 

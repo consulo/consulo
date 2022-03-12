@@ -317,14 +317,6 @@ public interface EditorEx extends Editor {
   }
 
   /**
-   * @return the offset that the caret is expected to be but maybe not yet.
-   * E.g. when user right-clicks the mouse the caret is not immediately jumps there but the click-handler wants to know that location already.
-   * <p>
-   * When no mouse-clicks happened return the regular caret offset.
-   */
-  int getExpectedCaretOffset();
-
-  /**
    * Sets id of action group what will be used to construct context menu displayed on mouse right button's click. Setting this to
    * <code>null</code> disables built-in logic for showing context menu (it can still be achieved by implementing corresponding mouse
    * event listener).

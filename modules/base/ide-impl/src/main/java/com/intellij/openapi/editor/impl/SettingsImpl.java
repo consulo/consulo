@@ -24,7 +24,7 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import com.intellij.codeStyle.CodeStyleFacade;
 import consulo.language.Language;
 import consulo.document.Document;
@@ -38,7 +38,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

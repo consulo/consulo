@@ -15,28 +15,29 @@
  */
 package com.intellij.codeInsight.intention.impl;
 
-import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.LowPriorityAction;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.Language;
-import consulo.language.inject.InjectedLanguageManager;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import com.intellij.psi.impl.source.tree.injected.Place;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.project.Project;
-import consulo.ui.ex.popup.Balloon;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.Language;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.tree.injected.Place;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.ui.ex.popup.Balloon;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 
@@ -61,20 +62,21 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
   private String myLastLanguageName;
 
   @Override
+  @RequiredReadAction
   public boolean isAvailable(@Nonnull Project project, Editor editor, PsiFile file) {
     return getRangePair(file, editor) != null;
   }
 
   @Nullable
-  protected consulo.util.lang.Pair<PsiElement, TextRange> getRangePair(final PsiFile file, final Editor editor) {
+  @RequiredReadAction
+  protected Pair<PsiElement, TextRange> getRangePair(final PsiFile file, final Editor editor) {
     final int offset = editor.getCaretModel().getOffset();
-    final PsiLanguageInjectionHost host =
-            PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
+    final PsiLanguageInjectionHost host = PsiTreeUtil.getParentOfType(file.findElementAt(offset), PsiLanguageInjectionHost.class, false);
     if (host == null || ElementManipulators.getManipulator(host) == null) return null;
-    final List<consulo.util.lang.Pair<PsiElement, TextRange>> injections = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
+    final List<Pair<PsiElement, TextRange>> injections = InjectedLanguageManager.getInstance(host.getProject()).getInjectedPsiFiles(host);
     if (injections == null || injections.isEmpty()) return null;
     final int offsetInElement = offset - host.getTextRange().getStartOffset();
-    final consulo.util.lang.Pair<PsiElement, TextRange> rangePair = ContainerUtil.find(injections, pair -> pair.second.containsRange(offsetInElement, offsetInElement));
+    final Pair<PsiElement, TextRange> rangePair = ContainerUtil.find(injections, pair -> pair.second.containsRange(offsetInElement, offsetInElement));
     if (rangePair != null) {
       final Language language = rangePair.first.getContainingFile().getLanguage();
       final Object action = language.getUserData(EDIT_ACTION_AVAILABLE);
@@ -90,6 +92,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
     invokeImpl(project, editor, file);
   }
 
+  @RequiredReadAction
   public QuickEditHandler invokeImpl(@Nonnull final Project project, final Editor editor, PsiFile file) throws IncorrectOperationException {
     int offset = editor.getCaretModel().getOffset();
     Pair<PsiElement, TextRange> pair = ObjectUtils.assertNotNull(getRangePair(file, editor));
@@ -130,8 +133,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
     DocumentWindow documentWindow = InjectedLanguageUtil.getDocumentWindow(injectedFile);
     if (shreds == null || documentWindow == null) return null;
 
-    TextRange hostRange = TextRange.create(shreds.get(0).getHostRangeMarker().getStartOffset(),
-                                           shreds.get(shreds.size() - 1).getHostRangeMarker().getEndOffset());
+    TextRange hostRange = TextRange.create(shreds.get(0).getHostRangeMarker().getStartOffset(), shreds.get(shreds.size() - 1).getHostRangeMarker().getEndOffset());
     for (Editor editor : EditorFactory.getInstance().getAllEditors()) {
       if (editor.getDocument() != documentWindow.getDelegate()) continue;
       QuickEditHandler handler = editor.getUserData(QUICK_EDIT_HANDLER);
@@ -152,7 +154,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
   @Override
   @Nonnull
   public String getText() {
-    return "Edit "+ StringUtil.notNullize(myLastLanguageName, "Injected")+" Fragment";
+    return "Edit " + StringUtil.notNullize(myLastLanguageName, "Injected") + " Fragment";
   }
 
   @Override
@@ -164,7 +166,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
   public static Balloon.Position getBalloonPosition(Editor editor) {
     final int line = editor.getCaretModel().getVisualPosition().line;
     final Rectangle area = editor.getScrollingModel().getVisibleArea();
-    int startLine  = area.y / editor.getLineHeight() + 1;
+    int startLine = area.y / editor.getLineHeight() + 1;
     return (line - startLine) * editor.getLineHeight() < 200 ? Balloon.Position.below : Balloon.Position.above;
   }
 }

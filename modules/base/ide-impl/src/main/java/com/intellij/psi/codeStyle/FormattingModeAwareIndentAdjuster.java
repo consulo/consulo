@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.formatting.FormattingMode;
+import consulo.language.codeStyle.FormattingMode;
 import consulo.document.Document;
 import javax.annotation.Nonnull;
 

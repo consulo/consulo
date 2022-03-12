@@ -5,7 +5,8 @@
  */
 package com.intellij.util;
 
-import com.intellij.concurrency.AsyncFuture;
+import consulo.application.util.Query;
+import consulo.util.concurrent.AsyncFuture;
 import com.intellij.concurrency.AsyncFutureFactory;
 import com.intellij.concurrency.AsyncFutureResult;
 import com.intellij.concurrency.DefaultResultConsumer;

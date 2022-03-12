@@ -17,7 +17,7 @@
 package com.intellij.usageView;
 
 import com.intellij.ide.TypePresentationService;
-import com.intellij.psi.*;
+import consulo.language.psi.*;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import com.intellij.psi.meta.PsiPresentableMetaData;
@@ -26,9 +26,6 @@ import consulo.language.Language;
 import com.intellij.lang.findUsages.FindUsagesProvider;
 import com.intellij.lang.findUsages.LanguageFindUsages;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 

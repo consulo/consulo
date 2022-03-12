@@ -16,6 +16,8 @@
 package com.intellij.psi.formatter;
 
 import com.intellij.util.text.CharArrayUtil;
+import consulo.language.codeStyle.AbstractWhiteSpaceFormattingStrategy;
+
 import javax.annotation.Nonnull;
 
 import java.util.Arrays;

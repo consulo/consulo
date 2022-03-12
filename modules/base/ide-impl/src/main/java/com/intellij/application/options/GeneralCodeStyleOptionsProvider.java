@@ -16,7 +16,7 @@
 package com.intellij.application.options;
 
 import consulo.configurable.UnnamedConfigurable;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 
 /**
  * @author Dennis.Ushakov

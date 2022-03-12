@@ -1,8 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util;
 
-import com.intellij.concurrency.AsyncFuture;
-import com.intellij.concurrency.AsyncUtil;
+import consulo.application.util.Query;
+import consulo.util.concurrent.AsyncFuture;
+import consulo.util.concurrent.AsyncUtil;
 import consulo.application.util.function.Processor;
 
 import javax.annotation.Nonnull;

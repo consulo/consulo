@@ -1,42 +1,40 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.impl;
 
-import consulo.execution.ui.console.Filter;
-import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.filters.HyperlinkInfoBase;
 import com.intellij.ide.OccurenceNavigator;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.CodeInsightColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.event.EditorMouseEventArea;
-import consulo.codeEditor.event.EditorMouseListener;
-import consulo.codeEditor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.MarkupModelEx;
 import com.intellij.openapi.editor.ex.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.util.Consumer;
+import com.intellij.util.FilteringProcessor;
+import consulo.application.util.function.CommonProcessors;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEventArea;
+import consulo.codeEditor.event.EditorMouseListener;
+import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
+import consulo.document.Document;
+import consulo.execution.ui.console.Filter;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import com.intellij.pom.NavigatableAdapter;
 import consulo.ui.ex.RelativePoint;
-import consulo.application.util.function.CommonProcessors;
-import com.intellij.util.Consumer;
-import com.intellij.util.FilteringProcessor;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author peter
@@ -331,12 +329,9 @@ public class EditorHyperlinkSupport {
       if (info.includeInOccurenceNavigation()) {
         boolean inCollapsedRegion = editor.getFoldingModel().getCollapsedRegionAtOffset(next.getStartOffset()) != null;
         if (!inCollapsedRegion) {
-          return new OccurenceNavigator.OccurenceInfo(new NavigatableAdapter() {
-            @Override
-            public void navigate(final boolean requestFocus) {
-              action.consume(next);
-              linkFollowed(editor, ranges, next);
-            }
+          return new OccurenceNavigator.OccurenceInfo(requestFocus -> {
+            action.consume(next);
+            linkFollowed(editor, ranges, next);
           }, newIndex == -1 ? -1 : newIndex + 1, ranges.size());
         }
       }

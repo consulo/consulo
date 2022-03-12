@@ -2,7 +2,8 @@
 
 package com.intellij.util;
 
-import com.intellij.concurrency.AsyncFuture;
+import consulo.application.util.Query;
+import consulo.util.concurrent.AsyncFuture;
 import consulo.application.progress.ProgressManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.function.Processor;

@@ -16,6 +16,7 @@
 package com.intellij.concurrency;
 
 import consulo.application.Application;
+import consulo.util.concurrent.AsyncFuture;
 
 /**
  * Author: dmitrylomov

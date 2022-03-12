@@ -15,6 +15,8 @@
  */
 package com.intellij.concurrency;
 
+import consulo.util.concurrent.ResultConsumer;
+
 /**
  * Author: dmitrylomov
  */

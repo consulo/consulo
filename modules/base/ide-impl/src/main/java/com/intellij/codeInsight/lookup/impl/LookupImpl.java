@@ -18,6 +18,7 @@ import consulo.codeEditor.event.*;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.language.editor.completion.PrefixMatcher;
+import consulo.language.editor.completion.lookup.LookupItem;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.file.inject.DocumentWindow;

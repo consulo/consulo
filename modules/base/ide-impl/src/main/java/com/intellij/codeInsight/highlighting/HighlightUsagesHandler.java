@@ -16,47 +16,45 @@
 
 package com.intellij.codeInsight.highlighting;
 
-import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.impl.IdentifierUtil;
+import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.find.EditorSearchSession;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import com.intellij.injected.editor.EditorWindow;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.navigation.NavigationItem;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.action.Shortcut;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.component.extension.Extensions;
-import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.language.psi.*;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.WindowManager;
-import consulo.language.pom.PomTarget;
-import consulo.language.pom.PomTargetPsiElement;
-import com.intellij.pom.PsiDeclaredTarget;
-import com.intellij.psi.*;
+import consulo.language.pom.PsiDeclaredTarget;
+import com.intellij.psi.ElementDescriptionUtil;
 import com.intellij.psi.util.PsiUtilBase;
-import consulo.language.psi.PsiUtilCore;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageTargetUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.language.editor.TargetElementUtil;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
+import consulo.component.extension.Extensions;
+import consulo.document.util.TextRange;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerBase;
+import consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.pom.PomTarget;
+import consulo.language.pom.PomTargetPsiElement;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.navigation.NavigationItem;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.codeInsight.TargetElementUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -85,7 +83,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         FeatureUsageTracker.getInstance().triggerFeatureUsed(featureId);
       }
 
-      handler.highlightUsages();
+      handler.highlightUsages(() -> performHighlighting(editor, handler));
       return;
     }
 
@@ -101,6 +99,28 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
         target.highlightUsages(file, editor, clearHighlights);
       }
     });
+  }
+
+  private static void performHighlighting(@Nonnull Editor editor, @Nonnull HighlightUsagesHandlerBase<? extends PsiElement> handlerBase) {
+    String hintText = handlerBase.getHintText();
+    String statusText = handlerBase.getStatusText();
+    List<TextRange> readUsages = handlerBase.getReadUsages();
+    List<TextRange> writeUsages = handlerBase.getWriteUsages();
+
+    boolean clearHighlights = HighlightUsagesHandler.isClearHighlights(editor);
+    EditorColorsManager manager = EditorColorsManager.getInstance();
+    TextAttributes attributes = manager.getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
+    TextAttributes writeAttributes = manager.getGlobalScheme().getAttributes(EditorColors.WRITE_SEARCH_RESULT_ATTRIBUTES);
+    HighlightUsagesHandler.highlightRanges(HighlightManager.getInstance(editor.getProject()), editor, attributes, clearHighlights, readUsages);
+    HighlightUsagesHandler.highlightRanges(HighlightManager.getInstance(editor.getProject()), editor, writeAttributes, clearHighlights, writeUsages);
+    if (!clearHighlights) {
+      WindowManager.getInstance().getStatusBar(editor.getProject()).setInfo(statusText);
+
+      HighlightHandlerBase.setupFindModel(editor.getProject()); // enable f3 navigation
+    }
+    if (hintText != null) {
+      HintManager.getInstance().showInformationHint(editor, hintText);
+    }
   }
 
   @Nullable
@@ -136,10 +156,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     return usageTargets;
   }
 
-  private static void handleNoUsageTargets(PsiFile file,
-                                           @Nonnull Editor editor,
-                                           SelectionModel selectionModel,
-                                           @Nonnull Project project) {
+  private static void handleNoUsageTargets(PsiFile file, @Nonnull Editor editor, SelectionModel selectionModel, @Nonnull Project project) {
     if (file.findElementAt(editor.getCaretModel().getOffset()) instanceof PsiWhiteSpace) return;
     selectionModel.selectWordAtCaret(false);
     String selection = selectionModel.getSelectedText();
@@ -216,8 +233,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     private final PsiFile myFile;
     private final boolean myClearHighlights;
 
-    public DoHighlightRunnable(@Nonnull List<PsiReference> refs, @Nonnull Project project, @Nonnull PsiElement target, Editor editor,
-                               PsiFile file, boolean clearHighlights) {
+    public DoHighlightRunnable(@Nonnull List<PsiReference> refs, @Nonnull Project project, @Nonnull PsiElement target, Editor editor, PsiFile file, boolean clearHighlights) {
       myRefs = refs;
       myProject = project;
       myTarget = target;
@@ -241,12 +257,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     doHighlightElements(editor, elements, attributes, clearHighlights);
   }
 
-  public static void highlightReferences(@Nonnull Project project,
-                                         @Nonnull PsiElement element,
-                                         @Nonnull List<PsiReference> refs,
-                                         Editor editor,
-                                         PsiFile file,
-                                         boolean clearHighlights) {
+  public static void highlightReferences(@Nonnull Project project, @Nonnull PsiElement element, @Nonnull List<PsiReference> refs, Editor editor, PsiFile file, boolean clearHighlights) {
 
     HighlightManager highlightManager = HighlightManager.getInstance(project);
     EditorColorsManager manager = EditorColorsManager.getInstance();
@@ -329,9 +340,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     highlightRanges(highlightManager, editor, attributes, clearHighlights, textRanges);
   }
 
-  public static void highlightRanges(HighlightManager highlightManager, Editor editor, TextAttributes attributes,
-                                     boolean clearHighlights,
-                                     List<TextRange> textRanges) {
+  public static void highlightRanges(HighlightManager highlightManager, Editor editor, TextAttributes attributes, boolean clearHighlights, List<TextRange> textRanges) {
     if (clearHighlights) {
       clearHighlights(editor, highlightManager, textRanges, attributes);
       return;
@@ -359,10 +368,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     return false;
   }
 
-  private static void clearHighlights(Editor editor,
-                                      HighlightManager highlightManager,
-                                      List<TextRange> rangesToHighlight,
-                                      TextAttributes attributes) {
+  private static void clearHighlights(Editor editor, HighlightManager highlightManager, List<TextRange> rangesToHighlight, TextAttributes attributes) {
     if (editor instanceof EditorWindow) editor = ((EditorWindow)editor).getDelegate();
     RangeHighlighter[] highlighters = ((HighlightManagerImpl)highlightManager).getHighlighters(editor);
     Arrays.sort(highlighters, (o1, o2) -> o1.getStartOffset() - o2.getStartOffset());
@@ -373,8 +379,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
       RangeHighlighter highlighter = highlighters[i];
       TextRange highlighterRange = TextRange.create(highlighter);
       TextRange refRange = rangesToHighlight.get(j);
-      if (refRange.equals(highlighterRange) && attributes.equals(highlighter.getTextAttributes()) &&
-          highlighter.getLayer() == HighlighterLayer.SELECTION - 1) {
+      if (refRange.equals(highlighterRange) && attributes.equals(highlighter.getTextAttributes()) && highlighter.getLayer() == HighlighterLayer.SELECTION - 1) {
         highlightManager.removeSegmentHighlighter(editor, highlighter);
         i++;
       }
@@ -391,8 +396,7 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
     }
   }
 
-  private static void doHighlightRefs(HighlightManager highlightManager, @Nonnull Editor editor, @Nonnull List<PsiReference> refs,
-                                      TextAttributes attributes, boolean clearHighlights) {
+  private static void doHighlightRefs(HighlightManager highlightManager, @Nonnull Editor editor, @Nonnull List<PsiReference> refs, TextAttributes attributes, boolean clearHighlights) {
     List<TextRange> textRanges = new ArrayList<>(refs.size());
     for (PsiReference ref : refs) {
       collectRangesToHighlight(ref, textRanges);
@@ -432,14 +436,10 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
       message = "";
     }
     else if (refCount > 0) {
-      message = CodeInsightBundle.message(elementName != null ?
-                                          "status.bar.highlighted.usages.message" :
-                                          "status.bar.highlighted.usages.no.target.message", refCount, elementName, getShortcutText());
+      message = CodeInsightBundle.message(elementName != null ? "status.bar.highlighted.usages.message" : "status.bar.highlighted.usages.no.target.message", refCount, elementName, getShortcutText());
     }
     else {
-      message = CodeInsightBundle.message(elementName != null ?
-                                          "status.bar.highlighted.usages.not.found.message" :
-                                          "status.bar.highlighted.usages.not.found.no.target.message", elementName);
+      message = CodeInsightBundle.message(elementName != null ? "status.bar.highlighted.usages.not.found.message" : "status.bar.highlighted.usages.not.found.no.target.message", elementName);
     }
     WindowManager.getInstance().getStatusBar(project).setInfo(message);
   }
@@ -449,13 +449,6 @@ public class HighlightUsagesHandler extends HighlightHandlerBase {
   }
 
   public static String getShortcutText() {
-    final Shortcut[] shortcuts = ActionManager.getInstance()
-            .getAction(IdeActions.ACTION_HIGHLIGHT_USAGES_IN_FILE)
-            .getShortcutSet()
-            .getShortcuts();
-    if (shortcuts.length == 0) {
-      return "<no key assigned>";
-    }
-    return KeymapUtil.getShortcutText(shortcuts[0]);
+    return HighlightUsagesHandlerBase.getShortcutText();
   }
 }

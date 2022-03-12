@@ -16,8 +16,6 @@
 package consulo.extensions;
 
 import consulo.application.Application;
-import consulo.module.Module;
-import consulo.project.Project;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.logging.Logger;
@@ -47,26 +45,6 @@ public abstract class CompositeExtensionPointName<T> {
   @Target(ElementType.METHOD)
   public @interface BooleanBreakResult {
     boolean breakValue();
-  }
-
-  @Nonnull
-  public static <E> CompositeExtensionPointName<E> modulePoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
-    return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
-      @Override
-      protected boolean validateArea(@Nullable ComponentManager componentManager) {
-        return componentManager instanceof Module;
-      }
-    };
-  }
-
-  @Nonnull
-  public static <E> CompositeExtensionPointName<E> projectPoint(@Nonnull String epName, @Nonnull Class<E> clazz) {
-    return new CompositeExtensionPointNameWithArea<E>(epName, clazz) {
-      @Override
-      protected boolean validateArea(@Nullable ComponentManager componentManager) {
-        return componentManager instanceof Project;
-      }
-    };
   }
 
   @Nonnull

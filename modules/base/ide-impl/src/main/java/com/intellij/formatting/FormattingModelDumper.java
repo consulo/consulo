@@ -18,6 +18,7 @@ package com.intellij.formatting;
 
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.codeStyle.*;
 
 import java.io.PrintStream;
 import java.util.List;

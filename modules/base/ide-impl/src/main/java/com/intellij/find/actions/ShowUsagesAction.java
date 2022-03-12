@@ -54,7 +54,7 @@ import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataManager;

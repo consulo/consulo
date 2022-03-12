@@ -15,15 +15,15 @@
  */
 package com.intellij.formatting.engine;
 
-import com.intellij.formatting.ASTBlock;
-import com.intellij.formatting.AbstractBlockWrapper;
-import com.intellij.formatting.Block;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.internal.AbstractBlockWrapper;
+import consulo.language.codeStyle.Block;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import javax.annotation.Nonnull;
 
 public class BlockIndentOptions {

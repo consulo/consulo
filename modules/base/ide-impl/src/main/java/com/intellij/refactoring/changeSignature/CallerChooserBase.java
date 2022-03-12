@@ -43,7 +43,7 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashSet;
 import javax.annotation.Nonnull;

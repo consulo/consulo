@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.actions;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.application.ApplicationBundle;

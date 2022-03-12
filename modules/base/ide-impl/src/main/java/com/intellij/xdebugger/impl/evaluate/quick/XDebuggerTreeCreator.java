@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.evaluate.quick;
 
-import com.intellij.concurrency.ResultConsumer;
+import consulo.util.concurrent.ResultConsumer;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.awt.tree.Tree;

@@ -23,7 +23,7 @@ import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.components.fields.CommaSeparatedIntegersField;
@@ -57,7 +57,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static com.intellij.psi.codeStyle.CodeStyleSettings.MAX_RIGHT_MARGIN;
+import static consulo.language.codeStyle.CodeStyleSettings.MAX_RIGHT_MARGIN;
 
 public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   @SuppressWarnings("UnusedDeclaration")

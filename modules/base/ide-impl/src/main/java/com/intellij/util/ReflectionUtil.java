@@ -18,7 +18,7 @@ package com.intellij.util;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.DifferenceFilter;
+import consulo.util.xml.serializer.DifferenceFilter;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.JBTreeTraverser;

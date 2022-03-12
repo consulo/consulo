@@ -4,6 +4,7 @@ package com.intellij.formatting;
 import com.intellij.diagnostic.LogMessageEx;
 import consulo.language.Language;
 import consulo.document.util.TextRange;
+import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.formatter.FormattingDocumentModelImpl;
 import consulo.language.impl.DebugUtil;

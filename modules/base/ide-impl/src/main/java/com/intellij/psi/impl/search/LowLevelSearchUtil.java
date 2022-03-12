@@ -29,7 +29,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
-import com.intellij.psi.search.TextOccurenceProcessor;
+import consulo.language.psi.search.TextOccurenceProcessor;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ConcurrencyUtil;

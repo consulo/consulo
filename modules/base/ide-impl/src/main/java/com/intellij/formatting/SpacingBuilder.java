@@ -2,10 +2,14 @@ package com.intellij.formatting;
 
 import consulo.language.Language;
 import consulo.document.util.TextRange;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.Spacing;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

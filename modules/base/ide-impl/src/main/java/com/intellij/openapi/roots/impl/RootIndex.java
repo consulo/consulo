@@ -37,7 +37,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.util.CollectionQuery;
 import com.intellij.util.EmptyQuery;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;

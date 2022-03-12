@@ -17,8 +17,9 @@ package com.intellij.psi.codeStyle.arrangement;
 
 import consulo.language.Language;
 import com.intellij.openapi.util.Pair;
+import consulo.language.codeStyle.arrangement.ArrangementSettings;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;

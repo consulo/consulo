@@ -6,6 +6,8 @@ import com.intellij.find.FindModel;
 import com.intellij.find.ngrams.TrigramIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.PsiSearchHelper;
+import consulo.language.psi.search.UsageSearchContext;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.DumbService;
 import consulo.project.Project;

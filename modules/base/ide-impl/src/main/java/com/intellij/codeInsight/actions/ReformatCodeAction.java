@@ -18,9 +18,9 @@ package com.intellij.codeInsight.actions;
 
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.find.impl.FindInProjectUtil;
-import com.intellij.formatting.FormattingModelBuilder;
+import consulo.language.codeStyle.FormattingModelBuilder;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

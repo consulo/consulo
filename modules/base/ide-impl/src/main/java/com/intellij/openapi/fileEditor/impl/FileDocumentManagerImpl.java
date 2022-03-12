@@ -3,7 +3,7 @@ package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.AppTopics;
 import consulo.application.CommonBundle;
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import consulo.application.WriteAction;
 import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.undoRedo.CommandProcessor;

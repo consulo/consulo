@@ -16,13 +16,14 @@
 
 package com.intellij.psi.impl.search;
 
-import com.intellij.concurrency.AsyncFuture;
-import com.intellij.concurrency.AsyncUtil;
+import consulo.language.psi.search.*;
+import consulo.util.concurrent.AsyncFuture;
+import consulo.util.concurrent.AsyncUtil;
 import consulo.application.internal.concurrency.JobLauncher;
 import com.intellij.concurrency.SensitiveProgressWrapper;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ReadActionProcessor;
+import consulo.application.util.ReadActionProcessor;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.application.ex.ApplicationUtil;
 import com.intellij.openapi.progress.impl.CoreProgressManager;

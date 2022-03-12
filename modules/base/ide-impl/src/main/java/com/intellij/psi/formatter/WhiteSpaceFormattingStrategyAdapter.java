@@ -16,8 +16,10 @@
 package com.intellij.psi.formatter;
 
 import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.StaticSymbolWhiteSpaceDefinitionStrategy;
+import consulo.language.codeStyle.WhiteSpaceFormattingStrategy;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.impl.ast.LeafElement;
 import javax.annotation.Nonnull;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.psi.codeStyle.autodetect;
 
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

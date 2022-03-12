@@ -15,8 +15,9 @@
  */
 package com.intellij.formatting.engine;
 
-import com.intellij.formatting.*;
 import consulo.document.Document;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.internal.*;
 import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 

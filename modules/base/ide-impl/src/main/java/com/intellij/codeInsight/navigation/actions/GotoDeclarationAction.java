@@ -33,8 +33,8 @@ import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
-import consulo.codeInsight.TargetElementUtil;
-import consulo.codeInsight.TargetElementUtilEx;
+import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.TargetElementUtilExtender;
 import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
 import consulo.component.extension.ExtensionException;
 import consulo.component.extension.Extensions;
@@ -130,7 +130,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
   }
 
   public static PsiNameIdentifierOwner findElementToShowUsagesOf(@Nonnull Editor editor, int offset) {
-    PsiElement elementAt = TargetElementUtil.findTargetElement(editor, ContainerUtil.newHashSet(TargetElementUtilEx.ELEMENT_NAME_ACCEPTED), offset);
+    PsiElement elementAt = TargetElementUtil.findTargetElement(editor, ContainerUtil.newHashSet(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED), offset);
     if (elementAt instanceof PsiNameIdentifierOwner) {
       return (PsiNameIdentifierOwner)elementAt;
     }
@@ -283,9 +283,9 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
     }
 
     Set<String> flags = ContainerUtil.newHashSet(TargetElementUtil.getAllAccepted());
-    flags.remove(TargetElementUtilEx.ELEMENT_NAME_ACCEPTED);
+    flags.remove(TargetElementUtilExtender.ELEMENT_NAME_ACCEPTED);
     if (!lookupAccepted) {
-      flags.remove(TargetElementUtilEx.LOOKUP_ITEM_ACCEPTED);
+      flags.remove(TargetElementUtilExtender.LOOKUP_ITEM_ACCEPTED);
     }
     PsiElement element = TargetElementUtil.findTargetElement(editor, flags, offset);
     if (element != null) {

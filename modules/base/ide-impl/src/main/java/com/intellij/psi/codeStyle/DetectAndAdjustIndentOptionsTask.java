@@ -15,11 +15,13 @@
  */
 package com.intellij.psi.codeStyle;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
 import consulo.document.Document;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.progress.DumbProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
@@ -29,7 +31,7 @@ import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
+import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import com.intellij.psi.codeStyle.autodetect.IndentOptionsAdjuster;
 import com.intellij.psi.codeStyle.autodetect.IndentOptionsDetectorImpl;
 import com.intellij.util.Time;

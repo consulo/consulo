@@ -31,7 +31,7 @@ import consulo.util.lang.CharFilter;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import javax.annotation.Nonnull;
 
 import java.awt.datatransfer.DataFlavor;

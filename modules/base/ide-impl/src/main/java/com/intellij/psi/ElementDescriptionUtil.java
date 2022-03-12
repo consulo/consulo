@@ -16,6 +16,8 @@
 
 package com.intellij.psi;
 
+import consulo.language.psi.ElementDescriptionLocation;
+import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;

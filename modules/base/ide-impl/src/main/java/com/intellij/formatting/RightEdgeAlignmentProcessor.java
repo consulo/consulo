@@ -15,6 +15,10 @@
  */
 package com.intellij.formatting;
 
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.CoreFormatterUtil;
+import consulo.language.codeStyle.internal.*;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -15,19 +15,19 @@
  */
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.formatting.CoreFormatterUtil;
-import com.intellij.formatting.FormattingMode;
-import com.intellij.formatting.FormattingModel;
-import com.intellij.formatting.FormattingModelBuilder;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CoreFormatterUtil;
+import consulo.language.codeStyle.FormattingMode;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;

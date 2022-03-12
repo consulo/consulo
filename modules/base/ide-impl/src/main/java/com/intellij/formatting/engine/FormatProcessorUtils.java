@@ -17,7 +17,11 @@ package com.intellij.formatting.engine;
 
 import com.intellij.formatting.*;
 import consulo.document.util.TextRange;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.internal.LeafBlockWrapper;
+import consulo.language.codeStyle.internal.WhiteSpace;
+
 import javax.annotation.Nonnull;
 
 public class FormatProcessorUtils {

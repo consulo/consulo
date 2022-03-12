@@ -21,7 +21,7 @@ import consulo.application.util.Queryable;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.psi.PsiElementBase;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;

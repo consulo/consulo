@@ -16,6 +16,8 @@
 
 package com.intellij.formatting;
 
+import consulo.language.codeStyle.FormattingModelBuilder;
+
 public interface DelegatingFormattingModelBuilder extends FormattingModelBuilder {
   boolean dontFormatMyModel();
 }

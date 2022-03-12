@@ -30,7 +30,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;

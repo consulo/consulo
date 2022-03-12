@@ -16,7 +16,7 @@
 
 package com.intellij.psi.formatter;
 
-import com.intellij.formatting.FormattingDocumentModel;
+import consulo.language.codeStyle.*;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.logging.Logger;
@@ -27,8 +27,6 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.impl.PsiDocumentManagerImpl;
 import consulo.language.impl.psi.internal.PsiToDocumentSynchronizer;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;

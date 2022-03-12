@@ -15,17 +15,17 @@
  */
 package com.intellij.psi.templateLanguages;
 
-import com.intellij.formatting.*;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.LanguageFormatting;
 import consulo.document.util.TextRange;
+import consulo.language.codeStyle.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.file.FileViewProvider;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
-import com.intellij.psi.formatter.common.AbstractBlock;
+import consulo.language.codeStyle.AbstractBlock;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 
 import javax.annotation.Nonnull;
@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * @author peter
  */
-public class SimpleTemplateLanguageFormattingModelBuilder implements FormattingModelBuilder{
+public class SimpleTemplateLanguageFormattingModelBuilder implements FormattingModelBuilder {
   @Override
   @Nonnull
   public FormattingModel createModel(final PsiElement element, final CodeStyleSettings settings) {

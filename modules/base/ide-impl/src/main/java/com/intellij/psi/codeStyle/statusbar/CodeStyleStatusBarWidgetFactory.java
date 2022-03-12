@@ -14,7 +14,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.ui.ex.UIBundle;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;

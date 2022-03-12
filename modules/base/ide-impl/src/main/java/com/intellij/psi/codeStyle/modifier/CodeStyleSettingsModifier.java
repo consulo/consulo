@@ -5,7 +5,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

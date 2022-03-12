@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.navigation.Navigatable;
-import com.intellij.pom.NavigatableWithText;
+import consulo.language.pom.NavigatableWithText;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

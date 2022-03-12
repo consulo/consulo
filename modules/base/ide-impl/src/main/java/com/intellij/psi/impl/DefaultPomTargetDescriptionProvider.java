@@ -17,10 +17,10 @@ package com.intellij.psi.impl;
 
 import com.intellij.ide.TypePresentationService;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.PomDescriptionProvider;
-import com.intellij.pom.PomNamedTarget;
+import consulo.language.pom.PomDescriptionProvider;
+import consulo.language.pom.PomNamedTarget;
 import consulo.language.pom.PomTarget;
-import com.intellij.psi.ElementDescriptionLocation;
+import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.PsiElement;
 import com.intellij.usageView.UsageViewNodeTextLocation;
 import com.intellij.usageView.UsageViewTypeLocation;

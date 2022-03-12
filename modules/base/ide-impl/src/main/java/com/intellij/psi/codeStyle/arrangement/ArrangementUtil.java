@@ -18,6 +18,7 @@ package com.intellij.psi.codeStyle.arrangement;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
 import consulo.language.Language;
 import consulo.document.Document;
+import consulo.language.codeStyle.arrangement.ArrangementSettings;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import com.intellij.psi.codeStyle.arrangement.match.*;
@@ -50,7 +51,7 @@ public class ArrangementUtil {
 
   //region Serialization
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ArrangementSettings readExternal(@Nonnull Element element, @Nonnull Language language) {
     ArrangementSettingsSerializer serializer = getSerializer(language);
     if (serializer == null) {
@@ -163,7 +164,7 @@ public class ArrangementUtil {
   }
   //endregion
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ArrangementSettingsToken parseType(@Nonnull ArrangementMatchCondition condition) throws IllegalArgumentException {
     final Ref<ArrangementSettingsToken> result = new Ref<ArrangementSettingsToken>();
     condition.invite(new ArrangementMatchConditionVisitor() {
@@ -227,7 +228,7 @@ public class ArrangementUtil {
     return result;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public static ArrangementEntryMatcher buildMatcher(@Nonnull ArrangementMatchCondition condition) {
     final Ref<ArrangementEntryMatcher> result = new Ref<ArrangementEntryMatcher>();
     final Stack<CompositeArrangementEntryMatcher> composites = new Stack<CompositeArrangementEntryMatcher>();

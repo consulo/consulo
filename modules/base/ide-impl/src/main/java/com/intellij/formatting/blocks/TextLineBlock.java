@@ -16,8 +16,8 @@
 
 package com.intellij.formatting.blocks;
 
-import com.intellij.formatting.*;
 import consulo.document.util.TextRange;
+import consulo.language.codeStyle.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

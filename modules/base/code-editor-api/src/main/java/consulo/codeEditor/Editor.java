@@ -525,4 +525,14 @@ public interface Editor extends UserDataHolder {
   }
 
   void showPopupInBestPositionFor(@Nonnull JBPopup popup);
+
+  /**
+   * @return the offset that the caret is expected to be but maybe not yet.
+   * E.g. when user right-clicks the mouse the caret is not immediately jumps there but the click-handler wants to know that location already.
+   * <p>
+   * When no mouse-clicks happened return the regular caret offset.
+   */
+  default int getExpectedCaretOffset() {
+    return getCaretModel().getOffset();
+  }
 }

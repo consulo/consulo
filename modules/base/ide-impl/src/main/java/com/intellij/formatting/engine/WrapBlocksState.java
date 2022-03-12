@@ -17,7 +17,14 @@ package com.intellij.formatting.engine;
 
 import com.intellij.formatting.*;
 import consulo.document.Document;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.Alignment;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingDocumentModel;
+import consulo.language.codeStyle.internal.AbstractBlockWrapper;
+import consulo.language.codeStyle.internal.BlockRangesMap;
+import consulo.language.codeStyle.internal.LeafBlockWrapper;
+import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 

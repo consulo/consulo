@@ -17,6 +17,7 @@ package com.intellij.formatting;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.language.codeStyle.internal.LeafBlockWrapper;
 
 import java.util.*;
 

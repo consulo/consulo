@@ -17,7 +17,7 @@
 package com.intellij.psi.impl.cache.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ReadActionProcessor;
+import consulo.application.util.ReadActionProcessor;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.dumb.IndexNotReadyException;

@@ -7,7 +7,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.psi.search.IndexPattern;
 import com.intellij.psi.search.IndexPatternOccurrence;
 import com.intellij.psi.search.IndexPatternProvider;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import com.intellij.util.QueryFactory;
 import javax.annotation.Nonnull;
 

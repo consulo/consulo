@@ -23,6 +23,11 @@ import consulo.document.impl.DocumentEx;
 import com.intellij.openapi.editor.impl.BulkChangesMerger;
 import com.intellij.openapi.editor.impl.TextChangeImpl;
 import consulo.document.impl.DocumentUtil;
+import consulo.language.codeStyle.FormattingDocumentModel;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.internal.LeafBlockWrapper;
+import consulo.language.codeStyle.internal.WhiteSpace;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

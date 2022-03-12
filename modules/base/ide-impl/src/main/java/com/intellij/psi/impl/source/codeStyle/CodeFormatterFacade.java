@@ -2,7 +2,7 @@
 
 package com.intellij.psi.impl.source.codeStyle;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.*;
 import com.intellij.formatting.*;
 import consulo.dataContext.DataManager;
 import consulo.codeEditor.CaretModel;
@@ -12,7 +12,6 @@ import consulo.codeEditor.SelectionModel;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
-import com.intellij.lang.LanguageFormatting;
 import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
@@ -38,8 +37,6 @@ import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
 import com.intellij.psi.formatter.DocumentBasedFormattingModel;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import consulo.language.impl.psi.SourceTreeToPsiMap;

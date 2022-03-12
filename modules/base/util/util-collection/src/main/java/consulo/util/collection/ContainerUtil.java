@@ -657,6 +657,7 @@ public class ContainerUtil {
 
   @Nonnull
   @Contract(pure = true)
+  @Deprecated
   public static <T> ArrayList<T> newArrayList() {
     return new ArrayList<>();
   }

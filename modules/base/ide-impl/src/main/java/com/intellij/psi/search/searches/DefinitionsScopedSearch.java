@@ -20,9 +20,9 @@ import consulo.application.ApplicationManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.util.function.Computable;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.search.PsiSearchHelper;
+import consulo.language.psi.search.PsiSearchHelper;
 import consulo.content.scope.SearchScope;
-import com.intellij.util.Query;
+import consulo.application.util.Query;
 import com.intellij.util.QueryExecutor;
 import javax.annotation.Nonnull;
 

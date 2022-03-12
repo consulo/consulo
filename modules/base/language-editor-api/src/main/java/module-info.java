@@ -20,6 +20,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.documentation;
   exports consulo.language.editor.gutter;
   exports consulo.language.editor.highlight;
+  exports consulo.language.editor.highlight.usage;
   exports consulo.language.editor.rawHighlight;
   exports consulo.language.editor.inspection;
   exports consulo.language.editor.inspection.reference;

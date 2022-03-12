@@ -16,7 +16,7 @@
 package com.intellij.psi.codeStyle.presentation;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.LanguageCodeStyleSettingsProvider;
+import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.intellij.psi.codeStyle.CodeStyleSettingsCustomizable.*;
+import static consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable.*;
 
 /**
  * @author Roman.Shein

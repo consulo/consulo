@@ -17,6 +17,7 @@ package com.intellij.psi.codeStyle.arrangement;
 
 import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.language.codeStyle.arrangement.ArrangementSettings;
 
 import java.util.List;
 import java.util.Set;

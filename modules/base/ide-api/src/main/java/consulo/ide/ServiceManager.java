@@ -17,24 +17,28 @@ package consulo.ide;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
+import consulo.component.ComponentManager;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.NotNullLazyKey;
-import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;
 
 public class ServiceManager {
-  private ServiceManager() { }
+  private ServiceManager() {
+  }
 
+  @Nonnull
   public static <T> T getService(@Nonnull Class<T> serviceClass) {
     return getService(Application.get(), serviceClass);
   }
 
+  @Nonnull
   public static <T> T getService(@Nonnull Project project, @Nonnull Class<T> serviceClass) {
     return getService((ComponentManager)project, serviceClass);
   }
 
+  @Nonnull
   public static <T> T getService(@Nonnull Module module, @Nonnull Class<T> serviceClass) {
     return getService((ComponentManager)module, serviceClass);
   }

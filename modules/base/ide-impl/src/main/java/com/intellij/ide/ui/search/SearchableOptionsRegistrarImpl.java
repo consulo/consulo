@@ -16,7 +16,7 @@
 
 package com.intellij.ide.ui.search;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationBundle;
 import com.intellij.openapi.util.Comparing;

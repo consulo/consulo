@@ -15,14 +15,15 @@
  */
 package com.intellij.pom.references;
 
-import consulo.project.Project;
+import com.intellij.psi.impl.PomTargetPsiElementImpl;
+import consulo.language.pom.PomService;
 import consulo.language.pom.PomTarget;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.impl.PomTargetPsiElementImpl;
-
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author peter

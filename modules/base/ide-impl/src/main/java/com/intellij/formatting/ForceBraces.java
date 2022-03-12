@@ -2,7 +2,7 @@
 package com.intellij.formatting;
 
 import consulo.util.xml.serializer.InvalidDataException;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.CommonCodeStyleSettings;
 
 public enum ForceBraces {
   Never(CommonCodeStyleSettings.DO_NOT_FORCE),

@@ -19,8 +19,9 @@ import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiTarget;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.pom.PsiDeclaredTarget;
+import consulo.language.pom.PsiDeclaredTarget;
 import com.intellij.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
 

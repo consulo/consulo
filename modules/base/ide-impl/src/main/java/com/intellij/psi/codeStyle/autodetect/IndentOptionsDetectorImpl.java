@@ -1,14 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle.autodetect;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.FormattingContext;
-import com.intellij.formatting.FormattingModel;
-import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.lang.LanguageFormatting;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingContext;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.FormattingModelBuilder;
+import consulo.language.codeStyle.LanguageFormatting;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static com.intellij.psi.codeStyle.CommonCodeStyleSettings.IndentOptions;
+import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 
 public class IndentOptionsDetectorImpl implements IndentOptionsDetector {
   private final PsiFile myFile;

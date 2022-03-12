@@ -15,9 +15,10 @@
  */
 package com.intellij.formatting.engine;
 
-import com.intellij.formatting.DependantSpacingImpl;
-import com.intellij.formatting.SpacingImpl;
-import com.intellij.formatting.WhiteSpace;
+import consulo.language.codeStyle.internal.DependantSpacingImpl;
+import consulo.language.codeStyle.internal.BlockRangesMap;
+import consulo.language.codeStyle.internal.SpacingImpl;
+import consulo.language.codeStyle.internal.WhiteSpace;
 import consulo.document.util.TextRange;
 
 import java.util.*;

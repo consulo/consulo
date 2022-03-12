@@ -18,8 +18,8 @@ package com.intellij.application.options;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.configurable.Configurable;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsProvider;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import javax.annotation.Nonnull;
 
 /**

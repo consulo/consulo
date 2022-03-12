@@ -17,10 +17,11 @@
 package com.intellij.formatting;
 
 import com.intellij.formatting.engine.*;
+import consulo.language.codeStyle.*;
+import consulo.language.codeStyle.internal.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

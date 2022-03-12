@@ -16,6 +16,7 @@
 package com.intellij.psi.codeStyle;
 
 import consulo.component.util.pointer.Named;
+import consulo.language.codeStyle.CodeStyleSettings;
 
 /**
  * @author MYakovlev

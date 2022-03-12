@@ -50,7 +50,7 @@ import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.annotation.access.RequiredReadAction;

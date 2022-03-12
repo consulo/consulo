@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle.modifier;
 
-import com.intellij.application.options.CodeStyle;
+import consulo.language.codeStyle.CodeStyle;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.component.util.ModificationTracker;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.FileIndentOptionsProvider;
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.FileIndentOptionsProvider;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

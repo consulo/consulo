@@ -15,14 +15,14 @@
  */
 package com.intellij.psi.codeStyle.autodetect;
 
-import com.intellij.formatting.ASTBlock;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.Indent;
+import consulo.language.codeStyle.ASTBlock;
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.Indent;
 import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiComment;
-import com.intellij.psi.formatter.common.AbstractBlock;
+import consulo.language.codeStyle.AbstractBlock;
 import com.intellij.psi.formatter.common.NewLineBlocksIterator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.CharArrayUtil;

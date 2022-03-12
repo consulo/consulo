@@ -15,8 +15,14 @@
  */
 package com.intellij.formatting;
 
+import consulo.language.codeStyle.Block;
+import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.internal.AbstractBlockWrapper;
+import consulo.language.codeStyle.internal.CompositeBlockWrapper;
+import consulo.language.codeStyle.internal.WhiteSpace;
+import consulo.language.codeStyle.internal.WrapImpl;
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.psi.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettings;
 import javax.annotation.Nonnull;
 
 import java.util.EnumSet;
