@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui;
 
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;

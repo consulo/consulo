@@ -16,7 +16,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.AppTopics;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.command.WriteCommandAction;

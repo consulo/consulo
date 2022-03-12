@@ -16,13 +16,13 @@
 package com.intellij.application.options.codeStyle.arrangement.group;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.util.TitleWithToolbar;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
 import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import com.intellij.util.ui.GridBag;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -41,7 +41,7 @@ public class ArrangementGroupingRulesPanel extends JPanel implements DataProvide
   @Nonnull
   private final ArrangementGroupingRulesControl myControl;
 
-  public ArrangementGroupingRulesPanel(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementGroupingRulesPanel(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                        @Nonnull ArrangementColorsProvider colorsProvider)
   {
     super(new GridBagLayout());

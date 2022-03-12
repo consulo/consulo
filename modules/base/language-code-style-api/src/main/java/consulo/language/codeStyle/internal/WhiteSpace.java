@@ -16,10 +16,10 @@
 
 package consulo.language.codeStyle.internal;
 
-import com.intellij.psi.formatter.FormattingDocumentModelImpl;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.FormattingDocumentModel;
+import consulo.language.codeStyle.IndentInside;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;

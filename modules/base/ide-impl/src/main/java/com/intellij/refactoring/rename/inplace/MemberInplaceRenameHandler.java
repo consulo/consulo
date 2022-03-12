@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.rename.inplace;
 
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import com.intellij.lang.LanguageRefactoringSupport;

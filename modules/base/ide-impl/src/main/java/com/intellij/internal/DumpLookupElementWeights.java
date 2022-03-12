@@ -17,7 +17,7 @@
 package com.intellij.internal;
 
 import consulo.language.editor.completion.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

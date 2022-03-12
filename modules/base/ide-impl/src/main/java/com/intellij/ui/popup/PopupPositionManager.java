@@ -2,9 +2,9 @@
 package com.intellij.ui.popup;
 
 import consulo.language.editor.completion.lookup.event.LookupEvent;
-import com.intellij.codeInsight.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.event.LookupListener;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;

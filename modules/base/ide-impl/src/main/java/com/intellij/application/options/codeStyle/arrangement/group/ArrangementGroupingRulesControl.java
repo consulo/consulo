@@ -15,14 +15,14 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.group;
 
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementEditorAware;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementRepresentationAware;
 import consulo.util.dataholder.Key;
 import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.psi.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.containers.ContainerUtilRt;
@@ -52,11 +52,11 @@ public class ArrangementGroupingRulesControl extends JBTable {
   private final Map<ArrangementSettingsToken, ArrangementGroupingComponent> myComponents = ContainerUtilRt.newHashMap();
 
   @Nonnull
-  private final ArrangementStandardSettingsManager mySettingsManager;
+  private final ArrangementStandardSettingsManagerImpl mySettingsManager;
 
   private int myRowUnderMouse = -1;
 
-  public ArrangementGroupingRulesControl(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementGroupingRulesControl(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                          @Nonnull ArrangementColorsProvider colorsProvider)
   {
     super(new DefaultTableModel(0, 1));

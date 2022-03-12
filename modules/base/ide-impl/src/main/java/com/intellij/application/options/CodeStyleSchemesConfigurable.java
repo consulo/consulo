@@ -25,7 +25,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
-import com.intellij.psi.codeStyle.CodeStyleScheme;
+import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;

@@ -16,8 +16,8 @@
 package com.intellij.execution.console;
 
 import consulo.language.editor.completion.lookup.Lookup;
-import com.intellij.codeInsight.lookup.LookupFocusDegree;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupFocusDegree;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.AllIcons;

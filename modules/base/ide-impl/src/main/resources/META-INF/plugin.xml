@@ -540,9 +540,9 @@
     </extensionPoint>
 
     <extensionPoint name="lang.rearranger" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.codeStyle.arrangement.Rearranger"/>
+      <with attribute="implementationClass" implements="consulo.language.codeStyle.arrangement.Rearranger"/>
     </extensionPoint>
-    <extensionPoint name="rearranger.ui" interface="com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent$Factory"/>
+    <extensionPoint name="rearranger.ui" interface="consulo.language.codeStyle.arrangement.std.ArrangementUiComponent$Factory"/>
 
     <extensionPoint name="lang.surroundDescriptor" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.editor.surroundWith.SurroundDescriptor"/>
@@ -1105,7 +1105,7 @@
 
     <extensionPoint name="codeStyleSettingsModifier" interface="com.intellij.psi.codeStyle.modifier.CodeStyleSettingsModifier"/>
 
-    <extensionPoint name="predefinedCodeStyle" interface="com.intellij.psi.codeStyle.PredefinedCodeStyle"/>
+    <extensionPoint name="predefinedCodeStyle" interface="consulo.language.codeStyle.PredefinedCodeStyle"/>
 
     <extensionPoint name="semContributor"
                     beanClass="com.intellij.semantic.SemContributorEP" area="PROJECT">
@@ -1753,7 +1753,7 @@
     <projectService serviceInterface="com.intellij.psi.search.PsiTodoSearchHelper"
                     serviceImplementation="com.intellij.psi.impl.search.PsiTodoSearchHelperImpl"/>
 
-    <projectService serviceInterface="com.intellij.codeInsight.lookup.LookupManager"
+    <projectService serviceInterface="consulo.language.editor.completion.lookup.LookupManager"
                     serviceImplementation="com.intellij.codeInsight.lookup.impl.LookupManagerImpl"/>
 
     <projectService serviceImplementation="com.intellij.openapi.editor.impl.DocumentMarkupModelManager"/>
@@ -1790,10 +1790,10 @@
     <applicationService serviceInterface="com.intellij.openapi.actionSystem.AbbreviationManager"
                         serviceImplementation="com.intellij.openapi.actionSystem.impl.AbbreviationManagerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.psi.codeStyle.CodeStyleSchemes"
+    <applicationService serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"
                         serviceImplementation="com.intellij.psi.impl.source.codeStyle.PersistableCodeStyleSchemes"/>
 
-    <schemeOwner serviceInterface="com.intellij.psi.codeStyle.CodeStyleSchemes"/>
+    <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.libraries.LibraryTablesRegistrar"
                         serviceImplementation="com.intellij.openapi.roots.impl.libraries.LibraryTablesRegistrarImpl"/>
@@ -1850,7 +1850,7 @@
                         serviceImplementation="consulo.psi.impl.source.codeStyle.ApplicationCodeStyleFacadeImpl"/>
 
     <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
-    <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.MemberOrderService"/>
+    <applicationService serviceImplementation="consulo.language.codeStyle.impl.arrangement.MemberOrderService"/>
 
     <applicationService serviceInterface="consulo.content.bundle.SdkPointerManager"
                         serviceImplementation="consulo.module.bundle.SdkPointerManagerImpl"/>

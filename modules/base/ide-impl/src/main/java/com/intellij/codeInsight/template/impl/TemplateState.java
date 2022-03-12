@@ -24,6 +24,7 @@ import com.intellij.codeInsight.template.macro.TemplateCompletionProcessor;
 import com.intellij.diagnostic.AttachmentFactory;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.inject.InjectedLanguageManager;

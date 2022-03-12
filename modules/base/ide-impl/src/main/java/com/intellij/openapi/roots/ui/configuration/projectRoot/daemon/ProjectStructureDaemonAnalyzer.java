@@ -2,7 +2,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.application.Application;
 import consulo.project.Project;
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import consulo.application.util.function.ThrowableComputable;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;

@@ -24,6 +24,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;

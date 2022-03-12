@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.navigation;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;

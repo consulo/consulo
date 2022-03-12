@@ -24,7 +24,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.project.Project;
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

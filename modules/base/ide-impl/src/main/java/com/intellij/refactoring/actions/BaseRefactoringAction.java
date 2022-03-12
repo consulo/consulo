@@ -18,8 +18,8 @@ package com.intellij.refactoring.actions;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.Lookup;
-import com.intellij.codeInsight.lookup.LookupEx;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.lang.ContextAwareActionHandler;

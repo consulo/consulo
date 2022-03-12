@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions.smartEnter;
 
 import com.intellij.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.language.Language;

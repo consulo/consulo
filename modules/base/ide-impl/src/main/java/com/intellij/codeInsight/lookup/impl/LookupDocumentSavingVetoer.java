@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.lookup.impl;
 
-import com.intellij.codeInsight.lookup.LookupEx;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

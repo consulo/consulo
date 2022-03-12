@@ -16,4 +16,5 @@ module consulo.code.editor.api {
   exports consulo.codeEditor;
   exports consulo.codeEditor.event;
   exports consulo.codeEditor.markup;
+  exports consulo.codeEditor.util;
 }

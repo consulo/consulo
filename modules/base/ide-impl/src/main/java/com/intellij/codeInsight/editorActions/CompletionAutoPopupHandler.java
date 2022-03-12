@@ -4,7 +4,7 @@ package com.intellij.codeInsight.editorActions;
 import consulo.language.editor.AutoPopupController;
 import com.intellij.codeInsight.AutoPopupControllerImpl;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.application.AppUIExecutor;
 import consulo.logging.Logger;

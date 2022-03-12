@@ -20,10 +20,7 @@ import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
-import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileFilter;
-import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,6 +38,20 @@ import java.util.function.Predicate;
 public final class VirtualFileUtil {
   private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
 
+  /**
+   * Returns {@code true} if given virtual file represents broken symbolic link (which points to non-existent file).
+   */
+  public static boolean isBrokenLink(@Nonnull VirtualFile file) {
+    return file.is(VFileProperty.SYMLINK) && file.getCanonicalPath() == null;
+  }
+
+  /**
+   * Returns {@code true} if given virtual file represents broken or recursive symbolic link.
+   */
+  public static boolean isInvalidLink(@Nonnull VirtualFile link) {
+    final VirtualFile target = link.getCanonicalFile();
+    return target == null || target.equals(link) || isAncestor(target, link, true);
+  }
 
   /**
    * Makes a copy of the <code>file</code> in the <code>toDir</code> folder and returns it.

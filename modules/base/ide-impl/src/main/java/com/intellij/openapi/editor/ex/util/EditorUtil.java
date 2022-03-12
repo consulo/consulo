@@ -661,7 +661,7 @@ public final class EditorUtil {
   }
 
   public static boolean inVirtualSpace(@Nonnull Editor editor, @Nonnull LogicalPosition logicalPosition) {
-    return !editor.offsetToLogicalPosition(editor.logicalPositionToOffset(logicalPosition)).equals(logicalPosition);
+    return consulo.codeEditor.util.EditorUtil.inVirtualSpace(editor, logicalPosition);
   }
 
   public static void reinitSettings() {

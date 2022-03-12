@@ -15,13 +15,13 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.match.tokens;
 
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.language.codeStyle.CodeStyleBundle;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
+import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 
@@ -39,7 +39,7 @@ public class ArrangementRuleAliasDialog extends DialogWrapper {
   private boolean myModified;
 
   public ArrangementRuleAliasDialog(@Nullable Project project,
-                                    @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                    @Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                     @Nonnull ArrangementColorsProvider colorsProvider,
                                     @Nonnull Collection<StdArrangementRuleAliasToken> tokens,
                                     @Nonnull Set<String> tokensInUse) {
@@ -51,7 +51,7 @@ public class ArrangementRuleAliasDialog extends DialogWrapper {
       myEditor.selectItem(tokenList.get(0));
     }
 
-    setTitle(ApplicationBundle.message("arrangement.settings.section.rule.custom.token.title"));
+    setTitle(CodeStyleBundle.message("arrangement.settings.section.rule.custom.token.title"));
     init();
   }
 

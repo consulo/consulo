@@ -15,12 +15,12 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.component;
 
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokenUiRole;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
+import consulo.language.codeStyle.arrangement.std.StdArrangementTokenUiRole;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +37,7 @@ public class DefaultArrangementUiComponentFactory implements ArrangementUiCompon
   public ArrangementUiComponent build(@Nonnull StdArrangementTokenUiRole role,
                                       @Nonnull List<ArrangementSettingsToken> tokens,
                                       @Nonnull ArrangementColorsProvider colorsProvider,
-                                      @Nonnull ArrangementStandardSettingsManager settingsManager)
+                                      @Nonnull ArrangementStandardSettingsManagerImpl settingsManager)
   {
     switch (role) {
       case CHECKBOX:

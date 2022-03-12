@@ -15,9 +15,9 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.component;
 
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

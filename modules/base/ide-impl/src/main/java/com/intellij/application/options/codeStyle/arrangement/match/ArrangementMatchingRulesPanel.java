@@ -16,16 +16,16 @@
 package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.util.TitleWithToolbar;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import consulo.language.Language;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.ui.GridBag;
 import javax.annotation.Nonnull;
@@ -46,7 +46,7 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
   protected final ArrangementSectionRulesControl myControl;
 
   public ArrangementMatchingRulesPanel(@Nonnull Language language,
-                                       @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                       @Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                        @Nonnull ArrangementColorsProvider colorsProvider)
   {
     super(new GridBagLayout());
@@ -89,7 +89,7 @@ public class ArrangementMatchingRulesPanel extends JPanel implements DataProvide
   }
 
   protected ArrangementSectionRulesControl createRulesControl(@Nonnull Language language,
-                                                              @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                                              @Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                                               @Nonnull ArrangementColorsProvider colorsProvider,
                                                               @Nonnull ArrangementSectionRulesControl.RepresentationCallback callback) {
     return new ArrangementSectionRulesControl(language, settingsManager, colorsProvider, callback);

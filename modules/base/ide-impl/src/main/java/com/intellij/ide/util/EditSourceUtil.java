@@ -16,22 +16,23 @@
 
 package com.intellij.ide.util;
 
-import consulo.navigation.NavigationItem;
-import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.util.dataholder.UserDataHolder;
-import consulo.virtualFileSystem.VFileProperty;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
+import consulo.fileEditor.FileEditorManager;
 import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiNavigateApiUtil;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NavigationItem;
+import consulo.util.dataholder.UserDataHolder;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nullable;
 
 public class EditSourceUtil {
-  private EditSourceUtil() { }
+  private EditSourceUtil() {
+  }
 
   @Nullable
   public static Navigatable getDescriptor(final PsiElement element) {
@@ -55,13 +56,8 @@ public class EditSourceUtil {
     return desc;
   }
 
-  public static boolean canNavigate (PsiElement element) {
-    if (element == null || !element.isValid()) {
-      return false;
-    }
-
-    VirtualFile file = PsiUtilCore.getVirtualFile(element.getNavigationElement());
-    return file != null && file.isValid() && !file.is(VFileProperty.SPECIAL) && !VfsUtilCore.isBrokenLink(file);
+  public static boolean canNavigate(PsiElement element) {
+    return PsiNavigateApiUtil.canNavigate(element);
   }
 
   public static void navigate(NavigationItem item, boolean requestFocus, boolean useCurrentWindow) {

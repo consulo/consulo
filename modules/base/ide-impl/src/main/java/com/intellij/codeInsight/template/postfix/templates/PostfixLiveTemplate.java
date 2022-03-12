@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.template.postfix.templates;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.completion.OffsetTranslator;
+import com.intellij.codeInsight.completion.OffsetTranslatorImpl;
 import com.intellij.codeInsight.template.CustomLiveTemplateBase;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.impl.CustomLiveTemplateLookupElement;
@@ -291,7 +291,7 @@ public class PostfixLiveTemplate extends CustomLiveTemplateBase {
                 AttachmentFactory.createAttachment(editor.getDocument()));
     }
     Document originalDocument = editor.getDocument();
-    OffsetTranslator translator = new OffsetTranslator(originalDocument, file, copyDocument, newOffset, currentOffset, "");
+    OffsetTranslatorImpl translator = new OffsetTranslatorImpl(originalDocument, file, copyDocument, newOffset, currentOffset, "");
     Disposer.register(parentDisposable, translator);
 
     final PsiElement context = CustomTemplateCallback.getContext(copyFile, positiveOffset(newOffset));

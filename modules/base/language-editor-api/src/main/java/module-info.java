@@ -7,6 +7,7 @@ module consulo.language.editor.api {
   requires java.desktop;
 
   requires transitive consulo.language.api;
+  requires transitive consulo.language.code.style.api;
   requires transitive consulo.code.editor.api;
   requires transitive consulo.undo.redo.api;
   requires consulo.util.jdom;
@@ -20,6 +21,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.documentation;
   exports consulo.language.editor.gutter;
   exports consulo.language.editor.highlight;
+  exports consulo.language.editor.completion.internal to consulo.ide.impl;
   exports consulo.language.editor.highlight.usage;
   exports consulo.language.editor.rawHighlight;
   exports consulo.language.editor.inspection;

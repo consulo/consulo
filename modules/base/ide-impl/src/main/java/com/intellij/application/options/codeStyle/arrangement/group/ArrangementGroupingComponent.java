@@ -16,12 +16,13 @@
 package com.intellij.application.options.codeStyle.arrangement.group;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementEditorAware;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementRepresentationAware;
 import com.intellij.application.options.codeStyle.arrangement.util.ArrangementRuleIndexControl;
-import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
-import com.intellij.psi.codeStyle.arrangement.std.*;
+import consulo.language.codeStyle.arrangement.ArrangementUtil;
+import consulo.language.codeStyle.arrangement.std.*;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
@@ -41,7 +42,7 @@ import java.util.List;
 public class ArrangementGroupingComponent extends JPanel implements ArrangementRepresentationAware, ArrangementEditorAware {
 
   @Nonnull
-  private final ArrangementUiComponent      myGroupingTypeToken;
+  private final ArrangementUiComponent myGroupingTypeToken;
   @Nonnull
   private final ArrangementRuleIndexControl myRowIndexControl;
 
@@ -61,7 +62,7 @@ public class ArrangementGroupingComponent extends JPanel implements ArrangementR
    */
   public ArrangementGroupingComponent(@Nonnull CompositeArrangementSettingsToken token,
                                       @Nonnull ArrangementColorsProvider colorsProvider,
-                                      @Nonnull ArrangementStandardSettingsManager settingsManager)
+                                      @Nonnull ArrangementStandardSettingsManagerImpl settingsManager)
     throws IllegalArgumentException
   {
     List<ArrangementSettingsToken> children = ContainerUtilRt.newArrayList();

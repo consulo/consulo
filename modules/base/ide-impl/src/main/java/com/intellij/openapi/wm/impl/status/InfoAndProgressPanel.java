@@ -54,6 +54,7 @@ import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.ui.ex.impl.BalloonLayoutEx;
 import consulo.ui.ex.impl.ToolWindowPanelImplEx;
+import consulo.util.collection.MultiValuesMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

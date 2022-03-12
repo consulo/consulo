@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ide.util.gotoByName.ChooseByNameBase;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 
 import java.awt.*;
 

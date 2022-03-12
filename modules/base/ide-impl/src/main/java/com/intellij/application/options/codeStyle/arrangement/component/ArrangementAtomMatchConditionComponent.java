@@ -18,12 +18,13 @@ package com.intellij.application.options.codeStyle.arrangement.component;
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
 import com.intellij.application.options.codeStyle.arrangement.action.ArrangementRemoveConditionAction;
 import com.intellij.application.options.codeStyle.arrangement.animation.ArrangementAnimationPanel;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.util.InsetsPanel;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.std.*;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.arrangement.std.*;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.RoundedLineBorder;
 import consulo.ui.ex.awt.SimpleColoredComponent;
@@ -124,7 +125,7 @@ public class ArrangementAtomMatchConditionComponent implements ArrangementUiComp
   @Nullable private ArrangementAtomMatchCondition myOppositeCondition;
   @Nullable private String myInvertedText;
 
-  public ArrangementAtomMatchConditionComponent(@Nonnull ArrangementStandardSettingsManager manager,
+  public ArrangementAtomMatchConditionComponent(@Nonnull ArrangementStandardSettingsManagerImpl manager,
                                                 @Nonnull ArrangementColorsProvider colorsProvider,
                                                 @Nonnull ArrangementAtomMatchCondition condition,
                                                 @Nullable Consumer<ArrangementAtomMatchConditionComponent> closeCallback)

@@ -761,11 +761,7 @@ open module consulo.ide.impl {
   exports com.intellij.projectImport;
   exports com.intellij.psi;
   exports com.intellij.psi.codeStyle;
-  exports com.intellij.psi.codeStyle.arrangement;
   exports com.intellij.psi.codeStyle.arrangement.engine;
-  exports com.intellij.psi.codeStyle.arrangement.match;
-  exports com.intellij.psi.codeStyle.arrangement.model;
-  exports com.intellij.psi.codeStyle.arrangement.std;
   exports com.intellij.psi.codeStyle.autodetect;
   exports com.intellij.psi.codeStyle.lineIndent;
   exports com.intellij.psi.codeStyle.modifier;

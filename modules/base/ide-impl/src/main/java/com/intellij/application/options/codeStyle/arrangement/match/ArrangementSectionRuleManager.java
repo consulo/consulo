@@ -15,22 +15,22 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.match;
 
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.LanguageCommenters;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementEntryMatcher;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementCompositeMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.psi.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.ArrangementUtil;
+import consulo.language.codeStyle.arrangement.match.StdArrangementEntryMatcher;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementCompositeMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;
@@ -39,10 +39,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.General.TYPE;
-import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Regexp.TEXT;
-import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Section.END_SECTION;
-import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Section.START_SECTION;
+import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.General.TYPE;
+import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Regexp.TEXT;
+import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Section.END_SECTION;
+import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Section.START_SECTION;
 
 /**
  * @author Svetlana.Zemlyanskaya
@@ -58,7 +58,7 @@ public class ArrangementSectionRuleManager {
 
   @Nullable
   public static ArrangementSectionRuleManager getInstance(@Nonnull Language language,
-                                                          @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                                          @Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                                           @Nonnull ArrangementColorsProvider colorsProvider,
                                                           @Nonnull ArrangementMatchingRulesControl control) {
     if (settingsManager.isSectionRulesSupported()) {
@@ -68,7 +68,7 @@ public class ArrangementSectionRuleManager {
   }
 
   private ArrangementSectionRuleManager(@Nonnull Language language,
-                                        @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                        @Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                         @Nonnull ArrangementColorsProvider colorsProvider,
                                         @Nonnull ArrangementMatchingRulesControl control) {
     myCommenter = LanguageCommenters.INSTANCE.forLanguage(language);

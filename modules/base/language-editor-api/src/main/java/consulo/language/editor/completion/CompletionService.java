@@ -121,4 +121,17 @@ public abstract class CompletionService {
   public abstract CompletionSorter defaultSorter(CompletionParameters parameters, PrefixMatcher matcher);
 
   public abstract CompletionSorter emptySorter();
+
+  public static boolean isStartMatch(LookupElement element, WeighingContext context) {
+    return getItemMatcher(element, context).isStartMatch(element);
+  }
+
+  static PrefixMatcher getItemMatcher(LookupElement element, WeighingContext context) {
+    PrefixMatcher itemMatcher = context.itemMatcher(element);
+    String pattern = context.itemPattern(element);
+    if (!pattern.equals(itemMatcher.getPrefix())) {
+      return itemMatcher.cloneWithPrefix(pattern);
+    }
+    return itemMatcher;
+  }
 }

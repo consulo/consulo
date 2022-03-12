@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootAdapter;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.ModuleRootManager;
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;

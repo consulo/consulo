@@ -15,8 +15,9 @@
  */
 package consulo.language.codeStyle.arrangement.group;
 
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
+
 import javax.annotation.Nonnull;
 
 /**

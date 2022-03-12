@@ -15,12 +15,11 @@
  */
 package com.intellij.codeInsight.completion;
 
-import consulo.language.editor.completion.lookup.LookupElement;
-import com.intellij.openapi.util.Pair;
 import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,6 @@ import java.util.Map;
  * Supposed to be used ONLY by plugin allowing to sort completion using ml-ranking algorithm.
  * Needed to sort items from different sorters together.
  */
-//@ApiStatus.Internal
 public abstract class CompletionFinalSorter {
 
   @Nonnull

@@ -20,7 +20,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.FileModificationService;
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;

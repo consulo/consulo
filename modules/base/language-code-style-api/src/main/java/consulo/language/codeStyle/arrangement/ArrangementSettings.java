@@ -15,11 +15,11 @@
  */
 package consulo.language.codeStyle.arrangement;
 
-import com.intellij.psi.codeStyle.arrangement.group.ArrangementGroupingRule;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
-import javax.annotation.Nonnull;
+import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
+import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**

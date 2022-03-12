@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import javax.annotation.Nullable;
 
 /**

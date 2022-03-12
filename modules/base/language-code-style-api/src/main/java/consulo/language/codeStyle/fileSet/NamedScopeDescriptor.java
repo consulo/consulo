@@ -1,14 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle.fileSet;
 
-import consulo.language.codeStyle.fileSet.FileSetDescriptor;
-import consulo.language.psi.search.scope.*;
-import consulo.language.editor.scope.NamedScopeManager;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import com.intellij.openapi.util.Pair;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.search.scope.*;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

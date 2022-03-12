@@ -18,7 +18,7 @@
 package com.intellij.application.options.codeStyle;
 
 import consulo.application.ApplicationManager;
-import com.intellij.psi.codeStyle.CodeStyleScheme;
+import consulo.language.codeStyle.CodeStyleScheme;
 import com.intellij.ui.ListCellRendererWrapper;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

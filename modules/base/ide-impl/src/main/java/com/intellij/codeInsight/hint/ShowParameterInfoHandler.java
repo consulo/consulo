@@ -6,7 +6,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.Language;
 import com.intellij.lang.parameterInfo.LanguageParameterInfo;
 import com.intellij.lang.parameterInfo.ParameterInfoHandler;

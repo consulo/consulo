@@ -15,20 +15,20 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.lookup.Classifier;
-import com.intellij.openapi.util.Pair;
 import com.intellij.psi.statistics.StatisticsInfo;
 import com.intellij.psi.statistics.StatisticsManager;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionWeigher;
+import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

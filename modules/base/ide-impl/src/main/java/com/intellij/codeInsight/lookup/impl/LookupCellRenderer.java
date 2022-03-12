@@ -27,6 +27,7 @@ import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import consulo.component.ProcessCanceledException;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
+import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupValueWithUIHint;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;

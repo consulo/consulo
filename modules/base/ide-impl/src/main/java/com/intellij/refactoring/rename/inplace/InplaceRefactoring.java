@@ -17,8 +17,8 @@ package com.intellij.refactoring.rename.inplace;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.codeInsight.lookup.LookupFocusDegree;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupFocusDegree;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.*;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;

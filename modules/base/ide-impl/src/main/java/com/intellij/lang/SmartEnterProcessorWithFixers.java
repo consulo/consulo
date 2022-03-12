@@ -1,7 +1,7 @@
 package com.intellij.lang;
 
 import com.intellij.codeInsight.editorActions.smartEnter.SmartEnterProcessor;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.ui.ex.action.IdeActions;
 import consulo.document.Document;

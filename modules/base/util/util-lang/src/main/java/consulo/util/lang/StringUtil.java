@@ -102,6 +102,87 @@ public class StringUtil {
 
   @Nonnull
   @Contract(pure = true)
+  public static String unescapeStringCharacters(@Nonnull String s) {
+    StringBuilder buffer = new StringBuilder(s.length());
+    unescapeStringCharacters(s.length(), s, buffer);
+    return buffer.toString();
+  }
+
+  private static void unescapeStringCharacters(int length, @Nonnull String s, @Nonnull StringBuilder buffer) {
+    boolean escaped = false;
+    for (int idx = 0; idx < length; idx++) {
+      char ch = s.charAt(idx);
+      if (!escaped) {
+        if (ch == '\\') {
+          escaped = true;
+        }
+        else {
+          buffer.append(ch);
+        }
+      }
+      else {
+        switch (ch) {
+          case 'n':
+            buffer.append('\n');
+            break;
+
+          case 'r':
+            buffer.append('\r');
+            break;
+
+          case 'b':
+            buffer.append('\b');
+            break;
+
+          case 't':
+            buffer.append('\t');
+            break;
+
+          case 'f':
+            buffer.append('\f');
+            break;
+
+          case '\'':
+            buffer.append('\'');
+            break;
+
+          case '\"':
+            buffer.append('\"');
+            break;
+
+          case '\\':
+            buffer.append('\\');
+            break;
+
+          case 'u':
+            if (idx + 4 < length) {
+              try {
+                int code = Integer.parseInt(s.substring(idx + 1, idx + 5), 16);
+                idx += 4;
+                buffer.append((char)code);
+              }
+              catch (NumberFormatException e) {
+                buffer.append("\\u");
+              }
+            }
+            else {
+              buffer.append("\\u");
+            }
+            break;
+
+          default:
+            buffer.append(ch);
+            break;
+        }
+        escaped = false;
+      }
+    }
+
+    if (escaped) buffer.append('\\');
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static String escapeToRegexp(@Nonnull String text) {
     final StringBuilder result = new StringBuilder(text.length());
     return escapeToRegexp(text, result).toString();
@@ -955,6 +1036,7 @@ public class StringUtil {
 
     return true;
   }
+
   @Contract(pure = true)
   public static boolean equals(@Nullable CharSequence s1, @Nullable CharSequence s2) {
     if (s1 == null ^ s2 == null) {
@@ -1311,7 +1393,7 @@ public class StringUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static String replace( @Nonnull String text,  @Nonnull String oldS,  @Nonnull String newS) {
+  public static String replace(@Nonnull String text, @Nonnull String oldS, @Nonnull String newS) {
     return replace(text, oldS, newS, false);
   }
 
@@ -1351,12 +1433,12 @@ public class StringUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static String replaceIgnoreCase( @Nonnull String text,  @Nonnull String oldS,  @Nonnull String newS) {
+  public static String replaceIgnoreCase(@Nonnull String text, @Nonnull String oldS, @Nonnull String newS) {
     return replace(text, oldS, newS, true);
   }
 
   @Contract(pure = true)
-  public static String replace( @Nonnull final String text,  @Nonnull final String oldS,  @Nonnull final String newS, final boolean ignoreCase) {
+  public static String replace(@Nonnull final String text, @Nonnull final String oldS, @Nonnull final String newS, final boolean ignoreCase) {
     if (text.length() < oldS.length()) return text;
 
     StringBuilder newText = null;

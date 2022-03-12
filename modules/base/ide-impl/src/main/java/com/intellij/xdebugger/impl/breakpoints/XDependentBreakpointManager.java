@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import consulo.util.collection.SmartList;
 import com.intellij.util.EventDispatcher;
 import consulo.debugger.breakpoint.XBreakpoint;

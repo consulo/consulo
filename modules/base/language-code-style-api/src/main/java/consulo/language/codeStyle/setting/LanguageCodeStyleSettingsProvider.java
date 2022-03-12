@@ -1,13 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle.setting;
 
-import com.intellij.application.options.IndentOptionsEditor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
+import consulo.language.codeStyle.PredefinedCodeStyle;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.project.Project;

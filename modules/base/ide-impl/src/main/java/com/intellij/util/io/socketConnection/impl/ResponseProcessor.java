@@ -1,7 +1,7 @@
 package com.intellij.util.io.socketConnection.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import consulo.util.lang.ref.Ref;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.SmartList;

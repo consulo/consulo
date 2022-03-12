@@ -15,6 +15,7 @@
  */
 package org.intellij.plugins.intelliLang;
 
+import consulo.util.collection.MultiValuesMap;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.lang.function.Condition;
 import consulo.language.Language;

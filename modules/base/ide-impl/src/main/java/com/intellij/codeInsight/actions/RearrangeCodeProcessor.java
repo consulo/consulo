@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.arrangement.Rearranger;
+import consulo.language.codeStyle.arrangement.Rearranger;
 import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;

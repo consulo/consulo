@@ -12,7 +12,7 @@ import com.intellij.codeInsight.editorActions.AutoHardWrapHandler;
 import com.intellij.codeInsight.editorActions.TypedHandler;
 import com.intellij.codeInsight.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.LookupElement;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;

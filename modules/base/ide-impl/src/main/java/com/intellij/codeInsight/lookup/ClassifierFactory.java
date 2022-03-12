@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInsight.lookup;
 
+import consulo.language.editor.completion.lookup.Classifier;
+
 /**
  * @author peter
  */

@@ -25,7 +25,7 @@ import consulo.codeEditor.SelectionModel;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.arrangement.Rearranger;
+import consulo.language.codeStyle.arrangement.Rearranger;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

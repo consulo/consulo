@@ -15,11 +15,11 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.match.tokens;
 
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class ArrangementRuleAliasControl extends ArrangementMatchingRulesControl
   @Nonnull
   public static final Key<ArrangementRuleAliasControl> KEY = Key.create("Arrangement.Alias.Rule.Control");
 
-  public ArrangementRuleAliasControl(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementRuleAliasControl(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                      @Nonnull ArrangementColorsProvider colorsProvider,
                                      @Nonnull RepresentationCallback callback) {
     super(settingsManager, colorsProvider, callback);

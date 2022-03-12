@@ -16,19 +16,19 @@
 package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.match.tokens.ArrangementRuleAliasDialog;
 import consulo.language.Language;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementCompositeMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.language.codeStyle.arrangement.ArrangementUtil;
+import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementCompositeMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
@@ -51,15 +51,15 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
   @Nonnull
   private final ArrangementColorsProvider myColorsProvider;
   @Nonnull
-  private final ArrangementStandardSettingsManager mySettingsManager;
+  private final ArrangementStandardSettingsManagerImpl mySettingsManager;
 
   @Nullable
   private final ArrangementSectionRuleManager mySectionRuleManager;
   @Nullable
-  private ArrangementStandardSettingsManager myExtendedSettingsManager;
+  private ArrangementStandardSettingsManagerImpl myExtendedSettingsManager;
 
   public ArrangementSectionRulesControl(@Nonnull Language language,
-                                        @Nonnull ArrangementStandardSettingsManager settingsManager,
+                                        @Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                         @Nonnull ArrangementColorsProvider colorsProvider,
                                         @Nonnull RepresentationCallback callback) {
     super(settingsManager, colorsProvider, callback);
@@ -170,7 +170,7 @@ public class ArrangementSectionRulesControl extends ArrangementMatchingRulesCont
 
   public void setRulesAliases(@Nullable Collection<StdArrangementRuleAliasToken> aliases) {
     if (aliases != null) {
-      myExtendedSettingsManager = new ArrangementStandardSettingsManager(mySettingsManager.getDelegate(), myColorsProvider, aliases);
+      myExtendedSettingsManager = new ArrangementStandardSettingsManagerImpl(mySettingsManager.getDelegate(), myColorsProvider, aliases);
       myEditor = new ArrangementMatchingRuleEditor(myExtendedSettingsManager, myColorsProvider, this);
     }
   }

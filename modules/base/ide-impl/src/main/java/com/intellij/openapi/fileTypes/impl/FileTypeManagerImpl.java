@@ -22,6 +22,7 @@ import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.StringUtilRt;
 import com.intellij.openapi.vfs.newvfs.FileAttribute;
+import consulo.util.collection.MultiValuesMap;
 import consulo.virtualFileSystem.FileSystemInterface;
 import com.intellij.openapi.vfs.newvfs.impl.StubVirtualFile;
 import consulo.ui.ex.awt.internal.GuiUtils;

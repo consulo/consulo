@@ -16,12 +16,12 @@
 package com.intellij.application.options.codeStyle.arrangement.match.tokens;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
@@ -40,7 +40,7 @@ public class ArrangementRuleAliasConfigurable implements UnnamedConfigurable {
   private StdArrangementRuleAliasToken myToken;
   private ArrangementRuleAliasesPanel myTokenRulesPanel;
 
-  public ArrangementRuleAliasConfigurable(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementRuleAliasConfigurable(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                           @Nonnull ArrangementColorsProvider colorsProvider,
                                           @Nonnull StdArrangementRuleAliasToken token) {
     myToken = token;

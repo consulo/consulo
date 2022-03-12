@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.intention.impl;
 
 import com.intellij.codeInsight.editorActions.CopyPastePreProcessor;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.undo.UndoManager;

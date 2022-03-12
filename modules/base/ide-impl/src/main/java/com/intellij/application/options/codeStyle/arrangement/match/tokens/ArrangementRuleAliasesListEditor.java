@@ -15,15 +15,15 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.match.tokens;
 
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.ui.NamedItemsListEditor;
 import com.intellij.openapi.ui.Namer;
 import com.intellij.openapi.util.Cloner;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.util.collection.HashingStrategy;
 import org.jetbrains.annotations.Nls;
 
@@ -78,11 +78,11 @@ public class ArrangementRuleAliasesListEditor extends NamedItemsListEditor<StdAr
   @Nonnull
   private Set<String> myUsedTokenIds;
   @Nonnull
-  private ArrangementStandardSettingsManager mySettingsManager;
+  private ArrangementStandardSettingsManagerImpl mySettingsManager;
   @Nonnull
   private ArrangementColorsProvider myColorsProvider;
 
-  protected ArrangementRuleAliasesListEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  protected ArrangementRuleAliasesListEditor(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                              @Nonnull ArrangementColorsProvider colorsProvider,
                                              @Nonnull List<StdArrangementRuleAliasToken> items,
                                              @Nonnull Set<String> usedTokenIds) {

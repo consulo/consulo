@@ -19,7 +19,8 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.impl.DocumentEx;
-import consulo.language.codeStyle.arrangement.ArrangementSettings;
+import consulo.language.codeStyle.arrangement.*;
+import consulo.language.codeStyle.arrangement.match.TextAwareArrangementEntry;
 import consulo.project.DumbService;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
@@ -29,12 +30,11 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.codeStyle.arrangement.*;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
+import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsAware;
+import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.ContainerUtilRt;
 import consulo.util.collection.MultiMap;
@@ -50,8 +50,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Section.END_SECTION;
-import static com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens.Section.START_SECTION;
+import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Section.END_SECTION;
+import static consulo.language.codeStyle.arrangement.std.StdArrangementTokens.Section.START_SECTION;
 
 /**
  * Encapsulates generic functionality of arranging file elements by the predefined rules.

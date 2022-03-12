@@ -15,7 +15,7 @@ package com.intellij.openapi.roots.ui.configuration.projectRoot.daemon;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationError;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationErrors;
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

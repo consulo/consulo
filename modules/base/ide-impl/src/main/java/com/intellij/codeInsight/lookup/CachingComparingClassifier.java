@@ -18,6 +18,7 @@ package com.intellij.codeInsight.lookup;
 import com.intellij.codeInsight.completion.CompletionLookupArranger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
+import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.util.lang.ref.Ref;

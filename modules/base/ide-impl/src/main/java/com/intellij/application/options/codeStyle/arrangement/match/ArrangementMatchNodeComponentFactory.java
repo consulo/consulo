@@ -16,21 +16,21 @@
 package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import com.intellij.application.options.codeStyle.arrangement.animation.ArrangementAnimationManager;
 import com.intellij.application.options.codeStyle.arrangement.animation.ArrangementAnimationPanel;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.component.ArrangementAndMatchConditionComponent;
 import com.intellij.application.options.codeStyle.arrangement.component.ArrangementAtomMatchConditionComponent;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.Ref;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementEntryMatcher;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementCompositeMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
+import consulo.language.codeStyle.arrangement.match.StdArrangementEntryMatcher;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementCompositeMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
+import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 
@@ -45,13 +45,13 @@ public class ArrangementMatchNodeComponentFactory {
   private static final Logger LOG = Logger.getInstance(ArrangementMatchNodeComponentFactory.class);
 
   @Nonnull
-  private final ArrangementStandardSettingsManager mySettingsManager;
+  private final ArrangementStandardSettingsManagerImpl mySettingsManager;
   @Nonnull
   private final ArrangementColorsProvider          myColorsProvider;
   @Nonnull
   private final ArrangementMatchingRulesControl    myList;
 
-  public ArrangementMatchNodeComponentFactory(@Nonnull ArrangementStandardSettingsManager manager,
+  public ArrangementMatchNodeComponentFactory(@Nonnull ArrangementStandardSettingsManagerImpl manager,
                                               @Nonnull ArrangementColorsProvider provider,
                                               @Nonnull ArrangementMatchingRulesControl list)
   {

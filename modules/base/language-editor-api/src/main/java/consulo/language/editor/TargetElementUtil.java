@@ -19,9 +19,11 @@ package consulo.language.editor;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.content.scope.SearchScope;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.language.editor.completion.CompletionUtilCore;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.pom.PomDeclarationSearcher;
@@ -30,6 +32,7 @@ import consulo.language.pom.PomTarget;
 import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.*;
 import consulo.language.psi.search.PsiSearchHelper;
+import consulo.language.psi.util.PsiNavigateApiUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
@@ -233,7 +236,7 @@ public class TargetElementUtil {
     Lookup activeLookup = LookupManager.getInstance(project).getActiveLookup();
     if (activeLookup != null) {
       LookupElement item = activeLookup.getCurrentItem();
-      final PsiElement psi = item == null ? null : CompletionUtil.getTargetElement(item);
+      final PsiElement psi = item == null ? null : CompletionUtilCore.getTargetElement(item);
       if (psi != null && psi.isValid()) {
         return psi;
       }
@@ -245,8 +248,10 @@ public class TargetElementUtil {
     if (referenceOrReferencedElement == null || !referenceOrReferencedElement.isValid()) {
       return false;
     }
-    if (!TargetElementUtilExtender.EP.composite().isAcceptableReferencedElement(element, referenceOrReferencedElement)) {
-      return false;
+    for (TargetElementUtilExtender extender : TargetElementUtilExtender.EP.getExtensionList(Application.get())) {
+      if(!extender.isAcceptableReferencedElement(element, referenceOrReferencedElement)) {
+        return false;
+      }
     }
     return true;
   }
@@ -303,12 +308,12 @@ public class TargetElementUtil {
     if (element == null) {
       return null;
     }
-    return TargetElementUtilExtender.EP.composite().getNamedElement(element);
+    return TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.getNamedElement(element));
   }
 
   @Nullable
   public static PsiElement adjustElement(final Editor editor, final Set<String> flags, final PsiElement element, final PsiElement contextElement) {
-    return TargetElementUtilExtender.EP.composite().adjustElement(editor, flags, element, contextElement);
+    return TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.adjustElement(editor, flags, element, contextElement));
   }
 
   public static boolean inVirtualSpace(@Nonnull Editor editor, int offset) {
@@ -341,7 +346,7 @@ public class TargetElementUtil {
 
       for (ResolveResult r : results) {
         PsiElement element = r.getElement();
-        if (EditSourceUtil.canNavigate(element) || element instanceof Navigatable && ((Navigatable)element).canNavigateToSource()) {
+        if (PsiNavigateApiUtil.canNavigate(element) || element instanceof Navigatable && ((Navigatable)element).canNavigateToSource()) {
           navigatableResults.add(element);
         }
       }
@@ -361,7 +366,7 @@ public class TargetElementUtil {
 
   @Nullable
   public static PsiElement getGotoDeclarationTarget(final PsiElement element, final PsiElement navElement) {
-    PsiElement gotoDeclarationTarget = TargetElementUtilExtender.EP.composite().getGotoDeclarationTarget(element, navElement);
+    PsiElement gotoDeclarationTarget = TargetElementUtilExtender.EP.computeSafeIfAny(Application.get(), it -> it.getGotoDeclarationTarget(element, navElement));
     if (gotoDeclarationTarget != null) {
       return gotoDeclarationTarget;
     }
@@ -369,7 +374,12 @@ public class TargetElementUtil {
   }
 
   public static boolean includeSelfInGotoImplementation(final PsiElement element) {
-    return TargetElementUtilExtender.EP.composite().includeSelfInGotoImplementation(element);
+    for (TargetElementUtilExtender extender : TargetElementUtilExtender.EP.getExtensionList(Application.get())) {
+      if (!extender.includeSelfInGotoImplementation(element)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   public static SearchScope getSearchScope(Editor editor, PsiElement element) {

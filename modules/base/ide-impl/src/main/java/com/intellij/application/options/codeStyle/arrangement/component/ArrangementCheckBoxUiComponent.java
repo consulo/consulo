@@ -16,9 +16,9 @@
 package com.intellij.application.options.codeStyle.arrangement.component;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.util.ui.GridBag;
 import javax.annotation.Nonnull;

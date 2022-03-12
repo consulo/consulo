@@ -16,36 +16,34 @@
 package consulo.language.codeStyle;
 
 import com.intellij.codeInsight.actions.ReformatCodeProcessor;
-import consulo.language.impl.ast.ASTFactory;
-import consulo.language.ast.ASTNode;
-import consulo.language.Language;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.checkin.ReformatBeforeCheckinHandler;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
+import consulo.language.ast.TokenType;
+import consulo.language.impl.ast.ASTFactory;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.LeafElement;
+import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.internal.Factory;
 import consulo.language.impl.ast.internal.SharedImplUtil;
-import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.impl.psi.internal.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.language.psi.PsiElement;
-import consulo.language.ast.TokenType;
-import consulo.language.impl.psi.SourceTreeToPsiMap;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.TokenSet;
 import consulo.language.util.CharTable;
+import consulo.undoRedo.CommandProcessor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Set;
 
 public class FormatterUtil {
 
-  public static final Collection<String> FORMATTER_ACTION_NAMES = Collections.unmodifiableCollection(ContainerUtilRt.newHashSet(
-    ReformatCodeProcessor.COMMAND_NAME, ReformatBeforeCheckinHandler.COMMAND_NAME
-  ));
+  public static final Collection<String> FORMATTER_ACTION_NAMES = Set.of(ReformatCodeProcessor.COMMAND_NAME, ReformatBeforeCheckinHandler.COMMAND_NAME);
 
   private FormatterUtil() {
   }
@@ -276,26 +274,19 @@ public class FormatterUtil {
    * at the target inner element range and performs corresponding replacement by generating new leaf with adjusted text
    * and replacing the old one by it.
    *
-   * @param newWhiteSpaceText  new text to use at the target inner element range
-   * @param holder             target range holder
-   * @param whiteSpaceRange    target range which text should be replaced by the given one
+   * @param newWhiteSpaceText new text to use at the target inner element range
+   * @param holder            target range holder
+   * @param whiteSpaceRange   target range which text should be replaced by the given one
    */
-  public static void replaceInnerWhiteSpace(@Nonnull final String newWhiteSpaceText,
-                                            @Nonnull final ASTNode holder,
-                                            @Nonnull final TextRange whiteSpaceRange)
-  {
+  public static void replaceInnerWhiteSpace(@Nonnull final String newWhiteSpaceText, @Nonnull final ASTNode holder, @Nonnull final TextRange whiteSpaceRange) {
     final CharTable charTable = SharedImplUtil.findCharTableByTree(holder);
     StringBuilder newText = createNewLeafChars(holder, whiteSpaceRange, newWhiteSpaceText);
-    LeafElement newElement =
-      Factory.createSingleLeafElement(holder.getElementType(), newText, charTable, holder.getPsi().getManager());
+    LeafElement newElement = Factory.createSingleLeafElement(holder.getElementType(), newText, charTable, holder.getPsi().getManager());
 
     holder.getTreeParent().replaceChild(holder, newElement);
   }
 
-  public static void replaceWhiteSpace(final String whiteSpace,
-                                       final ASTNode leafElement,
-                                       final IElementType whiteSpaceToken,
-                                       @Nullable final TextRange textRange) {
+  public static void replaceWhiteSpace(final String whiteSpace, final ASTNode leafElement, final IElementType whiteSpaceToken, @Nullable final TextRange textRange) {
     final CharTable charTable = SharedImplUtil.findCharTableByTree(leafElement);
 
     ASTNode treePrev = findPreviousWhiteSpace(leafElement, whiteSpaceToken);
@@ -303,20 +294,14 @@ public class FormatterUtil {
       treePrev = getWsCandidate(leafElement);
     }
 
-    if (treePrev != null &&
-        treePrev.getText().trim().isEmpty() &&
-        treePrev.getElementType() != whiteSpaceToken &&
-        treePrev.getTextLength() > 0 &&
-        !whiteSpace.isEmpty()) {
-      LeafElement whiteSpaceElement =
-        Factory.createSingleLeafElement(treePrev.getElementType(), whiteSpace, charTable, SharedImplUtil.getManagerByTree(leafElement));
+    if (treePrev != null && treePrev.getText().trim().isEmpty() && treePrev.getElementType() != whiteSpaceToken && treePrev.getTextLength() > 0 && !whiteSpace.isEmpty()) {
+      LeafElement whiteSpaceElement = Factory.createSingleLeafElement(treePrev.getElementType(), whiteSpace, charTable, SharedImplUtil.getManagerByTree(leafElement));
 
       ASTNode treeParent = treePrev.getTreeParent();
       treeParent.replaceChild(treePrev, whiteSpaceElement);
     }
     else {
-      LeafElement whiteSpaceElement =
-        Factory.createSingleLeafElement(whiteSpaceToken, whiteSpace, charTable, SharedImplUtil.getManagerByTree(leafElement));
+      LeafElement whiteSpaceElement = Factory.createSingleLeafElement(whiteSpaceToken, whiteSpace, charTable, SharedImplUtil.getManagerByTree(leafElement));
 
       if (treePrev == null) {
         if (!whiteSpace.isEmpty()) {
@@ -461,7 +446,7 @@ public class FormatterUtil {
   }
 
   /**
-   * @return    <code>true</code> explicitly called 'reformat' is in  progress at the moment; <code>false</code> otherwise
+   * @return <code>true</code> explicitly called 'reformat' is in  progress at the moment; <code>false</code> otherwise
    */
   public static boolean isFormatterCalledExplicitly() {
     return FORMATTER_ACTION_NAMES.contains(CommandProcessor.getInstance().getCurrentCommandName());

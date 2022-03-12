@@ -16,15 +16,15 @@
 package com.intellij.application.options.codeStyle.arrangement.match.tokens;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
 import com.intellij.application.options.codeStyle.arrangement.util.TitleWithToolbar;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.ui.GridBag;
 import org.jetbrains.annotations.NonNls;
@@ -43,7 +43,7 @@ public class ArrangementRuleAliasesPanel extends JPanel implements DataProvider 
   @Nonnull
   protected final ArrangementRuleAliasControl myControl;
 
-  public ArrangementRuleAliasesPanel(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementRuleAliasesPanel(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                      @Nonnull ArrangementColorsProvider colorsProvider) {
     super(new GridBagLayout());
     setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));

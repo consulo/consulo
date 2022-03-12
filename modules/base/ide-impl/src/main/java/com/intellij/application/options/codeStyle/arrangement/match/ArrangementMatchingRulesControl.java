@@ -15,18 +15,18 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.match;
 
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementEditorAware;
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementRepresentationAware;
 import com.intellij.application.options.codeStyle.arrangement.util.ArrangementListRowDecorator;
 import com.intellij.application.options.codeStyle.arrangement.util.IntObjectMap;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementEntryMatcher;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
-import com.intellij.psi.codeStyle.arrangement.std.StdArrangementTokens;
+import consulo.language.codeStyle.arrangement.match.StdArrangementEntryMatcher;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
+import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.table.JBTable;
@@ -75,7 +75,7 @@ public class ArrangementMatchingRulesControl extends JBTable {
   private int myEditorRow     = -1;
   private boolean mySkipSelectionChange;
 
-  public ArrangementMatchingRulesControl(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementMatchingRulesControl(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                          @Nonnull ArrangementColorsProvider colorsProvider,
                                          @Nonnull RepresentationCallback callback)
   {

@@ -17,21 +17,22 @@ package com.intellij.application.options.codeStyle.arrangement;
 
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.application.options.codeStyle.arrangement.additional.ForceArrangementPanel;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProviderImpl;
 import com.intellij.application.options.codeStyle.arrangement.group.ArrangementGroupingRulesPanel;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesPanel;
 import consulo.language.Language;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.colorScheme.EditorColorsScheme;
+import consulo.language.codeStyle.arrangement.std.*;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.codeStyle.arrangement.Rearranger;
+import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementSectionRule;
-import com.intellij.psi.codeStyle.arrangement.std.*;
+import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import consulo.ui.ex.action.*;
@@ -81,7 +82,7 @@ public abstract class ArrangementSettingsPanel extends CodeStyleAbstractPanel {
       colorsProvider = new ArrangementColorsProviderImpl(null);
     }
 
-    ArrangementStandardSettingsManager settingsManager = new ArrangementStandardSettingsManager(mySettingsAware, colorsProvider);
+    ArrangementStandardSettingsManagerImpl settingsManager = new ArrangementStandardSettingsManagerImpl(mySettingsAware, colorsProvider);
 
     myGroupingRulesPanel = new ArrangementGroupingRulesPanel(settingsManager, colorsProvider);
     myMatchingRulesPanel = new ArrangementMatchingRulesPanel(myLanguage, settingsManager, colorsProvider);

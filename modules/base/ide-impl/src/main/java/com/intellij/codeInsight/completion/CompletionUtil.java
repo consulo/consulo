@@ -2,35 +2,38 @@
 
 package com.intellij.codeInsight.completion;
 
-import consulo.language.editor.completion.lookup.TailType;
-import consulo.language.editor.completion.lookup.InsertionContext;
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.completion.*;
-import consulo.language.editor.completion.lookup.LookupValueWithPsiElement;
-import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import consulo.language.Language;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
+import com.intellij.psi.filters.TrueFilter;
+import com.intellij.util.UnmodifiableIterator;
+import consulo.application.util.concurrent.ThreadDumper;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.language.Language;
+import consulo.language.editor.completion.CompletionInitializationContext;
+import consulo.language.editor.completion.CompletionParameters;
+import consulo.language.editor.completion.CompletionUtilCore;
+import consulo.language.editor.completion.OffsetMap;
+import consulo.language.editor.completion.lookup.InsertionContext;
+import consulo.language.editor.completion.lookup.Lookup;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.TailType;
 import consulo.language.pattern.CharPattern;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.filters.TrueFilter;
-import com.intellij.util.UnmodifiableIterator;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionManager;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 
 public class CompletionUtil {
 
@@ -180,23 +183,12 @@ public class CompletionUtil {
 
   @Nullable
   public static PsiElement getTargetElement(LookupElement lookupElement) {
-    PsiElement psiElement = lookupElement.getPsiElement();
-    if (psiElement != null && psiElement.isValid()) {
-      return getOriginalElement(psiElement);
-    }
-
-    Object object = lookupElement.getObject();
-    if (object instanceof LookupValueWithPsiElement) {
-      final PsiElement element = ((LookupValueWithPsiElement)object).getElement();
-      if (element != null && element.isValid()) return getOriginalElement(element);
-    }
-
-    return null;
+    return CompletionUtilCore.getTargetElement(lookupElement);
   }
 
   @Nullable
   public static <T extends PsiElement> T getOriginalElement(@Nonnull T psi) {
-    return CompletionUtilCoreImpl.getOriginalElement(psi);
+    return CompletionUtilCore.getOriginalElement(psi);
   }
 
   @Nonnull

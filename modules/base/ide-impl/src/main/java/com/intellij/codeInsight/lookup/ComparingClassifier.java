@@ -17,6 +17,7 @@ package com.intellij.codeInsight.lookup;
 
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;
+import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;

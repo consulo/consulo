@@ -16,15 +16,16 @@
 package com.intellij.application.options.codeStyle.arrangement.match;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.application.options.codeStyle.arrangement.color.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.codeStyle.arrangement.ArrangementUtil;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementEntryMatcher;
-import com.intellij.psi.codeStyle.arrangement.match.ArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementEntryMatcher;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.std.*;
+import consulo.language.codeStyle.arrangement.ArrangementUtil;
+import consulo.language.codeStyle.arrangement.match.ArrangementEntryMatcher;
+import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.match.StdArrangementEntryMatcher;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
+import consulo.language.codeStyle.arrangement.std.*;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
@@ -58,7 +59,7 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
   @Nonnull
   private final ArrangementMatchingRulesControl    myControl;
   @Nonnull
-  private final ArrangementStandardSettingsManager mySettingsManager;
+  private final ArrangementStandardSettingsManagerImpl mySettingsManager;
   @Nonnull
   private final ArrangementColorsProvider          myColorsProvider;
 
@@ -71,14 +72,14 @@ public class ArrangementMatchingRuleEditor extends JPanel implements Arrangement
 
   private boolean mySkipStateChange;
 
-  public ArrangementMatchingRuleEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementMatchingRuleEditor(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                        @Nonnull ArrangementColorsProvider colorsProvider,
                                        @Nonnull ArrangementMatchingRulesControl control)
   {
     this(settingsManager, settingsManager.getSupportedMatchingTokens(), colorsProvider, control);
   }
 
-  public ArrangementMatchingRuleEditor(@Nonnull ArrangementStandardSettingsManager settingsManager,
+  public ArrangementMatchingRuleEditor(@Nonnull ArrangementStandardSettingsManagerImpl settingsManager,
                                        @Nullable List<CompositeArrangementSettingsToken> tokens,
                                        @Nonnull ArrangementColorsProvider colorsProvider,
                                        @Nonnull ArrangementMatchingRulesControl control)

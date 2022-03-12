@@ -22,8 +22,8 @@ import com.intellij.openapi.options.SchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
 import com.intellij.openapi.options.SchemesManagerFactory;
 import consulo.util.xml.serializer.WriteExternalException;
-import com.intellij.psi.codeStyle.CodeStyleScheme;
-import com.intellij.psi.codeStyle.CodeStyleSchemes;
+import consulo.language.codeStyle.CodeStyleScheme;
+import consulo.language.codeStyle.CodeStyleSchemes;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 

@@ -108,7 +108,7 @@ public class CompletionInitializationUtil {
     int startOffset = hostMap.getOffset(CompletionInitializationContext.START_OFFSET);
     int endOffset = hostMap.getOffset(CompletionInitializationContext.SELECTION_END_OFFSET);
 
-    indicator.registerChildDisposable(() -> new OffsetTranslator(hostEditor.getDocument(), initContext.getFile(), copyDocument, startOffset, endOffset, dummyIdentifier));
+    indicator.registerChildDisposable(() -> new OffsetTranslatorImpl(hostEditor.getDocument(), initContext.getFile(), copyDocument, startOffset, endOffset, dummyIdentifier));
 
     copyDocument.setText(hostEditor.getDocument().getText());
 

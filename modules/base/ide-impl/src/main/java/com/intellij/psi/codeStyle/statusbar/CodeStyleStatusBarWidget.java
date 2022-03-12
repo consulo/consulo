@@ -10,6 +10,8 @@ import consulo.dataContext.DataContext;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.FileIndentOptionsProvider;
+import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
+import consulo.language.codeStyle.event.CodeStyleSettingsListener;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.ActionGroup;

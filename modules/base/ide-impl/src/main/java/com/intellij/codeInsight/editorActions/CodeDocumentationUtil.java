@@ -23,7 +23,7 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.codeStyle.DocCommentSettings;
+import consulo.language.codeStyle.DocCommentSettings;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

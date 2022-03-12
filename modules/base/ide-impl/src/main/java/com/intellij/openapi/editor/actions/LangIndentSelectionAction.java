@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.codeInsight.completion.NextPrevParameterAction;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;

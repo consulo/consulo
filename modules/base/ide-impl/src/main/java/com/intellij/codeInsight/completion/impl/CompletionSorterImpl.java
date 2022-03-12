@@ -17,6 +17,7 @@ package com.intellij.codeInsight.completion.impl;
 
 import consulo.language.editor.completion.CompletionSorter;
 import com.intellij.codeInsight.lookup.*;
+import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.util.lang.function.Condition;

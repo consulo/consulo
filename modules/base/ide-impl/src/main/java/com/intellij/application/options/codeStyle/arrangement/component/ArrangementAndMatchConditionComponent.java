@@ -16,16 +16,18 @@
 package com.intellij.application.options.codeStyle.arrangement.component;
 
 import com.intellij.application.options.codeStyle.arrangement.ArrangementConstants;
-import com.intellij.psi.codeStyle.arrangement.std.*;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchNodeComponentFactory;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.arrangement.match.StdArrangementMatchRule;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementCompositeMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchCondition;
-import com.intellij.psi.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
+import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementCompositeMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
+import consulo.language.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,7 +63,7 @@ public class ArrangementAndMatchConditionComponent extends JPanel implements Arr
   public ArrangementAndMatchConditionComponent(@Nonnull StdArrangementMatchRule rule,
                                                @Nonnull ArrangementCompositeMatchCondition setting,
                                                @Nonnull ArrangementMatchNodeComponentFactory factory,
-                                               @Nonnull ArrangementStandardSettingsManager manager,
+                                               @Nonnull ArrangementStandardSettingsManagerImpl manager,
                                                boolean allowModification)
   {
     mySetting = setting;

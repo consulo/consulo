@@ -3,8 +3,8 @@
 package com.intellij.codeInsight.documentation;
 
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.lookup.LookupEx;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupEx;
+import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.ide.actions.BaseNavigateToSourceAction;
 import com.intellij.ide.actions.ExternalJavaDocAction;
 import com.intellij.ide.actions.WindowAction;

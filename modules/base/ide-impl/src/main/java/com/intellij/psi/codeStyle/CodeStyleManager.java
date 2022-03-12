@@ -2,6 +2,7 @@
 package com.intellij.psi.codeStyle;
 
 import consulo.language.codeStyle.ChangedRangesInfo;
+import consulo.language.codeStyle.DocCommentSettings;
 import consulo.language.codeStyle.FormattingMode;
 import consulo.language.ast.ASTNode;
 import consulo.ide.ServiceManager;

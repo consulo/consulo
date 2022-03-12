@@ -15,7 +15,6 @@
  */
 package consulo.language.codeStyle;
 
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;

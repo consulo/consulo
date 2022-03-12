@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.Configurat
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemDescription;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsHolderImpl;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import consulo.compiler.artifact.element.PackagingElement;
 
 import javax.annotation.Nullable;

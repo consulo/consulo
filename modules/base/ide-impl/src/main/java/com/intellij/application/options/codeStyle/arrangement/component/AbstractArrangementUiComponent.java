@@ -16,8 +16,8 @@
 package com.intellij.application.options.codeStyle.arrangement.component;
 
 import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.psi.codeStyle.arrangement.std.ArrangementUiComponent;
+import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import com.intellij.util.containers.ContainerUtilRt;
 import com.intellij.util.ui.GridBag;
 import consulo.ui.ex.awt.UIUtil;

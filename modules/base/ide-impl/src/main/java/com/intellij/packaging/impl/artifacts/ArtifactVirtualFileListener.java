@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.artifacts;
 
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ModifiableArtifactModel;

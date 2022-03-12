@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactProblemDescription;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;

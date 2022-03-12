@@ -4,7 +4,7 @@ package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.completion.CompletionProgressIndicator;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
-import com.intellij.codeInsight.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

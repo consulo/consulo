@@ -23,7 +23,7 @@ import consulo.application.ui.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.arrangement.Rearranger;
+import consulo.language.codeStyle.arrangement.Rearranger;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;

@@ -28,7 +28,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.project.Project;
-import com.intellij.openapi.util.MultiValuesMap;
+import consulo.util.collection.MultiValuesMap;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.ToolWindowEx;

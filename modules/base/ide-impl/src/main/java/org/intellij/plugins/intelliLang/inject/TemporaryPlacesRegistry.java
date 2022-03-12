@@ -16,17 +16,17 @@
 
 package org.intellij.plugins.intelliLang.inject;
 
-import com.intellij.codeInsight.completion.CompletionUtilCoreImpl;
-import consulo.language.Language;
-import consulo.ide.ServiceManager;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.util.lang.function.Condition;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.ServiceManager;
+import consulo.language.Language;
+import consulo.language.editor.completion.CompletionUtilCore;
+import consulo.language.psi.*;
+import consulo.project.Project;
 import consulo.psi.injection.AbstractLanguageInjectionSupport;
 import consulo.psi.injection.LanguageInjectionSupport;
+import consulo.util.lang.function.Condition;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.intellij.plugins.intelliLang.Configuration;
@@ -203,7 +203,7 @@ public class TemporaryPlacesRegistry
 	@Nullable
 	public InjectedLanguage getLanguageFor(@Nonnull PsiLanguageInjectionHost host, PsiFile containingFile)
 	{
-		PsiLanguageInjectionHost originalHost = CompletionUtilCoreImpl.getOriginalElement(host, containingFile);
+		PsiLanguageInjectionHost originalHost = CompletionUtilCore.getOriginalElement(host, containingFile);
 		PsiLanguageInjectionHost injectionHost = originalHost == null ? host : originalHost;
 		getInjectionPlacesSafe();
 		return injectionHost.getUserData(LanguageInjectionSupport.TEMPORARY_INJECTED_LANGUAGE);

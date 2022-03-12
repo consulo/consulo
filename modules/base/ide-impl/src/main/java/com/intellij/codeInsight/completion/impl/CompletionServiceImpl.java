@@ -5,6 +5,7 @@ import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.*;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.completion.*;
+import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
 import consulo.logging.Logger;
@@ -305,18 +306,5 @@ public final class CompletionServiceImpl extends CompletionService {
   @Override
   public CompletionSorterImpl emptySorter() {
     return new CompletionSorterImpl(new ArrayList<>());
-  }
-
-  public static boolean isStartMatch(LookupElement element, WeighingContext context) {
-    return getItemMatcher(element, context).isStartMatch(element);
-  }
-
-  static PrefixMatcher getItemMatcher(LookupElement element, WeighingContext context) {
-    PrefixMatcher itemMatcher = context.itemMatcher(element);
-    String pattern = context.itemPattern(element);
-    if (!pattern.equals(itemMatcher.getPrefix())) {
-      return itemMatcher.cloneWithPrefix(pattern);
-    }
-    return itemMatcher;
   }
 }

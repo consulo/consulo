@@ -11,7 +11,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.DocCommentSettings;
+import consulo.language.codeStyle.DocCommentSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.application.ApplicationManager;

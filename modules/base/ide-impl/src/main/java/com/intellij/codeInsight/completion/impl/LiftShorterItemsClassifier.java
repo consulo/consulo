@@ -16,15 +16,14 @@
 package com.intellij.codeInsight.completion.impl;
 
 import com.intellij.codeInsight.completion.CompletionUtil;
-import com.intellij.codeInsight.lookup.Classifier;
-import consulo.language.editor.completion.lookup.LookupElement;
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.Function;
-import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.FilteringIterator;
 import com.intellij.util.containers.FlatteningIterator;
+import consulo.language.editor.completion.lookup.Classifier;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.util.ProcessingContext;
+import consulo.util.collection.FilteringIterator;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -119,12 +118,7 @@ public class LiftShorterItemsClassifier extends Classifier<LookupElement> {
   public List<Pair<LookupElement, Object>> getSortingWeights(@Nonnull Iterable<LookupElement> items, @Nonnull ProcessingContext context) {
     final Set<LookupElement> lifted = newIdentityTroveSet();
     Iterable<LookupElement> iterable = liftShorterElements(ContainerUtil.newArrayList(items), lifted, context);
-    return ContainerUtil.map(iterable, new Function<LookupElement, Pair<LookupElement, Object>>() {
-      @Override
-      public Pair<LookupElement, Object> fun(LookupElement element) {
-        return new Pair<LookupElement, Object>(element, lifted.contains(element));
-      }
-    });
+    return ContainerUtil.map(iterable, element -> new Pair<LookupElement, Object>(element, lifted.contains(element)));
   }
 
   @Override

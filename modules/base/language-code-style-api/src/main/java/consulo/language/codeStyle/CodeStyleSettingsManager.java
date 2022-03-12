@@ -15,16 +15,19 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
+import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
+import consulo.language.codeStyle.event.CodeStyleSettingsListener;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.DifferenceFilter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.language.psi.PsiFile;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.logging.Logger;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -40,7 +43,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   private volatile CodeStyleSettings myTemporarySettings;
   private volatile boolean myIsLoaded = false;
 
-  private final List<CodeStyleSettingsListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<CodeStyleSettingsListener> myListeners = Lists.newLockFreeCopyOnWriteList();
 
   public static CodeStyleSettingsManager getInstance(@Nullable Project project) {
     if (project == null || project.isDefault()) {
@@ -50,7 +53,7 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
   }
 
   public static CodeStyleSettingsManager getInstance() {
-    return ServiceManager.getService(AppCodeStyleSettingsManager.class);
+    return Application.get().getInstance(AppCodeStyleSettingsManager.class);
   }
 
   @SuppressWarnings({"UnusedDeclaration"})

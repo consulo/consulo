@@ -17,7 +17,7 @@ package com.intellij.psi.codeStyle.arrangement.engine;
 
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.arrangement.ArrangementEntry;
+import consulo.language.codeStyle.arrangement.ArrangementEntry;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

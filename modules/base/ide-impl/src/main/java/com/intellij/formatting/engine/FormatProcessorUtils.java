@@ -19,6 +19,7 @@ import com.intellij.formatting.*;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.IndentInside;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.codeStyle.internal.WhiteSpace;
 

@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.codeStyle;
 
-import com.intellij.psi.codeStyle.CodeStyleScheme;
+import consulo.language.codeStyle.CodeStyleScheme;
 
 import java.util.EventListener;
 

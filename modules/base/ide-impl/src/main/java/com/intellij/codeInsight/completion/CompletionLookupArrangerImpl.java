@@ -4,30 +4,29 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl;
-import com.intellij.codeInsight.lookup.*;
 import com.intellij.codeInsight.lookup.impl.EmptyLookupItem;
-import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
-import consulo.application.ui.UISettings;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.language.editor.completion.*;
-import consulo.language.editor.completion.lookup.Lookup;
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupElementPresentation;
-import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.Pair;
-import consulo.application.util.registry.Registry;
-import consulo.language.pattern.StandardPatterns;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import consulo.language.util.ProcessingContext;
-import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.UISettings;
+import consulo.application.util.registry.Registry;
+import consulo.language.editor.completion.CompletionLocation;
+import consulo.language.editor.completion.CompletionResult;
+import consulo.language.editor.completion.CompletionSorter;
+import consulo.language.editor.completion.PrefixMatcher;
+import consulo.language.editor.completion.lookup.*;
+import consulo.language.pattern.StandardPatterns;
+import consulo.language.util.ProcessingContext;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
+import consulo.util.collection.MultiMap;
+import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -331,7 +330,8 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
 
   private static void ensureItemAdded(Set<? extends LookupElement> items,
                                       LinkedHashSet<? super LookupElement> model,
-                                      Iterator<? extends LookupElement> byRelevance, @Nullable final LookupElement item) {
+                                      Iterator<? extends LookupElement> byRelevance,
+                                      @Nullable final LookupElement item) {
     if (item != null && items.contains(item) && !model.contains(item)) {
       addSomeItems(model, byRelevance, lastAdded -> lastAdded == item);
     }
@@ -516,7 +516,7 @@ public class CompletionLookupArrangerImpl extends LookupArranger implements Comp
   }
 
   @Override
-  public void prefixTruncated(@Nonnull LookupImpl lookup, int hideOffset) {
+  public void prefixTruncated(@Nonnull LookupEx lookup, int hideOffset) {
     if (hideOffset < lookup.getEditor().getCaretModel().getOffset()) {
       myProcess.scheduleRestart();
       return;
