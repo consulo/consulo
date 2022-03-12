@@ -48,18 +48,21 @@ public class OpenFileDescriptorFactoryImpl implements OpenFileDescriptorFactory 
     @Nonnull
     @Override
     public Builder offset(int offset) {
+      myOffset = offset;
       return this;
     }
 
     @Nonnull
     @Override
     public Builder line(int line) {
+      myLine = line;
       return this;
     }
 
     @Nonnull
     @Override
     public Builder column(int column) {
+      myColumn = column;
       return this;
     }
 
