@@ -19,8 +19,9 @@ endif()
 
 add_definitions (-DUNICODE -D_UNICODE)
 
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
 add_executable(${FILE_NAME} WIN32 resource.h stdafx.cpp stdafx.h targetver.h WinLauncher.cpp WinLauncher.h WinLauncher.rc)
 
-target_sources(${FILE_NAME} PRIVATE DpiManifest.xml)
+set_property(TARGET ${FILE_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")

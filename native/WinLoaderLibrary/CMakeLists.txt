@@ -25,7 +25,8 @@ endif()
 
 add_definitions (-DUNICODE -D_UNICODE)
 
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /MT")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
 
 include_directories(${JAVA_HOME}/include ${JAVA_HOME}/include/win32)
 
