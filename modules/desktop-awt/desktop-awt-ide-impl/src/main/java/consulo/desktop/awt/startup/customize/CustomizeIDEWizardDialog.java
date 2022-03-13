@@ -16,13 +16,13 @@
 package consulo.desktop.awt.startup.customize;
 
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.application.util.SystemInfo;
-import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.JBCardLayout;
-import consulo.util.collection.MultiMap;
+import consulo.application.Application;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.platform.Platform;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -51,12 +51,14 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   private final CardLayout myButtonWrapperLayout = new CardLayout();
   private final JPanel myButtonWrapper = new JPanel(myButtonWrapperLayout);
   private JPanel myContentPanel;
+  private final boolean myDarkTheme;
 
-  public CustomizeIDEWizardDialog(MultiMap<String, PluginDescriptor> pluginDescriptors, Map<String, PluginTemplate> predefinedTemplateSets) {
+  public CustomizeIDEWizardDialog(boolean isDark, MultiMap<String, PluginDescriptor> pluginDescriptors, Map<String, PluginTemplate> predefinedTemplateSets) {
     super(null);
+    myDarkTheme = isDark;
     myPluginDescriptors = pluginDescriptors;
     myPredefinedTemplateSets = predefinedTemplateSets;
-    setTitle("Customize " + ApplicationNamesInfo.getInstance().getProductName());
+    setTitle("Customize " + Application.get().getName());
     initSteps();
     mySkipButton.addActionListener(this);
     myBackButton.addActionListener(this);
@@ -82,8 +84,9 @@ public class CustomizeIDEWizardDialog extends DialogWrapper implements ActionLis
   }
 
   protected void initSteps() {
-    mySteps.add(new CustomizeUIThemeStepPanel());
-    if (SystemInfo.isMac) {
+    mySteps.add(new CustomizeUIThemeStepPanel(myDarkTheme));
+
+    if (Platform.current().os().isMac()) {
       mySteps.add(new CustomizeKeyboardSchemeStepPanel());
     }
 

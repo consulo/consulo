@@ -19,6 +19,7 @@ import com.google.gson.Gson;
 import com.intellij.ide.*;
 import com.intellij.idea.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
+import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
@@ -182,7 +183,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
     }
 
     if (Boolean.getBoolean("consulo.first.start.testing") || newConfigFolder && !ApplicationProperties.isInSandbox()) {
-      SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true));
+      SwingUtilities.invokeLater(() -> FirstStartCustomizeUtil.showDialog(true, Platform.current().user().darkTheme()));
     }
     else {
       SystemDock.getInstance().updateMenu();

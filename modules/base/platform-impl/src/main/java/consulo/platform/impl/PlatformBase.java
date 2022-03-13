@@ -43,6 +43,8 @@ public abstract class PlatformBase implements Platform {
   private static final boolean isLinux = _OS_NAME.startsWith("linux");
   private static final boolean isUnix = !isWindows && !isOS2;
 
+  public static final boolean isMacOSMojave = isMac && isOsVersionAtLeast("10.14");
+
   public static final boolean isXWindow = isUnix && !isMac;
   /* http://askubuntu.com/questions/72549/how-to-determine-which-window-manager-is-running/227669#227669 */
   public static final boolean isGNOME = isXWindow &&
@@ -84,7 +86,6 @@ public abstract class PlatformBase implements Platform {
     private Boolean myWindows11OrLater;
 
     public OperatingSystemImpl() {
-
     }
 
     @Override
@@ -144,6 +145,11 @@ public abstract class PlatformBase implements Platform {
     @Override
     public boolean isMac() {
       return isMac;
+    }
+
+    @Override
+    public boolean isMacMojave() {
+      return isMacOSMojave;
     }
 
     @Override

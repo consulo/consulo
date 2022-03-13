@@ -59,6 +59,8 @@ public interface Platform {
     boolean isWindows11OrNewer();
 
     boolean isMac();
+ 
+    boolean isMacMojave();
 
     boolean isLinux();
 
@@ -153,6 +155,10 @@ public interface Platform {
 
     @Nonnull
     Path homePath();
+
+    default boolean darkTheme() {
+      return false;
+    }
   }
 
   @Nonnull

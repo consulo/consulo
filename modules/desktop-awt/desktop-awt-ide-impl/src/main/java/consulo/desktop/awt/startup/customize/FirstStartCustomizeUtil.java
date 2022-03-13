@@ -16,25 +16,25 @@
 package consulo.desktop.awt.startup.customize;
 
 import com.intellij.ide.plugins.RepositoryHelper;
-import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
-import consulo.application.Application;
-import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
-import consulo.util.collection.MultiMap;
 import com.intellij.util.io.DownloadUtil;
 import com.intellij.util.io.URLUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.Application;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.desktop.awt.ui.plaf.darcula.DarculaLaf;
+import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
 import consulo.ide.eap.EarlyAccessProgramManager;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.collection.MultiMap;
 import org.jdom.Document;
 import org.jdom.Element;
 
@@ -60,9 +60,9 @@ public class FirstStartCustomizeUtil {
   private static final int IMAGE_SIZE = 100;
 
   @RequiredUIAccess
-  public static void showDialog(boolean initLaf) {
+  public static void showDialog(boolean initLaf, boolean isDark) {
     if (initLaf) {
-      initLaf();
+      initLaf(isDark);
     }
 
     DialogWrapper downloadDialog = new DialogWrapper(false) {
@@ -109,7 +109,7 @@ public class FirstStartCustomizeUtil {
 
       UIUtil.invokeLaterIfNeeded(() -> {
         downloadDialog.close(DialogWrapper.OK_EXIT_CODE);
-        new CustomizeIDEWizardDialog(pluginDescriptors, predefinedTemplateSets).show();
+        new CustomizeIDEWizardDialog(isDark, pluginDescriptors, predefinedTemplateSets).show();
       });
     });
     downloadDialog.showAsync();
@@ -143,7 +143,7 @@ public class FirstStartCustomizeUtil {
           if (name.endsWith(".xml") || (isSvg = name.endsWith(".svg"))) {
             byte[] bytes = FileUtil.loadBytes(zipInputStream, (int)e.getSize());
 
-            String templateName = FileUtilRt.getNameWithoutExtension(onlyFileName(e));
+            String templateName = FileUtil.getNameWithoutExtension(onlyFileName(e));
             if (isSvg) {
               images.put(templateName, URLUtil.getJarEntryURL(zipFile, name.replace(" ", "%20")));
             }
@@ -205,9 +205,9 @@ public class FirstStartCustomizeUtil {
     map.put(setName, template);
   }
 
-  private static void initLaf() {
+  private static void initLaf(boolean isDark) {
     try {
-      UIManager.setLookAndFeel(new IntelliJLaf());
+      UIManager.setLookAndFeel(isDark ? new DarculaLaf() : new IntelliJLaf());
     }
     catch (Exception ignored) {
     }

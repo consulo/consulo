@@ -17,6 +17,7 @@ package consulo.desktop.awt.startup.customize;
 
 import consulo.startup.customize.StartupCustomizeManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.style.StyleManager;
 import jakarta.inject.Singleton;
 
 /**
@@ -28,6 +29,6 @@ public class DesktopStartupCustomizeManager implements StartupCustomizeManager {
   @RequiredUIAccess
   @Override
   public void showAsync(boolean firstShow) {
-    FirstStartCustomizeUtil.showDialog(firstShow);
+    FirstStartCustomizeUtil.showDialog(firstShow, StyleManager.get().getCurrentStyle().isDark());
   }
 }
