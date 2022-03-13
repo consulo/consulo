@@ -31,7 +31,7 @@ import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
-import com.intellij.psi.codeStyle.Indent;
+import com.intellij.psi.codeStyle.IndentOld;
 import com.intellij.psi.codeStyle.*;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.impl.psi.CheckUtil;
@@ -582,17 +582,15 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     return Pair.create(elementAt, charTable);
   }
 
-  @Override
-  public Indent getIndent(String text, FileType fileType) {
+  public IndentOld getIndent(String text, FileType fileType) {
     int indent = IndentHelperImpl.getIndent(CodeStyle.getSettings(myProject).getIndentOptions(fileType), text, true);
     int indentLevel = indent / IndentHelperImpl.INDENT_FACTOR;
     int spaceCount = indent - indentLevel * IndentHelperImpl.INDENT_FACTOR;
-    return new IndentImpl(CodeStyle.getSettings(myProject), indentLevel, spaceCount, fileType);
+    return new IndentOldImpl(CodeStyle.getSettings(myProject), indentLevel, spaceCount, fileType);
   }
 
-  @Override
-  public String fillIndent(Indent indent, FileType fileType) {
-    IndentImpl indent1 = (IndentImpl)indent;
+  public String fillIndent(IndentOld indent, FileType fileType) {
+    IndentOldImpl indent1 = (IndentOldImpl)indent;
     int indentLevel = indent1.getIndentLevel();
     int spaceCount = indent1.getSpaceCount();
     final CodeStyleSettings settings = CodeStyle.getSettings(myProject);
@@ -616,9 +614,8 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
     return IndentHelperImpl.fillIndent(myProject, fileType, indentLevel * IndentHelperImpl.INDENT_FACTOR + spaceCount);
   }
 
-  @Override
-  public Indent zeroIndent() {
-    return new IndentImpl(CodeStyle.getSettings(myProject), 0, 0, null);
+  public IndentOld zeroIndent() {
+    return new IndentOldImpl(CodeStyle.getSettings(myProject), 0, 0, null);
   }
 
   @Nonnull

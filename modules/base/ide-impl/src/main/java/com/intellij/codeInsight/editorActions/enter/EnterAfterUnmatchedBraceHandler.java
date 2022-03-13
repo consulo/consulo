@@ -39,7 +39,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.TokenType;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;

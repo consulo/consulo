@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.language.psi;
 
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.impl.psi.internal.FormattingService;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

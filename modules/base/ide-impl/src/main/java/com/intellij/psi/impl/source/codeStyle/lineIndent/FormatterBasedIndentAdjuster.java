@@ -7,8 +7,8 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
-import com.intellij.psi.codeStyle.CodeStyleManager;
-import com.intellij.psi.codeStyle.FormattingModeAwareIndentAdjuster;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.FormattingModeAwareIndentAdjuster;
 import javax.annotation.Nonnull;
 
 public class FormatterBasedIndentAdjuster {

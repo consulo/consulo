@@ -19,7 +19,7 @@ package com.intellij.codeInspection.actions;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.intention.IntentionAction;
-import com.intellij.codeInsight.intention.LowPriorityAction;
+import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.InspectionsBundle;

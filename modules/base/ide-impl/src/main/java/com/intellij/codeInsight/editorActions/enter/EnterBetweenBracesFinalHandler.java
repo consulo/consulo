@@ -13,7 +13,7 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

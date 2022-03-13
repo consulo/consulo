@@ -18,15 +18,15 @@ package com.intellij.psi.impl.source.codeStyle;
 
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.Indent;
+import com.intellij.psi.codeStyle.IndentOld;
 
-public class IndentImpl implements Indent{
+public class IndentOldImpl implements IndentOld {
   private final CodeStyleSettings mySettings;
   private final int myIndentLevel;
   private final int mySpaceCount;
   private final FileType myFileType;
 
-  public IndentImpl(CodeStyleSettings settings, int indentLevel, int spaceCount, FileType fileType) {
+  public IndentOldImpl(CodeStyleSettings settings, int indentLevel, int spaceCount, FileType fileType) {
     mySettings = settings;
     myIndentLevel = indentLevel;
     mySpaceCount = spaceCount;
@@ -42,9 +42,9 @@ public class IndentImpl implements Indent{
   }
 
   public boolean equals(Object o) {
-    if (!(o instanceof IndentImpl)) return false;
+    if (!(o instanceof IndentOldImpl)) return false;
 
-    IndentImpl indent = (IndentImpl)o;
+    IndentOldImpl indent = (IndentOldImpl)o;
 
     if (myIndentLevel != indent.myIndentLevel) return false;
     if (mySpaceCount != indent.mySpaceCount) return false;
@@ -58,30 +58,30 @@ public class IndentImpl implements Indent{
   }
 
   @Override
-  public boolean isGreaterThan(Indent indent) {
-    return getSize() > ((IndentImpl)indent).getSize();
+  public boolean isGreaterThan(IndentOld indent) {
+    return getSize() > ((IndentOldImpl)indent).getSize();
   }
 
   @Override
-  public Indent min(Indent anotherIndent) {
+  public IndentOld min(IndentOld anotherIndent) {
     return isGreaterThan(anotherIndent) ? anotherIndent : this;
   }
 
   @Override
-  public Indent max(Indent anotherIndent) {
+  public IndentOld max(IndentOld anotherIndent) {
     return isGreaterThan(anotherIndent) ? this : anotherIndent;
   }
 
   @Override
-  public Indent add(Indent indent) {
-    IndentImpl indent1 = (IndentImpl)indent;
-    return new IndentImpl(mySettings, myIndentLevel + indent1.myIndentLevel, mySpaceCount + indent1.mySpaceCount, myFileType);
+  public IndentOld add(IndentOld indent) {
+    IndentOldImpl indent1 = (IndentOldImpl)indent;
+    return new IndentOldImpl(mySettings, myIndentLevel + indent1.myIndentLevel, mySpaceCount + indent1.mySpaceCount, myFileType);
   }
 
   @Override
-  public Indent subtract(Indent indent) {
-    IndentImpl indent1 = (IndentImpl)indent;
-    return new IndentImpl(mySettings, myIndentLevel - indent1.myIndentLevel, mySpaceCount - indent1.mySpaceCount, myFileType);
+  public IndentOld subtract(IndentOld indent) {
+    IndentOldImpl indent1 = (IndentOldImpl)indent;
+    return new IndentOldImpl(mySettings, myIndentLevel - indent1.myIndentLevel, mySpaceCount - indent1.mySpaceCount, myFileType);
   }
 
   @Override

@@ -1,25 +1,20 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.psi.codeStyle;
+package consulo.language.codeStyle;
 
-import consulo.language.codeStyle.ChangedRangesInfo;
-import consulo.language.codeStyle.DocCommentSettings;
-import consulo.language.codeStyle.FormattingMode;
-import consulo.language.ast.ASTNode;
-import consulo.ide.ServiceManager;
-import consulo.document.Document;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
 import consulo.application.util.function.Computable;
+import consulo.application.util.function.ThrowableRunnable;
+import consulo.document.Document;
 import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +34,7 @@ public abstract class CodeStyleManager {
    * @return the code style manager instance.
    */
   public static CodeStyleManager getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, CodeStyleManager.class);
+    return project.getInstance(CodeStyleManager.class);
   }
 
   /**
@@ -241,23 +236,6 @@ public abstract class CodeStyleManager {
   @Nullable
   public abstract String getLineIndent(@Nonnull Document document, int offset);
 
-  /**
-   * @deprecated obsolete
-   */
-  @Deprecated
-  public abstract Indent getIndent(String text, FileType fileType);
-
-  /**
-   * @deprecated obsolete
-   */
-  @Deprecated
-  public abstract String fillIndent(Indent indent, FileType fileType);
-
-  /**
-   * @deprecated obsolete
-   */
-  @Deprecated
-  public abstract Indent zeroIndent();
 
   /**
    * Reformats line indents inside new element and reformats white spaces around it

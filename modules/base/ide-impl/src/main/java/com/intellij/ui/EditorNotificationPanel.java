@@ -18,6 +18,7 @@ package com.intellij.ui;
 import com.intellij.codeInsight.intention.*;
 import consulo.application.AllIcons;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.LowPriorityAction;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionManager;

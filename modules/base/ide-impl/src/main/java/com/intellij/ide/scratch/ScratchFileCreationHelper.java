@@ -8,7 +8,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import com.intellij.util.PathUtil;
 import consulo.application.util.function.Computable;
 import consulo.container.plugin.PluginIds;

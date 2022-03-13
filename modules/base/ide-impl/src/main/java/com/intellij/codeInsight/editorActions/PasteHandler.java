@@ -47,7 +47,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.document.impl.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.Producer;

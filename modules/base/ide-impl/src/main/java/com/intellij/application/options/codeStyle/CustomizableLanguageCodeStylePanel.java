@@ -28,7 +28,7 @@ import consulo.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;

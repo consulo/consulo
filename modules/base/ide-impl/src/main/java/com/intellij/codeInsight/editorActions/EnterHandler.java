@@ -39,7 +39,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.codeStyle.FormatterUtil;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;

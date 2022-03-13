@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi.codeStyle;
+package consulo.language.editor.intention;
 
 /**
- * @deprecated
- * @see consulo.language.codeStyle.Indent
+ * @author Max Ishchenko
+ * Marker interface for intentions and quick fixes.
+ * Marked actions are shown lower in the list of available quick fixes.
  */
-public interface Indent {
-  boolean isGreaterThan(Indent indent);
-
-  Indent min(Indent anotherIndent);
-  Indent max(Indent anotherIndent);
-
-  Indent add(Indent indent);
-  Indent subtract(Indent indent);
-
-  boolean isZero();
+public interface LowPriorityAction {
 }

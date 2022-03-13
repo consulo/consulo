@@ -40,7 +40,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileSystemItemUtil;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;

@@ -32,7 +32,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.impl.psi.PsiDirectoryImpl;
 import com.intellij.util.ArrayUtil;

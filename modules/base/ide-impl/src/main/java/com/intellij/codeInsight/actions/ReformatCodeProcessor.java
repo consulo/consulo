@@ -30,7 +30,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.diff.FilesTooBigForDiffException;

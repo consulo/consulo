@@ -1877,7 +1877,7 @@
                     serviceImplementation="consulo.language.impl.psi.internal.diff.BlockSupportImpl"/>
     <projectService serviceInterface="consulo.language.psi.SmartPointerManager"
                     serviceImplementation="consulo.language.impl.psi.internal.pointer.SmartPointerManagerImpl"/>
-    <projectService serviceInterface="com.intellij.psi.codeStyle.CodeStyleManager"
+    <projectService serviceInterface="consulo.language.codeStyle.CodeStyleManager"
                     serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl"/>
     <projectService serviceInterface="consulo.language.pom.PomModel"
                     serviceImplementation="com.intellij.pom.core.impl.PomModelImpl"/>

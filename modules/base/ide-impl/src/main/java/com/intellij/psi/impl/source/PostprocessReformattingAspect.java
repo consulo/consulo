@@ -41,7 +41,7 @@ import consulo.language.pom.event.TreeChange;
 import consulo.language.pom.event.TreeChangeEvent;
 import consulo.language.impl.pom.internal.ChangeInfoImpl;
 import consulo.language.impl.pom.internal.TreeChangeImpl;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.ExternalFormatProcessor;
 import consulo.language.impl.psi.internal.PsiDocumentManagerBase;

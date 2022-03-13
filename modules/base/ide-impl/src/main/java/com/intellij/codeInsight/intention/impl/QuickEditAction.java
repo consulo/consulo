@@ -15,7 +15,6 @@
  */
 package com.intellij.codeInsight.intention.impl;
 
-import com.intellij.codeInsight.intention.LowPriorityAction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.psi.impl.source.tree.injected.PlaceImpl;
@@ -28,6 +27,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.ElementManipulators;

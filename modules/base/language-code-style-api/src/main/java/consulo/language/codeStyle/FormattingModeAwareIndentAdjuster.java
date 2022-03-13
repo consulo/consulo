@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi.codeStyle;
+package consulo.language.codeStyle;
 
-import consulo.language.codeStyle.FormattingMode;
 import consulo.document.Document;
+
 import javax.annotation.Nonnull;
 
 /**

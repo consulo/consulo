@@ -43,7 +43,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import com.intellij.psi.codeStyle.*;
 import consulo.ui.ex.event.UserActivityListener;
 import consulo.ui.ex.awt.UserActivityWatcher;
 import consulo.ui.ex.awt.CustomLineBorder;

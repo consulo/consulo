@@ -17,7 +17,7 @@
 package org.intellij.plugins.intelliLang.inject;
 
 import consulo.language.editor.intention.IntentionAction;
-import com.intellij.codeInsight.intention.LowPriorityAction;
+import consulo.language.editor.intention.LowPriorityAction;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

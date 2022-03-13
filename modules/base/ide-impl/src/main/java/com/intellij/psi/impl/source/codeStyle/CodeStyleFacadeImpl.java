@@ -27,7 +27,7 @@ import consulo.codeEditor.Editor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProvider;
 import com.intellij.psi.codeStyle.lineIndent.LineIndentProviderEP;
 import javax.annotation.Nonnull;

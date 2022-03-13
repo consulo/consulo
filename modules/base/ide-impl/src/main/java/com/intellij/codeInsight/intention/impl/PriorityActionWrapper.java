@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.intention.impl;
 
 import com.intellij.codeInsight.intention.HighPriorityAction;
-import com.intellij.codeInsight.intention.LowPriorityAction;
+import consulo.language.editor.intention.LowPriorityAction;
 import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;

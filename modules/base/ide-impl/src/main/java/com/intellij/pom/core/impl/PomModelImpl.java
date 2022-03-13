@@ -42,7 +42,7 @@ import consulo.language.pom.event.PomModelListener;
 import consulo.language.impl.pom.internal.PomTransactionBase;
 import consulo.language.pom.TreeAspect;
 import consulo.language.pom.TreeAspectEvent;
-import com.intellij.psi.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.*;
 import consulo.language.impl.psi.internal.pointer.SmartPointerManagerImpl;
 import consulo.language.impl.psi.DummyHolder;
