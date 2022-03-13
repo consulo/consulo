@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.wm.ex.AbstractDelegatingToRootTraversalPolicy;
+import consulo.ui.ex.awt.AbstractDelegatingToRootTraversalPolicy;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
