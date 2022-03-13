@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.console;
 
-import com.intellij.AppTopics;
+import consulo.ide.impl.AppTopics;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.openapi.actionSystem.*;

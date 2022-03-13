@@ -22,7 +22,7 @@ import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.search.TodoItem;
+import consulo.ide.impl.psi.search.TodoItem;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

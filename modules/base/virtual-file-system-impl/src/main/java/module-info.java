@@ -5,8 +5,11 @@
 module consulo.virtual.file.system.impl {
   requires transitive consulo.virtual.file.system.api;
 
-  requires com.sun.jna;
+  requires static com.sun.jna;
 
   exports consulo.virtualFileSystem.impl.internal.mediator to consulo.ide.impl;
   exports consulo.virtualFileSystem.impl.internal.windows to consulo.ide.impl;
+  exports consulo.virtualFileSystem.impl.internal to consulo.ide.impl;
+
+  opens consulo.virtualFileSystem.impl.internal to consulo.util.xml.serializer;
 }

@@ -2,8 +2,8 @@
 package com.intellij.index;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.stubs.StubUpdatingIndex;
-import com.intellij.psi.stubs.provided.StubProvidedIndexExtension;
+import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
+import consulo.ide.impl.psi.stubs.provided.StubProvidedIndexExtension;
 import com.intellij.util.indexing.FileBasedIndexExtension;
 import consulo.index.io.ID;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;

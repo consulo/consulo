@@ -25,7 +25,7 @@ import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.util.ThreadLocalCachedIntArray;
 import com.intellij.openapi.util.text.TrigramBuilder;
-import com.intellij.psi.impl.cache.impl.id.IdIndex;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.indexing.*;
 import consulo.index.io.data.DataExternalizer;

@@ -12,7 +12,7 @@ import consulo.codeEditor.Editor;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
 
 import java.awt.event.InputEvent;

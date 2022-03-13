@@ -15,7 +15,7 @@
  */
 package consulo.net.util;
 
-import com.intellij.Patches;
+import consulo.ide.impl.Patches;
 import consulo.application.util.SystemInfo;
 import consulo.util.lang.SystemProperties;
 import org.slf4j.Logger;

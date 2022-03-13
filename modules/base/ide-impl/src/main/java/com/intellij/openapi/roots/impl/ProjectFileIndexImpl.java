@@ -20,6 +20,8 @@ import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.DirectoryIndex;
+import consulo.module.content.DirectoryInfo;
 import consulo.project.Project;
 import consulo.module.content.layer.ContentFolder;
 import consulo.content.ContentIterator;

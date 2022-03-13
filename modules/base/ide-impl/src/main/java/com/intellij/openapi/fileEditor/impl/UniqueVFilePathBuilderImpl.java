@@ -22,7 +22,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.UniqueNameBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFilePathWrapper;
-import com.intellij.psi.search.FilenameIndex;
+import consulo.ide.impl.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;

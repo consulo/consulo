@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.application.Application;

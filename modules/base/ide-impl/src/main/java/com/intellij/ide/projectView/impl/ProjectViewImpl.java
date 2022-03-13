@@ -40,7 +40,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
-import com.intellij.psi.impl.file.PsiPackageHelper;
+import consulo.ide.impl.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.AutoScrollFromSourceHandler;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.ui.content.ContentManagerAdapter;

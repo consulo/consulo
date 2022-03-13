@@ -24,7 +24,7 @@ import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.intellij.psi.CustomHighlighterTokenType.*;
+import static consulo.ide.impl.psi.CustomHighlighterTokenType.*;
 
 /**
  * @author Maxim.Mossienko

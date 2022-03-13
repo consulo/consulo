@@ -15,7 +15,7 @@
  */
 package consulo.psi.impl.source.codeStyle;
 
-import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
+import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
 import consulo.codeStyle.ApplicationCodeStyleFacade;
 import jakarta.inject.Inject;
 

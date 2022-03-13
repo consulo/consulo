@@ -20,7 +20,7 @@ import consulo.language.lexer.LayeredLexer;
 import consulo.language.lexer.StringLiteralLexer;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.highlight.SyntaxHighlighterBase;
-import com.intellij.psi.CustomHighlighterTokenType;
+import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;

@@ -20,7 +20,7 @@ import com.intellij.util.ObjectUtils;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.jetbrains.ide.script.IdeScriptEngine;
+import consulo.ide.impl.script.IdeScriptEngine;
 
 public class IdeScriptBindings {
   public static final Binding<IDE> IDE = Binding.create("IDE", IDE.class);

@@ -20,7 +20,7 @@ import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiDirectory;
-import com.intellij.psi.impl.file.PsiPackageHelper;
+import consulo.ide.impl.psi.impl.file.PsiPackageHelper;
 import javax.annotation.Nonnull;
 
 /**

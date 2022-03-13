@@ -18,7 +18,7 @@ package com.intellij.refactoring.rename;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.codeStyle.SuggestedNameInfo;
+import consulo.ide.impl.psi.codeStyle.SuggestedNameInfo;
 import javax.annotation.Nullable;
 
 import java.util.Set;

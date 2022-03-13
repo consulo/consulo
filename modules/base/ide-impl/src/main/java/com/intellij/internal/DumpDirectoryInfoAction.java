@@ -24,8 +24,8 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.content.ContentIterator;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
-import com.intellij.openapi.roots.impl.DirectoryInfo;
+import consulo.module.content.DirectoryIndex;
+import consulo.module.content.DirectoryInfo;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

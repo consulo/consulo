@@ -28,7 +28,7 @@ import consulo.application.util.function.Computable;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import org.jetbrains.ide.PooledThreadExecutor;
+import consulo.ide.impl.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

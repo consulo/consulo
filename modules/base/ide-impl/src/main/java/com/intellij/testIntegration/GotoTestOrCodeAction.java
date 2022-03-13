@@ -27,7 +27,7 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

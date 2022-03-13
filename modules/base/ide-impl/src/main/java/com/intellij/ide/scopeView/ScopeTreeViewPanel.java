@@ -51,7 +51,7 @@ import com.intellij.packageDependencies.DependencyValidationManager;
 import com.intellij.packageDependencies.ui.*;
 import com.intellij.problems.ProblemListener;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.TreeSpeedSearch;

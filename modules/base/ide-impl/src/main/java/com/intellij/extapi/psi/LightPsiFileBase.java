@@ -19,7 +19,7 @@ package com.intellij.extapi.psi;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElementVisitor;
-import com.intellij.psi.impl.source.LightPsiFileImpl;
+import consulo.ide.impl.psi.impl.source.LightPsiFileImpl;
 import javax.annotation.Nonnull;
 
 public abstract class LightPsiFileBase extends LightPsiFileImpl {

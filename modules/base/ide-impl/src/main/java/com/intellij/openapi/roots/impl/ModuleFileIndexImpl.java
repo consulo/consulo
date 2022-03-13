@@ -20,6 +20,8 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import consulo.content.ContentIterator;
 import consulo.content.OrderRootType;
 import consulo.module.Module;
+import consulo.module.content.DirectoryIndex;
+import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;

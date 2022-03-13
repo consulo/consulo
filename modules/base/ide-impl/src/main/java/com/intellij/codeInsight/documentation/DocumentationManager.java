@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.psi.presentation.java.SymbolPresentationUtil;
+import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.FileColorManager;
 import consulo.ui.ex.awt.internal.GuiUtils;

@@ -30,7 +30,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.search.scope.packageSet.FilePatternPackageSet;
+import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 

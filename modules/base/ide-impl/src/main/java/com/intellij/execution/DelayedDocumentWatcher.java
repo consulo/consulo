@@ -15,7 +15,7 @@
  */
 package com.intellij.execution;
 
-import com.intellij.AppTopics;
+import consulo.ide.impl.AppTopics;
 import com.intellij.execution.testframework.autotest.AutoTestWatcher;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

@@ -17,6 +17,7 @@ package com.intellij.pom.core.impl;
 
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.psi.impl.ChangedPsiRangeUtil;
 import consulo.language.ast.ASTNode;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
@@ -43,7 +44,7 @@ import consulo.language.impl.pom.internal.PomTransactionBase;
 import consulo.language.pom.TreeAspect;
 import consulo.language.pom.TreeAspectEvent;
 import consulo.language.codeStyle.CodeStyleManager;
-import com.intellij.psi.impl.*;
+import consulo.ide.impl.psi.impl.*;
 import consulo.language.impl.psi.internal.pointer.SmartPointerManagerImpl;
 import consulo.language.impl.psi.DummyHolder;
 import consulo.language.impl.psi.PsiFileImpl;

@@ -23,7 +23,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.ide.PooledThreadExecutor;
+import consulo.ide.impl.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

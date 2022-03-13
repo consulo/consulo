@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.intention.impl;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.tree.injected.PlaceImpl;
+import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ide.impl.psi.impl.source.tree.injected.PlaceImpl;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;

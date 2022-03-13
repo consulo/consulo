@@ -18,9 +18,9 @@ import consulo.language.psi.*;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.psi.impl.search.TodoItemImpl;
-import com.intellij.psi.search.PsiTodoSearchHelper;
-import com.intellij.psi.search.TodoItem;
+import consulo.ide.impl.psi.impl.search.TodoItemImpl;
+import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
+import consulo.ide.impl.psi.search.TodoItem;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

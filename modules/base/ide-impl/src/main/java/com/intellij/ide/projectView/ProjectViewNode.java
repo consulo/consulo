@@ -27,7 +27,7 @@ import com.intellij.problems.WolfTheProblemSolver;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 

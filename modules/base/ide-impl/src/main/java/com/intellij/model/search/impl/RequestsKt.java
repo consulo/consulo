@@ -1,6 +1,6 @@
 package com.intellij.model.search.impl;
 
-import com.intellij.psi.impl.search.LeafOccurrence;
+import consulo.ide.impl.psi.impl.search.LeafOccurrence;
 import consulo.application.util.Query;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

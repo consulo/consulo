@@ -31,7 +31,7 @@ import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.inline.InlineRefactoringActionHandler;
 import javax.annotation.Nonnull;

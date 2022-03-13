@@ -16,9 +16,9 @@
 package com.intellij.vcs.changes;
 
 import consulo.project.Project;
-import com.intellij.psi.search.DefaultSearchScopeProviders;
+import consulo.ide.impl.psi.search.DefaultSearchScopeProviders;
 import consulo.content.scope.SearchScope;
-import com.intellij.psi.search.SearchScopeProvider;
+import consulo.ide.impl.psi.search.SearchScopeProvider;
 import consulo.language.psi.search.scope.NamedScope;
 
 import javax.annotation.Nonnull;

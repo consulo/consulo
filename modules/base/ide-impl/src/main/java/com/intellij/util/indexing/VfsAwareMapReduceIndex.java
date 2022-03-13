@@ -3,7 +3,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.psi.impl.cache.impl.id.IdIndex;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.*;

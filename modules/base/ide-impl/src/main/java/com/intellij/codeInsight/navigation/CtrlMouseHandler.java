@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.navigation;
 
+import consulo.ide.impl.psi.ElementDescriptionUtil;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
@@ -52,9 +53,9 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.psi.*;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.search.searches.DefinitionsScopedSearch;
+import consulo.ide.impl.psi.*;
+import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ide.impl.psi.search.searches.DefinitionsScopedSearch;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.awt.util.ScreenUtil;

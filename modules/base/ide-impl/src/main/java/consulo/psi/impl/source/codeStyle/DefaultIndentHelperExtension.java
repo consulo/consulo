@@ -17,7 +17,7 @@ package consulo.psi.impl.source.codeStyle;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.codeStyle.IndentHelperImpl;
+import consulo.ide.impl.psi.impl.source.codeStyle.IndentHelperImpl;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.annotation.access.RequiredReadAction;

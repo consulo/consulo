@@ -27,7 +27,7 @@ import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettings;
-import com.intellij.psi.formatter.DocumentBasedFormattingModel;
+import consulo.ide.impl.psi.formatter.DocumentBasedFormattingModel;
 import consulo.language.codeStyle.AbstractBlock;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import javax.annotation.Nonnull;

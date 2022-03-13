@@ -39,7 +39,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.PairProcessor;
 import consulo.application.util.ConcurrentFactoryMap;

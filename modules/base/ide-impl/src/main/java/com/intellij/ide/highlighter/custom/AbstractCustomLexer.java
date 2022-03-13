@@ -19,7 +19,7 @@ package com.intellij.ide.highlighter.custom;
 import com.intellij.ide.highlighter.custom.tokens.TokenInfo;
 import com.intellij.ide.highlighter.custom.tokens.TokenParser;
 import consulo.language.lexer.LexerBase;
-import com.intellij.psi.CustomHighlighterTokenType;
+import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 import com.intellij.util.ArrayUtil;
 

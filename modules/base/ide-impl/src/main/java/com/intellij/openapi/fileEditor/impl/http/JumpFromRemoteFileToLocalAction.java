@@ -28,7 +28,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.openapi.vfs.impl.http.RemoteFileState;
-import com.intellij.psi.search.FilenameIndex;
+import consulo.ide.impl.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.ui.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;

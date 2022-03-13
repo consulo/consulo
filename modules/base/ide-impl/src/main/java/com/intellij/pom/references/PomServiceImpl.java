@@ -15,7 +15,7 @@
  */
 package com.intellij.pom.references;
 
-import com.intellij.psi.impl.PomTargetPsiElementImpl;
+import consulo.ide.impl.psi.impl.PomTargetPsiElementImpl;
 import consulo.language.pom.PomService;
 import consulo.language.pom.PomTarget;
 import consulo.language.psi.PsiElement;

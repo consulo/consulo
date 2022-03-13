@@ -64,7 +64,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
-import com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl;
+import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.document.impl.DocumentUtil;

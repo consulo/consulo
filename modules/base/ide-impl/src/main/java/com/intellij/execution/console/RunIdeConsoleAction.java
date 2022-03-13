@@ -51,8 +51,8 @@ import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.ide.script.IdeScriptEngine;
-import org.jetbrains.ide.script.IdeScriptEngineManager;
+import consulo.ide.impl.script.IdeScriptEngine;
+import consulo.ide.impl.script.IdeScriptEngineManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

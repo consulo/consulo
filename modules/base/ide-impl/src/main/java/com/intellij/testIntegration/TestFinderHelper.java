@@ -22,7 +22,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import com.intellij.psi.codeStyle.NameUtil;
+import consulo.ide.impl.psi.codeStyle.NameUtil;
 import javax.annotation.Nullable;
 
 import java.util.*;

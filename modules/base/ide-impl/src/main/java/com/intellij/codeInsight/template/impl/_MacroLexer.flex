@@ -1,8 +1,8 @@
 /* It's an automatically generated code. Do not modify it. */
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
+import consulo.ide.impl.psi.TokenType;
+import consulo.ide.impl.psi.tree.IElementType;
 import com.intellij.lexer.LexerBase;
 
 %%

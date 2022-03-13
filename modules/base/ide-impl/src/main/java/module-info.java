@@ -129,7 +129,6 @@ open module consulo.ide.impl {
 
   provides consulo.ui.image.IconLibraryDescriptor with consulo.ui.ex.impl.LightIconLibraryDescriptor, consulo.ui.ex.impl.DarkIconLibraryDescriptor;
 
-  exports com.intellij;
   exports com.intellij.analysis;
   //exports com.intellij.application;
   exports com.intellij.application.options;
@@ -483,9 +482,6 @@ open module consulo.ide.impl {
   exports com.intellij.internal.psiView.formattingblocks;
   exports com.intellij.internal.statistic;
   exports com.intellij.internal.statistic.beans;
-  //exports com.intellij.internal.statistic.collectors;
-  //exports com.intellij.internal.statistic.collectors.fus;
-  //exports com.intellij.internal.statistic.collectors.fus.actions;
   exports com.intellij.internal.statistic.collectors.fus.actions.persistence;
   exports com.intellij.internal.statistic.configurable;
   exports com.intellij.internal.statistic.ideSettings;
@@ -758,63 +754,6 @@ open module consulo.ide.impl {
   exports com.intellij.profile.codeInspection.ui.inspectionsTree;
   exports com.intellij.profile.codeInspection.ui.table;
   exports com.intellij.projectImport;
-  exports com.intellij.psi;
-  exports com.intellij.psi.codeStyle;
-  exports com.intellij.psi.codeStyle.arrangement.engine;
-  exports com.intellij.psi.codeStyle.autodetect;
-  exports com.intellij.psi.codeStyle.lineIndent;
-  exports com.intellij.psi.codeStyle.modifier;
-  exports com.intellij.psi.codeStyle.presentation;
-  exports com.intellij.psi.codeStyle.statusbar;
-  exports com.intellij.psi.file;
-  exports com.intellij.psi.filters;
-  exports com.intellij.psi.filters.position;
-  exports com.intellij.psi.formatter;
-  exports com.intellij.psi.formatter.common;
-  exports com.intellij.psi.impl;
-  exports com.intellij.psi.impl.cache;
-  exports com.intellij.psi.impl.cache.impl;
-  exports com.intellij.psi.impl.cache.impl.id;
-  exports com.intellij.psi.impl.cache.impl.todo;
-  exports com.intellij.psi.impl.file;
-  exports com.intellij.psi.impl.file.impl;
-  exports com.intellij.psi.impl.include;
-  exports com.intellij.psi.impl.light;
-  exports com.intellij.psi.impl.meta;
-  exports com.intellij.psi.impl.search;
-  exports com.intellij.psi.impl.source;
-  exports com.intellij.psi.impl.source.codeStyle;
-  exports com.intellij.psi.impl.source.codeStyle.lineIndent;
-  exports com.intellij.psi.impl.source.parsing;
-  exports com.intellij.psi.impl.source.resolve;
-  exports com.intellij.psi.impl.source.resolve.reference;
-  exports com.intellij.psi.impl.source.resolve.reference.impl;
-  exports com.intellij.psi.impl.source.resolve.reference.impl.manipulators;
-  exports com.intellij.psi.impl.source.resolve.reference.impl.providers;
-  exports com.intellij.psi.impl.source.tree;
-  exports com.intellij.psi.impl.source.tree.injected;
-  exports com.intellij.psi.injection;
-  exports com.intellij.psi.meta;
-  //exports com.intellij.psi.presentation;
-  exports com.intellij.psi.presentation.java;
-  exports com.intellij.psi.scope;
-  exports com.intellij.psi.scope.processor;
-  exports com.intellij.psi.scope.util;
-  exports com.intellij.psi.search;
-  exports com.intellij.psi.search.scope;
-  exports com.intellij.psi.search.scope.impl;
-  exports com.intellij.psi.search.scope.packageSet;
-  exports com.intellij.psi.search.scope.packageSet.lexer;
-  exports com.intellij.psi.search.searches;
-  exports com.intellij.psi.statistics;
-  exports com.intellij.psi.statistics.impl;
-  exports com.intellij.psi.stubs;
-  exports com.intellij.psi.stubs.provided;
-  exports com.intellij.psi.targets;
-  exports com.intellij.psi.templateLanguages;
-  exports com.intellij.psi.tree;
-  exports com.intellij.psi.util;
-  exports com.intellij.psi.util.proximity;
   exports com.intellij.refactoring;
   exports com.intellij.refactoring.actions;
   exports com.intellij.refactoring.changeSignature;
@@ -1035,13 +974,6 @@ open module consulo.ide.impl {
   exports com.intellij.xdebugger.impl.ui.tree.nodes;
   exports com.intellij.xml;
   exports com.intellij.xml.util;
-  exports com.maddyhome.idea.copyright;
-  exports com.maddyhome.idea.copyright.actions;
-  exports com.maddyhome.idea.copyright.options;
-  exports com.maddyhome.idea.copyright.pattern;
-  exports com.maddyhome.idea.copyright.psi;
-  exports com.maddyhome.idea.copyright.ui;
-  exports com.maddyhome.idea.copyright.util;
   exports consulo.actionSystem;
   exports consulo.actionSystem.ex;
   exports consulo.actionSystem.impl;
@@ -1087,13 +1019,7 @@ open module consulo.ide.impl {
   exports consulo.components.impl.stores.storage;
   //exports consulo.configurationStore;
   exports consulo.configurationStore.vcs;
-  //exports consulo.copyright;
-  exports consulo.copyright.config;
-  exports consulo.copyright.generate;
-  exports consulo.copyright.impl;
-  exports consulo.copyright.psi;
-  //exports consulo.desktop;
-  //exports consulo.desktop.awt;
+
   exports consulo.desktop.editor;
   exports consulo.desktop.editor.impl;
   exports consulo.desktop.editor.impl.ui;
@@ -1250,12 +1176,9 @@ open module consulo.ide.impl {
   exports org.intellij.plugins.intelliLang.inject.config.ui.configurables;
   exports org.intellij.plugins.intelliLang.references;
   exports org.intellij.plugins.intelliLang.util;
-  exports org.jetbrains.ide;
-  exports org.jetbrains.ide.script;
-  exports org.jetbrains.io;
   exports consulo.module.extension.ui;
 
-  exports consulo.application.ui.impl;
-
-  exports consulo.options.impl;
+  exports consulo.ide.impl.psi.codeStyle to consulo.desktop.awt.ide.impl;
+  exports consulo.application.ui.impl to consulo.desktop.awt.ide.impl;
+  exports consulo.options.impl to consulo.desktop.awt.ide.impl;
 }

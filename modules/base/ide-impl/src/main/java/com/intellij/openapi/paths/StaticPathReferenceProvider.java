@@ -19,7 +19,7 @@ package com.intellij.openapi.paths;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
+import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
 import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

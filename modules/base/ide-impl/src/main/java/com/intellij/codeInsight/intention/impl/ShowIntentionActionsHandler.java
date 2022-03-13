@@ -36,8 +36,8 @@ import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.stubs.StubTextInconsistencyException;
+import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
 import com.intellij.util.PairProcessor;
 import consulo.util.lang.ThreeState;
 

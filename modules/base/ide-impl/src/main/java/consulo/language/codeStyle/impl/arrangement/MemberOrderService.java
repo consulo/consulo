@@ -15,7 +15,7 @@
  */
 package consulo.language.codeStyle.impl.arrangement;
 
-import com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine;
+import consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine;
 import consulo.language.Language;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.arrangement.ArrangementEntry;

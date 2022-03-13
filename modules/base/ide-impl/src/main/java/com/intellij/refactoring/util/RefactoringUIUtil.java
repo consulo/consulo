@@ -20,7 +20,7 @@ import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.ElementDescriptionUtil;
+import consulo.ide.impl.psi.ElementDescriptionUtil;
 import consulo.project.Project;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;

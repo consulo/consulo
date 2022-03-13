@@ -35,7 +35,7 @@ import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.SyntaxTraverser;
+import consulo.ide.impl.psi.SyntaxTraverser;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.util.dataholder.Key;

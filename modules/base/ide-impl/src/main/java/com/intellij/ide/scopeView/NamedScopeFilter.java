@@ -7,7 +7,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.search.scope.NonProjectFilesScope;
+import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.language.psi.search.scope.PackageSet;
@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx.getAllScope;
+import static consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx.getAllScope;
 
 public final class NamedScopeFilter implements VirtualFileFilter {
   private static final Logger LOG = Logger.getInstance(NamedScopeFilter.class);

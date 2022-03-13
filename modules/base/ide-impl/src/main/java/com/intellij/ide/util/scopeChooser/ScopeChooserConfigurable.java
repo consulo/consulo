@@ -16,6 +16,7 @@
 
 package com.intellij.ide.util.scopeChooser;
 
+import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
@@ -36,7 +37,7 @@ import consulo.ui.ex.awt.MasterDetailsState;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.util.lang.function.Condition;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.search.scope.packageSet.*;
+import consulo.ide.impl.psi.search.scope.packageSet.*;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;

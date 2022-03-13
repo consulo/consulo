@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.roots.impl;
 
+import consulo.module.content.DirectoryIndex;
+import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ProjectTopics;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;

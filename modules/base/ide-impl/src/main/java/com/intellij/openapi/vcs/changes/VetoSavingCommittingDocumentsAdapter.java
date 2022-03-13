@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.AppTopics;
+import consulo.ide.impl.AppTopics;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;

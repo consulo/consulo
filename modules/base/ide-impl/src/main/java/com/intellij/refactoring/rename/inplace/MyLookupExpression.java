@@ -30,8 +30,8 @@ import consulo.component.extension.Extensions;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import com.intellij.psi.codeStyle.SuggestedNameInfo;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ide.impl.psi.codeStyle.SuggestedNameInfo;
+import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.refactoring.rename.NameSuggestionProvider;
 import com.intellij.refactoring.rename.PreferrableNameSuggestionProvider;
 

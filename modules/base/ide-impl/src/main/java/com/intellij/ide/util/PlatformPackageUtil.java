@@ -17,7 +17,7 @@ package com.intellij.ide.util;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
+import consulo.module.content.DirectoryIndex;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

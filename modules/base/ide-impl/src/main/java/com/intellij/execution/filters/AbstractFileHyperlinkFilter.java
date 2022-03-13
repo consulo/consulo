@@ -13,7 +13,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
-import org.jetbrains.io.LocalFileFinder;
+import consulo.ide.impl.util.LocalFileFinder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -14,7 +14,7 @@ import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.logging.Logger;
 import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.ex.popup.ListPopupStep;

@@ -30,7 +30,7 @@ import io.netty.handler.codec.http.cors.CorsHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.jetbrains.annotations.TestOnly;
-import org.jetbrains.ide.PooledThreadExecutor;
+import consulo.ide.impl.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

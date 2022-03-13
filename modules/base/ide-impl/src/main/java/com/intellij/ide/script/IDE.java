@@ -22,7 +22,7 @@ import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.jetbrains.ide.script.IdeScriptEngine;
+import consulo.ide.impl.script.IdeScriptEngine;
 
 import java.io.IOException;
 import java.io.Writer;

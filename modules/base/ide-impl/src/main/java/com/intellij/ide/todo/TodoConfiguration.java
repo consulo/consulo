@@ -17,13 +17,13 @@
 package com.intellij.ide.todo;
 
 import consulo.application.Application;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import com.intellij.psi.search.*;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.psi.search.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

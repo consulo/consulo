@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.AppTopics;
+import consulo.ide.impl.AppTopics;
 import consulo.application.CommonBundle;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.application.WriteAction;
@@ -68,7 +68,7 @@ import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.impl.RawFileLoaderImpl;
+import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 

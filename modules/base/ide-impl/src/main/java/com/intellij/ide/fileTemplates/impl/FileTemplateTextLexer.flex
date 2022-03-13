@@ -2,7 +2,7 @@
 package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.lexer.LexerBase;
-import com.intellij.psi.tree.IElementType;
+import consulo.ide.impl.psi.tree.IElementType;
 
 %%
 

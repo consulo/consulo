@@ -1,0 +1,77 @@
+package consulo.ide.impl.psi.impl.source.resolve.reference.impl;
+
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
+import consulo.language.util.IncorrectOperationException;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author Sergey Evdokimov
+ */
+public class PsiDelegateReference implements PsiReference {
+
+  private final PsiReference myDelegate;
+
+  public PsiDelegateReference(@Nonnull PsiReference delegate) {
+    myDelegate = delegate;
+  }
+
+  @Override
+  public PsiElement getElement() {
+    return myDelegate.getElement();
+  }
+
+  @Override
+  public TextRange getRangeInElement() {
+    return myDelegate.getRangeInElement();
+  }
+
+  @Nullable
+  @Override
+  public PsiElement resolve() {
+    return myDelegate.resolve();
+  }
+
+  @Nonnull
+  @Override
+  public String getCanonicalText() {
+    return myDelegate.getCanonicalText();
+  }
+
+  @Override
+  public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+    return myDelegate.handleElementRename(newElementName);
+  }
+
+  @Override
+  public PsiElement bindToElement(@Nonnull PsiElement element) throws IncorrectOperationException {
+    return myDelegate.bindToElement(element);
+  }
+
+  @Override
+  public boolean isReferenceTo(PsiElement element) {
+    return myDelegate.isReferenceTo(element);
+  }
+
+  @Nonnull
+  @Override
+  public Object[] getVariants() {
+    return myDelegate.getVariants();
+  }
+
+  @Override
+  public boolean isSoft() {
+    return myDelegate.isSoft();
+  }
+
+  public static PsiReference createSoft(PsiReference origin, final boolean soft) {
+    return new PsiDelegateReference(origin) {
+      @Override
+      public boolean isSoft() {
+        return soft;
+      }
+    };
+  }
+}

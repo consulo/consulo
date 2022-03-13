@@ -20,7 +20,7 @@ import com.intellij.ide.TypePresentationService;
 import consulo.language.psi.*;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-import com.intellij.psi.meta.PsiPresentableMetaData;
+import consulo.ide.impl.psi.meta.PsiPresentableMetaData;
 import com.intellij.lang.LangBundle;
 import consulo.language.Language;
 import com.intellij.lang.findUsages.FindUsagesProvider;

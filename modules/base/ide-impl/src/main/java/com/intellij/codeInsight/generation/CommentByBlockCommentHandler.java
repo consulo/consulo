@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.generation;
 
+import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
@@ -49,14 +50,14 @@ import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;
-import com.intellij.psi.*;
+import consulo.ide.impl.psi.*;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import com.intellij.psi.templateLanguages.MultipleLangCommentProvider;
+import consulo.ide.impl.psi.templateLanguages.MultipleLangCommentProvider;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;

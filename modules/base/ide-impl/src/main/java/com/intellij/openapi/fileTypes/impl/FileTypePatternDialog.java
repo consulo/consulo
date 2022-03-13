@@ -19,7 +19,7 @@ import com.intellij.ui.ListCellRendererWrapper;
 import consulo.language.Language;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.template.TemplateLanguageFileType;
-import com.intellij.psi.templateLanguages.TemplateDataLanguageMappings;
+import consulo.ide.impl.psi.templateLanguages.TemplateDataLanguageMappings;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nullable;

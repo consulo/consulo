@@ -27,7 +27,7 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
+import consulo.ide.impl.psi.search.searches.ReferencesSearch;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.usageView.UsageInfo;
 import consulo.language.util.IncorrectOperationException;

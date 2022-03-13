@@ -26,7 +26,7 @@ import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.psi.ElementDescriptionUtil;
+import consulo.ide.impl.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;

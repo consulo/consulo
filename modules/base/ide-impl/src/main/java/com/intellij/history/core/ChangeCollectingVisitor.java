@@ -16,7 +16,7 @@
 package com.intellij.history.core;
 
 import com.intellij.history.core.changes.*;
-import com.intellij.psi.codeStyle.NameUtil;
+import consulo.ide.impl.psi.codeStyle.NameUtil;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

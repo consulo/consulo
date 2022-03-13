@@ -19,8 +19,8 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import com.intellij.openapi.util.Getter;
 import consulo.document.util.TextRange;
-import com.intellij.psi.search.PsiTodoSearchHelper;
-import com.intellij.psi.search.TodoItem;
+import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
+import consulo.ide.impl.psi.search.TodoItem;
 import com.intellij.util.Consumer;
 
 import java.util.ArrayList;

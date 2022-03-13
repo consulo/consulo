@@ -18,10 +18,10 @@ package consulo.virtualFileSystem.fileWatcher.impl.ui;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeManager;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeTask;
 
@@ -62,7 +62,7 @@ public class BackgroundTaskPsiFileTreeNode extends PsiFileNode {
     if(generatedFiles.isEmpty()) {
       return super.getChildrenImpl();
     }
-    PsiFile[] psiFiles = PsiUtilBase.virtualToPsiFiles(generatedFiles, myProject);
+    PsiFile[] psiFiles = PsiUtilCore.virtualToPsiFiles(generatedFiles, myProject);
     List<AbstractTreeNode> newChildren = new ArrayList<AbstractTreeNode>(psiFiles.length);
     for (PsiFile psiFile : psiFiles) {
       newChildren.add(new PsiFileNode(getProject(), psiFile, getSettings()));

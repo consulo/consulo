@@ -21,7 +21,7 @@ import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.navigation.GotoImplementationHandler;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
-import com.intellij.psi.search.searches.DefinitionsScopedSearch;
+import consulo.ide.impl.psi.search.searches.DefinitionsScopedSearch;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

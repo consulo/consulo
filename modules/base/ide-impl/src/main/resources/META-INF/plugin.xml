@@ -48,8 +48,8 @@
     <extensionPoint name="addTo.listOfElements" beanClass="consulo.extensions.AddToElementEP"/>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="search.optionContributor" interface="com.intellij.ide.ui.search.SearchableOptionContributor"/>
-    <extensionPoint name="referenceInjector" interface="com.intellij.psi.injection.ReferenceInjector"/>
-    <extensionPoint name="customPropertyScopeProvider" interface="com.intellij.psi.impl.search.CustomPropertyScopeProvider"/>
+    <extensionPoint name="referenceInjector" interface="consulo.ide.impl.psi.injection.ReferenceInjector"/>
+    <extensionPoint name="customPropertyScopeProvider" interface="consulo.ide.impl.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.content.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.content.layer.ContentFolderPropertyProvider"/>
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.content.layer.ContentFolderSupportPatcher"/>
@@ -333,7 +333,7 @@
     <extensionPoint name="errorPropertiesProvider" interface="consulo.codeInspection.ui.ErrorPropertiesProvider"/>
 
     <extensionPoint name="indexPatternProvider"
-                    interface="com.intellij.psi.search.IndexPatternProvider"/>
+                    interface="consulo.ide.impl.psi.search.IndexPatternProvider"/>
 
     <extensionPoint name="indexImporterFactory"
                     interface="com.intellij.index.IndexImporterFactory"/>
@@ -532,7 +532,7 @@
       <with attribute="implementationClass" implements="consulo.language.codeStyle.FormattingModelBuilder"/>
     </extensionPoint>
 
-    <extensionPoint name="externalFormatProcessor" interface="com.intellij.psi.codeStyle.ExternalFormatProcessor"/>
+    <extensionPoint name="externalFormatProcessor" interface="consulo.ide.impl.psi.codeStyle.ExternalFormatProcessor"/>
 
     <extensionPoint name="lang.formatter.restriction" interface="consulo.language.codeStyle.LanguageFormattingRestriction"/>
     <extensionPoint name="lang.importOptimizer" beanClass="consulo.language.LanguageExtensionPoint">
@@ -567,11 +567,11 @@
     </extensionPoint>
 
     <extensionPoint name="lang.treePatcher" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.templateLanguages.TreePatcher"/>
+      <with attribute="implementationClass" implements="consulo.ide.impl.psi.templateLanguages.TreePatcher"/>
     </extensionPoint>
 
     <extensionPoint name="outerLanguageRangePatcher" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.templateLanguages.TemplateDataElementType$OuterLanguageRangePatcher"/>
+      <with attribute="implementationClass" implements="consulo.ide.impl.psi.templateLanguages.TemplateDataElementType$OuterLanguageRangePatcher"/>
     </extensionPoint>
 
     <extensionPoint name="lang.tokenSeparatorGenerator" beanClass="consulo.language.LanguageExtensionPoint">
@@ -588,7 +588,7 @@
     </extensionPoint>
 
     <extensionPoint name="multiLangCommenter"
-                    interface="com.intellij.psi.templateLanguages.MultipleLangCommentProvider"/>
+                    interface="consulo.ide.impl.psi.templateLanguages.MultipleLangCommentProvider"/>
 
     <extensionPoint name="cacheBuilder"
                     beanClass="com.intellij.lang.cacheBuilder.CacheBuilderEP">
@@ -598,9 +598,9 @@
     <extensionPoint name="referencesSearch" interface="com.intellij.util.QueryExecutor"/>
     <extensionPoint name="definitionsScopedSearch" interface="com.intellij.util.QueryExecutor"/>
 
-    <extensionPoint name="useScopeEnlarger" interface="com.intellij.psi.search.UseScopeEnlarger"/>
-    <extensionPoint name="resolveScopeEnlarger" interface="com.intellij.psi.ResolveScopeEnlarger"/>
-    <extensionPoint name="resolveScopeProvider" interface="com.intellij.psi.ResolveScopeProvider"/>
+    <extensionPoint name="useScopeEnlarger" interface="consulo.ide.impl.psi.search.UseScopeEnlarger"/>
+    <extensionPoint name="resolveScopeEnlarger" interface="consulo.language.psi.ResolveScopeEnlarger"/>
+    <extensionPoint name="resolveScopeProvider" interface="consulo.ide.impl.psi.ResolveScopeProvider"/>
     <extensionPoint name="codeUsageScopeOptimizer" interface="consulo.language.psi.search.ScopeOptimizer"/>
 
     <extensionPoint name="gotoClassContributor"
@@ -633,8 +633,8 @@
 
     <extensionPoint name="smartPointerAnchorProvider" interface="consulo.language.psi.SmartPointerAnchorProvider"/>
     <extensionPoint name="elementSignatureProvider" interface="com.intellij.codeInsight.folding.impl.ElementSignatureProvider"/>
-    <extensionPoint name="preFormatProcessor" interface="com.intellij.psi.impl.source.codeStyle.PreFormatProcessor"/>
-    <extensionPoint name="postFormatProcessor" interface="com.intellij.psi.impl.source.codeStyle.PostFormatProcessor"/>
+    <extensionPoint name="preFormatProcessor" interface="consulo.ide.impl.psi.impl.source.codeStyle.PreFormatProcessor"/>
+    <extensionPoint name="postFormatProcessor" interface="consulo.ide.impl.psi.impl.source.codeStyle.PostFormatProcessor"/>
 
     <extensionPoint name="declarationRangeHandler" beanClass="com.intellij.util.MixinEP">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.hint.DeclarationRangeHandler"/>
@@ -647,10 +647,10 @@
     <extensionPoint name="usageToPsiElementProvider" interface="com.intellij.usages.UsageToPsiElementProvider"/>
 
     <extensionPoint name="customScopesProvider"
-                    interface="com.intellij.psi.search.scope.packageSet.CustomScopesProvider"
+                    interface="consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider"
                     area="PROJECT"/>
 
-    <extensionPoint name="customScopesFilter" interface="com.intellij.psi.search.scope.packageSet.CustomScopesFilter"/>
+    <extensionPoint name="customScopesFilter" interface="consulo.ide.impl.psi.search.scope.packageSet.CustomScopesFilter"/>
 
     <extensionPoint name="scopeDescriptorProvider" interface="com.intellij.ide.util.scopeChooser.ScopeDescriptorProvider"/>
     <extensionPoint name="patternDialectProvider" interface="com.intellij.packageDependencies.ui.PatternDialectProvider"/>
@@ -716,7 +716,7 @@
     <extensionPoint name="fileBasedIndex" interface="com.intellij.util.indexing.FileBasedIndexExtension"/>
     <extensionPoint name="stubIndex" interface="consulo.language.psi.stub.StubIndexExtension"/>
     <extensionPoint name="indexedRootsContributor" interface="com.intellij.util.indexing.IndexableSetContributor"/>
-    <extensionPoint name="include.provider" interface="com.intellij.psi.impl.include.FileIncludeProvider"/>
+    <extensionPoint name="include.provider" interface="consulo.ide.impl.psi.impl.include.FileIncludeProvider"/>
 
     <extensionPoint name="refactoring.copyHandler" interface="com.intellij.refactoring.copy.CopyHandlerDelegate"/>
     <extensionPoint name="refactoring.moveHandler" interface="com.intellij.refactoring.move.MoveHandlerDelegate"/>
@@ -749,7 +749,7 @@
     <extensionPoint name="macro" interface="com.intellij.ide.macro.Macro"/>
     <extensionPoint name="printOption" interface="com.intellij.codeEditor.printing.PrintOption"/>
 
-    <extensionPoint name="indexPatternBuilder" interface="com.intellij.psi.impl.search.IndexPatternBuilder"/>
+    <extensionPoint name="indexPatternBuilder" interface="consulo.ide.impl.psi.impl.search.IndexPatternBuilder"/>
 
     <extensionPoint name="configurationType"
                     interface="consulo.execution.configuration.ConfigurationType"/>
@@ -808,26 +808,26 @@
       <with attribute="implementationClass" implements="consulo.language.psi.ElementManipulator"/>
     </extensionPoint>
 
-    <extensionPoint name="fileContextProvider" interface="com.intellij.psi.FileContextProvider" area="PROJECT"/>
+    <extensionPoint name="fileContextProvider" interface="consulo.ide.impl.psi.FileContextProvider" area="PROJECT"/>
     <extensionPoint name="psi.fileReferenceHelper"
-                    interface="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper"/>
+                    interface="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper"/>
 
-    <extensionPoint name="psi.referenceContributor" beanClass="com.intellij.psi.impl.source.resolve.reference.PsiReferenceContributorEP">
+    <extensionPoint name="psi.referenceContributor" beanClass="consulo.ide.impl.psi.impl.source.resolve.reference.PsiReferenceContributorEP">
       <with attribute="implementation" implements="consulo.language.psi.PsiReferenceContributor"/>
     </extensionPoint>
 
-    <extensionPoint name="psi.referenceProvider" beanClass="com.intellij.psi.PsiReferenceProviderBean"/>
+    <extensionPoint name="psi.referenceProvider" beanClass="consulo.ide.impl.psi.PsiReferenceProviderBean"/>
     <extensionPoint name="psi.packageSupportProvider" interface="consulo.language.psi.PsiPackageSupportProvider"/>
     <extensionPoint name="psi.directoryMethodProxy" interface="consulo.language.psi.PsiDirectoryMethodProxy"/>
     <extensionPoint name="patterns.patternClass" beanClass="com.intellij.patterns.compiler.PatternClassBean"/>
 
     <extensionPoint name="pom.declarationSearcher" interface="consulo.language.pom.PomDeclarationSearcher"/>
 
-    <extensionPoint name="statistician" beanClass="com.intellij.psi.statistics.StatisticsExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.statistics.Statistician"/>
+    <extensionPoint name="statistician" beanClass="consulo.ide.impl.psi.statistics.StatisticsExtensionPoint">
+      <with attribute="implementationClass" implements="consulo.ide.impl.psi.statistics.Statistician"/>
     </extensionPoint>
 
-    <extensionPoint name="weigher" beanClass="com.intellij.psi.WeigherExtensionPoint">
+    <extensionPoint name="weigher" beanClass="consulo.ide.impl.psi.WeigherExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.Weigher"/>
     </extensionPoint>
 
@@ -875,7 +875,7 @@
     </extensionPoint>
 
     <extensionPoint name="disabledIndentRangesProvider" interface="consulo.language.codeStyle.DisabledIndentRangesProvider"/>
-    <extensionPoint name="lineIndentProvider" interface="com.intellij.psi.codeStyle.lineIndent.LineIndentProvider"/>
+    <extensionPoint name="lineIndentProvider" interface="consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider"/>
 
     <extensionPoint name="gotoDeclarationHandler"
                     interface="com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler"/>
@@ -907,7 +907,7 @@
 
     <extensionPoint name="readWriteAccessDetector" interface="com.intellij.codeInsight.highlighting.ReadWriteAccessDetector"/>
 
-    <extensionPoint name="scopeParserExtension" interface="com.intellij.psi.search.scope.packageSet.PackageSetParserExtension"/>
+    <extensionPoint name="scopeParserExtension" interface="consulo.ide.impl.psi.search.scope.packageSet.PackageSetParserExtension"/>
 
     <extensionPoint name="referenceProviderType" beanClass="consulo.component.extension.KeyedLazyInstanceEP"/>
 
@@ -1043,7 +1043,7 @@
       <with attribute="instance" implements="com.intellij.application.options.editor.EditorAppearanceConfigurable"/>
     </extensionPoint>
 
-    <extensionPoint name="metaDataContributor" interface="com.intellij.psi.meta.MetaDataContributor"/>
+    <extensionPoint name="metaDataContributor" interface="consulo.ide.impl.psi.meta.MetaDataContributor"/>
 
     <extensionPoint name="documentationProvider"
                     interface="consulo.language.editor.documentation.DocumentationProvider"/>
@@ -1064,10 +1064,10 @@
             implements="com.intellij.codeInsight.editorActions.moveLeftRight.MoveElementLeftRightHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="fileLookupInfoProvider" interface="com.intellij.psi.file.FileLookupInfoProvider"/>
+    <extensionPoint name="fileLookupInfoProvider" interface="consulo.ide.impl.psi.file.FileLookupInfoProvider"/>
 
     <extensionPoint name="idIndexer" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.psi.impl.cache.impl.id.IdIndexer"/>
+      <with attribute="implementationClass" implements="consulo.ide.impl.psi.impl.cache.impl.id.IdIndexer"/>
     </extensionPoint>
 
     <extensionPoint name="todoIndexer" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
@@ -1103,7 +1103,7 @@
 
     <extensionPoint name="langCodeStyleSettingsProvider" interface="consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider"/>
 
-    <extensionPoint name="codeStyleSettingsModifier" interface="com.intellij.psi.codeStyle.modifier.CodeStyleSettingsModifier"/>
+    <extensionPoint name="codeStyleSettingsModifier" interface="consulo.ide.impl.psi.codeStyle.modifier.CodeStyleSettingsModifier"/>
 
     <extensionPoint name="predefinedCodeStyle" interface="consulo.language.codeStyle.PredefinedCodeStyle"/>
 
@@ -1126,7 +1126,7 @@
 
     <extensionPoint name="preserveIndentOnPaste" beanClass="com.intellij.codeInsight.editorActions.PreserveIndentOnPasteBean"/>
 
-    <extensionPoint name="aliasingPsiTargetMapper" interface="com.intellij.psi.targets.AliasingPsiTargetMapper"/>
+    <extensionPoint name="aliasingPsiTargetMapper" interface="consulo.ide.impl.psi.targets.AliasingPsiTargetMapper"/>
 
     <extensionPoint name="inspectionsReportConverter"
                     interface="com.intellij.codeInspection.InspectionsReportConverter"/>
@@ -1196,7 +1196,7 @@
     <extensionPoint name="runAnything.commandHandler" interface="com.intellij.ide.actions.runAnything.handlers.RunAnythingCommandHandler"/>
     <extensionPoint name="runAnything.commandCustomizer" interface="com.intellij.ide.actions.runAnything.commands.RunAnythingCommandCustomizer"/>
 
-    <extensionPoint name="searchScopesProvider" interface="com.intellij.psi.search.SearchScopeProvider"/>
+    <extensionPoint name="searchScopesProvider" interface="consulo.ide.impl.psi.search.SearchScopeProvider"/>
     <extensionPoint name="findInProjectExtension" interface="com.intellij.find.impl.FindInProjectExtension"/>
 
     <extensionPoint name="uiDecorator" interface="consulo.ui.ex.UIDecorator"/>
@@ -1313,8 +1313,8 @@
 
     <applicationService serviceInterface="com.intellij.internal.psiView.PsiViewerSettings"
                         serviceImplementation="com.intellij.internal.psiView.PsiViewerSettings"/>
-    <applicationService serviceInterface="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceCompletion"
-                        serviceImplementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceCompletionImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceCompletion"
+                        serviceImplementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceCompletionImpl"/>
 
     <applicationService serviceInterface="com.intellij.util.graph.GraphAlgorithms"
                         serviceImplementation="com.intellij.util.graph.impl.GraphAlgorithmsImpl"/>
@@ -1447,9 +1447,9 @@
                         serviceImplementation="com.intellij.openapi.options.colors.pages.ColorSettingsPagesImpl"/>
 
     <applicationService serviceInterface="consulo.language.psi.search.scope.PackageSetFactory"
-                        serviceImplementation="com.intellij.psi.search.scope.packageSet.PackageSetFactoryImpl"/>
+                        serviceImplementation="consulo.ide.impl.psi.search.scope.packageSet.PackageSetFactoryImpl"/>
 
-    <scopeParserExtension implementation="com.intellij.psi.search.scope.packageSet.FilePackageSetParserExtension"/>
+    <scopeParserExtension implementation="consulo.ide.impl.psi.search.scope.packageSet.FilePackageSetParserExtension"/>
     <applicationService serviceInterface="consulo.ui.ex.popup.StackingPopupDispatcher"
                         serviceImplementation="com.intellij.ui.popup.StackingPopupDispatcherImpl"/>
 
@@ -1667,7 +1667,7 @@
                         serviceImplementation="com.intellij.usages.impl.ImportFilteringUsageViewSetting"/>
 
     <!-- this depends on TemplateLanguageConfigurable which isn't registered in LangExtensions, so it should go here as well -->
-    <errorQuickFixProvider implementation="com.intellij.psi.templateLanguages.TemplateLanguageErrorQuickFixProvider"/>
+    <errorQuickFixProvider implementation="consulo.ide.impl.psi.templateLanguages.TemplateLanguageErrorQuickFixProvider"/>
 
     <roots.watchedRootsProvider implementation="consulo.compiler.impl.CompilerConfigurationImpl$MyWatchedRootsProvider"/>
     <projectService serviceInterface="consulo.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings"
@@ -1676,8 +1676,8 @@
     <applicationService serviceInterface="consulo.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings"
                         serviceImplementation="com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.GlobalProjectStructureProblemsSettings"/>
 
-    <referencesSearch implementation="com.intellij.psi.impl.search.CachesBasedRefSearcher"/>
-    <referencesSearch implementation="com.intellij.psi.impl.search.NonPhysicalReferenceSearcher"/>
+    <referencesSearch implementation="consulo.ide.impl.psi.impl.search.CachesBasedRefSearcher"/>
+    <referencesSearch implementation="consulo.ide.impl.psi.impl.search.NonPhysicalReferenceSearcher"/>
 
     <applicationService serviceInterface="consulo.language.editor.completion.CompletionService"
                         serviceImplementation="com.intellij.codeInsight.completion.impl.CompletionServiceImpl"/>
@@ -1748,10 +1748,10 @@
                     serviceImplementation="com.intellij.pom.references.PomServiceImpl"/>
 
     <projectService serviceInterface="consulo.language.psi.search.PsiSearchHelper"
-                    serviceImplementation="com.intellij.psi.impl.search.PsiSearchHelperImpl"/>
+                    serviceImplementation="consulo.ide.impl.psi.impl.search.PsiSearchHelperImpl"/>
 
-    <projectService serviceInterface="com.intellij.psi.search.PsiTodoSearchHelper"
-                    serviceImplementation="com.intellij.psi.impl.search.PsiTodoSearchHelperImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.psi.search.PsiTodoSearchHelper"
+                    serviceImplementation="consulo.ide.impl.psi.impl.search.PsiTodoSearchHelperImpl"/>
 
     <projectService serviceInterface="consulo.language.editor.completion.lookup.LookupManager"
                     serviceImplementation="com.intellij.codeInsight.lookup.impl.LookupManagerImpl"/>
@@ -1760,16 +1760,16 @@
 
     <projectService serviceImplementation="consulo.compiler.CompilerPathsManager"/>
 
-    <applicationService serviceInterface="com.intellij.psi.meta.MetaDataRegistrar"
-                        serviceImplementation="com.intellij.psi.impl.meta.MetaRegistry"/>
+    <applicationService serviceInterface="consulo.ide.impl.psi.meta.MetaDataRegistrar"
+                        serviceImplementation="consulo.ide.impl.psi.impl.meta.MetaRegistry"/>
 
     <applicationService serviceInterface="com.intellij.openapi.paths.PathReferenceManager"
                         serviceImplementation="com.intellij.openapi.paths.PathReferenceManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.folding.CodeFoldingSettings"
                         serviceImplementation="com.intellij.codeInsight.folding.CodeFoldingSettingsImpl"/>
-    <applicationService serviceInterface="com.intellij.psi.statistics.StatisticsManager"
-                        serviceImplementation="com.intellij.psi.statistics.impl.StatisticsManagerImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.psi.statistics.StatisticsManager"
+                        serviceImplementation="consulo.ide.impl.psi.statistics.impl.StatisticsManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings"
                         serviceImplementation="com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings"/>
@@ -1791,7 +1791,7 @@
                         serviceImplementation="com.intellij.openapi.actionSystem.impl.AbbreviationManagerImpl"/>
 
     <applicationService serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"
-                        serviceImplementation="com.intellij.psi.impl.source.codeStyle.PersistableCodeStyleSchemes"/>
+                        serviceImplementation="consulo.ide.impl.psi.impl.source.codeStyle.PersistableCodeStyleSchemes"/>
 
     <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
 
@@ -1811,14 +1811,14 @@
     <applicationService serviceInterface="consulo.language.codeStyle.AppCodeStyleSettingsManager"
                         serviceImplementation="consulo.language.codeStyle.AppCodeStyleSettingsManager"/>
 
-    <applicationService serviceInterface="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"
-                        serviceImplementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"/>
+    <applicationService serviceInterface="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"
+                        serviceImplementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"/>
 
-    <applicationService serviceInterface="com.intellij.psi.search.PredefinedSearchScopeProvider"
-                        serviceImplementation="com.intellij.psi.search.PredefinedSearchScopeProviderImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.psi.search.PredefinedSearchScopeProvider"
+                        serviceImplementation="consulo.ide.impl.psi.search.PredefinedSearchScopeProviderImpl"/>
 
     <applicationService serviceInterface="consulo.language.psi.PsiReferenceService"
-                        serviceImplementation="com.intellij.psi.PsiReferenceServiceImpl"/>
+                        serviceImplementation="consulo.ide.impl.psi.PsiReferenceServiceImpl"/>
 
     <applicationService serviceInterface="consulo.language.pattern.compiler.PatternCompilerFactory"
                         serviceImplementation="com.intellij.patterns.compiler.PatternCompilerFactoryImpl"/>
@@ -1827,29 +1827,29 @@
                         serviceImplementation="consulo.application.PowerSaveMode"/>
 
     <applicationService serviceInterface="consulo.language.impl.psi.internal.DocumentCommitProcessor"
-                        serviceImplementation="com.intellij.psi.impl.DocumentCommitThread"/>
+                        serviceImplementation="consulo.ide.impl.psi.impl.DocumentCommitThread"/>
 
     <applicationService serviceInterface="consulo.language.impl.psi.internal.stub.StubTreeLoader"
-                        serviceImplementation="com.intellij.psi.stubs.StubTreeLoaderImpl"/>
+                        serviceImplementation="consulo.ide.impl.psi.stubs.StubTreeLoaderImpl"/>
 
     <applicationService serviceInterface="consulo.language.psi.PsiNavigationSupport"
                         serviceImplementation="com.intellij.ide.util.PsiNavigationSupportImpl"/>
 
     <applicationService serviceInterface="consulo.language.impl.psi.internal.IndentHelper"
-                        serviceImplementation="com.intellij.psi.impl.source.codeStyle.IndentHelperImpl"/>
+                        serviceImplementation="consulo.ide.impl.psi.impl.source.codeStyle.IndentHelperImpl"/>
 
     <applicationService serviceInterface="com.intellij.conversion.ConversionService"
                         serviceImplementation="com.intellij.conversion.DummyConversionService"/>
 
-    <applicationService serviceInterface="com.intellij.psi.search.searches.IndexPatternSearch"
-                        serviceImplementation="com.intellij.psi.impl.search.IndexPatternSearchImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.psi.search.searches.IndexPatternSearch"
+                        serviceImplementation="consulo.ide.impl.psi.impl.search.IndexPatternSearchImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.fileEditor.UniqueVFilePathBuilder"
                         serviceImplementation="com.intellij.openapi.fileEditor.impl.UniqueVFilePathBuilderImpl"/>
     <applicationService serviceInterface="consulo.codeStyle.ApplicationCodeStyleFacade"
                         serviceImplementation="consulo.psi.impl.source.codeStyle.ApplicationCodeStyleFacadeImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
+    <applicationService serviceImplementation="consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="consulo.language.codeStyle.impl.arrangement.MemberOrderService"/>
 
     <applicationService serviceInterface="consulo.content.bundle.SdkPointerManager"
@@ -1872,26 +1872,26 @@
     <projectService serviceInterface="com.intellij.codeHighlighting.TextEditorHighlightingPassManager"
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.TextEditorHighlightingPassManagerImpl"/>
     <projectService serviceInterface="consulo.language.psi.PsiFileFactory"
-                    serviceImplementation="com.intellij.psi.impl.PsiFileFactoryImpl"/>
+                    serviceImplementation="consulo.ide.impl.psi.impl.PsiFileFactoryImpl"/>
     <projectService serviceInterface="consulo.language.impl.psi.internal.diff.BlockSupport"
                     serviceImplementation="consulo.language.impl.psi.internal.diff.BlockSupportImpl"/>
     <projectService serviceInterface="consulo.language.psi.SmartPointerManager"
                     serviceImplementation="consulo.language.impl.psi.internal.pointer.SmartPointerManagerImpl"/>
     <projectService serviceInterface="consulo.language.codeStyle.CodeStyleManager"
-                    serviceImplementation="com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl"/>
+                    serviceImplementation="consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl"/>
     <projectService serviceInterface="consulo.language.pom.PomModel"
                     serviceImplementation="com.intellij.pom.core.impl.PomModelImpl"/>
-    <projectService serviceInterface="com.intellij.psi.impl.include.FileIncludeManager"
-                    serviceImplementation="com.intellij.psi.impl.include.FileIncludeManagerImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.psi.impl.include.FileIncludeManager"
+                    serviceImplementation="consulo.ide.impl.psi.impl.include.FileIncludeManagerImpl"/>
     <projectService serviceInterface="com.intellij.util.CachedValuesFactory"
-                    serviceImplementation="com.intellij.psi.impl.PsiCachedValuesFactory"/>
+                    serviceImplementation="consulo.ide.impl.psi.impl.PsiCachedValuesFactory"/>
 
 
     <projectService serviceInterface="com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable"
                     serviceImplementation="com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable"/>
 
     <projectService serviceInterface="consulo.project.content.scope.ProjectScopeProvider"
-                    serviceImplementation="com.intellij.psi.search.ProjectScopeProviderImpl"/>
+                    serviceImplementation="consulo.ide.impl.psi.search.ProjectScopeProviderImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="com.intellij.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
@@ -1921,13 +1921,13 @@
                     serviceImplementation="com.intellij.diagnostic.logging.LogConsolePreferences"/>
 
     <applicationService serviceInterface="consulo.language.psi.ReferenceProvidersRegistry"
-                        serviceImplementation="com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistryImpl"/>
+                        serviceImplementation="consulo.ide.impl.psi.impl.source.resolve.reference.ReferenceProvidersRegistryImpl"/>
 
     <projectService serviceInterface="com.intellij.find.FindManager"
                     serviceImplementation="com.intellij.find.impl.FindManagerImpl"/>
 
     <projectService serviceInterface="consulo.language.psi.PsiParserFacade"
-                    serviceImplementation="com.intellij.psi.impl.PsiParserFacadeImpl"/>
+                    serviceImplementation="consulo.ide.impl.psi.impl.PsiParserFacadeImpl"/>
 
     <projectService serviceInterface="com.intellij.ide.util.gotoByName.GotoFileConfiguration"
                     serviceImplementation="com.intellij.ide.util.gotoByName.GotoFileConfiguration"/>
@@ -1957,16 +1957,16 @@
     <projectService serviceInterface="com.intellij.ide.util.TreeFileChooserFactory"
                     serviceImplementation="com.intellij.ide.util.TreeFileChooserFactoryImpl"/>
 
-    <projectService serviceInterface="com.intellij.psi.impl.cache.CacheManager"
-                    serviceImplementation="com.intellij.psi.impl.cache.impl.IndexCacheManagerImpl"/>
-    <projectService serviceInterface="com.intellij.psi.impl.cache.TodoCacheManager"
-                    serviceImplementation="com.intellij.psi.impl.cache.impl.IndexTodoCacheManagerImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.psi.impl.cache.CacheManager"
+                    serviceImplementation="consulo.ide.impl.psi.impl.cache.impl.IndexCacheManagerImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.psi.impl.cache.TodoCacheManager"
+                    serviceImplementation="consulo.ide.impl.psi.impl.cache.impl.IndexTodoCacheManagerImpl"/>
     <projectService serviceInterface="consulo.language.impl.psi.ResolveScopeManager"
-                    serviceImplementation="com.intellij.psi.impl.file.impl.ResolveScopeManagerImpl"/>
+                    serviceImplementation="consulo.ide.impl.psi.impl.file.impl.ResolveScopeManagerImpl"/>
     <projectService serviceInterface="consulo.module.content.ProjectFileIndex"
                     serviceImplementation="com.intellij.openapi.roots.impl.ProjectFileIndexImpl"/>
-    <projectService serviceInterface="com.intellij.psi.impl.source.resolve.ResolveCache"
-                    serviceImplementation="com.intellij.psi.impl.source.resolve.ResolveCache"/>
+    <projectService serviceInterface="consulo.ide.impl.psi.impl.source.resolve.ResolveCache"
+                    serviceImplementation="consulo.ide.impl.psi.impl.source.resolve.ResolveCache"/>
     <moduleService serviceInterface="consulo.module.content.ModuleFileIndex"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
     <moduleService serviceInterface="consulo.module.content.ModuleRootManager"
@@ -1993,7 +1993,7 @@
     <colorSettingsPage implementation="com.intellij.openapi.options.colors.pages.ANSIColoredConsoleColorsPage" id="ansi"/>
     <colorSettingsPage implementation="com.intellij.openapi.options.colors.pages.CustomColorsPage" id="custom"/>
 
-    <elementDescriptionProvider implementation="com.intellij.psi.impl.DefaultPomTargetDescriptionProvider" order="last" id="pomDefault"/>
+    <elementDescriptionProvider implementation="consulo.ide.impl.psi.impl.DefaultPomTargetDescriptionProvider" order="last" id="pomDefault"/>
 
     <applicationService serviceInterface="com.intellij.codeInspection.ex.AppInspectionProfilesVisibleTreeState"
                         serviceImplementation="com.intellij.codeInspection.ex.AppInspectionProfilesVisibleTreeState"/>
@@ -2017,7 +2017,7 @@
     <lang.parserDefinition language="TEXT" implementationClass="consulo.language.impl.plain.PlainTextParserDefinition"/>
     <lang.syntaxHighlighterFactory key="TEXT" implementationClass="com.intellij.openapi.fileTypes.PlainTextSyntaxHighlighterFactory"/>
     <lang.braceMatcher language="TEXT" implementationClass="com.intellij.ide.highlighter.custom.impl.CustomFileTypeBraceMatcher"/>
-    <lang.ast.leafFactory implementation="com.intellij.psi.impl.source.tree.PlainTextASTLeafFactory"/>
+    <lang.ast.leafFactory implementation="consulo.ide.impl.psi.impl.source.tree.PlainTextASTLeafFactory"/>
 
     <getDataRule implementation="com.intellij.ide.impl.dataRules.PsiFileRule"/>
     <getDataRule implementation="com.intellij.ide.impl.dataRules.PsiElementFromSelectionRule"/>
@@ -2044,9 +2044,9 @@
     <customScopesProvider implementation="com.intellij.vcs.changes.ChangeListsScopesProvider" order="last"/>
     <refactoring.elementListenerProvider implementation="com.intellij.packageDependencies.ui.RefactoringScopeElementListenerProvider"/>
 
-    <searchScopesProvider implementation="com.intellij.psi.search.DefaultSearchScopeProviders$Favorites"/>
+    <searchScopesProvider implementation="consulo.ide.impl.psi.search.DefaultSearchScopeProviders$Favorites"/>
     <searchScopesProvider implementation="com.intellij.vcs.changes.ChangeListsSearchScopeProvider"/>
-    <searchScopesProvider implementation="com.intellij.psi.search.DefaultSearchScopeProviders$CustomNamed" order="last"/>
+    <searchScopesProvider implementation="consulo.ide.impl.psi.search.DefaultSearchScopeProviders$CustomNamed" order="last"/>
 
     <findInProjectExtension implementation="com.intellij.vcs.changes.ChangeListsFindInProjectExtension"/>
 
@@ -2073,23 +2073,23 @@
 
     <liveTemplateMacro implementation="com.intellij.codeInsight.template.macro.EnumMacro"/>
 
-    <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.todo.TodoIndex"/>
-    <fileBasedIndex implementation="com.intellij.psi.impl.cache.impl.id.IdIndexImpl"/>
-    <fileBasedIndex implementation="com.intellij.psi.search.FilenameIndexImpl"/>
-    <fileBasedIndex implementation="com.intellij.psi.search.FileTypeIndexImpl"/>
-    <fileBasedIndex implementation="com.intellij.psi.stubs.StubUpdatingIndex"/>
+    <fileBasedIndex implementation="consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndex"/>
+    <fileBasedIndex implementation="consulo.ide.impl.psi.impl.cache.impl.id.IdIndexImpl"/>
+    <fileBasedIndex implementation="consulo.ide.impl.psi.search.FilenameIndexImpl"/>
+    <fileBasedIndex implementation="consulo.ide.impl.psi.search.FileTypeIndexImpl"/>
+    <fileBasedIndex implementation="consulo.ide.impl.psi.stubs.StubUpdatingIndex"/>
 
     <fileBasedIndex implementation="com.intellij.find.ngrams.TrigramIndex"/>
 
-    <fileBasedIndex implementation="com.intellij.psi.impl.include.FileIncludeIndex"/>
+    <fileBasedIndex implementation="consulo.ide.impl.psi.impl.include.FileIncludeIndex"/>
 
     <syntaxHighlighter factoryClass="com.intellij.openapi.fileTypes.LanguageFileTypeHighlighterProvider"/>
     <structureViewBuilder factoryClass="com.intellij.ide.highlighter.LanguageFileTypeStructureViewBuilderProvider"/>
 
     <lang.elementManipulator forClass="consulo.language.plain.psi.PsiPlainTextFile"
-                             implementationClass="com.intellij.psi.impl.source.resolve.reference.impl.manipulators.PlainFileManipulator"/>
+                             implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators.PlainFileManipulator"/>
     <lang.elementManipulator forClass="consulo.language.psi.PsiComment"
-                             implementationClass="com.intellij.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator"/>
+                             implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator"/>
 
     <applicationService serviceInterface="com.intellij.ide.macro.MacroManager" serviceImplementation="com.intellij.ide.macro.MacroManager"/>
     <hectorComponentProvider implementation="com.intellij.codeInsight.daemon.impl.FileIncludeContextHectorProvider"/>
@@ -2103,12 +2103,12 @@
                   id="decorator"/>
     <statistician key="completion" implementationClass="com.intellij.codeInsight.completion.DefaultCompletionStatistician" order="last"/>
 
-    <weigher key="proximity" implementationClass="com.intellij.psi.util.proximity.OpenedInEditorWeigher" id="openedInEditor"/>
-    <weigher key="proximity" implementationClass="com.intellij.psi.util.proximity.SameLogicalRootWeigher" id="sameLogicalRoot"
+    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.OpenedInEditorWeigher" id="openedInEditor"/>
+    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameLogicalRootWeigher" id="sameLogicalRoot"
              order="after openedInEditor"/>
-    <weigher key="proximity" implementationClass="com.intellij.psi.util.proximity.SameModuleWeigher" id="sameModule"
+    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameModuleWeigher" id="sameModule"
              order="after sameLogicalRoot"/>
-    <weigher key="proximity" implementationClass="com.intellij.psi.util.proximity.SdkOrLibraryWeigher" id="sdkOrLibrary"
+    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SdkOrLibraryWeigher" id="sdkOrLibrary"
              order="after sameModule"/>
 
     <weigher key="completion" implementationClass="com.intellij.codeInsight.completion.PriorityWeigher" id="priority" order="first"/>
@@ -2148,7 +2148,7 @@
     <lookup.charFilter implementation="com.intellij.codeInsight.template.impl.LiveTemplateCharFilter" order="first" id="liveTemplate"/>
     <lookup.charFilter implementation="com.intellij.codeInsight.completion.CompletionCharFilter" order="last" id="completion"/>
     <lookup.charFilter implementation="com.intellij.refactoring.IdentifierCharFilter" id="identifier" order="last"/>
-    <lookup.charFilter implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReferenceCharFilter" id="fileRef"
+    <lookup.charFilter implementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceCharFilter" id="fileRef"
                        order="before completion"/>
 
     <gotoFileContributor implementation="com.intellij.ide.util.gotoByName.DefaultFileNavigationContributor"/>
@@ -2170,9 +2170,9 @@
     <usageFilteringRuleProvider implementation="com.intellij.usages.impl.UsageFilteringRuleProviderImpl"/>
     <usageGroupingRuleProvider implementation="com.intellij.usages.impl.UsageGroupingRuleProviderImpl"/>
 
-    <projectService serviceImplementation="com.intellij.psi.templateLanguages.TemplateDataLanguageMappings"/>
-    <applicationService serviceImplementation="com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns"/>
-    <filePropertyPusher implementation="com.intellij.psi.templateLanguages.TemplateDataLanguagePusher"/>
+    <projectService serviceImplementation="consulo.ide.impl.psi.templateLanguages.TemplateDataLanguageMappings"/>
+    <applicationService serviceImplementation="consulo.ide.impl.psi.templateLanguages.TemplateDataLanguagePatterns"/>
+    <filePropertyPusher implementation="consulo.ide.impl.psi.templateLanguages.TemplateDataLanguagePusher"/>
 
     <!-- execution -->
     <executor implementation="consulo.execution.executor.DefaultRunExecutor" order="first" id="run"/>
@@ -2332,13 +2332,13 @@
                 factoryClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"
                 conditionClass="com.intellij.execution.dashboard.RunDashboardToolWindowFactory"/>
 
-    <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper"/>
-    <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.JarFileReferenceHelper"/>
-    <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.HttpFileReferenceHelper"/>
-    <psi.fileReferenceHelper implementation="com.intellij.psi.impl.source.resolve.reference.impl.providers.NullFileReferenceHelper" order="last"/>
-    <psi.referenceContributor implementation="com.intellij.psi.impl.source.resolve.reference.CommentsReferenceContributor"/>
+    <psi.fileReferenceHelper implementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.PsiFileReferenceHelper"/>
+    <psi.fileReferenceHelper implementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.JarFileReferenceHelper"/>
+    <psi.fileReferenceHelper implementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.HttpFileReferenceHelper"/>
+    <psi.fileReferenceHelper implementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.NullFileReferenceHelper" order="last"/>
+    <psi.referenceContributor implementation="consulo.ide.impl.psi.impl.source.resolve.reference.CommentsReferenceContributor"/>
     <referenceProviderType key="commentsReferenceProvider"
-                           implementationClass="com.intellij.psi.impl.source.resolve.reference.ArbitraryPlaceUrlReferenceProvider"/>
+                           implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.ArbitraryPlaceUrlReferenceProvider"/>
 
     <uiDebuggerExtension implementation="com.intellij.ui.debugger.extensions.ActionTracer"/>
 
@@ -2453,8 +2453,8 @@
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy"
                     serviceImplementation="com.intellij.openapi.vcs.impl.ModuleDefaultVcsRootPolicy"/>
 
-    <projectService serviceInterface="com.intellij.psi.impl.file.PsiPackageHelper"
-                    serviceImplementation="com.intellij.psi.impl.file.PsiPackageHelperImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.psi.impl.file.PsiPackageHelper"
+                    serviceImplementation="consulo.ide.impl.psi.impl.file.PsiPackageHelperImpl"/>
 
     <projectService serviceImplementation="com.intellij.openapi.roots.ui.configuration.ProjectSettingsService"/>
 
@@ -2462,7 +2462,7 @@
                     serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringFactoryImpl"/>
 
     <projectService serviceInterface="consulo.language.inject.InjectedLanguageManager"
-                    serviceImplementation="com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl"/>
+                    serviceImplementation="consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.vcs.changes.patch.PatchBaseDirectoryDetector"
                     serviceImplementation="com.intellij.openapi.vcs.changes.patch.PsiPatchBaseDirectoryDetector"/>
 
@@ -2476,7 +2476,7 @@
                          key="scopes.display.name" bundle="messages.IdeBundle"/>
 
 
-    <weigher key="proximity" implementationClass="com.intellij.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"
+    <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"
              order="after openedInEditor"/>
 
 
@@ -2562,7 +2562,7 @@
     <addModuleDependencyActionProvider implementation="consulo.roots.ui.configuration.classpath.ModuleDependencyActionProvider"/>
     <addModuleDependencyActionProvider implementation="consulo.roots.ui.configuration.classpath.ProjectLibraryActionProvider"/>
 
-    <fileIndentOptionsProvider implementation="com.intellij.psi.codeStyle.DetectableIndentOptionsProvider" order="last"/>
+    <fileIndentOptionsProvider implementation="consulo.ide.impl.psi.codeStyle.DetectableIndentOptionsProvider" order="last"/>
 
     <predefinedBundlesProvider implementation="consulo.bundle.impl.DefaultPredefinedBundlesProvider" order="first"/>
 
@@ -2600,10 +2600,10 @@
     <vcs.ignoredFileProvider implementation="com.intellij.openapi.vcs.changes.ChangeListManagerImpl$DefaultIgnoredFileProvider" order="last"/>
     <vcs.ignoredFileProvider implementation="consulo.configurationStore.vcs.StoreIgnoredFileProvider"/>
 
-    <stripTrailingSpacesFilterFactory implementation="com.intellij.psi.codeStyle.KeepTrailingSpacesOnEmptyLinesFilterFactory"/>
+    <stripTrailingSpacesFilterFactory implementation="consulo.ide.impl.psi.codeStyle.KeepTrailingSpacesOnEmptyLinesFilterFactory"/>
 
     <lineIndentProvider
-        implementation="com.intellij.psi.impl.source.codeStyle.lineIndent.FormatterBasedLineIndentProvider"
+        implementation="consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedLineIndentProvider"
         order="last"/>
 
     <projectService serviceInterface="com.intellij.execution.dashboard.RunDashboardManager"
@@ -2616,8 +2616,8 @@
     <editorActionHandler action="EditorEscape" implementationClass="com.intellij.refactoring.changeSignature.inplace.EscapeHandler" id="changeSignatureEscape"
                          order="before hide-search"/>
 
-    <idIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.id.PlainTextIndexer"/>
-    <todoIndexer filetype="PLAIN_TEXT" implementationClass="com.intellij.psi.impl.cache.impl.todo.PlainTextTodoIndexer"/>
+    <idIndexer filetype="PLAIN_TEXT" implementationClass="consulo.ide.impl.psi.impl.cache.impl.id.PlainTextIndexer"/>
+    <todoIndexer filetype="PLAIN_TEXT" implementationClass="consulo.ide.impl.psi.impl.cache.impl.todo.PlainTextTodoIndexer"/>
 
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.GeneralHighlightingPassFactory"/>
     <textEditorHighlightingPassFactory implementation="com.intellij.codeInsight.daemon.impl.ChameleonSyntaxHighlightingPass$Factory"/>
@@ -2668,11 +2668,11 @@
     <vfs.asyncListener implementation="com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl$MyAsyncFileListener"/>
     <vfs.asyncListener implementation="com.intellij.util.indexing.FileBasedIndexImpl$ChangedFilesCollector"/>
 
-    <applicationService serviceInterface="com.intellij.psi.search.FileNameIndexService" serviceImplementation="com.intellij.psi.search.FileNameIndexServiceImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.psi.search.FileNameIndexService" serviceImplementation="consulo.ide.impl.psi.search.FileNameIndexServiceImpl"/>
 
     <vfs.asyncListener implementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
 
-    <projectService serviceImplementation="com.intellij.psi.impl.source.tree.injected.ConcatenationInjectorManager"/>
+    <projectService serviceImplementation="consulo.ide.impl.psi.impl.source.tree.injected.ConcatenationInjectorManager"/>
 
     <dateTimeFormatter id="vcs.annotate" name="VCS Annotate"/>
     <dateTimeFormatter id="vcs.log" name="VCS Log"/>
@@ -2709,8 +2709,8 @@
 
     <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.OutdatedVersionNotifier" lazy="false"/>
     <projectService serviceImplementation="com.intellij.openapi.vcs.changes.committed.IncomingChangesIndicator" lazy="false"/>
-    <projectService serviceImplementation="com.intellij.psi.impl.file.impl.PsiVFSListener" lazy="false"/>
-    <postStartupActivity id="vfsStartup" implementation="com.intellij.psi.impl.file.impl.PsiVFSListener$MyStartUpActivity" order="first"/>
+    <projectService serviceImplementation="consulo.ide.impl.psi.impl.file.impl.PsiVFSListener" lazy="false"/>
+    <postStartupActivity id="vfsStartup" implementation="consulo.ide.impl.psi.impl.file.impl.PsiVFSListener$MyStartUpActivity" order="first"/>
 
     <searchEverywhereContributor implementation="com.intellij.ide.actions.searcheverywhere.ClassSearchEverywhereContributor$Factory"/>
     <searchEverywhereContributor implementation="com.intellij.ide.actions.searcheverywhere.FileSearchEverywhereContributor$Factory"/>
@@ -2759,7 +2759,7 @@
     <!--TODO <statusBarWidgetFactory id="largeFileEncodingWidget" implementation="com.intellij.largeFilesEditor.encoding.LargeFileEncodingWidgetFactory" order="after encodingWidget"/> -->
     <statusBarWidgetFactory id="moduleLayerWidget" implementation="consulo.wm.impl.status.ModuleLayerWidgetFactory" order=" after encodingWidget"/>
     <statusBarWidgetFactory id="selectionModeWidget" implementation="com.intellij.openapi.wm.impl.status.ColumnSelectionModeWidgetFactory" order="after moduleLayerWidget"/>
-    <statusBarWidgetFactory id="codeStyleWidget" implementation="com.intellij.psi.codeStyle.statusbar.CodeStyleStatusBarWidgetFactory" order="after selectionModeWidget"/>
+    <statusBarWidgetFactory id="codeStyleWidget" implementation="consulo.ide.impl.psi.codeStyle.statusbar.CodeStyleStatusBarWidgetFactory" order="after selectionModeWidget"/>
     <statusBarWidgetFactory id="readOnlyWidget" implementation="com.intellij.openapi.wm.impl.status.ReadOnlyAttributeWidgetFactory" order="after codeStyleWidget"/>
     <statusBarWidgetFactory id="inspectionProfileWidget" implementation="com.intellij.openapi.wm.impl.status.InspectionProfileWidgetFactory" order="after readOnlyWidget"/>
     <statusBarWidgetFactory id="notificationsWidget" implementation="com.intellij.notification.impl.widget.NotificationWidgetFactory" order="after inspectionProfileWidget"/>
@@ -2797,7 +2797,7 @@
     <fileTypeOverrider implementation="com.intellij.openapi.file.exclude.UserFileTypeOverrider"/>
     <applicationService serviceImplementation="com.intellij.openapi.file.exclude.OverrideFileTypeManager"/>
 
-    <projectService serviceInterface="com.intellij.openapi.roots.impl.DirectoryIndex" serviceImplementation="com.intellij.openapi.roots.impl.DirectoryIndexImpl"/>
+    <projectService serviceInterface="consulo.module.content.DirectoryIndex" serviceImplementation="com.intellij.openapi.roots.impl.DirectoryIndexImpl"/>
 
     <projectService serviceImplementation="com.intellij.execution.impl.ProjectRunConfigurationManager"/>
     <postStartupActivity implementation="com.intellij.execution.impl.ProjectRunConfigurationManager$MyStartupActivity"/>
@@ -2809,7 +2809,7 @@
     <applicationService serviceInterface="consulo.process.DefaultCharsetProvider" serviceImplementation="consulo.process.impl.DefaultCharsetProviderImpl"/>
     <applicationService serviceInterface="consulo.project.ui.notification.internal.NotificationActionInvoker"
                         serviceImplementation="consulo.project.ui.notification.impl.NotificationActionInvokerImpl"/>
-    <applicationService serviceInterface="consulo.virtualFileSystem.RawFileLoader" serviceImplementation="consulo.virtualFileSystem.impl.RawFileLoaderImpl"/>
+    <applicationService serviceInterface="consulo.virtualFileSystem.RawFileLoader" serviceImplementation="consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl"/>
     <projectService serviceInterface="consulo.language.impl.psi.internal.FormattingService" serviceImplementation="consulo.ide.impl.language.psi.FormattingServiceImpl"/>
     <projectService serviceInterface="consulo.fileEditor.OpenFileDescriptorFactory" serviceImplementation="consulo.ide.impl.fileEditor.OpenFileDescriptorFactoryImpl"/>
 

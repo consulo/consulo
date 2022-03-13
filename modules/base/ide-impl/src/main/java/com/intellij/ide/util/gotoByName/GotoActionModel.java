@@ -29,7 +29,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.WordPrefixMatcher;
+import consulo.ide.impl.psi.codeStyle.WordPrefixMatcher;
 import consulo.ui.ex.awt.util.ColorUtil;
 import com.intellij.ui.LightColors;
 import consulo.ui.ex.awt.SimpleColoredComponent;

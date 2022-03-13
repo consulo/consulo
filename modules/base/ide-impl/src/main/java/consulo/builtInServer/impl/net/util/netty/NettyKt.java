@@ -30,7 +30,7 @@ import io.netty.channel.oio.OioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.oio.OioServerSocketChannel;
 import io.netty.channel.socket.oio.OioSocketChannel;
-import org.jetbrains.ide.PooledThreadExecutor;
+import consulo.ide.impl.PooledThreadExecutor;
 
 import javax.annotation.Nullable;
 import java.io.IOException;

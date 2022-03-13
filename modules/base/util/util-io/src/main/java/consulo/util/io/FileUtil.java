@@ -16,6 +16,7 @@
  */
 package consulo.util.io;
 
+import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
@@ -46,6 +47,21 @@ public class FileUtil {
       return new byte[THREAD_LOCAL_BUFFER_LENGTH];
     }
   };
+
+  @Nonnull
+  public static byte[] loadBytes(@Nonnull InputStream stream, int length) throws IOException {
+    if (length == 0) {
+      return ArrayUtil.EMPTY_BYTE_ARRAY;
+    }
+    byte[] bytes = new byte[length];
+    int count = 0;
+    while (count < length) {
+      int n = stream.read(bytes, count, length - count);
+      if (n <= 0) break;
+      count += n;
+    }
+    return bytes;
+  }
 
   public static void copy(@Nonnull File fromFile, @Nonnull File toFile, @Nonnull FilePermissionCopier permissionCopier) throws IOException {
     performCopy(fromFile, toFile, true, permissionCopier);

@@ -57,7 +57,7 @@
                          parentId="editor"
                          id="editor.code.inspections"/>
 
-    <projectConfigurable instance="com.intellij.psi.templateLanguages.TemplateDataLanguageConfigurable"
+    <projectConfigurable instance="consulo.ide.impl.psi.templateLanguages.TemplateDataLanguageConfigurable"
                          id="Template Data Languages"
                          parentId="editor"
                          key="template.data.language.configurable"

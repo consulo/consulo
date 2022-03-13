@@ -15,13 +15,16 @@
  */
 package com.intellij.packageDependencies.ui;
 
+import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
+import consulo.ide.impl.psi.search.scope.packageSet.PatternBasedPackageSet;
+import consulo.ide.impl.psi.search.scope.packageSet.UnionPackageSet;
 import consulo.language.psi.search.scope.*;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiQualifiedNamedElement;
-import com.intellij.psi.search.scope.packageSet.*;
+import consulo.ide.impl.psi.search.scope.packageSet.*;
 import com.intellij.refactoring.listeners.RefactoringElementAdapter;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.listeners.RefactoringElementListenerComposite;

@@ -45,8 +45,5 @@ public interface PsiPackageSupportProvider {
   }
 
   @Nonnull
-  PsiPackage createPackage(@Nonnull PsiManager psiManager,
-                           @Nonnull PsiPackageManager packageManager,
-                           @Nonnull Class<? extends ModuleExtension> extensionClass,
-                           @Nonnull String packageName);
+  PsiPackage createPackage(@Nonnull PsiManager psiManager, @Nonnull PsiPackageManager packageManager, @Nonnull Class<? extends ModuleExtension> extensionClass, @Nonnull String packageName);
 }

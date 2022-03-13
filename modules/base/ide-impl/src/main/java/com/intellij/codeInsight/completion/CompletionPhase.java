@@ -25,7 +25,7 @@ import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.HintListener;

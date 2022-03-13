@@ -32,7 +32,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.pattern.ElementPattern;
-import com.intellij.psi.impl.cache.impl.id.IdTableBuilding;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.annotation.access.RequiredReadAction;

@@ -18,17 +18,17 @@
     <projectConfigurable displayName="Copyright"
                          parentId="editor"
                          dynamic="true"
-                         instance="com.maddyhome.idea.copyright.ui.CopyrightProjectConfigurable"/>
+                         instance="consulo.copyright.impl.ui.CopyrightProjectConfigurable"/>
 
-    <checkinHandlerFactory implementation="com.maddyhome.idea.copyright.actions.UpdateCopyrightCheckinHandlerFactory"/>
+    <checkinHandlerFactory implementation="consulo.copyright.impl.actions.UpdateCopyrightCheckinHandlerFactory"/>
 
-    <projectService serviceInterface="com.maddyhome.idea.copyright.actions.UpdateCopyrightCheckinHandlerState"
-                    serviceImplementation="com.maddyhome.idea.copyright.actions.UpdateCopyrightCheckinHandlerState"/>
+    <projectService serviceInterface="consulo.copyright.impl.actions.UpdateCopyrightCheckinHandlerState"
+                    serviceImplementation="consulo.copyright.impl.actions.UpdateCopyrightCheckinHandlerState"/>
 
     <predefinedCopyright name="Apache 2" file="/copyright/Apache2.txt"/>
     <predefinedCopyright name="MIT" file="/copyright/MIT.txt"/>
 
-    <projectService serviceImplementation="com.maddyhome.idea.copyright.CopyrightManager"/>
+    <projectService serviceImplementation="consulo.copyright.impl.CopyrightManager"/>
   </extensions>
 
   <applicationListeners>
@@ -37,19 +37,19 @@
 
   <extensionPoints>
     <extensionPoint name="copyright.updater" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="com.maddyhome.idea.copyright.psi.UpdateCopyrightsProvider"/>
+      <with attribute="implementationClass" implements="consulo.copyright.impl.psi.UpdateCopyrightsProvider"/>
     </extensionPoint>
     <extensionPoint name="predefinedCopyright" beanClass="consulo.copyright.impl.PredefinedCopyrightTextEP"/>
   </extensionPoints>
 
   <actions>
-    <action id="UpdateCopyright" class="com.maddyhome.idea.copyright.actions.UpdateCopyrightAction" text="Update Copyright..."
+    <action id="UpdateCopyright" class="consulo.copyright.impl.actions.UpdateCopyrightAction" text="Update Copyright..."
             description="Generate/Update the copyright notice.">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
       <add-to-group group-id="CodeMenu" anchor="last"/>
       <add-to-group group-id="NavbarPopupMenu" anchor="last"/>
     </action>
-    <action id="GenerateCopyright" class="com.maddyhome.idea.copyright.actions.GenerateCopyrightAction" text="Copyright"
+    <action id="GenerateCopyright" class="consulo.copyright.impl.actions.GenerateCopyrightAction" text="Copyright"
             description="Generate/Update the copyright notice.">
       <add-to-group group-id="GenerateGroup" anchor="last"/>
     </action>

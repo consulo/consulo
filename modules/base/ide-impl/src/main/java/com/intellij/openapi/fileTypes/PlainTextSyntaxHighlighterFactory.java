@@ -29,7 +29,7 @@ import consulo.language.lexer.MergingLexerAdapter;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.CustomHighlighterTokenType;
+import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import javax.annotation.Nonnull;

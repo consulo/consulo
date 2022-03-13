@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.speedSearch;
 
-import com.intellij.psi.codeStyle.MinusculeMatcher;
+import consulo.ide.impl.psi.codeStyle.MinusculeMatcher;
 import com.intellij.util.text.Matcher;
 import consulo.application.util.registry.Registry;
 import consulo.document.util.TextRange;

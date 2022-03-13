@@ -24,10 +24,10 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.ChangedPsiRangeUtil;
+import consulo.ide.impl.psi.impl.ChangedPsiRangeUtil;
 import consulo.language.impl.psi.internal.diff.DiffLog;
 import consulo.language.impl.ast.FileElement;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.language.impl.psi.internal.diff.BlockSupport;
 import com.intellij.util.ObjectUtil;
 

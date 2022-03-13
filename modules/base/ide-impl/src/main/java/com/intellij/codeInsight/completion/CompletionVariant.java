@@ -23,7 +23,7 @@ import consulo.language.editor.completion.lookup.LookupItem;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
-import com.intellij.psi.filters.ElementFilter;
+import consulo.ide.impl.psi.filters.ElementFilter;
 import com.intellij.util.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
 

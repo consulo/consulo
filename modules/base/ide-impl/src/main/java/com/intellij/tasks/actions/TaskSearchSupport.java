@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.lang.function.Condition;
-import com.intellij.psi.codeStyle.NameUtil;
+import consulo.ide.impl.psi.codeStyle.NameUtil;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;

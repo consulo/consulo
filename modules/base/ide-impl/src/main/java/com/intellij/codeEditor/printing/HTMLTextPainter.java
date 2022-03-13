@@ -33,7 +33,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
-import com.intellij.psi.impl.file.PsiPackageHelper;
+import consulo.ide.impl.psi.impl.file.PsiPackageHelper;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;

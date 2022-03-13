@@ -21,7 +21,7 @@ import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.psi.codeStyle.MinusculeMatcher;
+import consulo.ide.impl.psi.codeStyle.MinusculeMatcher;
 import com.intellij.ui.ListActions;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBList;

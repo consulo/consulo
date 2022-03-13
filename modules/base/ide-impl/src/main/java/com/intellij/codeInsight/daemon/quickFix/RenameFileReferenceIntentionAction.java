@@ -25,7 +25,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.resolve.reference.impl.providers.FileReference;
+import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReference;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 

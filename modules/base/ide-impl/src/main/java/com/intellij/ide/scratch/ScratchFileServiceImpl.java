@@ -34,7 +34,7 @@ import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighterProvider;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.LanguageSubstitutors;
-import com.intellij.psi.search.UseScopeEnlarger;
+import consulo.ide.impl.psi.search.UseScopeEnlarger;
 import com.intellij.usages.impl.rules.UsageType;
 import com.intellij.usages.impl.rules.UsageTypeProvider;
 import com.intellij.util.PathUtil;

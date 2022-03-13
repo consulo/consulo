@@ -27,7 +27,7 @@ import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

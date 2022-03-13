@@ -20,7 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceBase;
 import consulo.language.psi.SyntheticElement;
-import com.intellij.psi.impl.FakePsiElement;
+import consulo.ide.impl.psi.impl.FakePsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -46,7 +46,7 @@ import consulo.document.util.TextRange;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.pom.PomTargetPsiElement;
-import com.intellij.psi.presentation.java.SymbolPresentationUtil;
+import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.reference.SoftReference;

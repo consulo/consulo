@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.psi.statistics.StatisticsInfo;
+import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import javax.annotation.Nonnull;
 
 /**

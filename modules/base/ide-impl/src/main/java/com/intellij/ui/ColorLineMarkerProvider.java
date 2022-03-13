@@ -20,7 +20,7 @@ import com.intellij.codeInsight.daemon.*;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import com.intellij.util.Function;
 import com.intellij.util.FunctionUtil;
 import consulo.annotation.access.RequiredReadAction;

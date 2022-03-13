@@ -6,7 +6,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.completion.CompletionInitializationContext;
 import consulo.language.editor.completion.CompletionType;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
 
 /**

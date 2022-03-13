@@ -20,7 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
-import com.intellij.psi.SyntaxTraverser;
+import consulo.ide.impl.psi.SyntaxTraverser;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.text.CharArrayUtil;

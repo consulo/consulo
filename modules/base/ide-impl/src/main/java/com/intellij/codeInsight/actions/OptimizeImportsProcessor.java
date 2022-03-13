@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.source.codeStyle.CodeStyleManagerImpl;
+import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -1,7 +1,7 @@
 package com.intellij.model.search.impl;
 
-import com.intellij.psi.impl.search.LeafOccurrence;
-import com.intellij.psi.impl.search.WordRequestInfoImpl;
+import consulo.ide.impl.psi.impl.search.LeafOccurrence;
+import consulo.ide.impl.psi.impl.search.WordRequestInfoImpl;
 import javax.annotation.Nonnull;
 
 // from kotlin

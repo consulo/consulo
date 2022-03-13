@@ -26,7 +26,7 @@ import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.RefResolveService;
+import consulo.ide.impl.psi.RefResolveService;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

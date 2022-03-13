@@ -28,7 +28,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.impl.search.LexerEditorHighlighterLexer;
+import consulo.ide.impl.psi.impl.search.LexerEditorHighlighterLexer;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 

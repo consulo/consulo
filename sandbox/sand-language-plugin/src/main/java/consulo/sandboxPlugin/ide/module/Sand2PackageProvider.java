@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
-import com.intellij.psi.impl.file.PsiPackageBase;
+import consulo.language.impl.psi.PsiPackageBase;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
 import consulo.language.psi.PsiManager;

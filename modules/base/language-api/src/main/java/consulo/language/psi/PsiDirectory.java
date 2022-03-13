@@ -18,6 +18,7 @@ package consulo.language.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.language.util.IncorrectOperationException;
+import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -31,6 +32,8 @@ public interface PsiDirectory extends PsiFileSystemItem {
    * The empty array of PSI directories which can be reused to avoid unnecessary allocations.
    */
   PsiDirectory[] EMPTY_ARRAY = new PsiDirectory[0];
+
+  ArrayFactory<PsiDirectory> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiDirectory[count];
 
   /**
    * Returns the virtual file represented by the PSI directory.

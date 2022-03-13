@@ -29,7 +29,7 @@ import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
-import com.intellij.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
+import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleSchemeImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;

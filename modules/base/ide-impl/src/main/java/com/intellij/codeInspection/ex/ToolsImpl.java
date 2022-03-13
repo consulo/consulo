@@ -22,7 +22,7 @@ package com.intellij.codeInspection.ex;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
+import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;

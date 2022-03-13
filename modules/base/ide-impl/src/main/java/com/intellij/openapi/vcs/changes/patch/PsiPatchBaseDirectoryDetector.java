@@ -21,7 +21,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.search.FilenameIndex;
+import consulo.ide.impl.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
 import jakarta.inject.Inject;
 

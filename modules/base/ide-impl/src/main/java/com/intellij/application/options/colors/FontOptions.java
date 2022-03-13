@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.Patches;
+import consulo.ide.impl.Patches;
 import com.intellij.application.options.OptionsConstants;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.application.ApplicationBundle;

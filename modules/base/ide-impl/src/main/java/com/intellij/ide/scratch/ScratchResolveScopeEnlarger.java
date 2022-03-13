@@ -17,7 +17,7 @@ package com.intellij.ide.scratch;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.ResolveScopeEnlarger;
+import consulo.language.psi.ResolveScopeEnlarger;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 import javax.annotation.Nonnull;

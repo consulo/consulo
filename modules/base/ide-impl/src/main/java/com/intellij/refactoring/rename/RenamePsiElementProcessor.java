@@ -27,7 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiReference;
 import consulo.content.scope.SearchScope;
-import com.intellij.psi.search.searches.ReferencesSearch;
+import consulo.ide.impl.psi.search.searches.ReferencesSearch;
 import com.intellij.refactoring.RefactoringSettings;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.usageView.UsageInfo;

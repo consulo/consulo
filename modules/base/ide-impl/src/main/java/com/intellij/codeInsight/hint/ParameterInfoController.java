@@ -40,7 +40,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.ast.TokenType;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;

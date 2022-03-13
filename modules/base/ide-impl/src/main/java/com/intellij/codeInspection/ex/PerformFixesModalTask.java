@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.presentation.java.SymbolPresentationUtil;
+import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
 import javax.annotation.Nonnull;

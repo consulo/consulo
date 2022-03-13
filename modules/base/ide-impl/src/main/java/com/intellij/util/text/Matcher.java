@@ -1,6 +1,6 @@
 package com.intellij.util.text;
 
-import com.intellij.psi.codeStyle.NameUtil;
+import consulo.ide.impl.psi.codeStyle.NameUtil;
 import javax.annotation.Nonnull;
 
 /**

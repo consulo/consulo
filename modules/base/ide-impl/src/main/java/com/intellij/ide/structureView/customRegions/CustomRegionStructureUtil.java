@@ -2,6 +2,7 @@
 package com.intellij.ide.structureView.customRegions;
 
 import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.ide.impl.psi.SyntaxTraverser;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import com.intellij.lang.folding.CustomFoldingBuilder;
@@ -10,7 +11,7 @@ import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.LanguageFolding;
 import consulo.application.progress.ProgressManager;
 import consulo.document.util.TextRange;
-import com.intellij.psi.*;
+import consulo.ide.impl.psi.*;
 import consulo.language.impl.psi.internal.PsiFileEx;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;

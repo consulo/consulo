@@ -36,7 +36,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.psi.impl.file.PsiPackageHelper;
+import consulo.ide.impl.psi.impl.file.PsiPackageHelper;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;

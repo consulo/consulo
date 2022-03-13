@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.util.indexing;
 
-import com.intellij.psi.search.EverythingGlobalScope;
+import consulo.ide.impl.psi.search.EverythingGlobalScope;
 import com.intellij.util.ObjectUtils;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.content.scope.ProjectScopes;

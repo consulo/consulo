@@ -6,7 +6,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.psi.filters.TrueFilter;
+import consulo.ide.impl.psi.filters.TrueFilter;
 import com.intellij.util.UnmodifiableIterator;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.codeEditor.Editor;

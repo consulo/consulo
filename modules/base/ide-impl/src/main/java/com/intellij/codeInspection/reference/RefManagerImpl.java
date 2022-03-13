@@ -34,7 +34,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
-import com.intellij.psi.impl.light.LightElement;
+import consulo.ide.impl.psi.impl.light.LightElement;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;

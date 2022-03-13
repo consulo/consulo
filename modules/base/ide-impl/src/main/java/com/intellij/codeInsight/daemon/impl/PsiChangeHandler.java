@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
-import com.intellij.psi.impl.PsiDocumentManagerImpl;
+import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
 import consulo.language.impl.psi.internal.PsiDocumentTransactionListener;
 import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
 import consulo.util.collection.SmartList;

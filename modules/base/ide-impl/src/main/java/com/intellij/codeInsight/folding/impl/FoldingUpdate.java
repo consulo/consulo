@@ -13,7 +13,7 @@ import consulo.codeEditor.FoldingModel;
 import consulo.document.impl.DocumentEx;
 import consulo.document.impl.DocumentImpl;
 import consulo.language.impl.DebugUtil;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;

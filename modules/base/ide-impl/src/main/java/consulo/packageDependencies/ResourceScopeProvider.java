@@ -16,7 +16,7 @@
 package consulo.packageDependencies;
 
 import consulo.project.Project;
-import com.intellij.psi.search.scope.packageSet.CustomScopesProviderEx;
+import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.psi.search.scope.ResourcesScope;
 

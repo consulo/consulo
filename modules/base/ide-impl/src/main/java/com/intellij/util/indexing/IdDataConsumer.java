@@ -17,7 +17,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.impl.cache.impl.id.IdIndexEntry;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdIndexEntry;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl;
 
-import com.intellij.AppTopics;
+import consulo.ide.impl.AppTopics;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionManager;
 import consulo.execution.executor.Executor;

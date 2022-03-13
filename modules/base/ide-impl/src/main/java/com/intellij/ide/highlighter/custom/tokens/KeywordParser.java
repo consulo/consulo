@@ -17,7 +17,7 @@
 package com.intellij.ide.highlighter.custom.tokens;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.psi.CustomHighlighterTokenType;
+import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 import com.intellij.util.containers.CharTrie;
 import consulo.logging.Logger;

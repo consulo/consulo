@@ -23,7 +23,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import consulo.language.psi.PsiElement;
-import com.intellij.psi.presentation.java.SymbolPresentationUtil;
+import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

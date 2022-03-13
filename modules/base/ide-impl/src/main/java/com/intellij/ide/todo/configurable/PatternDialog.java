@@ -25,9 +25,9 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.psi.search.TodoAttributes;
-import com.intellij.psi.search.TodoAttributesUtil;
-import com.intellij.psi.search.TodoPattern;
+import consulo.ide.impl.psi.search.TodoAttributes;
+import consulo.ide.impl.psi.search.TodoAttributesUtil;
+import consulo.ide.impl.psi.search.TodoPattern;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

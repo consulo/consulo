@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.virtualFileSystem.RawFileLoader;
-import consulo.virtualFileSystem.impl.RawFileLoaderImpl;
+import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
 
 @Deprecated
 public class PersistentFSConstants {

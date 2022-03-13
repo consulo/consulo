@@ -19,7 +19,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
-import com.intellij.psi.impl.FakePsiElement;
+import consulo.ide.impl.psi.impl.FakePsiElement;
 import com.intellij.tasks.Task;
 
 /**

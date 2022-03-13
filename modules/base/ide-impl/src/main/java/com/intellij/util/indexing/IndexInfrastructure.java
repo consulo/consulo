@@ -13,14 +13,14 @@ import consulo.index.io.ID;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.language.psi.stub.StubIndexKey;
-import com.intellij.psi.stubs.StubUpdatingIndex;
+import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
 import consulo.util.lang.SystemProperties;
 import consulo.application.util.function.ThrowableRunnable;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import org.jetbrains.ide.PooledThreadExecutor;
+import consulo.ide.impl.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

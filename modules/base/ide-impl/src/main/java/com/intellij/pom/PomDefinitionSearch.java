@@ -5,7 +5,7 @@ import consulo.language.pom.PomTarget;
 import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiTarget;
-import com.intellij.psi.search.searches.DefinitionsScopedSearch;
+import consulo.ide.impl.psi.search.searches.DefinitionsScopedSearch;
 import consulo.application.util.function.Processor;
 import com.intellij.util.QueryExecutor;
 

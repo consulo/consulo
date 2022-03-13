@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.roots.impl;
 
+import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;

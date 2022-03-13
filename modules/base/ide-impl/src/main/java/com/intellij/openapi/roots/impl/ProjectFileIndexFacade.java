@@ -17,6 +17,7 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.module.Module;
+import consulo.module.content.DirectoryIndex;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import consulo.module.content.ProjectFileIndex;

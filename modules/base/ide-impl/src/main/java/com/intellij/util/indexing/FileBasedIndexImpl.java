@@ -2,7 +2,7 @@
 package com.intellij.util.indexing;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.AppTopics;
+import consulo.ide.impl.AppTopics;
 import com.intellij.history.LocalHistory;
 import com.intellij.ide.plugins.PluginManager;
 import consulo.application.dumb.IndexNotReadyException;
@@ -68,12 +68,12 @@ import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.impl.psi.internal.PsiDocumentTransactionListener;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
-import com.intellij.psi.impl.cache.impl.id.IdIndex;
-import com.intellij.psi.impl.cache.impl.id.PlatformIdTableBuilding;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
+import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.language.impl.psi.PsiFileImpl;
-import com.intellij.psi.search.EverythingGlobalScope;
+import consulo.ide.impl.psi.search.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.psi.stubs.SerializationManagerEx;
+import consulo.ide.impl.psi.stubs.SerializationManagerEx;
 import com.intellij.util.*;
 import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.application.util.concurrent.SequentialTaskExecutor;

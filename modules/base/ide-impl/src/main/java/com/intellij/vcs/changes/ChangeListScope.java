@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import consulo.component.util.WeighedItem;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
-import com.intellij.psi.search.scope.packageSet.FilteredNamedScope;
+import consulo.ide.impl.psi.search.scope.packageSet.FilteredNamedScope;
 import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

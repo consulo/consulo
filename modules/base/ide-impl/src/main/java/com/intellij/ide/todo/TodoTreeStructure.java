@@ -24,8 +24,8 @@ import consulo.project.Project;
 import consulo.util.concurrent.ActionCallback;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.search.PsiTodoSearchHelper;
-import com.intellij.psi.search.TodoPattern;
+import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
+import consulo.ide.impl.psi.search.TodoPattern;
 import consulo.language.psi.PsiPackageSupportProviders;
 import javax.annotation.Nonnull;
 

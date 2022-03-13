@@ -16,7 +16,7 @@
 package consulo.psi.impl.source.codeStyle;
 
 import consulo.project.Project;
-import com.intellij.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
+import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleFacadeImpl;
 import consulo.codeStyle.ProjectCodeStyleFacade;
 
 import javax.annotation.Nonnull;

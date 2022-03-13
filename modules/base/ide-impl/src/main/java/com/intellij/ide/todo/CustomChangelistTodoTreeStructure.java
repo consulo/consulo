@@ -19,7 +19,7 @@ import com.intellij.ide.todo.nodes.ToDoRootNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.search.PsiTodoSearchHelper;
+import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
 
 /**
  * @author irengrig

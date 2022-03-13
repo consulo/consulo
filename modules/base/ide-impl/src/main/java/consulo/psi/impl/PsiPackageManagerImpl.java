@@ -16,7 +16,7 @@
 package consulo.psi.impl;
 
 import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.roots.impl.DirectoryIndex;
+import consulo.module.content.DirectoryIndex;
 import com.intellij.util.ObjectUtil;
 import consulo.application.util.Query;
 import consulo.annotation.access.RequiredReadAction;

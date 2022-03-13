@@ -16,7 +16,7 @@
 
 package com.intellij.ide.highlighter.custom.tokens;
 
-import com.intellij.psi.CustomHighlighterTokenType;
+import consulo.ide.impl.psi.CustomHighlighterTokenType;
 
 /**
  * @author peter

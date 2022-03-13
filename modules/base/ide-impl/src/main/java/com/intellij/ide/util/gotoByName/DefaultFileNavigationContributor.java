@@ -16,7 +16,7 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.intellij.navigation.ChooseByNameContributorEx;
-import com.intellij.psi.search.FilenameIndex;
+import consulo.ide.impl.psi.search.FilenameIndex;
 import com.intellij.util.indexing.FindSymbolParameters;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.function.Processor;

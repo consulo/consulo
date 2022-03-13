@@ -2,7 +2,7 @@ package com.intellij.ide.util.gotoByName;
 
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.psi.codeStyle.NameUtil;
+import consulo.ide.impl.psi.codeStyle.NameUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
 

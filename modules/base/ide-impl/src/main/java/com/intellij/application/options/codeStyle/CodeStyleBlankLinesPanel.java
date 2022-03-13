@@ -23,7 +23,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import com.intellij.psi.codeStyle.presentation.CodeStyleSettingPresentation;
+import consulo.ide.impl.psi.codeStyle.presentation.CodeStyleSettingPresentation;
 import consulo.ui.ex.awt.OptionGroup;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;

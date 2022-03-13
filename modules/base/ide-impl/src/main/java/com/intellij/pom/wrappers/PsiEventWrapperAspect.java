@@ -29,7 +29,7 @@ import consulo.language.pom.event.TreeChangeEvent;
 import consulo.language.impl.pom.internal.TreeChangeEventImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.PsiDocumentManagerImpl;
+import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.impl.psi.internal.PsiToDocumentSynchronizer;
 import consulo.language.impl.psi.DummyHolder;

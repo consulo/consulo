@@ -17,8 +17,8 @@
 package com.intellij.util.indexing;
 
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.psi.search.ProjectAndLibrariesScope;
-import com.intellij.psi.search.ProjectScopeImpl;
+import consulo.ide.impl.psi.search.ProjectAndLibrariesScope;
+import consulo.ide.impl.psi.search.ProjectScopeImpl;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.impl.MapIndexStorage;
 import com.intellij.util.io.AppendableStorageBackedByResizableMappedFile;

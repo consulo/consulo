@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.document.util.TextRange;
-import com.intellij.psi.search.TodoPattern;
+import consulo.ide.impl.psi.search.TodoPattern;
 
 /**
  * Created with IntelliJ IDEA.

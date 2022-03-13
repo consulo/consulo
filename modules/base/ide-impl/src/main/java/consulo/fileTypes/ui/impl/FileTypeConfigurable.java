@@ -32,7 +32,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.psi.templateLanguages.TemplateDataLanguagePatterns;
+import consulo.ide.impl.psi.templateLanguages.TemplateDataLanguagePatterns;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.PairConvertor;

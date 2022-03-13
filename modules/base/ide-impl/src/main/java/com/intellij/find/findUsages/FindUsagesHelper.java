@@ -22,7 +22,7 @@ import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceService;
-import com.intellij.psi.impl.search.PsiSearchHelperImpl;
+import consulo.ide.impl.psi.impl.search.PsiSearchHelperImpl;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.usageView.UsageInfoFactory;

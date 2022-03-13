@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.HectorComponentPanel;
 import com.intellij.openapi.editor.HectorComponentPanelsProvider;
 import consulo.project.DumbService;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.impl.include.FileIncludeManager;
+import consulo.ide.impl.psi.impl.include.FileIncludeManager;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

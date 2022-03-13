@@ -20,7 +20,7 @@ import com.intellij.codeInsight.editorActions.QuoteHandler;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.highlight.HighlighterIterator;
-import com.intellij.psi.CustomHighlighterTokenType;
+import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 
 /**

@@ -32,7 +32,7 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

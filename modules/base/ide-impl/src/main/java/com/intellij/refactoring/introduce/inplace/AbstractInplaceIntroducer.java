@@ -44,7 +44,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
-import com.intellij.psi.search.searches.ReferencesSearch;
+import consulo.ide.impl.psi.search.searches.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;

@@ -17,7 +17,7 @@ package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.lookup.LookupElement;
-import com.intellij.psi.statistics.StatisticsInfo;
+import consulo.ide.impl.psi.statistics.StatisticsInfo;
 
 /**
  * @author peter

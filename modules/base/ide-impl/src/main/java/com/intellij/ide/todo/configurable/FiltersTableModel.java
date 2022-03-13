@@ -18,7 +18,7 @@ package com.intellij.ide.todo.configurable;
 
 import com.intellij.ide.todo.TodoFilter;
 import com.intellij.ide.IdeBundle;
-import com.intellij.psi.search.TodoPattern;
+import consulo.ide.impl.psi.search.TodoPattern;
 import consulo.ui.ex.awt.ItemRemovable;
 
 import javax.swing.table.AbstractTableModel;
