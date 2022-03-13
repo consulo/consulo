@@ -17,16 +17,16 @@ package com.intellij.codeInsight.lookup;
 
 import com.intellij.codeInsight.completion.CompletionLookupArranger;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Pair;
+import consulo.language.ForceableComparable;
 import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
-import consulo.util.lang.ref.Ref;
-import consulo.language.ForceableComparable;
 import consulo.language.util.ProcessingContext;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;

@@ -9,7 +9,7 @@ import com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.ide.IdeTooltip;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.ScrollType;

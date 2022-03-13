@@ -222,9 +222,9 @@ public class CommonCodeStyleSettings {
     }
 
     @Override
-    public boolean isAccept(@Nonnull Field field) {
+    public boolean test(@Nonnull Field field) {
       if (mySupportedFieldNames != null && mySupportedFieldNames.contains(field.getName())) {
-        return super.isAccept(field);
+        return super.test(field);
       }
       return false;
     }

@@ -53,6 +53,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-util-interner</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna-jpms</artifactId>
       <optional>true</optional>

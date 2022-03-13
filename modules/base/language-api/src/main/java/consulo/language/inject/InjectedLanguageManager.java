@@ -17,7 +17,6 @@
 package consulo.language.inject;
 
 import consulo.component.util.ComponentUtil;
-import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
@@ -55,18 +54,6 @@ public abstract class InjectedLanguageManager {
   public abstract int injectedToHost(@Nonnull PsiElement injectedContext, int injectedOffset);
 
   public abstract int injectedToHost(@Nonnull PsiElement injectedContext, int injectedOffset, boolean minHostOffset);
-
-  /**
-   * @deprecated use {@link MultiHostInjector#MULTIHOST_INJECTOR_EP_NAME extension point} for production and
-   * {@link #registerMultiHostInjector(MultiHostInjector, Disposable)} for tests
-   */
-  public void registerMultiHostInjector(@Nonnull MultiHostInjector injector) {
-    throw new UnsupportedOperationException();
-  }
-
-  public void registerMultiHostInjector(@Nonnull MultiHostInjector injector, @Nonnull Disposable parentDisposable) {
-    throw new UnsupportedOperationException();
-  }
 
   @Nonnull
   public abstract String getUnescapedText(@Nonnull PsiElement injectedNode);

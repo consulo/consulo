@@ -21,7 +21,7 @@ import com.intellij.diagnostic.LogMessageEx;
 import com.intellij.idea.ApplicationStarter;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
+import consulo.application.util.logging.IdeaLoggingEvent;
 import com.intellij.util.ExceptionUtil;
 import consulo.logging.attachment.ExceptionWithAttachments;
 import org.apache.logging.log4j.core.Filter;

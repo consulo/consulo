@@ -16,24 +16,23 @@
 
 package com.intellij.internal;
 
+import com.intellij.codeInsight.lookup.impl.LookupImpl;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
-import com.intellij.codeInsight.lookup.impl.LookupImpl;
+import consulo.logging.Logger;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.application.dumb.DumbAware;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Pair;
 
+import javax.annotation.Nonnull;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Map;
@@ -70,21 +69,13 @@ public class DumpLookupElementWeights extends AnAction implements DumbAware {
     LOG.info(sb);
     try {
       CopyPasteManager.getInstance().setContents(new StringSelection(sb));
-    } catch (Exception ignore){}
+    }
+    catch (Exception ignore) {
+    }
   }
 
   public static List<String> getLookupElementWeights(LookupImpl lookup, boolean hideSingleValued) {
     final Map<LookupElement, List<Pair<String, Object>>> weights = lookup.getRelevanceObjects(lookup.getItems(), hideSingleValued);
-    return ContainerUtil.map(weights.entrySet(), new Function<Map.Entry<LookupElement, List<Pair<String, Object>>>, String>() {
-      @Override
-      public String fun(Map.Entry<LookupElement, List<Pair<String, Object>>> entry) {
-        return entry.getKey().getLookupString() + "\t" + StringUtil.join(entry.getValue(), new Function<Pair<String, Object>, String>() {
-          @Override
-          public String fun(Pair<String, Object> pair) {
-            return pair.first + "=" + pair.second;
-          }
-        }, ", ");
-      }
-    });
+    return ContainerUtil.map(weights.entrySet(), entry -> entry.getKey().getLookupString() + "\t" + StringUtil.join(entry.getValue(), pair -> pair.first + "=" + pair.second, ", "));
   }
 }

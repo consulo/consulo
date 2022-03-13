@@ -2,7 +2,7 @@
 package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingGroup;

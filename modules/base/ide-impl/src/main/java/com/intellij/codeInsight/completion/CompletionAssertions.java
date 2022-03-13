@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.lookup.Lookup;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import com.intellij.openapi.util.text.StringUtil;

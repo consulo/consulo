@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

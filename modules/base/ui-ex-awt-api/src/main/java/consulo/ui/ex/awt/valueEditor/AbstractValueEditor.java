@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.components.fields.valueEditors;
+package consulo.ui.ex.awt.valueEditor;
 
-import consulo.configurable.ConfigurationException;
-import consulo.util.xml.serializer.InvalidDataException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +46,7 @@ public abstract class AbstractValueEditor<T> implements ValueEditor<T> {
     try {
       return parseValue(getValueText());
     }
-    catch (InvalidDataException ex) {
+    catch (ValueValidationException ex) {
       return getDefaultValue();
     }
   }
@@ -85,13 +82,13 @@ public abstract class AbstractValueEditor<T> implements ValueEditor<T> {
    * @throws ConfigurationException If the text doesn't represent a valid value.
    */
   @Override
-  public void validateContent() throws ConfigurationException {
+  public void validateContent() throws ValueValidationException {
     try {
       parseValue(getValueText());
     }
-    catch (InvalidDataException ex) {
+    catch (ValueValidationException ex) {
       String name = getValueName();
-      throw new ConfigurationException((name != null ? name + " " : "") + ex.getMessage());
+      throw new ValueValidationException((name != null ? name + " " : "") + ex.getMessage());
     }
   }
 

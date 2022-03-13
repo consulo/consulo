@@ -15,13 +15,13 @@
  */
 package com.intellij.ui.components.fields;
 
-import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.JBTextField;
-import com.intellij.ui.components.fields.valueEditors.CommaSeparatedIntegersValueEditor;
-import com.intellij.ui.components.fields.valueEditors.ValueEditor;
+import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
+import consulo.ui.ex.awt.valueEditor.ValueEditor;
+import consulo.ui.ex.awt.valueEditor.ValueValidationException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class CommaSeparatedIntegersField extends JBTextField {
     return myValueEditor.getValueName();
   }
 
-  public void validateContent() throws ConfigurationException {
+  public void validateContent() throws ValueValidationException {
     myValueEditor.validateContent();
   }
 

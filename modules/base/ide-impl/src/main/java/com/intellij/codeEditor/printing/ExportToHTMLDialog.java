@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import com.intellij.ui.OptionGroup;
+import consulo.ui.ex.awt.OptionGroup;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.folding.impl;
 
 import com.intellij.diagnostic.AttachmentFactory;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.lang.folding.LanguageFolding;

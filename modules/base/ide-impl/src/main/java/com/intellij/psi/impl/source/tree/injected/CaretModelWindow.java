@@ -2,7 +2,7 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretActionListener;
 import consulo.codeEditor.event.CaretEvent;

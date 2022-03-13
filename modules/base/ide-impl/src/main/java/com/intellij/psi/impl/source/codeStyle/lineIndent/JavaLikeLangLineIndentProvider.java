@@ -360,7 +360,7 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
   @Nullable
   protected Indent getIndentInBlock(@Nonnull Project project, @Nullable Language language, @Nonnull SemanticEditorPosition blockStartPosition) {
     if (language != null) {
-      CommonCodeStyleSettings settings = CodeStyle.getSettings(blockStartPosition.getEditor()).getCommonSettings(language);
+      CommonCodeStyleSettings settings = CodeStyle.getSettings(project, blockStartPosition.getEditor().getDocument()).getCommonSettings(language);
       if (settings.BRACE_STYLE == CommonCodeStyleSettings.NEXT_LINE_SHIFTED) {
         return getDefaultIndentFromType(settings.METHOD_BRACE_STYLE == CommonCodeStyleSettings.NEXT_LINE_SHIFTED ? NONE : null);
       }
@@ -371,7 +371,7 @@ public abstract class JavaLikeLangLineIndentProvider implements LineIndentProvid
   @Contract("_, null -> null")
   private static Type getBlockIndentType(@Nonnull Editor editor, @Nullable Language language) {
     if (language != null) {
-      CommonCodeStyleSettings settings = CodeStyle.getSettings(editor).getCommonSettings(language);
+      CommonCodeStyleSettings settings = CodeStyle.getSettings(editor.getProject(), editor.getDocument()).getCommonSettings(language);
       if (settings.BRACE_STYLE == CommonCodeStyleSettings.NEXT_LINE || settings.BRACE_STYLE == CommonCodeStyleSettings.END_OF_LINE) {
         return NONE;
       }

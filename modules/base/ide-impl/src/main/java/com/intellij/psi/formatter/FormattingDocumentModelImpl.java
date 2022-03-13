@@ -123,6 +123,7 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
     return myDocument;
   }
 
+  @Override
   public PsiFile getFile() {
     return myFile;
   }

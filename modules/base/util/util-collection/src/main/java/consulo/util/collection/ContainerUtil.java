@@ -36,9 +36,27 @@ public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
 
   @Nonnull
+  @Contract(pure = true)
+  public static <K, V> Map<K, V> union(@Nonnull Map<? extends K, ? extends V> map, @Nonnull Map<? extends K, ? extends V> map2) {
+    Map<K, V> result = new HashMap<>(map.size() + map2.size());
+    result.putAll(map);
+    result.putAll(map2);
+    return result;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> Set<T> union(@Nonnull Set<T> set, @Nonnull Set<T> set2) {
+    Set<T> result = new HashSet<>(set.size() + set2.size());
+    result.addAll(set);
+    result.addAll(set2);
+    return result;
+  }
+
+  @Nonnull
   public static <T> List<T> collect(@Nonnull Iterator<T> iterator) {
     if (!iterator.hasNext()) return List.of();
-    List<T> list = new ArrayList<T>();
+    List<T> list = new ArrayList<>();
     addAll(list, iterator);
     return list;
   }
@@ -142,7 +160,7 @@ public class ContainerUtil {
       return List.of();
     }
 
-    return new AbstractList<E>() {
+    return new AbstractList<>() {
       @Override
       public E get(int index) {
         return elements.get(elements.size() - 1 - index);
@@ -226,7 +244,7 @@ public class ContainerUtil {
   @Contract(pure = true)
   public static <T, V> List<V> map2List(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
     if (collection.isEmpty()) return List.of();
-    List<V> list = new ArrayList<V>(collection.size());
+    List<V> list = new ArrayList<>(collection.size());
     for (final T t : collection) {
       list.add(mapper.apply(t));
     }
@@ -297,47 +315,21 @@ public class ContainerUtil {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> List<T> findAll(@Nonnull T[] collection, @Nonnull Condition<? super T> condition) {
-    final List<T> result = new SmartList<T>();
-    for (T t : collection) {
-      if (condition.value(t)) {
-        result.add(t);
-      }
-    }
-    return result;
-  }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <T> List<T> filter(@Nonnull Collection<? extends T> collection, @Nonnull Condition<? super T> condition) {
+  public static <T> List<T> filter(@Nonnull Collection<? extends T> collection, @Nonnull Predicate<? super T> condition) {
     return findAll(collection, condition);
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> Map<K, V> filter(@Nonnull Map<K, ? extends V> map, @Nonnull Condition<? super K> keyFilter) {
-    Map<K, V> result = new HashMap<K, V>();
+  public static <K, V> Map<K, V> filter(@Nonnull Map<K, ? extends V> map, @Nonnull Predicate<? super K> keyFilter) {
+    Map<K, V> result = new HashMap<>();
     for (Map.Entry<K, ? extends V> entry : map.entrySet()) {
-      if (keyFilter.value(entry.getKey())) {
+      if (keyFilter.test(entry.getKey())) {
         result.put(entry.getKey(), entry.getValue());
       }
     }
     return result;
   }
-
-  @Nonnull
-  @Contract(pure = true)
-  public static <T> List<T> findAll(@Nonnull Collection<? extends T> collection, @Nonnull Condition<? super T> condition) {
-    if (collection.isEmpty()) return List.of();
-    final List<T> result = new SmartList<T>();
-    for (final T t : collection) {
-      if (condition.value(t)) {
-        result.add(t);
-      }
-    }
-    return result;
-  }
-
 
   /**
    * @return read-only list consisting of the elements from the iterable converted by mapping
@@ -345,7 +337,7 @@ public class ContainerUtil {
   @Nonnull
   @Contract(pure = true)
   public static <T, V> List<V> map(@Nonnull Iterable<? extends T> iterable, @Nonnull Function<T, V> mapping) {
-    List<V> result = new ArrayList<V>();
+    List<V> result = new ArrayList<>();
     for (T t : iterable) {
       result.add(mapping.apply(t));
     }
@@ -360,7 +352,7 @@ public class ContainerUtil {
       return emptyArray;
     }
 
-    List<V> result = new ArrayList<V>(arr.length);
+    List<V> result = new ArrayList<>(arr.length);
     for (T t : arr) {
       result.add(mapping.apply(t));
     }
@@ -375,7 +367,7 @@ public class ContainerUtil {
   @Contract(pure = true)
   public static <T, V> List<V> map(@Nonnull Collection<? extends T> iterable, @Nonnull Function<T, V> mapping) {
     if (iterable.isEmpty()) return List.of();
-    List<V> result = new ArrayList<V>(iterable.size());
+    List<V> result = new ArrayList<>(iterable.size());
     for (T t : iterable) {
       result.add(mapping.apply(t));
     }
@@ -388,7 +380,7 @@ public class ContainerUtil {
   @Nonnull
   @Contract(pure = true)
   public static <T, V> List<V> map(@Nonnull T[] array, @Nonnull Function<T, V> mapping) {
-    List<V> result = new ArrayList<V>(array.length);
+    List<V> result = new ArrayList<>(array.length);
     for (T t : array) {
       result.add(mapping.apply(t));
     }
@@ -405,6 +397,24 @@ public class ContainerUtil {
   @Contract(pure = true)
   public static <T> List<T> skipNulls(@Nonnull Collection<? extends T> collection) {
     return findAll(collection, Objects::nonNull);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> filter(@Nonnull T[] collection, @Nonnull Predicate<? super T> condition) {
+    return findAll(collection, condition);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> findAll(@Nonnull T[] collection, @Nonnull Predicate<? super T> condition) {
+    final List<T> result = new SmartList<>();
+    for (T t : collection) {
+      if (condition.test(t)) {
+        result.add(t);
+      }
+    }
+    return result;
   }
 
   @Nonnull

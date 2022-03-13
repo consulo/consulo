@@ -27,10 +27,11 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBTabbedPane;
 import com.intellij.ui.components.fields.CommaSeparatedIntegersField;
-import com.intellij.ui.components.fields.IntegerField;
+import consulo.ui.ex.awt.IntegerField;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.editor.highlight.EditorHighlighter;
@@ -172,8 +173,13 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
 
   @Override
   public void apply(CodeStyleSettings settings) throws ConfigurationException {
-    myVisualGuides.validateContent();
-    myRightMarginField.validateContent();
+    try {
+      myVisualGuides.validateContent();
+      myRightMarginField.validateContent();
+    }
+    catch (ValueValidationException e) {
+      throw new ConfigurationException(e.getMessage());
+    }
     settings.setDefaultSoftMargins(myVisualGuides.getValue());
     myExcludedFilesList.apply(settings);
 

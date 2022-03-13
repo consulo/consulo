@@ -16,14 +16,14 @@
 
 package com.intellij.openapi.vcs.checkin;
 
-import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.actions.ReformatCodeProcessor;
-import consulo.document.FileDocumentManager;
-import consulo.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
+import consulo.document.FileDocumentManager;
+import consulo.language.codeStyle.FormatterUtil;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ import java.util.Collection;
 
 public class ReformatBeforeCheckinHandler extends CheckinHandler implements CheckinMetaHandler {
 
-  public static final String COMMAND_NAME = CodeInsightBundle.message("process.reformat.code.before.commit");
+  public static final String COMMAND_NAME = FormatterUtil.REFORMAT_BEFORE_COMMIT_COMMAND_NAME;
   
   protected final Project myProject;
   private final CheckinProjectPanel myPanel;

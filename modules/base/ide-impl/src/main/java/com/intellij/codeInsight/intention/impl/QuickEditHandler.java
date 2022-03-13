@@ -16,7 +16,6 @@
 package com.intellij.codeInsight.intention.impl;
 
 import com.intellij.codeInsight.editorActions.CopyPastePreProcessor;
-import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.undo.UndoManager;
@@ -32,7 +31,7 @@ import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.impl.source.PostprocessReformattingAspect;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.tree.injected.Place;
+import com.intellij.psi.impl.source.tree.injected.PlaceImpl;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
@@ -58,6 +57,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.EditorWithProviderComposite;
 import consulo.language.Language;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.psi.internal.FileContextUtil;
@@ -120,7 +120,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     myEditor = editor;
     myAction = action;
     myOrigDocument = editor.getDocument();
-    Place shreds = InjectedLanguageUtil.getShreds(injectedFile);
+    PlaceImpl shreds = InjectedLanguageUtil.getShreds(injectedFile);
     FileType fileType = injectedFile.getFileType();
     Language language = injectedFile.getLanguage();
     PsiLanguageInjectionHost.Shred firstShred = ContainerUtil.getFirstItem(shreds);
@@ -342,7 +342,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     }
   }
 
-  public void initMarkers(Place shreds) {
+  public void initMarkers(PlaceImpl shreds) {
     SmartPointerManager smartPointerManager = SmartPointerManager.getInstance(myProject);
     int curOffset = -1;
     for (PsiLanguageInjectionHost.Shred shred : shreds) {
@@ -365,7 +365,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     initGuardedBlocks(shreds);
   }
 
-  private void initGuardedBlocks(Place shreds) {
+  private void initGuardedBlocks(PlaceImpl shreds) {
     int origOffset = -1;
     int curOffset = 0;
     for (PsiLanguageInjectionHost.Shred shred : shreds) {

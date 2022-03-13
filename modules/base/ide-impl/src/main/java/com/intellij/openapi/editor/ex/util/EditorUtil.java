@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.ex.util;
 
 import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.WriteAction;
 import com.intellij.openapi.editor.EditorModificationUtil;

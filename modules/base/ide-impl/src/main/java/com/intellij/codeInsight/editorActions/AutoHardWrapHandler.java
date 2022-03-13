@@ -173,7 +173,7 @@ public class AutoHardWrapHandler {
       return;
     }
 
-    WhiteSpaceFormattingStrategy formattingStrategy = WhiteSpaceFormattingStrategyFactory.getStrategy(editor);
+    WhiteSpaceFormattingStrategy formattingStrategy = WhiteSpaceFormattingStrategyFactory.getStrategy(editor.getProject(), editor.getDocument());
     if (wrapOffset <= startOffset || wrapOffset > maxPreferredOffset
         || formattingStrategy.check(document.getCharsSequence(), startOffset, wrapOffset) >= wrapOffset)
     {

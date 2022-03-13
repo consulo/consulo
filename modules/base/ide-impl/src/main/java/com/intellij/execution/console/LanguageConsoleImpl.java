@@ -6,7 +6,7 @@ import com.intellij.execution.impl.ConsoleViewUtil;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.*;
 import consulo.language.Language;
 import consulo.dataContext.DataProvider;

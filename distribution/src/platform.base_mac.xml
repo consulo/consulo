@@ -75,6 +75,7 @@
         <include>consulo:consulo-virtual-file-system-impl</include>
         <include>consulo:consulo-component-impl</include>
         <include>consulo:consulo-ide-api</include>
+        <include>consulo:consulo-language-code-style-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

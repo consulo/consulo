@@ -85,9 +85,9 @@ public interface InjectedFileViewProvider extends FileViewProvider, FreeThreaded
   }
 
   // returns true if shreds were set, false if old ones were reused
-  default boolean setShreds(@Nonnull Place newShreds) {
+  default boolean setShreds(@Nonnull PlaceImpl newShreds) {
     synchronized (getLock()) {
-      Place oldShreds = getDocument().getShreds();
+      PlaceImpl oldShreds = getDocument().getShreds();
       // try to reuse shreds, otherwise there are too many range markers disposals/re-creations
       if (same(oldShreds, newShreds)) {
         return false;
@@ -97,7 +97,7 @@ public interface InjectedFileViewProvider extends FileViewProvider, FreeThreaded
     }
   }
 
-  static boolean same(Place oldShreds, Place newShreds) {
+  static boolean same(PlaceImpl oldShreds, PlaceImpl newShreds) {
     if (oldShreds == newShreds) return true;
     if (oldShreds.size() != newShreds.size()) return false;
     for (int i = 0; i < oldShreds.size(); i++) {
@@ -138,7 +138,7 @@ public interface InjectedFileViewProvider extends FileViewProvider, FreeThreaded
     return getManager().getProject().isDisposed();
   }
 
-  default Place getShreds() {
+  default PlaceImpl getShreds() {
     return getDocument().getShreds();
   }
 

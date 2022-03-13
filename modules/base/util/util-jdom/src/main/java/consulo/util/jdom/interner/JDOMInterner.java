@@ -13,20 +13,64 @@
 // limitations under the License.
 package consulo.util.jdom.interner;
 
-import com.intellij.openapi.util.Comparing;
-import com.intellij.util.containers.Interner;
-import com.intellij.util.containers.OpenTHashSet;
-import gnu.trove.TObjectHashingStrategy;
+import consulo.util.collection.HashingStrategy;
+import consulo.util.interner.Interner;
+import consulo.util.lang.Comparing;
 import org.jdom.*;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public class JDOMInterner {
+  private static final JDOMInterner ourDefaultInterner = new JDOMInterner();
+
+  /**
+   * Interns {@code element} to reduce instance count of many identical Elements created after loading JDOM document to memory.
+   * For example, after interning <pre>{@code
+   * <app>
+   *   <component load="true" isDefault="true" name="comp1"/>
+   *   <component load="true" isDefault="true" name="comp2"/>
+   * </app>}</pre>
+   * <p>
+   * there will be created just one XmlText("\n  ") instead of three for whitespaces between tags,
+   * one Attribute("load=true") instead of two equivalent for each component tag etc.
+   *
+   * <p><h3>Intended usage:</h3>
+   * - When you need to keep some part of JDOM tree in memory, use this method before save the element to some collection,
+   * E.g.: <pre>{@code
+   *   public void readExternal(final Element element) {
+   *     myStoredElement = JDOMUtil.internElement(element);
+   *   }
+   *   }</pre>
+   * - When you need to save interned element back to JDOM and/or modify/add it, use {@link ImmutableElement#clone()}
+   * to obtain mutable modifiable Element.
+   * E.g.: <pre>{@code
+   *   void writeExternal(Element element) {
+   *     for (Attribute a : myStoredElement.getAttributes()) {
+   *       element.setAttribute(a.getName(), a.getValue()); // String getters work as before
+   *     }
+   *     for (Element child : myStoredElement.getChildren()) {
+   *       element.addContent(child.clone()); // need to call clone() before modifying/adding
+   *     }
+   *   }
+   *   }</pre>
+   *
+   * @return interned Element, i.e Element which<br/>
+   * - is the same for equivalent parameters. E.g. two calls of internElement() with {@code <xxx/>} and the other {@code <xxx/>}
+   * will return the same element {@code <xxx/>}<br/>
+   * - getParent() method is not implemented (and will throw exception; interning would not make sense otherwise)<br/>
+   * - is immutable (all modifications methods like setName(), setParent() etc will throw)<br/>
+   * - has {@code clone()} method which will return modifiable org.jdom.Element copy.<br/>
+   */
+  @Nonnull
+  public static Element internElement(@Nonnull Element element) {
+    return ourDefaultInterner.intern(element);
+  }
+
   private final Interner<String> myStrings = Interner.createStringInterner();
-  private final OpenTHashSet<Element> myElements = new OpenTHashSet<Element>(new TObjectHashingStrategy<Element>() {
+  private final Interner<Element> myElements = Interner.createHashInterner(new HashingStrategy<Element>() {
     @Override
-    public int computeHashCode(Element e) {
+    public int hashCode(Element e) {
       int result = e.getName().hashCode() * 31;
       result += computeAttributesHashCode(e);
       List<Content> content = e.getContent();
@@ -36,7 +80,7 @@ public class JDOMInterner {
           result = result * 31 + computeTextHashCode((Text)child);
         }
         else if (child instanceof Element) {
-          result = result * 31 + computeHashCode((Element)child);
+          result = result * 31 + hashCode((Element)child);
           break;
         }
       }
@@ -104,9 +148,9 @@ public class JDOMInterner {
     return name.hashCode() * 31 + (value == null ? 0 : value.hashCode());
   }
 
-  private final OpenTHashSet<Text/*ImmutableText or ImmutableCDATA*/> myTexts = new OpenTHashSet<Text>(new TObjectHashingStrategy<Text>() {
+  private final Interner<Text/*ImmutableText or ImmutableCDATA*/> myTexts = Interner.createHashInterner(new HashingStrategy<Text>() {
     @Override
-    public int computeHashCode(Text object) {
+    public int hashCode(Text object) {
       return computeTextHashCode(object);
     }
 
@@ -121,12 +165,12 @@ public class JDOMInterner {
   }
 
   @Nonnull
-  public synchronized Element internElement(@Nonnull final Element element) {
+  public synchronized Element intern(@Nonnull final Element element) {
     if (element instanceof ImmutableElement) return element;
     Element interned = myElements.get(element);
     if (interned == null) {
       interned = new ImmutableElement(element, this);
-      myElements.add(interned);
+      myElements.intern(interned);
     }
     return interned;
   }
@@ -142,7 +186,7 @@ public class JDOMInterner {
     if (interned == null) {
       // no need to intern CDATA - there are no duplicates anyway
       interned = text instanceof CDATA ? new ImmutableCDATA(text.getText()) : new ImmutableText(myStrings.intern(text.getText()));
-      myTexts.add(interned);
+      myTexts.intern(interned);
     }
     return interned;
   }

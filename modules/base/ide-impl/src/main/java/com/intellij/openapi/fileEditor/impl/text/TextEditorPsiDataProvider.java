@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor.impl.text;
 
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.EditorHelper;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.Language;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

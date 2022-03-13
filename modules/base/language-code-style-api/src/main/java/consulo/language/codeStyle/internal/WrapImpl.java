@@ -66,7 +66,7 @@ public class WrapImpl extends Wrap {
    *
    * @param parent    parent wrap to register for the current wrap
    */
-  void registerParent(@Nullable WrapImpl parent) {
+  public void registerParent(@Nullable WrapImpl parent) {
     if (parent == this) return;
     if (parent == null) return;
     if (parent.isChildOf(this, null)) return;

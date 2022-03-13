@@ -48,7 +48,7 @@ public class SpacingImpl extends Spacing {
     init(minSpaces, maxSpaces, minLineFeeds, isReadOnly, safe, shouldKeepLineBreaks, keepBlankLines, keepFirstColumn, prefLineFeeds);
   }
 
-  void init(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean isReadOnly, final boolean safe,
+  public void init(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean isReadOnly, final boolean safe,
             final boolean shouldKeepLineBreaks, final int keepBlankLines, final boolean keepFirstColumn, final int prefLineFeeds)
   {
     myMinSpaces = minSpaces;

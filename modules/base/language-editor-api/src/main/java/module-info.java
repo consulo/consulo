@@ -21,6 +21,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.documentation;
   exports consulo.language.editor.gutter;
   exports consulo.language.editor.highlight;
+  exports consulo.language.editor.inject;
   exports consulo.language.editor.completion.internal to consulo.ide.impl;
   exports consulo.language.editor.highlight.usage;
   exports consulo.language.editor.rawHighlight;

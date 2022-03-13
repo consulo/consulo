@@ -20,7 +20,7 @@ import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;

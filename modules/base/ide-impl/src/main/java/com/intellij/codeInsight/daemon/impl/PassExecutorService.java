@@ -7,7 +7,7 @@ import consulo.fileEditor.highlight.HighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import consulo.application.internal.concurrency.Job;
 import consulo.application.internal.concurrency.JobLauncher;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;

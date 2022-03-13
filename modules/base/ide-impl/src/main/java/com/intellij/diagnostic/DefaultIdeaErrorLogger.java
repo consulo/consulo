@@ -20,7 +20,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
+import consulo.application.util.logging.IdeaLoggingEvent;
 import consulo.application.util.SystemInfo;
 import com.intellij.util.io.MappingFailedException;
 

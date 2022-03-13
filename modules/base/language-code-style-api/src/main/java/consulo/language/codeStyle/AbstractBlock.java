@@ -16,20 +16,16 @@
 
 package consulo.language.codeStyle;
 
-import com.intellij.formatting.*;
-import consulo.language.codeStyle.*;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.ast.ASTNode;
 import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.formatter.FormatterUtil;
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.util.containers.ContainerUtilRt;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,10 +33,11 @@ import java.util.List;
 public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
   public static final List<Block> EMPTY = Collections.emptyList();
   @Nonnull
-  protected final  ASTNode     myNode;
+  protected final ASTNode myNode;
   @Nullable
   protected final Wrap myWrap;
-  @Nullable protected final Alignment myAlignment;
+  @Nullable
+  protected final Alignment myAlignment;
 
   private List<Block> mySubBlocks;
   private Boolean myIncomplete;
@@ -100,12 +97,12 @@ public abstract class AbstractBlock implements ASTBlock, ExtraRangesProvider {
       return EMPTY;
     }
 
-    if (InjectedLanguageUtil.getCachedInjectedDocuments(file).isEmpty()) {
+    TextRange blockRange = myNode.getTextRange();
+    List<DocumentWindow> documentWindows = InjectedLanguageManager.getInstance(file.getProject()).getCachedInjectedDocumentsInRange(file, blockRange);
+    if (documentWindows.isEmpty()) {
       return EMPTY;
     }
 
-    TextRange blockRange = myNode.getTextRange();
-    List<DocumentWindow> documentWindows = InjectedLanguageUtil.getCachedInjectedDocuments(file);
     for (DocumentWindow documentWindow : documentWindows) {
       int startOffset = documentWindow.injectedToHost(0);
       int endOffset = startOffset + documentWindow.getTextLength();

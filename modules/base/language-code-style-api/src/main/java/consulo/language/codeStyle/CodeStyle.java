@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
-import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.language.Language;
 import consulo.language.codeStyle.internal.CodeStyleCachingService;
@@ -15,6 +14,7 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * Utility class for miscellaneous code style settings retrieving methods.
@@ -88,10 +88,9 @@ public class CodeStyle {
     return cachedSettings != null ? cachedSettings : getSettings(project);
   }
 
-  public static CodeStyleSettings getSettings(@Nonnull Editor editor) {
-    Project project = editor.getProject();
+  public static CodeStyleSettings getSettings(@Nullable Project project, @Nullable Document document) {
     if (project != null) {
-      PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+      PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(Objects.requireNonNull(document));
       if (file != null) {
         return getSettings(file);
       }
@@ -108,10 +107,9 @@ public class CodeStyle {
    * @return The language code style settings for the editor or {@code null}.
    */
   @Nullable
-  public static CommonCodeStyleSettings getLanguageSettings(@Nonnull Editor editor) {
-    Project project = editor.getProject();
+  public static CommonCodeStyleSettings getLanguageSettings(@Nullable Project project, @Nullable Document document) {
     if (project != null) {
-      PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+      PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(Objects.requireNonNull(document));
       if (file != null) {
         return getLanguageSettings(file);
       }

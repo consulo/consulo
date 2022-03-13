@@ -20,7 +20,7 @@ public abstract class MultiHostRegistrarImpl implements MultiHostRegistrar {
    */
   @Deprecated
   //@ApiStatus.ScheduledForRemoval(inVersion = "2018.1")
-  public List<Pair<Place, PsiFile>> getResult() {
+  public List<Pair<PlaceImpl, PsiFile>> getResult() {
     throw new IllegalStateException();
   }
 

@@ -25,9 +25,10 @@ package consulo.language.codeStyle.setting;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.psi.PsiFile;
-import org.jetbrains.annotations.NonNls;
+import consulo.virtualFileSystem.fileType.FileType;
+
+import javax.annotation.Nonnull;
 
 /**
  * Allows to specify indent options for specific file types as opposed to languages. For a language it is highly recommended to use
@@ -44,7 +45,7 @@ public interface FileTypeIndentOptionsProvider {
 
   IndentOptionsEditor createOptionsEditor();
 
-  @NonNls
+  @Nonnull
   String getPreviewText();
 
   void prepareForReformat(final PsiFile psiFile);

@@ -21,7 +21,7 @@ import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.jdom.JDOMUtil;
+import consulo.util.jdom.interner.JDOMInterner;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;

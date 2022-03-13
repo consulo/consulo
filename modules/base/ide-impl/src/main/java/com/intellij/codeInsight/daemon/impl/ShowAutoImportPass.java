@@ -11,7 +11,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.ReferenceImporter;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.HintAction;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;

@@ -3,6 +3,8 @@ package consulo.language.codeStyle;
 
 import consulo.application.util.function.Processor;
 import consulo.component.extension.ExtensionException;
+import consulo.component.persist.UnknownElementCollector;
+import consulo.component.persist.UnknownElementWriter;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -20,6 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.collection.ClassMap;
 import consulo.util.collection.JBIterable;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
@@ -28,6 +31,7 @@ import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.util.xml.serializer.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -930,7 +934,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     for (Element additionalIndentElement : list) {
       String fileTypeId = additionalIndentElement.getAttributeValue(FILETYPE);
       if (!StringUtil.isEmpty(fileTypeId)) {
-        FileType target = FileTypeManager.getInstance().getFileTypeByExtension(fileTypeId);
+        FileType target = FileTypeRegistry.getInstance().getFileTypeByExtension(fileTypeId);
         if (UnknownFileType.INSTANCE == target || PlainTextFileType.INSTANCE == target || target.getDefaultExtension().isEmpty()) {
           target = new TempFileType(fileTypeId);
         }
@@ -1524,7 +1528,7 @@ public class CodeStyleSettings extends LegacyCodeStyleSettings implements Clonea
     CodeStyleSettings defaults = getDefaults();
     ReflectionUtil.copyFields(this.getClass().getFields(), defaults, this, new DifferenceFilter<CodeStyleSettings>(this, defaults) {
       @Override
-      public boolean isAccept(@Nonnull Field field) {
+      public boolean test(@Nonnull Field field) {
         return field.getAnnotation(Deprecated.class) != null;
       }
     });

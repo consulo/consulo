@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.configurationStore;
+package consulo.component.persist;
 
-import com.intellij.util.ArrayUtil;
+import consulo.util.collection.ArrayUtil;
 import org.jdom.Element;
 
 import java.util.*;

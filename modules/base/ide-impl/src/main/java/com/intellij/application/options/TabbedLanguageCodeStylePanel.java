@@ -27,6 +27,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.PredefinedCodeStyle;
 import consulo.language.codeStyle.setting.CodeStyleSettingsProvider;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.language.editor.highlight.EditorHighlighter;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;

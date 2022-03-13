@@ -16,35 +16,35 @@
 
 package com.maddyhome.idea.copyright.ui;
 
-import consulo.language.Commenter;
-import consulo.application.WriteAction;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.plain.PlainTextFileType;
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.configurable.SearchableConfigurable;
-import consulo.project.Project;
-import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.util.ObjectUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import com.maddyhome.idea.copyright.CopyrightManager;
 import com.maddyhome.idea.copyright.CopyrightProfile;
 import com.maddyhome.idea.copyright.CopyrightUpdaters;
 import com.maddyhome.idea.copyright.pattern.EntityUtil;
 import com.maddyhome.idea.copyright.pattern.VelocityHelper;
 import com.maddyhome.idea.copyright.util.FileTypeUtil;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.application.WriteAction;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.configurable.SearchableConfigurable;
 import consulo.copyright.config.CopyrightFileConfig;
 import consulo.copyright.config.CopyrightFileConfigManager;
 import consulo.copyright.generate.TemplateCopyrightCommenter;
+import consulo.document.Document;
+import consulo.language.Commenter;
+import consulo.language.plain.PlainTextFileType;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.Nls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -213,9 +213,9 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
       fileLocations[i] = new JRadioButton(locations[i]);
       group.add(fileLocations[i]);
 
-      fileLocationPanel.add(fileLocations[i], new GridConstraints(i, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE,
-                                                                  GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
-                                                                  GridConstraints.SIZEPOLICY_FIXED, null, null, null));
+      fileLocationPanel.add(fileLocations[i],
+                            new GridConstraints(i, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW,
+                                                GridConstraints.SIZEPOLICY_FIXED, null, null, null));
     }
   }
 
@@ -265,9 +265,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   }
 
   private int getOverrideChoice() {
-    return myUseDefaultSettingsRadioButton.isSelected()
-           ? CopyrightFileConfig.USE_TEMPLATE
-           : myNoCopyright.isSelected() ? CopyrightFileConfig.NO_COPYRIGHT : CopyrightFileConfig.USE_TEXT;
+    return myUseDefaultSettingsRadioButton.isSelected() ? CopyrightFileConfig.USE_TEMPLATE : myNoCopyright.isSelected() ? CopyrightFileConfig.NO_COPYRIGHT : CopyrightFileConfig.USE_TEXT;
   }
 
   private void updateOverride() {
@@ -416,9 +414,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   @RequiredUIAccess
   @Override
   public void reset() {
-    final CopyrightFileConfig options = myFileType == null
-                                        ? myManager.getCopyrightFileConfigManager().getTemplateOptions()
-                                        : myManager.getCopyrightFileConfigManager().getOptions(myFileType);
+    final CopyrightFileConfig options = myFileType == null ? myManager.getCopyrightFileConfigManager().getTemplateOptions() : myManager.getCopyrightFileConfigManager().getOptions(myFileType);
     boolean isBlock = options.isBlock();
     if (isBlock) {
       rbBlockComment.setSelected(true);

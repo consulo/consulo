@@ -74,7 +74,7 @@ import java.util.Set;
 class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHostRegistrar {
   private final PsiDocumentManagerBase myDocumentManagerBase;
   private List<PsiFile> resultFiles;
-  private List<Pair<ReferenceInjector, Place>> resultReferences;
+  private List<Pair<ReferenceInjector, PlaceImpl>> resultReferences;
   private LanguageVersion myLanguageVersion;
   private List<PlaceInfo> placeInfos;
   private boolean cleared = true;
@@ -268,7 +268,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
 
   private void createAndRegisterInjected(LanguageVersion forcedLanguageVersion) {
     StringBuilder decodedChars = new StringBuilder();
-    Place place = new Place();
+    PlaceImpl place = new PlaceImpl();
     for (PlaceInfo info : placeInfos) {
       ShredImpl shred = createShred(info, decodedChars, myHostPsiFile);
       place.add(shred);
@@ -298,7 +298,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
   @Nonnull
   private static PsiFile createOrMergeInjectedFile(@Nonnull PsiFile hostPsiFile,
                                                    @Nonnull PsiDocumentManagerBase documentManager,
-                                                   @Nonnull Place place,
+                                                   @Nonnull PlaceImpl place,
                                                    @Nonnull DocumentWindowImpl documentWindow,
                                                    @Nonnull PsiFile psiFile,
                                                    @Nonnull InjectedFileViewProvider viewProvider) {
@@ -314,7 +314,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
     List<InjectedLanguageUtil.TokenInfo> newTokens = InjectedLanguageUtil.getHighlightTokens(psiFile);
     PsiFile newFile = registerDocument(documentWindow, psiFile, place, hostPsiFile, documentManager);
     boolean mergeHappened = newFile != psiFile;
-    Place mergedPlace = place;
+    PlaceImpl mergedPlace = place;
     if (mergeHappened) {
       InjectedLanguageUtil.clearCaches(psiFile, documentWindow);
       psiFile = newFile;
@@ -377,7 +377,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
     currentThread = Thread.currentThread();
 
     addPlace(prefix, suffix, host, rangeInsideHost);
-    Place place = new Place();
+    PlaceImpl place = new PlaceImpl();
     StringBuilder decodedChars = new StringBuilder();
     ShredImpl shred = createShred(placeInfos.get(0), decodedChars, myHostPsiFile);
     place.add(shred);
@@ -389,7 +389,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
   }
 
   // returns true if shreds were set, false if old ones were reused
-  private static boolean cacheEverything(@Nonnull Place place, @Nonnull DocumentWindowImpl documentWindow, @Nonnull InjectedFileViewProvider viewProvider, @Nonnull PsiFile psiFile) {
+  private static boolean cacheEverything(@Nonnull PlaceImpl place, @Nonnull DocumentWindowImpl documentWindow, @Nonnull InjectedFileViewProvider viewProvider, @Nonnull PsiFile psiFile) {
     FileDocumentManagerImpl.registerDocument(documentWindow, viewProvider.getVirtualFile());
 
     DebugUtil.performPsiModification("MultiHostRegistrar cacheEverything", () -> viewProvider.forceCachedPsi(psiFile));
@@ -468,7 +468,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
       }
     }
     if (result.references != null) {
-      for (Pair<ReferenceInjector, Place> pair : result.references) {
+      for (Pair<ReferenceInjector, PlaceImpl> pair : result.references) {
         addReferenceToResults(pair);
       }
     }
@@ -481,7 +481,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
     resultFiles.add(psiFile);
   }
 
-  private void addReferenceToResults(@Nonnull Pair<ReferenceInjector, Place> pair) {
+  private void addReferenceToResults(@Nonnull Pair<ReferenceInjector, PlaceImpl> pair) {
     if (resultReferences == null) {
       resultReferences = new SmartList<>();
     }
@@ -493,7 +493,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
   @Nonnull
   private static PsiFile registerDocument(@Nonnull DocumentWindowImpl newDocumentWindow,
                                           @Nonnull PsiFile newInjectedPsi,
-                                          @Nonnull Place shreds,
+                                          @Nonnull PlaceImpl shreds,
                                           @Nonnull PsiFile hostPsiFile,
                                           @Nonnull PsiDocumentManager documentManager) {
     List<DocumentWindow> injected = InjectedLanguageUtil.getCachedInjectedDocuments(hostPsiFile);
@@ -588,7 +588,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
       // one-lineness changed, e.g. when enter pressed in the middle of a string literal
       return null;
     }
-    Place oldPlace = oldDocumentWindow.getShreds();
+    PlaceImpl oldPlace = oldDocumentWindow.getShreds();
     // can be different from newText if decode fails in the middle and we'll have to shrink the document
     StringBuilder newDocumentText = new StringBuilder(newText.length());
     // we need escaper but it only works with committed PSI,
@@ -647,7 +647,7 @@ class InjectionRegistrarImpl extends MultiHostRegistrarImpl implements MultiHost
             diffLog.doActualPsiChange(oldFiles.get(i));
 
             // create new shreds after commit is complete because otherwise the range markers will be changed in MarkerCache.updateMarkers
-            Place newPlace = new Place();
+            PlaceImpl newPlace = new PlaceImpl();
             for (int j = 0; j < oldPlace.size(); j++) {
               PsiLanguageInjectionHost.Shred shred = oldPlace.get(j);
               PlaceInfo info = placeInfos.get(j);

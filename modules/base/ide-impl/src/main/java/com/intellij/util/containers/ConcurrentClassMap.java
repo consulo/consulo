@@ -15,6 +15,8 @@
  */
 package com.intellij.util.containers;
 
+import consulo.util.collection.ClassMap;
+
 /**
  * @author peter
  */

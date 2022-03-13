@@ -13,16 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
-import com.intellij.openapi.util.Pair;
-import consulo.ui.ex.awt.IdeaTitledBorder;
-import consulo.ui.ex.awt.AnchorableComponent;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.PanelWithAnchor;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -33,14 +28,14 @@ import java.util.List;
  */
 public class OptionGroup implements PanelWithAnchor {
   private String myTitle;
-  private List myOptions;
+  private List<Object> myOptions;
   private List<Boolean> myIsShifted;
   private JComponent anchor;
 
   public OptionGroup(@Nullable String title) {
     myTitle = title;
-    myOptions = new ArrayList();
-    myIsShifted = new ArrayList<Boolean>();
+    myOptions = new ArrayList<>();
+    myIsShifted = new ArrayList<>();
   }
 
   /**
@@ -56,7 +51,7 @@ public class OptionGroup implements PanelWithAnchor {
 
   public void add(JComponent component, boolean indented) {
     myOptions.add(component);
-    myIsShifted.add(Boolean.valueOf(indented));
+    myIsShifted.add(indented);
   }
 
   public void add(JComponent leftComponent, JComponent rightComponent) {
@@ -64,8 +59,8 @@ public class OptionGroup implements PanelWithAnchor {
   }
 
   public void add(JComponent leftComponent, JComponent rightComponent, boolean indented) {
-    myOptions.add(new Pair(leftComponent, rightComponent));
-    myIsShifted.add(Boolean.valueOf(indented));
+    myOptions.add(new Pair<>(leftComponent, rightComponent));
+    myIsShifted.add(indented);
   }
 
   public JPanel createPanel() {

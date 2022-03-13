@@ -516,7 +516,7 @@ public class JDOMUtil {
    */
   @Nonnull
   public static Element internElement(@Nonnull Element element) {
-    return ourJDOMInterner.internElement(element);
+    return ourJDOMInterner.intern(element);
   }
 
   /**

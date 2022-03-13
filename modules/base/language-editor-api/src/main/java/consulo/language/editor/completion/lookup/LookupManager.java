@@ -2,10 +2,9 @@
 
 package consulo.language.editor.completion.lookup;
 
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
-import consulo.ide.ServiceManager;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.project.Project;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;
@@ -28,7 +27,7 @@ public abstract class LookupManager {
     final LookupEx lookup = getInstance(project).getActiveLookup();
     if (lookup == null) return null;
 
-    return lookup.getTopLevelEditor() == InjectedLanguageUtil.getTopLevelEditor(editor) ? lookup : null;
+    return lookup.getTopLevelEditor() == EditorWindow.getTopLevelEditor(editor) ? lookup : null;
   }
 
   @Nullable

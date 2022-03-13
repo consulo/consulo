@@ -18,6 +18,7 @@ package consulo.language.codeStyle;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,4 +90,9 @@ public interface FormattingDocumentModel {
    */
   @Nonnull
   CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, int startOffset, int endOffset, @Nullable ASTNode nodeAfter, boolean changedViaPsi);
+
+  @Nullable
+  default PsiFile getFile() {
+    return null;
+  }
 }

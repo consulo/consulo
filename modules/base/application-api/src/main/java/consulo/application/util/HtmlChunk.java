@@ -1,12 +1,13 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.util.text;
+package consulo.application.util;
 
-import com.intellij.util.containers.UnmodifiableHashMap;
+import consulo.util.collection.UnmodifiableHashMap;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Collector;
 
@@ -130,16 +131,14 @@ public abstract class HtmlChunk {
      * @return a new element that is like this element but has the specified attribute added or replaced
      */
     @Contract(pure = true)
-    public
     @Nonnull
-    Element attr(@NonNls String name, String value) {
+    public Element attr(@NonNls String name, String value) {
       return new Element(myTagName, myAttributes.with(name, value), myChildren);
     }
 
     @Contract(pure = true)
-    public
     @Nonnull
-    Element attr(@NonNls String name, int value) {
+    public Element attr(@NonNls String name, int value) {
       return new Element(myTagName, myAttributes.with(name, Integer.toString(value)), myChildren);
     }
 

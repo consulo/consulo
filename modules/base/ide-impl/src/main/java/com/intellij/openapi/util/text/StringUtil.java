@@ -100,12 +100,7 @@ public class StringUtil extends StringUtilRt {
   @Nonnull
   @Contract(pure = true)
   public static <T> Function<T, String> createToStringFunction(@Nonnull Class<T> cls) {
-    return new Function<T, String>() {
-      @Override
-      public String fun(@Nonnull T o) {
-        return o.toString();
-      }
-    };
+    return Object::toString;
   }
 
   @Nonnull

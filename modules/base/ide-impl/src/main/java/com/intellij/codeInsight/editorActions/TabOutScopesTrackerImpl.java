@@ -3,7 +3,7 @@ package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Caret;
 import consulo.document.Document;

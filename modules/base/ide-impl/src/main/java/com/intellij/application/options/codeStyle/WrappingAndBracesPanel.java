@@ -28,7 +28,7 @@ import com.intellij.psi.codeStyle.presentation.CodeStyleSelectSettingPresentatio
 import com.intellij.psi.codeStyle.presentation.CodeStyleSettingPresentation;
 import com.intellij.psi.codeStyle.presentation.CodeStyleSoftMarginsPresentation;
 import com.intellij.ui.components.fields.CommaSeparatedIntegersField;
-import com.intellij.ui.components.fields.valueEditors.CommaSeparatedIntegersValueEditor;
+import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.ui.ex.awt.UIUtil;

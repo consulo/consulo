@@ -22,7 +22,7 @@ import com.intellij.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.language.codeStyle.internal.IndentData;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.Commenter;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

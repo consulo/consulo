@@ -18,6 +18,7 @@ package consulo.language.codeStyle;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
@@ -103,7 +104,10 @@ public abstract class InjectedLanguageBlockBuilder {
           }
       }
     };
-    InjectedLanguageUtil.enumerate(injectionHost.getPsi(), injectedPsiVisitor);
+
+    final PsiElement injectionHostPsi = injectionHost.getPsi();
+    PsiFile containingFile = injectionHostPsi.getContainingFile();
+    InjectedLanguageManager.getInstance(containingFile.getProject()).enumerateEx(injectionHostPsi, containingFile, true, injectedPsiVisitor);
 
     if  (injectedFile[0] != null) {
       final Language childLanguage = injectedFile[0].getLanguage();

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.diagnostic;
+package consulo.application.util.logging;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.ExceptionUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
@@ -43,7 +43,7 @@ public class IdeaLoggingEvent {
   public String getThrowableText() {
     if (myThrowable == null) return "";
     
-    return StringUtil.getThrowableText(myThrowable);
+    return ExceptionUtil.getThrowableText(myThrowable);
   }
 
   @Nullable

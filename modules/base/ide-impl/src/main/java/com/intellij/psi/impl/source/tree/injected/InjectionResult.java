@@ -14,10 +14,10 @@ class InjectionResult implements Getter<InjectionResult> {
   @Nullable
   final List<? extends PsiFile> files;
   @Nullable
-  final List<? extends Pair<ReferenceInjector, Place>> references;
+  final List<? extends Pair<ReferenceInjector, PlaceImpl>> references;
   private final long myModificationCount;
 
-  InjectionResult(@Nonnull PsiFile hostFile, @Nullable List<? extends PsiFile> files, @Nullable List<? extends Pair<ReferenceInjector, Place>> references) {
+  InjectionResult(@Nonnull PsiFile hostFile, @Nullable List<? extends PsiFile> files, @Nullable List<? extends Pair<ReferenceInjector, PlaceImpl>> references) {
     this.files = files;
     this.references = references;
     myModificationCount = calcModCount(hostFile);
@@ -39,8 +39,8 @@ class InjectionResult implements Getter<InjectionResult> {
       }
     }
     else if (references != null) {
-      for (Pair<ReferenceInjector, Place> pair : references) {
-        Place place = pair.getSecond();
+      for (Pair<ReferenceInjector, PlaceImpl> pair : references) {
+        PlaceImpl place = pair.getSecond();
         if (!place.isValid()) return false;
       }
     }

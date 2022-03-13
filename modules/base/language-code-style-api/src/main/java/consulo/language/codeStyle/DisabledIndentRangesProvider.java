@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.psi.impl.source;
+package consulo.language.codeStyle;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;

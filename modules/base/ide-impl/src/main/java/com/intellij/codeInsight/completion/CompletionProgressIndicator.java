@@ -19,7 +19,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.lang.LangBundle;
 import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;

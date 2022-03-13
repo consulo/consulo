@@ -21,6 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.util.collection.Lists;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
@@ -116,12 +117,24 @@ public abstract class NamedScopesHolder implements PersistentStateComponent<Elem
   }
 
   @Nullable
-  public static NamedScope getScope(@Nonnull Project project, final String scopeName) {
+  public static NamedScope getScope(@Nonnull Project project, final String scopeId) {
     final NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
     for (NamedScopesHolder holder : holders) {
-      final NamedScope scope = holder.getScope(scopeName);
+      final NamedScope scope = holder.getScope(scopeId);
       if (scope != null) {
         return scope;
+      }
+    }
+    return null;
+  }
+
+  @Nullable
+  public static Pair<NamedScopesHolder, NamedScope> getScopeWithHolder(@Nonnull Project project, final String scopeId) {
+    final NamedScopesHolder[] holders = getAllNamedScopeHolders(project);
+    for (NamedScopesHolder holder : holders) {
+      final NamedScope scope = holder.getScope(scopeId);
+      if (scope != null) {
+        return Pair.create(holder, scope);
       }
     }
     return null;

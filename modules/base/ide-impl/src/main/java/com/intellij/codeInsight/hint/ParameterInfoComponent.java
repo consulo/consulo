@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.hint;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.lang.parameterInfo.ParameterInfoHandler;
 import com.intellij.lang.parameterInfo.ParameterInfoUIContextEx;
 import consulo.ui.ex.action.IdeActions;

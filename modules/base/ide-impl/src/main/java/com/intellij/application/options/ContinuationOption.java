@@ -15,8 +15,10 @@ package com.intellij.application.options;
 
 import consulo.language.codeStyle.CodeStyleConstraints;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import com.intellij.ui.components.fields.IntegerField;
-import com.intellij.ui.components.fields.valueEditors.ValueEditor;
+import consulo.ui.ex.awt.IntegerField;
+import consulo.ui.ex.awt.valueEditor.ValueEditor;
+import consulo.language.codeStyle.setting.IndentOptionsEditor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

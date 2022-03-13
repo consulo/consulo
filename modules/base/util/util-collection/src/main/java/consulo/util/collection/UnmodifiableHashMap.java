@@ -1,9 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util.containers;
+package consulo.util.collection;
 
-import com.intellij.util.ArrayUtil;
-import consulo.util.collection.HashingStrategy;
-import consulo.util.collection.Maps;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

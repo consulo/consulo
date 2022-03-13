@@ -15,7 +15,7 @@
  */
 package consulo.ide.plugins.whatsNew;
 
-import com.intellij.openapi.util.text.HtmlChunk;
+import consulo.application.util.HtmlChunk;
 
 import java.util.regex.Pattern;
 

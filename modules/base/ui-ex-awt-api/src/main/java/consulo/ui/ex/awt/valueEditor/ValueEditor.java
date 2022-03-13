@@ -1,9 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ui.components.fields.valueEditors;
+package consulo.ui.ex.awt.valueEditor;
 
-import consulo.configurable.Configurable;
-import consulo.configurable.ConfigurationException;
-import consulo.util.xml.serializer.InvalidDataException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,10 +42,9 @@ public interface ValueEditor<T> {
   /**
    * Check if the current component content is valid and throw ConfigurationException if not.
    *
-   * @throws ConfigurationException The configuration exception.
-   * @see Configurable#apply()
+   * @throws ValueValidationException The configuration exception.
    */
-  void validateContent() throws ConfigurationException;
+  void validateContent() throws ValueValidationException;
 
   String getValueText();
 
@@ -59,10 +55,10 @@ public interface ValueEditor<T> {
    *
    * @param text The text to parse.
    * @return Parsed data.
-   * @throws InvalidDataException if parsing fails.
+   * @throws ValueValidationException if parsing fails.
    */
   @Nonnull
-  T parseValue(@Nullable String text) throws InvalidDataException;
+  T parseValue(@Nullable String text) throws ValueValidationException;
 
   /**
    * Convert the value to an equivalent text string.

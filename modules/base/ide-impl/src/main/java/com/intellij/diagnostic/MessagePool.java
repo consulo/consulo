@@ -16,7 +16,7 @@
 package com.intellij.diagnostic;
 
 import com.intellij.concurrency.JobScheduler;
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
+import consulo.application.util.logging.IdeaLoggingEvent;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

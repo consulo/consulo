@@ -24,7 +24,7 @@ import com.intellij.ui.TreeTableSpeedSearch;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.ui.components.editors.JBComboBoxTableCellEditorComponent;
-import com.intellij.ui.components.fields.IntegerField;
+import consulo.ui.ex.awt.IntegerField;
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModel;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableCellRenderer;

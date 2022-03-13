@@ -7,7 +7,7 @@ import com.intellij.ide.CutProvider;
 import com.intellij.ide.DeleteProvider;
 import com.intellij.ide.PasteProvider;
 import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.injected.editor.MarkupModelWindow;
 import com.intellij.openapi.editor.*;
 import consulo.document.impl.DocumentEx;

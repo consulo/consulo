@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.util.collection;
 
-package consulo.language.editor.completion.lookup;
+import consulo.util.collection.impl.EmptyIterator;
 
-import consulo.component.extension.ExtensionPointName;
+import javax.annotation.Nonnull;
+import java.util.Iterator;
 
 /**
- * @author yole
- * @deprecated use {@link LookupElement#renderElement(LookupElementPresentation)}
+ * @author VISTALL
+ * @since 13-Mar-22
  */
-@Deprecated
-public interface ElementLookupRenderer<T> {
-  ExtensionPointName<ElementLookupRenderer> EP_NAME = ExtensionPointName.create("consulo.elementLookupRenderer");
-
-  boolean handlesItem(Object element);
-
-  void renderElement(final LookupItem item, T element, LookupElementPresentation presentation);
+public final class Iterators {
+  @Nonnull
+  public static <T> Iterator<T> empty() {
+    return EmptyIterator.getInstance();
+  }
 }

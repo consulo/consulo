@@ -2,6 +2,7 @@
 package com.intellij.injected.editor;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.util.dataholder.UserDataHolderBase;
 import javax.annotation.Nonnull;
 

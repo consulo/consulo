@@ -15,17 +15,19 @@
  */
 package com.intellij.codeInsight.lookup;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.containers.FlatteningIterator;
 import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FlatteningIterator;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeMap;
 
 /**
  * @author peter
@@ -80,11 +82,6 @@ public abstract class ComparingClassifier<T> extends Classifier<T> {
   @Nonnull
   @Override
   public List<Pair<T, Object>> getSortingWeights(@Nonnull Iterable<T> items, @Nonnull final ProcessingContext context) {
-    return ContainerUtil.map(items, new Function<T, Pair<T, Object>>() {
-      @Override
-      public Pair<T, Object> fun(T t) {
-        return new Pair<T, Object>(t, getWeight(t, context));
-      }
-    });
+    return ContainerUtil.map(items, t -> new Pair<T, Object>(t, getWeight(t, context)));
   }
 }

@@ -17,7 +17,7 @@ package consulo.language.editor.highlight.usage;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
-import consulo.codeInsight.TargetElementUtil;
+import consulo.language.editor.TargetElementUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 

@@ -20,7 +20,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.QuestionAction;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Editor;

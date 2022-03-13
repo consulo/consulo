@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.actions;
 
+import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.formatting.FormattingProgressTask;
 import consulo.logging.Logger;
@@ -46,7 +47,7 @@ import java.util.concurrent.FutureTask;
 
 public class ReformatCodeProcessor extends AbstractLayoutCodeProcessor {
 
-  public static final String COMMAND_NAME = CodeInsightBundle.message("process.reformat.code");
+  public static final String COMMAND_NAME = FormatterUtil.REFORMAT_COMMAND_NAME;
 
   private static final Logger LOG = Logger.getInstance(ReformatCodeProcessor.class);
 

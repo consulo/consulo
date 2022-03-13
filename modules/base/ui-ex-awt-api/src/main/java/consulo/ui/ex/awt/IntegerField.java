@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.components.fields;
+package consulo.ui.ex.awt;
 
-import consulo.configurable.ConfigurationException;
-import consulo.ui.ex.awt.JBTextField;
-import com.intellij.ui.components.fields.valueEditors.IntegerValueEditor;
+import consulo.ui.ex.awt.valueEditor.IntegerValueEditor;
+import consulo.ui.ex.awt.valueEditor.ValueValidationException;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -81,7 +81,7 @@ public class IntegerField extends JBTextField {
     return myValueEditor.getValueName();
   }
 
-  public void validateContent() throws ConfigurationException {
+  public void validateContent() throws ValueValidationException {
     myValueEditor.validateContent();
   }
 

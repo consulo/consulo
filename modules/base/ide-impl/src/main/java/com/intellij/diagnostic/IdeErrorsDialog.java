@@ -30,7 +30,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
+import consulo.application.util.logging.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import consulo.component.extension.ExtensionException;
 import consulo.application.progress.ProgressIndicator;

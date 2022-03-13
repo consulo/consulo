@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Methods of this interface define contract for implementing {@link Indent} factory methods, so, feel free to check
  * their contracts.
  */
-interface IndentFactory {
+public interface IndentFactory {
   Indent getNormalIndent(boolean relativeToDirectParent);
 
   Indent getNoneIndent();

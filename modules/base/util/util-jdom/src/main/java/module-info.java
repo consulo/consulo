@@ -10,7 +10,10 @@ module consulo.util.jdom {
   requires org.slf4j;
   requires transitive org.jdom;
 
+  requires static consulo.util.interner;
+
   requires transitive java.xml;
 
   exports consulo.util.jdom;
+  exports consulo.util.jdom.interner;
 }

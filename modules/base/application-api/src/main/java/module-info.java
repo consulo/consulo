@@ -13,9 +13,10 @@ module consulo.application.api {
 
   requires transitive consulo.util.concurrent;
   requires transitive consulo.util.collection;
+  requires transitive consulo.util.interner;
 
   requires consulo.injecting.api;
-  
+
   requires transitive jakarta.inject;
 
   requires com.sun.jna;
@@ -38,4 +39,5 @@ module consulo.application.api {
   exports consulo.application.util.concurrent;
   exports consulo.application.util.registry;
   exports consulo.application.util.diff;
+  exports consulo.application.util.logging;
 }

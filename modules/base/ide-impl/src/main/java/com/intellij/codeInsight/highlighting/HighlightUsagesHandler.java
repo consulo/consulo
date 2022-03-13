@@ -21,7 +21,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.find.EditorSearchSession;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.pom.PsiDeclaredTarget;
 import com.intellij.psi.ElementDescriptionUtil;

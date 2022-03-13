@@ -1,12 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle;
 
-import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.*;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.lang.LangBundle;
-import consulo.language.codeStyle.LanguageFormatting;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.FileIndentOptionsProvider;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;

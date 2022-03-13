@@ -15,8 +15,6 @@
  */
 package consulo.language.codeStyle;
 
-import com.intellij.codeInsight.actions.ReformatCodeProcessor;
-import com.intellij.openapi.vcs.checkin.ReformatBeforeCheckinHandler;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -42,8 +40,11 @@ import java.util.Collection;
 import java.util.Set;
 
 public class FormatterUtil {
+  // TODO [VISTALL] change it. make it more localize friendly
+  public static final String REFORMAT_COMMAND_NAME = "Reformat Code";
+  public static final String REFORMAT_BEFORE_COMMIT_COMMAND_NAME = "Reformat Code Before Commit";
 
-  public static final Collection<String> FORMATTER_ACTION_NAMES = Set.of(ReformatCodeProcessor.COMMAND_NAME, ReformatBeforeCheckinHandler.COMMAND_NAME);
+  public static final Collection<String> FORMATTER_ACTION_NAMES = Set.of(REFORMAT_COMMAND_NAME, REFORMAT_BEFORE_COMMIT_COMMAND_NAME);
 
   private FormatterUtil() {
   }

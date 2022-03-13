@@ -4,7 +4,7 @@ package com.intellij.psi.impl.source.tree.injected;
 
 import consulo.document.util.ProperTextRange;
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.disposer.Disposable;
 import consulo.document.util.Segment;
@@ -42,14 +42,14 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
   private static final Logger LOG = Logger.getInstance(DocumentWindowImpl.class);
   private final DocumentEx myDelegate;
   private final boolean myOneLine;
-  private Place myShreds; // guarded by myLock
+  private PlaceImpl myShreds; // guarded by myLock
   private final int myPrefixLineCount;
   private final int mySuffixLineCount;
   private final Object myLock = new Object();
 
   private CachedText myCachedText;
 
-  DocumentWindowImpl(@Nonnull DocumentEx delegate, @Nonnull Place shreds) {
+  DocumentWindowImpl(@Nonnull DocumentEx delegate, @Nonnull PlaceImpl shreds) {
     myDelegate = delegate;
     myOneLine = ContainerUtil.and(shreds, s -> ((ShredImpl)s).isOneLine());
     synchronized (myLock) {
@@ -847,8 +847,8 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
   @Override
   public boolean areRangesEqual(@Nonnull DocumentWindow other) {
     DocumentWindowImpl window = (DocumentWindowImpl)other;
-    Place shreds = getShreds();
-    Place otherShreds = window.getShreds();
+    PlaceImpl shreds = getShreds();
+    PlaceImpl otherShreds = window.getShreds();
     if (shreds.size() != otherShreds.size()) return false;
     for (int i = 0; i < shreds.size(); i++) {
       PsiLanguageInjectionHost.Shred shred = shreds.get(i);
@@ -865,7 +865,7 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
 
   @Override
   public boolean isValid() {
-    Place shreds;
+    PlaceImpl shreds;
     synchronized (myLock) {
       shreds = myShreds; // assumption: myShreds list is immutable
     }
@@ -910,7 +910,7 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
     }
   }
 
-  void setShreds(@Nonnull Place shreds) {
+  void setShreds(@Nonnull PlaceImpl shreds) {
     synchronized (myLock) {
       myShreds.dispose();
       myShreds = shreds;
@@ -918,7 +918,7 @@ class DocumentWindowImpl extends UserDataHolderBase implements Disposable, Docum
   }
 
   @Nonnull
-  Place getShreds() {
+  PlaceImpl getShreds() {
     synchronized (myLock) {
       return myShreds;
     }

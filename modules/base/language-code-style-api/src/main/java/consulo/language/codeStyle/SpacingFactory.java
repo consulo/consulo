@@ -24,47 +24,28 @@ import java.util.List;
  * Internal interface for creating spacing instances.
  */
 
-interface SpacingFactory {
+public interface SpacingFactory {
 
   @Nonnull
-  Spacing createSpacing(int minSpaces,
-                        int maxSpaces,
-                        int minLineFeeds,
-                        boolean keepLineBreaks,
-                        int keepBlankLines);
+  Spacing createSpacing(int minSpaces, int maxSpaces, int minLineFeeds, boolean keepLineBreaks, int keepBlankLines);
 
   @Nonnull
   Spacing getReadOnlySpacing();
 
   @Nonnull
-  Spacing createDependentLFSpacing(int minSpaces,
-                                   int maxSpaces,
-                                   @Nonnull TextRange dependencyRange,
-                                   boolean keepLineBreaks,
-                                   int keepBlankLines,
-                                   @Nonnull DependentSpacingRule rule);
+  Spacing createDependentLFSpacing(int minSpaces, int maxSpaces, @Nonnull TextRange dependencyRange, boolean keepLineBreaks, int keepBlankLines, @Nonnull DependentSpacingRule rule);
 
 
   @Nonnull
-  Spacing createDependentLFSpacing(int minSpaces,
-                                   int maxSpaces,
-                                   @Nonnull List<TextRange> dependencyRange,
-                                   boolean keepLineBreaks,
-                                   int keepBlankLines,
-                                   @Nonnull DependentSpacingRule rule);
+  Spacing createDependentLFSpacing(int minSpaces, int maxSpaces, @Nonnull List<TextRange> dependencyRange, boolean keepLineBreaks, int keepBlankLines, @Nonnull DependentSpacingRule rule);
 
 
   @Nonnull
-  Spacing createSafeSpacing(boolean keepLineBreaks,
-                            int keepBlankLines);
+  Spacing createSafeSpacing(boolean keepLineBreaks, int keepBlankLines);
 
   @Nonnull
-  Spacing createKeepingFirstColumnSpacing(final int minSpaces,
-                                          final int maxSpaces,
-                                          final boolean keepLineBreaks,
-                                          final int keepBlankLines);
+  Spacing createKeepingFirstColumnSpacing(final int minSpaces, final int maxSpaces, final boolean keepLineBreaks, final int keepBlankLines);
 
   @Nonnull
-  Spacing createSpacing(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean keepLineBreaks,
-                        final int keepBlankLines, final int prefLineFeeds);
+  Spacing createSpacing(final int minSpaces, final int maxSpaces, final int minLineFeeds, final boolean keepLineBreaks, final int keepBlankLines, final int prefLineFeeds);
 }

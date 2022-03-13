@@ -17,16 +17,17 @@ package com.intellij.application.options.codeStyle;
 
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.configurable.ConfigurationException;
+import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 import consulo.util.lang.Trinity;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import com.intellij.psi.codeStyle.presentation.CodeStyleSettingPresentation;
-import com.intellij.ui.OptionGroup;
+import consulo.ui.ex.awt.OptionGroup;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.fields.IntegerField;
+import consulo.ui.ex.awt.IntegerField;
 import consulo.util.collection.MultiMap;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -147,7 +148,12 @@ public class CodeStyleBlankLinesPanel extends CustomizableLanguageCodeStylePanel
   @Override
   public void apply(CodeStyleSettings settings) throws ConfigurationException {
     for (IntOption option : myOptions) {
-      option.myIntField.validateContent();
+      try {
+        option.myIntField.validateContent();
+      }
+      catch (ValueValidationException e) {
+        throw new ConfigurationException(e.getMessage());
+      }
     }
     for (IntOption option : myOptions) {
       option.setFieldValue(settings, option.getValue());

@@ -21,10 +21,11 @@ import consulo.language.psi.SmartPsiElementPointer;
 import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 
-public class Place extends SmartList<PsiLanguageInjectionHost.Shred> {
-  Place() {
+public class PlaceImpl extends SmartList<PsiLanguageInjectionHost.Shred> implements PsiLanguageInjectionHost.Place {
+  PlaceImpl() {
   }
 
+  @Override
   @Nonnull
   public SmartPsiElementPointer<PsiLanguageInjectionHost> getHostPointer() {
     return ((ShredImpl)get(0)).getSmartPointer();

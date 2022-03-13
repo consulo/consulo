@@ -37,6 +37,41 @@ public class ReflectionUtil {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);
   }
 
+  public static void copyFields(@Nonnull Field[] fields, @Nonnull Object from, @Nonnull Object to) {
+    copyFields(fields, from, to, null);
+  }
+
+  public static boolean copyFields(@Nonnull Field[] fields, @Nonnull Object from, @Nonnull Object to, @Nullable Predicate<Field> diffFilter) {
+    Set<Field> sourceFields = new HashSet<Field>(Arrays.asList(from.getClass().getFields()));
+    boolean valuesChanged = false;
+    for (Field field : fields) {
+      if (sourceFields.contains(field)) {
+        if (isPublic(field) && !isFinal(field)) {
+          try {
+            if (diffFilter == null || diffFilter.test(field)) {
+              copyFieldValue(from, to, field);
+              valuesChanged = true;
+            }
+          }
+          catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+        }
+      }
+    }
+    return valuesChanged;
+  }
+
+  public static void copyFieldValue(@Nonnull Object from, @Nonnull Object to, @Nonnull Field field) throws IllegalAccessException {
+    Class<?> fieldType = field.getType();
+    if (fieldType.isPrimitive() || fieldType.equals(String.class) || fieldType.isEnum()) {
+      field.set(to, field.get(from));
+    }
+    else {
+      throw new RuntimeException("Field '" + field.getName() + "' not copied: unsupported type: " + field.getType());
+    }
+  }
+
   public static boolean comparePublicNonFinalFields(@Nonnull Object first, @Nonnull Object second) {
     Set<Field> firstFields = Set.of(first.getClass().getFields());
     for (Field field : second.getClass().getFields()) {

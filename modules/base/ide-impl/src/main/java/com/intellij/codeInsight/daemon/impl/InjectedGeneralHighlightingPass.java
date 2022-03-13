@@ -18,7 +18,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.tree.injected.Place;
+import com.intellij.psi.impl.source.tree.injected.PlaceImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.concurrency.JobLauncher;
@@ -200,7 +200,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
                                            @Nonnull InjectedLanguageManager injectedLanguageManager) {
     DocumentWindow documentWindow = (DocumentWindow)PsiDocumentManager.getInstance(myProject).getCachedDocument(injectedPsi);
     if (documentWindow == null) return true;
-    Place places = InjectedLanguageUtil.getShreds(injectedPsi);
+    PlaceImpl places = InjectedLanguageUtil.getShreds(injectedPsi);
     boolean addTooltips = places.size() < 100;
     for (PsiLanguageInjectionHost.Shred place : places) {
       PsiLanguageInjectionHost host = place.getHost();
@@ -374,7 +374,7 @@ public class InjectedGeneralHighlightingPass extends GeneralHighlightingPass {
 
     final TextAttributes defaultAttrs = myGlobalScheme.getAttributes(HighlighterColors.TEXT);
 
-    Place shreds = InjectedLanguageUtil.getShreds(injectedPsi);
+    PlaceImpl shreds = InjectedLanguageUtil.getShreds(injectedPsi);
     int shredIndex = -1;
     int injectionHostTextRangeStart = -1;
     for (InjectedLanguageUtil.TokenInfo token : tokens) {

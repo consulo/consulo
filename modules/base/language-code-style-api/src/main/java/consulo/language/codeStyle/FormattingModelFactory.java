@@ -23,11 +23,9 @@ import javax.annotation.Nonnull;
  * A factory for standard formatting model implementations. Not to be used directly
  * by plugins - use {@link FormattingModelProvider} instead.
  *
- * @see FormattingModelProvider 
+ * @see FormattingModelProvider
  */
 
-interface FormattingModelFactory {
-  FormattingModel createFormattingModelForPsiFile(PsiFile file,
-                                                  @Nonnull Block rootBlock,
-                                                  CodeStyleSettings settings);
+public interface FormattingModelFactory {
+  FormattingModel createFormattingModelForPsiFile(PsiFile file, @Nonnull Block rootBlock, CodeStyleSettings settings);
 }

@@ -34,11 +34,11 @@ public class MapBasedInterner<T> implements Interner<T> {
 
   @Override
   @Nonnull
-  public T intern(@Nonnull T name) {
-    T v = myMap.get(name);
+  public T intern(@Nonnull T item) {
+    T v = myMap.get(item);
     if (v != null) return v;
-    T prev = myMap.putIfAbsent(name, name);
-    return prev == null ? name : prev;
+    T prev = myMap.putIfAbsent(item, item);
+    return prev == null ? item : prev;
   }
 
   @Nullable

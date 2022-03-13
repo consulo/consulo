@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.language.editor.highlight.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.EditorModificationUtil;

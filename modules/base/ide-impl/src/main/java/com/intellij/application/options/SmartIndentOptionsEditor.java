@@ -19,6 +19,7 @@ package com.intellij.application.options;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
+import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import javax.annotation.Nonnull;
 

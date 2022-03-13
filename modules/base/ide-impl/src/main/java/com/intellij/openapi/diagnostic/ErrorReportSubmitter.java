@@ -16,6 +16,7 @@
 package com.intellij.openapi.diagnostic;
 
 import com.intellij.util.Consumer;
+import consulo.application.util.logging.IdeaLoggingEvent;
 
 import java.awt.*;
 

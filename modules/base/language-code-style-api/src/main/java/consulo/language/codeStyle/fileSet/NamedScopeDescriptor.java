@@ -1,7 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle.fileSet;
 
-import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.search.scope.*;
 import consulo.project.Project;
@@ -14,18 +13,18 @@ import javax.annotation.Nullable;
 public class NamedScopeDescriptor implements FileSetDescriptor {
   public final static String NAMED_SCOPE_TYPE = "namedScope";
 
-  private final String myScopeName;
+  private final String myScopeId;
   private
   @Nullable
   PackageSet myFileSet;
 
   public NamedScopeDescriptor(@Nonnull NamedScope scope) {
-    myScopeName = scope.getName();
+    myScopeId = scope.getScopeId();
     myFileSet = scope.getValue();
   }
 
-  public NamedScopeDescriptor(@Nonnull String scopeName) {
-    myScopeName = scopeName;
+  public NamedScopeDescriptor(@Nonnull String scopeId) {
+    myScopeId = scopeId;
   }
 
   @Override
@@ -50,27 +49,17 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
         return fileSet.contains(psiFile, resolved.first);
       }
     }
-    if (myFileSet != null) {
-      NamedScopesHolder holder = DependencyValidationManager.getInstance(psiFile.getProject());
-      return myFileSet.contains(psiFile, holder);
-    }
     return false;
   }
 
   private Pair<NamedScopesHolder, NamedScope> resolveScope(@Nonnull Project project) {
-    NamedScopesHolder holder = DependencyValidationManager.getInstance(project);
-    NamedScope scope = holder.getScope(myScopeName);
-    if (scope == null) {
-      holder = NamedScopeManager.getInstance(project);
-      scope = holder.getScope(myScopeName);
-    }
-    return scope != null ? Pair.create(holder, scope) : null;
+    return NamedScopesHolder.getScopeWithHolder(project, myScopeId);
   }
 
   @Nonnull
   @Override
   public String getName() {
-    return myScopeName;
+    return myScopeId;
   }
 
   @Nonnull
@@ -92,6 +81,6 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
 
   @Override
   public String toString() {
-    return "scope: " + myScopeName;
+    return "scope: " + myScopeId;
   }
 }

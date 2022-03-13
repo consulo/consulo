@@ -1,15 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.psi.codeStyle.statusbar;
 
-import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.*;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ModalityState;
 import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.language.codeStyle.FileIndentOptionsProvider;
 import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
 import consulo.language.codeStyle.event.CodeStyleSettingsListener;
 import consulo.project.Project;
@@ -25,9 +22,8 @@ import consulo.project.ui.wm.StatusBarWidget;
 import com.intellij.openapi.wm.impl.status.EditorBasedStatusBarPopup;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.psi.codeStyle.*;
 import com.intellij.psi.codeStyle.modifier.CodeStyleSettingsModifier;
-import com.intellij.psi.codeStyle.modifier.CodeStyleStatusBarUIContributor;
+import consulo.language.codeStyle.CodeStyleStatusBarUIContributor;
 import com.intellij.psi.codeStyle.modifier.TransientCodeStyleSettings;
 import com.intellij.util.concurrency.NonUrgentExecutor;
 import javax.annotation.Nonnull;

@@ -1,11 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ui.components.fields.valueEditors;
+package consulo.ui.ex.awt.valueEditor;
 
-import consulo.util.xml.serializer.InvalidDataException;
-import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import javax.annotation.Nonnull;
+import consulo.util.lang.StringUtil;
+import consulo.util.xml.serializer.InvalidDataException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -35,7 +35,7 @@ public abstract class TextFieldValueEditor<T> extends AbstractValueEditor<T> {
       fireValueChanged(newValue);
       return null;
     }
-    catch (InvalidDataException ex) {
+    catch (ValueValidationException ex) {
       return ex.getMessage();
     }
   }

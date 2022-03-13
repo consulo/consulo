@@ -20,7 +20,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.components.fields.valueEditors.CommaSeparatedIntegersValueEditor;
+import consulo.ui.ex.awt.valueEditor.CommaSeparatedIntegersValueEditor;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

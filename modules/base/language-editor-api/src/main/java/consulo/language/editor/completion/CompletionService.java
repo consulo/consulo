@@ -126,7 +126,7 @@ public abstract class CompletionService {
     return getItemMatcher(element, context).isStartMatch(element);
   }
 
-  static PrefixMatcher getItemMatcher(LookupElement element, WeighingContext context) {
+  public static PrefixMatcher getItemMatcher(LookupElement element, WeighingContext context) {
     PrefixMatcher itemMatcher = context.itemMatcher(element);
     String pattern = context.itemPattern(element);
     if (!pattern.equals(itemMatcher.getPrefix())) {

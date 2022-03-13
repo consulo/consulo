@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.intellij.application.options;
+package consulo.language.codeStyle.setting;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.language.codeStyle.CodeStyleBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import com.intellij.ui.OptionGroup;
-import com.intellij.ui.components.fields.IntegerField;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.IntegerField;
+import consulo.ui.ex.awt.OptionGroup;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -35,8 +33,8 @@ import static consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvid
 
 @SuppressWarnings({"Duplicates", "deprecation", "DeprecatedIsStillUsed"})
 public class IndentOptionsEditor extends OptionGroup implements CodeStyleSettingsCustomizable {
-  private static final String INDENT_LABEL = ApplicationBundle.message("editbox.indent.indent");
-  private static final String TAB_SIZE_LABEL = ApplicationBundle.message("editbox.indent.tab.size");
+  private static final String INDENT_LABEL = CodeStyleBundle.message("editbox.indent.indent");
+  private static final String TAB_SIZE_LABEL = CodeStyleBundle.message("editbox.indent.tab.size");
 
   @Deprecated
   protected JTextField myIndentField;
@@ -53,7 +51,7 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
   @Deprecated
   protected JLabel myIndentLabel;
 
-  @javax.annotation.Nullable
+  @Nullable
   private final LanguageCodeStyleSettingsProvider myProvider;
 
   public IndentOptionsEditor() {
@@ -99,11 +97,11 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
    * @deprecated Use {@link #createIndentTextField(String, int, int, int)}
    */
   @Deprecated
-  protected JTextField createIndentTextField() {
+  public JTextField createIndentTextField() {
     return createIndentTextField(null, Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
   }
 
-  protected IntegerField createIndentTextField(@Nullable String valueName, int minSize, int maxSize, int defaultValue) {
+  public IntegerField createIndentTextField(@Nullable String valueName, int minSize, int maxSize, int defaultValue) {
     IntegerField field = new IntegerField(valueName, minSize, maxSize);
     field.setDefaultValue(defaultValue);
     field.setColumns(4);
@@ -113,7 +111,7 @@ public class IndentOptionsEditor extends OptionGroup implements CodeStyleSetting
   }
 
   protected void addTabOptions() {
-    myCbUseTab = new JCheckBox(ApplicationBundle.message("checkbox.indent.use.tab.character"));
+    myCbUseTab = new JCheckBox(CodeStyleBundle.message("checkbox.indent.use.tab.character"));
     add(myCbUseTab);
   }
 

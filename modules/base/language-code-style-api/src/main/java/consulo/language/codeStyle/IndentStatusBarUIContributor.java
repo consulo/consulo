@@ -1,16 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.psi.codeStyle;
+package consulo.language.codeStyle;
 
-import consulo.language.codeStyle.CodeStyle;
-import com.intellij.lang.LangBundle;
-import com.intellij.openapi.util.text.HtmlBuilder;
-import com.intellij.openapi.util.text.HtmlChunk;
-import consulo.language.psi.PsiFile;
+import consulo.application.util.HtmlBuilder;
+import consulo.application.util.HtmlChunk;
 import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
-import com.intellij.psi.codeStyle.modifier.CodeStyleStatusBarUIContributor;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ui.ex.JBColor;
+import consulo.language.psi.PsiFile;
+import consulo.ui.style.StandardColors;
+import consulo.ui.util.ColorValueUtil;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -42,7 +40,7 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
   @Nls
   @Nonnull
   public static String getIndentInfo(@Nonnull IndentOptions indentOptions) {
-    return indentOptions.USE_TAB_CHARACTER ? LangBundle.message("indent.status.bar.tab") : LangBundle.message("indent.status.bar.spaces", indentOptions.INDENT_SIZE);
+    return indentOptions.USE_TAB_CHARACTER ? CodeStyleBundle.message("indent.status.bar.tab") : CodeStyleBundle.message("indent.status.bar.spaces", indentOptions.INDENT_SIZE);
   }
 
   /**
@@ -57,9 +55,9 @@ public abstract class IndentStatusBarUIContributor implements CodeStyleStatusBar
   public static
   String createTooltip(@Nls String indentInfo, String hint) {
     HtmlBuilder builder = new HtmlBuilder();
-    builder.append(LangBundle.message("indent.status.bar.indent.tooltip")).append(indentInfo);
+    builder.append(CodeStyleBundle.message("indent.status.bar.indent.tooltip")).append(indentInfo);
     if (hint != null) {
-      builder.nbsp(2).append(HtmlChunk.span("color:" + ColorUtil.toHtmlColor(JBColor.GRAY)).addText(hint));
+      builder.nbsp(2).append(HtmlChunk.span("color:" + ColorValueUtil.toHtmlColor(StandardColors.GRAY)).addText(hint));
     }
     return builder.wrapWith("html").toString();
   }

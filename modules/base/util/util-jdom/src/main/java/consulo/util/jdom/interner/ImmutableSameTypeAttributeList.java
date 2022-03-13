@@ -13,14 +13,13 @@
 // limitations under the License.
 package consulo.util.jdom.interner;
 
-import com.intellij.openapi.util.Comparing;
-import com.intellij.util.containers.EmptyIterator;
+import consulo.util.collection.Iterators;
+import consulo.util.lang.Comparing;
 import org.jdom.Attribute;
 import org.jdom.AttributeType;
 import org.jdom.Namespace;
 
 import javax.annotation.Nonnull;
-
 import java.util.*;
 
 class ImmutableSameTypeAttributeList implements List<Attribute> {
@@ -75,7 +74,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
   @Override
   public int indexOf(Object o) {
     for (int i = 0; i < size(); i++) {
-      if (Comparing.equal(0,get(i))) return i;
+      if (Comparing.equal(0, get(i))) return i;
     }
     return -1;
   }
@@ -91,7 +90,7 @@ class ImmutableSameTypeAttributeList implements List<Attribute> {
   @Nonnull
   @Override
   public Iterator<Attribute> iterator() {
-    if (isEmpty()) return EmptyIterator.getInstance();
+    if (isEmpty()) return Iterators.empty();
     return new Iterator<Attribute>() {
       int i;
       @Override

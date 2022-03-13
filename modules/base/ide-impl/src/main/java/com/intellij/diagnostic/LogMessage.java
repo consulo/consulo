@@ -15,7 +15,7 @@
  */
 package com.intellij.diagnostic;
 
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
+import consulo.application.util.logging.IdeaLoggingEvent;
 import com.intellij.openapi.util.text.StringUtil;
 
 public class LogMessage extends AbstractMessage {

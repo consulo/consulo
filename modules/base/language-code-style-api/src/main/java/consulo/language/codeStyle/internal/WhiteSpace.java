@@ -159,8 +159,7 @@ public class WhiteSpace {
     if (myInitial == null) return true;
     if (model.containsWhiteSpaceSymbolsOnly(myStart, myEnd)) return true;
 
-    if (!(model instanceof FormattingDocumentModelImpl)) return false;
-    PsiFile psiFile = ((FormattingDocumentModelImpl)model).getFile();
+    PsiFile psiFile = model.getFile();
     if (psiFile == null) return false;
     PsiElement start = psiFile.findElementAt(myStart);
     PsiElement end = psiFile.findElementAt(myEnd-1);

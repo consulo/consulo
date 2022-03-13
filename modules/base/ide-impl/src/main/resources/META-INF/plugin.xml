@@ -874,7 +874,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.editor.IndentStrategy"/>
     </extensionPoint>
 
-    <extensionPoint name="disabledIndentRangesProvider" interface="com.intellij.psi.impl.source.DisabledIndentRangesProvider"/>
+    <extensionPoint name="disabledIndentRangesProvider" interface="consulo.language.codeStyle.DisabledIndentRangesProvider"/>
     <extensionPoint name="lineIndentProvider" interface="com.intellij.psi.codeStyle.lineIndent.LineIndentProvider"/>
 
     <extensionPoint name="gotoDeclarationHandler"

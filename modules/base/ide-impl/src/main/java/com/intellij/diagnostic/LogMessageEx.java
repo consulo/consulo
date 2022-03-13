@@ -15,7 +15,7 @@
  */
 package com.intellij.diagnostic;
 
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
+import consulo.application.util.logging.IdeaLoggingEvent;
 import com.intellij.util.ExceptionUtil;
 import consulo.util.collection.SmartList;
 import consulo.logging.Logger;

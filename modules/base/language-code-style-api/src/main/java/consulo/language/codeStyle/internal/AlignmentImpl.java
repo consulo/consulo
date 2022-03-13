@@ -30,11 +30,11 @@ public class AlignmentImpl extends Alignment {
   private AlignmentImpl myParentAlignment;
   private ProbablyIncreasingLowerboundAlgorithm<LeafBlockWrapper> myOffsetRespBlocksCalculator;
 
-  AlignmentImpl() {
+  public AlignmentImpl() {
     this(false, Anchor.LEFT);
   }
 
-  AlignmentImpl(boolean allowBackwardShift, @Nonnull Anchor anchor) {
+  public AlignmentImpl(boolean allowBackwardShift, @Nonnull Anchor anchor) {
     myAllowBackwardShift = allowBackwardShift;
     myAnchor = anchor;
     myOffsetRespBlocksCalculator = new ProbablyIncreasingLowerboundAlgorithm<>(myOffsetRespBlocks);
@@ -67,34 +67,34 @@ public class AlignmentImpl extends Alignment {
   /**
    * Selects target wrapped block by the following algorithm:
    * <ol>
-   *   <li>
-   *      Filter blocks registered via {@link #setOffsetRespBlock(LeafBlockWrapper)} in order to process only those that start
-   *      before the given block (blocks which start offset is lower than start offset of the given block).
-   *   </li>
-   *   <li>
-   *      Try to find out result from those filtered blocks using the following algorithm:
-   *      <ol>
-   *        <li>
-   *            Use the last block (block which has the greatest start offset) after the block which
-   *            {@link AbstractBlockWrapper#getWhiteSpace() white space} contains line feeds;
-   *        </li>
-   *        <li>
-   *            Use the first block (block with the smallest start offset) if no block can be selected using the rule above;
-   *        </li>
-   *        <li>
-   *            Use the last block (block with the greatest start offset) if no block can be selected using the rules above;
-   *        </li>
-   *      </ol>
-   *   </li>
-   *   <li>
-   *      Delegate the task to the {@link #setParent(Alignment) parent alignment} (if it's registered) if no blocks
-   *      are configured for the current one;
-   *   </li>
+   * <li>
+   * Filter blocks registered via {@link #setOffsetRespBlock(LeafBlockWrapper)} in order to process only those that start
+   * before the given block (blocks which start offset is lower than start offset of the given block).
+   * </li>
+   * <li>
+   * Try to find out result from those filtered blocks using the following algorithm:
+   * <ol>
+   * <li>
+   * Use the last block (block which has the greatest start offset) after the block which
+   * {@link AbstractBlockWrapper#getWhiteSpace() white space} contains line feeds;
+   * </li>
+   * <li>
+   * Use the first block (block with the smallest start offset) if no block can be selected using the rule above;
+   * </li>
+   * <li>
+   * Use the last block (block with the greatest start offset) if no block can be selected using the rules above;
+   * </li>
+   * </ol>
+   * </li>
+   * <li>
+   * Delegate the task to the {@link #setParent(Alignment) parent alignment} (if it's registered) if no blocks
+   * are configured for the current one;
+   * </li>
    * </ol>
    *
-   * @param block     target block to use during blocks filtering
-   * @return          block {@link #setOffsetRespBlock(LeafBlockWrapper) registered} for the current alignment object or
-   *                  {@link #setParent(Alignment) its parent} using the algorithm above if any; {@code null} otherwise
+   * @param block target block to use during blocks filtering
+   * @return block {@link #setOffsetRespBlock(LeafBlockWrapper) registered} for the current alignment object or
+   * {@link #setParent(Alignment) its parent} using the algorithm above if any; {@code null} otherwise
    */
   @Nullable
   public LeafBlockWrapper getOffsetRespBlockBefore(@Nullable final AbstractBlockWrapper block) {
@@ -120,7 +120,7 @@ public class AlignmentImpl extends Alignment {
    * Registers wrapped block within the current alignment in order to use it for further
    * {@link #getOffsetRespBlockBefore(AbstractBlockWrapper)} calls processing.
    *
-   * @param block   wrapped block to register within the current alignment object
+   * @param block wrapped block to register within the current alignment object
    */
   public void setOffsetRespBlock(final LeafBlockWrapper block) {
     if (block == null) {
@@ -176,11 +176,8 @@ public class AlignmentImpl extends Alignment {
       }
 
       //blocks are on different lines
-      if (myAllowBackwardShift
-          && myAnchor == Anchor.RIGHT
-          && prevAlignBlock != null
-          && prevAlignBlock.getWhiteSpace().containsLineFeeds() // {prevAlignBlock} starts new indent => can be moved
-              ) {
+      if (myAllowBackwardShift && myAnchor == Anchor.RIGHT && prevAlignBlock != null && prevAlignBlock.getWhiteSpace().containsLineFeeds() // {prevAlignBlock} starts new indent => can be moved
+      ) {
         // extend block on position for right align
         prevAlignBlock = extendBlockFromStart(prevAlignBlock);
 
@@ -199,7 +196,8 @@ public class AlignmentImpl extends Alignment {
             }
             current = prev;
           }
-        } while (current != null);
+        }
+        while (current != null);
         if (current == null) {
           return false; //root block is the top
         }
@@ -225,6 +223,6 @@ public class AlignmentImpl extends Alignment {
 
   @Override
   public String toString() {
-    return "Align: " + System.identityHashCode(this) + "," +  getAnchor() +  (isAllowBackwardShift() ? "<" : "");
+    return "Align: " + System.identityHashCode(this) + "," + getAnchor() + (isAllowBackwardShift() ? "<" : "");
   }
 }

@@ -190,7 +190,7 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   @Override
   @Nonnull
   public List<TextRange> intersectWithAllEditableFragments(@Nonnull PsiFile injectedPsi, @Nonnull TextRange rangeToEdit) {
-    Place shreds = InjectedLanguageUtil.getShreds(injectedPsi);
+    PlaceImpl shreds = InjectedLanguageUtil.getShreds(injectedPsi);
     if (shreds == null) return Collections.emptyList();
     Object result = null; // optimization: TextRange or ArrayList
     int count = 0;
@@ -294,10 +294,10 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
   @Nonnull
   @Override
   public DocumentWindow freezeWindow(@Nonnull DocumentWindow document) {
-    Place shreds = ((DocumentWindowImpl)document).getShreds();
+    PlaceImpl shreds = ((DocumentWindowImpl)document).getShreds();
     Project project = shreds.getHostPointer().getProject();
     DocumentEx delegate = ((PsiDocumentManagerBase)PsiDocumentManager.getInstance(project)).getLastCommittedDocument(document.getDelegate());
-    Place place = new Place();
+    PlaceImpl place = new PlaceImpl();
     place.addAll(ContainerUtil.map(shreds, shred -> ((ShredImpl)shred).withPsiRange()));
     return new DocumentWindowImpl(delegate, place);
   }

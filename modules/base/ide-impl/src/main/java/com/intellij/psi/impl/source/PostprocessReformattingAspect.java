@@ -2,6 +2,7 @@
 package com.intellij.psi.impl.source;
 
 import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.DisabledIndentRangesProvider;
 import consulo.language.codeStyle.FormatTextRanges;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.ast.CompositeElement;

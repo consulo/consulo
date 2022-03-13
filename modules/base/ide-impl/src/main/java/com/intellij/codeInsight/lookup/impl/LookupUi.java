@@ -11,7 +11,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeEventQueue;
 import consulo.application.ui.UISettings;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;

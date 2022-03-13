@@ -253,7 +253,6 @@ open module consulo.ide.impl {
   exports com.intellij.compiler.options;
   exports com.intellij.compiler.progress;
   exports com.intellij.concurrency;
-  exports com.intellij.configurationStore;
   exports com.intellij.conversion;
   exports com.intellij.coverage;
   exports com.intellij.coverage.actions;
@@ -896,7 +895,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.components.breadcrumbs;
   exports com.intellij.ui.components.editors;
   exports com.intellij.ui.components.fields;
-  exports com.intellij.ui.components.fields.valueEditors;
   exports com.intellij.ui.components.labels;
   exports com.intellij.ui.components.panels;
   exports com.intellij.ui.content;
@@ -1233,7 +1231,6 @@ open module consulo.ide.impl {
   exports consulo.util;
   exports consulo.util.containers;
   exports consulo.util.io2;
-  exports consulo.util.jdom.interner;
   exports consulo.util.pointers;
   exports consulo.util.ui;
   exports consulo.vcs.changes.ui;

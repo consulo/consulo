@@ -22,7 +22,6 @@ import consulo.language.codeStyle.event.CodeStyleSettingsListener;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.DifferenceFilter;
@@ -138,10 +137,8 @@ public class CodeStyleSettingsManager implements PersistentStateComponent<Elemen
     }
     else {
       if (!project.isDisposed()) {
-        CodeStyleSettingsManager projectInstance = ServiceManager.getService(project, ProjectCodeStyleSettingsManager.class);
-        if (projectInstance != null) {
-          projectInstance.removeListener(listener);
-        }
+        CodeStyleSettingsManager projectInstance = ProjectCodeStyleSettingsManager.getInstance(project);
+        projectInstance.removeListener(listener);
       }
     }
   }

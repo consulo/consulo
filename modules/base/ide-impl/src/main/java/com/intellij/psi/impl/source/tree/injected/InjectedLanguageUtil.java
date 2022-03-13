@@ -2,7 +2,7 @@
 
 package com.intellij.psi.impl.source.tree.injected;
 
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Getter;
@@ -114,19 +114,19 @@ public class InjectedLanguageUtil {
     file.putUserData(HIGHLIGHT_TOKENS, tokens);
   }
 
-  public static Place getShreds(@Nonnull PsiFile injectedFile) {
+  public static PlaceImpl getShreds(@Nonnull PsiFile injectedFile) {
     FileViewProvider viewProvider = injectedFile.getViewProvider();
     return getShreds(viewProvider);
   }
 
-  public static Place getShreds(@Nonnull FileViewProvider viewProvider) {
+  public static PlaceImpl getShreds(@Nonnull FileViewProvider viewProvider) {
     if (!(viewProvider instanceof InjectedFileViewProvider)) return null;
     InjectedFileViewProvider myFileViewProvider = (InjectedFileViewProvider)viewProvider;
     return getShreds(myFileViewProvider.getDocument());
   }
 
   @Nonnull
-  private static Place getShreds(@Nonnull DocumentWindow document) {
+  private static PlaceImpl getShreds(@Nonnull DocumentWindow document) {
     return ((DocumentWindowImpl)document).getShreds();
   }
 
@@ -351,7 +351,7 @@ public class InjectedLanguageUtil {
       if (result != null) {
         if (result.files != null) {
           for (PsiFile injectedPsiFile : result.files) {
-            Place place = getShreds(injectedPsiFile);
+            PlaceImpl place = getShreds(injectedPsiFile);
             if (place.isValid()) {
               // check that injections found intersect with queried element
               boolean intersects = intersects(element, place);
@@ -363,8 +363,8 @@ public class InjectedLanguageUtil {
         }
         if (result.references != null && visitor instanceof InjectedReferenceVisitor) {
           InjectedReferenceVisitor refVisitor = (InjectedReferenceVisitor)visitor;
-          for (Pair<ReferenceInjector, Place> pair : result.references) {
-            Place place = pair.getSecond();
+          for (Pair<ReferenceInjector, PlaceImpl> pair : result.references) {
+            PlaceImpl place = pair.getSecond();
             if (place.isValid()) {
               // check that injections found intersect with queried element
               boolean intersects = intersects(element, place);
@@ -421,7 +421,7 @@ public class InjectedLanguageUtil {
     return element instanceof PsiFileSystemItem || element instanceof PsiLanguageInjectionHost;
   }
 
-  private static boolean intersects(@Nonnull PsiElement hostElement, @Nonnull Place place) {
+  private static boolean intersects(@Nonnull PsiElement hostElement, @Nonnull PlaceImpl place) {
     TextRange hostElementRange = hostElement.getTextRange();
     boolean intersects = false;
     for (PsiLanguageInjectionHost.Shred shred : place) {
@@ -582,7 +582,7 @@ public class InjectedLanguageUtil {
 
   @Nonnull
   public static Editor getTopLevelEditor(@Nonnull Editor editor) {
-    return editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor;
+    return EditorWindow.getTopLevelEditor(editor);
   }
 
   public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull final PsiElement element) {
@@ -600,7 +600,7 @@ public class InjectedLanguageUtil {
 
 
   public static int hostToInjectedUnescaped(DocumentWindow window, int hostOffset) {
-    Place shreds = ((DocumentWindowImpl)window).getShreds();
+    PlaceImpl shreds = ((DocumentWindowImpl)window).getShreds();
     Segment hostRangeMarker = shreds.get(0).getHostRangeMarker();
     if (hostRangeMarker == null || hostOffset < hostRangeMarker.getStartOffset()) {
       return shreds.get(0).getPrefix().length();
@@ -720,7 +720,7 @@ public class InjectedLanguageUtil {
     PsiFile containingFile = psi.getContainingFile().getOriginalFile();              // * formatting
     PsiElement fileContext = containingFile.getContext();                            // * quick-edit-handler
     if (fileContext instanceof PsiLanguageInjectionHost) return (PsiLanguageInjectionHost)fileContext;
-    Place shreds = getShreds(containingFile.getViewProvider()); // * injection-registrar
+    PlaceImpl shreds = getShreds(containingFile.getViewProvider()); // * injection-registrar
     if (shreds == null) {
       VirtualFile virtualFile = PsiUtilCore.getVirtualFile(containingFile);
       if (virtualFile instanceof LightVirtualFile) {

@@ -51,6 +51,11 @@ public interface PsiLanguageInjectionHost extends PsiElement {
     void visit(@Nonnull PsiFile injectedPsi, @Nonnull List<Shred> places);
   }
 
+  interface Place extends List<Shred> {
+    @Nonnull
+    SmartPsiElementPointer<PsiLanguageInjectionHost> getHostPointer();
+  }
+
   interface Shred {
     /**
      * @return returns null when the host document marker is invalid

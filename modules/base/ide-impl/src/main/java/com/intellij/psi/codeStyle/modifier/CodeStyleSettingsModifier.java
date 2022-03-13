@@ -2,6 +2,7 @@
 package com.intellij.psi.codeStyle.modifier;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.codeStyle.CodeStyleStatusBarUIContributor;
 import consulo.project.Project;
 import consulo.component.util.ModificationTracker;
 import consulo.language.psi.PsiFile;

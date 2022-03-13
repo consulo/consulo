@@ -13,16 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.injected.editor;
+package consulo.language.editor.inject;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.language.file.inject.DocumentWindow;
-import consulo.util.dataholder.UserDataHolderEx;
 import consulo.language.psi.PsiFile;
+import consulo.util.dataholder.UserDataHolderEx;
+
 import javax.annotation.Nonnull;
 
 public interface EditorWindow extends UserDataHolderEx, Editor {
+  @Nonnull
+  static Editor getTopLevelEditor(@Nonnull Editor editor) {
+    return editor instanceof EditorWindow ? ((EditorWindow)editor).getDelegate() : editor;
+  }
+
+
   boolean isValid();
 
   @Nonnull

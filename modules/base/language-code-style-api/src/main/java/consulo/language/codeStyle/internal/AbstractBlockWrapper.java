@@ -350,7 +350,7 @@ public abstract class AbstractBlockWrapper {
    * @return    previous block for the current block if any; {@code null} otherwise
    */
   @Nullable
-  protected abstract LeafBlockWrapper getPreviousBlock();
+  public abstract LeafBlockWrapper getPreviousBlock();
 
   protected final void setCanUseFirstChildIndentAsBlockIndent(final boolean newValue) {
     if (newValue) myFlags |= CAN_USE_FIRST_CHILD_INDENT_AS_BLOCK_INDENT;

@@ -13,7 +13,7 @@ import com.intellij.codeInsight.lookup.LookupElementAction;
 import com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction;
 import com.intellij.codeInsight.template.impl.actions.NextVariableAction;
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.injected.editor.EditorWindow;
+import consulo.language.editor.inject.EditorWindow;
 import com.intellij.lang.LangBundle;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.editor.EditorModificationUtil;

@@ -133,7 +133,7 @@ public class DependantSpacingImpl extends SpacingImpl {
 
   @Override
   public String toString() {
-    String dependencies = StringUtil.join(myDependentRegionRanges, StringUtil.createToStringFunction(TextRange.class), ", ");
+    String dependencies = StringUtil.join(myDependentRegionRanges, Object::toString, ", ");
     return "<DependantSpacing: minSpaces=" + getMinSpaces() + " maxSpaces=" + getMaxSpaces() + " minLineFeeds=" + getMinLineFeeds() + " dep=" + dependencies + ">";
   }
 

@@ -15,15 +15,16 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.component;
 
-import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
+import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
+import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokenUiRole;
+import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 /**
@@ -37,8 +38,7 @@ public class DefaultArrangementUiComponentFactory implements ArrangementUiCompon
   public ArrangementUiComponent build(@Nonnull StdArrangementTokenUiRole role,
                                       @Nonnull List<ArrangementSettingsToken> tokens,
                                       @Nonnull ArrangementColorsProvider colorsProvider,
-                                      @Nonnull ArrangementStandardSettingsManagerImpl settingsManager)
-  {
+                                      @Nonnull ArrangementStandardSettingsManager settingsManager) {
     switch (role) {
       case CHECKBOX:
         if (tokens.size() != 1) {
@@ -66,9 +66,8 @@ public class DefaultArrangementUiComponentFactory implements ArrangementUiCompon
         if (tokens.size() != 1) {
           throw new IllegalArgumentException("Can't build a bulb token for elements " + tokens);
         }
-        return new ArrangementAtomMatchConditionComponent(
-          settingsManager, colorsProvider, new ArrangementAtomMatchCondition(tokens.get(0)), null
-        );
+        return new ArrangementAtomMatchConditionComponent((ArrangementStandardSettingsManagerImpl)settingsManager, colorsProvider,
+                                                          new ArrangementAtomMatchCondition(tokens.get(0)), null);
     }
     return null;
   }

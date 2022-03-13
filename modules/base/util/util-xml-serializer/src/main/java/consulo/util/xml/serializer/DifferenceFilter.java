@@ -19,11 +19,12 @@ import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.util.function.Predicate;
 
 /**
  * @author peter
 */
-public class DifferenceFilter<T> implements DefaultJDOMExternalizer.JDOMFilter {
+public class DifferenceFilter<T> implements DefaultJDOMExternalizer.JDOMFilter, Predicate<Field> {
   private final T myThisSettings;
   private final T myParentSettings;
 
@@ -32,7 +33,13 @@ public class DifferenceFilter<T> implements DefaultJDOMExternalizer.JDOMFilter {
     myParentSettings = parentObject;
   }
 
-  public boolean isAccept(@Nonnull Field field) {
+  @Override
+  public final boolean isAccept(@Nonnull Field field) {
+    return test(field);
+  }
+
+  @Override
+  public boolean test(Field field) {
     try {
       Object thisValue = field.get(myThisSettings);
       Object parentValue = field.get(myParentSettings);

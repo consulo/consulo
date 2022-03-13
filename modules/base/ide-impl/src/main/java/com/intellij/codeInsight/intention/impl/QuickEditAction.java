@@ -18,7 +18,7 @@ package com.intellij.codeInsight.intention.impl;
 import com.intellij.codeInsight.intention.LowPriorityAction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import com.intellij.psi.impl.source.tree.injected.Place;
+import com.intellij.psi.impl.source.tree.injected.PlaceImpl;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredReadAction;
@@ -129,7 +129,7 @@ public class QuickEditAction implements IntentionAction, LowPriorityAction {
   }
 
   public static QuickEditHandler getExistingHandler(@Nonnull PsiFile injectedFile) {
-    Place shreds = InjectedLanguageUtil.getShreds(injectedFile);
+    PlaceImpl shreds = InjectedLanguageUtil.getShreds(injectedFile);
     DocumentWindow documentWindow = InjectedLanguageUtil.getDocumentWindow(injectedFile);
     if (shreds == null || documentWindow == null) return null;
 

@@ -22,6 +22,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.FormatTextRanges;
 import consulo.language.codeStyle.FormattingDocumentModel;
+import consulo.language.codeStyle.internal.RangesAssert;
 import consulo.util.collection.Stack;
 
 import java.util.ArrayList;

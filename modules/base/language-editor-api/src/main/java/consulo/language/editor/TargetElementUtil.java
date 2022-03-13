@@ -26,6 +26,7 @@ import consulo.document.util.TextRange;
 import consulo.language.editor.completion.CompletionUtilCore;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.pom.PomDeclarationSearcher;
 import consulo.language.pom.PomService;
 import consulo.language.pom.PomTarget;

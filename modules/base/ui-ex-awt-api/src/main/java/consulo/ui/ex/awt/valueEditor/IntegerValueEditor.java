@@ -1,12 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ui.components.fields.valueEditors;
+package consulo.ui.ex.awt.valueEditor;
 
-import com.intellij.openapi.application.ApplicationBundle;
-import consulo.util.xml.serializer.InvalidDataException;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.UIBundle;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 
 public class IntegerValueEditor extends TextFieldValueEditor<Integer> {
@@ -20,22 +19,22 @@ public class IntegerValueEditor extends TextFieldValueEditor<Integer> {
 
   @Nonnull
   @Override
-  public Integer parseValue(@Nullable String text) throws InvalidDataException {
+  public Integer parseValue(@Nullable String text) throws ValueValidationException {
     try {
       if (StringUtil.isEmpty(text)) {
         if (!myCanBeEmpty) {
-          throw new InvalidDataException(ApplicationBundle.message("integer.field.value.expected"));
+          throw new ValueValidationException(UIBundle.message("integer.field.value.expected"));
         }
         return getDefaultValue();
       }
       int value = Integer.parseInt(text);
       if (value < myMinValue || value > myMaxValue) {
-        throw new InvalidDataException((ApplicationBundle.message("integer.field.value.out.of.range", value, myMinValue, myMaxValue)));
+        throw new ValueValidationException((UIBundle.message("integer.field.value.out.of.range", value, myMinValue, myMaxValue)));
       }
       return value;
     }
     catch (NumberFormatException nfe) {
-      throw new InvalidDataException((ApplicationBundle.message("integer.field.value.not.a.number", text)));
+      throw new ValueValidationException((UIBundle.message("integer.field.value.not.a.number", text)));
     }
   }
 
