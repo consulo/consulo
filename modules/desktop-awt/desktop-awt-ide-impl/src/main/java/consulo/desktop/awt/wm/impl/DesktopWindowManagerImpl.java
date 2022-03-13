@@ -200,11 +200,12 @@ public final class DesktopWindowManagerImpl extends WindowManagerEx implements P
     if (frames.length > 0) {
       return frames[0].getWindow();
     }
-    IdeFrame desktopIdeFrame = WelcomeFrameManager.getInstance().getCurrentFrame();
-    if (desktopIdeFrame == null) {
-      throw new UnsupportedOperationException("Welcome frame not showing. Possible bug?");
+    IdeFrame frame = WelcomeFrameManager.getInstance().getCurrentFrame();
+    if (frame == null) {
+      // will return null at first app start, while customization window
+      return null;
     }
-    return desktopIdeFrame.getWindow();
+    return frame.getWindow();
   }
 
   @Override
