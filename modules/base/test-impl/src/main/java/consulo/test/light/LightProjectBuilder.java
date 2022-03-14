@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.impl.PsiFileFactoryImpl;
+import consulo.language.impl.psi.internal.PsiFileFactoryImpl;
 import consulo.language.impl.psi.internal.PsiManagerImpl;
 import consulo.language.impl.psi.internal.PsiModificationTrackerImpl;
 import consulo.language.psi.PsiModificationTracker;

@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.psi.internal;
 
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.FileViewProviderFactory;

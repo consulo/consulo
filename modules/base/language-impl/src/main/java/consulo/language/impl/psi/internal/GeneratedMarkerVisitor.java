@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.psi.internal;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.impl.psi.CodeEditUtil;
-import consulo.language.impl.psi.internal.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.TreeElement;
 
 public class GeneratedMarkerVisitor extends RecursiveTreeElementWalkingVisitor {

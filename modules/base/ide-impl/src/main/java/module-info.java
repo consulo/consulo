@@ -1180,5 +1180,5 @@ open module consulo.ide.impl {
 
   exports consulo.ide.impl.psi.codeStyle to consulo.desktop.awt.ide.impl;
   exports consulo.application.ui.impl to consulo.desktop.awt.ide.impl;
-  exports consulo.options.impl to consulo.desktop.awt.ide.impl;
+  exports consulo.options.impl to consulo.desktop.awt.ide.impl, consulo.sand.language.plugin;
 }

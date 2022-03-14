@@ -27,6 +27,7 @@ import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.psi.DummyHolderFactory;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
+import consulo.language.impl.psi.internal.GeneratedMarkerVisitor;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
 import jakarta.inject.Inject;
