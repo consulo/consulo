@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 public class DesktopSwtPlatformInternal extends PlatformInternal {
   @Nonnull
   @Override
-  public Platform build() {
+  public Platform createCurrent() {
     return new DesktopSwtPlatformImpl();
   }
 }

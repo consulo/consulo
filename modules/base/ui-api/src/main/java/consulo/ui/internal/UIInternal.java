@@ -15,11 +15,7 @@
  */
 package consulo.ui.internal;
 
-import consulo.annotation.ReviewAfterMigrationToJRE;
-import consulo.container.StartupError;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginManager;
+import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -41,7 +37,6 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
@@ -53,28 +48,7 @@ import java.util.function.Supplier;
  * @since 09-Jun-16
  */
 public abstract class UIInternal {
-  private static UIInternal ourInstance = findImplementation(UIInternal.class);
-
-  @Nonnull
-  @ReviewAfterMigrationToJRE(value = 9, description = "Use consulo.container.plugin.util.PlatformServiceLocator#findImplementation after migration")
-  private static <T, S> T findImplementation(@Nonnull Class<T> interfaceClass) {
-    for (T value : ServiceLoader.load(interfaceClass, UIInternal.class.getClassLoader())) {
-      return value;
-    }
-
-    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-      if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
-        ServiceLoader<T> loader = ServiceLoader.load(descriptor.getModuleLayer(), interfaceClass);
-
-        Iterator<T> iterator = loader.iterator();
-        if (iterator.hasNext()) {
-          return iterator.next();
-        }
-      }
-    }
-
-    throw new StartupError("Can't find platform implementation: " + interfaceClass);
-  }
+  private static UIInternal ourInstance = PlatformServiceLoader.findImplementation(UIInternal.class, ServiceLoader::load);
 
   @Nonnull
   public static UIInternal get() {

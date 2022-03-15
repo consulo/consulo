@@ -1,3 +1,4 @@
+import consulo.desktop.awt.platform.impl.DesktopAwtPlatformInternalImpl;
 import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
 
@@ -40,7 +41,7 @@ open module consulo.desktop.awt.ide.impl {
   requires consulo.desktop.awt.eawt.wrapper;
 
   provides consulo.ui.internal.UIInternal with consulo.desktop.awt.ui.impl.DesktopUIInternalImpl;
-  provides consulo.platform.internal.PlatformInternal with consulo.desktop.awt.platform.impl.DesktopPlatformInternalImpl;
+  provides consulo.platform.internal.PlatformInternal with DesktopAwtPlatformInternalImpl;
   provides consulo.container.boot.ContainerStartup with consulo.desktop.awt.container.impl.DesktopContainerStartup;
   provides TargetAWTFacade with DesktopAwtTargetAWTImpl;
 

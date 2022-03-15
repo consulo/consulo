@@ -20,26 +20,38 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 
-import java.util.Iterator;
+import java.util.Optional;
 import java.util.ServiceLoader;
 
 /**
  * @author VISTALL
  * @since 2019-07-25
  */
-public class PlatformServiceLocator {
-  public static <T> T findImplementation(Class<T> interfaceClass) {
-    for (T value : ServiceLoader.load(interfaceClass, interfaceClass.getClassLoader())) {
-      return value;
+public class PlatformServiceLoader {
+  @FunctionalInterface
+  public interface ServiceLoaderCall {
+    <S> ServiceLoader<S> load(Class<S> service, ClassLoader loader);
+  }
+
+  /**
+   * @param interfaceClass class for service
+   * @param loaderCall just method ref for 'ServiceLoader::load' - for selecting grand caller
+   */
+  public static <T> T findImplementation(Class<T> interfaceClass, ServiceLoaderCall loaderCall) {
+    ServiceLoader<T> loader = loaderCall.load(interfaceClass, interfaceClass.getClassLoader());
+
+    Optional<T> first = loader.findFirst();
+    if (first.isPresent()) {
+      return first.get();
     }
 
     for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
       if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
-        ServiceLoader<T> loader = ServiceLoader.load(interfaceClass, descriptor.getPluginClassLoader());
+        loader = loaderCall.load(interfaceClass, descriptor.getPluginClassLoader());
 
-        Iterator<T> iterator = loader.iterator();
-        if (iterator.hasNext()) {
-          return iterator.next();
+        first = loader.findFirst();
+        if (first.isPresent()) {
+          return first.get();
         }
       }
     }

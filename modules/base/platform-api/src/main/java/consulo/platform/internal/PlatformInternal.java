@@ -15,15 +15,10 @@
  */
 package consulo.platform.internal;
 
-import consulo.container.StartupError;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginIds;
-import consulo.container.plugin.PluginManager;
+import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;
-import java.util.Iterator;
-import java.util.Optional;
 import java.util.ServiceLoader;
 
 /**
@@ -31,29 +26,8 @@ import java.util.ServiceLoader;
  * @since 15-Sep-17
  */
 public abstract class PlatformInternal {
-  private static final PlatformInternal ourPlatformInternal = findImplementation(PlatformInternal.class);
-  private static final Platform ourCurrentPlatform = ourPlatformInternal.build();
-
-  @Nonnull
-  private static <T> T findImplementation(@Nonnull Class<T> interfaceClass) {
-    Optional<T> thisClassloader = ServiceLoader.load(interfaceClass).findFirst();
-    if(thisClassloader.isPresent()) {
-      return thisClassloader.get();
-    }
-
-    for (PluginDescriptor descriptor : PluginManager.getPlugins()) {
-      if (PluginIds.isPlatformImplementationPlugin(descriptor.getPluginId())) {
-        ServiceLoader<T> loader = ServiceLoader.load(descriptor.getModuleLayer(), interfaceClass);
-
-        Iterator<T> iterator = loader.iterator();
-        if (iterator.hasNext()) {
-          return iterator.next();
-        }
-      }
-    }
-
-    throw new StartupError("Can't find platform implementation: " + interfaceClass);
-  }
+  private static final PlatformInternal ourPlatformInternal = PlatformServiceLoader.findImplementation(PlatformInternal.class, ServiceLoader::load);
+  private static final Platform ourCurrentPlatform = ourPlatformInternal.createCurrent();
 
   @Nonnull
   public static Platform current() {
@@ -61,5 +35,5 @@ public abstract class PlatformInternal {
   }
 
   @Nonnull
-  public abstract Platform build();
+  public abstract Platform createCurrent();
 }

@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 public class WebPlatformInternalImpl extends PlatformInternal {
   @Nonnull
   @Override
-  public Platform build() {
+  public Platform createCurrent() {
     return new WebPlatformImpl();
   }
 }

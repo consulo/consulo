@@ -15,11 +15,9 @@
  */
 package consulo.logging.internal;
 
-import consulo.annotation.ReviewAfterMigrationToJRE;
+import consulo.container.plugin.util.PlatformServiceLoader;
 import consulo.logging.attachment.AttachmentFactory;
 
-import javax.annotation.Nonnull;
-import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
@@ -27,18 +25,7 @@ import java.util.ServiceLoader;
  * @since 2019-08-10
  */
 public class AttachmentFactoryInternal {
-  private static final AttachmentFactory ourInstance = loadSingleOrError(AttachmentFactory.class);
-
-  @Nonnull
-  @ReviewAfterMigrationToJRE(9)
-  private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
-    ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
-    Iterator<T> iterator = serviceLoader.iterator();
-    if (iterator.hasNext()) {
-      return iterator.next();
-    }
-    throw new Error("Unable to find '" + clazz.getName() + "' implementation");
-  }
+  private static final AttachmentFactory ourInstance = PlatformServiceLoader.findImplementation(AttachmentFactory.class, ServiceLoader::load);
 
   public static AttachmentFactory get() {
     return ourInstance;

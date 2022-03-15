@@ -11,5 +11,5 @@ module consulo.virtual.file.system.impl {
   exports consulo.virtualFileSystem.impl.internal.windows to consulo.ide.impl;
   exports consulo.virtualFileSystem.impl.internal to consulo.ide.impl;
 
-  opens consulo.virtualFileSystem.impl.internal to consulo.util.xml.serializer;
+  opens consulo.virtualFileSystem.impl.internal to consulo.injecting.pico.impl;
 }
