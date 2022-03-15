@@ -95,6 +95,7 @@
     <module>modules/base/ui-ex-awt-api</module>
     <module>modules/base/virtual-file-system-impl</module>
     <module>modules/base/language-code-style-api</module>
+    <module>modules/base/language-editor-ui-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>
