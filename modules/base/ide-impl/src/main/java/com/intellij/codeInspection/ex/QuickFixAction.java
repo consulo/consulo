@@ -27,6 +27,7 @@ import com.intellij.codeInspection.ui.InspectionResultsView;
 import com.intellij.codeInspection.ui.InspectionTree;
 import consulo.application.AllIcons;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -72,8 +73,9 @@ public class QuickFixAction extends AnAction {
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void update(AnActionEvent e) {
+  public void update(@Nonnull AnActionEvent e) {
     final InspectionResultsView view = getInvoker(e);
     if (view == null) {
       e.getPresentation().setEnabled(false);
@@ -104,8 +106,9 @@ public class QuickFixAction extends AnAction {
     return getTemplatePresentation().getText();
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(final AnActionEvent e) {
+  public void actionPerformed(@Nonnull final AnActionEvent e) {
     final InspectionResultsView view = getInvoker(e);
     final InspectionTree tree = view.getTree();
     if (isProblemDescriptorsAcceptable()) {

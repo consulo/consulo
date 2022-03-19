@@ -37,7 +37,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.document.event.DocumentEvent;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;

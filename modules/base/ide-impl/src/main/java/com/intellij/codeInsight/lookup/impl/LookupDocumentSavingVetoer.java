@@ -23,7 +23,7 @@ import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import javax.annotation.Nonnull;
 
 /**

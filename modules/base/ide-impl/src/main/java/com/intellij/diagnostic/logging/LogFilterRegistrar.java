@@ -17,6 +17,7 @@
 package com.intellij.diagnostic.logging;
 
 import consulo.component.persist.PersistentStateComponent;
+import consulo.execution.configuration.log.LogFilter;
 import org.jdom.Element;
 
 import java.util.List;

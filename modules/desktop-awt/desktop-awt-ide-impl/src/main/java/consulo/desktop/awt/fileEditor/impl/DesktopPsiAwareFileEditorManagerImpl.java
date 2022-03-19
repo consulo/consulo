@@ -15,20 +15,20 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
+import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.openapi.fileEditor.impl.DesktopFileEditorWithProviderComposite;
+import com.intellij.openapi.fileEditor.impl.DesktopFileEditorsSplitters;
+import com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
+import com.intellij.problems.WolfTheProblemSolver;
+import com.intellij.ui.docking.DockManager;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorWithProviderComposite;
-import com.intellij.openapi.fileEditor.impl.DesktopEditorsSplitters;
-import com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.problems.WolfTheProblemSolver;
+import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.docking.DockManager;
+import consulo.project.Project;
 import consulo.ui.ex.awt.JBUI;
-import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -53,11 +53,11 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
 
   @Nonnull
   @Override
-  protected EditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
-                                                                          @Nonnull FileEditor[] editors,
-                                                                          @Nonnull FileEditorProvider[] providers,
-                                                                          @Nonnull FileEditorManagerEx fileEditorManager) {
-    return new DesktopEditorWithProviderComposite(file, editors, providers, fileEditorManager);
+  protected FileEditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
+                                                                              @Nonnull FileEditor[] editors,
+                                                                              @Nonnull FileEditorProvider[] providers,
+                                                                              @Nonnull FileEditorManagerEx fileEditorManager) {
+    return new DesktopFileEditorWithProviderComposite(file, editors, providers, fileEditorManager);
   }
 
   @Nonnull
@@ -75,7 +75,7 @@ public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
           final JPanel panel = new JPanel(new BorderLayout());
           panel.setOpaque(false);
           panel.setBorder(JBUI.Borders.empty());
-          DesktopEditorsSplitters splitters = new DesktopEditorsSplitters(myProject, this, myDockManager, true);
+          DesktopFileEditorsSplitters splitters = new DesktopFileEditorsSplitters(myProject, this, myDockManager, true);
           mySplitters = splitters;
           Disposer.register(myProject, splitters);
           panel.add(splitters.getComponent(), BorderLayout.CENTER);

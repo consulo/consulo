@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.markup;
 
-import com.intellij.openapi.editor.EditorBundle;
+import consulo.codeEditor.EditorBundle;
 import org.jetbrains.annotations.PropertyKey;
 
 /**

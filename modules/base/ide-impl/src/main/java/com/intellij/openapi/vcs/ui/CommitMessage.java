@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;

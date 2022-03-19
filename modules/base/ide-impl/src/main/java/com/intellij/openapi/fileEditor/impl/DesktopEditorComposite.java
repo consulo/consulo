@@ -29,7 +29,7 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
-import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
+import consulo.fileEditor.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.DumbService;
 import com.intellij.openapi.util.Comparing;
@@ -54,7 +54,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.EditorComposite;
+import consulo.fileEditor.FileEditorComposite;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
@@ -80,7 +80,7 @@ import java.util.*;
  */
 @Deprecated
 @DeprecationInfo("Only desktop")
-public abstract class DesktopEditorComposite implements EditorComposite {
+public abstract class DesktopEditorComposite implements FileEditorComposite {
   private static final Logger LOG = Logger.getInstance(DesktopEditorComposite.class);
 
   /**

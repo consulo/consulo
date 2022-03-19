@@ -19,7 +19,7 @@ package consulo.language.impl.psi.internal;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.document.Document;
-import consulo.document.impl.DocumentEx;
+import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.impl.psi.ForeignLeafPsiElement;

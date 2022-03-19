@@ -22,7 +22,7 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.impl.DesktopFoldingModelImpl;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;

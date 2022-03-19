@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.runners;
 
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.ui.ExecutionConsoleEx;
 import com.intellij.execution.ui.ObservableConsoleView;

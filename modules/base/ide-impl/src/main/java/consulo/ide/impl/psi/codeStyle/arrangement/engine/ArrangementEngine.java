@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.codeStyle.arrangement.engine;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.document.impl.DocumentEx;
+import consulo.document.internal.DocumentEx;
 import consulo.language.codeStyle.arrangement.*;
 import consulo.language.codeStyle.arrangement.match.TextAwareArrangementEntry;
 import consulo.project.DumbService;

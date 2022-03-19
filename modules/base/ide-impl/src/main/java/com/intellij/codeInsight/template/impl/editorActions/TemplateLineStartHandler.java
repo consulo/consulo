@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template.impl.editorActions;
 
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 
 /**
  * @author yole

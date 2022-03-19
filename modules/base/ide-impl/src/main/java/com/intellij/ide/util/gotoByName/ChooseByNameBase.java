@@ -4,7 +4,7 @@ package com.intellij.ide.util.gotoByName;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.primitives.Ints;
-import consulo.ide.impl.Patches;
+import consulo.application.util.Patches;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import com.intellij.ide.IdeBundle;

@@ -4,7 +4,7 @@ import consulo.application.CommonBundle;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.coverage.view.CoverageViewManager;
 import com.intellij.coverage.view.CoverageViewSuiteListener;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
 import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import consulo.process.event.ProcessAdapter;

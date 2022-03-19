@@ -2,7 +2,7 @@ package com.intellij.codeInsight.editorActions.enter;
 
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

@@ -28,7 +28,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.PsiNamedElement;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
 import javax.annotation.Nonnull;

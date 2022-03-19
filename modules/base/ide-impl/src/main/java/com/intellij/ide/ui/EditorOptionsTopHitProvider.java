@@ -16,7 +16,7 @@
 package com.intellij.ide.ui;
 
 import com.intellij.ide.ui.search.BooleanOptionDescription;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import com.intellij.util.containers.ContainerUtil;

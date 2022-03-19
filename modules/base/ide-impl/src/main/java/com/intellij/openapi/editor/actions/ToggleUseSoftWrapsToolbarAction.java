@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
+import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 

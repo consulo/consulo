@@ -23,7 +23,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;

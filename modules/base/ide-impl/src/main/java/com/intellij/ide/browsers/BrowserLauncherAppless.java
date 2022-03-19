@@ -16,7 +16,7 @@
 package com.intellij.ide.browsers;
 
 import consulo.application.CommonBundle;
-import consulo.ide.impl.Patches;
+import consulo.application.util.Patches;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;

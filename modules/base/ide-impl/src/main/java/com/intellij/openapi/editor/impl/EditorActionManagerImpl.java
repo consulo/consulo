@@ -15,13 +15,16 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.action.TypedAction;
+import consulo.codeEditor.impl.action.EditorAction;
 import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.impl.DocumentImpl;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.editor.EditorBundle;
+import consulo.codeEditor.EditorBundle;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.Document;
-import com.intellij.openapi.editor.actionSystem.*;
 import com.intellij.openapi.ui.Messages;
 import consulo.language.file.inject.DocumentWindow;
 import javax.annotation.Nonnull;

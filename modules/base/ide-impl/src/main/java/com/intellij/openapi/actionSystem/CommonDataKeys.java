@@ -17,6 +17,7 @@ package com.intellij.openapi.actionSystem;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorKeys;
 import consulo.codeEditor.EditorSettings;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -29,19 +30,20 @@ import consulo.virtualFileSystem.VirtualFile;
 public interface CommonDataKeys {
   Key<Project> PROJECT = Project.KEY;
   Key<Module> MODULE = Module.KEY;
-  Key<Editor> EDITOR = Key.create("editor");
+  Key<Editor> EDITOR = Editor.KEY;
   /**
    * This key can be used to obtain reference to host editor instance, in case {@link #EDITOR} key is referring to an injected editor.
    */
-  Key<Editor> HOST_EDITOR = Key.create("host.editor");
+  Key<Editor> HOST_EDITOR = EditorKeys.HOST_EDITOR;
   /**
    * A key to retrieve caret instance (in host or injected editor, depending on context).
    */
-  Key<Caret> CARET = Key.create("caret");
+  Key<Caret> CARET = Caret.KEY;
   /**
-   * Returns com.intellij.openapi.editor.Editor even if focus currently is in find bar
+   * Returns Editor even if focus currently is in find bar
    */
-  Key<Editor> EDITOR_EVEN_IF_INACTIVE = Key.create("editor.even.if.inactive");
+  Key<Editor> EDITOR_EVEN_IF_INACTIVE = EditorKeys.EDITOR_EVEN_IF_INACTIVE;
+
   Key<Navigatable> NAVIGATABLE = Navigatable.KEY;
   Key<Navigatable[]> NAVIGATABLE_ARRAY = Navigatable.KEY_OF_ARRAY;
   Key<VirtualFile> VIRTUAL_FILE = VirtualFile.KEY;
@@ -49,11 +51,11 @@ public interface CommonDataKeys {
 
   Key<PsiElement> PSI_ELEMENT = PsiElement.KEY;
   Key<PsiElement[]> PSI_ELEMENT_ARRAY = PsiElement.KEY_OF_ARRAY;
-  Key<PsiFile> PSI_FILE = Key.create("psi.File");
+  Key<PsiFile> PSI_FILE = PsiFile.KEY;
   /**
    * This key can be used to check if the current context relates to a virtual space in editor.
    *
    * @see EditorSettings#setVirtualSpace(boolean)
    */
-  Key<Boolean> EDITOR_VIRTUAL_SPACE = Key.create("editor.virtual.space");
+  Key<Boolean> EDITOR_VIRTUAL_SPACE = EditorKeys.EDITOR_VIRTUAL_SPACE;
 }

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl.event;
 
+import consulo.codeEditor.EditorEx;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.*;
 import consulo.document.impl.EditorDocumentPriorities;
@@ -9,9 +10,9 @@ import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.impl.DocumentEx;
-import consulo.document.impl.event.PrioritizedInternalDocumentListener;
-import consulo.document.impl.event.EditReadOnlyListener;
+import consulo.document.internal.DocumentEx;
+import consulo.document.internal.PrioritizedInternalDocumentListener;
+import consulo.document.internal.EditReadOnlyListener;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.EditorInternal;
 import consulo.ui.annotation.RequiredUIAccess;

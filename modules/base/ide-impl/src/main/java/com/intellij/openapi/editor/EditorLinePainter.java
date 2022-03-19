@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
+import consulo.codeEditor.LineExtensionInfo;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

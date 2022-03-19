@@ -34,7 +34,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;

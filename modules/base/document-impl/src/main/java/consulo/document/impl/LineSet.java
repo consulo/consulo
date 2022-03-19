@@ -16,6 +16,7 @@
 package consulo.document.impl;
 
 import consulo.application.util.LineTokenizer;
+import consulo.document.internal.LineIterator;
 import consulo.util.collection.primitive.bytes.ByteList;
 import consulo.util.collection.primitive.bytes.ByteLists;
 import consulo.util.collection.primitive.ints.IntList;

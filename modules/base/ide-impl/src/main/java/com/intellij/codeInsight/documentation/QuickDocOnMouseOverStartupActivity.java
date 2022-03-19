@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.documentation;
 
 import consulo.ide.ServiceManager;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 

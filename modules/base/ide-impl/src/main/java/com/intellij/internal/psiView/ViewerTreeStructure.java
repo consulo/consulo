@@ -33,7 +33,7 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.project.Project;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ArrayUtil;
 import javax.annotation.Nonnull;

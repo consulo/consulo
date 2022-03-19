@@ -15,13 +15,14 @@
  */
 package com.intellij.diagnostic.logging;
 
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import com.intellij.ui.content.ContentManagerAdapter;
 import com.intellij.util.ArrayUtil;
 import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.log.AdditionalTabComponent;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;

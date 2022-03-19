@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import com.intellij.openapi.editor.impl.FontInfo;
+import consulo.codeEditor.impl.FontInfo;
 
 import javax.annotation.Nonnull;
 import java.awt.*;

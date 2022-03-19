@@ -16,7 +16,7 @@
 package com.intellij.execution.util;
 
 import consulo.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
+import consulo.execution.configuration.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RuntimeConfigurationWarning;
 import com.intellij.execution.configurations.SimpleProgramParameters;
 import com.intellij.openapi.components.PathMacroManager;

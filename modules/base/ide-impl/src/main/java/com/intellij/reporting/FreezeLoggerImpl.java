@@ -15,20 +15,21 @@
  */
 package com.intellij.reporting;
 
-import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.openapi.application.ApplicationInfo;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import consulo.application.ApplicationManager;
+import consulo.application.util.FreezeLogger;
+import consulo.application.util.concurrent.ThreadDumper;
+import consulo.application.util.registry.Registry;
+import consulo.component.ComponentManager;
+import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.application.util.registry.Registry;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 
@@ -40,7 +41,7 @@ public class FreezeLoggerImpl extends FreezeLogger {
   private static final int MAX_ALLOWED_TIME = 500;
 
   @Override
-  public void runUnderPerformanceMonitor(@Nullable Project project, @Nonnull Runnable action) {
+  public void runUnderPerformanceMonitor(@Nullable ComponentManager project, @Nonnull Runnable action) {
     if (!shouldReport() || isUnderDebug() || ApplicationManager.getApplication().isUnitTestMode()) {
       action.run();
       return;
@@ -62,14 +63,14 @@ public class FreezeLoggerImpl extends FreezeLogger {
     return Registry.is("typing.freeze.report.dumps");
   }
 
-  private static void dumpThreads(@Nullable Project project, @Nonnull ModalityState initialState) {
+  private static void dumpThreads(@Nullable ComponentManager project, @Nonnull ModalityState initialState) {
     final ThreadInfo[] infos = ThreadDumper.getThreadInfos();
     final String edtTrace = ThreadDumper.dumpEdtStackTrace(infos);
     if (edtTrace.contains("java.lang.ClassLoader.loadClass")) {
       return;
     }
 
-    final boolean isInDumbMode = project != null && !project.isDisposed() && DumbService.isDumb(project);
+    final boolean isInDumbMode = project != null && !project.isDisposed() && DumbService.isDumb((Project)project);
 
     ApplicationManager.getApplication().invokeLater(() -> {
       if (!initialState.equals(ModalityState.current())) return;

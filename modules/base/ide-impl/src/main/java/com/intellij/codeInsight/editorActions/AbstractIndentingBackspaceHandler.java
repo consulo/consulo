@@ -16,9 +16,12 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.action.BackspaceHandlerDelegate;
+import consulo.codeEditor.action.BackspaceModeOverride;
 import consulo.language.psi.PsiFile;
 
 abstract class AbstractIndentingBackspaceHandler extends BackspaceHandlerDelegate {

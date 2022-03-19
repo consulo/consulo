@@ -28,7 +28,7 @@ import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;

@@ -20,6 +20,7 @@ import consulo.language.ast.FileASTNode;
 import consulo.language.ast.IFileElementType;
 import consulo.language.file.FileViewProvider;
 import consulo.util.collection.ArrayFactory;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -33,15 +34,17 @@ import javax.annotation.Nullable;
  * Please see <a href="http://confluence.jetbrains.net/display/IDEADEV/IntelliJ+IDEA+Architectural+Overview">IntelliJ IDEA Architectural Overview </a>
  * for high-level overview.
  *
- * @see com.intellij.openapi.actionSystem.CommonDataKeys#PSI_FILE
+ * @see #KEY
  * @see PsiElement#getContainingFile()
  * @see PsiManager#findFile(VirtualFile)
  * @see PsiDocumentManager#getPsiFile(Document)
  */
 public interface PsiFile extends PsiFileSystemItem {
-  public static final PsiFile[] EMPTY_ARRAY = new PsiFile[0];
+  Key<PsiFile> KEY = Key.create(PsiFile.class);
 
-  public static ArrayFactory<PsiFile> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiFile[count];
+  PsiFile[] EMPTY_ARRAY = new PsiFile[0];
+
+  ArrayFactory<PsiFile> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiFile[count];
 
   /**
    * Returns the virtual file corresponding to the PSI file.

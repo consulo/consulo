@@ -17,7 +17,7 @@ package com.intellij.util.textCompletion;
 
 import consulo.language.editor.AutoPopupController;
 import com.intellij.openapi.editor.SpellCheckingEditorCustomizationProvider;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import com.intellij.ui.EditorCustomization;

@@ -48,7 +48,7 @@
     <extensionPoint name="addTo.listOfElements" beanClass="consulo.extensions.AddToElementEP"/>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="search.optionContributor" interface="com.intellij.ide.ui.search.SearchableOptionContributor"/>
-    <extensionPoint name="referenceInjector" interface="consulo.ide.impl.psi.injection.ReferenceInjector"/>
+    <extensionPoint name="referenceInjector" interface="consulo.language.inject.ReferenceInjector"/>
     <extensionPoint name="customPropertyScopeProvider" interface="consulo.ide.impl.psi.impl.search.CustomPropertyScopeProvider"/>
     <extensionPoint name="contentFolderTypeProvider" interface="consulo.content.ContentFolderTypeProvider"/>
     <extensionPoint name="contentFolderPropertyProvider" interface="consulo.module.content.layer.ContentFolderPropertyProvider"/>
@@ -175,16 +175,16 @@
       <with attribute="implementationClass" implements="consulo.virtualFileSystem.BinaryFileDecompiler"/>
     </extensionPoint>
 
-    <extensionPoint name="editorActionHandler" beanClass="com.intellij.openapi.editor.actionSystem.EditorActionHandlerBean">
-      <with attribute="implementationClass" implements="com.intellij.openapi.editor.actionSystem.EditorActionHandler"/>
+    <extensionPoint name="editorActionHandler" beanClass="consulo.codeEditor.impl.action.EditorActionHandlerBean">
+      <with attribute="implementationClass" implements="consulo.codeEditor.action.EditorActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="editorTypedHandler" beanClass="com.intellij.openapi.editor.actionSystem.EditorTypedHandlerBean">
-      <with attribute="implementationClass" implements="com.intellij.openapi.editor.actionSystem.TypedActionHandler"/>
+    <extensionPoint name="editorTypedHandler" beanClass="consulo.codeEditor.action.EditorTypedHandlerBean">
+      <with attribute="implementationClass" implements="consulo.codeEditor.action.TypedActionHandler"/>
     </extensionPoint>
 
-    <extensionPoint name="rawEditorTypedHandler" beanClass="com.intellij.openapi.editor.actionSystem.EditorTypedHandlerBean">
-      <with attribute="implementationClass" implements="com.intellij.openapi.editor.actionSystem.TypedActionHandler"/>
+    <extensionPoint name="rawEditorTypedHandler" beanClass="consulo.codeEditor.action.EditorTypedHandlerBean">
+      <with attribute="implementationClass" implements="consulo.codeEditor.action.TypedActionHandler"/>
     </extensionPoint>
 
     <extensionPoint name="customFileDropHandler" area="PROJECT" interface="com.intellij.openapi.editor.CustomFileDropHandler"/>
@@ -215,7 +215,7 @@
     <extensionPoint name="statistics.usagesCollector" interface="com.intellij.internal.statistic.UsagesCollector"/>
 
     <extensionPoint name="editorHighlighterProvider" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.openapi.fileTypes.EditorHighlighterProvider"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.highlight.EditorHighlighterProvider"/>
     </extensionPoint>
 
     <extensionPoint name="actionPromoter" interface="com.intellij.openapi.actionSystem.ActionPromoter"/>
@@ -395,20 +395,20 @@
     <extensionPoint name="quoteHandler"
                     beanClass="com.intellij.codeInsight.editorActions.QuoteHandlerEP"/>
     <extensionPoint name="extendWordSelectionHandler"
-                    interface="com.intellij.codeInsight.editorActions.ExtendWordSelectionHandler"/>
+                    interface="consulo.language.editor.action.ExtendWordSelectionHandler"/>
     <extensionPoint name="basicWordSelectionFilter"
                     interface="consulo.util.lang.function.Condition"/>
     <extensionPoint name="typedHandler"
-                    interface="com.intellij.codeInsight.editorActions.TypedHandlerDelegate"/>
+                    interface="consulo.language.editor.action.TypedHandlerDelegate"/>
     <extensionPoint name="selectionDequotingFilter"
                     interface="com.intellij.codeInsight.editorActions.SelectionQuotingTypedHandler$DequotingFilter"/>
 
     <extensionPoint name="joinLinesHandler"
-                    interface="com.intellij.codeInsight.editorActions.JoinLinesHandlerDelegate"/>
+                    interface="consulo.language.editor.action.JoinLinesHandlerDelegate"/>
     <extensionPoint name="enterHandlerDelegate" interface="com.intellij.codeInsight.editorActions.enter.EnterHandlerDelegate"/>
-    <extensionPoint name="backspaceHandlerDelegate" interface="com.intellij.codeInsight.editorActions.BackspaceHandlerDelegate"/>
+    <extensionPoint name="backspaceHandlerDelegate" interface="consulo.language.editor.action.BackspaceHandlerDelegate"/>
     <extensionPoint name="editor.backspaceModeOverride" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.BackspaceModeOverride"/>
+      <with attribute="implementationClass" implements="consulo.codeEditor.action.BackspaceModeOverride"/>
     </extensionPoint>
     <extensionPoint name="enterBetweenBracesDelegate" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.enter.EnterBetweenBracesDelegate"/>
@@ -442,7 +442,7 @@
                     interface="com.intellij.codeInsight.daemon.ChangeLocalityDetector"/>
 
     <extensionPoint name="languageInjector" interface="consulo.language.inject.LanguageInjector"/>
-    <extensionPoint name="concatenationAwareInjector" interface="com.intellij.lang.injection.ConcatenationAwareInjector" area="PROJECT"/>
+    <extensionPoint name="concatenationAwareInjector" interface="consulo.language.inject.ConcatenationAwareInjector" area="PROJECT"/>
     <extensionPoint name="multiHostInjector"
                     beanClass="consulo.language.inject.MultiHostInjectorExtensionPoint"
                     area="PROJECT">
@@ -502,7 +502,7 @@
 
     <extensionPoint name="lang.quoteHandler"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.QuoteHandler"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.action.QuoteHandler"/>
     </extensionPoint>
 
     <extensionPoint name="lang.foldingBuilder"
@@ -676,10 +676,10 @@
 
     <extensionPoint name="customPasteProvider" interface="com.intellij.ide.PasteProvider"/>
 
-    <extensionPoint name="copyPastePreProcessor" interface="com.intellij.codeInsight.editorActions.CopyPastePreProcessor"/>
+    <extensionPoint name="copyPastePreProcessor" interface="consulo.language.editor.action.CopyPastePreProcessor"/>
     <extensionPoint name="copyPastePostProcessor" interface="com.intellij.codeInsight.editorActions.CopyPastePostProcessor"/>
 
-    <extensionPoint name="commentCompleteHandler" interface="com.intellij.codeInsight.editorActions.CommentCompleteHandler"/>
+    <extensionPoint name="commentCompleteHandler" interface="consulo.language.editor.action.CommentCompleteHandler"/>
 
     <extensionPoint name="liveTemplateContext" interface="com.intellij.codeInsight.template.TemplateContextType"/>
     <extensionPoint name="liveTemplateMacro" interface="com.intellij.codeInsight.template.Macro"/>
@@ -861,7 +861,7 @@
 
     <extensionPoint name="lang.lineWrapStrategy"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.openapi.editor.LineWrapPositionStrategy"/>
+      <with attribute="implementationClass" implements="consulo.codeEditor.LineWrapPositionStrategy"/>
     </extensionPoint>
 
     <extensionPoint name="lang.whiteSpaceFormattingStrategy"
@@ -1145,7 +1145,7 @@
 
     <extensionPoint name="codeBlockProvider"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.editorActions.CodeBlockProvider"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.action.CodeBlockProvider"/>
     </extensionPoint>
 
     <extensionPoint name="toolsProvider" interface="com.intellij.tools.ToolsProvider"/>
@@ -1211,7 +1211,7 @@
     <applicationService serviceInterface="consulo.project.impl.ProjectOpenProcessors"
                         serviceImplementation="consulo.project.impl.ProjectOpenProcessorsImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.openapi.editor.ex.EditorSettingsExternalizable"/>
+    <applicationService serviceImplementation="consulo.codeEditor.impl.EditorSettingsExternalizable"/>
     <applicationService serviceImplementation="com.intellij.codeInsight.hints.settings.ParameterNameHintsSettings"/>
     <applicationService serviceImplementation="com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager"/>
     <applicationService serviceImplementation="com.intellij.openapi.keymap.KeyboardSettingsExternalizable"/>
@@ -1297,13 +1297,13 @@
                         serviceImplementation="com.intellij.codeInsight.hint.HintManagerImpl"/>
     <applicationService serviceInterface="com.intellij.codeInsight.hint.TooltipController"
                         serviceImplementation="com.intellij.codeInsight.hint.TooltipController"/>
-    <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.EditorActionManager"
+    <applicationService serviceInterface="consulo.codeEditor.action.EditorActionManager"
                         serviceImplementation="com.intellij.openapi.editor.impl.EditorActionManagerImpl"/>
     <applicationService serviceImplementation="consulo.ide.updateSettings.UpdateSettings"/>
     <applicationService serviceImplementation="consulo.ide.updateSettings.impl.UpdateHistory"/>
     <applicationService serviceInterface="com.intellij.featureStatistics.FeatureUsageTracker"
                         serviceImplementation="com.intellij.featureStatistics.FeatureUsageTrackerImpl"/>
-    <applicationService serviceInterface="com.intellij.reporting.FreezeLogger"
+    <applicationService serviceInterface="consulo.application.util.FreezeLogger"
                         serviceImplementation="com.intellij.reporting.FreezeLoggerImpl"/>
     <applicationService serviceInterface="com.intellij.featureStatistics.ProductivityFeaturesRegistry"
                         serviceImplementation="com.intellij.featureStatistics.ProductivityFeaturesRegistryImpl"/>
@@ -2213,7 +2213,7 @@
       <className>com.intellij.codeInsight.intention.impl.EditFoldingOptionsAction</className>
     </intentionAction>
     <intentionAction>
-      <className>com.intellij.codeInsight.intention.impl.QuickEditAction</className>
+      <className>consulo.language.editor.impl.intention.QuickEditAction</className>
       <category>Language Injection</category>
     </intentionAction>
 
@@ -2447,7 +2447,7 @@
                     serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringFactoryImpl"/>
 
     <projectService serviceInterface="consulo.language.inject.InjectedLanguageManager"
-                    serviceImplementation="consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageManagerImpl"/>
+                    serviceImplementation="consulo.language.inject.impl.internal.InjectedLanguageManagerImpl"/>
     <projectService serviceInterface="com.intellij.openapi.vcs.changes.patch.PatchBaseDirectoryDetector"
                     serviceImplementation="com.intellij.openapi.vcs.changes.patch.PsiPatchBaseDirectoryDetector"/>
 
@@ -2657,7 +2657,7 @@
 
     <vfs.asyncListener implementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl$MyAsyncFileListener"/>
 
-    <projectService serviceImplementation="consulo.ide.impl.psi.impl.source.tree.injected.ConcatenationInjectorManager"/>
+    <projectService serviceImplementation="consulo.language.inject.impl.internal.ConcatenationInjectorManager"/>
 
     <dateTimeFormatter id="vcs.annotate" name="VCS Annotate"/>
     <dateTimeFormatter id="vcs.log" name="VCS Log"/>
@@ -2667,7 +2667,7 @@
     <applicationService serviceInterface="com.intellij.openapi.command.undo.DocumentReferenceManager" serviceImplementation="com.intellij.openapi.command.impl.DocumentReferenceManagerImpl"
                         lazy="false"/>
 
-    <applicationService serviceInterface="com.intellij.codeInsight.editorActions.TabOutScopesTracker" serviceImplementation="com.intellij.codeInsight.editorActions.TabOutScopesTrackerImpl"/>
+    <applicationService serviceInterface="consulo.codeEditor.action.TabOutScopesTracker" serviceImplementation="com.intellij.codeInsight.editorActions.TabOutScopesTrackerImpl"/>
 
     <applicationService serviceInterface="consulo.language.codeStyle.Formatter" serviceImplementation="com.intellij.formatting.FormatterImpl"/>
     <applicationService serviceInterface="com.intellij.util.gist.GistManager" serviceImplementation="com.intellij.util.gist.GistManagerImpl"/>
@@ -2688,7 +2688,7 @@
     <projectService serviceInterface="consulo.module.ModuleManager" serviceImplementation="com.intellij.openapi.module.impl.ModuleManagerComponent"/>
     <applicationService serviceInterface="consulo.virtualFileSystem.pointer.VirtualFilePointerManager" serviceImplementation="com.intellij.openapi.vfs.impl.VirtualFilePointerManagerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.editor.actionSystem.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl"/>
+    <applicationService serviceInterface="consulo.codeEditor.action.TypedAction" serviceImplementation="com.intellij.openapi.editor.impl.TypedActionImpl"/>
 
     <editorFactoryListener implementation="com.intellij.codeInsight.daemon.impl.EditorTracker$MyAppLevelEditorFactoryListener"/>
 

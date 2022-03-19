@@ -45,7 +45,7 @@ import consulo.ui.ex.awt.util.Update;
 import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.ui.ex.popup.Balloon;
@@ -507,7 +507,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     if (tabWrapper != null) {
       return tabWrapper;
     }
-    EditorsSplitters splitters = AWTComponentProviderUtil.findChild(pane, EditorsSplitters.class);
+    FileEditorsSplitters splitters = AWTComponentProviderUtil.findChild(pane, FileEditorsSplitters.class);
     if (splitters != null) {
       return splitters.isShowing() ? splitters.getComponent() : pane;
     }

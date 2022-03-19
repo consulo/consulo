@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.colorScheme.EditorColorsManager;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import javax.annotation.Nonnull;
 
 public class RightMarginEditorCustomization extends SimpleEditorCustomization {

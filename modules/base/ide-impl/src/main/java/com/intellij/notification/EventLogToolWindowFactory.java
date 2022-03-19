@@ -23,7 +23,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
+import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;

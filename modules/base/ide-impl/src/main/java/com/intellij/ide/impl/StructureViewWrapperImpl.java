@@ -65,7 +65,7 @@ import com.intellij.util.BitUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -179,7 +179,7 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
       setFile(null);
     } else if (myFirstRun) {
       final FileEditorManagerImpl editorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(myProject);
-      final List<Pair<VirtualFile, EditorWindow>> history = editorManager.getSelectionHistory();
+      final List<Pair<VirtualFile, FileEditorWindow>> history = editorManager.getSelectionHistory();
       if (! history.isEmpty()) {
         setFile(history.get(0).getFirst());
       }

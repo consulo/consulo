@@ -27,6 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.UpdateInBackground;
 
 import javax.annotation.Nonnull;
 

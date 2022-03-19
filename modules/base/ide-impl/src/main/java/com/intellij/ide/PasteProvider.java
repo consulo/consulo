@@ -17,9 +17,13 @@
 package com.intellij.ide;
 
 import consulo.dataContext.DataContext;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 public interface PasteProvider {
+  Key<PasteProvider> KEY = Key.create(PasteProvider.class);
+
   void performPaste(@Nonnull DataContext dataContext);
 
   /**
@@ -27,5 +31,6 @@ public interface PasteProvider {
    * See #12326
    */
   boolean isPastePossible(@Nonnull DataContext dataContext);
+
   boolean isPasteEnabled(@Nonnull DataContext dataContext);
 }

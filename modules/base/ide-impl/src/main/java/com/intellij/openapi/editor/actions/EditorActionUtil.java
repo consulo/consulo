@@ -24,33 +24,33 @@
  */
 package com.intellij.openapi.editor.actions;
 
+import com.intellij.openapi.editor.EditorModificationUtil;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.editor.impl.DesktopEditorImpl;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.EditorPopupHandler;
+import com.intellij.util.text.CharArrayUtil;
 import consulo.codeEditor.*;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEventArea;
+import consulo.codeEditor.EditorEx;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.ast.IElementType;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
-import com.intellij.openapi.editor.*;
-import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.event.EditorMouseEventArea;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.highlight.EditorHighlighter;
-import consulo.language.editor.highlight.HighlighterIterator;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
-import consulo.document.Document;
-import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.language.ast.IElementType;
-import com.intellij.util.EditorPopupHandler;
-import com.intellij.util.text.CharArrayUtil;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -820,7 +820,7 @@ public class EditorActionUtil {
 
   /**
    * @deprecated Use {@link EditorEx#setContextMenuGroupId(String)} or
-   * {@link EditorEx#installPopupHandler(com.intellij.openapi.editor.ex.EditorPopupHandler)} instead. To be removed in version 2020.2.
+   * {@link EditorEx#installPopupHandler(consulo.codeEditor.EditorPopupHandler)} instead. To be removed in version 2020.2.
    */
   @Deprecated
   //@ApiStatus.ScheduledForRemoval(inVersion = "2020.2")

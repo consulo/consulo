@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 
 /**
  * @author Konstantin Bulenkov
  */
 public interface EditorWindowHolder {
-  EditorWindow getEditorWindow();
+  FileEditorWindow getEditorWindow();
 }

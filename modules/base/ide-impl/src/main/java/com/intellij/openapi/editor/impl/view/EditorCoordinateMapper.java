@@ -4,11 +4,11 @@
 package com.intellij.openapi.editor.impl.view;
 
 import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
+import consulo.codeEditor.SoftWrapDrawingType;
 import consulo.document.impl.DocumentUtil;
 import consulo.document.Document;
 import consulo.codeEditor.FoldRegion;

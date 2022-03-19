@@ -16,9 +16,9 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageManagerImpl;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import consulo.ide.impl.psi.impl.source.tree.injected.PlaceImpl;
+import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.PlaceImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.concurrency.JobLauncher;

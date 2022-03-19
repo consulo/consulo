@@ -12,9 +12,15 @@ module consulo.code.editor.api {
   requires transitive consulo.document.api;
   requires transitive consulo.ui.ex.api;
   requires transitive consulo.color.scheme.api;
+  requires transitive consulo.undo.redo.api;
+
+  requires consulo.injecting.api;
 
   exports consulo.codeEditor;
+  exports consulo.codeEditor.action;
   exports consulo.codeEditor.event;
   exports consulo.codeEditor.markup;
   exports consulo.codeEditor.util;
+
+  exports consulo.codeEditor.internal to consulo.ide.impl;
 }

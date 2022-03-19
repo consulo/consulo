@@ -22,7 +22,7 @@ import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.codeEditor.impl.EditorInternal;

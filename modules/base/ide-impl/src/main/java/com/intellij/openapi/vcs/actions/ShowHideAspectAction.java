@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import com.intellij.vcsUtil.VcsUtil;
 
 /**

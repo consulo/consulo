@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.impl.editorActions;
 
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 
 public class TemplateLineStartWithSelectionHandler extends TemplateLineStartEndHandler {
   public TemplateLineStartWithSelectionHandler(final EditorActionHandler originalHandler) {

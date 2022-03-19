@@ -6,7 +6,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -14,7 +14,7 @@ import java.awt.*;
 
 public class EditorTabPresentationUtil {
   @Nonnull
-  public static String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable EditorWindow editorWindow) {
+  public static String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
     for (EditorTabTitleProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabTitleProvider.EP_NAME)) {
       String result = provider.getEditorTabTitle(project, file, editorWindow);
       if (StringUtil.isNotEmpty(result)) {
@@ -26,7 +26,7 @@ public class EditorTabPresentationUtil {
   }
 
   @Nonnull
-  public static String getUniqueEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable EditorWindow editorWindow) {
+  public static String getUniqueEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
     String name = getEditorTabTitle(project, file, editorWindow);
     if (name.equals(file.getPresentableName())) {
       return UniqueVFilePathBuilder.getInstance().getUniqueVirtualFilePath(project, file);
@@ -35,7 +35,7 @@ public class EditorTabPresentationUtil {
   }
 
   @Nullable
-  public static Color getEditorTabBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable EditorWindow editorWindow) {
+  public static Color getEditorTabBackgroundColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
     for (EditorTabColorProvider provider : DumbService.getDumbAwareExtensions(project, EditorTabColorProvider.EP_NAME)) {
       Color result = provider.getEditorTabColor(project, file, editorWindow);
       if (result != null) {

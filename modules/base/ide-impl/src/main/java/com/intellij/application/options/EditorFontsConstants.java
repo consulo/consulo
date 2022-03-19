@@ -20,45 +20,38 @@ import consulo.ui.ex.awt.JBUI;
 /**
  * @author Konstantin Bulenkov
  */
+@Deprecated
 public class EditorFontsConstants {
   public static int getMinEditorFontSize() {
-    return JBUI.scale(4);
+    return JBUI.scale(consulo.colorScheme.EditorFontsConstants.getMinEditorFontSize());
   }
 
   public static int getMaxEditorFontSize() {
-    return JBUI.scale(40);
+    return JBUI.scale(consulo.colorScheme.EditorFontsConstants.getMaxEditorFontSize());
   }
 
   public static int getDefaultEditorFontSize() {
-    return JBUI.scale(12);
+    return JBUI.scale(consulo.colorScheme.EditorFontsConstants.getDefaultEditorFontSize());
   }
 
   public static float getMinEditorLineSpacing() {
-    return .6f;
+    return consulo.colorScheme.EditorFontsConstants.getMinEditorLineSpacing();
   }
 
   public static float getMaxEditorLineSpacing() {
-    return 3f;
+    return consulo.colorScheme.EditorFontsConstants.getMaxEditorLineSpacing();
   }
 
   public static float getDefaultEditorLineSpacing() {
-    return 1f;
+    return consulo.colorScheme.EditorFontsConstants.getDefaultEditorLineSpacing();
   }
 
   public static int checkAndFixEditorFontSize(int size) {
-    return round(getMinEditorFontSize(), getMaxEditorFontSize(), size);
+    return consulo.colorScheme.EditorFontsConstants.checkAndFixEditorFontSize(size);
   }
 
   public static float checkAndFixEditorLineSpacing(float lineSpacing) {
-    return round(getMinEditorLineSpacing(), getMaxEditorLineSpacing(), lineSpacing);
-  }
-
-  private static int round(int min, int max, int val) {
-    return val < min ? min : val > max ? max : val;
-  }
-
-  private static float round(float min, float max, float val) {
-    return val < min ? min : val > max ? max : val;
+    return consulo.colorScheme.EditorFontsConstants.checkAndFixEditorLineSpacing(lineSpacing);
   }
 
   private EditorFontsConstants() {

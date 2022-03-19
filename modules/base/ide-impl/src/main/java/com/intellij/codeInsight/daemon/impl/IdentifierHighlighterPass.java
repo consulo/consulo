@@ -28,7 +28,7 @@ import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.psi.search.searches.ReferencesSearch;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.progress.ProgressIndicator;

@@ -5,6 +5,9 @@ import consulo.document.RangeMarker;
 import consulo.document.impl.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.function.Processor;
+import consulo.document.internal.DocumentEx;
+import consulo.document.internal.LineIterator;
+import consulo.document.internal.RangeMarkerEx;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 

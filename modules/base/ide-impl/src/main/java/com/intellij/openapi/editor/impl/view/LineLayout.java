@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl.view;
 
+import consulo.codeEditor.impl.IterationState;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
@@ -9,9 +10,9 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import com.intellij.openapi.editor.bidi.BidiRegionsSeparator;
 import com.intellij.openapi.editor.bidi.LanguageBidiRegionsSeparator;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.FontFallbackIterator;
-import com.intellij.openapi.editor.impl.FontInfo;
+import consulo.codeEditor.impl.FontInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.TokenType;

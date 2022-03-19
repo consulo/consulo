@@ -26,7 +26,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.codeStyle.arrangement.std.*;
 import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
-import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;

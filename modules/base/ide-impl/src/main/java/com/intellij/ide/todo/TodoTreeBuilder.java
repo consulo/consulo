@@ -29,7 +29,7 @@ import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.logging.Logger;
 import consulo.document.Document;
-import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.DumbService;

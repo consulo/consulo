@@ -48,9 +48,9 @@ import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -573,11 +573,11 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
   }
 
   private void focusDefaultElementInSelectedEditor() {
-    EditorsSplitters splittersToFocus = getSplittersToFocus();
+    FileEditorsSplitters splittersToFocus = getSplittersToFocus();
     if (splittersToFocus != null) {
-      final EditorWindow window = splittersToFocus.getCurrentWindow();
+      final FileEditorWindow window = splittersToFocus.getCurrentWindow();
       if (window != null) {
-        final EditorWithProviderComposite editor = window.getSelectedEditor();
+        final FileEditorWithProviderComposite editor = window.getSelectedEditor();
         if (editor != null) {
           JComponent defaultFocusedComponentInEditor = editor.getPreferredFocusedComponent();
           if (defaultFocusedComponentInEditor != null) {
@@ -778,7 +778,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     UIAccess.assertIsUIThread();
 
     Component owner = getFocusManager().getFocusOwner();
-    EditorsSplitters splitters = AWTComponentProviderUtil.findParent(owner, EditorsSplitters.class);
+    FileEditorsSplitters splitters = AWTComponentProviderUtil.findParent(owner, FileEditorsSplitters.class);
     return splitters != null;
   }
 
@@ -824,7 +824,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
   }
 
-  private EditorsSplitters getSplittersToFocus() {
+  private FileEditorsSplitters getSplittersToFocus() {
     WindowManagerEx windowManager = (WindowManagerEx)myWindowManager.get();
 
     Window activeWindow = TargetAWT.to(windowManager.getMostRecentFocusedWindow());
@@ -838,7 +838,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     FileEditorManagerEx fem = FileEditorManagerEx.getInstanceEx(myProject);
-    EditorsSplitters splitters = activeWindow != null ? fem.getSplittersFor(activeWindow) : null;
+    FileEditorsSplitters splitters = activeWindow != null ? fem.getSplittersFor(activeWindow) : null;
     return splitters != null ? splitters : fem.getSplitters();
   }
 

@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.RawText;
+import consulo.codeEditor.RawText;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

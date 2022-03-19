@@ -22,9 +22,9 @@ import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.docking.DockableContent;
 import consulo.disposer.Disposable;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.ui.Component;
-import consulo.fileEditor.impl.UnifiedEditorsSplitters;
+import consulo.fileEditor.impl.UnifiedFileEditorsSplitters;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -37,9 +37,9 @@ import java.awt.*;
  */
 public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbedContainer {
   private final Project myProject;
-  private final UnifiedEditorsSplitters mySplitters;
+  private final UnifiedFileEditorsSplitters mySplitters;
 
-  public UnifiedDockableEditorTabbedContainer(Project project, UnifiedEditorsSplitters splitters, boolean disposeWhenEmpty) {
+  public UnifiedDockableEditorTabbedContainer(Project project, UnifiedFileEditorsSplitters splitters, boolean disposeWhenEmpty) {
     myProject = project;
 
     mySplitters = splitters;
@@ -47,7 +47,7 @@ public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbe
 
   @Nullable
   @Override
-  public EditorsSplitters getSplitters() {
+  public FileEditorsSplitters getSplitters() {
     return mySplitters;
   }
 

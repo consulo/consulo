@@ -3,6 +3,8 @@ package consulo.document.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Processor;
+import consulo.document.MarkupIterator;
+import consulo.document.internal.RangeMarkerEx;
 import consulo.logging.Logger;
 import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.longs.LongSet;

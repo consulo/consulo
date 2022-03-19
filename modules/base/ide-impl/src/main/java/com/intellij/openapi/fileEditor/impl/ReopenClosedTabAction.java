@@ -20,8 +20,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileEditor.impl.EditorsSplitters;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorsSplitters;
+import consulo.fileEditor.FileEditorWindow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,17 +39,17 @@ public class ReopenClosedTabAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final EditorWindow window = getEditorWindow(e);
+    final FileEditorWindow window = getEditorWindow(e);
     if (window != null) {
       window.restoreClosedTab();
     }
   }
 
   @Nullable
-  private static EditorWindow getEditorWindow(AnActionEvent e) {
+  private static FileEditorWindow getEditorWindow(AnActionEvent e) {
     final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
     if (component != null) {
-      EditorsSplitters splitters = DataManager.getInstance().getDataContext(component).getData(EditorsSplitters.KEY);
+      FileEditorsSplitters splitters = DataManager.getInstance().getDataContext(component).getData(FileEditorsSplitters.KEY);
       if (splitters != null) {
         return splitters.getCurrentWindow();
       }
@@ -60,7 +60,7 @@ public class ReopenClosedTabAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    final EditorWindow window = getEditorWindow(e);
+    final FileEditorWindow window = getEditorWindow(e);
     e.getPresentation().setEnabled(window != null && window.hasClosedTabs());
   }
 }

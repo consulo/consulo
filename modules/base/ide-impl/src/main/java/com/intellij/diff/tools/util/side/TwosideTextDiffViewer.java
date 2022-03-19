@@ -41,7 +41,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.document.event.DocumentEvent;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.util.dataholder.Key;
 import consulo.navigation.Navigatable;
 import com.intellij.util.containers.ContainerUtil;

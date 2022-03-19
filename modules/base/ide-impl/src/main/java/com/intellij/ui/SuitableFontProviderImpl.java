@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
+import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.ui.ex.awt.SuitableFontProvider;
 import jakarta.inject.Singleton;
 import org.intellij.lang.annotations.JdkConstants;

@@ -30,7 +30,7 @@ import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.psi.util.PsiUtilBase;
 import javax.annotation.Nonnull;
 

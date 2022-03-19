@@ -19,7 +19,7 @@ import com.intellij.ide.CopyProvider;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;

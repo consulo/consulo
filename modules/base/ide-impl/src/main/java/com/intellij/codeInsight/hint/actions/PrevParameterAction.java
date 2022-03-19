@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.hint.actions;
 
 import com.intellij.codeInsight.hint.PrevNextParameterHandler;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 
 /**
  * @author ven

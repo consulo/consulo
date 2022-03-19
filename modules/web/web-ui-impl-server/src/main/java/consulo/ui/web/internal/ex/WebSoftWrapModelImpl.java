@@ -15,9 +15,9 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
-import com.intellij.openapi.editor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
+import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
+import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
+import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;

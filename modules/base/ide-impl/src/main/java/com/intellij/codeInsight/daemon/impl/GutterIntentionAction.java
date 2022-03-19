@@ -4,7 +4,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeInsight.intention.AbstractIntentionAction;
 import com.intellij.codeInsight.intention.PriorityAction;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;

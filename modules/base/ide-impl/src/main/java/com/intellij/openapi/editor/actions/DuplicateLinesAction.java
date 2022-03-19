@@ -19,7 +19,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.Pair;
 import consulo.annotation.access.RequiredWriteAction;

@@ -31,7 +31,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SelectionModel;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.application.dumb.DumbAware;
 
 import java.util.List;

@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
 import com.intellij.util.ArrayUtil;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import javax.annotation.Nonnull;
 
 abstract class TabNavigationActionBase extends AnAction implements DumbAware {
@@ -71,7 +71,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
     final ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
     if (windowManager.isEditorComponentActive()) {
       final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
-      EditorWindow currentWindow = event.getData(EditorWindow.DATA_KEY);
+      FileEditorWindow currentWindow = event.getData(FileEditorWindow.DATA_KEY);
       if (currentWindow == null) {
         editorManager.getCurrentWindow();
       }
@@ -103,7 +103,7 @@ abstract class TabNavigationActionBase extends AnAction implements DumbAware {
   public static void navigateImpl(final DataContext dataContext, Project project, VirtualFile selectedFile, final int dir) {
     LOG.assertTrue(dir == 1 || dir == -1);
     final FileEditorManagerEx editorManager = FileEditorManagerEx.getInstanceEx(project);
-    EditorWindow currentWindow = dataContext.getData(EditorWindow.DATA_KEY);
+    FileEditorWindow currentWindow = dataContext.getData(FileEditorWindow.DATA_KEY);
     if (currentWindow == null) {
       currentWindow = editorManager.getCurrentWindow();
     }

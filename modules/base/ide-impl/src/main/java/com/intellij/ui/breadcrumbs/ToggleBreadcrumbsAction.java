@@ -7,7 +7,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.application.dumb.DumbAware;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;

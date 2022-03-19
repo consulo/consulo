@@ -18,7 +18,7 @@ package com.intellij.codeInsight.hint;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 
 import javax.annotation.Nonnull;
 

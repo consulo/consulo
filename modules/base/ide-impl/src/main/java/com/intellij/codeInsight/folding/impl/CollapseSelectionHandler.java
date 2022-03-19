@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
-import com.intellij.openapi.editor.ex.FoldingModelEx;
+import consulo.codeEditor.FoldingModelEx;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actions;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 
 /**
  * @author max

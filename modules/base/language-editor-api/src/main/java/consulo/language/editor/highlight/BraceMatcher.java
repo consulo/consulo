@@ -16,6 +16,7 @@
 
 package consulo.language.editor.highlight;
 
+import consulo.codeEditor.HighlighterIterator;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiFile;

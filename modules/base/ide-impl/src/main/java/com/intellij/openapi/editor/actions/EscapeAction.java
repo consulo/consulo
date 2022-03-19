@@ -17,9 +17,9 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.*;
 
 import javax.annotation.Nullable;

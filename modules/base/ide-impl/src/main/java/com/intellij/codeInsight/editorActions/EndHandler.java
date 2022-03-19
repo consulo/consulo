@@ -23,7 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.document.FileDocumentManager;
 import consulo.codeEditor.*;
 import consulo.project.Project;

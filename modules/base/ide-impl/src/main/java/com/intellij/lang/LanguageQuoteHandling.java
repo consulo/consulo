@@ -15,7 +15,7 @@
  */
 package com.intellij.lang;
 
-import com.intellij.codeInsight.editorActions.QuoteHandler;
+import consulo.language.editor.action.QuoteHandler;
 import consulo.container.plugin.PluginIds;
 import consulo.language.LanguageExtension;
 

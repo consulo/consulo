@@ -17,157 +17,25 @@ package com.intellij.openapi.fileEditor.ex;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.fileEditor.EditorDataProvider;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.component.util.BusyObject;
-import consulo.project.Project;
-import com.intellij.openapi.util.*;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.EditorComposite;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorsSplitters;
-import consulo.ui.Component;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.util.concurrent.ActionCallback;
-import consulo.util.concurrent.AsyncResult;
+import consulo.fileEditor.EditorDataProvider;
+import consulo.fileEditor.FileEditorManager;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public abstract class FileEditorManagerEx extends FileEditorManager implements BusyObject {
-  protected final List<EditorDataProvider> myDataProviders = new ArrayList<EditorDataProvider>();
+  protected final List<EditorDataProvider> myDataProviders = new ArrayList<>();
 
   public static FileEditorManagerEx getInstanceEx(Project project) {
     return (FileEditorManagerEx)getInstance(project);
   }
-
-  /**
-   * @return <code>JComponent</code> which represent the place where all editors are located
-   */
-  @Nonnull
-  public javax.swing.JComponent getComponent() {
-    throw new UnsupportedOperationException("Not supported at this platform");
-  }
-
-  @Nonnull
-  public Component getUIComponent() {
-    throw new UnsupportedOperationException("Not supported at this platform");
-  }
-
-  /**
-   * @return preferred focused component inside myEditor tabbed container.
-   * This method does similar things like {@link FileEditor#getPreferredFocusedComponent()}
-   * but it also tracks (and remember) focus movement inside tabbed container.
-   * @see com.intellij.openapi.fileEditor.impl.DesktopEditorComposite#getPreferredFocusedComponent()
-   */
-  @Nullable
-  public abstract javax.swing.JComponent getPreferredFocusedComponent();
-
-  @Nonnull
-  public abstract Pair<FileEditor[], FileEditorProvider[]> getEditorsWithProviders(@Nonnull VirtualFile file);
-
-  @Nullable
-  public abstract VirtualFile getFile(@Nonnull FileEditor editor);
-
-  public abstract void updateFilePresentation(@Nonnull VirtualFile file);
-
-  /**
-   * @return current window in splitters
-   */
-  public abstract EditorWindow getCurrentWindow();
-
-  @Nonnull
-  public abstract AsyncResult<EditorWindow> getActiveWindow();
-
-  public abstract void setCurrentWindow(EditorWindow window);
-
-  /**
-   * Closes editors for the file opened in particular window.
-   *
-   * @param file file to be closed. Cannot be null.
-   */
-  public abstract void closeFile(@Nonnull VirtualFile file, @Nonnull EditorWindow window);
-
-  public abstract void unsplitWindow();
-
-  public abstract void unsplitAllWindow();
-
-  public abstract int getWindowSplitCount();
-
-  public abstract boolean hasSplitOrUndockedWindows();
-
-  @Nonnull
-  public abstract EditorWindow[] getWindows();
-
-  /**
-   * @return arrays of all files (including <code>file</code> itself) that belong
-   * to the same tabbed container. The method returns empty array if <code>file</code>
-   * is not open. The returned files have the same order as they have in the
-   * tabbed container.
-   */
-  @Nonnull
-  public abstract VirtualFile[] getSiblings(@Nonnull VirtualFile file);
-
-  public abstract void createSplitter(int orientation, @Nullable EditorWindow window);
-
-  public abstract void changeSplitterOrientation();
-
-  public abstract boolean isInSplitter();
-
-  public abstract boolean hasOpenedFile();
-
-  @Nullable
-  public abstract VirtualFile getCurrentFile();
-
-  @Nullable
-  public abstract FileEditorWithProvider getSelectedEditorWithProvider(@Nonnull VirtualFile file);
-
-  /**
-   * Closes all files IN ACTIVE SPLITTER (window).
-   *
-   * @see com.intellij.ui.docking.DockManager#getContainers()
-   * @see com.intellij.ui.docking.DockContainer#closeAll()
-   */
-  public abstract void closeAllFiles();
-
-  @Nonnull
-  public abstract EditorsSplitters getSplitters();
-
-  @Override
-  @Nonnull
-  public FileEditor[] openFile(@Nonnull final VirtualFile file, final boolean focusEditor) {
-    return openFileWithProviders(file, focusEditor, false).getFirst();
-  }
-
-  @Nonnull
-  @Override
-  public FileEditor[] openFile(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForOpen) {
-    return openFileWithProviders(file, focusEditor, searchForOpen).getFirst();
-  }
-
-  @Nonnull
-  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForSplitter);
-
-  @Nonnull
-  @RequiredUIAccess
-  public abstract Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file, boolean focusEditor, @Nonnull EditorWindow window);
-
-  public abstract boolean isChanged(@Nonnull EditorComposite editor);
-
-  public abstract EditorWindow getNextWindow(@Nonnull final EditorWindow window);
-
-  public abstract EditorWindow getPrevWindow(@Nonnull final EditorWindow window);
-
-  public abstract boolean isInsideChange();
 
   @Override
   @Nullable
@@ -186,21 +54,4 @@ public abstract class FileEditorManagerEx extends FileEditorManager implements B
       Disposer.register(parentDisposable, () -> myDataProviders.remove(provider));
     }
   }
-
-  public void refreshIcons() {
-    if (this instanceof FileEditorManagerImpl) {
-      final FileEditorManagerImpl mgr = (FileEditorManagerImpl)this;
-      Set<EditorsSplitters> splitters = mgr.getAllSplitters();
-      for (EditorsSplitters each : splitters) {
-        for (VirtualFile file : mgr.getOpenFiles()) {
-          each.updateFileIcon(file);
-        }
-      }
-    }
-  }
-
-  public abstract EditorsSplitters getSplittersFor(java.awt.Component c);
-
-  @Nonnull
-  public abstract ActionCallback notifyPublisher(@Nonnull Runnable runnable);
 }

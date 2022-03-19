@@ -18,7 +18,6 @@ package consulo.colorScheme;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.platform.Platform;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +25,7 @@ import java.awt.*;
 import java.util.List;
 
 public interface FontPreferences {
-  @NonNls @Nonnull
+  @Nonnull
   String DEFAULT_FONT_NAME = getDefaultFontName();
   int DEFAULT_FONT_SIZE = Platform.current().os().isWindows() ? 13 : FontSize.SMALL.getSize();
 

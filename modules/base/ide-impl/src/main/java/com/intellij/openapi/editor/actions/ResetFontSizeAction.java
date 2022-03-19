@@ -18,11 +18,11 @@ package com.intellij.openapi.editor.actions;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import javax.annotation.Nonnull;
 
 /**

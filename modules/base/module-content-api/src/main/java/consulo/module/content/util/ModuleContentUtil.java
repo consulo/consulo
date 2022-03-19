@@ -15,14 +15,21 @@
  */
 package consulo.module.content.util;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author VISTALL
@@ -33,5 +40,36 @@ public class ModuleContentUtil {
   public static Module findModuleForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();
     return fileIndex.getModuleForFile(file);
+  }
+
+  /**
+   * collect transitive module dependants
+   *
+   * @param module to find dependencies on
+   * @param result resulted set
+   */
+  @RequiredReadAction
+  public static void collectModulesDependsOn(@Nonnull final Module module, final Set<Module> result) {
+    if (result.contains(module)) return;
+    result.add(module);
+    final ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());
+    final List<Module> dependentModules = moduleManager.getModuleDependentModules(module);
+    for (final Module dependentModule : dependentModules) {
+      final OrderEntry[] orderEntries = ModuleRootManager.getInstance(dependentModule).getOrderEntries();
+      for (OrderEntry o : orderEntries) {
+        if (o instanceof ModuleOrderEntry) {
+          final ModuleOrderEntry orderEntry = (ModuleOrderEntry)o;
+          if (orderEntry.getModule() == module) {
+            if (orderEntry.isExported()) {
+              collectModulesDependsOn(dependentModule, result);
+            }
+            else {
+              result.add(dependentModule);
+            }
+            break;
+          }
+        }
+      }
+    }
   }
 }

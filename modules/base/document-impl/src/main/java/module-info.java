@@ -8,6 +8,6 @@ module consulo.document.impl {
   requires transitive consulo.document.api;
   requires transitive consulo.undo.redo.api;
 
-  exports consulo.document.impl to consulo.ide.impl, consulo.language.impl, consulo.test.impl;
-  exports consulo.document.impl.event to consulo.ide.impl, consulo.language.impl;
+  exports consulo.document.impl to consulo.ide.impl, consulo.language.impl, consulo.test.impl, consulo.code.editor.impl;
+  exports consulo.document.impl.event to consulo.ide.impl, consulo.language.impl, consulo.code.editor.impl;
 }

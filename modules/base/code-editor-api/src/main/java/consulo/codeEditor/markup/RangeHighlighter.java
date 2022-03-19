@@ -21,8 +21,8 @@ import consulo.ui.color.ColorValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
+import java.util.Comparator;
 
 /**
  * Represents a range of text in the document which has specific markup (special text attributes,
@@ -33,6 +33,9 @@ import java.awt.*;
  */
 public interface RangeHighlighter extends RangeMarker {
   RangeHighlighter[] EMPTY_ARRAY = new RangeHighlighter[0];
+
+  Comparator<RangeHighlighter> BY_AFFECTED_START_OFFSET = Comparator.comparingInt(RangeHighlighter::getAffectedAreaStartOffset);
+
   /**
    * Returns the relative priority of the highlighter (higher priority highlighters can override
    * lower priority ones; layer number values for standard IDEA highlighters are given in
@@ -87,6 +90,7 @@ public interface RangeHighlighter extends RangeMarker {
   CustomHighlighterRenderer getCustomRenderer();
 
   void setCustomRenderer(CustomHighlighterRenderer renderer);
+
   /**
    * Returns the renderer used for drawing gutter icons in the area covered by the
    * highlighter. Gutter icons are drawn to the left of the folding area and can be used,
@@ -119,7 +123,7 @@ public interface RangeHighlighter extends RangeMarker {
    * Sets the color of the marker drawn in the error stripe in the area covered by the highlighter.
    *
    * @param color the error stripe marker color, or null if the highlighter does not add any
-   * error stripe markers.
+   *              error stripe markers.
    */
   void setErrorStripeMarkColor(@Nullable ColorValue color);
 
@@ -138,7 +142,7 @@ public interface RangeHighlighter extends RangeMarker {
    * for the error stripe marker added by the highlighter.
    *
    * @param tooltipObject the error stripe tooltip objects, or null if the highlighter does not
-   * add any error stripe markers or the marker has no tooltip.
+   *                      add any error stripe markers or the marker has no tooltip.
    */
   void setErrorStripeTooltip(@Nullable Object tooltipObject);
 
@@ -200,7 +204,7 @@ public interface RangeHighlighter extends RangeMarker {
    * Sets the filter which can disable the highlighter in specific editor instances.
    *
    * @param filter the filter controlling the highlighter availability, or MarkupEditorFilter.EMPTY if
-   * highlighter is available in all editors.
+   *               highlighter is available in all editors.
    */
   void setEditorFilter(@Nonnull MarkupEditorFilter filter);
 
@@ -211,4 +215,35 @@ public interface RangeHighlighter extends RangeMarker {
    */
   @Nonnull
   MarkupEditorFilter getEditorFilter();
+
+  boolean isAfterEndOfLine();
+
+  void setAfterEndOfLine(boolean value);
+
+  int getAffectedAreaStartOffset();
+
+  int getAffectedAreaEndOffset();
+
+  void setTextAttributes(@Nonnull TextAttributes textAttributes);
+
+  /**
+   * @see #isVisibleIfFolded()
+   */
+  void setVisibleIfFolded(boolean value);
+
+  /**
+   * If {@code true}, there will be a visual indication that this highlighter is present inside a collapsed fold region.
+   * By default it won't happen, use {@link #setVisibleIfFolded(boolean)} to change it.
+   *
+   * @see FoldRegion#setInnerHighlightersMuted(boolean)
+   */
+  boolean isVisibleIfFolded();
+
+  default boolean isRenderedInGutter() {
+    return getGutterIconRenderer() != null || getLineMarkerRenderer() != null;
+  }
+
+  default boolean isRenderedInScrollBar() {
+    return getErrorStripeMarkColor() != null;
+  }
 }

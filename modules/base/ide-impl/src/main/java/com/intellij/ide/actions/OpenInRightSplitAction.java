@@ -30,8 +30,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiFile;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 
@@ -57,7 +57,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
 
     Navigatable element = ObjectUtil.tryCast(e.getData(CommonDataKeys.PSI_ELEMENT), Navigatable.class);
 
-    EditorWindow editorWindow = openInRightSplit(project, file, element, true);
+    FileEditorWindow editorWindow = openInRightSplit(project, file, element, true);
     if (element == null && editorWindow != null) {
       VirtualFile[] files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
 
@@ -89,10 +89,10 @@ public class OpenInRightSplitAction extends DumbAwareAction {
 
   @Nullable
   @RequiredUIAccess
-  public static EditorWindow openInRightSplit(Project project, VirtualFile file, @Nullable Navigatable element, boolean requestFocus) {
+  public static FileEditorWindow openInRightSplit(Project project, VirtualFile file, @Nullable Navigatable element, boolean requestFocus) {
     FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
 
-    EditorsSplitters splitters = fileEditorManager.getSplitters();
+    FileEditorsSplitters splitters = fileEditorManager.getSplitters();
 
     FileEditorProvider[] providers = FileEditorProviderManager.getInstance().getProviders(project, file);
     if (providers.length == 0) {
@@ -102,7 +102,7 @@ public class OpenInRightSplitAction extends DumbAwareAction {
       return null;
     }
 
-    EditorWindow editorWindow = splitters.openInRightSplit(file, requestFocus);
+    FileEditorWindow editorWindow = splitters.openInRightSplit(file, requestFocus);
     if (editorWindow == null) {
       if (element != null) {
         element.navigate(requestFocus);

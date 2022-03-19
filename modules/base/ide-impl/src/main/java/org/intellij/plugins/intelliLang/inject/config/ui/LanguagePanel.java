@@ -31,7 +31,7 @@ import javax.swing.event.AncestorListener;
 import org.intellij.plugins.intelliLang.inject.InjectedLanguage;
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
 import consulo.language.Language;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;

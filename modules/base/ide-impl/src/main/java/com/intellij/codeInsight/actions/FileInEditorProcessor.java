@@ -27,7 +27,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

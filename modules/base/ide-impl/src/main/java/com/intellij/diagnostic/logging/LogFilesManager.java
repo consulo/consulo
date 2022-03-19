@@ -15,8 +15,8 @@
  */
 package com.intellij.diagnostic.logging;
 
-import com.intellij.execution.configurations.LogFileOptions;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.log.LogFileOptions;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.process.ProcessHandler;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;

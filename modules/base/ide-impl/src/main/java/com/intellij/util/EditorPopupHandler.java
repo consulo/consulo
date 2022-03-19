@@ -4,12 +4,12 @@ package com.intellij.util;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import javax.annotation.Nonnull;
 
 /**
  * @deprecated Use {@link EditorEx#setContextMenuGroupId(String)} or
- * {@link EditorEx#installPopupHandler(com.intellij.openapi.editor.ex.EditorPopupHandler)} instead. To be removed in version 2020.2.
+ * {@link EditorEx#installPopupHandler(consulo.codeEditor.EditorPopupHandler)} instead. To be removed in version 2020.2.
  */
 @SuppressWarnings("DeprecatedIsStillUsed")
 @Deprecated

@@ -20,7 +20,7 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.MergeConflictType;
 import com.intellij.diff.util.ThreeSide;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.ui.annotation.RequiredUIAccess;

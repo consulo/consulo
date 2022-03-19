@@ -23,7 +23,7 @@ import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 
 import javax.swing.*;
 
@@ -40,7 +40,7 @@ public abstract class SplitAction extends AnAction implements DumbAware {
   public void actionPerformed(final AnActionEvent event) {
     final Project project = event.getData(CommonDataKeys.PROJECT);
     final FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
-    final EditorWindow window = event.getData(EditorWindow.DATA_KEY);
+    final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
 
     fileEditorManager.createSplitter(myOrientation, window);
   }

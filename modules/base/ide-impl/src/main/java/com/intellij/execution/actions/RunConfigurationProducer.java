@@ -21,6 +21,7 @@ import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.logging.Logger;
 import consulo.component.extension.ExtensionPointName;
@@ -33,7 +34,7 @@ import java.util.List;
 
 /**
  * Supports creating run configurations from context (by right-clicking a code element in the source editor or the project view). Typically,
- * run configurations that can be created from context should extend the {@link com.intellij.execution.configurations.LocatableConfigurationBase} class.
+ * run configurations that can be created from context should extend the {@link LocatableConfigurationBase} class.
  *
  * @since 13
  * @author yole

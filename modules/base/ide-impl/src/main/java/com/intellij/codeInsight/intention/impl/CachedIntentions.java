@@ -22,7 +22,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.Pair;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;

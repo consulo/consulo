@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
+import consulo.codeEditor.LineWrapPositionStrategy;
+import consulo.codeEditor.impl.LanguageLineWrapPositionStrategy;
 import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.logging.Logger;

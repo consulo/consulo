@@ -20,7 +20,7 @@ import com.intellij.openapi.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.ComboBox;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.util.ui.FontInfo;
+import consulo.ui.ex.awt.FontInfo;
 
 import javax.swing.*;
 import java.util.ArrayList;

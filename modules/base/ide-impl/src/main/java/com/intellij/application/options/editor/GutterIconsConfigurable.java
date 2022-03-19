@@ -19,7 +19,7 @@ import com.intellij.codeInsight.daemon.*;
 import consulo.language.LanguageExtensionPoint;
 import consulo.application.Application;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;

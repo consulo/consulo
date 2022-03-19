@@ -19,7 +19,7 @@ package com.intellij.application.options.colors;
 import consulo.application.AllIcons;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import consulo.colorScheme.EditorColorsScheme;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import com.intellij.util.EventDispatcher;

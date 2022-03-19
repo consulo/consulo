@@ -17,11 +17,12 @@ package com.intellij.execution.testframework.actions;
 
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
+import consulo.execution.configuration.log.LogFileOptions;
+import consulo.execution.configuration.log.PredefinedLogFile;
 import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.process.ExecutionException;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunnerRegistry;
-import com.intellij.execution.configurations.*;
 import com.intellij.execution.executors.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.ExecutionEnvironment;

@@ -1,18 +1,19 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl.view;
 
-import com.intellij.openapi.editor.*;
 import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.impl.FontInfo;
+import consulo.codeEditor.impl.IterationState;
 import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.FontPreferences;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesEffectsBuilder;
-import consulo.language.editor.highlight.EditorHighlighter;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.*;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
+import consulo.codeEditor.SoftWrapDrawingType;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributesEffectsBuilder.EffectDescriptor;
 import com.intellij.openapi.util.Couple;
@@ -96,7 +97,8 @@ public class EditorPainter implements TextDrawingCallback {
   }
 
   @Override
-  public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, FontInfo fontInfo) {
+  public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, Object f) {
+    FontInfo fontInfo = (FontInfo)f;
     g.setFont(fontInfo.getFont());
     g.setColor(color);
     g.drawChars(data, start, end - start, x, y);

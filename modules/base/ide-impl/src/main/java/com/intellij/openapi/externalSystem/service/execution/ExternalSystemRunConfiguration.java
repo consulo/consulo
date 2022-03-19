@@ -4,7 +4,7 @@ import com.intellij.diagnostic.logging.LogConfigurationPanel;
 import consulo.execution.DefaultExecutionResult;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.ConfigurationFactory;
-import com.intellij.execution.configurations.LocatableConfigurationBase;
+import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfileState;
 import com.intellij.execution.executors.DefaultDebugExecutor;

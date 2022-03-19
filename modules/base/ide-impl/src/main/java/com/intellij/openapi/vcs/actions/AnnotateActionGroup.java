@@ -19,7 +19,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.AnSeparator;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.ui.color.ColorValue;

@@ -21,7 +21,7 @@ import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceOwner;
 import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.PsiFileReference;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.util.IncorrectOperationException;
 import java.util.HashMap;
 import consulo.logging.Logger;

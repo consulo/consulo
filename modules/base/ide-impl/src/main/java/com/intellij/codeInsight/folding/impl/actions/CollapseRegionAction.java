@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

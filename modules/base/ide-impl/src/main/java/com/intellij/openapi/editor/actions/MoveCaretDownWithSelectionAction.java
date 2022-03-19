@@ -28,8 +28,8 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
 import javax.annotation.Nullable;
 
 public class MoveCaretDownWithSelectionAction extends EditorAction {

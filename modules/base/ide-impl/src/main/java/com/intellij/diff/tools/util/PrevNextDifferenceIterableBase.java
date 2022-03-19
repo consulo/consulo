@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.util;
 
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import javax.annotation.Nonnull;
 
 import java.util.List;

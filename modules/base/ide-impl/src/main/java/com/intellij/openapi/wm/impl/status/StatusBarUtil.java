@@ -28,8 +28,8 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import org.jetbrains.annotations.Nls;
@@ -80,13 +80,13 @@ public class StatusBarUtil {
       c = DockManager.getInstance(project).getContainerFor(statusBar.getComponent());
     }
     
-    EditorsSplitters splitters = null;
+    FileEditorsSplitters splitters = null;
     if (c instanceof DockableEditorTabbedContainer) {
       splitters = ((DockableEditorTabbedContainer)c).getSplitters();
     }
 
     if (splitters != null && splitters.getCurrentWindow() != null) {
-      EditorWithProviderComposite editor = splitters.getCurrentWindow().getSelectedEditor();
+      FileEditorWithProviderComposite editor = splitters.getCurrentWindow().getSelectedEditor();
       if (editor != null) {
         return editor.getSelectedEditorWithProvider().getFileEditor();
       }

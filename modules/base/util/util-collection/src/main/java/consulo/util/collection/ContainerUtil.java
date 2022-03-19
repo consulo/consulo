@@ -35,6 +35,40 @@ import java.util.function.Predicate;
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
 
+  /**
+   * @return read-only set consisting of the elements from collection converted by mapper
+   */
+
+  public static <T, V> Set<V> map2Set(T[] collection, Function<T, V> mapper) {
+    return map2Set(Arrays.asList(collection), mapper);
+  }
+
+  /**
+   * @return read-only set consisting of the elements from collection converted by mapper
+   */
+
+  public static <T, V> Set<V> map2Set(Collection<? extends T> collection, Function<T, V> mapper) {
+    if (collection.isEmpty()) return Collections.emptySet();
+    Set<V> set = new HashSet<V>(collection.size());
+    for (final T t : collection) {
+      set.add(mapper.apply(t));
+    }
+    return set;
+  }
+
+  @Contract(pure = true)
+  public static <T> boolean and(@Nonnull T[] iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
+    return and(Arrays.asList(iterable), condition);
+  }
+
+  @Contract(pure = true)
+  public static <T> boolean and(@Nonnull Iterable<? extends T> iterable, @Nonnull java.util.function.Predicate<? super T> condition) {
+    for (final T t : iterable) {
+      if (!condition.test(t)) return false;
+    }
+    return true;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <K, V> Map<K, V> union(@Nonnull Map<? extends K, ? extends V> map, @Nonnull Map<? extends K, ? extends V> map2) {

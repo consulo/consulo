@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.editor.colors.ModifiableFontPreferences;
+import consulo.colorScheme.ModifiableFontPreferences;
 import javax.annotation.Nonnull;
 
 /**

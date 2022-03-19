@@ -16,9 +16,14 @@
 package com.intellij.ide;
 
 import consulo.dataContext.DataContext;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 public interface DeleteProvider {
+  Key<DeleteProvider> KEY = Key.create(DeleteProvider.class);
+
   void deleteElement(@Nonnull DataContext dataContext);
+
   boolean canDeleteElement(@Nonnull DataContext dataContext);
 }

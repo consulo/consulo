@@ -16,11 +16,12 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.action.TypedHandlerDelegate;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
 import consulo.virtualFileSystem.fileType.FileType;

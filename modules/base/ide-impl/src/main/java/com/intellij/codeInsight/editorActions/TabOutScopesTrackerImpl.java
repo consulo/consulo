@@ -2,6 +2,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.codeEditor.action.TabOutScopesTracker;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.application.ApplicationManager;

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.annotate;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.actions.CompareWithSelectedRevisionAction;

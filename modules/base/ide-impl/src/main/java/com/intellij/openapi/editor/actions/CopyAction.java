@@ -28,7 +28,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.application.util.registry.Registry;
 
 import javax.annotation.Nullable;

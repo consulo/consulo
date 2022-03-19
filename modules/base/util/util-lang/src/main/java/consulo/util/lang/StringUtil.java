@@ -100,6 +100,22 @@ public class StringUtil {
   private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
   private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
 
+
+  /**
+   * Allows to answer if target symbol is contained at given char sequence at <code>[start; end)</code> interval.
+   *
+   * @param s     target char sequence to check
+   * @param start start offset to use within the given char sequence (inclusive)
+   * @param end   end offset to use within the given char sequence (exclusive)
+   * @param c     target symbol to check
+   * @return <code>true</code> if given symbol is contained at the target range of the given char sequence;
+   * <code>false</code> otherwise
+   */
+  @Contract(pure = true)
+  public static boolean contains(@Nonnull CharSequence s, int start, int end, char c) {
+    return indexOf(s, c, start, end) >= 0;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static String unescapeStringCharacters(@Nonnull String s) {
@@ -1741,5 +1757,78 @@ public class StringUtil {
   public static String escapeXml(@Nullable final String text) {
     if (text == null) return null;
     return replace(text, REPLACES_DISP, REPLACES_REFS);
+  }
+
+  @Contract(pure = true)
+  public static int getLineBreakCount(@Nonnull CharSequence text) {
+    int count = 0;
+    for (int i = 0; i < text.length(); i++) {
+      char c = text.charAt(i);
+      if (c == '\n') {
+        count++;
+      }
+      else if (c == '\r') {
+        if (i + 1 < text.length() && text.charAt(i + 1) == '\n') {
+          //noinspection AssignmentToForLoopParameter
+          i++;
+          count++;
+        }
+        else {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String commonSuffix(@Nonnull String s1, @Nonnull String s2) {
+    return s1.substring(s1.length() - commonSuffixLength(s1, s2));
+  }
+
+  @Contract(pure = true)
+  public static int commonSuffixLength(@Nonnull CharSequence s1, @Nonnull CharSequence s2) {
+    int s1Length = s1.length();
+    int s2Length = s2.length();
+    if (s1Length == 0 || s2Length == 0) return 0;
+    int i;
+    for (i = 0; i < s1Length && i < s2Length; i++) {
+      if (s1.charAt(s1Length - i - 1) != s2.charAt(s2Length - i - 1)) {
+        break;
+      }
+    }
+    return i;
+  }
+
+  @Contract(pure = true)
+  public static boolean startsWith(@Nonnull CharSequence text, @Nonnull CharSequence prefix) {
+    int l1 = text.length();
+    int l2 = prefix.length();
+    if (l1 < l2) return false;
+
+    for (int i = 0; i < l2; i++) {
+      if (text.charAt(i) != prefix.charAt(i)) return false;
+    }
+
+    return true;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String commonPrefix(@Nonnull String s1, @Nonnull String s2) {
+    return s1.substring(0, commonPrefixLength(s1, s2));
+  }
+
+  @Contract(pure = true)
+  public static int commonPrefixLength(@Nonnull CharSequence s1, @Nonnull CharSequence s2) {
+    int i;
+    int minLength = Math.min(s1.length(), s2.length());
+    for (i = 0; i < minLength; i++) {
+      if (s1.charAt(i) != s2.charAt(i)) {
+        break;
+      }
+    }
+    return i;
   }
 }

@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;

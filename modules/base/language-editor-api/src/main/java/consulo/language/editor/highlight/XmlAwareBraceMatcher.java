@@ -16,6 +16,7 @@
 
 package consulo.language.editor.highlight;
 
+import consulo.codeEditor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nullable;

@@ -16,6 +16,7 @@
 package consulo.codeEditor;
 
 import consulo.disposer.Disposable;
+import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,6 +28,8 @@ import javax.annotation.Nullable;
  * Instances of this interface are supposed to be obtained from {@link CaretModel} instance, and not created explicitly.
  */
 public interface Caret extends UserDataHolderEx, Disposable {
+  Key<Caret> KEY = Key.create(Caret.class);
+
   /**
    * Returns an instance of Editor, current caret belongs to.
    */

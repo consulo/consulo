@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor.impl;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -34,7 +34,7 @@ public interface EditorTabColorProvider {
   Color getEditorTabColor(Project project, VirtualFile file);
 
   @Nullable
-  default Color getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable EditorWindow editorWindow) {
+  default Color getEditorTabColor(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
     return getEditorTabColor(project, file);
   }
 

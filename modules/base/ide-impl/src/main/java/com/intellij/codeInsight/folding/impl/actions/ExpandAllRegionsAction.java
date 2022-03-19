@@ -21,7 +21,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import javax.annotation.Nonnull;

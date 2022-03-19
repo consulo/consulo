@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;

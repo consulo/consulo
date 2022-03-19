@@ -5,7 +5,7 @@ import consulo.document.Document;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.SoftWrap;
-import com.intellij.openapi.editor.ex.FoldingModelEx;
+import consulo.codeEditor.FoldingModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;

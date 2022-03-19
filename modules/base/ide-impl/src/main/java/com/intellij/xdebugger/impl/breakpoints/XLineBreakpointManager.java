@@ -30,7 +30,7 @@ import consulo.colorScheme.event.EditorColorsListener;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.event.EditorEventMulticaster;
 import consulo.codeEditor.markup.RangeHighlighter;

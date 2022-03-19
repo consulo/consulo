@@ -25,7 +25,7 @@ import com.intellij.openapi.ui.ShadowAction;
 import consulo.ui.ex.action.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.BitUtil;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -37,16 +37,16 @@ import java.awt.event.InputEvent;
 public class CloseTab extends AnAction implements DumbAware {
   private final Project myProject;
   private final VirtualFile myFile;
-  private final EditorWindow myEditorWindow;
+  private final FileEditorWindow myEditorWindow;
 
-  public CloseTab(JComponent c, Project project, VirtualFile file, EditorWindow editorWindow) {
+  public CloseTab(JComponent c, Project project, VirtualFile file, FileEditorWindow editorWindow) {
     myProject = project;
     myFile = file;
     myEditorWindow = editorWindow;
     new ShadowAction(this, ActionManager.getInstance().getAction(IdeActions.ACTION_CLOSE), c);
   }
 
-  public CloseTab(Component c, Project project, VirtualFile file, EditorWindow editorWindow) {
+  public CloseTab(Component c, Project project, VirtualFile file, FileEditorWindow editorWindow) {
     myProject = project;
     myFile = file;
     myEditorWindow = editorWindow;
@@ -82,7 +82,7 @@ public class CloseTab extends AnAction implements DumbAware {
     }
 
     final FileEditorManagerEx mgr = FileEditorManagerEx.getInstanceEx(myProject);
-    EditorWindow window;
+    FileEditorWindow window;
     final VirtualFile file = myFile;
     if (ActionPlaces.EDITOR_TAB.equals(e.getPlace())) {
       window = myEditorWindow;

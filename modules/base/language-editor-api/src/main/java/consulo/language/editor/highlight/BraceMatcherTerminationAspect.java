@@ -1,5 +1,6 @@
 package consulo.language.editor.highlight;
 
+import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 
 import javax.annotation.Nonnull;

@@ -2,29 +2,32 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
-import com.intellij.diagnostic.Dumpable;
+import consulo.application.util.Dumpable;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.editor.EditorBundle;
+import consulo.codeEditor.EditorBundle;
 import com.intellij.openapi.editor.EditorDropHandler;
 import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.actionSystem.EditorActionManager;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorTextInsertHandler;
 import com.intellij.openapi.editor.actionSystem.LatencyListener;
-import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.ex.SoftWrapChangeListener;
+import consulo.codeEditor.impl.FontInfo;
+import consulo.codeEditor.internal.EditorActionPlan;
+import consulo.colorScheme.DelegateColorScheme;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.codeEditor.event.SoftWrapChangeListener;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.view.EditorView;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.ui.ex.awt.internal.AbstractPainter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
@@ -74,9 +77,9 @@ import consulo.document.impl.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.fileEditor.impl.EditorsSplitters;
-import consulo.language.editor.highlight.EditorHighlighter;
-import consulo.language.editor.highlight.HighlighterClient;
+import consulo.fileEditor.FileEditorsSplitters;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterClient;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
@@ -3814,7 +3817,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
     @Nonnull
     @Override
     public Insets getBorderInsets(Component c) {
-      EditorsSplitters splitters = AWTComponentProviderUtil.findParent(c, EditorsSplitters.class);
+      FileEditorsSplitters splitters = AWTComponentProviderUtil.findParent(c, FileEditorsSplitters.class);
 
       boolean thereIsSomethingAbove =
               !SystemInfo.isMac || UISettings.getInstance().getShowMainToolbar() || UISettings.getInstance().getShowNavigationBar() || toolWindowIsNotEmpty();
@@ -3864,7 +3867,9 @@ public final class DesktopEditorImpl extends CodeEditorBase implements EditorInt
 
   private class MyTextDrawingCallback implements TextDrawingCallback {
     @Override
-    public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, @Nonnull FontInfo fontInfo) {
+    public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, @Nonnull Object f) {
+      FontInfo fontInfo = (FontInfo)f;
+
       myView.drawChars(g, data, start, end, x, y, color, fontInfo);
     }
   }

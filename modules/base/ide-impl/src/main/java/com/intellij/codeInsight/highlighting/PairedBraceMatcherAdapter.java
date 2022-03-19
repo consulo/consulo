@@ -20,7 +20,7 @@ import consulo.language.BracePair;
 import consulo.language.Language;
 import consulo.language.PairedBraceMatcher;
 import consulo.language.editor.highlight.BraceMatcherTerminationAspect;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.language.editor.highlight.NontrivialBraceMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.psi.PsiFile;

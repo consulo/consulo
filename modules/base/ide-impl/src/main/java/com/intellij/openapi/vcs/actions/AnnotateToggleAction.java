@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsScheme;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.application.dumb.DumbAware;

@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
+import consulo.codeEditor.markup.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;

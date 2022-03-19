@@ -27,7 +27,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.HighlighterTargetArea;

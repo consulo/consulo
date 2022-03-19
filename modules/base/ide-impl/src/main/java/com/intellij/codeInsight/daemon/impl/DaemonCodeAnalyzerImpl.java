@@ -16,7 +16,7 @@ import consulo.application.PowerSaveMode;
 import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.NonBlockingReadActionImpl;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;

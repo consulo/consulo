@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.actions;
 
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
+import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 
 /**
  * Action that toggles <code>'show soft wraps at editor'</code> option and is expected to be used at various menus.

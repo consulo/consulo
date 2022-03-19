@@ -25,7 +25,7 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 
 public class PreviousWordAction extends TextComponentEditorAction {

@@ -17,13 +17,13 @@ package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.completion.*;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.ProcessingContext;

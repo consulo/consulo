@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInsight.editorActions.moveUpDown;
 
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 
 public class MoveStatementUpAction extends EditorAction {
   public MoveStatementUpAction() {

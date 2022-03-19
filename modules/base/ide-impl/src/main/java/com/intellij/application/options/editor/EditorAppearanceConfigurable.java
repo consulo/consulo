@@ -19,7 +19,7 @@ package com.intellij.application.options.editor;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.hints.InlayParameterHintsProvider;
 import com.intellij.codeInsight.hints.settings.ParameterNameHintsConfigurable;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.options.CompositeConfigurable;
 import consulo.configurable.Configurable;

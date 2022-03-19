@@ -17,9 +17,9 @@ package consulo.desktop.swt.editor.impl;
 
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import com.intellij.openapi.editor.impl.MarkupModelImpl;
-import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.impl.MarkupModelImpl;
+import consulo.codeEditor.TextDrawingCallback;
 import consulo.codeEditor.EditorGutter;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.LogicalPosition;

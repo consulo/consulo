@@ -21,7 +21,6 @@ import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import com.intellij.openapi.fileEditor.impl.EditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.ui.FrameWrapper;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.ui.components.panels.VerticalBox;
@@ -40,7 +39,7 @@ import consulo.component.util.BusyObject;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
@@ -58,6 +57,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.popup.JWindowPopupFactory;
 import consulo.util.collection.MutualMap;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -383,7 +383,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
     final DockWindow window = createWindowFor(null, container);
 
     window.show(true);
-    final EditorWindow editorWindow = ((DesktopDockableEditorTabbedContainer)container).getSplitters().getOrCreateCurrentWindow(file);
+    final FileEditorWindow editorWindow = ((DesktopDockableEditorTabbedContainer)container).getSplitters().getOrCreateCurrentWindow(file);
     final Pair<FileEditor[], FileEditorProvider[]> result = fileEditorManager.openFileImpl2(UIAccess.current(), editorWindow, file, true);
     container.add(EditorTabbedContainer.createDockableEditor(myProject, null, file, new Presentation(file.getName()), editorWindow), null);
 

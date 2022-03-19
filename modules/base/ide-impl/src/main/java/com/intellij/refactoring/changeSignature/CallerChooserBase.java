@@ -23,7 +23,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;

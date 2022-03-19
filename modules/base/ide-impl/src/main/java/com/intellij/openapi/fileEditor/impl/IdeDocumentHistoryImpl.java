@@ -25,7 +25,7 @@ import consulo.document.event.DocumentEvent;
 import com.intellij.openapi.editor.event.EditorEventListener;
 import consulo.codeEditor.event.EditorEventMulticaster;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
+import consulo.fileEditor.FileEditorWithProvider;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
@@ -53,7 +53,7 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.messagebus.Topic;
 import com.intellij.util.text.DateFormatUtil;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
 
@@ -538,7 +538,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   @Override
   public void gotoPlaceInfo(@Nonnull PlaceInfo info) {
     final boolean wasActive = ToolWindowManager.getInstance(myProject).isEditorComponentActive();
-    EditorWindow wnd = info.getWindow();
+    FileEditorWindow wnd = info.getWindow();
     FileEditorManagerEx editorManager = getFileEditorManager();
     final Pair<FileEditor[], FileEditorProvider[]> editorsWithProviders =
             wnd != null && wnd.isValid() ? editorManager.openFileWithProviders(info.getFile(), wasActive, wnd) : editorManager.openFileWithProviders(info.getFile(), wasActive, false);
@@ -621,12 +621,12 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     private final VirtualFile myFile;
     private final FileEditorState myNavigationState;
     private final String myEditorTypeId;
-    private final Reference<EditorWindow> myWindow;
+    private final Reference<FileEditorWindow> myWindow;
     @Nullable
     private final RangeMarker myCaretPosition;
     private final long myTimeStamp;
 
-    public PlaceInfo(@Nonnull VirtualFile file, @Nonnull FileEditorState navigationState, @Nonnull String editorTypeId, @Nullable EditorWindow window, @Nullable RangeMarker caretPosition) {
+    public PlaceInfo(@Nonnull VirtualFile file, @Nonnull FileEditorState navigationState, @Nonnull String editorTypeId, @Nullable FileEditorWindow window, @Nullable RangeMarker caretPosition) {
       myNavigationState = navigationState;
       myFile = file;
       myEditorTypeId = editorTypeId;
@@ -638,7 +638,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     public PlaceInfo(@Nonnull VirtualFile file,
                      @Nonnull FileEditorState navigationState,
                      @Nonnull String editorTypeId,
-                     @Nullable EditorWindow window,
+                     @Nullable FileEditorWindow window,
                      @Nullable RangeMarker caretPosition,
                      long stamp) {
       myNavigationState = navigationState;
@@ -649,7 +649,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
       myTimeStamp = stamp;
     }
 
-    public EditorWindow getWindow() {
+    public FileEditorWindow getWindow() {
       return myWindow.get();
     }
 

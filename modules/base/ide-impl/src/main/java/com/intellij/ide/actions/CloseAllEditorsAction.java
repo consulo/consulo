@@ -26,7 +26,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 
 public class CloseAllEditorsAction extends AnAction implements DumbAware {
   @Override
@@ -34,7 +34,7 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
     final Project project = e.getData(CommonDataKeys.PROJECT);
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(project, () -> {
-      final EditorWindow window = e.getData(EditorWindow.DATA_KEY);
+      final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
       if (window != null) {
         final VirtualFile[] files = window.getFiles();
         for (final VirtualFile file : files) {
@@ -54,7 +54,7 @@ public class CloseAllEditorsAction extends AnAction implements DumbAware {
   @Override
   public void update(AnActionEvent event) {
     Presentation presentation = event.getPresentation();
-    final EditorWindow editorWindow = event.getData(EditorWindow.DATA_KEY);
+    final FileEditorWindow editorWindow = event.getData(FileEditorWindow.DATA_KEY);
     if (editorWindow != null && editorWindow.inSplitter()) {
       presentation.setText(IdeBundle.message("action.close.all.editors.in.tab.group"));
     }

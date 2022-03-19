@@ -2,10 +2,10 @@
 package com.intellij.codeInsight.editorActions.enter;
 
 import com.intellij.codeInsight.editorActions.EnterHandler;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;

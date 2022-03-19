@@ -18,7 +18,6 @@ package com.intellij.execution.junit;
 
 import com.intellij.execution.*;
 import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.configurations.*;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;

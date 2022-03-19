@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.util.FileContentUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.psi.injection.LanguageInjectionSupport;

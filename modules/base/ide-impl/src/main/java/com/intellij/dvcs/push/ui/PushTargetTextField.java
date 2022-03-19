@@ -15,7 +15,7 @@
  */
 package com.intellij.dvcs.push.ui;
 
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.textCompletion.DefaultTextCompletionValueDescriptor;

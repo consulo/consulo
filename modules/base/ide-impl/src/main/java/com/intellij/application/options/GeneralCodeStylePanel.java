@@ -34,7 +34,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
-import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.project.ProjectManager;

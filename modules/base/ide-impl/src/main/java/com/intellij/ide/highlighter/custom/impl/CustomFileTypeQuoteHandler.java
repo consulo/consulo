@@ -16,10 +16,10 @@
 
 package com.intellij.ide.highlighter.custom.impl;
 
-import com.intellij.codeInsight.editorActions.QuoteHandler;
+import consulo.language.editor.action.QuoteHandler;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.ast.IElementType;
 

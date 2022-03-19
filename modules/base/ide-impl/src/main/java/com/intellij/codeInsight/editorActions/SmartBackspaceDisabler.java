@@ -15,6 +15,9 @@
  */
 package com.intellij.codeInsight.editorActions;
 
+import consulo.codeEditor.action.BackspaceModeOverride;
+import consulo.codeEditor.action.SmartBackspaceMode;
+
 public class SmartBackspaceDisabler extends BackspaceModeOverride {
   @Override
   public SmartBackspaceMode getBackspaceMode(SmartBackspaceMode modeFromSettings) {

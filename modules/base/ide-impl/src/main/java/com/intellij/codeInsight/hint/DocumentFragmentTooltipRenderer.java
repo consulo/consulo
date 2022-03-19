@@ -15,8 +15,8 @@
  */
 package com.intellij.codeInsight.hint;
 
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.FoldingModelEx;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.FoldingModelEx;
 import consulo.document.Document;
 import consulo.document.DocumentFragment;
 import consulo.document.util.TextRange;

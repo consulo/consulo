@@ -5,7 +5,7 @@ import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
 import consulo.language.Language;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import com.intellij.openapi.options.CompositeConfigurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;

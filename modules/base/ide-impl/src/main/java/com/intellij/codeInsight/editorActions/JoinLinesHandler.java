@@ -16,14 +16,16 @@ import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationEx;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import consulo.document.impl.DocumentEx;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.document.internal.DocumentEx;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
+import consulo.language.editor.action.JoinLinesHandlerDelegate;
+import consulo.language.editor.action.JoinRawLinesHandlerDelegate;
 import consulo.language.psi.*;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -44,7 +46,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.intellij.codeInsight.editorActions.JoinLinesHandlerDelegate.CANNOT_JOIN;
+import static consulo.language.editor.action.JoinLinesHandlerDelegate.CANNOT_JOIN;
 
 public class JoinLinesHandler extends EditorActionHandler {
   private static final Logger LOG = Logger.getInstance(JoinLinesHandler.class);

@@ -3,9 +3,9 @@ package com.intellij.execution.impl;
 
 import com.intellij.execution.filters.HyperlinkInfoBase;
 import com.intellij.ide.OccurenceNavigator;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.FilteringProcessor;

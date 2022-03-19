@@ -6,6 +6,8 @@ import consulo.document.FileDocumentManager;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.event.DocumentEventImpl;
+import consulo.document.internal.DocumentEx;
+import consulo.document.internal.RangeMarkerEx;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;

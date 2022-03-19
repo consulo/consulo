@@ -15,52 +15,46 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.diagnostic.Dumpable;
 import com.intellij.diagnostic.LogMessageEx;
-import consulo.language.editor.inject.EditorWindow;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.application.WriteAction;
 import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.editor.event.EditorFactoryAdapter;
-import consulo.document.event.DocumentBulkUpdateListener;
-import consulo.document.impl.DocumentEx;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DesktopScrollingModelImpl;
-import com.intellij.openapi.editor.impl.FontInfo;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.impl.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import consulo.application.ApplicationManager;
+import consulo.application.WriteAction;
 import consulo.application.ui.UISettings;
+import consulo.application.util.Dumpable;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.*;
+import consulo.codeEditor.impl.ComplementaryFontsRegistry;
+import consulo.codeEditor.impl.FontInfo;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.event.DocumentBulkUpdateListener;
+import consulo.document.impl.DocumentUtil;
+import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.*;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.event.CaretActionListener;
-import consulo.codeEditor.event.EditorFactoryEvent;
-import consulo.codeEditor.event.SelectionEvent;
-import consulo.codeEditor.event.SelectionListener;
-import consulo.language.editor.highlight.EditorHighlighter;
-import consulo.codeEditor.impl.EmptyEditorHighlighter;
-import consulo.language.editor.highlight.HighlighterClient;
-import consulo.language.editor.highlight.HighlighterIterator;
-import consulo.colorScheme.TextAttributes;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.language.editor.highlight.EmptyEditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.language.editor.inject.EditorWindow;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.image.Image;
@@ -362,7 +356,7 @@ public final class EditorUtil {
   }
 
   public static int getTabSize(@Nonnull Editor editor) {
-    return editor.getSettings().getTabSize(editor.getProject());
+    return consulo.codeEditor.util.EditorUtil.getTabSize(editor);
   }
 
   public static int nextTabStop(int x, @Nonnull Editor editor) {
@@ -753,7 +747,7 @@ public final class EditorUtil {
   }
 
   public static boolean attributesImpactFontStyleOrColor(@Nullable TextAttributes attributes) {
-    return attributes == TextAttributes.ERASE_MARKER || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
+    return consulo.codeEditor.util.EditorUtil.attributesImpactFontStyleOrColor(attributes);
   }
 
   public static boolean isCurrentCaretPrimary(@Nonnull Editor editor) {
@@ -851,11 +845,7 @@ public final class EditorUtil {
   }
 
   public static int getTotalInlaysHeight(@Nonnull List<? extends Inlay> inlays) {
-    int sum = 0;
-    for (Inlay inlay : inlays) {
-      sum += inlay.getHeightInPixels();
-    }
-    return sum;
+    return consulo.codeEditor.util.EditorUtil.getTotalInlaysHeight(inlays);
   }
 
   /**

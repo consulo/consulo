@@ -17,6 +17,9 @@
 package com.intellij.diagnostic.logging;
 
 import com.intellij.diagnostic.DiagnosticBundle;
+import consulo.execution.configuration.log.LogFilter;
+import consulo.execution.configuration.log.LogFilterListener;
+import consulo.execution.configuration.log.LogFilterModel;
 import consulo.process.ProcessOutputTypes;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

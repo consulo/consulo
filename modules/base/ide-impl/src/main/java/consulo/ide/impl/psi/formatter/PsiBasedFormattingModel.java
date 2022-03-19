@@ -31,7 +31,7 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

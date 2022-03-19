@@ -26,19 +26,17 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.codeInsight.editorActions.SelectWordUtil;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
-import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.highlight.HighlighterIterator;
+import com.intellij.util.text.CharArrayUtil;
 import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.*;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.*;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.text.CharArrayUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

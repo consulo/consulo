@@ -28,15 +28,14 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.ModulePointerManager;
-import consulo.module.content.util.ModuleContentUtil;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.util.ModuleContentUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.project.Project;
@@ -172,28 +171,9 @@ public class ModuleUtilCore {
    * @param result resulted set
    */
   @RequiredReadAction
+  @Deprecated
   public static void collectModulesDependsOn(@Nonnull final Module module, final Set<Module> result) {
-    if (result.contains(module)) return;
-    result.add(module);
-    final ModuleManager moduleManager = ModuleManager.getInstance(module.getProject());
-    final List<Module> dependentModules = moduleManager.getModuleDependentModules(module);
-    for (final Module dependentModule : dependentModules) {
-      final OrderEntry[] orderEntries = ModuleRootManager.getInstance(dependentModule).getOrderEntries();
-      for (OrderEntry o : orderEntries) {
-        if (o instanceof ModuleOrderEntry) {
-          final ModuleOrderEntry orderEntry = (ModuleOrderEntry)o;
-          if (orderEntry.getModule() == module) {
-            if (orderEntry.isExported()) {
-              collectModulesDependsOn(dependentModule, result);
-            }
-            else {
-              result.add(dependentModule);
-            }
-            break;
-          }
-        }
-      }
-    }
+    ModuleContentUtil.collectModulesDependsOn(module, result);
   }
 
   @Nonnull

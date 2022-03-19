@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeStyle.CodeStyleFacade;
+import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.logging.Logger;
 import consulo.codeEditor.CaretModel;
 import consulo.document.Document;

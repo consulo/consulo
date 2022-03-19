@@ -4,7 +4,8 @@ package consulo.document.impl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.event.PrioritizedInternalDocumentListener;
+import consulo.document.internal.PrioritizedInternalDocumentListener;
+import consulo.document.internal.RangeMarkerEx;
 import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;

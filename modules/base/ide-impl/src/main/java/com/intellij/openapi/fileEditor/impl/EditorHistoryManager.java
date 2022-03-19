@@ -21,7 +21,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
+import consulo.fileEditor.FileEditorWithProvider;
 import consulo.component.ProcessCanceledException;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.fileEditor.*;

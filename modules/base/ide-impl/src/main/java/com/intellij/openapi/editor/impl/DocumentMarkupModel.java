@@ -16,11 +16,12 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.MarkupModelImpl;
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.injected.editor.MarkupModelWindow;
+import consulo.language.inject.impl.internal.MarkupModelWindow;
 import consulo.document.Document;
-import consulo.document.impl.DocumentEx;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
+import consulo.document.internal.DocumentEx;
+import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

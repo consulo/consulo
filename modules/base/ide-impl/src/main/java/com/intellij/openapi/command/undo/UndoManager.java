@@ -15,14 +15,14 @@
  */
 package com.intellij.openapi.command.undo;
 
+import com.intellij.openapi.util.Pair;
 import consulo.application.Application;
+import consulo.command.undo.ApplicationUndoManager;
+import consulo.command.undo.ProjectUndoManager;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Pair;
-import consulo.command.undo.ApplicationUndoManager;
-import consulo.command.undo.ProjectUndoManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

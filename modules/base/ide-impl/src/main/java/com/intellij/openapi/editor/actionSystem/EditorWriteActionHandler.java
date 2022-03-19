@@ -16,6 +16,7 @@
 package com.intellij.openapi.editor.actionSystem;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.codeEditor.action.EditorActionManager;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.document.DocumentRunnable;
@@ -23,6 +24,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;

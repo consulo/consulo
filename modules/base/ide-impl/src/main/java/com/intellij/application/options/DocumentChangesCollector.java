@@ -19,7 +19,7 @@ import consulo.document.Document;
 import consulo.codeEditor.TextChange;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import com.intellij.openapi.editor.impl.TextChangeImpl;
+import consulo.codeEditor.impl.TextChangeImpl;
 import gnu.trove.TIntArrayList;
 import javax.annotation.Nonnull;
 

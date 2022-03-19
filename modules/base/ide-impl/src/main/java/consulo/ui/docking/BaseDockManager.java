@@ -15,23 +15,23 @@
  */
 package consulo.ui.docking;
 
-import consulo.component.persist.PersistentStateComponent;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.project.Project;
-import consulo.util.collection.MutualMap;
-import com.intellij.openapi.util.Pair;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockContainerFactory;
 import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.DockableContent;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposer;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorProvider;
+import consulo.project.Project;
 import consulo.ui.Component;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.util.TraverseUtil;
+import consulo.util.collection.MutualMap;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

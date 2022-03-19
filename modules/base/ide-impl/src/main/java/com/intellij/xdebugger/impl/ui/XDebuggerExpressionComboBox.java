@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.ui;
 
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;

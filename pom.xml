@@ -90,12 +90,16 @@
     <module>modules/base/file-editor-api</module>
     <module>modules/base/compiler-artifact-api</module>
     <module>modules/base/color-scheme-api</module>
+    <module>modules/base/color-scheme-impl</module>
     <module>modules/base/ide-api</module>
     <module>modules/base/component-impl</module>
     <module>modules/base/ui-ex-awt-api</module>
     <module>modules/base/virtual-file-system-impl</module>
     <module>modules/base/language-code-style-api</module>
     <module>modules/base/language-editor-ui-api</module>
+    <module>modules/base/language-editor-impl</module>
+    <module>modules/base/language-inject-impl</module>
+    <module>modules/base/code-editor-impl</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

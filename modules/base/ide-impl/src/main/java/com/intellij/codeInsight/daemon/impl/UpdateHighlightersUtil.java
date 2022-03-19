@@ -2,10 +2,10 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import com.intellij.openapi.editor.impl.SweepProcessor;
+import consulo.codeEditor.impl.SweepProcessor;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
@@ -17,7 +17,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.DocumentEx;
+import consulo.document.internal.DocumentEx;
 import consulo.document.impl.RedBlackTree;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;

@@ -27,7 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.impl.ChangedPsiRangeUtil;
 import consulo.language.impl.psi.internal.diff.DiffLog;
 import consulo.language.impl.ast.FileElement;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.impl.psi.internal.diff.BlockSupport;
 import com.intellij.util.ObjectUtil;
 

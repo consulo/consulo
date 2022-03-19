@@ -16,17 +16,12 @@
 package com.intellij.openapi.editor;
 
 import com.intellij.codeInsight.hint.HintManager;
-import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.openapi.editor.textarea.TextComponentEditor;
 import com.intellij.util.Producer;
 import consulo.application.ApplicationManager;
 import consulo.application.util.LineTokenizer;
 import consulo.codeEditor.*;
-import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.project.Project;
 import consulo.ui.ex.awt.CopyPasteManager;
 
 import javax.annotation.Nonnull;
@@ -35,8 +30,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class EditorModificationUtil {
@@ -44,22 +37,7 @@ public class EditorModificationUtil {
   }
 
   public static void deleteSelectedText(Editor editor) {
-    SelectionModel selectionModel = editor.getSelectionModel();
-    if (!selectionModel.hasSelection()) return;
-
-    int selectionStart = selectionModel.getSelectionStart();
-    int selectionEnd = selectionModel.getSelectionEnd();
-
-    VisualPosition selectionStartPosition = selectionModel.getSelectionStartPosition();
-    if (editor.isColumnMode() && editor.getCaretModel().supportsMultipleCarets() && selectionStartPosition != null) {
-      editor.getCaretModel().moveToVisualPosition(selectionStartPosition);
-    }
-    else {
-      editor.getCaretModel().moveToOffset(selectionStart);
-    }
-    selectionModel.removeSelection();
-    editor.getDocument().deleteString(selectionStart, selectionEnd);
-    scrollToCaret(editor);
+    consulo.codeEditor.util.EditorModificationUtil.deleteSelectedText(editor);
   }
 
   public static void deleteSelectedTextForAllCarets(@Nonnull final Editor editor) {
@@ -88,66 +66,7 @@ public class EditorModificationUtil {
   }
 
   public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
-    int result = insertStringAtCaretNoScrolling(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
-    if (toMoveCaret) {
-      scrollToCaret(editor);
-    }
-    return result;
-  }
-
-  private static int insertStringAtCaretNoScrolling(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
-    final SelectionModel selectionModel = editor.getSelectionModel();
-    if (selectionModel.hasSelection()) {
-      VisualPosition startPosition = selectionModel.getSelectionStartPosition();
-      if (editor.isColumnMode() && editor.getCaretModel().supportsMultipleCarets() && startPosition != null) {
-        editor.getCaretModel().moveToVisualPosition(startPosition);
-      }
-      else {
-        editor.getCaretModel().moveToOffset(selectionModel.getSelectionStart(), true);
-      }
-    }
-
-    // There is a possible case that particular soft wraps become hard wraps if the caret is located at soft wrap-introduced virtual
-    // space, hence, we need to give editor a chance to react accordingly.
-    editor.getSoftWrapModel().beforeDocumentChangeAtCaret();
-    int oldOffset = editor.getCaretModel().getOffset();
-
-    String filler = calcStringToFillVirtualSpace(editor);
-    if (filler.length() > 0) {
-      s = filler + s;
-    }
-
-    Document document = editor.getDocument();
-    if (editor.isInsertMode() || !toProcessOverwriteMode) {
-      if (selectionModel.hasSelection()) {
-        oldOffset = selectionModel.getSelectionStart();
-        document.replaceString(selectionModel.getSelectionStart(), selectionModel.getSelectionEnd(), s);
-      }
-      else {
-        document.insertString(oldOffset, s);
-      }
-    }
-    else {
-      deleteSelectedText(editor);
-      int lineNumber = editor.getCaretModel().getLogicalPosition().line;
-      if (lineNumber >= document.getLineCount()) {
-        return insertStringAtCaretNoScrolling(editor, s, false, toMoveCaret, s.length());
-      }
-
-      int endOffset = document.getLineEndOffset(lineNumber);
-      document.replaceString(oldOffset, Math.min(endOffset, oldOffset + s.length()), s);
-    }
-
-    int offset = oldOffset + filler.length() + caretShift;
-    if (toMoveCaret) {
-      editor.getCaretModel().moveToOffset(offset, true);
-      selectionModel.removeSelection();
-    }
-    else if (editor.getCaretModel().getOffset() != oldOffset) { // handling the case when caret model tracks document changes
-      editor.getCaretModel().moveToOffset(oldOffset);
-    }
-
-    return offset;
+    return consulo.codeEditor.util.EditorModificationUtil.insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
   }
 
   public static void pasteTransferableAsBlock(Editor editor, @Nullable Producer<Transferable> producer) {
@@ -222,131 +141,31 @@ public class EditorModificationUtil {
    * on a current visual line
    */
   public static int calcAfterLineEnd(Editor editor) {
-    Document document = editor.getDocument();
-    CaretModel caretModel = editor.getCaretModel();
-    LogicalPosition logicalPosition = caretModel.getLogicalPosition();
-    int lineNumber = logicalPosition.line;
-    int columnNumber = logicalPosition.column;
-    if (lineNumber >= document.getLineCount()) {
-      return columnNumber;
-    }
-
-    int caretOffset = caretModel.getOffset();
-    int anchorLineEndOffset = document.getLineEndOffset(lineNumber);
-    List<? extends SoftWrap> softWraps = editor.getSoftWrapModel().getSoftWrapsForLine(logicalPosition.line);
-    for (SoftWrap softWrap : softWraps) {
-      if (!editor.getSoftWrapModel().isVisible(softWrap)) {
-        continue;
-      }
-
-      int softWrapOffset = softWrap.getStart();
-      if (softWrapOffset == caretOffset) {
-        // There are two possible situations:
-        //     *) caret is located on a visual line before soft wrap-introduced line feed;
-        //     *) caret is located on a visual line after soft wrap-introduced line feed;
-        VisualPosition position = editor.offsetToVisualPosition(caretOffset - 1);
-        VisualPosition visualCaret = caretModel.getVisualPosition();
-        if (position.line == visualCaret.line) {
-          return visualCaret.column - position.column - 1;
-        }
-      }
-      if (softWrapOffset > caretOffset) {
-        anchorLineEndOffset = softWrapOffset;
-        break;
-      }
-
-      // Same offset corresponds to all soft wrap-introduced symbols, however, current method should behave differently in
-      // situations when the caret is located just before the soft wrap and at the next visual line.
-      if (softWrapOffset == caretOffset) {
-        boolean visuallyBeforeSoftWrap = caretModel.getVisualPosition().line < editor.offsetToVisualPosition(caretOffset).line;
-        if (visuallyBeforeSoftWrap) {
-          anchorLineEndOffset = softWrapOffset;
-          break;
-        }
-      }
-    }
-
-    int lineEndColumnNumber = editor.offsetToLogicalPosition(anchorLineEndOffset).column;
-    return columnNumber - lineEndColumnNumber;
+    return consulo.codeEditor.util.EditorModificationUtil.calcAfterLineEnd(editor);
   }
 
   public static String calcStringToFillVirtualSpace(Editor editor) {
-    int afterLineEnd = calcAfterLineEnd(editor);
-    if (afterLineEnd > 0) {
-      return calcStringToFillVirtualSpace(editor, afterLineEnd);
-    }
-
-    return "";
+    return consulo.codeEditor.util.EditorModificationUtil.calcStringToFillVirtualSpace(editor);
   }
 
   public static String calcStringToFillVirtualSpace(Editor editor, int afterLineEnd) {
-    final Project project = editor.getProject();
-    StringBuilder buf = new StringBuilder();
-    final Document doc = editor.getDocument();
-    final int caretOffset = editor.getCaretModel().getOffset();
-    boolean atLineStart = caretOffset >= doc.getTextLength() || doc.getLineStartOffset(doc.getLineNumber(caretOffset)) == caretOffset;
-    if (atLineStart && project != null) {
-      int offset = editor.getCaretModel().getOffset();
-      PsiDocumentManager.getInstance(project).commitDocument(doc); // Sync document and PSI before formatting.
-      String properIndent = offset >= doc.getTextLength() ? "" : CodeStyleFacade.getInstance(project).getLineIndent(doc, offset);
-      if (properIndent != null) {
-        int tabSize = editor.getSettings().getTabSize(project);
-        for (int i = 0; i < properIndent.length(); i++) {
-          if (properIndent.charAt(i) == ' ') {
-            afterLineEnd--;
-          }
-          else if (properIndent.charAt(i) == '\t') {
-            if (afterLineEnd < tabSize) {
-              break;
-            }
-            afterLineEnd -= tabSize;
-          }
-          buf.append(properIndent.charAt(i));
-          if (afterLineEnd == 0) break;
-        }
-      }
-    }
-
-    for (int i = 0; i < afterLineEnd; i++) {
-      buf.append(' ');
-    }
-
-    return buf.toString();
+    return consulo.codeEditor.util.EditorModificationUtil.calcStringToFillVirtualSpace(editor, afterLineEnd);
   }
 
   public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @Nonnull final String str) {
-    typeInStringAtCaretHonorMultipleCarets(editor, str, true, str.length());
+    consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, str.length());
   }
 
   public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @Nonnull final String str, final int caretShift) {
-    typeInStringAtCaretHonorMultipleCarets(editor, str, true, caretShift);
+    consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, true, caretShift);
   }
 
   public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @Nonnull final String str, final boolean toProcessOverwriteMode) {
-    typeInStringAtCaretHonorMultipleCarets(editor, str, toProcessOverwriteMode, str.length());
-  }
-
-  /**
-   * Inserts given string at each caret's position. Effective caret shift will be equal to <code>caretShift</code> for each caret.
-   */
-  public static void typeInStringAtCaretHonorMultipleCarets(final Editor editor, @Nonnull final String str, final boolean toProcessOverwriteMode, final int caretShift)
-          throws ReadOnlyFragmentModificationException {
-    editor.getCaretModel().runForEachCaret(new CaretAction() {
-      @Override
-      public void perform(Caret caret) {
-        insertStringAtCaretNoScrolling(editor, str, toProcessOverwriteMode, true, caretShift);
-      }
-    });
-    editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+    consulo.codeEditor.util.EditorModificationUtil.typeInStringAtCaretHonorMultipleCarets(editor, str, toProcessOverwriteMode, str.length());
   }
 
   public static void moveAllCaretsRelatively(@Nonnull Editor editor, final int caretShift) {
-    editor.getCaretModel().runForEachCaret(new CaretAction() {
-      @Override
-      public void perform(Caret caret) {
-        caret.moveToOffset(caret.getOffset() + caretShift);
-      }
-    });
+    consulo.codeEditor.util.EditorModificationUtil.moveAllCaretsRelatively(editor, caretShift);
   }
 
   public static void moveCaretRelatively(@Nonnull Editor editor, final int caretShift) {
@@ -360,49 +179,12 @@ public class EditorModificationUtil {
    * of carets.
    */
   public static void scrollToCaret(@Nonnull Editor editor) {
-    if (editor.getCaretModel().getCurrentCaret() == editor.getCaretModel().getPrimaryCaret()) {
-      editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-    }
+    consulo.codeEditor.util.EditorModificationUtil.scrollToCaret(editor);
   }
 
   @Nonnull
   public static List<CaretState> calcBlockSelectionState(@Nonnull Editor editor, @Nonnull LogicalPosition blockStart, @Nonnull LogicalPosition blockEnd) {
-    int startLine = Math.max(Math.min(blockStart.line, editor.getDocument().getLineCount() - 1), 0);
-    int endLine = Math.max(Math.min(blockEnd.line, editor.getDocument().getLineCount() - 1), 0);
-    int step = endLine < startLine ? -1 : 1;
-    int count = 1 + Math.abs(endLine - startLine);
-    List<CaretState> caretStates = new LinkedList<>();
-    boolean hasSelection = false;
-    for (int line = startLine, i = 0; i < count; i++, line += step) {
-      int startColumn = blockStart.column;
-      int endColumn = blockEnd.column;
-      int lineEndOffset = editor.getDocument().getLineEndOffset(line);
-      LogicalPosition lineEndPosition = editor.offsetToLogicalPosition(lineEndOffset);
-      int lineWidth = lineEndPosition.column;
-      if (startColumn > lineWidth && endColumn > lineWidth && !editor.isColumnMode()) {
-        LogicalPosition caretPos = new LogicalPosition(line, Math.min(startColumn, endColumn));
-        caretStates.add(new CaretState(caretPos, lineEndPosition, lineEndPosition));
-      }
-      else {
-        LogicalPosition startPos = new LogicalPosition(line, editor.isColumnMode() ? startColumn : Math.min(startColumn, lineWidth));
-        LogicalPosition endPos = new LogicalPosition(line, editor.isColumnMode() ? endColumn : Math.min(endColumn, lineWidth));
-        int startOffset = editor.logicalPositionToOffset(startPos);
-        int endOffset = editor.logicalPositionToOffset(endPos);
-        caretStates.add(new CaretState(endPos, startPos, endPos));
-        hasSelection |= startOffset != endOffset;
-      }
-    }
-    if (hasSelection && !editor.isColumnMode()) { // filtering out lines without selection
-      Iterator<CaretState> caretStateIterator = caretStates.iterator();
-      while (caretStateIterator.hasNext()) {
-        CaretState state = caretStateIterator.next();
-        //noinspection ConstantConditions
-        if (state.getSelectionStart().equals(state.getSelectionEnd())) {
-          caretStateIterator.remove();
-        }
-      }
-    }
-    return caretStates;
+    return consulo.codeEditor.util.EditorModificationUtil.calcBlockSelectionState(editor, blockStart, blockEnd);
   }
 
   public static boolean requestWriting(@Nonnull Editor editor) {

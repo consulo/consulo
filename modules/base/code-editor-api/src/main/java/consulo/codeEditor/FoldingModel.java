@@ -15,11 +15,16 @@
  */
 package consulo.codeEditor;
 
+import consulo.codeEditor.event.FoldingListener;
+import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposable;
 import consulo.document.RangeMarker;
 import consulo.util.lang.DeprecatedMethodException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
+import java.util.List;
 
 /**
  * Provides services for controlling and getting information about folded regions in the
@@ -118,4 +123,38 @@ public interface FoldingModel {
   void runBatchFoldingOperation(@Nonnull Runnable operation, boolean moveCaretFromCollapsedRegion);
 
   void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation);
+
+  void setFoldingEnabled(boolean isEnabled);
+
+  boolean isFoldingEnabled();
+
+  FoldRegion getFoldingPlaceholderAt(@Nonnull Point p);
+
+  boolean intersectsRegion(int startOffset, int endOffset);
+
+  /**
+   * Returns an index in an array returned by {@link #fetchTopLevel()} method, for the last folding region lying entirely before given
+   * offset (region can touch given offset at its right edge).
+   */
+  int getLastCollapsedRegionBefore(int offset);
+
+  TextAttributes getPlaceholderAttributes();
+
+  FoldRegion[] fetchTopLevel();
+
+  @Nullable
+  FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean neverExpands);
+
+  void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable);
+
+  void clearFoldRegions();
+
+  void rebuild();
+
+  @Nonnull
+  List<FoldRegion> getGroupedRegions(FoldingGroup group);
+
+  void clearDocumentRangesModificationStatus();
+
+  boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region);
 }

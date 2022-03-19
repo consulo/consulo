@@ -20,9 +20,9 @@ import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
-import consulo.fileEditor.impl.EditorComposite;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.FileEditorComposite;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorWithProviderComposite;
 
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
   @Override
-  protected boolean isFileToClose(EditorComposite editor, final EditorWindow window) {
+  protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
     return !window.isFilePinned(editor.getFile());
   }
 
@@ -49,11 +49,11 @@ public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
 
   @Override
   protected boolean isActionEnabled(final Project project, final AnActionEvent event) {
-    final List<Pair<EditorComposite, EditorWindow>> filesToClose = getFilesToClose(event);
+    final List<Pair<FileEditorComposite, FileEditorWindow>> filesToClose = getFilesToClose(event);
     if (filesToClose.isEmpty()) return false;
-    Set<EditorWindow> checked = new HashSet<>();
-    for (Pair<EditorComposite, EditorWindow> pair : filesToClose) {
-      final EditorWindow window = pair.second;
+    Set<FileEditorWindow> checked = new HashSet<>();
+    for (Pair<FileEditorComposite, FileEditorWindow> pair : filesToClose) {
+      final FileEditorWindow window = pair.second;
       if (!checked.contains(window)) {
         checked.add(window);
         if (hasPinned(window)) {
@@ -64,8 +64,8 @@ public class CloseAllUnpinnedEditorsAction extends CloseEditorsActionBase {
     return false;
   }
 
-  private static boolean hasPinned(final EditorWindow window) {
-    for (EditorWithProviderComposite e : window.getEditors()) {
+  private static boolean hasPinned(final FileEditorWindow window) {
+    for (FileEditorWithProviderComposite e : window.getEditors()) {
       if (e.isPinned()) {
         return true;
       }

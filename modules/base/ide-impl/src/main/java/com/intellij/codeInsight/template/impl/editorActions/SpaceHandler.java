@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.template.impl.editorActions;
 
-import com.intellij.codeInsight.editorActions.TypedHandlerDelegate;
+import consulo.language.editor.action.TypedHandlerDelegate;
 import com.intellij.codeInsight.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import consulo.codeEditor.Editor;

@@ -24,6 +24,11 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.codeEditor.impl.MarkupModelImpl;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import com.intellij.codeInsight.hint.*;
 import consulo.application.ui.UISettings;

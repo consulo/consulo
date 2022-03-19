@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.ColoredListCellRenderer;

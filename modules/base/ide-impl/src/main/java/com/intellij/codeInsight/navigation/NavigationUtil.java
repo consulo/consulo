@@ -24,7 +24,7 @@ import com.intellij.navigation.GotoRelatedProvider;
 import consulo.navigation.NavigationItem;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
+import consulo.codeEditor.markup.MarkupModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.HighlighterTargetArea;

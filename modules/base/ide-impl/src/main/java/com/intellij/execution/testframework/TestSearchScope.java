@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
+import consulo.execution.configuration.ModuleBasedConfiguration;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;

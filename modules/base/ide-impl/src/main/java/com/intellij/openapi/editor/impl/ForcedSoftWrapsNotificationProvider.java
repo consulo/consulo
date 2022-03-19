@@ -3,7 +3,7 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.EditorBundle;
+import consulo.codeEditor.EditorBundle;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.application.dumb.DumbAware;

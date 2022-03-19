@@ -20,6 +20,7 @@ import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiPredicate;
 
 public class FileUtil {
   private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
@@ -47,6 +49,148 @@ public class FileUtil {
       return new byte[THREAD_LOCAL_BUFFER_LENGTH];
     }
   };
+
+
+  /**
+   * <p>Gets the relative path from the {@code base} to the {@code file} regardless existence or the type of the {@code base}.</p>
+   *
+   * <p>NOTE: if a file (not a directory) is passed as the {@code base}, the result cannot be used as a relative path
+   * from the {@code base} parent directory to the {@code file}.</p>
+   *
+   * @param base the base
+   * @param file the file
+   * @return the relative path from the {@code base} to the {@code file}, or {@code null}
+   */
+  @Nullable
+  public static String getRelativePath(File base, File file) {
+    if (base == null || file == null) return null;
+
+    if (base.equals(file)) return ".";
+
+    String filePath = file.getAbsolutePath();
+    String basePath = base.getAbsolutePath();
+    return getRelativePath(basePath, filePath, File.separatorChar);
+  }
+
+  @Nullable
+  public static String getRelativePath(@Nonnull String basePath, @Nonnull String filePath, char separator) {
+    return getRelativePath(basePath, filePath, separator, OSInfo.isFileSystemCaseSensitive);
+  }
+
+  @Nullable
+  public static String getRelativePath(@Nonnull String basePath, @Nonnull String filePath, char separator, boolean caseSensitive) {
+    basePath = ensureEnds(basePath, separator);
+
+    if (caseSensitive ? basePath.equals(ensureEnds(filePath, separator)) : basePath.equalsIgnoreCase(ensureEnds(filePath, separator))) {
+      return ".";
+    }
+
+    int len = 0;
+    int lastSeparatorIndex = 0; // need this for cases like this: base="/temp/abc/base" and file="/temp/ab"
+    BiPredicate<Character, Character> strategy = caseSensitive ? (o1, o2) -> o1.equals(o2) : (o1, o2) -> StringUtil.charsEqualIgnoreCase(o1, o2);
+    while (len < filePath.length() && len < basePath.length() && strategy.test(filePath.charAt(len), basePath.charAt(len))) {
+      if (basePath.charAt(len) == separator) {
+        lastSeparatorIndex = len;
+      }
+      len++;
+    }
+
+    if (len == 0) return null;
+
+    StringBuilder relativePath = new StringBuilder();
+    for (int i = len; i < basePath.length(); i++) {
+      if (basePath.charAt(i) == separator) {
+        relativePath.append("..");
+        relativePath.append(separator);
+      }
+    }
+    relativePath.append(filePath.substring(lastSeparatorIndex + 1));
+
+    return relativePath.toString();
+  }
+
+  private static String ensureEnds(@Nonnull String s, final char endsWith) {
+    return StringUtil.endsWithChar(s, endsWith) ? s : s + endsWith;
+  }
+
+  @RegExp
+  @Nonnull
+  public static String convertAntToRegexp(@Nonnull String antPattern) {
+    return convertAntToRegexp(antPattern, true);
+  }
+
+  /**
+   * @param antPattern ant-style path pattern
+   * @return java regexp pattern.
+   * Note that no matter whether forward or backward slashes were used in the antPattern
+   * the returned regexp pattern will use forward slashes ('/') as file separators.
+   * Paths containing windows-style backslashes must be converted before matching against the resulting regexp
+   * @see FileUtil#toSystemIndependentName
+   */
+  @RegExp
+  @Nonnull
+  public static String convertAntToRegexp(@Nonnull String antPattern, boolean ignoreStartingSlash) {
+    final StringBuilder builder = new StringBuilder();
+    int asteriskCount = 0;
+    boolean recursive = true;
+    final int start = ignoreStartingSlash && (StringUtil.startsWithChar(antPattern, '/') || StringUtil.startsWithChar(antPattern, '\\')) ? 1 : 0;
+    for (int idx = start; idx < antPattern.length(); idx++) {
+      final char ch = antPattern.charAt(idx);
+
+      if (ch == '*') {
+        asteriskCount++;
+        continue;
+      }
+
+      final boolean foundRecursivePattern = recursive && asteriskCount == 2 && (ch == '/' || ch == '\\');
+      final boolean asterisksFound = asteriskCount > 0;
+
+      asteriskCount = 0;
+      recursive = ch == '/' || ch == '\\';
+
+      if (foundRecursivePattern) {
+        builder.append("(?:[^/]+/)*?");
+        continue;
+      }
+
+      if (asterisksFound) {
+        builder.append("[^/]*?");
+      }
+
+      if (ch == '(' || ch == ')' || ch == '[' || ch == ']' || ch == '^' || ch == '$' || ch == '.' || ch == '{' || ch == '}' || ch == '+' || ch == '|') {
+        // quote regexp-specific symbols
+        builder.append('\\').append(ch);
+        continue;
+      }
+      if (ch == '?') {
+        builder.append("[^/]{1}");
+        continue;
+      }
+      if (ch == '\\') {
+        builder.append('/');
+        continue;
+      }
+      builder.append(ch);
+    }
+
+    // handle ant shorthand: my_package/test/ is interpreted as if it were my_package/test/**
+    final boolean isTrailingSlash = builder.length() > 0 && builder.charAt(builder.length() - 1) == '/';
+    if (asteriskCount == 0 && isTrailingSlash || recursive && asteriskCount == 2) {
+      if (isTrailingSlash) {
+        builder.setLength(builder.length() - 1);
+      }
+      if (builder.length() == 0) {
+        builder.append(".*");
+      }
+      else {
+        builder.append("(?:$|/.+)");
+      }
+    }
+    else if (asteriskCount > 0) {
+      builder.append("[^/]*?");
+    }
+    return builder.toString();
+  }
 
   @Nonnull
   public static byte[] loadBytes(@Nonnull InputStream stream, int length) throws IOException {

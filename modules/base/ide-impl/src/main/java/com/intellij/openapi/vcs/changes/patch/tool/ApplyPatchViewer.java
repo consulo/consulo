@@ -38,7 +38,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.codeEditor.event.VisibleAreaListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.document.impl.DocumentImpl;
 import consulo.ui.ex.action.DumbAwareAction;

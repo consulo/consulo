@@ -17,6 +17,7 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
+import consulo.language.editor.action.CodeBlockProvider;
 
 /**
  * @author yole

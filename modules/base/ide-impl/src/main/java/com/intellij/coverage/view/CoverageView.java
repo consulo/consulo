@@ -5,7 +5,7 @@ import com.intellij.coverage.CoverageDataManager;
 import com.intellij.coverage.CoverageSuitesBundle;
 import com.intellij.execution.RunManagerEx;
 import consulo.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import com.intellij.execution.impl.RunDialog;
 import consulo.application.AllIcons;
 import com.intellij.ide.actions.CloseTabToolbarAction;

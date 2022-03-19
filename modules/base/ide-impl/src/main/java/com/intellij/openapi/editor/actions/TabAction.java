@@ -25,13 +25,14 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.codeEditor.EditorBundle;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.intellij.openapi.editor.actionSystem.EditorActionManager;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.Caret;

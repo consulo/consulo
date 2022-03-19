@@ -25,7 +25,7 @@ import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
+import consulo.codeEditor.markup.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import consulo.document.FileDocumentManager;
 import consulo.codeEditor.event.EditorEventMulticaster;

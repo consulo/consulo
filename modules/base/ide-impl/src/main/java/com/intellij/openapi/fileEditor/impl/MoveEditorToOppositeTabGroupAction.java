@@ -24,8 +24,8 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.ui.UIAccess;
 
 /**
@@ -34,28 +34,30 @@ import consulo.ui.UIAccess;
  */
 public class MoveEditorToOppositeTabGroupAction extends AnAction implements DumbAware {
 
+  @Override
   public void actionPerformed(final AnActionEvent event) {
     final VirtualFile vFile = event.getData(PlatformDataKeys.VIRTUAL_FILE);
     final Project project = event.getData(CommonDataKeys.PROJECT);
     if (vFile == null || project == null) {
       return;
     }
-    final EditorWindow window = event.getData(EditorWindow.DATA_KEY);
+    final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
     if (window != null) {
-      final EditorWindow[] siblings = window.findSiblings();
+      final FileEditorWindow[] siblings = window.findSiblings();
       if (siblings.length == 1) {
-        final EditorWithProviderComposite editorComposite = window.getSelectedEditor();
-        final HistoryEntry entry = editorComposite.currentStateAsHistoryEntry();
-        ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project)).openFileImpl3(UIAccess.get(), siblings[0], vFile, true, entry, true);
+        final FileEditorWithProviderComposite editorComposite = window.getSelectedEditor();
+        final HistoryEntry entry = FileEditorHistoryUtil.currentStateAsHistoryEntry(editorComposite);
+        ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(project)).openFileImpl3(UIAccess.current(), siblings[0], vFile, true, entry, true);
         window.closeFile(vFile);
       }
     }
   }
 
+  @Override
   public void update(AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final VirtualFile vFile = e.getData(PlatformDataKeys.VIRTUAL_FILE);
-    final EditorWindow window = e.getData(EditorWindow.DATA_KEY);
+    final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
     if (ActionPlaces.isPopupPlace(e.getPlace())) {
       presentation.setVisible(isEnabled(vFile, window));
     }
@@ -64,9 +66,9 @@ public class MoveEditorToOppositeTabGroupAction extends AnAction implements Dumb
     }
   }
 
-  private static boolean isEnabled(VirtualFile vFile, EditorWindow window) {
+  private static boolean isEnabled(VirtualFile vFile, FileEditorWindow window) {
     if (vFile != null && window != null) {
-      final EditorWindow[] siblings = window.findSiblings();
+      final FileEditorWindow[] siblings = window.findSiblings();
       if (siblings.length == 1) {
         return true;
       }

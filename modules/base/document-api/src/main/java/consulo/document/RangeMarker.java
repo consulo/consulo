@@ -33,6 +33,8 @@ import java.util.Comparator;
  * @see Document#createRangeMarker(int, int)
  */
 public interface RangeMarker extends UserDataHolder, Segment {
+  long getId();
+
   /**
    * Returns the document to which the marker belongs.
    *

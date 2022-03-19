@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.codeEditor.EditorGutterAction;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.TextAnnotationGutterProvider;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.markup.GutterIconRenderer;
 
 import javax.annotation.Nonnull;
@@ -34,7 +34,7 @@ import java.util.function.IntUnaryOperator;
  * @author VISTALL
  * @since 07/08/2021
  */
-public class WebEditorGutterComponentImpl extends EditorGutterComponentEx {
+public class WebEditorGutterComponentImpl implements EditorGutterComponentEx {
   @Nullable
   @Override
   public FoldRegion findFoldingAnchorAt(int x, int y) {
@@ -44,7 +44,7 @@ public class WebEditorGutterComponentImpl extends EditorGutterComponentEx {
   @Nonnull
   @Override
   public List<GutterMark> getGutterRenderers(int line) {
-    return null;
+    return List.of();
   }
 
   @Override

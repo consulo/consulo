@@ -13,7 +13,7 @@ import consulo.codeEditor.EditorGutterAction;
 import consulo.codeEditor.TextAnnotationGutterProvider;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.markup.RangeHighlighter;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.progress.ProgressIndicator;

@@ -15,8 +15,8 @@
  */
 package com.intellij.diagnostic.logging;
 
-import com.intellij.execution.configurations.AdditionalTabComponentManager;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.log.AdditionalTabComponentManager;
+import consulo.execution.configuration.RunConfigurationBase;
 import javax.annotation.Nonnull;
 
 import java.nio.charset.Charset;

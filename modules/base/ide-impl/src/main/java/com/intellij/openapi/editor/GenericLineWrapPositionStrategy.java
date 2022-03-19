@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
+import consulo.codeEditor.LineWrapPositionStrategy;
 import consulo.project.Project;
 import consulo.document.Document;
 import consulo.util.collection.primitive.ints.IntMaps;

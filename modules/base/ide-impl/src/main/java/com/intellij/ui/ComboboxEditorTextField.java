@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.FocusChangeListener;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.event.FocusChangeListener;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.project.Project;

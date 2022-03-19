@@ -28,7 +28,7 @@ import consulo.project.ProjectComponent;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import com.intellij.openapi.editor.event.EditorFactoryAdapter;
+import consulo.codeEditor.event.EditorFactoryAdapter;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.document.event.DocumentBulkUpdateListener;

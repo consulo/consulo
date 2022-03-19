@@ -24,7 +24,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 
 public class CutLineEndAction extends EditorAction {
   public CutLineEndAction() {

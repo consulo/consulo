@@ -16,6 +16,8 @@
 
 package com.intellij.diagnostic.logging;
 
+import consulo.execution.configuration.log.LogFilter;
+
 /**
  * @author Eugene.Kudelevsky
  */

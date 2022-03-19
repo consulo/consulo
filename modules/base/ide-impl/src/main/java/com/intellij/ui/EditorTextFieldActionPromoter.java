@@ -18,7 +18,7 @@ package com.intellij.ui;
 import com.intellij.openapi.actionSystem.ActionPromoter;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;
 
 import java.util.ArrayList;

@@ -6,6 +6,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.FileModificationService;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
+import consulo.ui.ex.action.UpdateInBackground;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;

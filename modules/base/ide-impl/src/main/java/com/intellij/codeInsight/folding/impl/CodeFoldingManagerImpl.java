@@ -8,7 +8,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.FoldRegion;
-import com.intellij.openapi.editor.ex.FoldingModelEx;
+import consulo.codeEditor.FoldingModelEx;
 import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -67,7 +67,7 @@ public class CodeFoldingManagerImpl extends CodeFoldingManager implements Dispos
   public void buildInitialFoldings(@Nonnull final Editor editor) {
     final Project project = editor.getProject();
     if (project == null || !project.equals(myProject) || editor.isDisposed()) return;
-    if (!((FoldingModelEx)editor.getFoldingModel()).isFoldingEnabled()) return;
+    if (!editor.getFoldingModel().isFoldingEnabled()) return;
     if (!FoldingUpdate.supportsDumbModeFolding(editor)) return;
 
     Document document = editor.getDocument();

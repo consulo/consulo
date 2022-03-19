@@ -22,7 +22,7 @@ import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.Presentation;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;
 import consulo.application.dumb.DumbAware;
 

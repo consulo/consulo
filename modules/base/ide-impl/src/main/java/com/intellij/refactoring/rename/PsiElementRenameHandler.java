@@ -34,7 +34,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.ide.impl.psi.meta.PsiWritableMetaData;
 import consulo.language.psi.PsiUtilCore;

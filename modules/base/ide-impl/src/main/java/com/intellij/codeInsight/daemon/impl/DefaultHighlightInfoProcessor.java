@@ -4,7 +4,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
+import consulo.codeEditor.markup.MarkupModelEx;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.application.ApplicationManager;

@@ -2,6 +2,8 @@
 package com.intellij.openapi.editor.ex;
 
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.event.FocusChangeListener;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -2,6 +2,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.codeEditor.action.*;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
@@ -9,7 +10,6 @@ import com.intellij.openapi.command.CommandProcessorEx;
 import com.intellij.openapi.command.CommandToken;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.*;
 import consulo.document.DocumentRunnable;
 import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.Editor;

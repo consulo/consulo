@@ -27,7 +27,7 @@ import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.codeEditor.Editor;
 import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

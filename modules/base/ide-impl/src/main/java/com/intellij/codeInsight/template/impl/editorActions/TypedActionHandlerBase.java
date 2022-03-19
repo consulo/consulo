@@ -17,10 +17,10 @@
 package com.intellij.codeInsight.template.impl.editorActions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.actionSystem.ActionPlan;
+import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.TypedActionHandler;
-import com.intellij.openapi.editor.actionSystem.TypedActionHandlerEx;
+import consulo.codeEditor.action.TypedActionHandler;
+import consulo.codeEditor.action.TypedActionHandlerEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

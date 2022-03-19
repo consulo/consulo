@@ -8,7 +8,7 @@ import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.document.Document;
 import consulo.document.DocumentFragment;
 import consulo.codeEditor.Editor;

@@ -28,7 +28,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;

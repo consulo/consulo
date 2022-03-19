@@ -29,7 +29,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.document.impl.DocumentUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

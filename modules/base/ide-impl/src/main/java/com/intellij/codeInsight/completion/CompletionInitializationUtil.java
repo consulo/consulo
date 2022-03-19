@@ -3,7 +3,7 @@ package com.intellij.codeInsight.completion;
 
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.util.Pair;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.psi.util.PsiUtilBase;
 import com.intellij.reference.SoftReference;
 import consulo.application.WriteAction;

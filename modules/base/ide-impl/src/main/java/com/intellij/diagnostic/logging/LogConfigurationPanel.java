@@ -17,9 +17,9 @@
 package com.intellij.diagnostic.logging;
 
 import com.intellij.diagnostic.DiagnosticBundle;
-import com.intellij.execution.configurations.LogFileOptions;
-import com.intellij.execution.configurations.PredefinedLogFile;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.log.LogFileOptions;
+import consulo.execution.configuration.log.PredefinedLogFile;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.configurable.ConfigurationException;

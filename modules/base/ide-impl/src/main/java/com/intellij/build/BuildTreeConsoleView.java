@@ -34,7 +34,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
+import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.application.dumb.DumbAware;

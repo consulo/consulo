@@ -15,11 +15,12 @@
  */
 package com.intellij.openapi.editor.impl;
 
+import consulo.codeEditor.impl.FilteringMarkupIterator;
 import consulo.document.Document;
-import consulo.document.impl.MarkupIterator;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.impl.event.MarkupModelListener;
+import consulo.document.MarkupIterator;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;

@@ -3,7 +3,7 @@ package com.intellij.openapi.editor.impl;
 
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.codeEditor.Editor;
-import consulo.document.impl.DocumentEx;
+import consulo.document.internal.DocumentEx;
 import javax.annotation.Nonnull;
 
 public class FocusRegion extends RangeMarkerImpl {

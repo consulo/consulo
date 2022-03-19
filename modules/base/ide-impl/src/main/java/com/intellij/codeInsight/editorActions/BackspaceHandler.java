@@ -16,25 +16,23 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import consulo.language.editor.highlight.BraceMatcher;
 import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
-import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.codeEditor.*;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.LogicalPosition;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.ast.IElementType;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.editor.action.BackspaceHandlerDelegate;
+import consulo.language.editor.action.QuoteHandler;
+import consulo.language.editor.highlight.BraceMatcher;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;

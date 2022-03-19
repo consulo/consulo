@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.actionSystem.UpdateInBackground;
+import consulo.ui.ex.action.UpdateInBackground;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.AbstractVcs;

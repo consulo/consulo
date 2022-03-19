@@ -27,7 +27,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -147,7 +147,7 @@ public class AsyncEditorLoader {
 
   private boolean worthWaiting() {
     // cannot perform commitAndRunReadAction in parallel to EDT waiting
-    return !PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments() && !ApplicationManager.getApplication().isWriteAccessAllowed() && !EditorsSplitters.isOpenedInBulk(myTextEditor.myFile);
+    return !PsiDocumentManager.getInstance(myProject).hasUncommitedDocuments() && !ApplicationManager.getApplication().isWriteAccessAllowed() && !FileEditorsSplitters.isOpenedInBulk(myTextEditor.myFile);
   }
 
   private static <T> T resultInTimeOrNull(@Nonnull Future<T> future) {

@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actions;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 
 /**
  * Scrolls to the top of the target editor without changing its caret position.

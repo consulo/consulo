@@ -20,7 +20,7 @@ import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.util.DiffUtil;
 import consulo.codeEditor.EditorFactory;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

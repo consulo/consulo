@@ -18,6 +18,8 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
+import consulo.language.editor.action.ExtendWordSelectionHandler;
+import consulo.language.editor.action.ExtendWordSelectionHandlerBase;
 import consulo.language.lexer.Lexer;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actions.EditorActionUtil;

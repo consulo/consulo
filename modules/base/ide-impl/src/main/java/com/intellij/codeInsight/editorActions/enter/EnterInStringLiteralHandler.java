@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.editorActions.enter;
 
 import com.intellij.codeInsight.editorActions.EnterHandler;
-import com.intellij.codeInsight.editorActions.JavaLikeQuoteHandler;
-import com.intellij.codeInsight.editorActions.QuoteHandler;
+import consulo.language.editor.action.JavaLikeQuoteHandler;
+import consulo.language.editor.action.QuoteHandler;
 import com.intellij.codeInsight.editorActions.TypedHandler;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
@@ -27,10 +27,10 @@ import consulo.language.lexer.StringLiteralLexer;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.highlight.EditorHighlighter;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;

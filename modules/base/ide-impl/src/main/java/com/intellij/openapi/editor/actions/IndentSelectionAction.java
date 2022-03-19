@@ -22,7 +22,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

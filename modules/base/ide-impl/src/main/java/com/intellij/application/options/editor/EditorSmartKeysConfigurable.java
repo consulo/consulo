@@ -17,13 +17,13 @@
 package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.CodeInsightSettings;
-import com.intellij.codeInsight.editorActions.SmartBackspaceMode;
+import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.LanguageCommenters;
 import com.intellij.openapi.application.ApplicationBundle;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.util.Comparing;

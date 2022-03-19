@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.FileEditorWithProviderComposite;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public abstract class EditorFileSwapper {
   public static final ExtensionPointName<EditorFileSwapper> EP_NAME = ExtensionPointName.create("consulo.editorFileSwapper");
 
   @Nullable
-  public abstract Pair<VirtualFile, Integer> getFileToSwapTo(Project project, EditorWithProviderComposite editorWithProviderComposite);
+  public abstract Pair<VirtualFile, Integer> getFileToSwapTo(Project project, FileEditorWithProviderComposite editorWithProviderComposite);
 
   @Nullable
   public static TextEditor findSinglePsiAwareEditor(@Nonnull FileEditor[] fileEditors) {

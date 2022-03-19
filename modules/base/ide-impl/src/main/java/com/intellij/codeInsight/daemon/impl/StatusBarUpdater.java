@@ -23,7 +23,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.document.impl.DocumentEx;
+import consulo.document.internal.DocumentEx;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerEvent;

@@ -17,6 +17,7 @@ package consulo.document.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
+import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.undoRedo.CommandProcessor;
 

@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 
 /**
  * Moves editor viewport one visual line up. Caret is also moved one line up if it becomes off-screen.

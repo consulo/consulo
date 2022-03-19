@@ -47,7 +47,7 @@ public class DockableEditorContainerFactory implements DockContainerFactory.Pers
 
   private DockContainer createContainer(boolean loadingState) {
     final SimpleReference<DesktopDockableEditorTabbedContainer> containerRef = SimpleReference.create();
-    DesktopEditorsSplitters splitters = new DesktopEditorsSplitters(myProject, myFileEditorManager, myDockManager, false) {
+    DesktopFileEditorsSplitters splitters = new DesktopFileEditorsSplitters(myProject, myFileEditorManager, myDockManager, false) {
       @Override
       public void afterFileClosed(VirtualFile file) {
         containerRef.get().fireContentClosed(file);

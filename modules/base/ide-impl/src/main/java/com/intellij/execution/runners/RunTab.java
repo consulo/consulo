@@ -18,7 +18,7 @@ package com.intellij.execution.runners;
 import com.intellij.diagnostic.logging.LogConsoleManagerBase;
 import com.intellij.diagnostic.logging.LogFilesManager;
 import com.intellij.diagnostic.logging.OutputFileUtil;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.content.scope.SearchScope;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.ExecutionSearchScopeProvider;
@@ -33,7 +33,6 @@ import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

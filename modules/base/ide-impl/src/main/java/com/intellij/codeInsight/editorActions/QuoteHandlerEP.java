@@ -20,6 +20,7 @@ import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.extension.LazyInstance;
 import consulo.component.extension.KeyedLazyInstance;
+import consulo.language.editor.action.QuoteHandler;
 import consulo.util.xml.serializer.annotation.Attribute;
 
 /**

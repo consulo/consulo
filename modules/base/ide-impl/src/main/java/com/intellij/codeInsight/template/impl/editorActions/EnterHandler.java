@@ -21,7 +21,7 @@ import com.intellij.codeInsight.template.impl.TemplateSettings;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredWriteAction;
 import javax.annotation.Nonnull;

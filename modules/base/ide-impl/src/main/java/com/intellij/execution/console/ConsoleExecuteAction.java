@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.EmptyAction;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;

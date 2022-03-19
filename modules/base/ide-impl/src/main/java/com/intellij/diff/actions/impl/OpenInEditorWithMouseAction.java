@@ -18,7 +18,7 @@ package com.intellij.diff.actions.impl;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorMouseEventArea;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;

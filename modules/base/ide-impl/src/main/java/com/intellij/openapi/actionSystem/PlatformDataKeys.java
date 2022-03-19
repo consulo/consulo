@@ -17,17 +17,17 @@ package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.*;
 import com.intellij.openapi.application.ModalityState;
-import consulo.fileEditor.FileEditor;
-import consulo.project.Project;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.StatusBar;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.content.ContentManager;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.FileEditor;
+import consulo.project.Project;
+import consulo.project.ui.wm.StatusBar;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.awt.*;
 import java.util.Comparator;
@@ -71,10 +71,14 @@ public interface PlatformDataKeys extends CommonDataKeys {
    */
   Key<consulo.ui.Component> CONTEXT_UI_COMPONENT = Key.create("contextUIComponent");
 
-  Key<CopyProvider> COPY_PROVIDER = Key.create("copyProvider");
-  Key<CutProvider> CUT_PROVIDER = Key.create("cutProvider");
-  Key<PasteProvider> PASTE_PROVIDER = Key.create("pasteProvider");
-  Key<DeleteProvider> DELETE_ELEMENT_PROVIDER = Key.create("deleteElementProvider");
+  Key<CopyProvider> COPY_PROVIDER = CopyProvider.KEY;
+
+  Key<CutProvider> CUT_PROVIDER = CutProvider.KEY;
+
+  Key<PasteProvider> PASTE_PROVIDER = PasteProvider.KEY;
+
+  Key<DeleteProvider> DELETE_ELEMENT_PROVIDER = DeleteProvider.KEY;
+
   Key<Object> SELECTED_ITEM = Key.create("selectedItem");
   Key<Object[]> SELECTED_ITEMS = Key.create("selectedItems");
   Key<Rectangle> DOMINANT_HINT_AREA_RECTANGLE = Key.create("dominant.hint.rectangle");

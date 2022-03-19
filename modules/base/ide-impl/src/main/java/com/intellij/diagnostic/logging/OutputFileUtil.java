@@ -16,7 +16,7 @@
 package com.intellij.diagnostic.logging;
 
 import consulo.execution.CommonProgramRunConfigurationParameters;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.event.ProcessAdapter;

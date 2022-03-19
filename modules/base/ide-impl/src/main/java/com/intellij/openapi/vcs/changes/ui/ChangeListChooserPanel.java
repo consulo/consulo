@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;

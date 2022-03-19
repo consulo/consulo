@@ -3,7 +3,7 @@ package com.intellij.coverage.view;
 import com.intellij.coverage.CoverageDataManager;
 import com.intellij.coverage.CoverageOptionsProvider;
 import com.intellij.coverage.CoverageSuitesBundle;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.application.AllIcons;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import consulo.application.ApplicationManager;

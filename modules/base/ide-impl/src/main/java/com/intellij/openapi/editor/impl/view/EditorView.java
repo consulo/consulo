@@ -3,7 +3,7 @@
  */
 package com.intellij.openapi.editor.impl.view;
 
-import com.intellij.diagnostic.Dumpable;
+import consulo.application.util.Dumpable;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;
@@ -11,13 +11,13 @@ import consulo.codeEditor.VisualPosition;
 import consulo.colorScheme.EditorFontType;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.document.impl.DocumentEx;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.document.internal.DocumentEx;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.document.impl.DocumentImpl;
-import com.intellij.openapi.editor.impl.FontInfo;
-import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import consulo.codeEditor.impl.FontInfo;
+import consulo.codeEditor.TextDrawingCallback;
 import consulo.colorScheme.TextAttributes;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
@@ -659,7 +659,9 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
   }
 
   @Override
-  public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, FontInfo fontInfo) {
+  public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, FontInfo f) {
+    FontInfo fontInfo = (FontInfo)f;
+
     myPainter.drawChars(g, data, start, end, x, y, color, fontInfo);
   }
 

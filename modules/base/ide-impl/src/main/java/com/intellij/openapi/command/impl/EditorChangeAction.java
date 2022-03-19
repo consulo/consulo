@@ -18,7 +18,7 @@ package com.intellij.openapi.command.impl;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.DocumentEx;
+import consulo.document.internal.DocumentEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.vcs.FileStatusManager;

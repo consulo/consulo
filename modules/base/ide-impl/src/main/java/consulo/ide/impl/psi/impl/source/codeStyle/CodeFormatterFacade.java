@@ -2,13 +2,11 @@
 
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
+import consulo.codeEditor.*;
+import consulo.codeEditor.impl.LanguageLineWrapPositionStrategy;
 import consulo.language.codeStyle.*;
 import com.intellij.formatting.*;
 import consulo.dataContext.DataManager;
-import consulo.codeEditor.CaretModel;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.SelectionModel;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
@@ -26,8 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.logging.Logger;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.EditorActionManager;
+import consulo.codeEditor.action.EditorActionManager;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
@@ -40,7 +37,7 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.psi.formatter.DocumentBasedFormattingModel;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.file.light.LightVirtualFile;

@@ -25,7 +25,7 @@ import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PsiElementListCellRenderer;
 import consulo.language.editor.inject.EditorWindow;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;

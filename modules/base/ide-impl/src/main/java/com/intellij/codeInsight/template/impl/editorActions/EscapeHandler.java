@@ -25,7 +25,7 @@ import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 
 public class EscapeHandler extends EditorActionHandler {
   private final EditorActionHandler myOriginalHandler;

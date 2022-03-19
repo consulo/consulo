@@ -23,7 +23,7 @@ import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import consulo.application.AllIcons;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
-import com.intellij.openapi.editor.EditorBundle;
+import consulo.codeEditor.EditorBundle;
 import com.intellij.openapi.editor.HectorComponentPanel;
 import com.intellij.openapi.editor.HectorComponentPanelsProvider;
 import consulo.configurable.ConfigurationException;

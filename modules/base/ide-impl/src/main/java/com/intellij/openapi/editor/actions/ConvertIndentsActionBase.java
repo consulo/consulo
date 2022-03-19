@@ -21,7 +21,7 @@ import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;

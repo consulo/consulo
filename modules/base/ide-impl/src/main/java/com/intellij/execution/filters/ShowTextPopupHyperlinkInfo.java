@@ -3,7 +3,7 @@ package com.intellij.execution.filters;
 import consulo.application.Application;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.language.plain.PlainTextFileType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.project.Project;

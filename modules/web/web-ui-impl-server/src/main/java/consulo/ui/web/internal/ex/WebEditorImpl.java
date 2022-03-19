@@ -15,10 +15,10 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
-import com.intellij.openapi.editor.impl.MarkupModelImpl;
-import com.intellij.openapi.editor.impl.TextDrawingCallback;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.codeEditor.impl.MarkupModelImpl;
+import consulo.codeEditor.TextDrawingCallback;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
@@ -37,7 +37,7 @@ import consulo.document.DocCommandGroupId;
 import consulo.document.Document;
 import consulo.internal.arquill.editor.server.ArquillEditor;
 import consulo.internal.arquill.editor.server.event.MouseDownEvent;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;

@@ -21,7 +21,7 @@ import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.impl.EmptyIndentsModel;
-import com.intellij.openapi.editor.impl.SettingsImpl;
+import consulo.codeEditor.impl.SettingsImpl;
 import consulo.codeEditor.markup.MarkupModel;
 import com.intellij.ui.popup.AbstractPopup;
 import consulo.ui.ex.awt.JBUI;

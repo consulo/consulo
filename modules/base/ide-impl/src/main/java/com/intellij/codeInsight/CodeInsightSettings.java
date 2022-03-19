@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight;
 
-import com.intellij.codeInsight.editorActions.SmartBackspaceMode;
+import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.ide.ServiceManager;
 import com.intellij.util.ArrayUtil;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;

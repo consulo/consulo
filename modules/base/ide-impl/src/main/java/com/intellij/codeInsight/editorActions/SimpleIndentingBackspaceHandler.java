@@ -17,6 +17,7 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.language.psi.PsiFile;
 
 public class SimpleIndentingBackspaceHandler extends AbstractIndentingBackspaceHandler {

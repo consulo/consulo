@@ -20,7 +20,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.ui.ex.awt.ScrollingUtil;
 import jakarta.inject.Inject;
 

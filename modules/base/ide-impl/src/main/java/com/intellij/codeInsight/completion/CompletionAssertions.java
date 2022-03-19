@@ -9,7 +9,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.RangeMarkerEx;
+import consulo.document.internal.RangeMarkerEx;
 import consulo.document.util.TextRange;
 import consulo.language.ast.FileASTNode;
 import consulo.language.editor.completion.CompletionInitializationContext;

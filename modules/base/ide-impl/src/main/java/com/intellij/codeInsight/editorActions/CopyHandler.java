@@ -16,21 +16,18 @@
 
 package com.intellij.codeInsight.editorActions;
 
+import consulo.codeEditor.*;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.editor.actions.CopyAction;
 import com.intellij.openapi.editor.actions.EditorActionUtil;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl;
 import consulo.component.extension.Extensions;
+import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.CaretAction;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiDocumentManager;

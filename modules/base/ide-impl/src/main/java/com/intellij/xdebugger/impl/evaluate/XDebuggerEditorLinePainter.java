@@ -17,7 +17,7 @@ package com.intellij.xdebugger.impl.evaluate;
 
 import consulo.document.Document;
 import com.intellij.openapi.editor.EditorLinePainter;
-import com.intellij.openapi.editor.LineExtensionInfo;
+import consulo.codeEditor.LineExtensionInfo;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.FileDocumentManager;

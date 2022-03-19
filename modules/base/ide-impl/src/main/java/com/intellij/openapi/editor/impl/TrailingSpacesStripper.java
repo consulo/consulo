@@ -26,7 +26,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerAdapter;
 import consulo.project.Project;

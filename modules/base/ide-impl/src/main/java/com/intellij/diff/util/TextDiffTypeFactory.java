@@ -18,7 +18,7 @@ package com.intellij.diff.util;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;

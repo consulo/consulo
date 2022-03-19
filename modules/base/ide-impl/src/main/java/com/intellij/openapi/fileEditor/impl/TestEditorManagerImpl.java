@@ -21,14 +21,14 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
+import consulo.fileEditor.FileEditorWithProvider;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.LogicalPosition;
-import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorHighlighter;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
@@ -44,9 +44,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.util.IncorrectOperationException;
-import consulo.fileEditor.impl.EditorComposite;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorComposite;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
@@ -149,7 +149,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   @Override
   public Pair<FileEditor[], FileEditorProvider[]> openFileWithProviders(@Nonnull VirtualFile file,
                                                                         boolean focusEditor,
-                                                                        @Nonnull EditorWindow window) {
+                                                                        @Nonnull FileEditorWindow window) {
     return openFileWithProviders(file, focusEditor, false);
   }
 
@@ -166,12 +166,12 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public EditorsSplitters getSplittersFor(Component c) {
+  public FileEditorsSplitters getSplittersFor(Component c) {
     return null;
   }
 
   @Override
-  public void createSplitter(int orientation, EditorWindow window) {
+  public void createSplitter(int orientation, FileEditorWindow window) {
     String containerName = createNewTabbedContainerName();
     myTestEditorSplitter.setActiveTabGroup(containerName);
   }
@@ -207,17 +207,17 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public boolean isChanged(@Nonnull EditorComposite editor) {
+  public boolean isChanged(@Nonnull FileEditorComposite editor) {
     return false;
   }
 
   @Override
-  public EditorWindow getNextWindow(@Nonnull EditorWindow window) {
+  public FileEditorWindow getNextWindow(@Nonnull FileEditorWindow window) {
     return null;
   }
 
   @Override
-  public EditorWindow getPrevWindow(@Nonnull EditorWindow window) {
+  public FileEditorWindow getPrevWindow(@Nonnull FileEditorWindow window) {
     return null;
   }
 
@@ -283,18 +283,18 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public EditorWindow getCurrentWindow() {
+  public FileEditorWindow getCurrentWindow() {
     return null;
   }
 
   @Nonnull
   @Override
-  public AsyncResult<EditorWindow> getActiveWindow() {
+  public AsyncResult<FileEditorWindow> getActiveWindow() {
     return AsyncResult.done(null);
   }
 
   @Override
-  public void setCurrentWindow(EditorWindow window) {
+  public void setCurrentWindow(FileEditorWindow window) {
   }
 
   @Override
@@ -318,8 +318,8 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
   @Override
   @Nonnull
-  public EditorWindow[] getWindows() {
-    return new EditorWindow[0];  //To change body of implemented methods use File | Settings | File Templates.
+  public FileEditorWindow[] getWindows() {
+    return new FileEditorWindow[0];  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
@@ -379,7 +379,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
   }
 
   @Override
-  public void closeFile(@Nonnull VirtualFile file, @Nonnull EditorWindow window) {
+  public void closeFile(@Nonnull VirtualFile file, @Nonnull FileEditorWindow window) {
     closeFile(file);
   }
 
@@ -524,7 +524,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
 
   @Nonnull
   @Override
-  public EditorsSplitters getSplitters() {
+  public FileEditorsSplitters getSplitters() {
     throw new IncorrectOperationException();
   }
 

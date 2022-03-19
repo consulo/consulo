@@ -15,6 +15,8 @@
  */
 package consulo.document.impl;
 
+import consulo.document.internal.LineIterator;
+
 public class LineIteratorImpl implements LineIterator {
   private int myLineIndex = 0;
   private final LineSet myLineSet;

@@ -15,14 +15,14 @@
  */
 package com.intellij.ui;
 
+import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
-import com.intellij.openapi.editor.ex.*;
+import consulo.colorScheme.DelegateColorScheme;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.EditorTextFieldRendererDocument;
 import consulo.codeEditor.markup.HighlighterLayer;

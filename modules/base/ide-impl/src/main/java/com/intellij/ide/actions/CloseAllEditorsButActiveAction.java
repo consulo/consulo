@@ -25,7 +25,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import javax.annotation.Nonnull;
 
 public class CloseAllEditorsButActiveAction extends AnAction implements DumbAware {
@@ -35,7 +35,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
     Project project = e.getData(CommonDataKeys.PROJECT);
     FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     VirtualFile selectedFile;
-    final EditorWindow window = e.getData(EditorWindow.DATA_KEY);
+    final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
     if (window != null) {
       window.closeAllExcept(e.getData(PlatformDataKeys.VIRTUAL_FILE));
       return;
@@ -60,7 +60,7 @@ public class CloseAllEditorsButActiveAction extends AnAction implements DumbAwar
     }
     FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
     VirtualFile selectedFile;
-    final EditorWindow window = event.getData(EditorWindow.DATA_KEY);
+    final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
     if (window != null) {
       presentation.setEnabled(window.getFiles().length > 1);
       return;

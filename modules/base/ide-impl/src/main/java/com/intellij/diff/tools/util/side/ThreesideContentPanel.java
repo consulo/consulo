@@ -21,7 +21,7 @@ import com.intellij.diff.tools.util.DiffSplitter;
 import com.intellij.diff.tools.util.ThreeDiffSplitter;
 import com.intellij.diff.util.Side;
 import com.intellij.diff.util.ThreeSide;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 

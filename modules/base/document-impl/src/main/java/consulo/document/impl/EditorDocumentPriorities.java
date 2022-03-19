@@ -15,7 +15,7 @@
  */
 package consulo.document.impl;
 
-import consulo.document.impl.event.PrioritizedDocumentListener;
+import consulo.document.internal.PrioritizedDocumentListener;
 
 /**
  * Holds values to use for common {@link PrioritizedDocumentListener prioritized document listeners} used within standard IntelliJ

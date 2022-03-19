@@ -31,8 +31,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.application.AccessRule;
-import consulo.fileEditor.impl.EditorComposite;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.FileEditorComposite;
+import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -128,9 +128,9 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
   private final Map<String, String> mySelectedProviders = new HashMap<>();
 
-  void providerSelected(EditorComposite composite) {
-    if (!(composite instanceof EditorWithProviderComposite)) return;
-    FileEditorProvider[] providers = ((EditorWithProviderComposite)composite).getProviders();
+  void providerSelected(FileEditorComposite composite) {
+    if (!(composite instanceof FileEditorWithProviderComposite)) return;
+    FileEditorProvider[] providers = ((FileEditorWithProviderComposite)composite).getProviders();
     if (providers.length < 2) return;
     mySelectedProviders.put(computeKey(providers), composite.getSelectedEditorWithProvider().getProvider().getEditorTypeId());
   }

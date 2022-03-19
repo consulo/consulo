@@ -15,19 +15,21 @@
  */
 package consulo.codeEditor;
 
-import consulo.dataContext.DataProvider;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.document.Document;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.EditorFontType;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.codeEditor.markup.MarkupModel;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EditorFontType;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnull;
@@ -46,6 +48,8 @@ import java.awt.geom.Point2D;
  */
 public interface Editor extends UserDataHolder {
   Editor[] EMPTY_ARRAY = new Editor[0];
+
+  Key<Editor> KEY = Key.create(Editor.class);
 
   /**
    * Returns the document edited or viewed in the editor.
@@ -535,4 +539,7 @@ public interface Editor extends UserDataHolder {
   default int getExpectedCaretOffset() {
     return getCaretModel().getOffset();
   }
+
+  @Nonnull
+  DataContext getDataContext();
 }

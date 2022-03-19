@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl.softwrap;
 
 import consulo.codeEditor.FoldRegion;
-import com.intellij.openapi.editor.ex.FoldingListener;
+import consulo.codeEditor.event.FoldingListener;
 
 /**
  * Adapts {@link FoldingListener} to soft wraps specific.

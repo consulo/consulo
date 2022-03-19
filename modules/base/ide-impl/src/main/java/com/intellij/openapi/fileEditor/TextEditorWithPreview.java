@@ -6,7 +6,7 @@ import consulo.application.AllIcons;
 import consulo.fileEditor.*;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.Pair;
 import consulo.application.ui.wm.IdeFocusManager;

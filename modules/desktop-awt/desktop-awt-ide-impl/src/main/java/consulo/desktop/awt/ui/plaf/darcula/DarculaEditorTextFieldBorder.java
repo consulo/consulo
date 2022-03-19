@@ -3,8 +3,8 @@ package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.desktop.awt.ui.plaf.VisualPaddingsProvider;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.FocusChangeListener;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.event.FocusChangeListener;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import com.intellij.ui.EditorTextField;
 import consulo.ui.ex.awt.JBInsets;

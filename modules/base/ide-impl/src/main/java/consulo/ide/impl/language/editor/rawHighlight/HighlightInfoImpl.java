@@ -6,7 +6,7 @@ import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;

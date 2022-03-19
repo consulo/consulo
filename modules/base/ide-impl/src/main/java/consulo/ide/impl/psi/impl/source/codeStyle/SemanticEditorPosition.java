@@ -16,9 +16,9 @@
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.language.Language;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.HighlighterIteratorWrapper;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;

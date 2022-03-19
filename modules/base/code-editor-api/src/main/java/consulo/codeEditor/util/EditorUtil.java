@@ -16,15 +16,36 @@
 package consulo.codeEditor.util;
 
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.Inlay;
 import consulo.codeEditor.LogicalPosition;
+import consulo.colorScheme.TextAttributes;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.awt.*;
+import java.util.List;
 
 /**
  * @author VISTALL
  * @since 12-Mar-22
  */
 public class EditorUtil {
+  public static boolean attributesImpactFontStyleOrColor(@Nullable TextAttributes attributes) {
+    return attributes == TextAttributes.ERASE_MARKER || (attributes != null && (attributes.getFontType() != Font.PLAIN || attributes.getForegroundColor() != null));
+  }
+
+  public static int getTabSize(@Nonnull Editor editor) {
+    return editor.getSettings().getTabSize(editor.getProject());
+  }
+
+  public static int getTotalInlaysHeight(@Nonnull List<? extends Inlay> inlays) {
+    int sum = 0;
+    for (Inlay inlay : inlays) {
+      sum += inlay.getHeightInPixels();
+    }
+    return sum;
+  }
+
   public static boolean inVirtualSpace(@Nonnull Editor editor, @Nonnull LogicalPosition logicalPosition) {
     return !editor.offsetToLogicalPosition(editor.logicalPositionToOffset(logicalPosition)).equals(logicalPosition);
   }

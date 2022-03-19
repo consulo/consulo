@@ -26,6 +26,7 @@ import com.intellij.lang.ContextAwareActionHandler;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import com.intellij.openapi.actionSystem.*;
+import consulo.ui.ex.action.UpdateInBackground;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.document.Document;

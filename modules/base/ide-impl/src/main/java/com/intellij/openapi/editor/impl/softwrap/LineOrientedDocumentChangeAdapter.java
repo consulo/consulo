@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.impl.softwrap;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.impl.event.PrioritizedDocumentListener;
+import consulo.document.internal.PrioritizedDocumentListener;
 
 /**
  * Adapter class for {@link DocumentListener} interface that allows to represent document change events

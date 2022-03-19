@@ -24,7 +24,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.actionSystem.UpdateInBackground;
+import consulo.ui.ex.action.UpdateInBackground;
 import consulo.application.ApplicationManager;
 import consulo.configurable.Configurable;
 import consulo.project.Project;

@@ -19,6 +19,7 @@ import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.event.DocumentEventImpl;
+import consulo.document.internal.DocumentEx;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.util.lang.ObjectUtil;

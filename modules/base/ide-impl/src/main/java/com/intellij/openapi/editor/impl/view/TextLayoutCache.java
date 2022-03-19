@@ -21,7 +21,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.event.PrioritizedDocumentListener;
+import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.document.impl.EditorDocumentPriorities;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;

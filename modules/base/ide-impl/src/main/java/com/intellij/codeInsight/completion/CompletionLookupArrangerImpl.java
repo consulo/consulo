@@ -7,7 +7,7 @@ import com.intellij.codeInsight.completion.impl.CompletionSorterImpl;
 import com.intellij.codeInsight.lookup.impl.EmptyLookupItem;
 import com.intellij.codeInsight.template.impl.LiveTemplateLookupElement;
 import com.intellij.openapi.util.Comparing;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;

@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor.impl;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ public interface EditorTabTitleProvider {
   String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file);
 
   @Nullable
-  default String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable EditorWindow editorWindow) {
+  default String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file, @Nullable FileEditorWindow editorWindow) {
     return getEditorTabTitle(project, file);
   }
 

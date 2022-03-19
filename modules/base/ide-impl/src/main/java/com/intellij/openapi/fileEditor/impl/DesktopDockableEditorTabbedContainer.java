@@ -30,7 +30,7 @@ import com.intellij.ui.tabs.impl.JBTabsImpl;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
@@ -45,7 +45,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @DeprecationInfo("Desktop only")
 public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbedContainer {
 
-  private final DesktopEditorsSplitters mySplitters;
+  private final DesktopFileEditorsSplitters mySplitters;
   private final Project myProject;
 
   private final CopyOnWriteArraySet<Listener> myListeners = new CopyOnWriteArraySet<Listener>();
@@ -62,7 +62,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
     this(project, null, true);
   }
 
-  DesktopDockableEditorTabbedContainer(Project project, @Nullable DesktopEditorsSplitters splitters, boolean disposeWhenEmpty) {
+  DesktopDockableEditorTabbedContainer(Project project, @Nullable DesktopFileEditorsSplitters splitters, boolean disposeWhenEmpty) {
     myProject = project;
     mySplitters = splitters;
     myDisposeWhenEmpty = disposeWhenEmpty;
@@ -116,15 +116,15 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
       if (targetTabs != null) {
         return targetTabs;
       } else {
-        EditorWindow wnd = mySplitters.getCurrentWindow();
+        FileEditorWindow wnd = mySplitters.getCurrentWindow();
         if (wnd != null) {
-          EditorTabbedContainer tabs = ((DesktopEditorWindow)wnd).getTabbedPane();
+          EditorTabbedContainer tabs = ((DesktopFileEditorWindow)wnd).getTabbedPane();
           if (tabs != null) {
             return tabs.getTabs();
           }
         } else {
-          DesktopEditorWindow[] windows = mySplitters.getWindows();
-          for (DesktopEditorWindow each : windows) {
+          DesktopFileEditorWindow[] windows = mySplitters.getWindows();
+          for (DesktopFileEditorWindow each : windows) {
             if (each.getTabbedPane() != null && each.getTabbedPane().getTabs() != null) {
               return each.getTabbedPane().getTabs();
             }
@@ -138,11 +138,11 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
 
   @Override
   public void add(@Nonnull DockableContent content, RelativePoint dropTarget) {
-    EditorWindow window = null;
+    FileEditorWindow window = null;
     if (myCurrentOver != null) {
       final DataProvider provider = myCurrentOver.getDataProvider();
       if (provider != null) {
-        window = provider.getDataUnchecked(EditorWindow.DATA_KEY);
+        window = provider.getDataUnchecked(FileEditorWindow.DATA_KEY);
       }
     }
 
@@ -157,7 +157,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
 
     if (myCurrentOver != null) {
       int index = ((JBTabsImpl)myCurrentOver).getDropInfoIndex();
-      file.putUserData(DesktopEditorWindow.INITIAL_INDEX_KEY, index);
+      file.putUserData(DesktopFileEditorWindow.INITIAL_INDEX_KEY, index);
     }
 
     ((FileEditorManagerImpl)FileEditorManagerEx.getInstanceEx(myProject)).openFileImpl2(UIAccess.get(), window, file, true);
@@ -208,7 +208,7 @@ public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbe
 
   @Override
   @Nullable
-  public DesktopEditorsSplitters getSplitters() {
+  public DesktopFileEditorsSplitters getSplitters() {
     return mySplitters;
   }
 

@@ -1,6 +1,6 @@
 package com.intellij.coverage;
 
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.project.Project;

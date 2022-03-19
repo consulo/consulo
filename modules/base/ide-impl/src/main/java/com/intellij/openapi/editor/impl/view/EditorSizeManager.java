@@ -1,20 +1,20 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl.view;
 
-import com.intellij.diagnostic.Dumpable;
+import consulo.application.util.Dumpable;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.disposer.Disposable;
 import consulo.document.impl.EditorDocumentPriorities;
 import consulo.codeEditor.*;
 import consulo.logging.Logger;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.DocumentEx;
-import com.intellij.openapi.editor.ex.FoldingListener;
-import consulo.document.impl.event.PrioritizedDocumentListener;
+import consulo.document.internal.DocumentEx;
+import consulo.codeEditor.event.FoldingListener;
+import consulo.document.internal.PrioritizedDocumentListener;
 import com.intellij.openapi.editor.impl.*;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
-import com.intellij.openapi.editor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
-import com.intellij.openapi.editor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
+import consulo.codeEditor.SoftWrapDrawingType;
+import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
+import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
 import com.intellij.openapi.util.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;

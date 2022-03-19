@@ -43,7 +43,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorWindow;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.localize.LocalizeValue;
@@ -676,7 +676,7 @@ public class Switcher extends AnAction implements DumbAware {
       final ArrayList<FileInfo> filesData = new ArrayList<>();
       final ArrayList<FileInfo> editors = new ArrayList<>();
       if (!pinned) {
-        for (Pair<VirtualFile, EditorWindow> pair : editorManager.getSelectionHistory()) {
+        for (Pair<VirtualFile, FileEditorWindow> pair : editorManager.getSelectionHistory()) {
           editors.add(new FileInfo(pair.first, pair.second, project));
         }
       }
@@ -685,7 +685,7 @@ public class Switcher extends AnAction implements DumbAware {
         int minIndex = pinned ? 0 : (filesForInit.size() - Math.min(toolWindowsCount, maxFiles));
         boolean firstRecentMarked = false;
         List<VirtualFile> selectedFiles = Arrays.asList(editorManager.getSelectedFiles());
-        EditorWindow currentWindow = editorManager.getCurrentWindow();
+        FileEditorWindow currentWindow = editorManager.getCurrentWindow();
         VirtualFile currentFile = currentWindow != null ? currentWindow.getSelectedFile() : null;
         for (int i = filesForInit.size() - 1; i >= minIndex; i--) {
           if (pinned && UISettings.getInstance().getEditorTabPlacement() != UISettings.PLACEMENT_EDITOR_TAB_NONE && selectedFiles.contains(filesForInit.get(i))) {
@@ -879,7 +879,7 @@ public class Switcher extends AnAction implements DumbAware {
           final VirtualFile virtualFile = info.first;
           final FileEditorManagerImpl editorManager = (FileEditorManagerImpl)FileEditorManager.getInstance(project);
           final JList jList = getSelectedList();
-          final EditorWindow wnd = findAppropriateWindow(info);
+          final FileEditorWindow wnd = findAppropriateWindow(info);
           if (wnd == null) {
             editorManager.closeFile(virtualFile, false, false);
           }
@@ -1056,7 +1056,7 @@ public class Switcher extends AnAction implements DumbAware {
                 manager.openFileInNewWindow(file);
               }
               else if (info.second != null) {
-                EditorWindow wnd = findAppropriateWindow(info);
+                FileEditorWindow wnd = findAppropriateWindow(info);
                 if (wnd != null) {
                   manager.openFileImpl2(UIAccess.current(), wnd, file, true);
                   manager.addSelectionRecord(file, wnd);
@@ -1089,9 +1089,9 @@ public class Switcher extends AnAction implements DumbAware {
     }
 
     @Nullable
-    private static EditorWindow findAppropriateWindow(@Nonnull FileInfo info) {
+    private static FileEditorWindow findAppropriateWindow(@Nonnull FileInfo info) {
       if (info.second == null) return null;
-      final EditorWindow[] windows = info.second.getOwner().getWindows();
+      final FileEditorWindow[] windows = info.second.getOwner().getWindows();
       return ArrayUtil.contains(info.second, windows) ? info.second : windows.length > 0 ? windows[0] : null;
     }
 
@@ -1322,11 +1322,11 @@ public class Switcher extends AnAction implements DumbAware {
     }
   }
 
-  static class FileInfo extends Pair<VirtualFile, EditorWindow> {
+  static class FileInfo extends Pair<VirtualFile, FileEditorWindow> {
     private final Project myProject;
     private String myNameForRendering;
 
-    FileInfo(VirtualFile first, EditorWindow second, Project project) {
+    FileInfo(VirtualFile first, FileEditorWindow second, Project project) {
       super(first, second);
       myProject = project;
     }

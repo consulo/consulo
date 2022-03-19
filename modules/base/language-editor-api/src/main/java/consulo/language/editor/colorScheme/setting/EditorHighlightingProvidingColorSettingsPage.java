@@ -20,7 +20,7 @@
 package consulo.language.editor.colorScheme.setting;
 
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
 
 public interface EditorHighlightingProvidingColorSettingsPage extends ColorSettingsPage {
   EditorHighlighter createEditorHighlighter(final EditorColorsScheme scheme);

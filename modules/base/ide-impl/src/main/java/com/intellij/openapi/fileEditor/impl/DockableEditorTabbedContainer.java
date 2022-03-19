@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.ui.docking.DockContainer;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorsSplitters;
 
 import javax.annotation.Nullable;
 
@@ -26,5 +26,5 @@ import javax.annotation.Nullable;
  */
 public interface DockableEditorTabbedContainer extends DockContainer.Persistent {
   @Nullable
-  EditorsSplitters getSplitters();
+  FileEditorsSplitters getSplitters();
 }

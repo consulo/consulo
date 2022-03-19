@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.template.impl.editorActions;
 
 import com.intellij.codeInsight.template.impl.TemplateSettings;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 
 /**
  * @author peter

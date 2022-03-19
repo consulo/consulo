@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.options;
 
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.RunConfigurationBase;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.AllIcons;
 import consulo.application.TransactionGuard;

@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import consulo.language.Language;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

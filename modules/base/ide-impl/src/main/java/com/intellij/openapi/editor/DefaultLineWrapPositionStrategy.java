@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
+import consulo.codeEditor.LineWrapPositionStrategy;
+
 /**
  * Default {@link LineWrapPositionStrategy} implementation. Is assumed to provide language-agnostic algorithm that may
  * be used with almost any kind of text.

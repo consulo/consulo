@@ -19,12 +19,12 @@ import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
-import consulo.fileEditor.impl.EditorComposite;
-import consulo.fileEditor.impl.EditorWindow;
+import consulo.fileEditor.FileEditorComposite;
+import consulo.fileEditor.FileEditorWindow;
 
 public class CloseAllUnmodifiedEditorsAction extends CloseEditorsActionBase {
   @Override
-  protected boolean isFileToClose(EditorComposite editor, final EditorWindow window) {
+  protected boolean isFileToClose(FileEditorComposite editor, final FileEditorWindow window) {
     return !window.getManager().isChanged (editor);
   }
 

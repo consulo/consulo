@@ -16,10 +16,16 @@
 package com.intellij.ide;
 
 import consulo.dataContext.DataContext;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 public interface CopyProvider {
+  Key<CopyProvider> KEY = Key.create(CopyProvider.class);
+
   void performCopy(@Nonnull DataContext dataContext);
+
   boolean isCopyEnabled(@Nonnull DataContext dataContext);
+
   boolean isCopyVisible(@Nonnull DataContext dataContext);
 }

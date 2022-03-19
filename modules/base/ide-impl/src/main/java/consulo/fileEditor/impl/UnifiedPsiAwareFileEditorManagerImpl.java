@@ -19,6 +19,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
+import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.problems.WolfTheProblemSolver;
@@ -45,7 +46,7 @@ public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
   @Override
   protected void initUI() {
     if (mySplitters == null) {
-      mySplitters = new UnifiedEditorsSplitters(myProject, this, myDockManager, true);
+      mySplitters = new UnifiedFileEditorsSplitters(myProject, this, myDockManager, true);
     }
   }
 
@@ -58,10 +59,10 @@ public class UnifiedPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorMana
 
   @Nonnull
   @Override
-  protected EditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
-                                                                          @Nonnull FileEditor[] editors,
-                                                                          @Nonnull FileEditorProvider[] providers,
-                                                                          @Nonnull FileEditorManagerEx fileEditorManager) {
-    return new UnifiedEditorWithProviderComposite(file, editors, providers, fileEditorManager);
+  protected FileEditorWithProviderComposite createEditorWithProviderComposite(@Nonnull VirtualFile file,
+                                                                              @Nonnull FileEditor[] editors,
+                                                                              @Nonnull FileEditorProvider[] providers,
+                                                                              @Nonnull FileEditorManagerEx fileEditorManager) {
+    return new UnifiedFileEditorWithProviderComposite(file, editors, providers, fileEditorManager);
   }
 }

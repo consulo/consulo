@@ -29,7 +29,7 @@ import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.project.content.scope.ProjectScopes;
 import consulo.content.scope.SearchScope;

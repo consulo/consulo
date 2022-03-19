@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.impl.TemplateState;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 
 /**
  * User: anna

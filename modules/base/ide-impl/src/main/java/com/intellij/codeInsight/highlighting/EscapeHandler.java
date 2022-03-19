@@ -20,7 +20,7 @@ import com.intellij.find.FindModel;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;

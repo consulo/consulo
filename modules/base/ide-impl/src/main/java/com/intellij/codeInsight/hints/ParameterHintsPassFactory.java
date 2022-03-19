@@ -29,7 +29,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.VisualPosition;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.ex.util.CaretVisualPositionKeeper;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;

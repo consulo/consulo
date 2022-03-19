@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.DocumentRunnable;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.ide.KillRingTransferable;
 
 /**

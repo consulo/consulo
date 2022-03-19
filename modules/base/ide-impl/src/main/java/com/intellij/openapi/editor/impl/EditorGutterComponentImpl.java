@@ -2,9 +2,12 @@
 
 package com.intellij.openapi.editor.impl;
 
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.TextAttributes;
-import consulo.document.impl.DocumentEx;
-import consulo.document.impl.MarkupIterator;
+import consulo.document.internal.DocumentEx;
+import consulo.document.MarkupIterator;
 import consulo.codeEditor.markup.*;
 import com.intellij.codeInsight.daemon.NonHideableIconGutterMark;
 import com.intellij.codeInsight.folding.impl.FoldingUtil;
@@ -28,7 +31,7 @@ import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.view.FontLayoutService;
-import com.intellij.openapi.editor.impl.view.IterationState;
+import consulo.codeEditor.impl.IterationState;
 import com.intellij.openapi.editor.impl.view.VisualLinesIterator;
 import com.intellij.openapi.editor.markup.*;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -125,7 +128,7 @@ import java.util.function.IntUnaryOperator;
  * <li>Folding area</li>
  * </ul>
  */
-class EditorGutterComponentImpl extends EditorGutterComponentEx implements MouseListener, MouseMotionListener, DataProvider, Accessible {
+class EditorGutterComponentImpl extends JComponent implements EditorGutterComponentEx, MouseListener, MouseMotionListener, DataProvider, Accessible {
   private static final JBValueGroup JBVG = new JBValueGroup();
   private static final JBValue START_ICON_AREA_WIDTH = JBVG.value(17);
   private static final JBValue FREE_PAINTERS_LEFT_AREA_WIDTH = JBVG.value(8);

@@ -16,8 +16,8 @@
 package com.intellij.diff.util;
 
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.EditorGutterComponentEx;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorGutterComponentEx;
 import com.intellij.openapi.editor.markup.LineMarkerRendererEx;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

@@ -23,7 +23,7 @@ import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.UndoableAction;
 import com.intellij.openapi.command.undo.UnexpectedUndoException;
-import consulo.document.impl.DocumentEx;
+import consulo.document.internal.DocumentEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.ui.Messages;

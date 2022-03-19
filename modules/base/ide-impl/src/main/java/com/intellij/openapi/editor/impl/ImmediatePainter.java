@@ -2,14 +2,15 @@
 package com.intellij.openapi.editor.impl;
 
 import consulo.application.ApplicationManager;
+import consulo.codeEditor.internal.EditorActionPlan;
 import consulo.document.impl.DocumentImpl;
 import consulo.codeEditor.EditorColors;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import com.intellij.openapi.editor.impl.view.FontLayoutService;
-import com.intellij.openapi.editor.impl.view.IterationState;
+import consulo.codeEditor.impl.IterationState;
 import consulo.codeEditor.*;
 import consulo.colorScheme.EffectType;
 import consulo.codeEditor.markup.HighlighterLayer;

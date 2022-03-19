@@ -28,11 +28,10 @@ import consulo.codeEditor.EditorColors;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentBulkUpdateListener;
-import consulo.document.impl.DocumentEx;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import consulo.document.internal.DocumentEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.openapi.editor.impl.event.MarkupModelListener;
+import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.CustomHighlighterRenderer;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
@@ -150,7 +149,7 @@ public final class LanguageConsoleBuilder {
   }
 
   /**
-   * @see {@link com.intellij.openapi.editor.ex.EditorEx#setOneLineMode(boolean)}
+   * @see {@link EditorEx#setOneLineMode(boolean)}
    */
   @SuppressWarnings("UnusedDeclaration")
   public LanguageConsoleBuilder oneLineInput() {
@@ -159,7 +158,7 @@ public final class LanguageConsoleBuilder {
   }
 
   /**
-   * @see {@link com.intellij.openapi.editor.ex.EditorEx#setOneLineMode(boolean)}
+   * @see {@link EditorEx#setOneLineMode(boolean)}
    */
   public LanguageConsoleBuilder oneLineInput(boolean value) {
     oneLineInput = value;
@@ -364,9 +363,9 @@ public final class LanguageConsoleBuilder {
         this.lineEndGutter = lineEndGutter;
 
         // console view can invoke markupModel.removeAllHighlighters(), so, we must be aware of it
-        getHistoryViewer().getMarkupModel().addMarkupModelListener(GutteredLanguageConsole.this, new MarkupModelListener.Adapter() {
+        getHistoryViewer().getMarkupModel().addMarkupModelListener(GutteredLanguageConsole.this, new MarkupModelListener() {
           @Override
-          public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
+          public void beforeRemoved(@Nonnull RangeHighlighter highlighter) {
             if (lineSeparatorPainter == highlighter) {
               lineSeparatorPainter = null;
             }

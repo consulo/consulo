@@ -28,7 +28,7 @@ import consulo.language.editor.inject.EditorWindow;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
+import consulo.codeEditor.impl.action.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import javax.annotation.Nonnull;

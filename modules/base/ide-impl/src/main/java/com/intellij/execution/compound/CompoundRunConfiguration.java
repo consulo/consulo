@@ -15,11 +15,11 @@
  */
 package com.intellij.execution.compound;
 
-import com.intellij.execution.configurations.*;
 import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
 import consulo.execution.*;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;

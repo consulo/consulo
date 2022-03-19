@@ -31,8 +31,8 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.fileEditor.impl.EditorWindow;
-import consulo.fileEditor.impl.EditorWithProviderComposite;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorWithProviderComposite;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -57,7 +57,7 @@ public class FileDropHandler implements EditorDropHandler {
   }
 
   @Override
-  public void handleDrop(@Nonnull final Transferable t, @Nullable final Project project, EditorWindow editorWindow) {
+  public void handleDrop(@Nonnull final Transferable t, @Nullable final Project project, FileEditorWindow editorWindow) {
     if (project != null) {
       final List<File> fileList = FileCopyPasteUtil.getFileList(t);
       if (fileList != null) {
@@ -70,7 +70,7 @@ public class FileDropHandler implements EditorDropHandler {
     }
   }
 
-  private void openFiles(final Project project, final List<File> fileList, EditorWindow editorWindow) {
+  private void openFiles(final Project project, final List<File> fileList, FileEditorWindow editorWindow) {
     if (editorWindow == null && myEditor != null) {
       editorWindow = findEditorWindow(project);
     }
@@ -92,14 +92,14 @@ public class FileDropHandler implements EditorDropHandler {
   }
 
   @Nullable
-  private EditorWindow findEditorWindow(Project project) {
+  private FileEditorWindow findEditorWindow(Project project) {
     final Document document = myEditor.getDocument();
     final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (file != null) {
       final FileEditorManagerEx fileEditorManager = (FileEditorManagerEx) FileEditorManager.getInstance(project);
-      final EditorWindow[] windows = fileEditorManager.getWindows();
-      for (EditorWindow window : windows) {
-        final EditorWithProviderComposite composite = window.findFileComposite(file);
+      final FileEditorWindow[] windows = fileEditorManager.getWindows();
+      for (FileEditorWindow window : windows) {
+        final FileEditorWithProviderComposite composite = window.findFileComposite(file);
         if (composite == null) {
           continue;
         }

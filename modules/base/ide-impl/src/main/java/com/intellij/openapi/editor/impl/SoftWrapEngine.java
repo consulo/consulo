@@ -1,17 +1,18 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
+import consulo.codeEditor.impl.TextChangeImpl;
 import consulo.document.Document;
-import com.intellij.openapi.editor.LanguageLineWrapPositionStrategy;
-import com.intellij.openapi.editor.LineWrapPositionStrategy;
+import consulo.codeEditor.impl.LanguageLineWrapPositionStrategy;
+import consulo.codeEditor.LineWrapPositionStrategy;
 import consulo.codeEditor.SoftWrap;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapImpl;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
-import com.intellij.openapi.editor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
-import com.intellij.openapi.editor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
+import consulo.codeEditor.SoftWrapDrawingType;
+import consulo.codeEditor.impl.softwrap.SoftWrapImpl;
+import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
+import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
+import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
+import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
 import com.intellij.openapi.editor.impl.view.EditorView;
 import com.intellij.openapi.editor.impl.view.WrapElementMeasuringIterator;
 import com.intellij.openapi.util.text.StringUtil;

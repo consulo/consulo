@@ -2,7 +2,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import consulo.language.Language;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.file.FileViewProvider;

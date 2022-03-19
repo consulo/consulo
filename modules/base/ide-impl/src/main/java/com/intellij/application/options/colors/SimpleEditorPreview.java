@@ -27,9 +27,9 @@ import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.event.CaretAdapter;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretEvent;
-import com.intellij.openapi.editor.ex.EditorEx;
-import consulo.language.editor.highlight.EditorHighlighter;
-import consulo.language.editor.highlight.HighlighterIterator;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
@@ -149,7 +149,7 @@ public class SimpleEditorPreview implements PreviewPanel {
 
   @Nullable
   private static String selectItem(HighlighterIterator itr, SyntaxHighlighter highlighter) {
-    IElementType tokenType = (IElementType)itr.getTokenType();
+    IElementType tokenType = itr.getTokenType();
     if (tokenType == null) return null;
 
     TextAttributesKey[] highlights = highlighter.getTokenHighlights(tokenType);
@@ -275,7 +275,7 @@ public class SimpleEditorPreview implements PreviewPanel {
     if (!found && highlighter != null) {
       HighlighterIterator iterator = editor.getHighlighter().createIterator(0);
       do {
-        IElementType tokenType = (IElementType)iterator.getTokenType();
+        IElementType tokenType = iterator.getTokenType();
         TextAttributesKey[] tokenHighlights = highlighter.getTokenHighlights(tokenType);
         for (final TextAttributesKey tokenHighlight : tokenHighlights) {
           String type = tokenHighlight.getExternalName();

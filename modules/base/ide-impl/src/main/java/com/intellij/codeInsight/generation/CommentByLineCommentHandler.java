@@ -50,7 +50,7 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedCaret;
+import consulo.language.inject.impl.internal.InjectedCaret;
 import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import consulo.document.impl.DocumentUtil;

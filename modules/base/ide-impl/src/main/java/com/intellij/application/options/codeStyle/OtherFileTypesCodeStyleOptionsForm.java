@@ -19,7 +19,7 @@ import com.intellij.application.options.CodeStyleAbstractPanel;
 import consulo.language.codeStyle.setting.IndentOptionsEditor;
 import com.intellij.openapi.application.ApplicationBundle;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.configurable.ConfigurationException;

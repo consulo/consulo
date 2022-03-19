@@ -16,10 +16,16 @@
 package com.intellij.ide;
 
 import consulo.dataContext.DataContext;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 public interface CutProvider {
+  Key<CutProvider> KEY = Key.create(CutProvider.class);
+
   void performCut(@Nonnull DataContext dataContext);
+
   boolean isCutEnabled(@Nonnull DataContext dataContext);
+
   boolean isCutVisible(@Nonnull DataContext dataContext);
 }

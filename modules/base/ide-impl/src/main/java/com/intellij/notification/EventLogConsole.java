@@ -15,8 +15,11 @@
  */
 package com.intellij.notification;
 
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.TextAttributes;
-import consulo.document.impl.DocumentEx;
+import consulo.document.internal.DocumentEx;
 import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.execution.impl.EditorHyperlinkSupport;
@@ -31,7 +34,7 @@ import consulo.colorScheme.event.EditorColorsListener;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
-import com.intellij.openapi.editor.colors.impl.DelegateColorScheme;
+import consulo.colorScheme.DelegateColorScheme;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.*;

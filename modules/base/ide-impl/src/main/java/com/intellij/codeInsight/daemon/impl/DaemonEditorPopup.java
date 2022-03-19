@@ -12,7 +12,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.EditorBundle;
+import consulo.codeEditor.EditorBundle;
 import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;

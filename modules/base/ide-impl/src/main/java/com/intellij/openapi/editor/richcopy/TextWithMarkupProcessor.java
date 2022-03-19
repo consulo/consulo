@@ -2,17 +2,17 @@
 package com.intellij.openapi.editor.richcopy;
 
 import com.intellij.codeInsight.editorActions.CopyPastePostProcessor;
-import com.intellij.codeInsight.editorActions.CopyPastePreProcessor;
+import consulo.language.editor.action.CopyPastePreProcessor;
 import com.intellij.ide.highlighter.HighlighterFactory;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.logging.Logger;
 import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.RawText;
+import consulo.codeEditor.RawText;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.highlight.EditorHighlighter;
+import consulo.codeEditor.EditorHighlighter;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModel;
 import com.intellij.openapi.editor.richcopy.SyntaxInfoBuilder.Context;

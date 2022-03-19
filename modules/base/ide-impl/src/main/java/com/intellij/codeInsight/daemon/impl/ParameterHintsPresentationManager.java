@@ -22,7 +22,7 @@ import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
-import com.intellij.openapi.editor.impl.FontInfo;
+import consulo.codeEditor.impl.FontInfo;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.Alarm;

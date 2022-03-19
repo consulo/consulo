@@ -21,7 +21,7 @@ import consulo.application.ReadAction;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.UIBundle;
 import com.intellij.ui.components.breadcrumbs.Breadcrumbs;

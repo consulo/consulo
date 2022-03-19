@@ -21,6 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.CaretAction;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.RawText;
 import consulo.logging.Logger;
 import com.intellij.openapi.editor.*;
 import consulo.ui.ex.awt.CopyPasteManager;

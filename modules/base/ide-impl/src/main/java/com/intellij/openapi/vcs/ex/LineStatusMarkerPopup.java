@@ -29,7 +29,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.ui.ex.action.ActionToolbar;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.FileDocumentManager;

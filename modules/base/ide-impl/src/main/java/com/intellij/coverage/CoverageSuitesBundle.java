@@ -1,7 +1,7 @@
 package com.intellij.coverage;
 
-import com.intellij.execution.configurations.ModuleBasedConfiguration;
-import com.intellij.execution.configurations.RunConfigurationBase;
+import consulo.execution.configuration.ModuleBasedConfiguration;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.project.content.ProjectRootModificationTracker;

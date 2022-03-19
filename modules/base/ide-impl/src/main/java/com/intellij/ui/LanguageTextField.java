@@ -19,7 +19,7 @@ import com.intellij.ide.highlighter.HighlighterFactory;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;

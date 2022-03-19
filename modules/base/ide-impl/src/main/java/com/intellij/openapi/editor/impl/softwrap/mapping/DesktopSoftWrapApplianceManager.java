@@ -3,12 +3,15 @@ package com.intellij.openapi.editor.impl.softwrap.mapping;
 
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapEngine;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapPainter;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapsStorage;
+import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
+import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
 import consulo.application.util.registry.Registry;
 import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.impl.CodeEditorBase;
+import consulo.codeEditor.impl.softwrap.mapping.CachingSoftWrapDataMapper;
+import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapApplianceManager;
+import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListener;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

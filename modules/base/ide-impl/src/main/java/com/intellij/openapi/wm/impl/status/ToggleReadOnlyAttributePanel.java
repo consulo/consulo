@@ -16,7 +16,7 @@ import consulo.project.ui.wm.StatusBarWidget;
 import consulo.ui.ex.UIBundle;
 import com.intellij.util.Consumer;
 import com.intellij.util.io.ReadOnlyAttributeUtil;
-import consulo.fileEditor.impl.EditorsSplitters;
+import consulo.fileEditor.FileEditorsSplitters;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -121,7 +121,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
   private VirtualFile getCurrentFile() {
     final Project project = getProject();
     if (project == null) return null;
-    EditorsSplitters splitters = FileEditorManagerEx.getInstanceEx(project).getSplittersFor(myStatusBar.getComponent());
+    FileEditorsSplitters splitters = FileEditorManagerEx.getInstanceEx(project).getSplittersFor(myStatusBar.getComponent());
     return splitters.getCurrentFile();
   }
 }

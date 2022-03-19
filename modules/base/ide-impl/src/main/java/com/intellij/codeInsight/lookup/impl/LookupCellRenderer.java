@@ -23,7 +23,7 @@ import consulo.colorScheme.EditorFontType;
 import consulo.colorScheme.FontPreferences;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.ComplementaryFontsRegistry;
+import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.component.ProcessCanceledException;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;

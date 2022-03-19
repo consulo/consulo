@@ -1,64 +1,65 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile;
-import consulo.compiler.ProblemsView;
 import com.intellij.diff.util.DiffUserDataKeys;
-import consulo.application.AllIcons;
-import consulo.application.PowerSaveMode;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorKind;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.language.Language;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
-import consulo.ui.ex.action.ToggleAction;
-import consulo.application.ReadAction;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.ex.MarkupModelEx;
-import com.intellij.openapi.editor.ex.RangeHighlighterEx;
+import com.intellij.openapi.editor.HectorComponentPanel;
+import com.intellij.openapi.editor.HectorComponentPanelsProvider;
 import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.impl.DocumentMarkupModel;
-import com.intellij.openapi.editor.impl.event.MarkupModelListener;
 import com.intellij.openapi.editor.markup.*;
-import consulo.document.Document;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.PsiCompiledElement;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.configurable.ConfigurationException;
-import consulo.component.ProcessCanceledException;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.storage.HeavyProcessLatch;
 import com.intellij.util.ui.GridBag;
-import consulo.ui.ex.awt.UIUtil;
 import com.intellij.xml.util.XmlStringUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.AllIcons;
+import consulo.application.PowerSaveMode;
+import consulo.application.ReadAction;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorBundle;
+import consulo.codeEditor.EditorKind;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.MarkupModelListener;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.compiler.ProblemsView;
+import consulo.component.ProcessCanceledException;
+import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.Language;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.file.FileViewProvider;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.PsiCompiledElement;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.DeprecatedMethodException;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -112,12 +113,12 @@ public class TrafficLightRenderer implements ErrorStripeRenderer, Disposable {
     final MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
     model.addMarkupModelListener(this, new MarkupModelListener() {
       @Override
-      public void afterAdded(@Nonnull RangeHighlighterEx highlighter) {
+      public void afterAdded(@Nonnull RangeHighlighter highlighter) {
         incErrorCount(highlighter, 1);
       }
 
       @Override
-      public void beforeRemoved(@Nonnull RangeHighlighterEx highlighter) {
+      public void beforeRemoved(@Nonnull RangeHighlighter highlighter) {
         incErrorCount(highlighter, -1);
       }
     });

@@ -22,7 +22,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorLastActionTracker;
 import consulo.codeEditor.ScrollType;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
+import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler;
 import consulo.util.dataholder.Key;
 import java.util.HashSet;

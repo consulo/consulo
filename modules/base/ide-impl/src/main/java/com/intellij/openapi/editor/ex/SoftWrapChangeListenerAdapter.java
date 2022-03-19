@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.editor.ex;
 
+import consulo.codeEditor.event.SoftWrapChangeListener;
+
 /**
  * @author Denis Zhdanov
  * @since 11/23/11 7:03 PM

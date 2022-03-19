@@ -17,9 +17,9 @@ package com.intellij.openapi.editor.actions;
 
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actionSystem.EditorAction;
-import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
-import com.intellij.openapi.editor.ex.EditorEx;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.EditorEx;
 
 /**
  * Allows to toggle {@link EditorEx#isStickySelection() sticky selection} for editors.
