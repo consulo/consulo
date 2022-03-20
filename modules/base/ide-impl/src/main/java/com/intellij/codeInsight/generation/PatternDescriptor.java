@@ -1,6 +1,6 @@
 package com.intellij.codeInsight.generation;
 
-import com.intellij.codeInsight.template.Template;
+import consulo.language.editor.template.Template;
 import consulo.dataContext.DataContext;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

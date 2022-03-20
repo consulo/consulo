@@ -17,7 +17,7 @@
 package com.intellij.lang.parser;
 
 import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
-import com.intellij.lang.LanguageBraceMatching;
+import consulo.language.LanguageBraceMatching;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.Function;

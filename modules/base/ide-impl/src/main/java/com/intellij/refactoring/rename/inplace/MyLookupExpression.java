@@ -19,12 +19,12 @@ import consulo.language.editor.completion.lookup.InsertHandler;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import com.intellij.codeInsight.template.Expression;
-import com.intellij.codeInsight.template.ExpressionContext;
-import com.intellij.codeInsight.template.Result;
-import com.intellij.codeInsight.template.TextResult;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.Result;
+import consulo.language.editor.template.TextResult;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.document.util.TextRange;
@@ -82,7 +82,7 @@ public class MyLookupExpression extends Expression {
         public void handleInsert(InsertionContext context, LookupElement item) {
           if (shouldSelectAll) return;
           final Editor topLevelEditor = InjectedLanguageUtil.getTopLevelEditor(context.getEditor());
-          final TemplateState templateState = TemplateManagerImpl.getTemplateState(topLevelEditor);
+          final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(topLevelEditor);
           if (templateState != null) {
             final TextRange range = templateState.getCurrentVariableRange();
             if (range != null) {
@@ -107,7 +107,7 @@ public class MyLookupExpression extends Expression {
 
   @Override
   public Result calculateResult(ExpressionContext context) {
-    TemplateState templateState = TemplateManagerImpl.getTemplateState(context.getEditor());
+    TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(context.getEditor());
     final TextResult insertedValue = templateState != null ? templateState.getVariableValue(InplaceRefactoring.PRIMARY_VARIABLE_NAME) : null;
     if (insertedValue != null) {
       if (!insertedValue.getText().isEmpty()) return insertedValue;

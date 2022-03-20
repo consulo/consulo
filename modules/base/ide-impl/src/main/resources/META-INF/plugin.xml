@@ -681,8 +681,8 @@
 
     <extensionPoint name="commentCompleteHandler" interface="consulo.language.editor.action.CommentCompleteHandler"/>
 
-    <extensionPoint name="liveTemplateContext" interface="com.intellij.codeInsight.template.TemplateContextType"/>
-    <extensionPoint name="liveTemplateMacro" interface="com.intellij.codeInsight.template.Macro"/>
+    <extensionPoint name="liveTemplateContext" interface="consulo.language.editor.template.context.TemplateContextType"/>
+    <extensionPoint name="liveTemplateMacro" interface="consulo.language.editor.template.macro.Macro"/>
     <extensionPoint name="liveTemplateOptionalProcessor" interface="com.intellij.codeInsight.template.impl.TemplateOptionalProcessor"/>
     <extensionPoint name="liveTemplatePreprocessor" interface="com.intellij.codeInsight.template.impl.TemplatePreprocessor"/>
     <extensionPoint name="customLiveTemplate" interface="com.intellij.codeInsight.template.CustomLiveTemplate"/>
@@ -1053,7 +1053,7 @@
     </extensionPoint>
 
     <extensionPoint name="templateCompletionProcessor"
-                    interface="com.intellij.codeInsight.template.macro.TemplateCompletionProcessor"/>
+                    interface="consulo.language.editor.template.TemplateCompletionProcessor"/>
 
     <extensionPoint name="targetElementUtilEx" interface="consulo.language.editor.TargetElementUtilExtender"/>
 
@@ -1715,7 +1715,7 @@
                         serviceImplementation="com.intellij.codeInsight.template.impl.TemplateSettings"/>
     <applicationService serviceInterface="com.intellij.codeInsight.template.impl.ExportableTemplateSettings"
                         serviceImplementation="com.intellij.codeInsight.template.impl.ExportableTemplateSettings"/>
-    <projectService serviceInterface="com.intellij.codeInsight.template.TemplateManager"
+    <projectService serviceInterface="consulo.language.editor.template.TemplateManager"
                     serviceImplementation="com.intellij.codeInsight.template.impl.TemplateManagerImpl"/>
     <editorFactoryListener implementation="com.intellij.codeInsight.template.impl.TemplateManagerImpl$MyEditorFactoryListener"/>
 
@@ -2275,7 +2275,7 @@
 
     <templateCompletionProcessor implementation="com.intellij.codeInsight.template.macro.DirectoryTemplateCompletionProcessor"/>
 
-    <liveTemplateContext id="OTHER" implementation="com.intellij.codeInsight.template.EverywhereContextType" order="last"/>
+    <liveTemplateContext id="OTHER" implementation="consulo.language.editor.template.context.EverywhereContextType" order="last"/>
 
     <dynamicContextProvider implementation="com.intellij.openapi.paths.GenericDynamicContextProvider"/>
 

@@ -9,7 +9,7 @@ import com.intellij.codeInsight.intention.impl.EditIntentionSettingsAction;
 import com.intellij.codeInsight.intention.impl.EnableDisableIntentionAction;
 import com.intellij.codeInsight.intention.impl.ShowIntentionActionsHandler;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.util.Pair;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -217,7 +217,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
   @Override
   public void doCollectInformation(@Nonnull ProgressIndicator progress) {
     if (!ApplicationManager.getApplication().isHeadlessEnvironment() && !FocusableComponent.hasFocus(myEditor.getContentUIComponent())) return;
-    TemplateState state = TemplateManagerImpl.getTemplateState(myEditor);
+    TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
     if (state != null && !state.isFinished()) return;
     getActionsToShow(myEditor, myFile, myIntentionsInfo, myPassIdToShowIntentionsFor, myQueryIntentionActions);
     myCachedIntentions = IntentionsUI.getInstance(myProject).getCachedIntentions(myEditor, myFile);
@@ -230,7 +230,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
 
     CachedIntentions cachedIntentions = myCachedIntentions;
     boolean actionsChanged = myActionsChanged;
-    TemplateState state = TemplateManagerImpl.getTemplateState(myEditor);
+    TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(myEditor);
     if ((state == null || state.isFinished()) && cachedIntentions != null) {
       IntentionsInfo syncInfo = new IntentionsInfo();
       getActionsToShowSync(myEditor, myFile, syncInfo, myPassIdToShowIntentionsFor);

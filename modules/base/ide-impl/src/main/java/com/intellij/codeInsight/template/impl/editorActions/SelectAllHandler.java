@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl.editorActions;
 
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -34,7 +34,7 @@ public class SelectAllHandler extends EditorActionHandler {
 
   @Override
   public void execute(Editor editor, DataContext dataContext) {
-    final TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+    final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       final TextRange range = templateState.getCurrentVariableRange();
       final int caretOffset = editor.getCaretModel().getOffset();

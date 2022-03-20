@@ -15,7 +15,9 @@
  */
 package com.intellij.codeInsight.template.macro;
 
-import com.intellij.codeInsight.template.*;
+import consulo.language.editor.template.*;
+import consulo.language.editor.template.macro.Macro;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

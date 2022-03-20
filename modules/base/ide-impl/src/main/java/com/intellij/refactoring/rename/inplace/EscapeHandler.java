@@ -18,7 +18,7 @@ package com.intellij.refactoring.rename.inplace;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
@@ -39,7 +39,7 @@ public class EscapeHandler extends EditorActionHandler {
   public void execute(Editor editor, DataContext dataContext) {
     final SelectionModel selectionModel = editor.getSelectionModel();
     if (selectionModel.hasSelection()) {
-      final TemplateState state = TemplateManagerImpl.getTemplateState(editor);
+      final TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(editor);
       if (state != null && editor.getUserData(InplaceRefactoring.INPLACE_RENAMER) != null) {
         final LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
         if (lookup != null) {
@@ -55,7 +55,7 @@ public class EscapeHandler extends EditorActionHandler {
 
   @Override
   public boolean isEnabled(Editor editor, DataContext dataContext) {
-    final TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+    final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       return true;
     } else {

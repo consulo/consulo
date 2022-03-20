@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.template.TemplateManager;
+import consulo.language.editor.template.TemplateManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.undoRedo.CommandProcessor;

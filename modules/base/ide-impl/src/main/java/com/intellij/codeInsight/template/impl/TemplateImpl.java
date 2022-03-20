@@ -16,17 +16,17 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.codeInsight.template.Expression;
-import com.intellij.codeInsight.template.Template;
-import com.intellij.codeInsight.template.TemplateContextType;
-import consulo.component.extension.Extensions;
+import consulo.language.editor.template.context.TemplateContextType;
 import com.intellij.openapi.options.SchemeElement;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.component.extension.Extensions;
 import consulo.language.ast.IElementType;
-import org.jetbrains.annotations.NonNls;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.Variable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class TemplateImpl extends Template implements SchemeElement {
@@ -44,7 +44,7 @@ public class TemplateImpl extends Template implements SchemeElement {
     if (this == o) return true;
     if (!(o instanceof TemplateImpl)) return false;
 
-    final TemplateImpl template = (TemplateImpl) o;
+    final TemplateImpl template = (TemplateImpl)o;
     if (myId != null && template.myId != null && myId.equals(template.myId)) return true;
 
     if (isToReformat != template.isToReformat) return false;
@@ -78,14 +78,7 @@ public class TemplateImpl extends Template implements SchemeElement {
   private boolean toParseSegments = true;
   private TemplateContext myTemplateContext = new TemplateContext();
 
-  @NonNls public static final String END = "END";
-  @NonNls public static final String SELECTION = "SELECTION";
-  @NonNls public static final String SELECTION_START = "SELECTION_START";
-  @NonNls public static final String SELECTION_END = "SELECTION_END";
-  @NonNls public static final String ARG = "ARG";
-
-  public static final Set<String> INTERNAL_VARS_SET = new HashSet<String>(Arrays.asList(
-      END, SELECTION, SELECTION_START, SELECTION_END));
+  public static final Set<String> INTERNAL_VARS_SET = Set.of(END, SELECTION, SELECTION_START, SELECTION_END);
 
   private boolean isDeactivated = false;
 
@@ -102,7 +95,6 @@ public class TemplateImpl extends Template implements SchemeElement {
   }
 
   private boolean myIsInline = false;
-
 
 
   public TemplateImpl(@Nonnull String key, String group) {
@@ -126,7 +118,7 @@ public class TemplateImpl extends Template implements SchemeElement {
   }
 
   @Override
-  public void addVariableSegment (String name) {
+  public void addVariableSegment(String name) {
     mySegments.add(new Segment(name, myTemplateText.length()));
   }
 
@@ -136,11 +128,7 @@ public class TemplateImpl extends Template implements SchemeElement {
   }
 
   @Override
-  public Variable addVariable(String name,
-                              Expression expression,
-                              Expression defaultValueExpression,
-                              boolean isAlwaysStopAt,
-                              boolean skipOnStart) {
+  public Variable addVariable(String name, Expression expression, Expression defaultValueExpression, boolean isAlwaysStopAt, boolean skipOnStart) {
     if (mySegments != null) {
       Segment segment = new Segment(name, myTemplateText.length());
       mySegments.add(segment);
@@ -284,10 +272,10 @@ public class TemplateImpl extends Template implements SchemeElement {
   }
 
   public void parseSegments() {
-    if(!toParseSegments) {
+    if (!toParseSegments) {
       return;
     }
-    if(mySegments != null) {
+    if (mySegments != null) {
       return;
     }
 
@@ -298,21 +286,21 @@ public class TemplateImpl extends Template implements SchemeElement {
     TemplateTextLexer lexer = new TemplateTextLexer();
     lexer.start(myString);
 
-    while(true){
+    while (true) {
       IElementType tokenType = lexer.getTokenType();
       if (tokenType == null) break;
       int start = lexer.getTokenStart();
       int end = lexer.getTokenEnd();
       String token = myString.substring(start, end);
-      if (tokenType == TemplateTokenType.VARIABLE){
+      if (tokenType == TemplateTokenType.VARIABLE) {
         String name = token.substring(1, token.length() - 1);
         Segment segment = new Segment(name, buffer.length());
         mySegments.add(segment);
       }
-      else if (tokenType == TemplateTokenType.ESCAPE_DOLLAR){
+      else if (tokenType == TemplateTokenType.ESCAPE_DOLLAR) {
         buffer.append("$");
       }
-      else{
+      else {
         buffer.append(token);
       }
       lexer.advance();
@@ -435,7 +423,7 @@ public class TemplateImpl extends Template implements SchemeElement {
     return context;
   }
 
-  public Map<TemplateContextType, Boolean> createContext(){
+  public Map<TemplateContextType, Boolean> createContext() {
 
     Map<TemplateContextType, Boolean> context = new LinkedHashMap<TemplateContextType, Boolean>();
     for (TemplateContextType processor : TemplateContextType.EP_NAME.getExtensions()) {
@@ -481,6 +469,6 @@ public class TemplateImpl extends Template implements SchemeElement {
 
   @Override
   public String toString() {
-    return myGroupName +"/" + myKey;
+    return myGroupName + "/" + myKey;
   }
 }

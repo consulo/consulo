@@ -4,7 +4,7 @@ package com.intellij.codeInsight.template.postfix.completion;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionType;
 import com.intellij.codeInsight.template.CustomLiveTemplate;
-import com.intellij.codeInsight.template.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateActionContext;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate;
 import consulo.codeEditor.Editor;

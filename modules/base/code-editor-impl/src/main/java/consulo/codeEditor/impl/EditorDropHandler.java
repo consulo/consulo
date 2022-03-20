@@ -16,7 +16,7 @@
 package consulo.codeEditor.impl;
 
 import consulo.project.Project;
-import consulo.fileEditor.FileEditorWindow;
+import consulo.ui.annotation.RequiredUIAccess;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -27,9 +27,11 @@ import java.awt.datatransfer.Transferable;
 public interface EditorDropHandler {
   boolean canHandleDrop(DataFlavor[] transferFlavors);
 
-  void handleDrop(Transferable t, final Project project, FileEditorWindow editorWindow);
+  @RequiredUIAccess
+  void handleDrop(Transferable t, final Project project, Object editorWindow);
 
-  default void handleDrop(Transferable t, final Project project, FileEditorWindow editorWindow, @SuppressWarnings("unused") int dropAction) {
+  @RequiredUIAccess
+  default void handleDrop(Transferable t, final Project project, Object editorWindow, @SuppressWarnings("unused") int dropAction) {
     handleDrop(t, project, editorWindow);
   }
 }

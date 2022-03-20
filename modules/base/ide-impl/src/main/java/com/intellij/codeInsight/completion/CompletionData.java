@@ -22,7 +22,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupItem;
 import consulo.language.editor.completion.lookup.LookupValueWithUIHint;
 import consulo.language.editor.completion.lookup.PresentableLookupValue;
-import com.intellij.codeInsight.template.Template;
+import consulo.language.editor.template.Template;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.plain.psi.PsiPlainText;
 import consulo.language.psi.*;

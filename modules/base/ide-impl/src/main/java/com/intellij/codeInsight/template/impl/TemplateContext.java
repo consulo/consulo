@@ -17,8 +17,8 @@
 package com.intellij.codeInsight.template.impl;
 
 
-import com.intellij.codeInsight.template.EverywhereContextType;
-import com.intellij.codeInsight.template.TemplateContextType;
+import consulo.language.editor.template.context.EverywhereContextType;
+import consulo.language.editor.template.context.TemplateContextType;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.util.containers.ContainerUtil;

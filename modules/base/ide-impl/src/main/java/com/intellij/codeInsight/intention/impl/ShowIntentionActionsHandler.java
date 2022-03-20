@@ -16,7 +16,7 @@ import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
@@ -77,7 +77,7 @@ public class ShowIntentionActionsHandler implements CodeInsightActionHandler {
 
     //intentions check isWritable before modification: if (!file.isWritable()) return;
 
-    TemplateState state = TemplateManagerImpl.getTemplateState(editor);
+    TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (state != null && !state.isFinished()) {
       return;
     }

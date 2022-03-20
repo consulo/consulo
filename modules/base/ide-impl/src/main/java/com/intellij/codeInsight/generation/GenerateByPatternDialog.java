@@ -1,6 +1,6 @@
 package com.intellij.codeInsight.generation;
 
-import com.intellij.codeInsight.template.Template;
+import consulo.language.editor.template.Template;
 import com.intellij.codeInsight.template.impl.TemplateEditorUtil;
 import com.intellij.codeInsight.template.impl.TemplateImpl;
 import consulo.dataContext.DataContext;

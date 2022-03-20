@@ -17,10 +17,10 @@ package com.intellij.refactoring.introduce.inplace;
 
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
-import com.intellij.codeInsight.template.ExpressionContext;
-import com.intellij.codeInsight.template.TextResult;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.TextResult;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.psi.internal.LanguageTokenSeparatorGenerators;
 import consulo.application.Result;
@@ -199,7 +199,7 @@ public abstract class InplaceVariableIntroducer<E extends PsiElement> extends In
 
     @Nullable
     private LookupElement[] createLookupItems(String name, Editor editor, PsiNamedElement psiVariable) {
-      TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+      TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
       if (psiVariable != null) {
         final TextResult insertedValue =
           templateState != null ? templateState.getVariableValue(PRIMARY_VARIABLE_NAME) : null;

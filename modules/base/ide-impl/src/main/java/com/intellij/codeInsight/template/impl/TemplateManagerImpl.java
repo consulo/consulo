@@ -16,36 +16,40 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.completion.CompletionUtil;
-import consulo.language.editor.completion.OffsetKey;
 import com.intellij.codeInsight.completion.OffsetsInFile;
 import com.intellij.codeInsight.template.*;
-import consulo.language.Language;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
+import com.intellij.openapi.util.Pair;
+import com.intellij.util.PairProcessor;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.util.ConcurrentFactoryMap;
+import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.Language;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.completion.OffsetKey;
+import consulo.language.editor.template.*;
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
-import consulo.ide.impl.psi.util.PsiUtilBase;
-import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.PairProcessor;
-import consulo.application.util.ConcurrentFactoryMap;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -55,6 +59,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.BiPredicate;
 
 @Singleton
 public class TemplateManagerImpl extends TemplateManager implements Disposable {
@@ -67,7 +72,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
         return;
       }
       
-      TemplateState state = getTemplateState(editor);
+      TemplateStateImpl state = getTemplateStateImpl(editor);
       if (state != null) {
         state.gotoEnd();
       }
@@ -78,7 +83,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   private final Project myProject;
   private boolean myTemplateTesting;
 
-  private static final Key<TemplateState> TEMPLATE_STATE_KEY = Key.create("TEMPLATE_STATE_KEY");
+  private static final Key<TemplateStateImpl> TEMPLATE_STATE_KEY = Key.create("TEMPLATE_STATE_KEY");
 
   @Inject
   public TemplateManagerImpl(Project project) {
@@ -106,7 +111,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     Disposer.register(parentDisposable, () -> instance.myTemplateTesting = false);
   }
 
-  private static void disposeState(@Nonnull TemplateState state) {
+  private static void disposeState(@Nonnull TemplateStateImpl state) {
     Disposer.dispose(state);
   }
 
@@ -121,8 +126,14 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   @Nullable
-  public static TemplateState getTemplateState(@Nonnull Editor editor) {
-    TemplateState templateState = editor.getUserData(TEMPLATE_STATE_KEY);
+  @Override
+  public TemplateState getTemplateState(@Nonnull Editor editor) {
+    return getTemplateStateImpl(editor);
+  }
+
+  @Nullable
+  public static TemplateStateImpl getTemplateStateImpl(@Nonnull Editor editor) {
+    TemplateStateImpl templateState = editor.getUserData(TEMPLATE_STATE_KEY);
     if (templateState != null && templateState.isDisposed()) {
       editor.putUserData(TEMPLATE_STATE_KEY, null);
       return null;
@@ -131,16 +142,16 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   static void clearTemplateState(@Nonnull Editor editor) {
-    TemplateState prevState = getTemplateState(editor);
+    TemplateStateImpl prevState = getTemplateStateImpl(editor);
     if (prevState != null) {
       disposeState(prevState);
     }
     editor.putUserData(TEMPLATE_STATE_KEY, null);
   }
 
-  private TemplateState initTemplateState(@Nonnull Editor editor) {
+  private TemplateStateImpl initTemplateState(@Nonnull Editor editor) {
     clearTemplateState(editor);
-    TemplateState state = new TemplateState(myProject, editor);
+    TemplateStateImpl state = new TemplateStateImpl(myProject, editor);
     Disposer.register(this, state);
     editor.putUserData(TEMPLATE_STATE_KEY, state);
     return state;
@@ -167,7 +178,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   }
 
   @Override
-  public void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener, final PairProcessor<String, String> processor) {
+  public void startTemplate(@Nonnull Editor editor, @Nonnull Template template, TemplateEditingListener listener, final BiPredicate<String, String> processor) {
     startTemplate(editor, null, template, true, listener, processor, null);
   }
 
@@ -176,9 +187,9 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
                              final Template template,
                              boolean inSeparateCommand,
                              TemplateEditingListener listener,
-                             final PairProcessor<String, String> processor,
+                             final BiPredicate<String, String> processor,
                              final Map<String, String> predefinedVarValues) {
-    final TemplateState templateState = initTemplateState(editor);
+    final TemplateStateImpl templateState = initTemplateState(editor);
 
     //noinspection unchecked
     templateState.getProperties().put(ExpressionContext.SELECTION, selectionString);
@@ -412,7 +423,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
                                       @Nullable final PairProcessor<String, String> processor,
                                       @Nullable final String argument) {
     final int caretOffset = editor.getCaretModel().getOffset();
-    final TemplateState templateState = initTemplateState(editor);
+    final TemplateStateImpl templateState = initTemplateState(editor);
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     commandProcessor.executeCommand(myProject, () -> {
       editor.getDocument().deleteString(templateStart, caretOffset);
@@ -501,13 +512,13 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
   @Override
   @Nullable
   public Template getActiveTemplate(@Nonnull Editor editor) {
-    final TemplateState templateState = getTemplateState(editor);
+    final TemplateStateImpl templateState = getTemplateStateImpl(editor);
     return templateState != null ? templateState.getTemplate() : null;
   }
 
   @Override
   public boolean finishTemplate(@Nonnull Editor editor) {
-    TemplateState state = getTemplateState(editor);
+    TemplateStateImpl state = getTemplateStateImpl(editor);
     if (state != null) {
       state.gotoEnd();
       return true;

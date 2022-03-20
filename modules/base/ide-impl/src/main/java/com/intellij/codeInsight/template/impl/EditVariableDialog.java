@@ -18,10 +18,11 @@ package com.intellij.codeInsight.template.impl;
 
 import consulo.application.CommonBundle;
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.template.Macro;
-import com.intellij.codeInsight.template.TemplateContextType;
-import com.intellij.codeInsight.template.macro.MacroFactory;
+import consulo.language.editor.template.macro.Macro;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.language.editor.template.macro.MacroFactory;
 import consulo.application.ApplicationManager;
+import consulo.language.editor.template.Variable;
 import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

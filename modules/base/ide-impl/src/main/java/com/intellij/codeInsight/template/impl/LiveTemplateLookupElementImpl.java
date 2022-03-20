@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import consulo.language.editor.completion.lookup.InsertionContext;
-import com.intellij.codeInsight.template.TemplateManager;
+import consulo.language.editor.template.TemplateManager;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 

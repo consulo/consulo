@@ -16,9 +16,9 @@
 package com.intellij.refactoring.introduce.inplace;
 
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.codeInsight.template.TextResult;
+import consulo.language.editor.template.TextResult;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
 import consulo.undoRedo.CommandProcessor;
@@ -212,7 +212,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
               @Override
               public void documentChanged(DocumentEvent e) {
                 if (myPreview == null) return;
-                final TemplateState templateState = TemplateManagerImpl.getTemplateState(myEditor);
+                final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(myEditor);
                 if (templateState != null) {
                   final TextResult value = templateState.getVariableValue(InplaceRefactoring.PRIMARY_VARIABLE_NAME);
                   if (value != null) {
@@ -223,7 +223,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
             };
             myEditor.getDocument().addDocumentListener(myDocumentAdapter);
             updateTitle(getVariable());
-            if (TemplateManagerImpl.getTemplateState(myEditor) != null) {
+            if (TemplateManagerImpl.getTemplateStateImpl(myEditor) != null) {
               myEditor.putUserData(ACTIVE_INTRODUCE, AbstractInplaceIntroducer.this);
             }
           }
@@ -291,7 +291,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
     Runnable restartTemplateRunnable = new Runnable() {
       @Override
       public void run() {
-        final TemplateState templateState = TemplateManagerImpl.getTemplateState(myEditor);
+        final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(myEditor);
         if (templateState != null) {
           myEditor.putUserData(INTRODUCE_RESTART, true);
           try {
@@ -339,7 +339,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
   @Override
   public void finish(boolean success) {
     myFinished = true;
-    final TemplateState templateState = TemplateManagerImpl.getTemplateState(myEditor);
+    final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(myEditor);
     if (templateState != null) {
       myEditor.putUserData(ACTIVE_INTRODUCE, null);
     }
@@ -575,7 +575,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
   }
 
   public void stopIntroduce(Editor editor) {
-    final TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+    final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null) {
       final Runnable runnable = new Runnable() {
         @Override

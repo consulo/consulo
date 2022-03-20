@@ -20,7 +20,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.SoftWrapDrawingType;
 import consulo.codeEditor.impl.ArrowPainter;
 import consulo.codeEditor.impl.ColorProvider;
-import consulo.codeEditor.util.EditorUtil;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -84,7 +84,7 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
   public int getMinDrawingWidth(@Nonnull SoftWrapDrawingType drawingType) {
     if (myMinWidth < 0) {
       // We need to reserve a minimal space required for representing arrow before soft wrap-introduced line feed.
-      myMinWidth = EditorUtil.charWidth('a', Font.PLAIN, myEditor);
+      myMinWidth = EditorImplUtil.charWidth('a', Font.PLAIN, myEditor);
     }
     return myMinWidth;
   }
@@ -112,7 +112,7 @@ public class ArrowSoftWrapPainter implements SoftWrapPainter {
   private class WidthProvider implements Computable<Integer> {
     @Override
     public Integer compute() {
-      return EditorUtil.getSpaceWidth(Font.PLAIN, myEditor);
+      return EditorImplUtil.getSpaceWidth(Font.PLAIN, myEditor);
     }
   }
 }

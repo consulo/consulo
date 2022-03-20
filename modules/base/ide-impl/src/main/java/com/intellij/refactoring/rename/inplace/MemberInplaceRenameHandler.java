@@ -17,7 +17,7 @@ package com.intellij.refactoring.rename.inplace;
 
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import com.intellij.lang.LanguageRefactoringSupport;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.dataContext.DataContext;
@@ -73,7 +73,7 @@ public class MemberInplaceRenameHandler extends VariableInplaceRenameHandler {
         else {
           final InplaceRefactoring inplaceRefactoring = editor.getUserData(InplaceRefactoring.INPLACE_RENAMER);
           if (inplaceRefactoring != null && inplaceRefactoring.getClass() == MemberInplaceRenamer.class) {
-            final TemplateState templateState = TemplateManagerImpl.getTemplateState(InjectedLanguageUtil.getTopLevelEditor(editor));
+            final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(InjectedLanguageUtil.getTopLevelEditor(editor));
             if (templateState != null) {
               templateState.gotoEnd(true);
             }

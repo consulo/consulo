@@ -18,10 +18,11 @@ package com.intellij.codeInsight.template.impl;
 
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.codeInsight.template.EverywhereContextType;
-import com.intellij.codeInsight.template.TemplateContextType;
+import consulo.language.editor.template.context.EverywhereContextType;
+import consulo.language.editor.template.context.TemplateContextType;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import consulo.language.editor.template.Variable;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;

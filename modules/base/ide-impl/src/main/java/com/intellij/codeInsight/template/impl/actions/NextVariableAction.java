@@ -26,7 +26,7 @@ package com.intellij.codeInsight.template.impl.actions;
 
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
@@ -46,7 +46,7 @@ public class NextVariableAction extends EditorAction {
 
     @Override
     protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-      TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+      TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
       assert templateState != null;
       CommandProcessor.getInstance().setCurrentCommandName(CodeInsightBundle.message("template.next.variable.command"));
       templateState.nextTab();
@@ -54,7 +54,7 @@ public class NextVariableAction extends EditorAction {
 
     @Override
     protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-      TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+      TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
       return templateState != null && !templateState.isFinished() && templateState.isToProcessTab();
     }
   }

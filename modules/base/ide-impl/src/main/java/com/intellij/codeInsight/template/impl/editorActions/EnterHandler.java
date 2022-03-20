@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.template.impl.editorActions;
 
 import com.intellij.codeInsight.editorActions.BaseEnterHandler;
-import com.intellij.codeInsight.template.TemplateManager;
+import consulo.language.editor.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;

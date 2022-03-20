@@ -19,7 +19,7 @@ package com.intellij.codeInsight.editorActions.smartEnter;
 import com.intellij.codeInsight.editorActions.enter.EnterAfterUnmatchedBraceHandler;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.language.Language;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
@@ -68,7 +68,7 @@ public class SmartEnterAction extends EditorAction {
 
       LookupManager.getInstance(project).hideActiveLookup();
 
-      TemplateState state = TemplateManagerImpl.getTemplateState(editor);
+      TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(editor);
       if (state != null) {
         state.gotoEnd();
       }

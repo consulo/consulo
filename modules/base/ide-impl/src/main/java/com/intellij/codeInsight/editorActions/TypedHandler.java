@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import com.intellij.codeInsight.CodeInsightSettings;
-import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
+import consulo.language.editor.action.BraceMatchingUtil;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import com.intellij.lang.LanguageQuoteHandling;
 import com.intellij.openapi.actionSystem.CommonDataKeys;

@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.template.TemplateContextType;
+import consulo.language.editor.template.context.TemplateContextType;
 import com.intellij.ide.dnd.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.actionSystem.*;

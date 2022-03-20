@@ -16,14 +16,12 @@
 package com.intellij.codeInsight.template;
 
 import com.intellij.codeInsight.template.impl.TemplateImpl;
-import com.intellij.codeInsight.template.impl.Variable;
 import consulo.application.ApplicationManager;
+import consulo.language.editor.template.Variable;
 import consulo.logging.Logger;
-import java.util.HashMap;
-import java.util.HashSet;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**

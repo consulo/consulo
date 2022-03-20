@@ -17,7 +17,7 @@
 package com.intellij.ide.highlighter.custom.impl;
 
 import com.intellij.codeInsight.editorActions.TypedHandler;
-import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
+import consulo.language.editor.action.BraceMatchingUtil;
 import com.intellij.ide.highlighter.FileTypeRegistrator;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import consulo.language.Commenter;

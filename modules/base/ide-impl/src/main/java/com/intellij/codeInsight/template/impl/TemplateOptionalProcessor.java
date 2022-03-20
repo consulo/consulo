@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.codeInsight.template.Template;
+import consulo.language.editor.template.Template;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;

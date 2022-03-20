@@ -45,7 +45,7 @@ import java.util.Objects;
 
 public class SettingsImpl implements EditorSettings {
   @Nullable
-  private final EditorEx myEditor;
+  protected final EditorEx myEditor;
   @Nullable
   private final Language myLanguage;
   private Boolean myIsCamelWords;
@@ -60,9 +60,9 @@ public class SettingsImpl implements EditorSettings {
   private boolean myAutoCodeFoldingEnabled = true;
 
   // These comes from CodeStyleSettings
-  private Integer myTabSize = null;
-  private Integer myCachedTabSize = null;
-  private Boolean myUseTabCharacter = null;
+  protected Integer myTabSize = null;
+  protected Integer myCachedTabSize = null;
+  protected Boolean myUseTabCharacter = null;
 
   // These comes from EditorSettingsExternalizable defaults.
   private Boolean myIsVirtualSpace = null;
@@ -383,12 +383,12 @@ public class SettingsImpl implements EditorSettings {
         tabSize = CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).TAB_SIZE;
       }
     }
-    myCachedTabSize = Integer.valueOf(tabSize);
+    myCachedTabSize = tabSize;
     return tabSize;
   }
 
   @Nullable
-  private PsiFile getPsiFile(@Nullable Project project) {
+  protected PsiFile getPsiFile(@Nullable Project project) {
     if (project != null && myEditor != null) {
       return PsiDocumentManager.getInstance(project).getPsiFile(myEditor.getDocument());
     }

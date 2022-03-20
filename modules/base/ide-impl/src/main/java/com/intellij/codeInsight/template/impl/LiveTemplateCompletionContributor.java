@@ -5,7 +5,7 @@ import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
 import com.intellij.codeInsight.template.CustomLiveTemplate;
 import com.intellij.codeInsight.template.CustomLiveTemplateBase;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
-import com.intellij.codeInsight.template.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;

@@ -27,6 +27,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
@@ -56,8 +57,9 @@ public class FileDropHandler implements EditorDropHandler {
     return transferFlavors != null && FileCopyPasteUtil.isFileListFlavorAvailable(transferFlavors);
   }
 
+  @RequiredUIAccess
   @Override
-  public void handleDrop(@Nonnull final Transferable t, @Nullable final Project project, FileEditorWindow editorWindow) {
+  public void handleDrop(@Nonnull final Transferable t, @Nullable final Project project, Object editorWindow) {
     if (project != null) {
       final List<File> fileList = FileCopyPasteUtil.getFileList(t);
       if (fileList != null) {
@@ -70,7 +72,8 @@ public class FileDropHandler implements EditorDropHandler {
     }
   }
 
-  private void openFiles(final Project project, final List<File> fileList, FileEditorWindow editorWindow) {
+  @RequiredUIAccess
+  private void openFiles(final Project project, final List<File> fileList, Object editorWindow) {
     if (editorWindow == null && myEditor != null) {
       editorWindow = findEditorWindow(project);
     }
@@ -82,7 +85,7 @@ public class FileDropHandler implements EditorDropHandler {
         NonProjectFileWritingAccessProvider.allowWriting(vFile);
 
         if (editorWindow != null) {
-          fileEditorManager.openFileWithProviders(vFile, true, editorWindow);
+          fileEditorManager.openFileWithProviders(vFile, true, (FileEditorWindow)editorWindow);
         }
         else {
           new OpenFileDescriptorImpl(project, vFile).navigate(true);

@@ -51,6 +51,7 @@ import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
+import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.language.editor.highlight.*;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;

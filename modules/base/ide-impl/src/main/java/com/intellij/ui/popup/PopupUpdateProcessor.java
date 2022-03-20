@@ -18,12 +18,12 @@ package com.intellij.ui.popup;
 
 import com.intellij.codeInsight.completion.CompletionUtil;
 import com.intellij.codeInsight.documentation.DocumentationManager;
-import com.intellij.codeInsight.lookup.*;
 import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.project.Project;
 import consulo.ui.ex.popup.PopupUpdateProcessorBase;

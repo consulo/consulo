@@ -16,6 +16,8 @@
 
 package com.intellij.codeInsight.template;
 
+import consulo.language.editor.template.context.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.file.LanguageFileType;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;

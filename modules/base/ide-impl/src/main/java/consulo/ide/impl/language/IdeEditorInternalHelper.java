@@ -22,6 +22,8 @@ import consulo.codeEditor.internal.EditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.action.LanguageWordBoundaryFilter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
@@ -87,5 +89,12 @@ public class IdeEditorInternalHelper extends EditorInternalHelper {
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean isLexemeBoundary(@Nullable Object left, @Nullable Object right) {
+    IElementType leftTokenType = (IElementType)left;
+    IElementType rightTokenType = (IElementType)right;
+    return leftTokenType != null && rightTokenType != null && LanguageWordBoundaryFilter.INSTANCE.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
   }
 }

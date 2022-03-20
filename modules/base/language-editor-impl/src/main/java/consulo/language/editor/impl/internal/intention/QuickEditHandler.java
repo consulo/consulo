@@ -15,12 +15,6 @@
  */
 package consulo.language.editor.impl.internal.intention;
 
-import com.intellij.codeInsight.template.TemplateManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -45,9 +39,6 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
-import consulo.ide.impl.psi.impl.source.tree.injected.InjectedLanguageUtil;
-import consulo.ide.impl.psi.impl.source.tree.injected.PlaceImpl;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.editor.action.CopyPastePreProcessor;
@@ -57,6 +48,8 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.psi.internal.FileContextUtil;
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.PlaceImpl;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
@@ -79,6 +72,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -132,7 +126,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
     // preserve \r\n as it is done in MultiHostRegistrarImpl
     myNewFile = factory.createFileFromText(newFileName, language, text, true, false);
-    myNewVirtualFile = ObjectUtils.assertNotNull((LightVirtualFile)myNewFile.getVirtualFile());
+    myNewVirtualFile = ObjectUtil.assertNotNull((LightVirtualFile)myNewFile.getVirtualFile());
     myNewVirtualFile.setOriginalFile(origFile.getVirtualFile());
 
     assert myNewFile != null : "PSI file is null";
@@ -148,7 +142,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
     myOrigCreationStamp = myOrigDocument.getModificationStamp(); // store creation stamp for UNDO tracking
     myOrigDocument.addDocumentListener(this, this);
     myNewDocument.addDocumentListener(this, this);
-    EditorFactory editorFactory = ObjectUtils.assertNotNull(EditorFactory.getInstance());
+    EditorFactory editorFactory = ObjectUtil.assertNotNull(EditorFactory.getInstance());
     // not FileEditorManager listener because of RegExp checker and alike
     editorFactory.addEditorFactoryListener(new EditorFactoryAdapter() {
 

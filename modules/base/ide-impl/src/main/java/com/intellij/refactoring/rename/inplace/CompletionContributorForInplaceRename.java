@@ -19,7 +19,7 @@ import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.codeEditor.Editor;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredReadAction;
@@ -34,7 +34,7 @@ public class CompletionContributorForInplaceRename extends CompletionContributor
   @Override
   public void fillCompletionVariants(@Nonnull CompletionParameters parameters, @Nonnull CompletionResultSet result) {
     final Editor editor = parameters.getEditor();
-    final TemplateState state = TemplateManagerImpl.getTemplateState(editor);
+    final TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (state != null) {
       if (editor.getUserData(InplaceRefactoring.INPLACE_RENAMER) != null && parameters.getInvocationCount() == 0) {
         result.stopHere();

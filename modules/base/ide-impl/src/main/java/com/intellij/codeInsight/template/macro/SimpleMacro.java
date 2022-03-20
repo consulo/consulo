@@ -16,7 +16,8 @@
 
 package com.intellij.codeInsight.template.macro;
 
-import com.intellij.codeInsight.template.*;
+import consulo.language.editor.template.*;
+import consulo.language.editor.template.macro.Macro;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

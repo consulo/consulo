@@ -19,7 +19,7 @@ package com.intellij.codeInsight.template.impl;
 import consulo.language.editor.completion.lookup.LookupItem;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;
 import consulo.language.editor.completion.lookup.ElementLookupRenderer;
-import com.intellij.codeInsight.template.Template;
+import consulo.language.editor.template.Template;
 
 /**
  * @author yole

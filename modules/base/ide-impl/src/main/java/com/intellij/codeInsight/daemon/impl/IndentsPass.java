@@ -20,7 +20,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
-import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
+import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.codeEditor.*;
 import consulo.language.Language;
 import consulo.language.parser.LanguageParserDefinitions;

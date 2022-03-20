@@ -7,7 +7,7 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.generation.surroundWith.SurroundWithHandler;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.template.CustomLiveTemplate;
-import com.intellij.codeInsight.template.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;

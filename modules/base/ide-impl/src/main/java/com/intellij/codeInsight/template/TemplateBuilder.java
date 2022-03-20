@@ -18,6 +18,7 @@ package com.intellij.codeInsight.template;
 
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
+import consulo.language.editor.template.Expression;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 

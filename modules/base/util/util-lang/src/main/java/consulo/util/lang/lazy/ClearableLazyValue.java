@@ -29,12 +29,12 @@ public interface ClearableLazyValue<T> extends LazyValue<T> {
   }
 
   @Nonnull
-  static <K> LazyValue<K> nullable(@Nonnull Supplier<K> factory) {
+  static <K> ClearableLazyValue<K> nullable(@Nonnull Supplier<K> factory) {
     return new ClearableNullableLazyValueImpl<>(factory);
   }
 
   @Nonnull
-  static <K> LazyValue<K> notNull(@Nonnull Supplier<K> factory) {
+  static <K> ClearableLazyValue<K> notNull(@Nonnull Supplier<K> factory) {
     return new ClearableDefaultLazyValueImpl<>(factory);
   }
 

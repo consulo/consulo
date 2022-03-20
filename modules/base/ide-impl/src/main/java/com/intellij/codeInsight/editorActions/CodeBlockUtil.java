@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.codeInsight.highlighting.BraceMatchingUtil;
+import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.IndentGuideDescriptor;
 import consulo.codeEditor.LogicalPosition;

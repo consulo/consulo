@@ -16,7 +16,10 @@
 
 package com.intellij.codeInsight.template;
 
-import com.intellij.codeInsight.template.impl.ConstantNode;
+import consulo.language.editor.template.ConstantNode;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateManager;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;

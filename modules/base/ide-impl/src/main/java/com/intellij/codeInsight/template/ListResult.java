@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.template;
 
 import consulo.document.Document;
+import consulo.language.editor.template.Result;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 

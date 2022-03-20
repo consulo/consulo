@@ -26,6 +26,7 @@ import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -73,5 +74,9 @@ public class EditorInternalHelper {
   @Nullable
   public String getProperIndent(Document document, int offset) {
     return null;
+  }
+
+  public boolean isLexemeBoundary(@Nullable Object leftTokenType, @Nullable Object rightTokenType) {
+    return !Objects.equals(leftTokenType, rightTokenType);
   }
 }

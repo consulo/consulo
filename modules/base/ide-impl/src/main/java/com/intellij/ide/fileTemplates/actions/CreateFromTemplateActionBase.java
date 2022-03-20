@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.fileTemplates.actions;
 
-import com.intellij.codeInsight.template.TemplateManager;
+import consulo.language.editor.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.TemplateImpl;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.fileTemplates.FileTemplate;

@@ -20,7 +20,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.component.persist.*;
 import consulo.component.util.localize.AbstractBundle;
-import com.intellij.codeInsight.template.Template;
+import consulo.language.editor.template.Template;
 import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;

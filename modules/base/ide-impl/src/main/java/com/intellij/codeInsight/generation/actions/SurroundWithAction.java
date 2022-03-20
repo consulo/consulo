@@ -5,7 +5,7 @@ package com.intellij.codeInsight.generation.actions;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.generation.surroundWith.SurroundWithHandler;
-import com.intellij.codeInsight.template.TemplateActionContext;
+import consulo.language.editor.template.context.TemplateActionContext;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.language.Language;
 import com.intellij.lang.LanguageSurrounders;

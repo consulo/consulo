@@ -16,8 +16,9 @@
 
 package com.intellij.codeInsight.template.macro;
 
-import com.intellij.codeInsight.template.ExpressionContext;
+import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.template.TemplateCompletionProcessor;
 import consulo.language.psi.PsiFileSystemItem;
 
 /**

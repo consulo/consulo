@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.template.macro;
 
-import com.intellij.codeInsight.template.Expression;
-import com.intellij.codeInsight.template.ExpressionContext;
+import consulo.language.editor.template.Expression;
+import consulo.language.editor.template.ExpressionContext;
 
 /**
  * @author yole

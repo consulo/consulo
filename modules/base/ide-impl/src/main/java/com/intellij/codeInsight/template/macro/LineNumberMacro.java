@@ -17,7 +17,9 @@
 package com.intellij.codeInsight.template.macro;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.template.*;
+import consulo.language.editor.template.*;
+import consulo.language.editor.template.macro.Macro;
+
 import javax.annotation.Nonnull;
 
 public class LineNumberMacro extends Macro {

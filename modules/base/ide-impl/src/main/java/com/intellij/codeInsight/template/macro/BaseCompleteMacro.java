@@ -16,31 +16,29 @@
 
 package com.intellij.codeInsight.template.macro;
 
-import com.intellij.codeInsight.lookup.*;
-import com.intellij.codeInsight.template.*;
-import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.command.WriteCommandAction;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
-import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.command.WriteCommandAction;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
+import consulo.language.editor.template.*;
+import consulo.language.editor.template.macro.Macro;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.util.PsiUtilBase;
-import org.jetbrains.annotations.NonNls;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
 
 import javax.annotation.Nonnull;
 
 public abstract class BaseCompleteMacro extends Macro {
   private final String myName;
 
-  protected BaseCompleteMacro(@NonNls String name) {
+  protected BaseCompleteMacro(String name) {
     myName = name;
   }
 
@@ -62,14 +60,12 @@ public abstract class BaseCompleteMacro extends Macro {
 
   @Override
   public final Result calculateResult(@Nonnull Expression[] params, final ExpressionContext context) {
-    return new InvokeActionResult(
-      new Runnable() {
-        @Override
-        public void run() {
-          invokeCompletion(context);
-        }
+    return new InvokeActionResult(new Runnable() {
+      @Override
+      public void run() {
+        invokeCompletion(context);
       }
-    );
+    });
   }
 
   private void invokeCompletion(final ExpressionContext context) {
@@ -100,13 +96,14 @@ public abstract class BaseCompleteMacro extends Macro {
     };
     if (ApplicationManager.getApplication().isUnitTestMode()) {
       runnable.run();
-    } else {
+    }
+    else {
       ApplicationManager.getApplication().invokeLater(runnable);
     }
   }
 
   private static void considerNextTab(Editor editor) {
-    TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+    TemplateState templateState = TemplateManager.getInstance(editor.getProject()).getTemplateState(editor);
     if (templateState != null) {
       TextRange range = templateState.getCurrentVariableRange();
       if (range != null && range.getLength() > 0) {
@@ -140,7 +137,7 @@ public abstract class BaseCompleteMacro extends Macro {
         return;
       }
 
-      for(TemplateCompletionProcessor processor: TemplateCompletionProcessor.EP_NAME.getExtensionList()) {
+      for (TemplateCompletionProcessor processor : TemplateCompletionProcessor.EP_NAME.getExtensionList()) {
         if (!processor.nextTabOnItemSelected(myContext, item)) {
           return;
         }
@@ -150,7 +147,7 @@ public abstract class BaseCompleteMacro extends Macro {
       if (project == null) {
         return;
       }
-      
+
       Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -167,7 +164,8 @@ public abstract class BaseCompleteMacro extends Macro {
       };
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         runnable.run();
-      } else {
+      }
+      else {
         ApplicationManager.getApplication().invokeLater(runnable, ModalityState.current(), project.getDisposed());
       }
 

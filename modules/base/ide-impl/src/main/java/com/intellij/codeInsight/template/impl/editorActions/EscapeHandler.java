@@ -20,7 +20,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
@@ -36,7 +36,7 @@ public class EscapeHandler extends EditorActionHandler {
 
   @Override
   public void execute(Editor editor, DataContext dataContext) {
-    TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+    TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       SelectionModel selectionModel = editor.getSelectionModel();
       LookupImpl lookup = (LookupImpl)LookupManager.getActiveLookup(editor);
@@ -60,7 +60,7 @@ public class EscapeHandler extends EditorActionHandler {
 
   @Override
   public boolean isEnabled(Editor editor, DataContext dataContext) {
-    final TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+    final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       return true;
     }

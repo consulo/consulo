@@ -32,6 +32,10 @@ module consulo.language.editor.api {
   exports consulo.language.editor.inspection.scheme.event;
   exports consulo.language.editor.intention;
   exports consulo.language.editor.scope;
+  exports consulo.language.editor.template;
+  exports consulo.language.editor.template.macro;
+  exports consulo.language.editor.template.context;
+  exports consulo.language.editor.template.event;
   exports consulo.language.editor.surroundWith;
   exports consulo.language.editor.refactoring;
   exports consulo.language.editor.refactoring.rename;

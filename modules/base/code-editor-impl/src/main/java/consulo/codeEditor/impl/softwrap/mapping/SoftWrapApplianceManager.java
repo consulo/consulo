@@ -213,7 +213,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
       LOG.error("Soft wrapping is not supported for documents with non-standard line endings. File: " + myEditor.getVirtualFile());
     }
     if (myInProgress) {
-      LOG.error("Detected race condition at soft wraps recalculation", new Throwable(), AttachmentFactory.createContext(myEditor.dumpState(), event));
+      LOG.error("Detected race condition at soft wraps recalculation", new Throwable(), AttachmentFactoryUtil.createContext(myEditor.dumpState(), event));
     }
     myInProgress = true;
     try {
@@ -227,7 +227,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
         LOG.debug("Soft wrap recalculation done: " + event.toString() + ". " + (event.getActualEndOffset() - event.getStartOffset()) + " characters processed");
       }
       if (event.getActualEndOffset() > endOffsetUpperEstimate) {
-        LOG.error("Unexpected error at soft wrap recalculation", consulo.logging.attachment.AttachmentFactory.get().create("softWrapModel.txt", myEditor.getSoftWrapModel().toString()));
+        LOG.error("Unexpected error at soft wrap recalculation", AttachmentFactory.get().create("softWrapModel.txt", myEditor.getSoftWrapModel().toString()));
       }
       notifyListenersOnCacheUpdateEnd(event);
       myEventBeingProcessed = null;

@@ -16,8 +16,10 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.codeInsight.template.Expression;
+import consulo.language.editor.template.Expression;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.template.macro.MacroParser;
+import consulo.language.editor.template.Variable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;

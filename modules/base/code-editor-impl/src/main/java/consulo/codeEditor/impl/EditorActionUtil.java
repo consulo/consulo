@@ -30,6 +30,7 @@ import consulo.codeEditor.action.CaretStopPolicy;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.EditorInternalHelper;
 import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.util.EditorModificationUtil;
 import consulo.codeEditor.util.EditorUtil;
@@ -251,8 +252,8 @@ public class EditorActionUtil {
     return !Comparing.equal(leftToken, rightToken);
   }
 
-  private static boolean isLexemeBoundary(@Nullable IElementType leftTokenType, @Nullable IElementType rightTokenType) {
-    return leftTokenType != null && rightTokenType != null && LanguageWordBoundaryFilter.INSTANCE.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
+  private static boolean isLexemeBoundary(@Nonnull Project project, @Nullable IElementType leftTokenType, @Nullable IElementType rightTokenType) {
+    return EditorInternalHelper.getInstance(project).isLexemeBoundary(leftTokenType, rightTokenType);
   }
 
   public static boolean isWordStart(@Nonnull CharSequence text, int offset, boolean isCamel) {
@@ -904,36 +905,43 @@ public class EditorActionUtil {
     final int offset = editor.getCaretModel().getOffset();
     if (offset == minOffset) return minOffset;
 
+    Project project = editor.getProject();
     final CharSequence text = editor.getDocument().getCharsSequence();
     final HighlighterIterator tokenIterator = createHighlighterIteratorAtOffset(editor, offset - 1);
 
-    final int newOffset = getPreviousWordStopOffset(text, wordStop, tokenIterator, offset, minOffset, isCamel);
+    final int newOffset = getPreviousWordStopOffset(project, text, wordStop, tokenIterator, offset, minOffset, isCamel);
     if (newOffset > minOffset && handleQuoted && tokenIterator != null && isTokenEnd(tokenIterator, newOffset + 1) && isQuotedToken(tokenIterator, text)) {
       // at the start of a closing quote:  "word|" <- "word" |
       // find the end of an opening quote: "|word" <- "word|"  (must be only a single step away)
-      final int newOffsetAfterQuote = getPreviousWordStopOffset(text, CaretStop.BOTH, tokenIterator, newOffset, minOffset, isCamel);
+      final int newOffsetAfterQuote = getPreviousWordStopOffset(project, text, CaretStop.BOTH, tokenIterator, newOffset, minOffset, isCamel);
       if (isTokenStart(tokenIterator, newOffsetAfterQuote - 1)) {
-        return getPreviousWordStopOffset(text, wordStop, tokenIterator, newOffsetAfterQuote, minOffset, isCamel); // |"word"
+        return getPreviousWordStopOffset(project, text, wordStop, tokenIterator, newOffsetAfterQuote, minOffset, isCamel); // |"word"
       }
     }
     return newOffset;
   }
 
-  private static int getPreviousWordStopOffset(@Nonnull CharSequence text, @Nonnull CaretStop wordStop, @Nullable HighlighterIterator tokenIterator, int offset, int minOffset, boolean isCamel) {
+  private static int getPreviousWordStopOffset(@Nonnull Project project,
+                                               @Nonnull CharSequence text,
+                                               @Nonnull CaretStop wordStop,
+                                               @Nullable HighlighterIterator tokenIterator,
+                                               int offset,
+                                               int minOffset,
+                                               boolean isCamel) {
     int newOffset = offset - 1;
     for (; newOffset > minOffset; newOffset--) {
-      final boolean isTokenBoundary = tokenIterator != null && retreatTokenOnBoundary(tokenIterator, text, newOffset);
+      final boolean isTokenBoundary = tokenIterator != null && retreatTokenOnBoundary(project, tokenIterator, text, newOffset);
       if (isWordStopOffset(text, wordStop, newOffset, isCamel, isTokenBoundary)) break;
     }
     return newOffset;
   }
 
-  private static boolean retreatTokenOnBoundary(@Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
+  private static boolean retreatTokenOnBoundary(@Nonnull Project project, @Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
     if (isTokenStart(tokenIterator, offset)) {
       final IElementType rightToken = (IElementType)tokenIterator.getTokenType();
       final boolean wasQuotedToken = isQuotedToken(tokenIterator, text);
       tokenIterator.retreat();
-      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary((IElementType)tokenIterator.getTokenType(), rightToken);
+      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary(project, (IElementType)tokenIterator.getTokenType(), rightToken);
     }
     return isQuotedTokenInnardsBoundary(tokenIterator, text, offset);
   }
@@ -980,34 +988,41 @@ public class EditorActionUtil {
 
     final CharSequence text = editor.getDocument().getCharsSequence();
     final HighlighterIterator tokenIterator = createHighlighterIteratorAtOffset(editor, offset);
+    Project project = editor.getProject();
 
-    final int newOffset = getNextWordStopOffset(text, wordStop, tokenIterator, offset, maxOffset, isCamel);
+    final int newOffset = getNextWordStopOffset(project, text, wordStop, tokenIterator, offset, maxOffset, isCamel);
     if (newOffset < maxOffset && handleQuoted && tokenIterator != null && isTokenStart(tokenIterator, newOffset - 1) && isQuotedToken(tokenIterator, text)) {
       // now at the end of an opening quote: | "word" -> "|word"
       // find the start of a closing quote:   "|word" -> "word|"  (must be only a single step away)
-      final int newOffsetBeforeQuote = getNextWordStopOffset(text, CaretStop.BOTH, tokenIterator, newOffset, maxOffset, isCamel);
+      final int newOffsetBeforeQuote = getNextWordStopOffset(project, text, CaretStop.BOTH, tokenIterator, newOffset, maxOffset, isCamel);
       if (isTokenEnd(tokenIterator, newOffsetBeforeQuote + 1)) {
-        return getNextWordStopOffset(text, wordStop, tokenIterator, newOffsetBeforeQuote, maxOffset, isCamel); // "word"|
+        return getNextWordStopOffset(project, text, wordStop, tokenIterator, newOffsetBeforeQuote, maxOffset, isCamel); // "word"|
       }
     }
     return newOffset;
   }
 
-  private static int getNextWordStopOffset(@Nonnull CharSequence text, @Nonnull CaretStop wordStop, @Nullable HighlighterIterator tokenIterator, int offset, int maxOffset, boolean isCamel) {
+  private static int getNextWordStopOffset(@Nonnull Project project,
+                                           @Nonnull CharSequence text,
+                                           @Nonnull CaretStop wordStop,
+                                           @Nullable HighlighterIterator tokenIterator,
+                                           int offset,
+                                           int maxOffset,
+                                           boolean isCamel) {
     int newOffset = offset + 1;
     for (; newOffset < maxOffset; newOffset++) {
-      final boolean isTokenBoundary = tokenIterator != null && advanceTokenOnBoundary(tokenIterator, text, newOffset);
+      final boolean isTokenBoundary = tokenIterator != null && advanceTokenOnBoundary(project, tokenIterator, text, newOffset);
       if (isWordStopOffset(text, wordStop, newOffset, isCamel, isTokenBoundary)) break;
     }
     return newOffset;
   }
 
-  private static boolean advanceTokenOnBoundary(@Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
+  private static boolean advanceTokenOnBoundary(@Nonnull Project project, @Nonnull HighlighterIterator tokenIterator, @Nonnull CharSequence text, int offset) {
     if (isTokenEnd(tokenIterator, offset)) {
       final IElementType leftToken = (IElementType)tokenIterator.getTokenType();
       final boolean wasQuotedToken = isQuotedToken(tokenIterator, text);
       tokenIterator.advance();
-      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary(leftToken, (IElementType)tokenIterator.getTokenType());
+      return wasQuotedToken || isQuotedToken(tokenIterator, text) || !isBetweenWhitespaces(text, offset) && isLexemeBoundary(project, leftToken, (IElementType)tokenIterator.getTokenType());
     }
     return isQuotedTokenInnardsBoundary(tokenIterator, text, offset);
   }

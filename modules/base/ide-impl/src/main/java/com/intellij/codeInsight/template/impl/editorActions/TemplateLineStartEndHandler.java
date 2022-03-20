@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl.editorActions;
 
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -42,7 +42,7 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler {
 
   @Override
   protected boolean isEnabledForCaret(@Nonnull Editor editor, @Nonnull Caret caret, DataContext dataContext) {
-    TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+    TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       TextRange range = templateState.getCurrentVariableRange();
       int caretOffset = editor.getCaretModel().getOffset();
@@ -53,7 +53,7 @@ public abstract class TemplateLineStartEndHandler extends EditorActionHandler {
 
   @Override
   protected void doExecute(Editor editor, @Nullable Caret caret, DataContext dataContext) {
-    final TemplateState templateState = TemplateManagerImpl.getTemplateState(editor);
+    final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(editor);
     if (templateState != null && !templateState.isFinished()) {
       final TextRange range = templateState.getCurrentVariableRange();
       final int caretOffset = editor.getCaretModel().getOffset();

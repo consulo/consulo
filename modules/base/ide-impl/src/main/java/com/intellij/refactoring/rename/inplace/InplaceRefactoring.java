@@ -17,78 +17,82 @@ package com.intellij.refactoring.rename.inplace;
 
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import consulo.language.editor.completion.lookup.LookupFocusDegree;
-import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
-import com.intellij.codeInsight.template.*;
+import com.intellij.codeInsight.template.TemplateBuilderImpl;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateState;
-import consulo.codeEditor.*;
-import consulo.language.file.inject.VirtualFileWindow;
-import consulo.language.Language;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import com.intellij.lang.LanguageNamesValidation;
-import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.lang.refactoring.NamesValidator;
-import consulo.ui.ex.action.Shortcut;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
-import consulo.undoRedo.util.UndoUtil;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.fileEditor.TextEditor;
-import consulo.document.Document;
-import consulo.document.RangeMarker;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.module.content.ProjectRootManager;
-import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.BalloonBuilder;
-import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.psi.reference.PsiMultiReference;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.psi.scope.LocalSearchScope;
-import consulo.project.content.scope.ProjectScopes;
-import consulo.language.psi.search.PsiSearchHelper;
-import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
-import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.ui.DottedBorder;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.PopupFactoryImpl;
-import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.Query;
-import consulo.util.collection.Stack;
-import consulo.ui.ex.PositionTracker;
+import consulo.application.ApplicationManager;
 import consulo.application.Result;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.util.Query;
+import consulo.application.util.function.CommonProcessors;
+import consulo.codeEditor.*;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
+import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.ide.impl.psi.search.searches.ReferencesSearch;
+import consulo.language.Language;
+import consulo.language.editor.completion.lookup.LookupFocusDegree;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.template.TemplateState;
+import consulo.language.editor.template.TextResult;
+import consulo.language.editor.template.event.TemplateEditingAdapter;
+import consulo.language.file.FileViewProvider;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.impl.psi.reference.PsiMultiReference;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.psi.*;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.PsiSearchHelper;
+import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.content.scope.ProjectScopes;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.PositionTracker;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.BalloonBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.util.UndoUtil;
+import consulo.util.collection.Stack;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -327,7 +331,7 @@ public abstract class InplaceRefactoring {
         }
 
         revertState();
-        final TemplateState templateState = TemplateManagerImpl.getTemplateState(InjectedLanguageUtil.getTopLevelEditor(myEditor));
+        final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(InjectedLanguageUtil.getTopLevelEditor(myEditor));
         if (templateState != null) {
           templateState.gotoEnd(true);
         }
@@ -398,7 +402,7 @@ public abstract class InplaceRefactoring {
     //add highlights
     if (myHighlighters != null) { // can be null if finish is called during testing
       Map<TextRange, TextAttributes> rangesToHighlight = new HashMap<TextRange, TextAttributes>();
-      final TemplateState templateState = TemplateManagerImpl.getTemplateState(topLevelEditor);
+      final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(topLevelEditor);
       if (templateState != null) {
         EditorColorsManager colorsManager = EditorColorsManager.getInstance();
         for (int i = 0; i < templateState.getSegmentsCount(); i++) {
@@ -459,7 +463,7 @@ public abstract class InplaceRefactoring {
         for (FileEditor editor : editors) {
           if (editor instanceof TextEditor) {
             final Editor textEditor = ((TextEditor)editor).getEditor();
-            final TemplateState templateState = TemplateManagerImpl.getTemplateState(textEditor);
+            final TemplateStateImpl templateState = TemplateManagerImpl.getTemplateStateImpl(textEditor);
             if (templateState != null) {
               if (exitCode == DialogWrapper.OK_EXIT_CODE) {
                 final TextRange range = templateState.getVariableRange(PRIMARY_VARIABLE_NAME);
@@ -613,7 +617,7 @@ public abstract class InplaceRefactoring {
         ApplicationManager.getApplication().runWriteAction(new Runnable() {
           @Override
           public void run() {
-            final TemplateState state = TemplateManagerImpl.getTemplateState(topLevelEditor);
+            final TemplateStateImpl state = TemplateManagerImpl.getTemplateStateImpl(topLevelEditor);
             assert state != null;
             final int segmentsCount = state.getSegmentsCount();
             final Document document = topLevelEditor.getDocument();
@@ -889,7 +893,7 @@ public abstract class InplaceRefactoring {
       finally {
         if (!bind) {
           try {
-            ((DesktopEditorImpl)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
+            ((RealEditor)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
           }
           finally {
             FinishMarkAction.finish(myProject, myEditor, myMarkAction);

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.codeInsight.template.TemplateManager;
+import consulo.language.editor.template.TemplateManager;
 import com.intellij.formatting.FormatConstants;
 import consulo.codeEditor.*;
 import consulo.codeEditor.impl.LanguageLineWrapPositionStrategy;
