@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.intellij.ide;
+package consulo.ui.ex;
 
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
-public interface PasteProvider {
-  Key<PasteProvider> KEY = Key.create(PasteProvider.class);
+public interface DeleteProvider {
+  Key<DeleteProvider> KEY = Key.create(DeleteProvider.class);
 
-  void performPaste(@Nonnull DataContext dataContext);
+  void deleteElement(@Nonnull DataContext dataContext);
 
-  /**
-   * Should perform fast and memory cheap negation. May return incorrect true.
-   * See #12326
-   */
-  boolean isPastePossible(@Nonnull DataContext dataContext);
-
-  boolean isPasteEnabled(@Nonnull DataContext dataContext);
+  boolean canDeleteElement(@Nonnull DataContext dataContext);
 }

@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import com.intellij.ide.DeleteProvider;
+import consulo.ui.ex.DeleteProvider;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;
 import consulo.project.Project;

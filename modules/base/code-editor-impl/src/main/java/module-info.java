@@ -17,6 +17,13 @@ module consulo.code.editor.impl {
 
   requires consulo.injecting.api;
 
-  exports consulo.codeEditor.impl to consulo.ide.impl, consulo.desktop.ide.impl;
-  exports consulo.codeEditor.impl.util to consulo.ide.impl, consulo.desktop.ide.impl;
+  exports consulo.codeEditor.impl to
+          consulo.ide.impl,
+          consulo.language.inject.impl,
+          consulo.desktop.ide.impl;
+  
+  exports consulo.codeEditor.impl.util to
+          consulo.ide.impl,
+          consulo.language.inject.impl,
+          consulo.desktop.ide.impl;
 }

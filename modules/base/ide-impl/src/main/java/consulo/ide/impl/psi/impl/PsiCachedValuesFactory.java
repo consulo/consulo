@@ -3,6 +3,7 @@
 package consulo.ide.impl.psi.impl;
 
 import com.intellij.util.CachedValuesFactory;
+import consulo.language.impl.psi.internal.PsiParameterizedCachedValue;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;

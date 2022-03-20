@@ -3,7 +3,7 @@ package com.intellij.execution.console;
 
 import com.intellij.ide.GeneralSettings;
 import com.intellij.openapi.actionSystem.EmptyAction;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;

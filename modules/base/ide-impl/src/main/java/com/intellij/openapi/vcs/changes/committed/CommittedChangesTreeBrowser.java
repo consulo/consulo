@@ -1,6 +1,6 @@
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.ide.CopyProvider;
+import consulo.ui.ex.CopyProvider;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.TreeExpander;
 import com.intellij.ide.actions.ContextHelpAction;

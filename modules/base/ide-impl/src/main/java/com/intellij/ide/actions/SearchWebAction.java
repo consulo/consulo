@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import consulo.component.util.localize.BundleBase;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.CopyProvider;
+import consulo.ui.ex.CopyProvider;
 import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.ui.ex.awt.CopyPasteManager;

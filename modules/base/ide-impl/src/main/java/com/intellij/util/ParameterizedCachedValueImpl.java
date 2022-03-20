@@ -16,6 +16,7 @@
 
 package com.intellij.util;
 
+import consulo.language.impl.psi.internal.CachedValueBase;
 import consulo.project.Project;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.ParameterizedCachedValue;

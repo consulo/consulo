@@ -6,7 +6,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
@@ -295,7 +295,7 @@ public class InjectedLanguageUtil {
     if (!documentWindow.isValid()) {
       return hostEditor; // since the moment we got hold of injectedFile and this moment call, document may have been dirtied
     }
-    return EditorWindowImpl.create(documentWindow, (EditorInternal)hostEditor, injectedFile);
+    return EditorWindowImpl.create(documentWindow, (RealEditor)hostEditor, injectedFile);
   }
 
   /**
@@ -563,7 +563,7 @@ public class InjectedLanguageUtil {
     Editor editor = FileEditorManager.getInstance(project).openTextEditor(OpenFileDescriptorFactory.getInstance(project).builder(virtualFile).build(), false);
     if (editor == null || editor instanceof EditorWindow || editor.isDisposed()) return editor;
     if (document instanceof DocumentWindowImpl) {
-      return EditorWindowImpl.create((DocumentWindowImpl)document, (EditorInternal)editor, file);
+      return EditorWindowImpl.create((DocumentWindowImpl)document, (RealEditor)editor, file);
     }
     return editor;
   }

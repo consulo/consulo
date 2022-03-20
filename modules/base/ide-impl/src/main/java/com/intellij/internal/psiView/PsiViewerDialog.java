@@ -25,7 +25,7 @@ import com.intellij.internal.psiView.formattingblocks.BlockTreeStructure;
 import consulo.language.codeStyle.LanguageFormatting;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ui.ex.awt.DialogWrapper;

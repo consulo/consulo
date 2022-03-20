@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.impl.dataRules;
 
-import com.intellij.ide.PasteProvider;
+import consulo.ui.ex.PasteProvider;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.Editor;

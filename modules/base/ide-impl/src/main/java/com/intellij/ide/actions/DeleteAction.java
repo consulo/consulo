@@ -16,7 +16,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.DeleteProvider;
+import consulo.ui.ex.DeleteProvider;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.TitledHandler;
 import com.intellij.openapi.actionSystem.*;

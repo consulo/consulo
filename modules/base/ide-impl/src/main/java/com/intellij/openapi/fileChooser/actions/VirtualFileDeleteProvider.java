@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser.actions;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.DeleteProvider;
+import consulo.ui.ex.DeleteProvider;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.ApplicationBundle;

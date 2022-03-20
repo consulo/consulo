@@ -35,6 +35,25 @@ import java.util.function.Predicate;
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
 
+  @Contract(pure = true)
+  public static <T> boolean intersects(@Nonnull Collection<? extends T> collection1, @Nonnull Collection<? extends T> collection2) {
+    if (collection1.size() <= collection2.size()) {
+      for (T t : collection1) {
+        if (collection2.contains(t)) {
+          return true;
+        }
+      }
+    }
+    else {
+      for (T t : collection2) {
+        if (collection1.contains(t)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static <T> List<T> subList(@Nonnull List<T> list, int from) {

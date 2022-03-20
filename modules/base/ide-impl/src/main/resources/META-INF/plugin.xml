@@ -674,7 +674,7 @@
     <extensionPoint name="inspectionElementsMerger" interface="com.intellij.codeInspection.ex.InspectionElementsMerger"/>
     <extensionPoint name="codeInspection.InspectionExtension" interface="consulo.language.editor.inspection.InspectionExtensionsFactory"/>
 
-    <extensionPoint name="customPasteProvider" interface="com.intellij.ide.PasteProvider"/>
+    <extensionPoint name="customPasteProvider" interface="consulo.ui.ex.PasteProvider"/>
 
     <extensionPoint name="copyPastePreProcessor" interface="consulo.language.editor.action.CopyPastePreProcessor"/>
     <extensionPoint name="copyPastePostProcessor" interface="com.intellij.codeInsight.editorActions.CopyPastePostProcessor"/>
@@ -1009,7 +1009,7 @@
                     interface="com.intellij.codeInsight.navigation.MethodNavigationOffsetProvider"/>
 
     <extensionPoint name="filePasteProvider"
-                    interface="com.intellij.ide.PasteProvider"/>
+                    interface="consulo.ui.ex.PasteProvider"/>
 
     <extensionPoint name="testFinder"
                     interface="com.intellij.testIntegration.TestFinder"/>
@@ -1285,7 +1285,7 @@
                         serviceImplementation="com.intellij.ui.ExpandTipHandlerFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.keymap.KeymapGroupFactory"
                         serviceImplementation="com.intellij.openapi.keymap.impl.KeymapGroupFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.editor.highlighter.EditorHighlighterFactory"
+    <applicationService serviceInterface="consulo.language.editor.highlight.EditorHighlighterFactory"
                         serviceImplementation="com.intellij.openapi.editor.highlighter.EditorHighlighterFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.ide.dnd.DnDManager"
                         serviceImplementation="com.intellij.ide.dnd.DnDManagerImpl"/>

@@ -16,11 +16,13 @@
 package consulo.codeEditor.internal;
 
 import consulo.codeEditor.Caret;
+import consulo.codeEditor.EditorHighlighter;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -78,5 +80,11 @@ public class EditorInternalHelper {
 
   public boolean isLexemeBoundary(@Nullable Object leftTokenType, @Nullable Object rightTokenType) {
     return !Objects.equals(leftTokenType, rightTokenType);
+  }
+
+  public void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull final EditorHighlighter highlighter) {
+  }
+
+  public void updateNotifications(VirtualFile file) {
   }
 }

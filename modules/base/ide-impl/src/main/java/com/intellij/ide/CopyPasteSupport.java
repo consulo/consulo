@@ -15,9 +15,9 @@
  */
 package com.intellij.ide;
 
-import com.intellij.ide.CutProvider;
-import com.intellij.ide.CopyProvider;
-import com.intellij.ide.PasteProvider;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
+import consulo.ui.ex.PasteProvider;
 
 public interface CopyPasteSupport {
   CutProvider getCutProvider();

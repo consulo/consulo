@@ -16,6 +16,7 @@
 package com.intellij.ide;
 
 import consulo.dataContext.DataContext;
+import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

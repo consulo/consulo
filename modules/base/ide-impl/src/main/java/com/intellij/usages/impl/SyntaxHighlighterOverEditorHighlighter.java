@@ -21,7 +21,7 @@ import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.ex.util.LayeredHighlighterIterator;
 import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
 import consulo.codeEditor.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.plain.PlainTextFileType;

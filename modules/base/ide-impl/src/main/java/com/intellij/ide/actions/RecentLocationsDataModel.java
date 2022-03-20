@@ -24,7 +24,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.codeEditor.LightHighlighterClient;
 import consulo.codeEditor.markup.HighlighterTargetArea;

@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.highlighter;
+package consulo.language.editor.highlight;
 
-import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 
 public class HighlighterFactory {

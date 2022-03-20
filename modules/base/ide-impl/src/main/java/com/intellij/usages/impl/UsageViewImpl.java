@@ -6,6 +6,7 @@ import com.intellij.find.FindManager;
 import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.exclusion.ExclusionHandler;
+import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.*;
 import consulo.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.*;

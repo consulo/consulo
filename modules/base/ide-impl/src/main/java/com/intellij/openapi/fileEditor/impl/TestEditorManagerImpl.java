@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import com.intellij.ide.highlighter.HighlighterFactory;
+import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerEvent;

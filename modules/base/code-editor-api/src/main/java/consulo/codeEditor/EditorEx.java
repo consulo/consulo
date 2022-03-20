@@ -26,6 +26,10 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.PasteProvider;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
@@ -115,13 +119,13 @@ public interface EditorEx extends Editor {
 
   void setHorizontalScrollbarVisible(boolean b);
 
-  //CutProvider getCutProvider();
-  //
-  //CopyProvider getCopyProvider();
-  //
-  //PasteProvider getPasteProvider();
-  //
-  //DeleteProvider getDeleteProvider();
+  CutProvider getCutProvider();
+
+  CopyProvider getCopyProvider();
+
+  PasteProvider getPasteProvider();
+
+  DeleteProvider getDeleteProvider();
 
   default void repaint(int startOffset, int endOffset) {
     repaint(startOffset, endOffset, true);

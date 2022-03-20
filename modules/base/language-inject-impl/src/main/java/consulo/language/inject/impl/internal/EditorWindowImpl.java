@@ -5,6 +5,9 @@ package consulo.language.inject.impl.internal;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
+import consulo.codeEditor.impl.MarkupModelWindow;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsManager;
@@ -14,6 +17,7 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.internal.DocumentEx;
+import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.editor.inject.EditorWindow;
@@ -23,7 +27,10 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.PasteProvider;
 import consulo.util.collection.UnsafeWeakList;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
@@ -44,7 +51,7 @@ import java.util.function.IntFunction;
 
 class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, EditorEx {
   private final DocumentWindowImpl myDocumentWindow;
-  private final EditorInternal myDelegate;
+  private final RealEditor myDelegate;
   private volatile PsiFile myInjectedFile;
   private final boolean myOneLine;
   private final CaretModelWindow myCaretModelDelegate;
@@ -58,7 +65,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   private final InlayModelWindow myInlayModel;
 
   @Nonnull
-  static Editor create(@Nonnull final DocumentWindowImpl documentRange, @Nonnull final EditorInternal editor, @Nonnull final PsiFile injectedFile) {
+  static Editor create(@Nonnull final DocumentWindowImpl documentRange, @Nonnull final RealEditor editor, @Nonnull final PsiFile injectedFile) {
     assert documentRange.isValid();
     assert injectedFile.isValid();
     EditorWindowImpl window;
@@ -78,7 +85,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     return window;
   }
 
-  private EditorWindowImpl(@Nonnull DocumentWindowImpl documentWindow, @Nonnull final EditorInternal delegate, @Nonnull PsiFile injectedFile, boolean oneLine) {
+  private EditorWindowImpl(@Nonnull DocumentWindowImpl documentWindow, @Nonnull final RealEditor delegate, @Nonnull PsiFile injectedFile, boolean oneLine) {
     myDocumentWindow = documentWindow;
     myDelegate = delegate;
     myInjectedFile = injectedFile;
@@ -619,7 +626,7 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
     if (offsetInLine > end - lineStartOffset) offsetInLine = end - lineStartOffset;
 
     CharSequence text = myDocumentWindow.getCharsSequence();
-    return EditorUtil.calcColumnNumber(this, text, lineStartOffset, lineStartOffset + offsetInLine);
+    return EditorImplUtil.calcColumnNumber(this, text, lineStartOffset, lineStartOffset + offsetInLine);
   }
 
   private int calcOffset(int col, int lineNumber, int lineStartOffset) {

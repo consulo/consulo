@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.RangeBlinker;
 import consulo.codeEditor.*;

@@ -10,7 +10,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.codeEditor.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;

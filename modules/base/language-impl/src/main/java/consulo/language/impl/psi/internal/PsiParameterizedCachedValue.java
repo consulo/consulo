@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.psi.internal;
 
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.util.CachedValueProvider;

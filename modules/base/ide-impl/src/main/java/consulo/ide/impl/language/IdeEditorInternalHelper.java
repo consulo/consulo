@@ -16,18 +16,23 @@
 package consulo.ide.impl.language;
 
 import com.intellij.codeStyle.CodeStyleFacade;
+import com.intellij.openapi.editor.impl.EditorHighlighterCache;
+import com.intellij.ui.EditorNotifications;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.internal.EditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.ast.IElementType;
 import consulo.language.editor.action.LanguageWordBoundaryFilter;
+import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -96,5 +101,17 @@ public class IdeEditorInternalHelper extends EditorInternalHelper {
     IElementType leftTokenType = (IElementType)left;
     IElementType rightTokenType = (IElementType)right;
     return leftTokenType != null && rightTokenType != null && LanguageWordBoundaryFilter.INSTANCE.forLanguage(rightTokenType.getLanguage()).isWordBoundary(leftTokenType, rightTokenType);
+  }
+
+  @Override
+  public void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull EditorHighlighter highlighter) {
+    if (!(highlighter instanceof EmptyEditorHighlighter)) {
+      EditorHighlighterCache.rememberEditorHighlighterForCachesOptimization(document, highlighter);
+    }
+  }
+
+  @Override
+  public void updateNotifications(VirtualFile file) {
+    EditorNotifications.getInstance(myProject).updateNotifications(file);
   }
 }

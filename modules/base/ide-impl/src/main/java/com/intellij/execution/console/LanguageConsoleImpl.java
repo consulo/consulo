@@ -3,7 +3,7 @@ package com.intellij.execution.console;
 
 import com.intellij.execution.impl.ConsoleViewImpl;
 import com.intellij.execution.impl.ConsoleViewUtil;
-import com.intellij.ide.highlighter.HighlighterFactory;
+import consulo.language.editor.highlight.HighlighterFactory;
 import com.intellij.openapi.actionSystem.EmptyAction;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;

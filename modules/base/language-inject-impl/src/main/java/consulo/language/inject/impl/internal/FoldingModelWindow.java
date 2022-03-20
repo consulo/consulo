@@ -2,19 +2,19 @@
 
 package consulo.language.inject.impl.internal;
 
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.editor.inject.EditorWindow;
-import consulo.disposer.Disposable;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingGroup;
-import com.intellij.openapi.editor.ex.FoldingListener;
-import com.intellij.openapi.editor.ex.FoldingModelEx;
+import consulo.codeEditor.FoldingModelEx;
+import consulo.codeEditor.event.FoldingListener;
 import consulo.colorScheme.TextAttributes;
-import consulo.util.dataholder.Key;
 import consulo.component.util.ModificationTracker;
+import consulo.disposer.Disposable;
 import consulo.document.util.TextRange;
-import javax.annotation.Nonnull;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.actions;
 
-import com.intellij.ide.DeleteProvider;
+import consulo.ui.ex.DeleteProvider;
 import com.intellij.ide.actions.DeleteAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;

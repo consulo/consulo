@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.ide.highlighter.HighlighterFactory;
+import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;

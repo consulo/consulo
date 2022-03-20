@@ -2,8 +2,8 @@
 package consulo.language.inject.impl.internal;
 
 import consulo.component.util.SimpleModificationTracker;
-import consulo.ide.impl.psi.impl.PsiParameterizedCachedValue;
 import consulo.language.impl.psi.internal.PsiManagerEx;
+import consulo.language.impl.psi.internal.PsiParameterizedCachedValue;
 import consulo.language.inject.ConcatenationAwareInjector;
 import consulo.language.inject.MultiHostInjector;
 import consulo.language.inject.MultiHostRegistrar;
@@ -15,7 +15,7 @@ import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import consulo.language.psi.util.ParameterizedCachedValue;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
@@ -31,7 +31,7 @@ public final class ConcatenationInjectorManager extends SimpleModificationTracke
     return project.getComponent(ConcatenationInjectorManager.class);
   }
 
-  private final List<ConcatenationAwareInjector> myConcatenationInjectors = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<ConcatenationAwareInjector> myConcatenationInjectors = Lists.newLockFreeCopyOnWriteList();
 
   @Inject
   public ConcatenationInjectorManager(@Nonnull Project project) {

@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.ide.DeleteProvider;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

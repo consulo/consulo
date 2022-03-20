@@ -21,7 +21,7 @@ import com.intellij.application.options.colors.highlighting.HighlightsExtractor;
 import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.rawHighlight.RainbowHighlighter;
 import consulo.language.editor.util.UsedColors;
-import com.intellij.ide.highlighter.HighlighterFactory;
+import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.editor.event.CaretAdapter;

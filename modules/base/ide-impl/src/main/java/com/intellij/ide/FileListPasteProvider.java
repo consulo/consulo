@@ -21,6 +21,7 @@ import com.intellij.ide.dnd.LinuxDragAndDropSupport;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;

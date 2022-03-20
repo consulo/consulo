@@ -16,7 +16,7 @@
 package com.intellij.vcs.log.ui.frame;
 
 import com.google.common.primitives.Ints;
-import com.intellij.ide.CopyProvider;
+import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;

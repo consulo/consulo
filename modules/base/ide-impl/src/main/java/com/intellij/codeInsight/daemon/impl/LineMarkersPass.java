@@ -36,7 +36,7 @@ import consulo.language.psi.PsiFile;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.NotNullList;
+import consulo.util.collection.NotNullList;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.image.Image;
 import gnu.trove.TIntObjectHashMap;

@@ -1,24 +1,24 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util;
+package consulo.language.impl.psi.internal;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.*;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.application.util.RecursionGuard;
 import consulo.application.util.RecursionManager;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.disposer.Disposable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.ResolveResult;
-import consulo.application.util.ConcurrentFactoryMap;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.JBIterable;
-import consulo.disposer.Disposable;
 import consulo.language.psi.util.CachedValue;
+import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.JBIterable;
+import consulo.util.lang.Pair;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.Trinity;
+import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -212,7 +212,7 @@ public final class IdempotenceChecker {
   }
 
   @Nullable
-  private static Object  [] asArray(Object o) {
+  private static Object[] asArray(Object o) {
     if (o instanceof Object[]) return (Object[])o;
     if (o instanceof Map.Entry) return new Object[]{((Map.Entry<?, ?>)o).getKey(), ((Map.Entry<?, ?>)o).getValue()};
     if (o instanceof Pair) return new Object[]{((Pair<?, ?>)o).first, ((Pair<?, ?>)o).second};
@@ -260,7 +260,8 @@ public final class IdempotenceChecker {
   }
 
   @SuppressWarnings("rawtypes")
-  private static final Map<Class, Set<Class>> allSupersWithEquals = ConcurrentFactoryMap.createMap(clazz -> JBIterable.generate(clazz, Class::getSuperclass).filter(c -> c != Object.class && ReflectionUtil.getDeclaredMethod(c, "equals", Object.class) != null).toSet());
+  private static final Map<Class, Set<Class>> allSupersWithEquals = ConcurrentFactoryMap
+          .createMap(clazz -> JBIterable.generate(clazz, Class::getSuperclass).filter(c -> c != Object.class && ReflectionUtil.getDeclaredMethod(c, "equals", Object.class) != null).toSet());
 
   private static String checkPsiEquivalence(@Nonnull PsiElement existing, @Nonnull PsiElement fresh) {
     if (!existing.equals(fresh) && !existing.isEquivalentTo(fresh) && !fresh.isEquivalentTo(existing) && (seemsToBeResolveTarget(existing) || seemsToBeResolveTarget(fresh))) {
@@ -319,7 +320,7 @@ public final class IdempotenceChecker {
    * @return whether random checks are enabled and it makes sense to call a potentially expensive {@link #applyForRandomCheck} at all.
    */
   public static boolean areRandomChecksEnabled() {
-    return ApplicationManager.getApplication().isUnitTestMode() && !ApplicationInfoImpl.isInStressTest();
+    return ApplicationManager.getApplication().isUnitTestMode();
   }
 
   /**

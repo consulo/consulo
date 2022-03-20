@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.psi.internal;
 
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
+import consulo.language.psi.util.CachedValueProvider;
 import consulo.project.Project;
 import consulo.project.content.ProjectRootModificationTracker;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.PsiModificationTracker;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.CachedValueBase;
-import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 
 /**

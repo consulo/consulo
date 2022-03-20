@@ -1,20 +1,21 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util;
+package consulo.language.impl.psi.internal;
 
-import com.intellij.openapi.diagnostic.Logger;
 import consulo.application.util.RecursionGuard;
 import consulo.application.util.RecursionManager;
-import consulo.document.Document;
-import consulo.project.Project;
-import com.intellij.openapi.util.*;
+import consulo.application.util.function.Computable;
 import consulo.component.util.ModificationTracker;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.document.Document;
 import consulo.language.psi.util.CachedValueProfiler;
 import consulo.language.psi.util.CachedValueProvider;
-import com.intellij.reference.SoftReference;
-import com.intellij.util.containers.NotNullList;
-import consulo.application.util.function.Computable;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.NotNullList;
+import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SimpleReference;
+import consulo.util.lang.ref.SoftReference;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,7 +27,7 @@ import java.util.function.Supplier;
  * @author Dmitry Avdeev
  */
 public abstract class CachedValueBase<T> {
-  private static final Logger LOG = Logger.getInstance(CachedValueImpl.class);
+  private static final Logger LOG = Logger.getInstance(CachedValueBase.class);
   private final boolean myTrackValue;
   private volatile SoftReference<Data<T>> myData;
 
@@ -135,7 +136,7 @@ public abstract class CachedValueBase<T> {
   @Nonnull
   private static void collectDependencies(@Nonnull List<Object> resultingDeps, Object[] dependencies) {
     for (Object dependency : dependencies) {
-      if (dependency == ObjectUtils.NULL) continue;
+      if (dependency == ObjectUtil.NULL) continue;
       if (dependency instanceof Object[]) {
         collectDependencies(resultingDeps, (Object[])dependency);
       }
@@ -185,7 +186,7 @@ public abstract class CachedValueBase<T> {
 
   public abstract Object getValueProvider();
 
-  protected static class Data<T> implements Getter<T> {
+  protected static class Data<T> implements Supplier<T> {
     private final T myValue;
     @Nonnull
     private final Object[] myDependencies;

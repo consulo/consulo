@@ -19,7 +19,7 @@ import consulo.language.lexer.Lexer;
 import consulo.document.Document;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import consulo.codeEditor.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;

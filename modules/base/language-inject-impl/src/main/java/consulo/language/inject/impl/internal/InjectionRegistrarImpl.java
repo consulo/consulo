@@ -2,10 +2,9 @@
 
 package consulo.language.inject.impl.internal;
 
-import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
-import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import com.intellij.openapi.fileTypes.FileTypeEditorHighlighterProviders;
 import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.component.ProcessCanceledException;
@@ -17,14 +16,12 @@ import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
-import consulo.ide.impl.psi.impl.DocumentCommitThread;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.language.ast.IElementType;
-import consulo.codeEditor.EditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighterProvider;
-import consulo.codeEditor.HighlighterIterator;
+import consulo.language.editor.highlight.FileTypeEditorHighlighterProviders;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -50,6 +47,7 @@ import consulo.language.version.LanguageVersionUtil;
 import consulo.project.Project;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
@@ -269,11 +267,11 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
       info.newInjectionHostRange = shred.getSmartPointer().getRange();
     }
     DocumentWindowImpl documentWindow = new DocumentWindowImpl(myHostDocument, place);
-    String fileName = PathUtil.makeFileName(myHostVirtualFile.getName(), fileExtension);
+    String fileName = FileUtil.makeFileName(myHostVirtualFile.getName(), fileExtension);
 
     ASTNode[] parsedNodes =
-            parseFile(myLanguageVersion, forcedLanguageVersion, documentWindow, myHostVirtualFile, myHostDocument, myHostPsiFile, myProject, documentWindow.getText(), placeInfos, decodedChars, fileName,
-                      myDocumentManagerBase);
+            parseFile(myLanguageVersion, forcedLanguageVersion, documentWindow, myHostVirtualFile, myHostDocument, myHostPsiFile, myProject, documentWindow.getText(), placeInfos, decodedChars,
+                      fileName, myDocumentManagerBase);
     for (ASTNode node : parsedNodes) {
       PsiFile psiFile = (PsiFile)node.getPsi();
       InjectedFileViewProvider viewProvider = (InjectedFileViewProvider)psiFile.getViewProvider();
@@ -624,7 +622,8 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
 
     assert documentManager.isUncommited(hostDocument);
     String fileName = ((VirtualFileWindowImpl)oldInjectedVirtualFile).getName();
-    ASTNode[] parsedNodes = parseFile(languageVersion, languageVersion, oldDocumentWindow, hostVirtualFile, hostDocument, hostPsiFile, project, newDocumentText, placeInfos, chars, fileName, documentManager);
+    ASTNode[] parsedNodes =
+            parseFile(languageVersion, languageVersion, oldDocumentWindow, hostVirtualFile, hostDocument, hostPsiFile, project, newDocumentText, placeInfos, chars, fileName, documentManager);
     List<PsiFile> oldFiles = ((AbstractFileViewProvider)oldInjectedPsiViewProvider).getCachedPsiFiles();
     synchronized (InjectedLanguageManagerImpl.ourInjectionPsiLock) {
       DiffLog[] diffLogs = new DiffLog[parsedNodes.length];
@@ -683,7 +682,8 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
                                      @Nonnull PsiDocumentManagerBase documentManager) {
     VirtualFileWindowImpl virtualFile = new VirtualFileWindowImpl(fileName, hostVirtualFile, documentWindow, languageVersion.getLanguage(), decodedChars);
     virtualFile.putUserData(LanguageVersion.KEY, languageVersion);
-    Language finalLanguage = forcedLanguageVersion == null ? LanguageSubstitutors.INSTANCE.substituteLanguage(languageVersion.getLanguage(), virtualFile, project) : forcedLanguageVersion.getLanguage();
+    Language finalLanguage =
+            forcedLanguageVersion == null ? LanguageSubstitutors.INSTANCE.substituteLanguage(languageVersion.getLanguage(), virtualFile, project) : forcedLanguageVersion.getLanguage();
     InjectedFileViewProvider viewProvider = InjectedFileViewProvider.create(PsiManagerEx.getInstanceEx(project), virtualFile, documentWindow, finalLanguage);
     Set<Language> languages = viewProvider.getLanguages();
     ASTNode[] parsedNodes = new ASTNode[languages.size()];
@@ -692,7 +692,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
       ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
       assert parserDefinition != null : "Parser definition for language " + finalLanguage + " is null";
       PsiFileImpl psiFile = (PsiFileImpl)parserDefinition.createFile(viewProvider);
-      if(lang == languageVersion.getLanguage()) {
+      if (lang == languageVersion.getLanguage()) {
         psiFile.putUserData(LanguageVersion.KEY, languageVersion);
       }
       if (viewProvider instanceof TemplateLanguageFileViewProvider) {
@@ -706,14 +706,15 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
       assert parsedNode instanceof FileElement : "Parsed to " + parsedNode + " instead of FileElement";
 
       assert ((FileElement)parsedNode).textMatches(decodedChars) : exceptionContext(
-              "Before patch: doc:\n'" + documentText + "'\n---PSI:\n'" + parsedNode.getText() + "'\n---chars:\n'" + decodedChars + "'", LanguageVersionUtil.findDefaultVersion(finalLanguage), hostPsiFile, hostVirtualFile, hostDocument,
-              placeInfos, documentManager);
+              "Before patch: doc:\n'" + documentText + "'\n---PSI:\n'" + parsedNode.getText() + "'\n---chars:\n'" + decodedChars + "'", LanguageVersionUtil.findDefaultVersion(finalLanguage),
+              hostPsiFile, hostVirtualFile, hostDocument, placeInfos, documentManager);
       try {
         patchLeaves(placeInfos, viewProvider, parsedNode, documentText);
       }
       catch (PatchException e) {
-        throw new RuntimeException(exceptionContext(e.getMessage() + "'\n---chars:\n'" + decodedChars + "'", LanguageVersionUtil.findDefaultVersion(finalLanguage), hostPsiFile, hostVirtualFile, hostDocument, placeInfos,
-                                                    documentManager));
+        throw new RuntimeException(
+                exceptionContext(e.getMessage() + "'\n---chars:\n'" + decodedChars + "'", LanguageVersionUtil.findDefaultVersion(finalLanguage), hostPsiFile, hostVirtualFile, hostDocument, placeInfos,
+                                 documentManager));
       }
 
       virtualFile.setContent(null, decodedChars, false);
@@ -817,7 +818,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     int shredEndOffset = -1;
     List<InjectedLanguageUtil.TokenInfo> tokens = new ArrayList<>(outChars.length() / 5); // avg. token per 5 chars
     while (!iterator.atEnd()) {
-      IElementType tokenType = iterator.getTokenType();
+      IElementType tokenType = (IElementType)iterator.getTokenType();
       TextRange range = new ProperTextRange(iterator.getStart(), iterator.getEnd());
       while (range != null && !range.isEmpty()) {
         if (range.getStartOffset() >= shredEndOffset) {

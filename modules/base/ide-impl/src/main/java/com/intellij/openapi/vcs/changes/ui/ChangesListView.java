@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.ide.CopyProvider;
+import consulo.ui.ex.CopyProvider;
 import com.intellij.ide.dnd.DnDAware;
 import consulo.ui.ex.awt.tree.TreeState;
 import com.intellij.openapi.actionSystem.*;

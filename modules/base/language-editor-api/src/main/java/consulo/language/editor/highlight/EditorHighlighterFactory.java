@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.highlighter;
+package consulo.language.editor.highlight;
 
-import consulo.ide.ServiceManager;
-import consulo.colorScheme.EditorColorsScheme;
+import consulo.application.Application;
 import consulo.codeEditor.EditorHighlighter;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author yole
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
 public abstract class EditorHighlighterFactory {
 
   public static EditorHighlighterFactory getInstance() {
-    return ServiceManager.getService(EditorHighlighterFactory.class);
+    return Application.get().getInstance(EditorHighlighterFactory.class);
   }
 
   @Nonnull
@@ -45,7 +46,7 @@ public abstract class EditorHighlighterFactory {
   @Nonnull
   public abstract EditorHighlighter createEditorHighlighter(@Nonnull final VirtualFile file,
                                                             @Nonnull EditorColorsScheme globalScheme,
-                                                            @javax.annotation.Nullable final Project project);
+                                                            @Nullable final Project project);
 
   @Nonnull
   public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull VirtualFile file);
@@ -54,5 +55,5 @@ public abstract class EditorHighlighterFactory {
   public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull String fileName);
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(@Nonnull EditorColorsScheme settings, @Nonnull String fileName, @javax.annotation.Nullable final Project project);
+  public abstract EditorHighlighter createEditorHighlighter(@Nonnull EditorColorsScheme settings, @Nonnull String fileName, @Nullable final Project project);
 }

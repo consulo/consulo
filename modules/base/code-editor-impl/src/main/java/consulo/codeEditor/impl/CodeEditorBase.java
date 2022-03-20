@@ -12,6 +12,7 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.internal.EditorInternalHelper;
 import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
@@ -36,6 +37,10 @@ import consulo.project.Project;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.CutProvider;
+import consulo.ui.ex.DeleteProvider;
+import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.undoRedo.CommandProcessor;
@@ -1125,9 +1130,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     Disposer.register(myDisposable, myHighlighterDisposable);
     highlighter.setEditor(this);
     highlighter.setText(document.getImmutableCharSequence());
-    if (!(highlighter instanceof EmptyEditorHighlighter)) {
-      EditorHighlighterCache.rememberEditorHighlighterForCachesOptimization(document, highlighter);
-    }
+    EditorInternalHelper.getInstance(myProject).rememberEditorHighlighterForCachesOptimization(document, highlighter);
     myHighlighter = highlighter;
   }
 

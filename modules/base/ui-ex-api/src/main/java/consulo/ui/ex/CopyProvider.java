@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide;
+package consulo.ui.ex;
 
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
-public interface DeleteProvider {
-  Key<DeleteProvider> KEY = Key.create(DeleteProvider.class);
+public interface CopyProvider {
+  Key<CopyProvider> KEY = Key.create(CopyProvider.class);
 
-  void deleteElement(@Nonnull DataContext dataContext);
+  void performCopy(@Nonnull DataContext dataContext);
 
-  boolean canDeleteElement(@Nonnull DataContext dataContext);
+  boolean isCopyEnabled(@Nonnull DataContext dataContext);
+
+  boolean isCopyVisible(@Nonnull DataContext dataContext);
 }

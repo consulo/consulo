@@ -19,7 +19,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.ui.ex.awt.AbstractDelegatingToRootTraversalPolicy;
 import com.intellij.util.IJSwingUtilities;

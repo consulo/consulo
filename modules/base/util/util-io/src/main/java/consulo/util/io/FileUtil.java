@@ -50,6 +50,10 @@ public class FileUtil {
     }
   };
 
+  @Nonnull
+  public static String makeFileName(@Nonnull String name, @Nullable String extension) {
+    return name + (StringUtil.isEmpty(extension) ? "" : "." + extension);
+  }
 
   /**
    * <p>Gets the relative path from the {@code base} to the {@code file} regardless existence or the type of the {@code base}.</p>

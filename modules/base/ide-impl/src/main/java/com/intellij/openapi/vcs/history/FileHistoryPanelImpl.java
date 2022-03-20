@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import consulo.application.AllIcons;
-import com.intellij.ide.CopyProvider;
+import consulo.ui.ex.CopyProvider;
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

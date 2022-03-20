@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl;
 
+import consulo.language.impl.psi.internal.PsiCachedValue;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;

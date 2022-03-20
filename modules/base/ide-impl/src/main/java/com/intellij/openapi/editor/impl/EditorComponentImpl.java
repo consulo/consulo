@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.editor.impl;
 
-import com.intellij.ide.CutProvider;
+import consulo.ui.ex.CutProvider;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.PasteProvider;
+import consulo.ui.ex.PasteProvider;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;

@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide;
+package consulo.ui.ex;
 
 import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
-public interface CopyProvider {
-  Key<CopyProvider> KEY = Key.create(CopyProvider.class);
+public interface CutProvider {
+  Key<CutProvider> KEY = Key.create(CutProvider.class);
 
-  void performCopy(@Nonnull DataContext dataContext);
+  void performCut(@Nonnull DataContext dataContext);
 
-  boolean isCopyEnabled(@Nonnull DataContext dataContext);
+  boolean isCutEnabled(@Nonnull DataContext dataContext);
 
-  boolean isCopyVisible(@Nonnull DataContext dataContext);
+  boolean isCutVisible(@Nonnull DataContext dataContext);
 }

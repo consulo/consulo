@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import consulo.language.editor.FileModificationService;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.PasteProvider;
+import consulo.ui.ex.PasteProvider;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;

@@ -19,7 +19,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.codeEditor.impl.SettingsImpl;
 import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 import consulo.codeEditor.markup.HighlighterLayer;

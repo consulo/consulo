@@ -1,15 +1,11 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.inject.impl.internal;
 
-import consulo.codeEditor.SoftWrap;
-import consulo.codeEditor.VisualPosition;
-import com.intellij.openapi.editor.ex.SoftWrapChangeListener;
-import com.intellij.openapi.editor.ex.SoftWrapModelEx;
-import com.intellij.openapi.editor.impl.EditorTextRepresentationHelper;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapDrawingType;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.SoftWrapChangeListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;

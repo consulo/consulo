@@ -17,7 +17,7 @@
 package com.intellij.codeEditor.printing;
 
 import consulo.language.editor.gutter.LineMarkerInfo;
-import com.intellij.ide.highlighter.HighlighterFactory;
+import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.document.Document;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;

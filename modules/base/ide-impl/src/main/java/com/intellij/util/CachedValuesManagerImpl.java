@@ -3,6 +3,7 @@ package com.intellij.util;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileViewProvider;
+import consulo.language.impl.psi.internal.CachedValueBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.*;
 import consulo.logging.Logger;

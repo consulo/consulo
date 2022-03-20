@@ -15,7 +15,7 @@
 */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.CopyProvider;
+import consulo.ui.ex.CopyProvider;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

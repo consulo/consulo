@@ -15,7 +15,7 @@
 */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.CutProvider;
+import consulo.ui.ex.CutProvider;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

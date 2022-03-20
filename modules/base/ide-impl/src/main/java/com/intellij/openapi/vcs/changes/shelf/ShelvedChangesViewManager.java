@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.ide.DeleteProvider;
+import consulo.ui.ex.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;

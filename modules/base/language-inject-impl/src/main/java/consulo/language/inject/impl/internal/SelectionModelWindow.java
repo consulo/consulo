@@ -2,16 +2,17 @@
 
 package consulo.language.inject.impl.internal;
 
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.editor.inject.EditorWindow;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.event.SelectionListener;
-import com.intellij.openapi.editor.ex.EditorEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.file.inject.DocumentWindow;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

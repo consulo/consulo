@@ -1,14 +1,13 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.inject.impl.internal;
 
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingGroup;
+import consulo.codeEditor.impl.FoldRegionImpl;
 import consulo.document.internal.RangeMarkerEx;
-import com.intellij.openapi.editor.impl.FoldRegionImpl;
-import consulo.language.impl.internal.psi.inject.RangeMarkerWindow;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.file.inject.DocumentWindow;
 
 import javax.annotation.Nonnull;
 

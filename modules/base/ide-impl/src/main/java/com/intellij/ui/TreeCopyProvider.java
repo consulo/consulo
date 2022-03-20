@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import com.intellij.ide.CopyProvider;
+import consulo.ui.ex.CopyProvider;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
 import javax.annotation.Nonnull;

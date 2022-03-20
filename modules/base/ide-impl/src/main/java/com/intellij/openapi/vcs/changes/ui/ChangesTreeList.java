@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.CopyProvider;
+import consulo.ui.ex.CopyProvider;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.awt.tree.TreeState;

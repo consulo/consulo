@@ -19,6 +19,7 @@ package com.intellij.ide;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
+import consulo.ui.ex.DeleteProvider;
 
 import javax.swing.*;
 

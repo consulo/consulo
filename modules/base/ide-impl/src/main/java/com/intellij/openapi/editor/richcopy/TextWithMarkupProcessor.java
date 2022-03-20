@@ -3,7 +3,7 @@ package com.intellij.openapi.editor.richcopy;
 
 import com.intellij.codeInsight.editorActions.CopyPastePostProcessor;
 import consulo.language.editor.action.CopyPastePreProcessor;
-import com.intellij.ide.highlighter.HighlighterFactory;
+import consulo.language.editor.highlight.HighlighterFactory;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.logging.Logger;
 import consulo.codeEditor.Caret;
