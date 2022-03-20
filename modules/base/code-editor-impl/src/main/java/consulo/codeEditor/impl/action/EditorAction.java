@@ -18,7 +18,6 @@ package consulo.codeEditor.impl.action;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.impl.action.EditorActionHandlerBean;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

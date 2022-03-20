@@ -62,7 +62,7 @@ public class EditorInternalHelper {
   }
 
   @Nonnull
-  public CaretDataContext createDataContext(@Nonnull DataContext delegate,@Nonnull Caret caret) {
+  public CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
     return new CaretDataContext(delegate, caret);
   }
 

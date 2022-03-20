@@ -16,14 +16,14 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.application.options.EditorFontsConstants;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
-import consulo.application.dumb.DumbAware;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.annotation.Nullable;
 
@@ -41,7 +41,7 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
   @RequiredUIAccess
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final EditorInternal editor = getEditor(e);
+    final RealEditor editor = getEditor(e);
     if (editor != null) {
       final int size = editor.getFontSize() + myStep;
       if (size >= 8 && size <= EditorFontsConstants.getMaxEditorFontSize()) {
@@ -51,10 +51,10 @@ public abstract class ChangeEditorFontSizeAction extends AnAction implements Dum
   }
 
   @Nullable
-  private static EditorInternal getEditor(AnActionEvent e) {
+  private static RealEditor getEditor(AnActionEvent e) {
     final Editor editor = e.getData(CommonDataKeys.EDITOR);
-    if (editor instanceof EditorInternal) {
-      return (EditorInternal)editor;
+    if (editor instanceof RealEditor) {
+      return (RealEditor)editor;
     }
     return null;
   }

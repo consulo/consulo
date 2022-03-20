@@ -2,19 +2,19 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.util.PropertiesComponent;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorBundle;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.TextEditor;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorBundle;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.notifications.EditorNotificationProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.TextEditor;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,8 +41,8 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
   public EditorNotificationPanel createNotificationPanel(@Nonnull final VirtualFile file, @Nonnull final FileEditor fileEditor) {
     if (!(fileEditor instanceof TextEditor)) return null;
     final Editor editor = ((TextEditor)fileEditor).getEditor();
-    if (!Boolean.TRUE.equals(editor.getUserData(EditorInternal.FORCED_SOFT_WRAPS)) ||
-        !Boolean.TRUE.equals(editor.getUserData(EditorInternal.SOFT_WRAPS_EXIST)) ||
+    if (!Boolean.TRUE.equals(editor.getUserData(RealEditor.FORCED_SOFT_WRAPS)) ||
+        !Boolean.TRUE.equals(editor.getUserData(RealEditor.SOFT_WRAPS_EXIST)) ||
         PropertiesComponent.getInstance().isTrueValue(DISABLED_NOTIFICATION_KEY)) {
       return null;
     }
@@ -50,7 +50,7 @@ public final class ForcedSoftWrapsNotificationProvider implements EditorNotifica
     final EditorNotificationPanel panel = new EditorNotificationPanel();
     panel.setText(EditorBundle.message("forced.soft.wrap.message"));
     panel.createActionLabel(EditorBundle.message("forced.soft.wrap.hide.message"), () -> {
-      editor.putUserData(EditorInternal.FORCED_SOFT_WRAPS, null);
+      editor.putUserData(RealEditor.FORCED_SOFT_WRAPS, null);
       EditorNotifications.getInstance(myProject).updateNotifications(file);
     });
     panel.createActionLabel(EditorBundle.message("forced.soft.wrap.dont.show.again.message"), () -> {

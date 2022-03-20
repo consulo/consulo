@@ -49,7 +49,7 @@ import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ide.impl.psi.util.PsiUtilBase;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.logging.Logger;

@@ -62,6 +62,8 @@ open module consulo.ide.impl {
   requires transitive consulo.ui.ex.awt.api;
   requires transitive consulo.virtual.file.system.impl;
   requires transitive consulo.language.editor.ui.api;
+  requires transitive consulo.code.editor.impl;
+  requires transitive consulo.language.inject.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;

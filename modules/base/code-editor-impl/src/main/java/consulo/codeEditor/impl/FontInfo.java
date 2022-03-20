@@ -2,15 +2,13 @@
 package consulo.codeEditor.impl;
 
 import consulo.application.util.Patches;
-import com.intellij.openapi.editor.impl.view.FontLayoutService;
 import consulo.application.util.SystemInfo;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import org.intellij.lang.annotations.JdkConstants;
-import sun.font.CompositeGlyphMapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,9 +130,15 @@ public class FontInfo {
 
   private static int getFontStyle(@Nonnull String fontFileNameLowercase) {
     String baseName = fontFileNameLowercase.substring(0, fontFileNameLowercase.length() - 4);
-    if (baseName.endsWith("-it")) return Font.ITALIC;
-    else if (baseName.endsWith("-boldit")) return Font.BOLD | Font.ITALIC;
-    else return ComplementaryFontsRegistry.getFontStyle(fontFileNameLowercase);
+    if (baseName.endsWith("-it")) {
+      return Font.ITALIC;
+    }
+    else if (baseName.endsWith("-boldit")) {
+      return Font.BOLD | Font.ITALIC;
+    }
+    else {
+      return ComplementaryFontsRegistry.getFontStyle(fontFileNameLowercase);
+    }
   }
 
   public boolean canDisplay(int codePoint) {
@@ -153,11 +157,15 @@ public class FontInfo {
     }
   }
 
+  // see sun.font.CompositeGlyphMapper
+  public static final int SLOTMASK = 0xff000000;
+  public static final int GLYPHMASK = 0x00ffffff;
+
   public static boolean canDisplay(@Nonnull Font font, int codePoint, boolean disableFontFallback) {
     if (!Character.isValidCodePoint(codePoint)) return false;
     if (disableFontFallback && SystemInfo.isMac) {
       int glyphCode = font.createGlyphVector(DEFAULT_CONTEXT, new String(new int[]{codePoint}, 0, 1)).getGlyphCode(0);
-      return (glyphCode & CompositeGlyphMapper.GLYPHMASK) != 0 && (glyphCode & CompositeGlyphMapper.SLOTMASK) == 0;
+      return (glyphCode & GLYPHMASK) != 0 && (glyphCode & SLOTMASK) == 0;
     }
     else {
       return font.canDisplay(codePoint);

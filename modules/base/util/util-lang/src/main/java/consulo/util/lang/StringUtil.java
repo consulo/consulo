@@ -100,7 +100,10 @@ public class StringUtil {
   private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
   private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
 
-
+  @Contract(pure = true)
+  public static int hashCode(@Nonnull CharSequence s) {
+    return stringHashCode(s);
+  }
   /**
    * Allows to answer if target symbol is contained at given char sequence at <code>[start; end)</code> interval.
    *

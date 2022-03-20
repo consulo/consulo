@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.editor.actions.CopyAction;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl;
 import consulo.component.extension.Extensions;

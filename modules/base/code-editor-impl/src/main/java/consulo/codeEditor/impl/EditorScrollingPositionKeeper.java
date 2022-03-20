@@ -1,18 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import com.intellij.util.containers.ContainerUtil;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.ScrollingModel;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.ScrollingModel;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;

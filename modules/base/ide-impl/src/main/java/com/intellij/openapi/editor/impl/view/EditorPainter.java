@@ -25,7 +25,7 @@ import com.intellij.ui.paint.EffectPainter;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.JBUIScale;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.ObjectUtils;
 import consulo.application.util.function.Processor;

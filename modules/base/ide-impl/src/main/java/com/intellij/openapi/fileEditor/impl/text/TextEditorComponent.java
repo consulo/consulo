@@ -16,41 +16,41 @@
 package com.intellij.openapi.fileEditor.impl.text;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataProvider;
-import consulo.ui.ex.action.IdeActions;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import consulo.document.FileDocumentManager;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
 import com.intellij.openapi.fileTypes.FileTypeEvent;
 import com.intellij.openapi.fileTypes.FileTypeListener;
 import com.intellij.openapi.fileTypes.FileTypeManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.event.VirtualFileListener;
-import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
-import consulo.document.util.FileContentUtilCore;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.document.util.FileContentUtilCore;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.text.TextEditorComponentContainer;
 import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
 import consulo.fileEditor.impl.text.TextEditorProvider;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.action.IdeActions;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -169,7 +169,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
 
     ((EditorEx)editor).setContextMenuGroupId(IdeActions.GROUP_EDITOR_POPUP);
 
-    ((EditorInternal)editor).setDropHandler(new FileDropHandler(editor));
+    ((CodeEditorBase)editor).setDropHandler(new FileDropHandler(editor));
 
     TextEditorProvider.putTextEditor(editor, myTextEditor);
     return editor;

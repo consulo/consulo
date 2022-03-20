@@ -7,7 +7,7 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
-import com.intellij.openapi.editor.EditorCopyPasteHelper;
+import consulo.codeEditor.EditorCopyPasteHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;

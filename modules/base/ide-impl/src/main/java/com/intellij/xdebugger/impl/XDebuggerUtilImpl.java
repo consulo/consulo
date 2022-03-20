@@ -51,7 +51,7 @@ import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.application.util.function.Processor;
 import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;
 import consulo.debugger.evaluation.EvaluationMode;

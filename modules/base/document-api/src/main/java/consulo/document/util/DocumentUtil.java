@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.document.impl;
+package consulo.document.util;
 
-import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
-import consulo.document.util.TextRange;
-import consulo.undoRedo.CommandProcessor;
 
 import javax.annotation.Nonnull;
 
@@ -57,10 +54,6 @@ public final class DocumentUtil {
     finally {
       documentEx.setInBulkUpdate(!executeInBulk);
     }
-  }
-
-  public static void writeInRunUndoTransparentAction(@Nonnull final Runnable runnable) {
-    CommandProcessor.getInstance().runUndoTransparentAction(() -> ApplicationManager.getApplication().runWriteAction(runnable));
   }
 
   public static int getFirstNonSpaceCharOffset(@Nonnull Document document, int line) {

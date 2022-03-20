@@ -53,7 +53,7 @@ import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.inject.impl.internal.InjectedCaret;
 import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

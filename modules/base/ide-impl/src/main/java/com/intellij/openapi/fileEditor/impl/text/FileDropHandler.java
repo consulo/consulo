@@ -19,7 +19,7 @@ import com.intellij.ide.dnd.FileCopyPasteUtil;
 import com.intellij.openapi.editor.CustomFileDropHandler;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.EditorDropHandler;
+import consulo.codeEditor.impl.EditorDropHandler;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;

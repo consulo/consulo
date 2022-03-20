@@ -8,6 +8,7 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.impl.FontLayoutService;
 import consulo.colorScheme.EditorFontType;
 import consulo.codeEditor.event.VisibleAreaEvent;
 import consulo.codeEditor.event.VisibleAreaListener;

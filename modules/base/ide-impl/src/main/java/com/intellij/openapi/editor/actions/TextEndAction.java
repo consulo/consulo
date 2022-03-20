@@ -2,15 +2,15 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import consulo.dataContext.DataContext;
+import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.codeEditor.action.EditorActionHandler;
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import consulo.codeEditor.impl.EditorInternal;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ public class TextEndAction extends TextComponentEditorAction {
     public void doExecute(@Nonnull Editor editor, @Nullable Caret caret, DataContext dataContext) {
       editor.getCaretModel().removeSecondaryCarets();
       int offset = editor.getDocument().getTextLength();
-      if (editor instanceof EditorInternal) {
+      if (editor instanceof RealEditor) {
         editor.getCaretModel().moveToLogicalPosition(editor.offsetToLogicalPosition(offset).leanForward(true));
       }
       else {

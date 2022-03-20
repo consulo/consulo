@@ -19,11 +19,10 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.*;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.dataContext.DataContext;
 
 class MoveCaretLeftOrRightHandler extends EditorActionHandler {
   enum Direction {LEFT, RIGHT}
@@ -64,7 +63,7 @@ class MoveCaretLeftOrRightHandler extends EditorActionHandler {
       caret.moveToVisualPosition(currentPosition.leanRight(!currentPosition.leansRight));
     }
     else {
-      final boolean scrollToCaret = (!(editor instanceof EditorInternal) || ((EditorInternal)editor).isScrollToCaret())
+      final boolean scrollToCaret = (!(editor instanceof RealEditor) || ((RealEditor)editor).isScrollToCaret())
                                     && caret == editor.getCaretModel().getPrimaryCaret();
       caretModel.moveCaretRelatively(myDirection == Direction.RIGHT ? 1 : -1, 0, false, false, scrollToCaret);
     }

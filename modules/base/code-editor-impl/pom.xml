@@ -57,5 +57,21 @@
       <artifactId>consulo-color-scheme-impl</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-language-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-language-code-style-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-desktop-awt-hacking</artifactId>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 </project>

@@ -20,7 +20,7 @@ import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.project.Project;

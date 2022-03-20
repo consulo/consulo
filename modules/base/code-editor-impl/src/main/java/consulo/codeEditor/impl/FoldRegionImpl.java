@@ -7,7 +7,7 @@ import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingGroup;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

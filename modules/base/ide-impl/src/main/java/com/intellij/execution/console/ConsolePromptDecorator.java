@@ -18,7 +18,7 @@ package com.intellij.execution.console;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.ui.ex.action.AnAction;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.EditorLinePainter;
+import consulo.codeEditor.EditorLinePainter;
 import consulo.codeEditor.LineExtensionInfo;
 import consulo.codeEditor.TextAnnotationGutterProvider;
 import consulo.colorScheme.EditorColorKey;

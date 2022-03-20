@@ -642,6 +642,15 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
     return contentsToByteArray();
   }
 
+  @Nonnull
+  public CharSequence loadText() {
+    try {
+      return new String(contentsToByteArray(), getCharset());
+    }
+    catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   /**
    * Gets modification stamp value. Modification stamp is a value changed by any modification

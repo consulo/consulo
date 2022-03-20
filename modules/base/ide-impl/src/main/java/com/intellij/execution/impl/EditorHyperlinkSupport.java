@@ -8,7 +8,7 @@ import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.util.Consumer;
-import com.intellij.util.FilteringProcessor;
+import consulo.application.util.function.FilteringProcessor;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.Editor;

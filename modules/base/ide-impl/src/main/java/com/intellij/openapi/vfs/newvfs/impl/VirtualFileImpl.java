@@ -20,22 +20,22 @@
 package com.intellij.openapi.vfs.newvfs.impl;
 
 import com.intellij.openapi.application.ex.ApplicationEx;
-import consulo.language.impl.psi.internal.LoadTextUtil;
 import com.intellij.openapi.fileTypes.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
+import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.io.FileTooBigException;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.LargeFileWriteRequestor;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -117,12 +117,7 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
   public InputStream getInputStream() throws IOException {
     final byte[] preloadedContent = getUserData(ourPreloadedContentKey);
 
-    return VfsUtilCore.inputStreamSkippingBOM(
-            preloadedContent == null ?
-            ourPersistence.getInputStream(this):
-            new DataInputStream(new UnsyncByteArrayInputStream(preloadedContent)),
-            this
-    );
+    return VfsUtilCore.inputStreamSkippingBOM(preloadedContent == null ? ourPersistence.getInputStream(this) : new DataInputStream(new UnsyncByteArrayInputStream(preloadedContent)), this);
   }
 
   @Override
@@ -153,6 +148,12 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
       }
     }
     return bytes;
+  }
+
+  @Nonnull
+  @Override
+  public CharSequence loadText() {
+    return LoadTextUtil.loadText(this);
   }
 
   @Override
@@ -195,4 +196,5 @@ public class VirtualFileImpl extends VirtualFileSystemEntry {
 
   private void checkNotTooLarge(@Nullable Object requestor) throws FileTooBigException {
     if (!(requestor instanceof LargeFileWriteRequestor) && RawFileLoader.getInstance().isLargeForContentLoading(getLength())) throw new FileTooBigException(getPath());
-  }}
+  }
+}

@@ -13,34 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.impl;
 
+package consulo.codeEditor.impl;
+
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.markup.*;
+import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.codeEditor.markup.MarkupModelListener;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.component.ProcessCanceledException;
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
-import com.intellij.util.Consumer;
-import consulo.application.util.function.Processor;
+import consulo.document.util.ProperTextRange;
+import consulo.document.util.TextRange;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.util.dataholder.UserDataHolderBase;
+
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
- * This is mock implementation to be used in null-object pattern where necessary.
- *
- * @author max
+ * @author cdr
  */
-public class EmptyMarkupModel implements MarkupModelEx {
-  private final Document myDocument;
+public class MarkupModelWindow extends UserDataHolderBase implements MarkupModelEx {
+  private final DocumentWindow myDocument;
+  private final MarkupModelEx myHostModel;
 
-  public EmptyMarkupModel(final Document document) {
+  public MarkupModelWindow(MarkupModelEx editorMarkupModel, final DocumentWindow document) {
     myDocument = document;
+    myHostModel = editorMarkupModel;
   }
 
   @Override
@@ -51,8 +50,9 @@ public class EmptyMarkupModel implements MarkupModelEx {
 
   @Override
   @Nonnull
-  public RangeHighlighter addRangeHighlighter(int startOffset, int endOffset, int layer, @Nullable TextAttributes textAttributes, @Nonnull HighlighterTargetArea targetArea) {
-    throw new ProcessCanceledException();
+  public RangeHighlighter addRangeHighlighter(final int startOffset, final int endOffset, final int layer, final TextAttributes textAttributes, @Nonnull final HighlighterTargetArea targetArea) {
+    TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
+    return myHostModel.addRangeHighlighter(hostRange.getStartOffset(), hostRange.getEndOffset(), layer, textAttributes, targetArea);
   }
 
   @Nonnull
@@ -64,85 +64,88 @@ public class EmptyMarkupModel implements MarkupModelEx {
                                                                    @Nonnull HighlighterTargetArea targetArea,
                                                                    boolean isPersistent,
                                                                    Consumer<? super RangeHighlighterEx> changeAttributesAction) {
-    throw new ProcessCanceledException();
+    TextRange hostRange = myDocument.injectedToHost(new ProperTextRange(startOffset, endOffset));
+    return myHostModel.addRangeHighlighterAndChangeAttributes(hostRange.getStartOffset(), hostRange.getEndOffset(), layer, textAttributes, targetArea, isPersistent, changeAttributesAction);
   }
 
   @Override
   public void changeAttributesInBatch(@Nonnull RangeHighlighterEx highlighter, @Nonnull Consumer<? super RangeHighlighterEx> changeAttributesAction) {
+    myHostModel.changeAttributesInBatch(highlighter, changeAttributesAction);
   }
 
   @Override
   @Nonnull
-  public RangeHighlighter addLineHighlighter(int line, int layer, @Nullable TextAttributes textAttributes) {
-    throw new ProcessCanceledException();
+  public RangeHighlighter addLineHighlighter(final int line, final int layer, final TextAttributes textAttributes) {
+    int hostLine = myDocument.injectedToHostLine(line);
+    return myHostModel.addLineHighlighter(hostLine, layer, textAttributes);
   }
 
   @Override
-  public void removeHighlighter(@Nonnull RangeHighlighter rangeHighlighter) {
+  public void removeHighlighter(@Nonnull final RangeHighlighter rangeHighlighter) {
+    myHostModel.removeHighlighter(rangeHighlighter);
   }
 
   @Override
   public void removeAllHighlighters() {
+    myHostModel.removeAllHighlighters();
   }
 
   @Override
   @Nonnull
   public RangeHighlighter[] getAllHighlighters() {
-    return RangeHighlighter.EMPTY_ARRAY;
-  }
-
-  @Override
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    return null;
-  }
-
-  @Override
-  public <T> void putUserData(@Nonnull Key<T> key, T value) {
+    return myHostModel.getAllHighlighters();
   }
 
   @Override
   public void dispose() {
+    myHostModel.dispose();
   }
 
   @Override
-  public RangeHighlighterEx addPersistentLineHighlighter(int lineNumber, int layer, TextAttributes textAttributes) {
-    return null;
+  public RangeHighlighterEx addPersistentLineHighlighter(final int line, final int layer, final TextAttributes textAttributes) {
+    int hostLine = myDocument.injectedToHostLine(line);
+    return myHostModel.addPersistentLineHighlighter(hostLine, layer, textAttributes);
   }
 
+
   @Override
-  public boolean containsHighlighter(@Nonnull RangeHighlighter highlighter) {
-    return false;
+  public boolean containsHighlighter(@Nonnull final RangeHighlighter highlighter) {
+    return myHostModel.containsHighlighter(highlighter);
   }
 
   @Override
   public void addMarkupModelListener(@Nonnull Disposable parentDisposable, @Nonnull MarkupModelListener listener) {
+    myHostModel.addMarkupModelListener(parentDisposable, listener);
   }
 
   @Override
   public void setRangeHighlighterAttributes(@Nonnull final RangeHighlighter highlighter, @Nonnull final TextAttributes textAttributes) {
-
+    myHostModel.setRangeHighlighterAttributes(highlighter, textAttributes);
   }
 
   @Override
   public boolean processRangeHighlightersOverlappingWith(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+    //todo
     return false;
   }
 
   @Override
   public boolean processRangeHighlightersOutside(int start, int end, @Nonnull Processor<? super RangeHighlighterEx> processor) {
+    //todo
     return false;
   }
 
   @Nonnull
   @Override
   public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset) {
-    return MarkupIterator.EMPTY;
+    // todo convert
+    return myHostModel.overlappingIterator(startOffset, endOffset);
   }
 
   @Nonnull
   @Override
   public MarkupIterator<RangeHighlighterEx> overlappingIterator(int startOffset, int endOffset, boolean onlyRenderedInGutter, boolean onlyRenderedInScrollBar) {
-    return MarkupIterator.EMPTY;
+    throw new UnsupportedOperationException();
   }
 
   @Override

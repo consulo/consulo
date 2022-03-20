@@ -21,7 +21,10 @@ import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+
+import static consulo.util.collection.ContainerUtil.swapElements;
 
 /**
  * @author VISTALL
@@ -54,5 +57,89 @@ public final class Lists {
   @Contract(pure = true)
   public static <T> List<T> notNullize(@Nullable List<T> list) {
     return list == null ? List.of() : list;
+  }
+
+  // Generalized Quick Sort. Does neither array.clone() nor list.toArray()
+
+  public static <T> void quickSort(@Nonnull List<T> list, @Nonnull Comparator<? super T> comparator) {
+    quickSort(list, comparator, 0, list.size());
+  }
+
+  private static <T> void quickSort(@Nonnull List<T> x, @Nonnull Comparator<? super T> comparator, int off, int len) {
+    // Insertion sort on smallest arrays
+    if (len < 7) {
+      for (int i = off; i < len + off; i++) {
+        for (int j = i; j > off && comparator.compare(x.get(j), x.get(j - 1)) < 0; j--) {
+          swapElements(x, j, j - 1);
+        }
+      }
+      return;
+    }
+
+    // Choose a partition element, v
+    int m = off + (len >> 1);       // Small arrays, middle element
+    if (len > 7) {
+      int l = off;
+      int n = off + len - 1;
+      if (len > 40) {        // Big arrays, pseudomedian of 9
+        int s = len / 8;
+        l = med3(x, comparator, l, l + s, l + 2 * s);
+        m = med3(x, comparator, m - s, m, m + s);
+        n = med3(x, comparator, n - 2 * s, n - s, n);
+      }
+      m = med3(x, comparator, l, m, n); // Mid-size, med of 3
+    }
+    T v = x.get(m);
+
+    // Establish Invariant: v* (<v)* (>v)* v*
+    int a = off;
+    int b = a;
+    int c = off + len - 1;
+    int d = c;
+    while (true) {
+      while (b <= c && comparator.compare(x.get(b), v) <= 0) {
+        if (comparator.compare(x.get(b), v) == 0) {
+          swapElements(x, a++, b);
+        }
+        b++;
+      }
+      while (c >= b && comparator.compare(v, x.get(c)) <= 0) {
+        if (comparator.compare(x.get(c), v) == 0) {
+          swapElements(x, c, d--);
+        }
+        c--;
+      }
+      if (b > c) break;
+      swapElements(x, b++, c--);
+    }
+
+    // Swap partition elements back to middle
+    int n = off + len;
+    int s = Math.min(a - off, b - a);
+    vecswap(x, off, b - s, s);
+    s = Math.min(d - c, n - d - 1);
+    vecswap(x, b, n - s, s);
+
+    // Recursively sort non-partition-elements
+    if ((s = b - a) > 1) quickSort(x, comparator, off, s);
+    if ((s = d - c) > 1) quickSort(x, comparator, n - s, s);
+  }
+
+  /*
+   * Returns the index of the median of the three indexed longs.
+   */
+  private static <T> int med3(@Nonnull List<T> x, Comparator<? super T> comparator, int a, int b, int c) {
+    return comparator.compare(x.get(a), x.get(b)) < 0
+           ? comparator.compare(x.get(b), x.get(c)) < 0 ? b : comparator.compare(x.get(a), x.get(c)) < 0 ? c : a
+           : comparator.compare(x.get(c), x.get(b)) < 0 ? b : comparator.compare(x.get(c), x.get(a)) < 0 ? c : a;
+  }
+
+  /*
+   * Swaps x[a .. (a+n-1)] with x[b .. (b+n-1)].
+   */
+  private static <T> void vecswap(List<T> x, int a, int b, int n) {
+    for (int i = 0; i < n; i++, a++, b++) {
+      swapElements(x, a, b);
+    }
   }
 }

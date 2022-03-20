@@ -16,32 +16,32 @@
 package com.intellij.refactoring.rename.inplace;
 
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
-import consulo.codeEditor.Editor;
-import consulo.document.RangeMarker;
-import consulo.component.extension.Extensions;
-import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
-import consulo.language.psi.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.psi.scope.LocalSearchScope;
-import consulo.project.content.scope.ProjectScopes;
-import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
-import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.RenameProcessor;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
 import com.intellij.refactoring.rename.naming.AutomaticRenamerFactory;
 import com.intellij.usageView.UsageViewUtil;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.component.extension.Extensions;
+import consulo.content.scope.SearchScope;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.psi.search.searches.ReferencesSearch;
 import consulo.language.editor.TargetElementUtil;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.psi.*;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.util.PsiTreeUtil;
+import consulo.project.content.scope.ProjectScopes;
+import consulo.undoRedo.CommandProcessor;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -215,7 +215,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
     }
     finally {
       try {
-        ((EditorInternal)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
+        ((RealEditor)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
       }
       finally {
         FinishMarkAction.finish(myProject, myEditor, markAction);
@@ -263,7 +263,7 @@ public class MemberInplaceRenamer extends VariableInplaceRenamer {
   protected void revertStateOnFinish() {
     final Editor editor = InjectedLanguageUtil.getTopLevelEditor(myEditor);
     if (editor == FileEditorManager.getInstance(myProject).getSelectedTextEditor()) {
-      ((EditorInternal)editor).startDumb();
+      ((RealEditor)editor).startDumb();
     }
     revertState();
   }

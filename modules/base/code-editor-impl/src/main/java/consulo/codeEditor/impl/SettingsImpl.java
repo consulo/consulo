@@ -24,23 +24,20 @@
  */
 package consulo.codeEditor.impl;
 
-import consulo.language.codeStyle.CodeStyle;
-import com.intellij.codeStyle.CodeStyleFacade;
-import consulo.language.Language;
-import consulo.document.Document;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.EditorSettings;
+import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
-import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.ex.EditorSettingsExternalizable;
-import com.intellij.openapi.editor.impl.softwrap.SoftWrapAppliancePlaces;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
+import consulo.language.Language;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -215,7 +212,7 @@ public class SettingsImpl implements EditorSettings {
 
   @Override
   public int getRightMargin(Project project) {
-    return myRightMargin != null ? myRightMargin : CodeStyleFacade.getInstance(project).getRightMargin(myLanguage);
+    return myRightMargin != null ? myRightMargin : CodeStyle.getSettings(project).getRightMargin(myLanguage);
   }
 
   @Nullable

@@ -16,7 +16,6 @@
 package consulo.application.util.logging;
 
 import consulo.util.lang.ExceptionUtil;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nullable;
 
@@ -51,7 +50,7 @@ public class IdeaLoggingEvent {
     return null;
   }
 
-  @NonNls
+  @Override
   public String toString() {
     return "IdeaLoggingEvent[message=" + myMessage + ", throwable=" + getThrowableText() + "]";
   }

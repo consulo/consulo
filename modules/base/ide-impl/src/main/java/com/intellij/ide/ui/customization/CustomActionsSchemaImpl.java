@@ -15,32 +15,28 @@
  */
 package com.intellij.ide.ui.customization;
 
-import consulo.util.xml.serializer.DefaultJDOMExternalizer;
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.IdeActions;
-import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
 import com.intellij.openapi.keymap.impl.ui.Group;
-import com.intellij.openapi.util.*;
+import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.application.AllIcons;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.logging.Logger;
+import consulo.ui.ex.action.*;
+import consulo.ui.image.Image;
+import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.logging.Logger;
-import consulo.ui.image.Image;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -55,31 +51,25 @@ import java.util.*;
  */
 @Singleton
 @State(name = "CustomActionsSchema", storages = @Storage("customization.xml"))
-public class CustomActionsSchema implements JDOMExternalizable {
-  @NonNls
+public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExternalizable {
   private static final String ACTIONS_SCHEMA = "custom_actions_schema";
-  @NonNls
   private static final String ACTIVE = "active";
-  @NonNls
   private static final String ELEMENT_ACTION = "action";
-  @NonNls
   private static final String ATTRIBUTE_ID = "id";
-  @NonNls
   private static final String ATTRIBUTE_ICON = "icon";
-
-  private final Map<String, String> myIconCustomizations = new HashMap<String, String>();
-
-  private ArrayList<ActionUrl> myActions = new ArrayList<ActionUrl>();
-
-  private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<String, ActionGroup>();
-
-  private final List<Pair> myIdToNameList = new ArrayList<Pair>();
-
-  @NonNls
   private static final String GROUP = "group";
-  private static final Logger LOG = Logger.getInstance(CustomActionsSchema.class);
 
-  public CustomActionsSchema() {
+  private final Map<String, String> myIconCustomizations = new HashMap<>();
+
+  private ArrayList<ActionUrl> myActions = new ArrayList<>();
+
+  private final HashMap<String, ActionGroup> myIdToActionGroup = new HashMap<>();
+
+  private final List<Pair> myIdToNameList = new ArrayList<>();
+
+  private static final Logger LOG = Logger.getInstance(CustomActionsSchemaImpl.class);
+
+  public CustomActionsSchemaImpl(Application application) {
     myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_MENU, ActionsTreeUtil.MAIN_MENU_TITLE));
     myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_TOOLBAR, ActionsTreeUtil.MAIN_TOOLBAR));
     myIdToNameList.add(new Pair(IdeActions.GROUP_EDITOR_POPUP, ActionsTreeUtil.EDITOR_POPUP));
@@ -99,13 +89,14 @@ public class CustomActionsSchema implements JDOMExternalizable {
         myIdToNameList.add(new Pair(groupId, groupTitle));
       }
     };
-    for (CustomizableActionGroupProvider provider : CustomizableActionGroupProvider.EP_NAME.getExtensions()) {
+    
+    for (CustomizableActionGroupProvider provider : CustomizableActionGroupProvider.EP_NAME.getExtensionList(application)) {
       provider.registerGroups(registrar);
     }
   }
 
-  public static CustomActionsSchema getInstance() {
-    return ServiceManager.getService(CustomActionsSchema.class);
+  public static CustomActionsSchemaImpl getInstance() {
+    return (CustomActionsSchemaImpl)CustomActionsSchema.getInstance();
   }
 
   public void addAction(ActionUrl url) {
@@ -122,13 +113,13 @@ public class CustomActionsSchema implements JDOMExternalizable {
     resortActions();
   }
 
-  public void copyFrom(CustomActionsSchema result) {
+  public void copyFrom(CustomActionsSchemaImpl result) {
     myIdToActionGroup.clear();
     myActions.clear();
     myIconCustomizations.clear();
 
     for (ActionUrl actionUrl : result.myActions) {
-      final ActionUrl url = new ActionUrl(new ArrayList<String>(actionUrl.getGroupPath()), actionUrl.getComponent(), actionUrl.getActionType(),
+      final ActionUrl url = new ActionUrl(new ArrayList<>(actionUrl.getGroupPath()), actionUrl.getComponent(), actionUrl.getActionType(),
                                           actionUrl.getAbsolutePosition());
       url.setInitialPosition(actionUrl.getInitialPosition());
       myActions.add(url);
@@ -142,7 +133,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
     Collections.sort(myActions, ActionUrlComparator.INSTANCE);
   }
 
-  public boolean isModified(CustomActionsSchema schema) {
+  public boolean isModified(CustomActionsSchemaImpl schema) {
     final ArrayList<ActionUrl> storedActions = schema.getActions();
     if (ApplicationManager.getApplication().isUnitTestMode() && !storedActions.isEmpty()) {
       System.err.println("stored: " + storedActions.toString());
@@ -204,6 +195,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
     }
   }
 
+  @Override
   public AnAction getCorrectedAction(String id) {
     if (!myIdToNameList.contains(new Pair(id, ""))) {
       return ActionManager.getInstance().getAction(id);
@@ -266,7 +258,7 @@ public class CustomActionsSchema implements JDOMExternalizable {
   }
 
   public List<ActionUrl> getChildActions(final ActionUrl url) {
-    ArrayList<ActionUrl> result = new ArrayList<ActionUrl>();
+    ArrayList<ActionUrl> result = new ArrayList<>();
     final ArrayList<String> groupPath = url.getGroupPath();
     for (ActionUrl actionUrl : myActions) {
       int index = 0;

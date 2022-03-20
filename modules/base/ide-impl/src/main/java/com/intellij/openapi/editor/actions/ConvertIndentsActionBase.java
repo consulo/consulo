@@ -25,7 +25,7 @@ import consulo.codeEditor.impl.action.EditorAction;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
 
 import javax.annotation.Nullable;

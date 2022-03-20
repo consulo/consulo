@@ -28,7 +28,7 @@ import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.util.BooleanGetter;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.JBColor;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.codeEditor.markup.*;

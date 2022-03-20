@@ -15,12 +15,12 @@
  */
 package consulo.desktop.swt.editor.impl;
 
-import consulo.application.Application;
-import consulo.document.Document;
-import consulo.codeEditor.EditorKind;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
+import consulo.application.Application;
+import consulo.codeEditor.EditorKind;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.document.Document;
 import consulo.project.Project;
-import consulo.codeEditor.impl.EditorInternal;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -39,7 +39,7 @@ public class DesktopSwtEditorFactoryImpl extends EditorFactoryImpl {
 
   @Nonnull
   @Override
-  protected EditorInternal createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
+  protected RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
     return new DesktopSwtEditorImpl(document, isViewer, project, kind);
   }
 }

@@ -21,7 +21,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;

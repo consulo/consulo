@@ -3,6 +3,7 @@ package com.intellij.openapi.editor.impl.view;
 
 import consulo.codeEditor.impl.FontInfo;
 import com.intellij.util.BitUtil;
+import consulo.codeEditor.impl.FontLayoutService;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

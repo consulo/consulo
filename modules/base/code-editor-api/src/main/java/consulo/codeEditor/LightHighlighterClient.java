@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.highlighter;
+package consulo.codeEditor;
 
 import consulo.document.Document;
-import consulo.codeEditor.HighlighterClient;
 import consulo.project.Project;
 
 /**

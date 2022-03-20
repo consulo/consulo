@@ -28,7 +28,7 @@ import com.intellij.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;
 import com.intellij.ide.projectView.impl.nodes.NamedLibraryElement;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.ide.util.EditSourceUtil;
@@ -431,7 +431,7 @@ public class CommanderPanel extends JPanel {
       }
     }
 
-    final ActionGroup group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_COMMANDER_POPUP);
+    final ActionGroup group = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_COMMANDER_POPUP);
     final ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.COMMANDER_POPUP, group);
     popupMenu.getComponent().show(c, x, y);
   }

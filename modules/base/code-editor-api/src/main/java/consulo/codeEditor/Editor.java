@@ -528,7 +528,9 @@ public interface Editor extends UserDataHolder {
     return (int)(getContentComponent().getFontMetrics(getColorsScheme().getFont(EditorFontType.PLAIN)).getAscent() * getColorsScheme().getLineSpacing());
   }
 
-  void showPopupInBestPositionFor(@Nonnull JBPopup popup);
+  default void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
+    EditorPopupHelper.getInstance().showPopupInBestPositionFor(this, popup);
+  }
 
   /**
    * @return the offset that the caret is expected to be but maybe not yet.

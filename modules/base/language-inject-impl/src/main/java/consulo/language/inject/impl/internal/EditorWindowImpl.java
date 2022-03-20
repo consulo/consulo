@@ -2,25 +2,11 @@
 
 package consulo.language.inject.impl.internal;
 
-import com.intellij.ide.CopyProvider;
-import com.intellij.ide.CutProvider;
-import com.intellij.ide.DeleteProvider;
-import com.intellij.ide.PasteProvider;
-import com.intellij.ide.highlighter.HighlighterFactory;
-import com.intellij.injected.editor.MarkupModelWindow;
-import com.intellij.openapi.editor.LineExtensionInfo;
-import com.intellij.openapi.editor.ex.*;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.highlighter.LightHighlighterClient;
-import com.intellij.openapi.editor.impl.TextDrawingCallback;
-import com.intellij.util.Consumer;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.*;
-import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.event.EditorMouseEventArea;
-import consulo.codeEditor.event.EditorMouseListener;
-import consulo.codeEditor.event.EditorMouseMotionListener;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.codeEditor.event.*;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
@@ -28,13 +14,10 @@ import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.internal.DocumentEx;
-import consulo.codeEditor.EditorHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.inject.DocumentWindow;
-import consulo.language.impl.internal.psi.inject.DocumentWindowImpl;
-import consulo.language.impl.internal.psi.inject.InjectionRegistrarImpl;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
@@ -56,6 +39,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Consumer;
 import java.util.function.IntFunction;
 
 class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, EditorEx {
@@ -321,11 +305,6 @@ class EditorWindowImpl extends UserDataHolderBase implements EditorWindow, Edito
   @Override
   public EditorKind getEditorKind() {
     return myDelegate.getEditorKind();
-  }
-
-  @Override
-  public void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
-    myDelegate.showPopupInBestPositionFor(popup);
   }
 
   @Override

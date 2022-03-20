@@ -23,7 +23,7 @@ package com.intellij.ide.navigationToolbar;
 import com.intellij.ide.navigationToolbar.ui.NavBarUIManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.ide.ui.customization.CustomisedActionGroup;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.project.Project;
@@ -88,7 +88,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   }
 
   public static boolean runToolbarExists() {
-    final AnAction correctedAction = CustomActionsSchema.getInstance().getCorrectedAction("NavBarToolBar");
+    final AnAction correctedAction = CustomActionsSchemaImpl.getInstance().getCorrectedAction("NavBarToolBar");
     return correctedAction instanceof DefaultActionGroup && ((DefaultActionGroup)correctedAction).getChildrenCount() > 0 ||
            correctedAction instanceof CustomisedActionGroup && ((CustomisedActionGroup)correctedAction).getFirstAction() != null;
   }
@@ -140,7 +140,7 @@ public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
   private void toggleRunPanel(final boolean show) {
     if (show && myRunPanel == null && runToolbarExists()) {
       final ActionManager manager = ActionManager.getInstance();
-      AnAction toolbarRunGroup = CustomActionsSchema.getInstance().getCorrectedAction("NavBarToolBar");
+      AnAction toolbarRunGroup = CustomActionsSchemaImpl.getInstance().getCorrectedAction("NavBarToolBar");
       if (toolbarRunGroup instanceof ActionGroup) {
         final boolean needGap = isNeedGap(toolbarRunGroup);
         final ActionToolbar actionToolbar = manager.createActionToolbar(ActionPlaces.NAVIGATION_BAR_TOOLBAR, (ActionGroup)toolbarRunGroup, true);

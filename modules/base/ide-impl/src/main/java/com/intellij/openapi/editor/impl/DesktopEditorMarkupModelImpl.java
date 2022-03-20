@@ -26,6 +26,7 @@ package com.intellij.openapi.editor.impl;
 
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.impl.MarkupModelImpl;

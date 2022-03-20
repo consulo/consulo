@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor;
+package consulo.ui.ex.awt;
 
-import consulo.project.Project;
-import consulo.fileEditor.FileEditorWindow;
-
-import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
 
 /**
  * @author yole
- */
-public interface EditorDropHandler {
-  boolean canHandleDrop(DataFlavor[] transferFlavors);
+*/
+public class EmptyClipboardOwner implements ClipboardOwner {
+  public static EmptyClipboardOwner INSTANCE = new EmptyClipboardOwner();
 
-  void handleDrop(Transferable t, final Project project, FileEditorWindow editorWindow);
+  private EmptyClipboardOwner() {
+  }
 
-  default void handleDrop(Transferable t, final Project project, FileEditorWindow editorWindow, @SuppressWarnings("unused") int dropAction) {
-    handleDrop(t, project, editorWindow);
+  @Override
+  public void lostOwnership(Clipboard clipboard, Transferable contents) {
   }
 }

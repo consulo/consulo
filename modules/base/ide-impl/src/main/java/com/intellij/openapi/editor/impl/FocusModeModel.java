@@ -21,7 +21,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

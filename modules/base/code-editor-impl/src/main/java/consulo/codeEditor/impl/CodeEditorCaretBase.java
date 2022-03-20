@@ -10,16 +10,19 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.impl.softwrap.SoftWrapHelper;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.EditorInternalHelper;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.DocumentUtil;
 import consulo.document.impl.RangeMarkerImpl;
 import consulo.document.impl.event.DocumentEventImpl;
 import consulo.document.internal.DocumentEx;
+import consulo.document.util.DocumentUtil;
+import consulo.language.util.AttachmentFactoryUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.ui.UIAccess;
@@ -36,6 +39,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
+import static consulo.codeEditor.impl.CodeEditorSelectionModelBase.doSelectLineAtCaret;
+
 /**
  * Common part from desktop caret impl
  */
@@ -44,7 +49,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   private static final Key<CaretVisualAttributes> VISUAL_ATTRIBUTES_KEY = Key.create("CaretAttributes");
 
   protected final CodeEditorBase myEditor;
-  
+
   @Nonnull
   protected final CodeEditorCaretModelBase<CodeEditorCaretBase> myCaretModel;
   private boolean isValid = true;
@@ -138,31 +143,33 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         int textEnd = Math.min(document.getTextLength() - 1, Math.max(offset, actualOffset) + 1);
         CharSequence text = document.getCharsSequence().subSequence(textStart, textEnd);
         int inverseOffset = myEditor.logicalPositionToOffset(logicalPosition);
-        LOG.error("caret moved to wrong offset. Please submit a dedicated ticket and attach current editor's text to it.", new Throwable(), AttachmentFactory.createContext("Requested: offset=" +
-                                                                                                                                                                            offset +
-                                                                                                                                                                            ", logical position='" +
-                                                                                                                                                                            logicalPosition +
-                                                                                                                                                                            "' but actual: offset=" +
-                                                                                                                                                                            actualOffset +
-                                                                                                                                                                            ", logical position='" +
-                                                                                                                                                                            myLogicalCaret +
-                                                                                                                                                                            "' (" +
-                                                                                                                                                                            positionByOffsetAfterMove +
-                                                                                                                                                                            "). " +
-                                                                                                                                                                            myEditor.dumpState() +
-                                                                                                                                                                            "\ninterested text [" +
-                                                                                                                                                                            textStart +
-                                                                                                                                                                            ";" +
-                                                                                                                                                                            textEnd +
-                                                                                                                                                                            "): '" +
-                                                                                                                                                                            text +
-                                                                                                                                                                            "'\n debug trace: " +
-                                                                                                                                                                            debugBuffer +
-                                                                                                                                                                            "\nLogical position -> offset ('" +
-                                                                                                                                                                            logicalPosition +
-                                                                                                                                                                            "'->'" +
-                                                                                                                                                                            inverseOffset +
-                                                                                                                                                                            "')"));
+        LOG.error("caret moved to wrong offset. Please submit a dedicated ticket and attach current editor's text to it.", new Throwable(), AttachmentFactory.get().create("context.txt", "Requested:" +
+                                                                                                                                                                                          " " +
+                                                                                                                                                                                          "offset=" +
+                                                                                                                                                                                          offset +
+                                                                                                                                                                                          ", logical position='" +
+                                                                                                                                                                                          logicalPosition +
+                                                                                                                                                                                          "' but actual: offset=" +
+                                                                                                                                                                                          actualOffset +
+                                                                                                                                                                                          ", logical position='" +
+                                                                                                                                                                                          myLogicalCaret +
+                                                                                                                                                                                          "' (" +
+                                                                                                                                                                                          positionByOffsetAfterMove +
+                                                                                                                                                                                          "). " +
+                                                                                                                                                                                          myEditor.dumpState() +
+                                                                                                                                                                                          "\ninterested text [" +
+                                                                                                                                                                                          textStart +
+                                                                                                                                                                                          ";" +
+                                                                                                                                                                                          textEnd +
+                                                                                                                                                                                          "): '" +
+                                                                                                                                                                                          text +
+                                                                                                                                                                                          "'\n debug trace: " +
+                                                                                                                                                                                          debugBuffer +
+                                                                                                                                                                                          "\nLogical position -> offset ('" +
+                                                                                                                                                                                          logicalPosition +
+                                                                                                                                                                                          "'->'" +
+                                                                                                                                                                                          inverseOffset +
+                                                                                                                                                                                          "')"));
       }
       if (event != null) {
         myCaretModel.fireCaretPositionChanged(event);
@@ -242,7 +249,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
       if (!editorSettings.isVirtualSpace() && lineShift == 0 && columnShift == 1) {
         int lastLine = document.getLineCount() - 1;
         if (lastLine < 0) lastLine = 0;
-        if (newColumnNumber > EditorUtil.getLastVisualLineColumnNumber(myEditor, newLineNumber) && newLineNumber < myEditor.logicalToVisualPosition(new LogicalPosition(lastLine, 0)).line) {
+        if (newColumnNumber > EditorImplUtil.getLastVisualLineColumnNumber(myEditor, newLineNumber) && newLineNumber < myEditor.logicalToVisualPosition(new LogicalPosition(lastLine, 0)).line) {
           newColumnNumber = 0;
           newLineNumber++;
         }
@@ -250,7 +257,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
       else if (!editorSettings.isVirtualSpace() && lineShift == 0 && columnShift == -1) {
         if (newColumnNumber < 0 && newLineNumber > 0) {
           newLineNumber--;
-          newColumnNumber = EditorUtil.getLastVisualLineColumnNumber(myEditor, newLineNumber);
+          newColumnNumber = EditorImplUtil.getLastVisualLineColumnNumber(myEditor, newLineNumber);
         }
       }
 
@@ -294,7 +301,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
                   newColumnNumber = myEditor.offsetToVisualPosition(offset + 1).column;
                 }
                 else {
-                  newColumnNumber = EditorUtil.getLastVisualLineColumnNumber(myEditor, newLineNumber);
+                  newColumnNumber = EditorImplUtil.getLastVisualLineColumnNumber(myEditor, newLineNumber);
                 }
               }
             }
@@ -311,7 +318,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
         }
         else {
           int line = myEditor.offsetToVisualLine(softWrapOffset - 1);
-          moveToVisualPosition(new VisualPosition(line, EditorUtil.getLastVisualLineColumnNumber(myEditor, line)));
+          moveToVisualPosition(new VisualPosition(line, EditorImplUtil.getLastVisualLineColumnNumber(myEditor, line)));
         }
       }
       else {
@@ -478,7 +485,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     if (locateBeforeSoftWrap && SoftWrapHelper.isCaretAfterSoftWrap(this)) {
       int lineToUse = myVisibleCaret.line - 1;
       if (lineToUse >= 0) {
-        final VisualPosition visualPosition = new VisualPosition(lineToUse, EditorUtil.getLastVisualLineColumnNumber(myEditor, lineToUse));
+        final VisualPosition visualPosition = new VisualPosition(lineToUse, EditorImplUtil.getLastVisualLineColumnNumber(myEditor, lineToUse));
         if (debugBuffer != null) {
           debugBuffer.append("Adjusting caret position by moving it before soft wrap. Moving to visual position ").append(visualPosition).append("\n");
         }
@@ -496,16 +503,16 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
           }
         }
         else {
-          LOG.error("Invalid editor dimension mapping", new Throwable(), AttachmentFactory.createContext("Expected to map visual position '" +
-                                                                                                         visualPosition +
-                                                                                                         "' to offset " +
-                                                                                                         newOffset +
-                                                                                                         " but got the following: -> logical position '" +
-                                                                                                         logicalPosition +
-                                                                                                         "'; -> offset " +
-                                                                                                         tmpOffset +
-                                                                                                         ". State: " +
-                                                                                                         myEditor.dumpState()));
+          LOG.error("Invalid editor dimension mapping", new Throwable(), AttachmentFactoryUtil.createContext("Expected to map visual position '" +
+                                                                                                             visualPosition +
+                                                                                                             "' to offset " +
+                                                                                                             newOffset +
+                                                                                                             " but got the following: -> logical position '" +
+                                                                                                             logicalPosition +
+                                                                                                             "'; -> offset " +
+                                                                                                             tmpOffset +
+                                                                                                             ". State: " +
+                                                                                                             myEditor.dumpState()));
         }
       }
     }
@@ -619,7 +626,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
     EditorSettings editorSettings = myEditor.getSettings();
 
     if (!editorSettings.isVirtualSpace()) {
-      int lineEndColumn = EditorUtil.getLastVisualLineColumnNumber(myEditor, line);
+      int lineEndColumn = EditorImplUtil.getLastVisualLineColumnNumber(myEditor, line);
       if (column > lineEndColumn && !myEditor.getSoftWrapModel().isInsideSoftWrap(pos)) {
         column = lineEndColumn;
         leanRight = true;
@@ -1301,7 +1308,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
   @Override
   public void selectLineAtCaret() {
     validateContext(true);
-    myCaretModel.doWithCaretMerging(() -> DesktopSelectionModelImpl.doSelectLineAtCaret(this));
+    myCaretModel.doWithCaretMerging(() -> doSelectLineAtCaret(this));
   }
 
   @Override
@@ -1319,7 +1326,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
       try {
         EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET);
-        DataContext context = AnActionEvent.getInjectedDataContext(new CaretSpecificDataContext(myEditor.getDataContext(), this));
+        DataContext context = AnActionEvent.getInjectedDataContext(EditorInternalHelper.getInstance(myEditor.getProject()).createCaretDataContext(myEditor.getDataContext(), this));
         Caret caret = context.getData(Caret.KEY);
         assert caret != null;
         handler.execute(caret.getEditor(), caret, context);

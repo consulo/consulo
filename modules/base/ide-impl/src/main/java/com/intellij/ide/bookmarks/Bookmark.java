@@ -31,7 +31,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.RangeHighlighter;

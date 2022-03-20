@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.document.impl.DocumentImpl;
 import consulo.component.extension.Extensions;
 import consulo.virtualFileSystem.fileType.FileType;

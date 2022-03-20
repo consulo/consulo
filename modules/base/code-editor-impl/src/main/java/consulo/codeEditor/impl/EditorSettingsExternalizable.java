@@ -16,11 +16,11 @@
 package consulo.codeEditor.impl;
 
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.codeEditor.BidiTextDirection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ui.ex.UINumericRange;
 import consulo.util.lang.StringUtil;
 import jakarta.inject.Singleton;
 import kava.beans.PropertyChangeListener;

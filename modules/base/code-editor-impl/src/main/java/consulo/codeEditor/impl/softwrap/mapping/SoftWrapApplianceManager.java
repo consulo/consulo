@@ -7,18 +7,20 @@ import consulo.codeEditor.impl.*;
 import consulo.codeEditor.impl.softwrap.SoftWrapImpl;
 import consulo.codeEditor.impl.softwrap.SoftWrapPainter;
 import consulo.codeEditor.impl.softwrap.SoftWrapsStorage;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.DocumentImpl;
-import consulo.document.impl.DocumentUtil;
 import consulo.document.internal.DocumentEx;
+import consulo.document.util.DocumentUtil;
 import consulo.document.util.Segment;
+import consulo.language.util.AttachmentFactoryUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.project.Project;
-import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.StringUtil;
@@ -236,12 +238,12 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
 
     Project project = myEditor.getProject();
     VirtualFile file = myEditor.getVirtualFile();
-    if (project != null && file != null && myEditor.getUserData(EditorInternal.FORCED_SOFT_WRAPS) != null) {
+    if (project != null && file != null && myEditor.getUserData(RealEditor.FORCED_SOFT_WRAPS) != null) {
       if (myStorage.isEmpty()) {
-        myEditor.putUserData(EditorInternal.SOFT_WRAPS_EXIST, null);
+        myEditor.putUserData(RealEditor.SOFT_WRAPS_EXIST, null);
       }
-      else if (myEditor.getUserData(EditorInternal.SOFT_WRAPS_EXIST) == null) {
-        myEditor.putUserData(EditorInternal.SOFT_WRAPS_EXIST, Boolean.TRUE);
+      else if (myEditor.getUserData(RealEditor.SOFT_WRAPS_EXIST) == null) {
+        myEditor.putUserData(RealEditor.SOFT_WRAPS_EXIST, Boolean.TRUE);
         EditorNotifications.getInstance(project).updateNotifications(file);
       }
     }
@@ -280,8 +282,8 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
 
     EditorPosition position = new EditorPosition(logical, start, myEditor);
     position.x = start == 0 ? myEditor.getPrefixTextWidthInPixels() : 0;
-    int spaceWidth = EditorUtil.getSpaceWidth(myContext.fontType, myEditor);
-    int plainSpaceWidth = EditorUtil.getSpaceWidth(Font.PLAIN, myEditor);
+    int spaceWidth = EditorImplUtil.getSpaceWidth(myContext.fontType, myEditor);
+    int plainSpaceWidth = EditorImplUtil.getSpaceWidth(Font.PLAIN, myEditor);
 
     myContext.logicalLineData.update(logical.line, spaceWidth, plainSpaceWidth);
 
@@ -355,8 +357,12 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
           break;
         }
         offset = document.getLineStartOffset(line);
-        if (offset > mandatoryEnd && myEditor.getFoldingModel().getCollapsedRegionAtOffset(offset - 1) == null) break;
-        else continue;
+        if (offset > mandatoryEnd && myEditor.getFoldingModel().getCollapsedRegionAtOffset(offset - 1) == null) {
+          break;
+        }
+        else {
+          continue;
+        }
       }
       FoldRegion foldRegion = myEditor.getFoldingModel().getCollapsedRegionAtOffset(offset);
       if (foldRegion != null) {
@@ -400,7 +406,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     for (int i = 0; i < placeholder.length(); i++) {
       char c = placeholder.charAt(i);
       if (c == '\n') c = ' '; // we display \n as space (see com.intellij.openapi.editor.impl.view.EditorView.getFoldRegionLayout)
-      placeholderWidthInPixels += SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor).charWidth(c, myContext.fontType);
+      placeholderWidthInPixels += CodeEditorSoftWrapModelBase.getEditorTextRepresentationHelper(myEditor).charWidth(c, myContext.fontType);
     }
 
     if (myContext.delayedSoftWrap == null) {
@@ -470,7 +476,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     int startOffset = myContext.currentPosition.offset;
     while (myContext.currentPosition.offset < myContext.tokenEndOffset) {
       if (counter++ > limit) {
-        LOG.error("Cycled soft wraps recalculation detected", new Throwable(), AttachmentFactory.createContext(
+        LOG.error("Cycled soft wraps recalculation detected", new Throwable(), AttachmentFactoryUtil.createContext(
                 String.format("Start recalculation offset: %d, visible area width: %d, calculation context: %s, editor info: %s", startOffset, myVisibleAreaWidth, myContext, myEditor.dumpState())));
         while (myContext.currentPosition.offset < myContext.tokenEndOffset) {
           int c = Character.codePointAt(myContext.text, myContext.currentPosition.offset);
@@ -637,11 +643,11 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
   private int[] calculateNewX(int c) {
     if (c == '\t') {
       int xStart = myContext.currentPosition.x + myContext.getInlaysPrefixWidth();
-      int xEnd = EditorUtil.nextTabStop(xStart, myEditor);
+      int xEnd = EditorImplUtil.nextTabStop(xStart, myEditor);
       return new int[]{xEnd + myContext.getInlaysSuffixWidth(), xEnd - xStart};
     }
     else {
-      int width = SoftWrapModelImpl.getEditorTextRepresentationHelper(myEditor).charWidth(c, myContext.fontType);
+      int width = CodeEditorSoftWrapModelBase.getEditorTextRepresentationHelper(myEditor).charWidth(c, myContext.fontType);
       return new int[]{myContext.currentPosition.x + width + myContext.getInlaysWidth(), width};
     }
   }
@@ -1005,7 +1011,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
             indentInPixels += spaceWidth;
             break;
           case '\t':
-            int x = EditorUtil.nextTabStop(indentInPixels, myEditor);
+            int x = EditorImplUtil.nextTabStop(indentInPixels, myEditor);
             indentInColumns += calculateWidthInColumns(c, x - indentInPixels, plainSpaceWidth);
             indentInPixels = x;
             break;
@@ -1062,7 +1068,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
       int width = Math.max(0, myEditor.getScrollingModel().getVisibleArea().width - insets.left - insets.right);
       if (myEditor.isInDistractionFreeMode()) {
         int rightMargin = myEditor.getSettings().getRightMargin(myEditor.getProject());
-        if (rightMargin > 0) width = Math.min(width, rightMargin * EditorUtil.getPlainSpaceWidth(myEditor));
+        if (rightMargin > 0) width = Math.min(width, rightMargin * EditorImplUtil.getPlainSpaceWidth(myEditor));
       }
       return width;
     }
@@ -1259,7 +1265,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     private int getSpaceWidth(@JdkConstants.FontStyle int fontType) {
       int result = fontType2spaceWidth.get(fontType);
       if (result <= 0) {
-        result = EditorUtil.getSpaceWidth(fontType, myEditor);
+        result = EditorImplUtil.getSpaceWidth(fontType, myEditor);
         fontType2spaceWidth.put(fontType, result);
       }
       assert result > 0;
@@ -1340,7 +1346,8 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     private int getInlaysSuffixWidth() {
       int nextOffset = currentPosition.offset + 1;
       return nextOffset < text.length() && text.charAt(nextOffset) != '\n' || nextOffset > tokenEndOffset || nextOffset == tokenEndOffset && nextIsFoldRegion
-             ? 0 : getInlaysWidthForOffset(nextOffset) + getAfterLineEndInlaysWidth(currentPosition.logicalLine);
+             ? 0
+             : getInlaysWidthForOffset(nextOffset) + getAfterLineEndInlaysWidth(currentPosition.logicalLine);
     }
 
     private int getAfterLineEndInlaysWidth(int logicalLine) {

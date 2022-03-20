@@ -15,25 +15,10 @@
  */
 package com.intellij.refactoring.rename.inplace;
 
-import consulo.language.Language;
-import consulo.language.LanguageExtension;
-import consulo.application.ApplicationManager;
-import consulo.application.Result;
-import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
-import consulo.application.progress.ProgressManager;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Pair;
-import consulo.document.util.TextRange;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.rename.*;
@@ -43,10 +28,24 @@ import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.refactoring.util.TextOccurrencesUtil;
 import com.intellij.usageView.UsageInfo;
 import com.intellij.util.PairProcessor;
-import consulo.util.collection.MultiMap;
+import consulo.application.ApplicationManager;
+import consulo.application.Result;
+import consulo.application.progress.ProgressManager;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.component.extension.Extensions;
 import consulo.container.plugin.PluginIds;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
+import consulo.language.LanguageExtension;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.psi.*;
+import consulo.project.Project;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -268,7 +267,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
     }
     finally {
       try {
-        ((EditorInternal)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
+        ((RealEditor)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
       }
       finally {
         FinishMarkAction.finish(myProject, myEditor, markAction);
@@ -319,7 +318,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
       revertStateOnFinish();
     }
     else {
-      ((EditorInternal)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
+      ((RealEditor)InjectedLanguageUtil.getTopLevelEditor(myEditor)).stopDumbLater();
     }
   }
 

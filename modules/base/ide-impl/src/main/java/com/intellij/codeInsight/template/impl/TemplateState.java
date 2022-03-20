@@ -21,7 +21,7 @@ import com.intellij.codeInsight.lookup.*;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.*;
 import com.intellij.codeInsight.template.macro.TemplateCompletionProcessor;
-import com.intellij.diagnostic.AttachmentFactory;
+import consulo.language.util.AttachmentFactoryUtil;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -67,7 +67,7 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairProcessor;
@@ -564,7 +564,7 @@ public class TemplateState implements Disposable {
     int segmentNumber = myTemplate.getVariableSegmentNumber(variableName);
     if (segmentNumber < 0) {
       LOG.error("No segment for variable: var=" + varNumber + "; name=" + variableName + "; " + presentTemplate(myTemplate) +
-                "; offset: " + myEditor.getCaretModel().getOffset(), AttachmentFactory.createAttachment(myDocument));
+                "; offset: " + myEditor.getCaretModel().getOffset(), AttachmentFactoryUtil.createAttachment(myDocument));
     }
     return segmentNumber;
   }
@@ -886,7 +886,7 @@ public class TemplateState implements Disposable {
     TextRange range = TextRange.create(start, end);
     if (!TextRange.from(0, myDocument.getCharsSequence().length()).contains(range)) {
       LOG.error("Diagnostic for EA-54980. Can't extract " + range + " range. " + presentTemplate(myTemplate),
-                AttachmentFactory.createAttachment(myDocument));
+                AttachmentFactoryUtil.createAttachment(myDocument));
     }
     String oldText = range.subSequence(myDocument.getCharsSequence()).toString();
 

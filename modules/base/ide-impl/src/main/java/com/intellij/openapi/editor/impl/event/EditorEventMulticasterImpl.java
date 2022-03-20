@@ -1,20 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl.event;
 
-import consulo.codeEditor.EditorEx;
-import consulo.document.Document;
-import com.intellij.openapi.editor.ex.*;
-import consulo.document.impl.EditorDocumentPriorities;
-import consulo.component.extension.ExtensionPointName;
+import com.intellij.openapi.editor.ex.EditorEventMulticasterEx;
+import com.intellij.openapi.editor.ex.EditorMarkupModel;
+import com.intellij.openapi.editor.ex.ErrorStripeListener;
 import com.intellij.util.EventDispatcher;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.event.*;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
+import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
+import consulo.document.impl.EditorDocumentPriorities;
 import consulo.document.internal.DocumentEx;
-import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.document.internal.EditReadOnlyListener;
-import consulo.codeEditor.event.*;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.ui.annotation.RequiredUIAccess;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.TestOnly;
@@ -112,7 +114,7 @@ public class EditorEventMulticasterImpl implements EditorEventMulticasterEx {
       }
     });
 
-    ((EditorMarkupModel)editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((EditorInternal)editor).getDisposable());
+    ((EditorMarkupModel)editor.getMarkupModel()).addErrorMarkerListener(myErrorStripeMulticaster.getMulticaster(), ((RealEditor)editor).getDisposable());
     editor.getCaretModel().addCaretListener(myCaretMulticaster.getMulticaster());
     editor.getSelectionModel().addSelectionListener(mySelectionMulticaster.getMulticaster());
     editor.getScrollingModel().addVisibleAreaListener(myVisibleAreaMulticaster.getMulticaster());

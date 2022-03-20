@@ -6,7 +6,7 @@ import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.Inlay;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.softwrap.WrapElementIterator;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import javax.annotation.Nonnull;
 
 import java.util.List;

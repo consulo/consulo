@@ -141,11 +141,6 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   }
 
   @Override
-  public void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
-    ((AbstractPopup)popup).showInBestPositionFor(this);
-  }
-
-  @Override
   @Nonnull
   public EditorSettings getSettings() {
     return getEditor().getSettings();

@@ -15,7 +15,7 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import com.intellij.openapi.editor.ex.util.EditorUtil;

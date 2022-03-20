@@ -11,7 +11,7 @@ import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.openapi.editor.HectorComponentPanel;
 import com.intellij.openapi.editor.HectorComponentPanelsProvider;
 import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import com.intellij.openapi.editor.markup.*;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

@@ -20,7 +20,7 @@ import consulo.codeEditor.SoftWrapDrawingType;
 import consulo.codeEditor.TextDrawingCallback;
 import consulo.codeEditor.impl.ColorProvider;
 import consulo.codeEditor.impl.FontInfo;
-import consulo.codeEditor.util.EditorUtil;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
@@ -106,7 +106,7 @@ public class TextBasedSoftWrapPainter implements SoftWrapPainter {
     for (Map.Entry<SoftWrapDrawingType, char[]> entry : mySymbols.entrySet()) {
       SoftWrapDrawingType type = entry.getKey();
       char c = entry.getValue()[0];
-      FontInfo fontInfo = EditorUtil.fontForChar(c, Font.PLAIN, myEditor);
+      FontInfo fontInfo = EditorImplUtil.fontForChar(c, Font.PLAIN, myEditor);
       if (!fontInfo.canDisplay(c)) {
         myCanUse = false;
         myFonts.put(type, null);

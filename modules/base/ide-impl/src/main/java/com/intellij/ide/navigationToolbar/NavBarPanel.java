@@ -14,7 +14,7 @@ import com.intellij.ide.navigationToolbar.ui.NavBarUIManager;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -461,7 +461,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
           if (popupGroupId != null) break;
         }
         if (popupGroupId == null) popupGroupId = IdeActions.GROUP_NAVBAR_POPUP;
-        ActionGroup group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(popupGroupId);
+        ActionGroup group = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(popupGroupId);
         return group == null ? EMPTY_ARRAY : group.getChildren(e);
       }
     }, ActionPlaces.NAVIGATION_BAR_POPUP, actionManager, new PopupMenuListenerAdapter() {

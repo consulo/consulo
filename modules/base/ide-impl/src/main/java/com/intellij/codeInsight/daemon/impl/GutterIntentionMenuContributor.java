@@ -11,7 +11,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.project.DumbService;
 import consulo.project.Project;

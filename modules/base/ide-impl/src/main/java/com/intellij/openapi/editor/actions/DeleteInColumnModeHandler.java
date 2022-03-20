@@ -1,6 +1,7 @@
 // Copyright 2000-2017 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.actions;
 
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;
@@ -9,7 +10,7 @@ import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import jakarta.inject.Inject;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.document.impl;
 
-import consulo.util.lang.function.Condition;
-import consulo.application.util.function.Processor;
+import consulo.application.ApplicationManager;
+import consulo.undoRedo.CommandProcessor;
+
+import javax.annotation.Nonnull;
 
 /**
- * @author max
+ * @author VISTALL
+ * @since 19-Mar-22
  */
-public class FilteringProcessor<T> implements Processor<T> {
-  private final Condition<T> myFilter;
-  private final Processor<T> myProcessor;
-
-  public FilteringProcessor(final Condition<T> filter, Processor<T> processor) {
-    myFilter = filter;
-    myProcessor = processor;
-  }
-
-  public boolean process(final T t) {
-    if (!myFilter.value(t)) return true;
-    return myProcessor.process(t);
+public class DocumentImpUtil {
+  public static void writeInRunUndoTransparentAction(@Nonnull final Runnable runnable) {
+    CommandProcessor.getInstance().runUndoTransparentAction(() -> ApplicationManager.getApplication().runWriteAction(runnable));
   }
 }

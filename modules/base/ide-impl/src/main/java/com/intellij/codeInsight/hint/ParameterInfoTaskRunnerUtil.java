@@ -9,11 +9,9 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.popup.ComponentPopupBuilder;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.RelativePoint;
@@ -22,7 +20,9 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.concurrent.EdtScheduledExecutorService;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.CancellablePromise;
 
@@ -58,7 +58,7 @@ class ParameterInfoTaskRunnerUtil {
       if (promise != null && promise.isSucceeded() && Objects.equals(focusOwner, getFocusOwner(project))) {
         continuationConsumer.accept(continuation);
       }
-    }).expireWith(editor instanceof EditorInternal ? ((EditorInternal)editor).getDisposable() : project).submit(AppExecutorUtil.getAppExecutorService()).onProcessed(ignore -> {
+    }).expireWith(editor instanceof RealEditor ? ((RealEditor)editor).getDisposable() : project).submit(AppExecutorUtil.getAppExecutorService()).onProcessed(ignore -> {
       stopAction.accept(false);
       editor.getScrollingModel().removeVisibleAreaListener(visibleAreaListener);
     }));

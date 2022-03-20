@@ -26,7 +26,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleManager;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 

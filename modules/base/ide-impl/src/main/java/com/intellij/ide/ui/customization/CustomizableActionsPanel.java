@@ -82,7 +82,7 @@ public class CustomizableActionsPanel implements Disposable {
   private final JTree myActionsTree;
   private JButton myAddSeparatorButton;
 
-  private CustomActionsSchema mySelectedSchema;
+  private CustomActionsSchemaImpl mySelectedSchema;
 
   private JButton myRestoreAllDefaultButton;
   private JButton myRestoreDefaultButton;
@@ -251,7 +251,7 @@ public class CustomizableActionsPanel implements Disposable {
 
     myRestoreAllDefaultButton = new JButton("Restore All Defaults");
     myRestoreAllDefaultButton.addActionListener(e -> {
-      mySelectedSchema.copyFrom(new CustomActionsSchema());
+      mySelectedSchema.copyFrom(new CustomActionsSchemaImpl());
       patchActionsTreeCorrespondingToSchema(root);
       myRestoreAllDefaultButton.setEnabled(false);
     });
@@ -260,7 +260,7 @@ public class CustomizableActionsPanel implements Disposable {
     myRestoreDefaultButton.addActionListener(e -> {
       final List<ActionUrl> otherActions = new ArrayList<>(mySelectedSchema.getActions());
       otherActions.removeAll(findActionsUnderSelection());
-      mySelectedSchema.copyFrom(new CustomActionsSchema());
+      mySelectedSchema.copyFrom(new CustomActionsSchemaImpl());
       for (ActionUrl otherAction : otherActions) {
         mySelectedSchema.addAction(otherAction);
       }
@@ -413,7 +413,7 @@ public class CustomizableActionsPanel implements Disposable {
       CustomizationUtil.optimizeSchema(myActionsTree, mySelectedSchema);
     }
     restorePathsAfterTreeOptimization(treePaths);
-    CustomActionsSchema.getInstance().copyFrom(mySelectedSchema);
+    CustomActionsSchemaImpl.getInstance().copyFrom(mySelectedSchema);
     setCustomizationSchemaForCurrentProjects();
   }
 
@@ -424,15 +424,15 @@ public class CustomizableActionsPanel implements Disposable {
   }
 
   public void reset() {
-    mySelectedSchema = new CustomActionsSchema();
-    mySelectedSchema.copyFrom(CustomActionsSchema.getInstance());
+    mySelectedSchema = new CustomActionsSchemaImpl();
+    mySelectedSchema.copyFrom(CustomActionsSchemaImpl.getInstance());
     patchActionsTreeCorrespondingToSchema((DefaultMutableTreeNode)myModel.getRoot());
-    myRestoreAllDefaultButton.setEnabled(mySelectedSchema.isModified(new CustomActionsSchema()));
+    myRestoreAllDefaultButton.setEnabled(mySelectedSchema.isModified(new CustomActionsSchemaImpl()));
   }
 
   public boolean isModified() {
     CustomizationUtil.optimizeSchema(myActionsTree, mySelectedSchema);
-    return CustomActionsSchema.getInstance().isModified(mySelectedSchema);
+    return CustomActionsSchemaImpl.getInstance().isModified(mySelectedSchema);
   }
 
   private void patchActionsTreeCorrespondingToSchema(DefaultMutableTreeNode root) {

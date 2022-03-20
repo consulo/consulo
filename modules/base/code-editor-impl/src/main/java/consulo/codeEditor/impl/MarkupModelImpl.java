@@ -29,7 +29,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.document.impl.IntervalTreeImpl;
 import consulo.document.impl.TextRangeInterval;
 import consulo.document.internal.DocumentEx;

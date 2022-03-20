@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.impl;
+package consulo.codeEditor.impl;
 
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.MarkupModelImpl;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.inject.impl.internal.MarkupModelWindow;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.MarkupModel;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.project.Project;
+import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
-import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -85,7 +83,7 @@ public class DocumentMarkupModel {
     MarkupModelImpl model = markupModelMap.get(project);
     if (create && model == null) {
       MarkupModelImpl newModel = new MarkupModelImpl((DocumentEx)document);
-      if ((model = ConcurrencyUtil.cacheOrGet(markupModelMap, project, newModel)) == newModel) {
+      if ((model = Maps.cacheOrGet(markupModelMap, project, newModel)) == newModel) {
         documentMarkupModelManager.registerDocument(document);
       }
       else {
@@ -99,7 +97,7 @@ public class DocumentMarkupModel {
   private static ConcurrentMap<Project, MarkupModelImpl> getMarkupModelMap(@Nonnull Document document) {
     ConcurrentMap<Project, MarkupModelImpl> markupModelMap = document.getUserData(MARKUP_MODEL_MAP_KEY);
     if (markupModelMap == null) {
-      ConcurrentMap<Project, MarkupModelImpl> newMap = ContainerUtil.newConcurrentMap();
+      ConcurrentMap<Project, MarkupModelImpl> newMap = new ConcurrentHashMap<>();
       markupModelMap = ((UserDataHolderEx)document).putUserDataIfAbsent(MARKUP_MODEL_MAP_KEY, newMap);
     }
     return markupModelMap;

@@ -20,7 +20,7 @@ import com.intellij.ide.actions.CustomizeUIAction;
 import com.intellij.ide.actions.ViewToolbarAction;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.application.Application;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -204,7 +204,7 @@ public class IdeRootPane extends JRootPane implements Disposable, UISettingsList
   }
 
   private JComponent createToolbar() {
-    ActionGroup group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_TOOLBAR);
+    ActionGroup group = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_TOOLBAR);
     final ActionToolbar toolBar= myActionManager.createActionToolbar(
             ActionPlaces.MAIN_TOOLBAR,
             group,

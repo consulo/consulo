@@ -5,7 +5,7 @@ import consulo.document.impl.RangeMarkerTree;
 import consulo.codeEditor.EditorCustomElementRenderer;
 import consulo.codeEditor.Inlay;
 import consulo.codeEditor.VisualPosition;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

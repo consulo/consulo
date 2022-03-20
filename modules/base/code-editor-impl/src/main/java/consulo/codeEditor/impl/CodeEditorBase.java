@@ -1,14 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl;
 
-import com.intellij.ide.CopyProvider;
-import com.intellij.ide.CutProvider;
-import com.intellij.ide.DeleteProvider;
-import com.intellij.ide.PasteProvider;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.ui.popup.AbstractPopup;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.util.Dumpable;
@@ -18,10 +12,10 @@ import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.action.EditorAction;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.MarkupModelListener;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.*;
 import consulo.colorScheme.impl.FontPreferencesImpl;
@@ -36,7 +30,6 @@ import consulo.document.impl.DocumentImpl;
 import consulo.document.impl.EditorDocumentPriorities;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.PrioritizedDocumentListener;
-import consulo.language.editor.highlight.EditorHighlighter;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -45,9 +38,8 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
-import consulo.ui.ex.popup.JBPopup;
 import consulo.undoRedo.CommandProcessor;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
 import consulo.util.collection.SmartList;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
@@ -68,7 +60,7 @@ import java.util.function.IntFunction;
 /**
  * Common part from desktop CodeEditor implementation
  */
-public abstract class CodeEditorBase extends UserDataHolderBase implements EditorInternal, HighlighterClient, Dumpable, Queryable {
+public abstract class CodeEditorBase extends UserDataHolderBase implements RealEditor, HighlighterClient, Dumpable, Queryable {
   protected class MyColorSchemeDelegate extends DelegateColorScheme {
     private final FontPreferencesImpl myFontPreferences = new FontPreferencesImpl();
     private final FontPreferencesImpl myConsoleFontPreferences = new FontPreferencesImpl();
@@ -405,14 +397,14 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
 
   protected final PropertyChangeSupport myPropertyChangeSupport = new PropertyChangeSupport(this);
 
-  protected final List<FocusChangeListener> myFocusListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  protected final List<FocusChangeListener> myFocusListeners = Lists.newLockFreeCopyOnWriteList();
 
   protected final List<EditorPopupHandler> myPopupHandlers = new ArrayList<>();
 
   @Nonnull
-  protected final List<EditorMouseListener> myMouseListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  protected final List<EditorMouseListener> myMouseListeners = Lists.newLockFreeCopyOnWriteList();
   @Nonnull
-  protected final List<EditorMouseMotionListener> myMouseMotionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  protected final List<EditorMouseMotionListener> myMouseMotionListeners = Lists.newLockFreeCopyOnWriteList();
 
   @Nonnull
   protected EditorColorsScheme myScheme;
@@ -490,7 +482,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
 
     if (!mySettings.isUseSoftWraps() && shouldSoftWrapsBeForced()) {
       mySettings.setUseSoftWrapsQuiet();
-      putUserData(EditorInternal.FORCED_SOFT_WRAPS, Boolean.TRUE);
+      putUserData(RealEditor.FORCED_SOFT_WRAPS, Boolean.TRUE);
     }
 
     mySelectionModel = createSelectionModel();
@@ -558,11 +550,11 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
 
   protected abstract void stopDumb();
 
-  protected boolean canImpactGutterSize(@Nonnull RangeHighlighterEx highlighter) {
+  protected boolean canImpactGutterSize(@Nonnull RangeHighlighter highlighter) {
     return false;
   }
 
-  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
   }
 
   protected void bulkUpdateStarted() {
@@ -867,8 +859,9 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
 
   @Override
   public void stopDumbLater() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
-    ApplicationManager.getApplication().invokeLater(this::stopDumb, ModalityState.current(), () -> isDisposed());
+    Application application = Application.get();
+    if (application.isUnitTestMode()) return;
+    application.invokeLater(this::stopDumb, application.getCurrentModalityState(), () -> isDisposed());
   }
 
   @Override
@@ -897,7 +890,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
       boolean oldAvailable = oldFilter == null || oldFilter.value(highlighter);
       boolean newAvailable = filter == null || filter.value(highlighter);
       if (oldAvailable != newAvailable) {
-        myMarkupModelListener.attributesChanged((RangeHighlighterEx)highlighter, true, EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
+        myMarkupModelListener.attributesChanged(highlighter, true, EditorUtil.attributesImpactFontStyleOrColor(highlighter.getTextAttributes()));
       }
     }
   }
@@ -1037,14 +1030,14 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
 
   @Nonnull
   private DataContext getProjectAwareDataContext(@Nonnull final DataContext original) {
-    if (original.getData(CommonDataKeys.PROJECT) == myProject) return original;
+    if (original.getData(Project.KEY) == myProject) return original;
 
     return new DataContext() {
       @Nullable
       @Override
       @SuppressWarnings("unchecked")
       public <T> T getData(@Nonnull Key<T> dataId) {
-        if (CommonDataKeys.PROJECT == dataId) {
+        if (Project.KEY == dataId) {
           return (T)myProject;
         }
         return original.getData(dataId);
@@ -1154,11 +1147,6 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements Edito
   public EditorHighlighter getHighlighter() {
     assertReadAccess();
     return myHighlighter;
-  }
-
-  @Override
-  public void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
-    ((AbstractPopup)popup).showInBestPositionFor(this);
   }
 
   @RequiredUIAccess

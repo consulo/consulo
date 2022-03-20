@@ -22,25 +22,21 @@
  * To change template for new class use
  * Code Style | Class Templates options (Tools | IDE Options).
  */
-package com.intellij.openapi.editor.actions;
+package consulo.codeEditor.impl;
 
-import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.EditorPopupHandler;
-import com.intellij.util.text.CharArrayUtil;
 import consulo.codeEditor.*;
+import consulo.codeEditor.action.CaretStop;
+import consulo.codeEditor.action.CaretStopPolicy;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
-import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.impl.util.EditorImplUtil;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.util.EditorModificationUtil;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.codeEditor.HighlighterIterator;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -49,6 +45,9 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.CharArrayUtil;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -76,7 +75,7 @@ public class EditorActionUtil {
       editor.getScrollingModel().scrollVertically(editor.getScrollingModel().getVerticalScrollOffset() + lineShift * editor.getLineHeight());
     }
     if (columnShift != 0) {
-      editor.getScrollingModel().scrollHorizontally(editor.getScrollingModel().getHorizontalScrollOffset() + columnShift * EditorUtil.getSpaceWidth(Font.PLAIN, editor));
+      editor.getScrollingModel().scrollHorizontally(editor.getScrollingModel().getHorizontalScrollOffset() + columnShift * EditorImplUtil.getSpaceWidth(Font.PLAIN, editor));
     }
 
     if (!moveCaret) {
@@ -107,7 +106,7 @@ public class EditorActionUtil {
 
     VisualPosition caretPos = editor.getCaretModel().getVisualPosition();
     Point caretLocation2 = editor.visualPositionToXY(caretPos);
-    final boolean scrollToCaret = !(editor instanceof DesktopEditorImpl) || ((DesktopEditorImpl)editor).isScrollToCaret();
+    final boolean scrollToCaret = !(editor instanceof RealEditor) || ((RealEditor)editor).isScrollToCaret();
     if (scrollToCaret) {
       editor.getScrollingModel().scrollVertically(caretLocation2.y - caretVShift);
     }
@@ -447,13 +446,13 @@ public class EditorActionUtil {
     int logLineEndOffset = document.getLineEndOffset(logLine);
     LogicalPosition logLineStart = editor.offsetToLogicalPosition(logLineStartOffset);
     VisualPosition visLineStart = editor.logicalToVisualPosition(logLineStart);
-    boolean newRendering = editor instanceof DesktopEditorImpl;
+    boolean newRendering = editor instanceof RealEditor;
 
     boolean softWrapIntroducedLine = visLineStart.line != visualLineNumber;
     if (!softWrapIntroducedLine) {
       int offset = findFirstNonSpaceOffsetInRange(document.getCharsSequence(), logLineStartOffset, logLineEndOffset);
       if (offset >= 0) {
-        return newRendering ? editor.offsetToVisualPosition(offset).column : EditorUtil.calcColumnNumber(editor, document.getCharsSequence(), logLineStartOffset, offset);
+        return newRendering ? editor.offsetToVisualPosition(offset).column : EditorImplUtil.calcColumnNumber(editor, document.getCharsSequence(), logLineStartOffset, offset);
       }
       else {
         return -1;
@@ -491,7 +490,7 @@ public class EditorActionUtil {
           assert !newRendering : "Unexpected soft wrap text";
           // Non space symbol is contained at soft wrap text after offset that corresponds to the target visual line start.
           if (nextSoftWrapLineFeedOffset < 0 || end < nextSoftWrapLineFeedOffset) {
-            return EditorUtil.calcColumnNumber(editor, softWrapText, j, end);
+            return EditorImplUtil.calcColumnNumber(editor, softWrapText, j, end);
           }
           else {
             return -1;
@@ -505,7 +504,7 @@ public class EditorActionUtil {
       }
       int end = findFirstNonSpaceOffsetInRange(document.getCharsSequence(), softWrap.getStart(), logLineEndOffset);
       if (end >= 0) {
-        return newRendering ? editor.offsetToVisualPosition(end).column : EditorUtil.calcColumnNumber(editor, document.getCharsSequence(), softWrap.getStart(), end);
+        return newRendering ? editor.offsetToVisualPosition(end).column : EditorImplUtil.calcColumnNumber(editor, document.getCharsSequence(), softWrap.getStart(), end);
       }
       else {
         return -1;
@@ -569,7 +568,7 @@ public class EditorActionUtil {
       return;
     }
     VisualPosition currentVisualCaret = editor.getCaretModel().getVisualPosition();
-    VisualPosition visualEndOfLineWithCaret = new VisualPosition(currentVisualCaret.line, EditorUtil.getLastVisualLineColumnNumber(editor, currentVisualCaret.line), true);
+    VisualPosition visualEndOfLineWithCaret = new VisualPosition(currentVisualCaret.line, EditorImplUtil.getLastVisualLineColumnNumber(editor, currentVisualCaret.line), true);
 
     // There is a possible case that the caret is already located at the visual end of line and the line is soft wrapped.
     // We want to move the caret to the end of the next visual line then.
@@ -589,7 +588,7 @@ public class EditorActionUtil {
         int column = currentVisualCaret.column;
         if (softWrap != null) {
           line++;
-          column = EditorUtil.getLastVisualLineColumnNumber(editor, line);
+          column = EditorImplUtil.getLastVisualLineColumnNumber(editor, line);
         }
         visualEndOfLineWithCaret = new VisualPosition(line, column, true);
       }
@@ -618,7 +617,7 @@ public class EditorActionUtil {
       caretModel.moveToVisualPosition(visualEndOfLineWithCaret);
     }
     else {
-      if (editor instanceof DesktopEditorImpl && true) {
+      if (editor instanceof RealEditor) {
         caretModel.moveToLogicalPosition(editor.offsetToLogicalPosition(newOffset).leanForward(true));
       }
       else {
@@ -670,8 +669,8 @@ public class EditorActionUtil {
         newOffset = foldRegion.getStartOffset();
       }
     }
-    if (editor instanceof DesktopEditorImpl) {
-      int boundaryOffset = ((DesktopEditorImpl)editor).findNearestDirectionBoundary(offset, true);
+    if (editor instanceof RealEditor) {
+      int boundaryOffset = ((RealEditor)editor).findNearestDirectionBoundary(offset, true);
       if (boundaryOffset >= 0) {
         newOffset = Math.min(boundaryOffset, newOffset);
       }
@@ -756,8 +755,8 @@ public class EditorActionUtil {
       }
     }
 
-    if (editor instanceof DesktopEditorImpl && true) {
-      int boundaryOffset = ((DesktopEditorImpl)editor).findNearestDirectionBoundary(offset, false);
+    if (editor instanceof RealEditor) {
+      int boundaryOffset = ((RealEditor)editor).findNearestDirectionBoundary(offset, false);
       if (boundaryOffset >= 0) {
         newOffset = Math.max(boundaryOffset, newOffset);
       }
@@ -818,21 +817,6 @@ public class EditorActionUtil {
     setupSelection(editor, isWithSelection, selectionStart, blockSelectionStart);
   }
 
-  /**
-   * @deprecated Use {@link EditorEx#setContextMenuGroupId(String)} or
-   * {@link EditorEx#installPopupHandler(consulo.codeEditor.EditorPopupHandler)} instead. To be removed in version 2020.2.
-   */
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2020.2")
-  public static EditorPopupHandler createEditorPopupHandler(@Nonnull final ActionGroup group) {
-    return new EditorPopupHandler() {
-      @Override
-      public void invokePopup(final EditorMouseEvent event) {
-        showEditorPopup(event, group);
-      }
-    };
-  }
-
   private static void showEditorPopup(final EditorMouseEvent event, @Nonnull final ActionGroup group) {
     if (!event.isConsumed() && event.getArea() == EditorMouseEventArea.EDITING_AREA) {
       ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(ActionPlaces.EDITOR_POPUP, group);
@@ -877,12 +861,7 @@ public class EditorActionUtil {
     FoldRegion collapsedRegionAtOffset;
     while ((collapsedRegionAtOffset = foldingModel.getCollapsedRegionAtOffset(offset)) != null) {
       final FoldRegion region = collapsedRegionAtOffset;
-      foldingModel.runBatchFoldingOperation(new Runnable() {
-        @Override
-        public void run() {
-          region.setExpanded(true);
-        }
-      });
+      foldingModel.runBatchFoldingOperation(() -> region.setExpanded(true));
     }
   }
 

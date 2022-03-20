@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.actionSystem.impl.WeakTimerListener;
@@ -400,7 +400,7 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
   }
 
   private void expandActionGroup(final DataContext context, final List<AnAction> newVisibleActions, ActionManager actionManager) {
-    final ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
+    final ActionGroup mainActionGroup = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_MAIN_MENU);
     if (mainActionGroup == null) return;
     final AnAction[] children = mainActionGroup.getChildren(null);
     for (final AnAction action : children) {

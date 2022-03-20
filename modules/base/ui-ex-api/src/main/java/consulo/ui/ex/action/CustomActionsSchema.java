@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui;
+package consulo.ui.ex.action;
 
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.Transferable;
+import consulo.application.Application;
+
+import javax.annotation.Nullable;
 
 /**
- * @author yole
-*/
-public class EmptyClipboardOwner implements ClipboardOwner {
-  public static EmptyClipboardOwner INSTANCE = new EmptyClipboardOwner();
-
-  private EmptyClipboardOwner() {
+ * @author VISTALL
+ * @since 20-Mar-22
+ */
+public interface CustomActionsSchema {
+  static CustomActionsSchema getInstance() {
+    return Application.get().getInstance(CustomActionsSchema.class);
   }
 
-  public void lostOwnership(Clipboard clipboard, Transferable contents) {
-  }
+  @Nullable
+  AnAction getCorrectedAction(String id);
 }

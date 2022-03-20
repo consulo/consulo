@@ -2,7 +2,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import com.intellij.openapi.util.text.StringUtil;

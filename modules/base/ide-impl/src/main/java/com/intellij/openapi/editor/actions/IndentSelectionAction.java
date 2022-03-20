@@ -17,6 +17,7 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
@@ -29,7 +30,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;

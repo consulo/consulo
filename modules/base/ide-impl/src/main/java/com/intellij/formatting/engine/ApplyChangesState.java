@@ -22,7 +22,7 @@ import consulo.codeEditor.TextChange;
 import consulo.document.internal.DocumentEx;
 import com.intellij.openapi.editor.impl.BulkChangesMerger;
 import consulo.codeEditor.impl.TextChangeImpl;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;

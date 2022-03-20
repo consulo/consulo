@@ -21,7 +21,7 @@ import com.intellij.ide.dnd.DnDAware;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import com.intellij.ui.BalloonImpl;
 import com.intellij.util.containers.FactoryMap;
-import com.intellij.util.ui.EmptyClipboardOwner;
+import consulo.ui.ex.awt.EmptyClipboardOwner;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;

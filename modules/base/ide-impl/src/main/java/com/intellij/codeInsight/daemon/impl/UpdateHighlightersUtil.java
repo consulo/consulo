@@ -4,7 +4,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.impl.SweepProcessor;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Consumer;

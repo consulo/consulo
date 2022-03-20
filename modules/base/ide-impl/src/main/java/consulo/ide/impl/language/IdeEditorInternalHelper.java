@@ -74,7 +74,7 @@ public class IdeEditorInternalHelper extends EditorInternalHelper {
 
   @Nonnull
   @Override
-  public CaretDataContext createDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+  public CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
     return new FileEditorAffectCaretContext(delegate, caret);
   }
 

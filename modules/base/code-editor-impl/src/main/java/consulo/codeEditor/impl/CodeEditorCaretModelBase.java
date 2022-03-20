@@ -3,12 +3,8 @@
 
 package consulo.codeEditor.impl;
 
-import com.intellij.diagnostic.Dumpable;
-import com.intellij.openapi.editor.ex.EditorEx;
-import com.intellij.openapi.editor.impl.InlineInlayImpl;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.EmptyClipboardOwner;
 import consulo.application.ApplicationManager;
+import consulo.application.util.Dumpable;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretActionListener;
 import consulo.codeEditor.event.CaretEvent;
@@ -22,6 +18,8 @@ import consulo.document.impl.EditorDocumentPriorities;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.proxy.EventDispatcher;
+import consulo.ui.ex.awt.EmptyClipboardOwner;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import org.jetbrains.annotations.TestOnly;

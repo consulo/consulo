@@ -35,6 +35,7 @@ import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.LineIterator;
 import consulo.document.internal.RangeMarkerEx;
+import consulo.document.util.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.logging.Logger;
@@ -366,7 +367,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     int finalTargetOffsetPos = targetOffsetPos;
     // document must be unblocked by now. If not, some Save handler attempted to modify PSI
     // which should have been caught by assertion in com.intellij.pom.core.impl.PomModelImpl.runTransaction
-    DocumentUtil.writeInRunUndoTransparentAction(new DocumentRunnable(this, project) {
+    DocumentImpUtil.writeInRunUndoTransparentAction(new DocumentRunnable(this, project) {
       @Override
       public void run() {
         DocumentUtil.executeInBulk(DocumentImpl.this, finalTargetOffsetPos > STRIP_TRAILING_SPACES_BULK_MODE_LINES_LIMIT * 2, () -> {

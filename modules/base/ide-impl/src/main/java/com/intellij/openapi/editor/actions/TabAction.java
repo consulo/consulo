@@ -26,6 +26,7 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.codeEditor.EditorBundle;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.*;

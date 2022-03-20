@@ -1,11 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.openapi.editor.actions;
+package consulo.language.editor.action;
 
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
-import com.intellij.openapi.util.Comparing;
 import consulo.language.ast.IElementType;
+
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 /**
  * Defines boundaries between language tokens which should be used as stops for next/prev-word caret movements.
@@ -24,6 +25,6 @@ public class WordBoundaryFilter {
    * @see EditorHighlighter
    */
   public boolean isWordBoundary(@Nonnull IElementType previousTokenType, @Nonnull IElementType tokenType) {
-    return !Comparing.equal(previousTokenType, tokenType);
+    return !Objects.equals(previousTokenType, tokenType);
   }
 }

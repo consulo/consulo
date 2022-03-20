@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.ui;
+package consulo.ui.ex;
 
 /**
  * This class is designed to provide reasonable restrictions for UI-specific settings

@@ -13,39 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.impl;
+package consulo.codeEditor.impl;
 
-import consulo.codeEditor.impl.FilteringMarkupIterator;
+import consulo.application.util.function.FilteringProcessor;
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.codeEditor.markup.*;
+import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.MarkupIterator;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.codeEditor.markup.MarkupModelListener;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.util.lang.function.Condition;
-import com.intellij.util.Consumer;
-import com.intellij.util.FilteringProcessor;
-import consulo.application.util.function.Processor;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.disposer.Disposable;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class EditorFilteringMarkupModelEx implements MarkupModelEx {
   @Nonnull
-  private final EditorInternal myEditor;
+  private final RealEditor myEditor;
   @Nonnull
   private final MarkupModelEx myDelegate;
 
   private final Condition<RangeHighlighter> IS_AVAILABLE = this::isAvailable;
 
-  public EditorFilteringMarkupModelEx(@Nonnull EditorInternal editor, @Nonnull MarkupModelEx delegate) {
+  public EditorFilteringMarkupModelEx(@Nonnull RealEditor editor, @Nonnull MarkupModelEx delegate) {
     myEditor = editor;
     myDelegate = delegate;
   }

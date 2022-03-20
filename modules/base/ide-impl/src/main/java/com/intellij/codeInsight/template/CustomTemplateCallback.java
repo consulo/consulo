@@ -4,7 +4,7 @@ package com.intellij.codeInsight.template;
 import com.intellij.codeInsight.template.impl.TemplateImpl;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
-import com.intellij.diagnostic.AttachmentFactory;
+import consulo.language.util.AttachmentFactoryUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.document.Document;
@@ -157,7 +157,7 @@ public class CustomTemplateCallback {
       PsiDocumentManager documentManager = PsiDocumentManager.getInstance(file.getProject());
       Document document = documentManager.getDocument(file);
       if (document != null && !documentManager.isCommitted(document)) {
-        LOGGER.error("Trying to access to injected template context on uncommited document, offset = " + offset, AttachmentFactory.createAttachment(file.getVirtualFile()));
+        LOGGER.error("Trying to access to injected template context on uncommited document, offset = " + offset, AttachmentFactoryUtil.createAttachment(file.getVirtualFile()));
       }
       else {
         element = InjectedLanguageManager.getInstance(file.getProject()).findInjectedElementAt(file, offset);

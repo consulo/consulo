@@ -13,7 +13,7 @@ import consulo.codeEditor.RawText;
 import consulo.colorScheme.EditorColorsScheme;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.EditorHighlighter;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModel;
 import com.intellij.openapi.editor.richcopy.SyntaxInfoBuilder.Context;
 import com.intellij.openapi.editor.richcopy.SyntaxInfoBuilder.MyMarkupIterator;

@@ -7,7 +7,7 @@ import consulo.codeEditor.Inlay;
 import consulo.codeEditor.VisualPosition;
 import consulo.document.event.DocumentEvent;
 import consulo.util.dataholder.Key;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import javax.annotation.Nonnull;
 
 import java.awt.*;

@@ -39,7 +39,7 @@ import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.ContextMenuPopupHandler;
+import consulo.codeEditor.ContextMenuPopupHandler;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;

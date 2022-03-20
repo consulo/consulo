@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2020 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.codeEditor.impl;
+package consulo.codeEditor.internal;
 
-import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * internal impl interface between desktop & web impl
  * there no sense of this interface, due all editors will implement CodeEditorBase
  */
-public interface EditorInternal extends EditorEx {
+public interface RealEditor extends EditorEx {
   Key<Boolean> DO_DOCUMENT_UPDATE_TEST = Key.create("DoDocumentUpdateTest");
   Key<Boolean> FORCED_SOFT_WRAPS = Key.create("forced.soft.wraps");
   Key<Boolean> SOFT_WRAPS_EXIST = Key.create("soft.wraps.exist");
@@ -92,7 +92,7 @@ public interface EditorInternal extends EditorEx {
     return false;
   }
 
-  default void setDropHandler(@Nonnull EditorDropHandler dropHandler) {
-
+  default int findNearestDirectionBoundary(int offset, boolean lookForward) {
+    return offset;
   }
 }

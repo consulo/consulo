@@ -52,7 +52,7 @@ public class CustomizationUtil {
   private CustomizationUtil() {
   }
 
-  public static ActionGroup correctActionGroup(final ActionGroup group, final CustomActionsSchema schema, final String defaultGroupName) {
+  public static ActionGroup correctActionGroup(final ActionGroup group, final CustomActionsSchemaImpl schema, final String defaultGroupName) {
     if (!schema.isCorrectActionGroup(group, defaultGroupName)){
        return group;
      }
@@ -71,7 +71,7 @@ public class CustomizationUtil {
   }
 
 
-  static AnAction[] getReordableChildren(ActionGroup group, CustomActionsSchema schema, String defaultGroupName, AnActionEvent e) {
+  static AnAction[] getReordableChildren(ActionGroup group, CustomActionsSchemaImpl schema, String defaultGroupName, AnActionEvent e) {
     String text = group.getTemplatePresentation().getText();
     ActionManager actionManager = ActionManager.getInstance();
     final ArrayList<AnAction> reorderedChildren = new ArrayList<AnAction>();
@@ -119,7 +119,7 @@ public class CustomizationUtil {
     return reorderedChildren.toArray(new AnAction[reorderedChildren.size()]);
   }
 
-  public static void optimizeSchema(final JTree tree, final CustomActionsSchema schema) {
+  public static void optimizeSchema(final JTree tree, final CustomActionsSchemaImpl schema) {
     //noinspection HardCodedStringLiteral
     Group rootGroup = new Group("root", null, null);
     DefaultMutableTreeNode root = new DefaultMutableTreeNode(rootGroup);
@@ -281,7 +281,7 @@ public class CustomizationUtil {
     if (ApplicationManager.getApplication() == null) return new MouseAdapter(){};
     PopupHandler popupHandler = new PopupHandler() {
       public void invokePopup(Component comp, int x, int y) {
-        ActionGroup group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(groupId);
+        ActionGroup group = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(groupId);
         final ActionPopupMenu popupMenu = ActionManager.getInstance().createActionPopupMenu(place, group);
         popupMenu.getComponent().show(comp, x, y);
       }

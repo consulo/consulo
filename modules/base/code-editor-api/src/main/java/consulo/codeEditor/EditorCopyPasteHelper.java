@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor;
+package consulo.codeEditor;
 
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.Editor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.datatransfer.Transferable;
 
 /**
@@ -35,7 +33,7 @@ public abstract class EditorCopyPasteHelper {
 
   @Nonnull
   public static EditorCopyPasteHelper getInstance() {
-    return ServiceManager.getService(EditorCopyPasteHelper.class);
+    return Application.get().getInstance(EditorCopyPasteHelper.class);
   }
 
   /**

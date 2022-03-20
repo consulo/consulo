@@ -23,11 +23,9 @@ import consulo.codeEditor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.impl.EmptyIndentsModel;
 import consulo.codeEditor.impl.SettingsImpl;
 import consulo.codeEditor.markup.MarkupModel;
-import com.intellij.ui.popup.AbstractPopup;
 import consulo.ui.ex.awt.JBUI;
 import consulo.document.Document;
 import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.UserDataHolderBase;
 
 import javax.annotation.Nonnull;
@@ -141,11 +139,6 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   @Override
   public EditorKind getEditorKind() {
     return EditorKind.UNTYPED;
-  }
-
-  @Override
-  public void showPopupInBestPositionFor(@Nonnull JBPopup popup) {
-    ((AbstractPopup)popup).showInBestPositionFor(this);
   }
 
   @Nonnull

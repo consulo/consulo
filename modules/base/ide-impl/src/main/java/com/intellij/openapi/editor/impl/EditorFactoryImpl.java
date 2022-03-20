@@ -1,41 +1,41 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import consulo.document.impl.DocumentImpl;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.dataContext.DataContext;
+import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
+import com.intellij.util.EventDispatcher;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.text.CharArrayCharSequence;
 import consulo.application.Application;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.action.TypedActionHandler;
 import consulo.codeEditor.action.TypedActionHandlerEx;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.EditorEventMulticaster;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
-import consulo.document.internal.DocumentEx;
-import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
-import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.component.extension.ExtensionPointName;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.impl.DocumentImpl;
+import consulo.document.internal.DocumentEx;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.EventDispatcher;
-import consulo.util.collection.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.text.CharArrayCharSequence;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.codeEditor.impl.EditorInternal;
-import consulo.logging.Logger;
 import consulo.ui.UIAccess;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -70,11 +70,11 @@ public abstract class EditorFactoryImpl extends EditorFactory {
   }
 
   @Nonnull
-  protected abstract EditorInternal createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind);
+  protected abstract RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind);
 
   protected final Editor createEditor(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
     Document hostDocument = document instanceof DocumentWindow ? ((DocumentWindow)document).getDelegate() : document;
-    EditorInternal editor = createEditorImpl(hostDocument, isViewer, project, kind);
+    RealEditor editor = createEditorImpl(hostDocument, isViewer, project, kind);
     myEditors.add(editor);
     myEditorEventMulticaster.registerEditor(editor);
 
@@ -103,8 +103,8 @@ public abstract class EditorFactoryImpl extends EditorFactory {
   }
 
   public static void throwNotReleasedError(@Nonnull Editor editor) {
-    if (editor instanceof EditorInternal) {
-      ((EditorInternal)editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
+    if (editor instanceof RealEditor) {
+      ((RealEditor)editor).throwEditorNotDisposedError("Editor of " + editor.getClass() + " hasn't been released:");
     }
     else {
       throw new RuntimeException("Editor of " + editor.getClass() + " and the following text hasn't been released:\n" + editor.getDocument().getText());
@@ -208,7 +208,7 @@ public abstract class EditorFactoryImpl extends EditorFactory {
     }
     finally {
       try {
-        ((EditorInternal)editor).release();
+        ((RealEditor)editor).release();
       }
       finally {
         myEditors.remove(editor);

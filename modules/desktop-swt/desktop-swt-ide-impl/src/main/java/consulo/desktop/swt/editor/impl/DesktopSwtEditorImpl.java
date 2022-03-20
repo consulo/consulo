@@ -15,19 +15,13 @@
  */
 package consulo.desktop.swt.editor.impl;
 
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.codeEditor.impl.MarkupModelImpl;
-import consulo.codeEditor.TextDrawingCallback;
-import consulo.codeEditor.EditorGutter;
-import consulo.codeEditor.EditorKind;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.VisualPosition;
-import consulo.project.Project;
-import consulo.document.Document;
+import consulo.codeEditor.*;
 import consulo.codeEditor.impl.*;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.project.Project;
 import consulo.ui.Component;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -39,7 +33,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 18/12/2021
  */
-public class DesktopSwtEditorImpl extends CodeEditorBase implements EditorInternal {
+public class DesktopSwtEditorImpl extends CodeEditorBase implements RealEditor {
   private DesktopSwtEditorComponent myComponent;
 
   private DesktopSwtEditorGutterComponentImpl myGutterComponent;

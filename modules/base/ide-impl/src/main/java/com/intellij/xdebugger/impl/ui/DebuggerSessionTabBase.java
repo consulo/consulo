@@ -28,7 +28,7 @@ import com.intellij.execution.ui.ObservableConsoleView;
 import consulo.execution.ui.RunContentManager;
 import consulo.execution.ui.layout.LayoutAttractionPolicy;
 import consulo.execution.ui.layout.LayoutViewOptions;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
@@ -57,7 +57,7 @@ public abstract class DebuggerSessionTabBase extends RunTab {
   }
 
   public static ActionGroup getCustomizedActionGroup(final String id) {
-    return (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(id);
+    return (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(id);
   }
 
   protected void attachNotificationTo(final Content content) {

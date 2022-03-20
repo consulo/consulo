@@ -16,6 +16,7 @@
 
 package com.intellij.openapi.editor.actions;
 
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.*;
@@ -25,7 +26,7 @@ import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 import consulo.codeEditor.Caret;

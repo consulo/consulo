@@ -22,7 +22,7 @@ import consulo.language.editor.action.ExtendWordSelectionHandler;
 import consulo.language.editor.action.ExtendWordSelectionHandlerBase;
 import consulo.language.lexer.Lexer;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.component.extension.Extensions;
 import consulo.project.DumbService;
 import consulo.document.util.TextRange;

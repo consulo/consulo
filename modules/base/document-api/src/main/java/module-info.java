@@ -12,5 +12,5 @@ module consulo.document.api {
   exports consulo.document.event;
   exports consulo.document.util;
 
-  exports consulo.document.internal to consulo.document.impl, consulo.ide.impl, consulo.language.editor.api, consulo.code.editor.api, consulo.code.editor.impl;
+  exports consulo.document.internal to consulo.document.impl, consulo.ide.impl, consulo.language.editor.api, consulo.code.editor.api, consulo.code.editor.impl, consulo.language.impl;
 }

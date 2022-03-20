@@ -16,7 +16,7 @@ import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
 import com.intellij.openapi.editor.impl.view.EditorView;
 import com.intellij.openapi.editor.impl.view.WrapElementMeasuringIterator;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import javax.annotation.Nonnull;
 
 /**

@@ -13,27 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.impl;
+package consulo.codeEditor.impl;
 
-import consulo.logging.Logger;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
+import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.disposer.Disposer;
 import consulo.util.collection.WeakList;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 
 /**
  * @author max
  */
 @Singleton
-public class DocumentMarkupModelManager {
+public class DocumentMarkupModelManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(DocumentMarkupModelManager.class);
 
-  private final WeakList<Document> myDocumentSet = new WeakList<Document>();
+  private final WeakList<Document> myDocumentSet = new WeakList<>();
   private volatile boolean myDisposed;
 
   public static DocumentMarkupModelManager getInstance(Project project) {
@@ -45,7 +44,6 @@ public class DocumentMarkupModelManager {
   @Inject
   public DocumentMarkupModelManager(@Nonnull Project project) {
     myProject = project;
-    Disposer.register(project, () -> cleanupProjectMarkups());
   }
 
   public void registerDocument(Document document) {
@@ -57,7 +55,8 @@ public class DocumentMarkupModelManager {
     return myDisposed;
   }
 
-  private void cleanupProjectMarkups() {
+  @Override
+  public void dispose() {
     if (!myDisposed) {
       myDisposed = true;
       for (Document document : myDocumentSet.toStrongList()) {

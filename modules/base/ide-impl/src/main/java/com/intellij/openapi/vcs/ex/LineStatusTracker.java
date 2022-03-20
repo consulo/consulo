@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.ex;
 import consulo.application.TransactionGuard;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.document.FileDocumentManager;

@@ -4,23 +4,20 @@ package consulo.codeEditor.impl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.*;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.codeEditor.markup.*;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesEffectsBuilder;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.document.internal.DocumentEx;
-import consulo.language.editor.highlight.HighlighterIterator;
 import consulo.logging.Logger;
 import consulo.ui.color.ColorValue;
 import consulo.util.collection.ArrayUtil;
-import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Lists;
+import consulo.util.lang.ObjectUtil;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
@@ -138,7 +135,7 @@ public class IterationState {
     LOG.assertTrue(myReverseIteration ? myStartOffset >= myEnd : myStartOffset <= myEnd);
     myHighlighterIterator = useOnlyFullLineHighlighters ? null : editor.getHighlighter().createIterator(start);
 
-    myCaretData = ObjectUtils.notNull(caretData, NULL_CARET_DATA);
+    myCaretData = ObjectUtil.notNull(caretData, NULL_CARET_DATA);
 
     myFoldingModel = useFoldRegions ? editor.getFoldingModel() : null;
     myFoldTextAttributes = useFoldRegions ? myFoldingModel.getPlaceholderAttributes() : null;
@@ -548,12 +545,12 @@ public class IterationState {
 
     final int size = myCurrentHighlighters.size();
     if (size > 1) {
-      ContainerUtil.quickSort(myCurrentHighlighters, BY_LAYER_THEN_ATTRIBUTES);
+      Lists.quickSort(myCurrentHighlighters, BY_LAYER_THEN_ATTRIBUTES);
     }
 
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < size; i++) {
-      RangeHighlighterEx highlighter = myCurrentHighlighters.get(i);
+      RangeHighlighter highlighter = myCurrentHighlighters.get(i);
       if (highlighter.getTextAttributes() == TextAttributes.ERASE_MARKER) {
         syntax = null;
       }
@@ -564,7 +561,7 @@ public class IterationState {
 
     //noinspection ForLoopReplaceableByForEach
     for (int i = 0; i < size; i++) {
-      RangeHighlighterEx highlighter = myCurrentHighlighters.get(i);
+      RangeHighlighter highlighter = myCurrentHighlighters.get(i);
       if (atBreak && highlighter.getTargetArea() == HighlighterTargetArea.EXACT_RANGE && myStartOffset == (myReverseIteration ? highlighter.getEndOffset() : highlighter.getStartOffset())) continue;
       if (highlighter.getLayer() < HighlighterLayer.SELECTION) {
         if (selection != null) {

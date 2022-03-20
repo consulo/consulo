@@ -5,7 +5,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.ide.impl.psi.util.PsiUtilBase;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;

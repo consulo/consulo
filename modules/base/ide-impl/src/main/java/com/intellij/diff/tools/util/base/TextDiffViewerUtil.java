@@ -32,7 +32,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorPopupHandler;
-import com.intellij.openapi.editor.impl.ContextMenuPopupHandler;
+import consulo.codeEditor.ContextMenuPopupHandler;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;

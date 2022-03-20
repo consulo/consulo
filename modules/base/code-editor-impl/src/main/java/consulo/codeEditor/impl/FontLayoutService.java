@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.impl.view;
+package consulo.codeEditor.impl;
 
 import consulo.awt.hacking.FontDesignMetricsHacking;
 import consulo.logging.Logger;

@@ -16,11 +16,11 @@
 package com.intellij.diagnostic;
 
 import consulo.application.util.logging.IdeaLoggingEvent;
-import com.intellij.util.ExceptionUtil;
-import consulo.util.collection.SmartList;
+import consulo.application.util.logging.LoggerUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
+import consulo.util.collection.SmartList;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -134,23 +134,17 @@ public class LogMessageEx extends LogMessage {
     };
   }
 
-  public static void error(@Nonnull Logger logger, @NonNls @Nonnull String message, @Nonnull String... attachmentText) {
+  @Deprecated
+  public static void error(@Nonnull Logger logger,  @Nonnull String message, @Nonnull String... attachmentText) {
     error(logger, message, new Throwable(), attachmentText);
   }
 
+  @Deprecated
   public static void error(@Nonnull Logger logger,
                            @Nonnull String message,
                            @Nonnull Throwable cause,
                            @Nonnull String... attachmentText) {
-    StringBuilder detailsBuffer = new StringBuilder();
-    for (String detail : attachmentText) {
-      detailsBuffer.append(detail).append(",");
-    }
-    if (attachmentText.length > 0 && detailsBuffer.length() > 0) {
-      detailsBuffer.setLength(detailsBuffer.length() - 1);
-    }
-    Attachment attachment = detailsBuffer.length() > 0 ? AttachmentFactory.get().create("current-context.txt", detailsBuffer.toString()) : null;
-    logger.error(createEvent(message, ExceptionUtil.getThrowableText(cause), null, null, attachment));
+    LoggerUtil.error(logger, message, cause, attachmentText);
   }
 
   /**

@@ -35,6 +35,12 @@ import java.util.function.Predicate;
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
 
+  @Nonnull
+  @Contract(pure = true)
+  public static <T> List<T> subList(@Nonnull List<T> list, int from) {
+    return list.subList(from, list.size());
+  }
+
   /**
    * @return read-only set consisting of the elements from collection converted by mapper
    */

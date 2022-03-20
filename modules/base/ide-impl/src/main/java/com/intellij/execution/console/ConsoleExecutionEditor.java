@@ -1,32 +1,32 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.console;
 
-import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.ide.GeneralSettings;
-import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.EmptyAction;
-import consulo.ui.ex.action.IdeActions;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.event.FocusChangeListener;
 import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ObjectUtils;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.event.FocusChangeListener;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.impl.DocumentImpUtil;
+import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.FileDocumentManager;
+import consulo.ui.ex.action.IdeActions;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.document.impl.DocumentUtil;
-import com.intellij.util.ObjectUtils;
-import consulo.component.messagebus.MessageBusConnection;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -215,6 +215,6 @@ public class ConsoleExecutionEditor implements Disposable {
   }
 
   public void setInputText(@Nonnull final String query) {
-    DocumentUtil.writeInRunUndoTransparentAction(() -> myConsoleEditor.getDocument().setText(StringUtil.convertLineSeparators(query)));
+    DocumentImpUtil.writeInRunUndoTransparentAction(() -> myConsoleEditor.getDocument().setText(StringUtil.convertLineSeparators(query)));
   }
 }

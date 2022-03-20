@@ -33,7 +33,7 @@ import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.codeEditor.Caret;
 import consulo.document.Document;
 import consulo.codeEditor.action.EditorActionManager;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;

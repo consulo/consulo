@@ -17,6 +17,7 @@ package consulo.codeEditor;
 
 import consulo.application.Application;
 import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.annotation.Nonnull;
 
@@ -36,12 +37,14 @@ public interface EditorPopupHelper {
    * @return location as close as possible to the action origin.
    */
   @Nonnull
-  public abstract RelativePoint guessBestPopupLocation(@Nonnull Editor editor);
+  RelativePoint guessBestPopupLocation(@Nonnull Editor editor);
 
   /**
    * @param editor the editor over which the popup is shown.
    * @return true if popup location is located in visible area
    * false if center would be suggested instead
    */
-  public abstract boolean isBestPopupLocationVisible(@Nonnull Editor editor);
+  boolean isBestPopupLocationVisible(@Nonnull Editor editor);
+
+  void showPopupInBestPositionFor(@Nonnull Editor editor, @Nonnull JBPopup popup);
 }

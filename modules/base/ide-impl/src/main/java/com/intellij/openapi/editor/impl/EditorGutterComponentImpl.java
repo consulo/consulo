@@ -16,7 +16,7 @@ import com.intellij.codeInsight.hint.TooltipGroup;
 import com.intellij.codeInsight.hint.TooltipRenderer;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.dnd.*;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
@@ -30,7 +30,7 @@ import consulo.codeEditor.event.EditorMouseEventArea;
 import com.intellij.openapi.editor.ex.*;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.view.FontLayoutService;
+import consulo.codeEditor.impl.FontLayoutService;
 import consulo.codeEditor.impl.IterationState;
 import com.intellij.openapi.editor.impl.view.VisualLinesIterator;
 import com.intellij.openapi.editor.markup.*;
@@ -2008,7 +2008,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
       else {
         ActionGroup group = myCustomGutterPopupGroup;
         if (group == null && myShowDefaultGutterPopup) {
-          group = (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_GUTTER);
+          group = (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_GUTTER);
         }
         if (group != null) {
           ActionPopupMenu popupMenu = actionManager.createActionPopupMenu(ActionPlaces.EDITOR_GUTTER_POPUP, group);

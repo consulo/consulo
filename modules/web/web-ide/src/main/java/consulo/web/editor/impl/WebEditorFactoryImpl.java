@@ -15,12 +15,12 @@
  */
 package consulo.web.editor.impl;
 
-import consulo.application.Application;
-import consulo.document.Document;
-import consulo.codeEditor.EditorKind;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
+import consulo.application.Application;
+import consulo.codeEditor.EditorKind;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.document.Document;
 import consulo.project.Project;
-import consulo.codeEditor.impl.EditorInternal;
 import consulo.ui.web.internal.ex.WebEditorImpl;
 
 import javax.annotation.Nonnull;
@@ -36,7 +36,7 @@ public class WebEditorFactoryImpl extends EditorFactoryImpl {
 
   @Nonnull
   @Override
-  protected EditorInternal createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
+  protected RealEditor createEditorImpl(@Nonnull Document document, boolean isViewer, Project project, @Nonnull EditorKind kind) {
     return new WebEditorImpl(document, isViewer, project, kind);
   }
 }

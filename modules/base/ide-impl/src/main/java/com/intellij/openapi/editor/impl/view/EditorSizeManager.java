@@ -18,7 +18,7 @@ import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingList
 import com.intellij.openapi.util.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 

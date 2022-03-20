@@ -34,7 +34,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.logging.Logger;

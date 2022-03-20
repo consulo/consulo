@@ -90,7 +90,7 @@ public abstract class EditorActionHandler {
   }
 
   private void doIfEnabled(@Nonnull Project project, @Nonnull Caret hostCaret, @Nullable DataContext context, @Nonnull CaretTask task) {
-    DataContext caretContext = context == null ? null : EditorInternalHelper.getInstance(project).createDataContext(context, hostCaret);
+    DataContext caretContext = context == null ? null : EditorInternalHelper.getInstance(project).createCaretDataContext(context, hostCaret);
     Editor editor = hostCaret.getEditor();
     if (myWorksInInjected && caretContext != null) {
       DataContext injectedCaretContext = AnActionEvent.getInjectedDataContext(caretContext);
@@ -216,7 +216,7 @@ public abstract class EditorActionHandler {
     }
   }
 
-  void setWorksInInjected(boolean worksInInjected) {
+  public void setWorksInInjected(boolean worksInInjected) {
     myWorksInInjected = worksInInjected;
   }
 

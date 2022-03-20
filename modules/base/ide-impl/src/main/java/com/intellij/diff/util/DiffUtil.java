@@ -73,7 +73,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;

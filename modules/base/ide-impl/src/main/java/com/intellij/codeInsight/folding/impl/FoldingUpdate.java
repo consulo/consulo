@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.folding.impl;
 
-import com.intellij.diagnostic.AttachmentFactory;
+import consulo.language.util.AttachmentFactoryUtil;
 import consulo.language.editor.inject.EditorWindow;
 import com.intellij.lang.folding.FoldingBuilder;
 import com.intellij.lang.folding.FoldingDescriptor;
@@ -275,7 +275,7 @@ public class FoldingUpdate {
                      psiElement.getTextRange() +
                      "; " +
                      DebugUtil.diagnosePsiDocumentInconsistency(psiElement, document);
-    LOG.error(message, ApplicationManager.getApplication().isInternal() ? new Attachment[]{AttachmentFactory.createAttachment(document),
+    LOG.error(message, ApplicationManager.getApplication().isInternal() ? new Attachment[]{AttachmentFactoryUtil.createAttachment(document),
             consulo.logging.attachment.AttachmentFactory.get().create("psiTree.txt", DebugUtil.psiToString(file, false, true))} : Attachment.EMPTY_ARRAY);
   }
 

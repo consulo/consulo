@@ -9,7 +9,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.SoftWrapModelImpl;
 import consulo.codeEditor.SoftWrapDrawingType;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.document.Document;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.LogicalPosition;

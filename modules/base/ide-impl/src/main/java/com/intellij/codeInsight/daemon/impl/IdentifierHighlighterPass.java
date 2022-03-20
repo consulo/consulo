@@ -25,7 +25,7 @@ import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesHandler;
 import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.find.impl.FindManagerImpl;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;

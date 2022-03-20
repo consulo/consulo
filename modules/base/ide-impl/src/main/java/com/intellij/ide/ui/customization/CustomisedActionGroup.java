@@ -29,13 +29,13 @@ public class CustomisedActionGroup extends ActionGroup {
   private boolean myForceUpdate;
   private final ActionGroup myGroup;
   private AnAction[] myChildren;
-  private final CustomActionsSchema mySchema;
+  private final CustomActionsSchemaImpl mySchema;
   private final String myDefaultGroupName;
 
   public CustomisedActionGroup(String shortName,
                                boolean popup,
                                final ActionGroup group,
-                               CustomActionsSchema schema,
+                               CustomActionsSchemaImpl schema,
                                String defaultGroupName) {
     super(shortName, popup);
     myGroup = group;

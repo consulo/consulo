@@ -18,19 +18,18 @@ package com.intellij.diff.actions.impl;
 import com.intellij.diff.tools.util.SyncScrollSupport;
 import com.intellij.diff.tools.util.base.HighlightingLevel;
 import com.intellij.diff.tools.util.base.TextDiffSettingsHolder;
-import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actions.AbstractToggleUseSoftWrapsAction;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.application.dumb.DumbAware;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.internal.RealEditor;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +143,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
               public void applyDefaults(@Nonnull List<? extends Editor> editors) {
                 if (!myTextSettings.isUseSoftWraps()) {
                   for (Editor editor : editors) {
-                    myForcedSoftWrap = myForcedSoftWrap || ((EditorInternal)editor).shouldSoftWrapsBeForced();
+                    myForcedSoftWrap = myForcedSoftWrap || ((RealEditor)editor).shouldSoftWrapsBeForced();
                   }
                 }
                 super.applyDefaults(editors);
@@ -226,7 +225,7 @@ public class SetEditorSettingsAction extends ActionGroup implements DumbAware {
 
     private void apply(@Nonnull HighlightingLevel layer) {
       for (Editor editor : myEditors) {
-        ((EditorInternal)editor).setHighlightingFilter(layer.getCondition());
+        ((RealEditor)editor).setHighlightingFilter(layer.getCondition());
       }
     }
 

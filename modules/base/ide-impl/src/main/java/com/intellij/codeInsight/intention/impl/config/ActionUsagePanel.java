@@ -15,23 +15,18 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import consulo.codeEditor.CodeInsightColors;
+import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ui.RangeBlinker;
+import consulo.codeEditor.*;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.highlighter.EditorHighlighterFactory;
 import consulo.colorScheme.TextAttributes;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
-import consulo.codeEditor.LogicalPosition;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.document.util.Segment;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.impl.DocumentUtil;
-import com.intellij.util.ui.RangeBlinker;
 import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.impl.DocumentImpUtil;
+import consulo.document.util.Segment;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
@@ -85,7 +80,7 @@ public class ActionUsagePanel extends JPanel implements Disposable {
     reinitViews();
     SwingUtilities.invokeLater(() -> {
       if (myEditor.isDisposed()) return;
-      DocumentUtil.writeInRunUndoTransparentAction(() -> configureByText(usageText, fileType));
+      DocumentImpUtil.writeInRunUndoTransparentAction(() -> configureByText(usageText, fileType));
     });
   }
 

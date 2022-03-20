@@ -11,7 +11,7 @@ import consulo.codeEditor.VisualPosition;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.document.impl.EditorDocumentPriorities;
 import consulo.document.impl.IntervalTreeImpl;
 import consulo.document.impl.RangeMarkerTree;

@@ -18,7 +18,7 @@ import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.TokenType;
 import consulo.language.ast.IElementType;
 import com.intellij.util.BitUtil;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.util.collection.SmartList;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.ui.color.ColorValue;

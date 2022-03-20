@@ -19,7 +19,7 @@ import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.CloseAction;
 import com.intellij.ide.actions.ShowFilePathAction;
-import com.intellij.ide.ui.customization.CustomActionsSchema;
+import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
@@ -110,7 +110,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
     });
     myTabs.setTransferHandler(new MyTransferHandler());
     myTabs.setDataProvider(new MyDataProvider())
-            .setPopupGroup(() -> (ActionGroup)CustomActionsSchema.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_TAB_POPUP), ActionPlaces.EDITOR_TAB_POPUP, false)
+            .setPopupGroup(() -> (ActionGroup)CustomActionsSchemaImpl.getInstance().getCorrectedAction(IdeActions.GROUP_EDITOR_TAB_POPUP), ActionPlaces.EDITOR_TAB_POPUP, false)
             .addTabMouseListener(new TabMouseListener()).getPresentation().setTabDraggingEnabled(true)
             .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(TabsUtil.TAB_VERTICAL_PADDING, 8))).setTabLabelActionsMouseDeadzone(TimedDeadzone.NULL)
             .setTabLabelActionsAutoHide(false).setActiveTabFillIn(TargetAWT.to(EditorColorsManager.getInstance().getGlobalScheme().getDefaultBackground())).setPaintFocus(true).getJBTabs()

@@ -15,19 +15,13 @@
  */
 package consulo.ui.web.internal.ex;
 
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.codeEditor.impl.MarkupModelImpl;
-import consulo.codeEditor.TextDrawingCallback;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
-import consulo.codeEditor.EditorGutter;
-import consulo.codeEditor.EditorKind;
-import consulo.codeEditor.LogicalPosition;
-import consulo.codeEditor.VisualPosition;
+import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.*;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -37,7 +31,6 @@ import consulo.document.DocCommandGroupId;
 import consulo.document.Document;
 import consulo.internal.arquill.editor.server.ArquillEditor;
 import consulo.internal.arquill.editor.server.event.MouseDownEvent;
-import consulo.codeEditor.HighlighterIterator;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
@@ -187,7 +180,7 @@ public class WebEditorImpl extends CodeEditorBase {
   }
 
   @Override
-  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
     if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
 
     Vaadin vaadin = myEditorComponent.toVaadinComponent();

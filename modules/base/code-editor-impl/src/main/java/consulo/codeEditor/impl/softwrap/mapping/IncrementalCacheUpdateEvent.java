@@ -1,13 +1,13 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.impl.softwrap.mapping;
 
-import consulo.document.Document;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SoftWrap;
-import consulo.document.event.DocumentEvent;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.impl.CodeEditorBase;
 import consulo.codeEditor.impl.CodeEditorSoftWrapModelBase;
+import consulo.codeEditor.util.EditorUtil;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 
 import javax.annotation.Nonnull;
 

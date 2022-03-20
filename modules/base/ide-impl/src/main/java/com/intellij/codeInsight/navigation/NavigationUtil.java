@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.MarkupModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.impl.DocumentMarkupModel;
+import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.colorScheme.TextAttributes;

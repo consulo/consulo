@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.textarea;
+package consulo.application.util.function;
 
-import consulo.codeEditor.Editor;
-
-import javax.swing.text.Document;
+import consulo.util.lang.function.Condition;
 
 /**
- * An implementation of {@link Editor} on top of a plain {@link javax.swing.text.JTextComponent}.
- * The corresponding document ({@link #getDocument()}) is a wrapper over Swing {@link Document} and
- * doesn't require write action for modifications.
+ * @author max
  */
-public interface TextComponentEditor extends Editor {
+public class FilteringProcessor<T> implements Processor<T> {
+  private final Condition<T> myFilter;
+  private final Processor<T> myProcessor;
+
+  public FilteringProcessor(final Condition<T> filter, Processor<T> processor) {
+    myFilter = filter;
+    myProcessor = processor;
+  }
+
+  @Override
+  public boolean process(final T t) {
+    if (!myFilter.value(t)) return true;
+    return myProcessor.process(t);
+  }
 }

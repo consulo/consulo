@@ -17,6 +17,7 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Caret;

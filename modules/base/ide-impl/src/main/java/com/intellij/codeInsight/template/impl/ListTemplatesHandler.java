@@ -22,7 +22,7 @@ import com.intellij.codeInsight.lookup.LookupAdapter;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.*;
 import com.intellij.codeWithMe.ClientId;
-import com.intellij.diagnostic.AttachmentFactory;
+import consulo.language.util.AttachmentFactoryUtil;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
@@ -88,7 +88,7 @@ public class ListTemplatesHandler implements CodeInsightActionHandler {
   public static Map<TemplateImpl, String> filterTemplatesByPrefix(@Nonnull Collection<? extends TemplateImpl> templates, @Nonnull Editor editor,
                                                                   int offset, boolean fullMatch, boolean searchInDescription) {
     if (offset > editor.getDocument().getTextLength()) {
-      LOG.error("Cannot filter templates, index out of bounds. Offset: " + offset, AttachmentFactory.createAttachment(editor.getDocument()));
+      LOG.error("Cannot filter templates, index out of bounds. Offset: " + offset, AttachmentFactoryUtil.createAttachment(editor.getDocument()));
     }
     CharSequence documentText = editor.getDocument().getCharsSequence().subSequence(0, offset);
 

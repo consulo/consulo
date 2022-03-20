@@ -24,10 +24,10 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.*;
-import consulo.codeEditor.impl.EditorInternal;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.internal.RealEditor;
+import consulo.dataContext.DataContext;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -55,7 +55,7 @@ public class TextEndWithSelectionAction extends TextComponentEditorAction {
           caret = carets.get(0);
         }
         int selectionStart = caret.getLeadSelectionOffset();
-        if (editor instanceof EditorInternal) {
+        if (editor instanceof RealEditor) {
           caret.moveToLogicalPosition(editor.offsetToLogicalPosition(endOffset).leanForward(true));
         }
         else {

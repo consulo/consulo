@@ -37,7 +37,7 @@ import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.DocumentEx;
-import consulo.document.impl.DocumentUtil;
+import consulo.document.util.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;

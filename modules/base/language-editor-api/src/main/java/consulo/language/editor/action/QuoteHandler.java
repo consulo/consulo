@@ -1,8 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.action;
 
-import com.intellij.codeInsight.CodeInsightSettings;
-import com.intellij.lang.LanguageQuoteHandling;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterIterator;
 

@@ -389,7 +389,7 @@
     </extensionPoint>
 
     <extensionPoint name="wordBoundaryFilter" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.openapi.editor.actions.WordBoundaryFilter"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.action.WordBoundaryFilter"/>
     </extensionPoint>
 
     <extensionPoint name="quoteHandler"
@@ -1162,7 +1162,7 @@
 
     <extensionPoint name="urlOpener" interface="com.intellij.ide.browsers.UrlOpener"/>
 
-    <extensionPoint name="editor.linePainter" interface="com.intellij.openapi.editor.EditorLinePainter"/>
+    <extensionPoint name="editor.linePainter" interface="consulo.codeEditor.EditorLinePainter"/>
 
     <extensionPoint name="cachesInvalidator" interface="com.intellij.ide.caches.CachesInvalidator"/>
 
@@ -1244,7 +1244,7 @@
     <applicationService serviceInterface="consulo.application.progress.ProgressManager"
                         serviceImplementation="com.intellij.openapi.progress.impl.ProgressManagerImpl"/>
 
-    <applicationService serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchema"/>
+    <applicationService serviceInterface="consulo.ui.ex.action.CustomActionsSchema" serviceImplementation="com.intellij.ide.ui.customization.CustomActionsSchemaImpl"/>
 
     <applicationService serviceInterface="consulo.project.internal.DefaultProjectFactory"
                         serviceImplementation="com.intellij.openapi.project.impl.DefaultProjectFactoryImpl" lazy="false"/>
@@ -1272,7 +1272,7 @@
     <applicationService serviceInterface="com.intellij.ide.ui.search.SearchableOptionsRegistrar"
                         serviceImplementation="com.intellij.ide.ui.search.SearchableOptionsRegistrarImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.editor.EditorCopyPasteHelper"
+    <applicationService serviceInterface="consulo.codeEditor.EditorCopyPasteHelper"
                         serviceImplementation="com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
@@ -1741,7 +1741,7 @@
     <projectService serviceInterface="consulo.language.editor.completion.lookup.LookupManager"
                     serviceImplementation="com.intellij.codeInsight.lookup.impl.LookupManagerImpl"/>
 
-    <projectService serviceImplementation="com.intellij.openapi.editor.impl.DocumentMarkupModelManager"/>
+    <projectService serviceImplementation="consulo.codeEditor.impl.DocumentMarkupModelManager"/>
 
     <projectService serviceImplementation="consulo.compiler.CompilerPathsManager"/>
 

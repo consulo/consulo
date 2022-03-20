@@ -31,7 +31,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.action.EditorActionManager;
-import com.intellij.openapi.editor.actions.EditorActionUtil;
+import consulo.codeEditor.impl.EditorActionUtil;
 import com.intellij.openapi.editor.actions.IncrementalFindAction;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
