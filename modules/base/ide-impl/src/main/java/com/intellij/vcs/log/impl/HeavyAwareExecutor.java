@@ -15,8 +15,8 @@
  */
 package com.intellij.vcs.log.impl;
 
-import com.intellij.concurrency.JobScheduler;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.impl.internal.JobScheduler;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.TimeUnit;

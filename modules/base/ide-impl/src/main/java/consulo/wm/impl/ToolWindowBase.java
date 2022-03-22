@@ -20,7 +20,7 @@ import consulo.ui.ex.UiActivityMonitor;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.project.ui.wm.ToolWindowFactory;
@@ -122,7 +122,7 @@ public abstract class ToolWindowBase implements ToolWindowEx {
     UIAccess.assertIsUIThread();
 
     final UiActivity activity = new UiActivity.Focus("toolWindow:" + myId);
-    UiActivityMonitor.getInstance().addActivity(myToolWindowManager.getProject(), activity, ModalityState.NON_MODAL);
+    UiActivityMonitor.getInstance().addActivity(myToolWindowManager.getProject(), activity, IdeaModalityState.NON_MODAL);
 
     myToolWindowManager.activateToolWindow(myId, forced, autoFocusContents);
 

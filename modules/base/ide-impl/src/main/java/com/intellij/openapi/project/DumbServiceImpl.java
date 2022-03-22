@@ -2,17 +2,17 @@
 package com.intellij.openapi.project;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.file.BatchFileChangeListener;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
+import consulo.application.impl.internal.progress.CoreProgressManager;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
 import com.intellij.openapi.progress.impl.ProgressSuspender;
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
@@ -32,7 +32,7 @@ import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.exception.FrequentErrorLogger;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.application.*;
 import consulo.disposer.Disposable;
@@ -450,7 +450,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
 
   @Override
   public void smartInvokeLater(@Nonnull final Runnable runnable) {
-    smartInvokeLater(runnable, ModalityState.defaultModalityState());
+    smartInvokeLater(runnable, IdeaModalityState.defaultModalityState());
   }
 
   @Override

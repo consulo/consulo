@@ -15,7 +15,7 @@
  */
 package consulo.ide.eap.plugins;
 
-import consulo.ide.eap.EarlyAccessProgramDescriptor;
+import consulo.application.eap.EarlyAccessProgramDescriptor;
 
 import javax.annotation.Nonnull;
 

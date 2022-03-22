@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

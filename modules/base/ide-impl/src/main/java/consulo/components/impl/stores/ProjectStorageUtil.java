@@ -17,9 +17,9 @@ package consulo.components.impl.stores;
 
 import consulo.application.ApplicationManager;
 import consulo.application.PathMacros;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.project.Project;
-import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.project.internal.ProjectEx;
 import com.intellij.openapi.project.impl.ProjectMacrosUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.project.ui.notification.Notification;
@@ -119,6 +119,11 @@ public class ProjectStorageUtil {
         }
       }
     }
+  }
+
+  @Nonnull
+  public static String getStoreDir(@Nonnull Project project) {
+    return project.getBasePath() + "/" + Project.DIRECTORY_STORE_FOLDER;
   }
 
   public static void dropUnableToSaveProjectNotification(@Nonnull final Project project, Collection<File> readOnlyFiles) {

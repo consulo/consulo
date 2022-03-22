@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.rename;
 
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.PlatformPatterns;

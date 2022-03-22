@@ -10,7 +10,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FactoryMap;
+import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
 import com.intellij.util.indexing.*;
 import consulo.index.io.data.DataExternalizer;

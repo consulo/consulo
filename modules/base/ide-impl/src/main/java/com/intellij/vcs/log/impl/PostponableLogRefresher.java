@@ -18,7 +18,7 @@ package com.intellij.vcs.log.impl;
 import consulo.application.PowerSaveMode;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
@@ -103,7 +103,7 @@ public class PostponableLogRefresher implements VcsLogRefresher {
       else {
         myRootsToRefresh.add(root);
       }
-    }, ModalityState.any());
+    }, IdeaModalityState.any());
   }
 
   protected void refreshPostponedRoots() {

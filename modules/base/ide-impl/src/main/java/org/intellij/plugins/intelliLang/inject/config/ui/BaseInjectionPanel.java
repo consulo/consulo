@@ -26,7 +26,7 @@ import org.intellij.plugins.intelliLang.inject.config.InjectionPlace;
 import consulo.document.Document;
 import consulo.codeEditor.EditorEx;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;

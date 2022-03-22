@@ -9,7 +9,7 @@ import javax.swing.JList;
 
 import javax.annotation.Nullable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
@@ -39,17 +39,17 @@ public class TaskUiUtil
 	{
 		protected T myResult;
 		protected Exception myException;
-		private final ModalityState myModalityState;
+		private final IdeaModalityState myModalityState;
 
 		/**
 		 * Should be called only from EDT, so current modality state can be captured.
 		 */
 		protected RemoteFetchTask(@Nullable Project project, @Nonnull String title)
 		{
-			this(project, title, ModalityState.current());
+			this(project, title, IdeaModalityState.current());
 		}
 
-		protected RemoteFetchTask(@Nullable Project project, @Nonnull String title, @Nonnull ModalityState modalityState)
+		protected RemoteFetchTask(@Nullable Project project, @Nonnull String title, @Nonnull IdeaModalityState modalityState)
 		{
 			super(project, title);
 			myModalityState = modalityState;
@@ -97,7 +97,7 @@ public class TaskUiUtil
 
 		public ComboBoxUpdater(@Nullable Project project, @Nonnull String title, @Nonnull JComboBox comboBox)
 		{
-			super(project, title, ModalityState.any());
+			super(project, title, IdeaModalityState.any());
 			myComboBox = comboBox;
 		}
 

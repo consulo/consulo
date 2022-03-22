@@ -6,7 +6,7 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -36,7 +36,7 @@ import com.intellij.util.ConcurrencyUtil;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FactoryMap;
+import consulo.util.collection.FactoryMap;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.hash.MergedInvertedIndex;
 import com.intellij.util.indexing.impl.AbstractUpdateData;
@@ -750,7 +750,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
       if (updated.length() > 0) {
         final Throwable e = new Throwable(updated.toString());
         // avoid direct forceRebuild as it produces dependency cycle (IDEA-105485)
-        ApplicationManager.getApplication().invokeLater(() -> forceRebuild(e), ModalityState.NON_MODAL);
+        ApplicationManager.getApplication().invokeLater(() -> forceRebuild(e), IdeaModalityState.NON_MODAL);
       }
 
       myInitialized = true;

@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorBase;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.disposer.Disposer;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

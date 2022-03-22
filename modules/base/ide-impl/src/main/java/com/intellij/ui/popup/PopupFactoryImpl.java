@@ -9,7 +9,7 @@ import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.HintHint;

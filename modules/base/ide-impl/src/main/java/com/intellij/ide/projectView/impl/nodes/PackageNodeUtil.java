@@ -17,7 +17,7 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ModuleFileIndex;

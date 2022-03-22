@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.patch;
 
 import consulo.application.CommonBundle;
 import com.intellij.ide.actions.ShowFilePathAction;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.IdeaTextPatchBuilder;
@@ -187,7 +187,7 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
             Messages.showErrorDialog(myProject, VcsBundle.message("create.patch.error.title", "Can not write patch to specified file: " +
                                                                                               file.getPath()), CommonBundle.getErrorTitle());
           }
-        }, ModalityState.NON_MODAL, myProject);
+        }, IdeaModalityState.NON_MODAL, myProject);
         return;
       }
 

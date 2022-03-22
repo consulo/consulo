@@ -1,7 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.ide.ActivityTracker;
+import consulo.application.impl.internal.performance.ActivityTracker;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataManager;
 import com.intellij.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
 import consulo.dataContext.DataContext;
@@ -14,8 +15,7 @@ import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.action.ActionStubBase;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.event.AnActionListener;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
@@ -1356,7 +1356,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
         if (event1.getID() == WindowEvent.WINDOW_OPENED || event1.getID() == WindowEvent.WINDOW_ACTIVATED) {
           if (!result.isProcessed()) {
             final WindowEvent we = (WindowEvent)event1;
-            IdeFocusManager.findInstanceByComponent(we.getWindow()).doWhenFocusSettlesDown(result.createSetDoneRunnable(), ModalityState.defaultModalityState());
+            IdeFocusManager.findInstanceByComponent(we.getWindow()).doWhenFocusSettlesDown(result.createSetDoneRunnable(), IdeaModalityState.defaultModalityState());
           }
         }
       }, AWTEvent.WINDOW_EVENT_MASK, eventListenerDisposable);
@@ -1364,7 +1364,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       ActionUtil.performActionDumbAware(action, event);
       result.setDone();
       queueActionPerformedEvent(action, context, event);
-    }), ModalityState.defaultModalityState());
+    }), IdeaModalityState.defaultModalityState());
   }
 
   private class MyTimer extends Timer implements ActionListener {
@@ -1444,10 +1444,10 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
     }
 
     private void runListenerAction(@Nonnull TimerListener listener) {
-      ModalityState modalityState = (ModalityState)listener.getModalityState();
+      IdeaModalityState modalityState = (IdeaModalityState)listener.getModalityState();
       if (modalityState == null) return;
       LOG.debug("notify ", listener);
-      if (!ModalityState.current().dominates(modalityState)) {
+      if (!IdeaModalityState.current().dominates(modalityState)) {
         try {
           listener.run();
         }

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import consulo.component.persist.StoragePathMacros;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -359,7 +359,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
    * so waiting for its completion on AWT thread is not good runnable is invoked on AWT thread
    */
   @Override
-  public void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, @javax.annotation.Nullable final String title, @Nullable final ModalityState state) {
+  public void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, @javax.annotation.Nullable final String title, @Nullable final IdeaModalityState state) {
     myUpdater.invokeAfterUpdate(afterUpdate, mode, title, null, state);
   }
 
@@ -368,7 +368,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
                                 final InvokeAfterUpdateMode mode,
                                 final String title,
                                 final Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
-                                final ModalityState state) {
+                                final IdeaModalityState state) {
     myUpdater.invokeAfterUpdate(afterUpdate, mode, title, dirtyScopeManagerFiller, state);
   }
 
@@ -382,7 +382,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
       myUpdater.pause();
       myFreezeName.set(reason);
       sem.up();
-    }, InvokeAfterUpdateMode.SILENT_CALLBACK_POOLED, "", ModalityState.defaultModalityState());
+    }, InvokeAfterUpdateMode.SILENT_CALLBACK_POOLED, "", IdeaModalityState.defaultModalityState());
 
     boolean free = false;
     while (!free) {

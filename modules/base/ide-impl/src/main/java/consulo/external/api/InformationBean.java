@@ -15,7 +15,7 @@
  */
 package consulo.external.api;
 
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.util.lang.SystemProperties;
 import consulo.ide.updateSettings.UpdateChannel;
 

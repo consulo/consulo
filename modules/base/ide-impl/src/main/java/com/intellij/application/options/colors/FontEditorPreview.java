@@ -17,7 +17,7 @@
 package com.intellij.application.options.colors;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.history;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -190,7 +190,7 @@ public class VcsHistoryProviderBackgroundableProxy {
         }
         finally {
           cachedPartner.finished();
-          ApplicationManager.getApplication().invokeLater(() -> handler.completed(resultingActionKey), ModalityState.NON_MODAL);
+          ApplicationManager.getApplication().invokeLater(() -> handler.completed(resultingActionKey), IdeaModalityState.NON_MODAL);
         }
       }
     });

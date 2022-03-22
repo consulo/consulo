@@ -8,7 +8,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

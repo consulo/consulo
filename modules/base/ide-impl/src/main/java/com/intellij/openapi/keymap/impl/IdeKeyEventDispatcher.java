@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl;
 
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ProhibitAWTEvents;
@@ -28,8 +29,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
@@ -650,7 +650,7 @@ public final class IdeKeyEventDispatcher implements Disposable {
   }
 
   private static void showDumbModeWarningLaterIfNobodyConsumesEvent(final InputEvent e, final AnActionEvent... actionEvents) {
-    if (ModalityState.current() == ModalityState.NON_MODAL) {
+    if (IdeaModalityState.current() == IdeaModalityState.NON_MODAL) {
       ApplicationManager.getApplication().invokeLater(() -> {
         if (e.isConsumed()) return;
 

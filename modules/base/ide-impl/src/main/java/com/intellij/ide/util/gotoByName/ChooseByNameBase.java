@@ -13,13 +13,13 @@ import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.ide.actions.GotoFileAction;
 import consulo.ui.ex.awt.internal.MnemonicHelper;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.progress.util.ReadTask;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ReadTask;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
@@ -243,7 +243,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     myFindUsagesTitle = findUsagesTitle;
   }
 
-  public void invoke(final ChooseByNamePopupComponent.Callback callback, final ModalityState modalityState, boolean allowMultipleSelection) {
+  public void invoke(final ChooseByNamePopupComponent.Callback callback, final IdeaModalityState modalityState, boolean allowMultipleSelection) {
     initUI(callback, modalityState, allowMultipleSelection);
   }
 
@@ -352,9 +352,9 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
   }
 
   /**
-   * @param modalityState - if not null rebuilds list in given {@link ModalityState}
+   * @param modalityState - if not null rebuilds list in given {@link IdeaModalityState}
    */
-  protected void initUI(final ChooseByNamePopupComponent.Callback callback, final ModalityState modalityState, final boolean allowMultipleSelection) {
+  protected void initUI(final ChooseByNamePopupComponent.Callback callback, final IdeaModalityState modalityState, final boolean allowMultipleSelection) {
     myPreviouslyFocusedComponent = WindowManagerEx.getInstanceEx().getFocusedComponent(myProject);
 
     myActionListener = callback;
@@ -528,7 +528,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
       @Override
       protected void textChanged(@Nonnull DocumentEvent e) {
         SelectionPolicy toSelect = currentChosenInfo != null && currentChosenInfo.hasSamePattern(ChooseByNameBase.this) ? PreserveSelection.INSTANCE : SelectMostRelevant.INSTANCE;
-        rebuildList(toSelect, myRebuildDelay, ModalityState.current(), null);
+        rebuildList(toSelect, myRebuildDelay, IdeaModalityState.current(), null);
       }
     });
 
@@ -576,7 +576,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
           case KeyEvent.VK_ENTER:
             if (myList.getSelectedValue() == EXTRA_ELEM) {
               myMaximumListSizeLimit += myListSizeIncreasing;
-              rebuildList(new SelectIndex(myList.getSelectedIndex()), myRebuildDelay, ModalityState.current(), null);
+              rebuildList(new SelectIndex(myList.getSelectedIndex()), myRebuildDelay, IdeaModalityState.current(), null);
               e.consume();
             }
             break;
@@ -606,7 +606,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
           if (selectedCellBounds != null && selectedCellBounds.contains(e.getPoint())) { // Otherwise it was reselected in the selection listener
             if (myList.getSelectedValue() == EXTRA_ELEM) {
               myMaximumListSizeLimit += myListSizeIncreasing;
-              rebuildList(new SelectIndex(selectedIndex), myRebuildDelay, ModalityState.current(), null);
+              rebuildList(new SelectIndex(selectedIndex), myRebuildDelay, IdeaModalityState.current(), null);
             }
             else {
               doClose(true);
@@ -695,7 +695,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
    */
   public void rebuildList(boolean initial) {
     // TODO this method is public, because the chooser does not listed for the model.
-    rebuildList(initial ? SelectionPolicyKt.fromIndex(myInitialIndex) : SelectMostRelevant.INSTANCE, myRebuildDelay, ModalityState.current(), null);
+    rebuildList(initial ? SelectionPolicyKt.fromIndex(myInitialIndex) : SelectMostRelevant.INSTANCE, myRebuildDelay, IdeaModalityState.current(), null);
   }
 
   private void updateDocumentation() {
@@ -859,7 +859,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     return layeredPane;
   }
 
-  void rebuildList(@Nonnull SelectionPolicy pos, final int delay, @Nonnull final ModalityState modalityState, @Nullable final Runnable postRunnable) {
+  void rebuildList(@Nonnull SelectionPolicy pos, final int delay, @Nonnull final IdeaModalityState modalityState, @Nullable final Runnable postRunnable) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     if (!myInitialized) {
       return;
@@ -868,7 +868,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     myAlarm.cancelAllRequests();
 
     if (delay > 0) {
-      myAlarm.addRequest(() -> rebuildList(pos, 0, modalityState, postRunnable), delay, ModalityState.stateForComponent(myTextField));
+      myAlarm.addRequest(() -> rebuildList(pos, 0, modalityState, postRunnable), delay, IdeaModalityState.stateForComponent(myTextField));
       return;
     }
 
@@ -917,7 +917,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     }
   }
 
-  public void scheduleCalcElements(@Nonnull String text, boolean checkboxState, @Nonnull ModalityState modalityState, @Nonnull SelectionPolicy policy, @Nonnull Consumer<? super Set<?>> callback) {
+  public void scheduleCalcElements(@Nonnull String text, boolean checkboxState, @Nonnull IdeaModalityState modalityState, @Nonnull SelectionPolicy policy, @Nonnull Consumer<? super Set<?>> callback) {
     new CalcElementsThread(text, checkboxState, modalityState, policy, callback).scheduleThread();
   }
 
@@ -1118,7 +1118,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
         final int oldPos = myList.getSelectedIndex();
         myHistory.add(Pair.create(pattern, oldPos));
         final Runnable postRunnable = () -> fillInCommonPrefix(pattern);
-        rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.current(), postRunnable);
+        rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), postRunnable);
         return;
       }
       if (keyStroke.equals(backStroke)) {
@@ -1129,7 +1129,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
           final Pair<String, Integer> last = myHistory.remove(myHistory.size() - 1);
           myTextField.setText(last.first);
           myFuture.add(Pair.create(oldText, oldPos));
-          rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.current(), null);
+          rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), null);
         }
         return;
       }
@@ -1141,7 +1141,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
           final Pair<String, Integer> next = myFuture.remove(myFuture.size() - 1);
           myTextField.setText(next.first);
           myHistory.add(Pair.create(oldText, oldPos));
-          rebuildList(SelectMostRelevant.INSTANCE, 0, ModalityState.current(), null);
+          rebuildList(SelectMostRelevant.INSTANCE, 0, IdeaModalityState.current(), null);
         }
         return;
       }
@@ -1275,13 +1275,13 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
     private final boolean myCheckboxState;
     @Nonnull
     private final Consumer<? super Set<?>> myCallback;
-    private final ModalityState myModalityState;
+    private final IdeaModalityState myModalityState;
     @Nonnull
     private SelectionPolicy mySelectionPolicy;
 
     private final ProgressIndicator myProgress = new ProgressIndicatorBase();
 
-    CalcElementsThread(@Nonnull String pattern, boolean checkboxState, @Nonnull ModalityState modalityState, @Nonnull SelectionPolicy policy, @Nonnull Consumer<? super Set<?>> callback) {
+    CalcElementsThread(@Nonnull String pattern, boolean checkboxState, @Nonnull IdeaModalityState modalityState, @Nonnull SelectionPolicy policy, @Nonnull Consumer<? super Set<?>> callback) {
       myPattern = pattern;
       myCheckboxState = checkboxState;
       myCallback = callback;
@@ -1519,7 +1519,7 @@ public abstract class ChooseByNameBase implements ChooseByNameViewModel {
             ensureNamesLoaded(everywhere);
             indicator.setIndeterminate(true);
             final TooManyUsagesStatus tooManyUsagesStatus = TooManyUsagesStatus.createFor(indicator);
-            myCalcUsagesThread = new CalcElementsThread(text, everywhere, ModalityState.NON_MODAL, PreserveSelection.INSTANCE, __ -> {
+            myCalcUsagesThread = new CalcElementsThread(text, everywhere, IdeaModalityState.NON_MODAL, PreserveSelection.INSTANCE, __ -> {
             }) {
               @Override
               protected boolean isOverflow(@Nonnull Set<Object> elementsArray) {

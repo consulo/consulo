@@ -15,10 +15,12 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.components.PathMacroManager;
-import com.intellij.openapi.components.StateStorageException;
-import consulo.components.impl.stores.storage.StateStorageManager;
-import consulo.components.impl.stores.storage.XmlElementStorage;
+import consulo.component.macro.PathMacroManager;
+import consulo.component.store.impl.internal.ApplicationDefaultStoreCache;
+import consulo.component.store.impl.internal.ComponentStoreImpl;
+import consulo.component.store.impl.internal.StateStorageException;
+import consulo.component.store.impl.internal.StateStorageManager;
+import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

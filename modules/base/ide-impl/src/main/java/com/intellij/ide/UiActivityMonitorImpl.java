@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide;
 
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ModalityStateListener;
-import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.util.containers.FactoryMap;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.ModalityStateListener;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.util.collection.FactoryMap;
 import consulo.application.ApplicationManager;
 import consulo.component.ComponentManager;
 import consulo.component.util.BusyObject;
@@ -121,8 +121,8 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
     addActivity(activity, getDefaultModalityState());
   }
 
-  private static ModalityState getDefaultModalityState() {
-    return (ModalityState)ApplicationManager.getApplication().getNoneModalityState();
+  private static IdeaModalityState getDefaultModalityState() {
+    return (IdeaModalityState)ApplicationManager.getApplication().getNoneModalityState();
   }
 
   @Override
@@ -186,21 +186,21 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
   }
 
   private static class ActivityInfo {
-    private final ModalityState myEffectiveState;
+    private final IdeaModalityState myEffectiveState;
 
-    private ActivityInfo(@Nonnull ModalityState effectiveState) {
+    private ActivityInfo(@Nonnull IdeaModalityState effectiveState) {
       myEffectiveState = effectiveState;
     }
 
     @Nonnull
-    public ModalityState getEffectiveState() {
+    public IdeaModalityState getEffectiveState() {
       return myEffectiveState;
     }
   }
 
   @Nonnull
-  protected ModalityState getCurrentState() {
-    return ModalityState.current();
+  protected IdeaModalityState getCurrentState() {
+    return IdeaModalityState.current();
   }
 
   private class BusyImpl extends BusyObject.Impl {
@@ -244,7 +244,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
 
       if (infoToCheck.isEmpty()) return true;
 
-      final ModalityState current = getCurrentState();
+      final IdeaModalityState current = getCurrentState();
       for (Map.Entry<UiActivity, ActivityInfo> entry : infoToCheck.entrySet()) {
         final ActivityInfo info = entry.getValue();
         if (!current.dominates(info.getEffectiveState())) {
@@ -255,7 +255,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
       return true;
     }
 
-    public void addActivity(@Nonnull UiActivity activity, @Nonnull ModalityState effectiveModalityState) {
+    public void addActivity(@Nonnull UiActivity activity, @Nonnull IdeaModalityState effectiveModalityState) {
       if (!myToWatch.isEmpty() && !myToWatch.contains(activity)) return;
 
       myActivities.put(activity, new ActivityInfo(effectiveModalityState));
@@ -380,7 +380,7 @@ public class UiActivityMonitorImpl extends UiActivityMonitor implements Modality
       getOrCreateBusy(activity);
       final Set<BusyImpl> busies = myObject2Activities.keySet();
       for (BusyImpl each : busies) {
-        each.addActivity(activity, (ModalityState)state);
+        each.addActivity(activity, (IdeaModalityState)state);
       }
     }
 

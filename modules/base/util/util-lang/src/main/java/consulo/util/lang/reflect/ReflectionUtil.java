@@ -17,6 +17,7 @@ package consulo.util.lang.reflect;
 
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SimpleReference;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,97 @@ import java.util.function.Predicate;
  */
 public class ReflectionUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtil.class);
+
+  public static Type resolveVariableInHierarchy(@Nonnull TypeVariable variable, @Nonnull Class aClass) {
+    Type type;
+    Class current = aClass;
+    while ((type = resolveVariable(variable, current, false)) == null) {
+      current = current.getSuperclass();
+      if (current == null) {
+        return null;
+      }
+    }
+    if (type instanceof TypeVariable) {
+      return resolveVariableInHierarchy((TypeVariable)type, aClass);
+    }
+    return type;
+  }
+
+  @Nullable
+  public static Type resolveVariable(@Nonnull TypeVariable variable, @Nonnull Class classType) {
+    return resolveVariable(variable, classType, true);
+  }
+
+  @Nullable
+  public static Type resolveVariable(@Nonnull TypeVariable variable, @Nonnull Class classType, boolean resolveInInterfacesOnly) {
+    final Class aClass = getRawType(classType);
+    int index = indexOf(aClass.getTypeParameters(), variable);
+    if (index >= 0) {
+      return variable;
+    }
+
+    final Class[] classes = aClass.getInterfaces();
+    final Type[] genericInterfaces = aClass.getGenericInterfaces();
+    for (int i = 0; i <= classes.length; i++) {
+      Class anInterface;
+      if (i < classes.length) {
+        anInterface = classes[i];
+      }
+      else {
+        anInterface = aClass.getSuperclass();
+        if (resolveInInterfacesOnly || anInterface == null) {
+          continue;
+        }
+      }
+      final Type resolved = resolveVariable(variable, anInterface);
+      if (resolved instanceof Class || resolved instanceof ParameterizedType) {
+        return resolved;
+      }
+      if (resolved instanceof TypeVariable) {
+        final TypeVariable typeVariable = (TypeVariable)resolved;
+        index = indexOf(anInterface.getTypeParameters(), typeVariable);
+        if (index < 0) {
+          LOG.error("Cannot resolve type variable:\n" +
+                    "typeVariable = " +
+                    typeVariable +
+                    "\n" +
+                    "genericDeclaration = " +
+                    declarationToString(typeVariable.getGenericDeclaration()) +
+                    "\n" +
+                    "searching in " +
+                    declarationToString(anInterface));
+        }
+        final Type type = i < genericInterfaces.length ? genericInterfaces[i] : aClass.getGenericSuperclass();
+        if (type instanceof Class) {
+          return Object.class;
+        }
+        if (type instanceof ParameterizedType) {
+          return getActualTypeArguments((ParameterizedType)type)[index];
+        }
+        throw new AssertionError("Invalid type: " + type);
+      }
+    }
+    return null;
+  }
+
+  private static <T> int indexOf(@Nonnull T[] ints, T value) {
+    for (int i = 0; i < ints.length; i++) {
+      if (Objects.equals(ints[i], value)) return i;
+    }
+
+    return -1;
+  }
+
+  @Nonnull
+  public static Type[] getActualTypeArguments(@Nonnull ParameterizedType parameterizedType) {
+    return parameterizedType.getActualTypeArguments();
+  }
+
+  @SuppressWarnings("HardCodedStringLiteral")
+  @Nonnull
+  public static String declarationToString(@Nonnull GenericDeclaration anInterface) {
+    return anInterface.toString() + Arrays.asList(anInterface.getTypeParameters()) + " loaded by " + ((Class)anInterface).getClassLoader();
+  }
 
   public static boolean isAssignable(@Nonnull Class<?> ancestor, @Nonnull Class<?> descendant) {
     return ancestor == descendant || ancestor.isAssignableFrom(descendant);

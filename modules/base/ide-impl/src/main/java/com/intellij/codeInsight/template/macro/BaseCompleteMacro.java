@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template.macro;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.command.WriteCommandAction;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
@@ -166,7 +166,7 @@ public abstract class BaseCompleteMacro extends Macro {
         runnable.run();
       }
       else {
-        ApplicationManager.getApplication().invokeLater(runnable, ModalityState.current(), project.getDisposed());
+        ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.current(), project.getDisposed());
       }
 
     }

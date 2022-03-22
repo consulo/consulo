@@ -18,7 +18,7 @@ package com.intellij.refactoring.rename;
 
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.component.extension.Extensions;
@@ -418,7 +418,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
             };
             statusBar.notifyProgressByBalloon(MessageType.WARNING, "<html><body>Unable to rename certain usages. <a href=\"\">Browse</a></body></html>", null, listener);
           }
-        }, ModalityState.NON_MODAL);
+        }, IdeaModalityState.NON_MODAL);
       }
     }
   }

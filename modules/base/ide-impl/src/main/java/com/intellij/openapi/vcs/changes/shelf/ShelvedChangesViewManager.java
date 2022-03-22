@@ -28,10 +28,10 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchSyntaxException;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
@@ -128,7 +128,7 @@ public class ShelvedChangesViewManager implements ProjectComponent {
           public void run() {
             updateChangesContent();
           }
-        }, ModalityState.NON_MODAL);
+        }, IdeaModalityState.NON_MODAL);
       }
     });
     myMoveRenameInfo = new HashMap<Pair<String, String>, String>();

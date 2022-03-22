@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import consulo.components.impl.stores.ComponentStoreImpl;
+import consulo.component.store.impl.internal.ComponentStoreImpl;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

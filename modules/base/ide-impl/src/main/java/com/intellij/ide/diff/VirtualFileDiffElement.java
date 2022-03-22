@@ -18,14 +18,14 @@ package com.intellij.ide.diff;
 import consulo.application.AllIcons;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.WriteAction;
 import consulo.document.Document;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.application.util.function.ThrowableComputable;
@@ -204,7 +204,7 @@ public class VirtualFileDiffElement extends DiffElement<VirtualFile> {
         });
       }
 
-      ModalityState modalityState = (ModalityState)ProgressManager.getInstance().getProgressIndicator().getModalityState();
+      IdeaModalityState modalityState = (IdeaModalityState)ProgressManager.getInstance().getProgressIndicator().getModalityState();
 
       VfsUtil.markDirty(true, true, virtualFile);
       RefreshQueue.getInstance().refresh(false, true, null, modalityState, virtualFile);

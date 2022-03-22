@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.JBMenuItem;
 import consulo.ui.ex.awt.JBPopupMenu;
 import com.intellij.openapi.ui.ShadowAction;
@@ -585,8 +585,8 @@ public abstract class JBTabsImpl extends JComponent
   }
 
   @Override
-  public ModalityState getModalityState() {
-    return ModalityState.stateForComponent(this);
+  public IdeaModalityState getModalityState() {
+    return IdeaModalityState.stateForComponent(this);
   }
 
   @Override

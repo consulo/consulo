@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl.projectlevelman;
 
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.vcs.*;
 import com.intellij.util.containers.Convertor;
 import javax.annotation.Nonnull;

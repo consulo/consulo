@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.codeStyle.statusbar;
 
 import consulo.language.codeStyle.*;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -162,7 +162,7 @@ public class CodeStyleStatusBarWidget extends EditorBasedStatusBarPopup implemen
   @Override
   protected void registerCustomListeners() {
     Project project = getProject();
-    ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project)).expireWith(project).finishOnUiThread(ModalityState.any(), manager -> {
+    ReadAction.nonBlocking(() -> CodeStyleSettingsManager.getInstance(project)).expireWith(project).finishOnUiThread(IdeaModalityState.any(), manager -> {
       manager.addListener(this);
       Disposer.register(this, () -> CodeStyleSettingsManager.removeListener(project, this));
     }).submit(NonUrgentExecutor.getInstance());

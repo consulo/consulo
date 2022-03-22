@@ -29,6 +29,7 @@ import com.intellij.openapi.externalSystem.service.ParametersEnhancer;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemLocalSettings;
 import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
 import com.intellij.util.PathUtil;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
@@ -360,7 +361,7 @@ public class ExternalSystemApiUtil {
   }
 
   public static void executeProjectChangeAction(boolean synchronous, @Nonnull final DisposeAwareProjectChange task) {
-    TransactionGuard.getInstance().assertWriteSafeContext(ModalityState.defaultModalityState());
+    TransactionGuard.getInstance().assertWriteSafeContext(IdeaModalityState.defaultModalityState());
     executeOnEdt(synchronous, () -> ApplicationManager.getApplication().runWriteAction(task));
   }
 

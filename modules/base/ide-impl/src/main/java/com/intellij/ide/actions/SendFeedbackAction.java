@@ -25,7 +25,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.BrowserUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.annotation.RequiredUIAccess;
 

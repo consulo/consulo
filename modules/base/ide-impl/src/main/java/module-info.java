@@ -64,6 +64,7 @@ open module consulo.ide.impl {
   requires transitive consulo.language.editor.ui.api;
   requires transitive consulo.code.editor.impl;
   requires transitive consulo.language.inject.impl;
+  requires transitive consulo.component.store.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -245,7 +246,6 @@ open module consulo.ide.impl {
   exports com.intellij.codeInspection.ui.actions;
   exports com.intellij.codeInspection.util;
   exports com.intellij.codeStyle;
-  exports com.intellij.codeWithMe;
   exports com.intellij.compiler.actions;
   exports com.intellij.compiler.impl;
   exports com.intellij.compiler.impl.generic;
@@ -475,8 +475,6 @@ open module consulo.ide.impl {
   exports com.intellij.idea;
   exports com.intellij.indentation;
   exports com.intellij.index;
-  //exports com.intellij.injected;
-  exports com.intellij.injected.editor;
   exports com.intellij.internal;
   exports com.intellij.internal.anomalies;
   exports com.intellij.internal.encodings;
@@ -499,7 +497,6 @@ open module consulo.ide.impl {
   exports com.intellij.lang.documentation;
   exports com.intellij.lang.findUsages;
   exports com.intellij.lang.folding;
-  exports com.intellij.lang.injection;
   exports com.intellij.lang.parameterInfo;
   exports com.intellij.lang.parser;
   exports com.intellij.lang.pratt;
@@ -1017,7 +1014,6 @@ open module consulo.ide.impl {
   exports consulo.compiler.impl.build;
   exports consulo.compiler.impl.packagingCompiler;
   exports consulo.compiler.impl.resourceCompiler;
-  exports consulo.components.impl;
   exports consulo.components.impl.stores;
   exports consulo.components.impl.stores.storage;
   //exports consulo.configurationStore;
@@ -1037,8 +1033,6 @@ open module consulo.ide.impl {
   exports consulo.diagram.provider;
   exports consulo.diff.editor.impl;
   exports consulo.diff.preferences.impl;
-  exports consulo.codeEditor.impl;
-  exports consulo.codeEditor.impl.softwrap.mapping;
   exports consulo.codeEditor.notifications;
   exports consulo.execution.impl;
   exports consulo.execution.testframework.thrift.runner;
@@ -1064,7 +1058,6 @@ open module consulo.ide.impl {
   exports consulo.fileEditor.impl;
   exports consulo.fileEditor.impl.text;
   exports consulo.fileEditor.internal;
-  exports consulo.fileTypes;
   exports consulo.fileTypes.impl;
   exports consulo.fileTypes.ui.impl;
   exports consulo.ide.actions;

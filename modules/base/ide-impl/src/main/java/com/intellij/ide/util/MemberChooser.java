@@ -43,7 +43,7 @@ import consulo.language.codeStyle.CodeStyleSettingsManager;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.containers.FactoryMap;
+import consulo.util.collection.FactoryMap;
 import java.util.HashMap;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;

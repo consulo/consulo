@@ -17,7 +17,7 @@ package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.util.Consumer;
 import consulo.application.ApplicationManager;
@@ -212,7 +212,7 @@ public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvid
       public void run() {
         popup.showInCenterOf(tree);
       }
-    }, ModalityState.NON_MODAL, project.getDisposed());
+    }, IdeaModalityState.NON_MODAL, project.getDisposed());
   }
 
   //private Operation getCustomEditOperation() {

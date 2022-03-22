@@ -12,7 +12,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -119,7 +119,7 @@ public class ManagePackagesDialog extends DialogWrapper {
               Messages.showErrorDialog(myMainPanel, IdeBundle.message("error.updating.package.list", e1.getMessage()), IdeBundle.message("action.AnActionButton.text.reload.list.of.packages"));
               LOG.info("Error updating list of repository packages", e1);
               myPackages.setPaintBusy(false);
-            }, ModalityState.any());
+            }, IdeaModalityState.any());
           }
         });
       }
@@ -209,7 +209,7 @@ public class ManagePackagesDialog extends DialogWrapper {
             @Override
             public void operationStarted(final String packageName) {
               if (!ApplicationManager.getApplication().isDispatchThread()) {
-                ApplicationManager.getApplication().invokeLater(() -> handleInstallationStarted(packageName), ModalityState.stateForComponent(myMainPanel));
+                ApplicationManager.getApplication().invokeLater(() -> handleInstallationStarted(packageName), IdeaModalityState.stateForComponent(myMainPanel));
               }
               else {
                 handleInstallationStarted(packageName);
@@ -219,7 +219,7 @@ public class ManagePackagesDialog extends DialogWrapper {
             @Override
             public void operationFinished(final String packageName, @Nullable final PackageManagementService.ErrorDescription errorDescription) {
               if (!ApplicationManager.getApplication().isDispatchThread()) {
-                ApplicationManager.getApplication().invokeLater(() -> handleInstallationFinished(packageName, errorDescription), ModalityState.stateForComponent(myMainPanel));
+                ApplicationManager.getApplication().invokeLater(() -> handleInstallationFinished(packageName, errorDescription), IdeaModalityState.stateForComponent(myMainPanel));
               }
               else {
                 handleInstallationFinished(packageName, errorDescription);
@@ -302,7 +302,7 @@ public class ManagePackagesDialog extends DialogWrapper {
           }
           doSelectPackage(mySelectedPackageName);
           setDownloadStatus(false);
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
       }
       catch (final IOException e) {
         application.invokeLater(() -> {
@@ -311,7 +311,7 @@ public class ManagePackagesDialog extends DialogWrapper {
           }
           LOG.info("Error initializing model", e);
           setDownloadStatus(false);
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
       }
     });
   }
@@ -473,7 +473,7 @@ public class ManagePackagesDialog extends DialogWrapper {
                     myVersionComboBox.addItem(release);
                   }
                 }
-              }, ModalityState.any());
+              }, IdeaModalityState.any());
             }
 
             @Override

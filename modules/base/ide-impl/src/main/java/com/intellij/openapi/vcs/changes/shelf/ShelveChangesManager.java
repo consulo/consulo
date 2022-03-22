@@ -16,11 +16,11 @@
 
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.concurrency.JobScheduler;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.JobScheduler;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.project.ProjectComponent;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diff.impl.patch.*;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatchBase;
@@ -97,8 +97,6 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
   private static final String REMOVE_FILES_FROM_SHELF_STRATEGY = "remove_strategy";
 
   @Nonnull
-  private final TrackingPathMacroSubstitutor myPathMacroSubstitutor;
-  @Nonnull
   private final SchemesManager<ShelvedChangeList, ShelvedChangeList> mySchemeManager;
   private ScheduledFuture<?> myCleaningFuture;
   private boolean myRemoveFilesFromShelf;
@@ -122,7 +120,6 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
   @Inject
   public ShelveChangesManager(Project project, ProjectPathMacroManager projectPathMacroManager, SchemesManagerFactory schemesManagerFactory, ChangeListManager changeListManager) {
     myProject = project;
-    myPathMacroSubstitutor = projectPathMacroManager.createTrackingSubstitutor();
     myBus = project.getMessageBus();
     mySchemeManager = schemesManagerFactory.createSchemesManager(SHELVE_MANAGER_DIR_PATH, new BaseSchemeProcessor<ShelvedChangeList, ShelvedChangeList>() {
       @Nullable
@@ -136,7 +133,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
       public Parent writeScheme(@Nonnull ShelvedChangeList scheme) throws WriteExternalException {
         Element child = new Element(ELEMENT_CHANGELIST);
         scheme.writeExternal(child);
-        myPathMacroSubstitutor.collapsePaths(child);
+        projectPathMacroManager.collapsePaths(child);
         return child;
       }
 
@@ -647,7 +644,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
           }
         }
       }
-    }, ModalityState.defaultModalityState());
+    }, IdeaModalityState.defaultModalityState());
   }
 
   private static List<TextFilePatch> loadTextPatches(final Project project,

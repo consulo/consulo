@@ -18,7 +18,7 @@ package com.intellij.openapi.progress.util;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.component.ProcessCanceledException;
@@ -73,7 +73,7 @@ public class BackgroundTaskUtil {
   @Nonnull
   @RequiredUIAccess
   public static ProgressIndicator executeAndTryWait(@Nonnull Function<ProgressIndicator, /*@NotNull*/ Runnable> backgroundTask, @Nullable Runnable onSlowAction, long waitMillis, boolean forceEDT) {
-    ModalityState modality = ModalityState.current();
+    IdeaModalityState modality = IdeaModalityState.current();
 
     if (forceEDT) {
       ProgressIndicator indicator = new EmptyProgressIndicator(modality);
@@ -123,7 +123,7 @@ public class BackgroundTaskUtil {
   @RequiredUIAccess
   public static <T> T tryComputeFast(@Nonnull Function<ProgressIndicator, T> backgroundTask, long waitMillis) {
     Pair<T, ProgressIndicator> pair = computeInBackgroundAndTryWait(backgroundTask, (result, indicator) -> {
-    }, ModalityState.defaultModalityState(), waitMillis);
+    }, IdeaModalityState.defaultModalityState(), waitMillis);
 
     T result = pair.first;
     ProgressIndicator indicator = pair.second;
@@ -135,7 +135,7 @@ public class BackgroundTaskUtil {
   @Nullable
   public static <T> T computeInBackgroundAndTryWait(@Nonnull Computable<T> computable, @Nonnull Consumer<T> asyncCallback, long waitMillis) {
     Pair<T, ProgressIndicator> pair =
-            computeInBackgroundAndTryWait(indicator -> computable.compute(), (result, indicator) -> asyncCallback.consume(result), ModalityState.defaultModalityState(), waitMillis);
+            computeInBackgroundAndTryWait(indicator -> computable.compute(), (result, indicator) -> asyncCallback.consume(result), IdeaModalityState.defaultModalityState(), waitMillis);
     return pair.first;
   }
 
@@ -150,7 +150,7 @@ public class BackgroundTaskUtil {
   @Nonnull
   private static <T> Pair<T, ProgressIndicator> computeInBackgroundAndTryWait(@Nonnull Function<ProgressIndicator, T> task,
                                                                               @Nonnull PairConsumer<T, ProgressIndicator> asyncCallback,
-                                                                              @Nonnull ModalityState modality,
+                                                                              @Nonnull IdeaModalityState modality,
                                                                               long waitMillis) {
     ProgressIndicator indicator = new EmptyProgressIndicator(modality);
 
@@ -230,7 +230,7 @@ public class BackgroundTaskUtil {
   }
 
   public static <T> T runUnderDisposeAwareIndicator(@Nonnull Disposable parent, @Nonnull Computable<T> task) {
-    ProgressIndicator indicator = new EmptyProgressIndicator(ModalityState.defaultModalityState());
+    ProgressIndicator indicator = new EmptyProgressIndicator(IdeaModalityState.defaultModalityState());
     indicator.start();
 
     Disposable disposable = () -> {

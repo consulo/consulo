@@ -16,7 +16,7 @@
 package com.intellij.ide.scratch;
 
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;

@@ -2,7 +2,7 @@
 package com.intellij.util;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.project.Project;
@@ -36,7 +36,7 @@ public final class EditSourceOnDoubleClickHandler {
     new DoubleClickListener() {
       @Override
       protected boolean onDoubleClick(@Nonnull MouseEvent e) {
-        if (ModalityState.current().dominates(ModalityState.NON_MODAL)) return false;
+        if (IdeaModalityState.current().dominates(IdeaModalityState.NON_MODAL)) return false;
         if (treeTable.getTree().getPathForLocation(e.getX(), e.getY()) == null) return false;
         DataContext dataContext = DataManager.getInstance().getDataContext(treeTable);
         Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -51,7 +51,7 @@ public final class EditSourceOnDoubleClickHandler {
     new DoubleClickListener() {
       @Override
       protected boolean onDoubleClick(@Nonnull MouseEvent e) {
-        if (ModalityState.current().dominates(ModalityState.NON_MODAL)) return false;
+        if (IdeaModalityState.current().dominates(IdeaModalityState.NON_MODAL)) return false;
         if (table.columnAtPoint(e.getPoint()) < 0) return false;
         if (table.rowAtPoint(e.getPoint()) < 0) return false;
         DataContext dataContext = DataManager.getInstance().getDataContext(table);

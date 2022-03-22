@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.ide.StartupProgress;
+import consulo.application.impl.internal.start.StartupProgress;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.container.boot.ContainerPathManager;
@@ -26,7 +26,7 @@ import consulo.container.impl.PluginValidator;
 import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.container.plugin.*;
 import consulo.logging.Logger;
-import consulo.plugins.internal.PluginsLoader;
+import consulo.application.impl.internal.plugin.PluginsLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -202,9 +202,5 @@ public class PluginManagerCore {
 
   public static boolean shouldSkipPlugin(final PluginDescriptor descriptor) {
     return consulo.container.plugin.PluginManager.shouldSkipPlugin(descriptor);
-  }
-
-  public static boolean isSystemPlugin(@Nonnull PluginId pluginId) {
-    return PluginIds.isPlatformPlugin(pluginId);
   }
 }

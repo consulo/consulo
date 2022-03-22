@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.changes.shelf;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
@@ -111,7 +111,7 @@ public class ShelveChangesCommitExecutor extends LocalCommitExecutor {
           public void run() {
             Messages.showErrorDialog(myProject, VcsBundle.message("create.patch.error.title", ex.getMessage()), CommonBundle.getErrorTitle());
           }
-        }, ModalityState.NON_MODAL, myProject);
+        }, IdeaModalityState.NON_MODAL, myProject);
       }
     }
 

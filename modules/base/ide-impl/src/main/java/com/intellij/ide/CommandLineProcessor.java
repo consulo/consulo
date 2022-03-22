@@ -30,7 +30,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import consulo.project.impl.ProjectOpenProcessors;
-import consulo.start.CommandLineArgs;
+import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;
 

@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
@@ -30,10 +30,10 @@ public class WaitForProgressToShow {
   }
 
   public static void runOrInvokeAndWaitAboveProgress(final Runnable command) {
-    runOrInvokeAndWaitAboveProgress(command, ModalityState.defaultModalityState());
+    runOrInvokeAndWaitAboveProgress(command, IdeaModalityState.defaultModalityState());
   }
 
-  public static void runOrInvokeAndWaitAboveProgress(final Runnable command, @Nullable final ModalityState modalityState) {
+  public static void runOrInvokeAndWaitAboveProgress(final Runnable command, @Nullable final IdeaModalityState modalityState) {
     final Application application = ApplicationManager.getApplication();
     if (application.isDispatchThread()) {
       command.run();
@@ -45,7 +45,7 @@ public class WaitForProgressToShow {
         application.invokeAndWait(command, pi.getModalityState());
       }
       else {
-        final ModalityState notNullModalityState = modalityState == null ? ModalityState.NON_MODAL : modalityState;
+        final IdeaModalityState notNullModalityState = modalityState == null ? IdeaModalityState.NON_MODAL : modalityState;
         application.invokeAndWait(command, notNullModalityState);
       }
     }
@@ -63,7 +63,7 @@ public class WaitForProgressToShow {
         application.invokeLater(command, pi.getModalityState(), () -> (!project.isOpen()) || project.isDisposed());
       }
       else {
-        final ModalityState notNullModalityState = modalityState == null ? ModalityState.NON_MODAL : (ModalityState)modalityState;
+        final IdeaModalityState notNullModalityState = modalityState == null ? IdeaModalityState.NON_MODAL : (IdeaModalityState)modalityState;
         application.invokeLater(command, notNullModalityState, project.getDisposed());
       }
     }

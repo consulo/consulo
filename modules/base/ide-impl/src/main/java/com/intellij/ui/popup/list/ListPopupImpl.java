@@ -4,7 +4,7 @@ package com.intellij.ui.popup.list;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.ui.popup.ListPopupStepEx;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
@@ -394,7 +394,7 @@ public class ListPopupImpl extends WizardPopup implements ListPopup, NextStepHan
       if (insideOnChosen.get()) {
         LOG.error("Showing dialogs from popup onChosen can result in focus issues. Please put the handler into BaseStep.doFinalStep or PopupStep.getFinalRunnable.");
       }
-    }, ModalityState.any());
+    }, IdeaModalityState.any());
 
     final PopupStep nextStep;
     try {

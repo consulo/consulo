@@ -17,6 +17,7 @@ package com.intellij.openapi.progress.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;

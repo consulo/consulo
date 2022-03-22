@@ -3,7 +3,7 @@ package com.intellij.openapi.util;
 
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import javax.annotation.Nonnull;
@@ -70,10 +70,10 @@ public class ZipperUpdater {
         };
         if (Alarm.ThreadToUse.SWING_THREAD.equals(myThreadToUse)) {
           if (anyModality) {
-            myAlarm.addRequest(request, urgent ? 0 : myDelay, ModalityState.any());
+            myAlarm.addRequest(request, urgent ? 0 : myDelay, IdeaModalityState.any());
           }
           else if (!ApplicationManager.getApplication().isDispatchThread()) {
-            myAlarm.addRequest(request, urgent ? 0 : myDelay, ModalityState.NON_MODAL);
+            myAlarm.addRequest(request, urgent ? 0 : myDelay, IdeaModalityState.NON_MODAL);
           }
           else {
             myAlarm.addRequest(request, urgent ? 0 : myDelay);

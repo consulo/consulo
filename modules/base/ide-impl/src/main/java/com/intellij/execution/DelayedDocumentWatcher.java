@@ -18,7 +18,7 @@ package com.intellij.execution;
 import consulo.ide.impl.AppTopics;
 import com.intellij.execution.testframework.autotest.AutoTestWatcher;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.event.DocumentAdapter;
@@ -88,7 +88,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
         @Override
         public void beforeAllDocumentsSaving() {
           myDocumentSavingInProgress = true;
-          ApplicationManager.getApplication().invokeLater(() -> myDocumentSavingInProgress = false, ModalityState.any());
+          ApplicationManager.getApplication().invokeLater(() -> myDocumentSavingInProgress = false, IdeaModalityState.any());
         }
       });
     }
@@ -176,7 +176,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
           return false;
         }
       });
-      ApplicationManager.getApplication().invokeLater(() -> errorsFoundConsumer.consume(errorsFound), ModalityState.any());
+      ApplicationManager.getApplication().invokeLater(() -> errorsFoundConsumer.consume(errorsFound), IdeaModalityState.any());
     });
   }
 }

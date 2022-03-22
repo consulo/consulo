@@ -1,13 +1,13 @@
 package consulo.web.application.impl;
 
-import com.intellij.ide.StartupProgress;
+import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.application.impl.ReadMostlyRWLock;
+import consulo.application.impl.internal.ReadMostlyRWLock;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.impl.BaseApplication;
+import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.UnifiedTransactionGuardImpl;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
@@ -32,9 +32,9 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
   private static final Logger LOG = Logger.getInstance(WebApplicationImpl.class);
 
   private WebSession myCurrentSession;
-  private static final ModalityState ANY = new ModalityState() {
+  private static final IdeaModalityState ANY = new IdeaModalityState() {
     @Override
-    public boolean dominates(@Nonnull ModalityState anotherState) {
+    public boolean dominates(@Nonnull IdeaModalityState anotherState) {
       return false;
     }
 
@@ -71,7 +71,7 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
 
   @Override
   @Nonnull
-  public ModalityState getAnyModalityState() {
+  public IdeaModalityState getAnyModalityState() {
     return ANY;
   }
 
@@ -141,26 +141,26 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
 
   @Nonnull
   @Override
-  public ModalityState getCurrentModalityState() {
+  public IdeaModalityState getCurrentModalityState() {
     return getNoneModalityState();
   }
 
   @Nonnull
   @Override
-  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
     return getNoneModalityState();
   }
 
   @Nonnull
   @Override
-  public ModalityState getDefaultModalityState() {
+  public IdeaModalityState getDefaultModalityState() {
     return getNoneModalityState();
   }
 
   @Nonnull
   @Override
-  public ModalityState getNoneModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getNoneModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @RequiredUIAccess

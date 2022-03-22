@@ -21,7 +21,7 @@ import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.ide.plugins.PluginNode;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.notification.NotificationAction;
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

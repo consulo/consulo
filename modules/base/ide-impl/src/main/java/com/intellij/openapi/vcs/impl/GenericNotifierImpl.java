@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
@@ -90,7 +90,7 @@ public abstract class GenericNotifierImpl<T, Key> {
     if (application.isDispatchThread()) {
       runnable.run();
     } else {
-      application.invokeLater(runnable, ModalityState.NON_MODAL, myProject.getDisposed());
+      application.invokeLater(runnable, IdeaModalityState.NON_MODAL, myProject.getDisposed());
     }
   }
 

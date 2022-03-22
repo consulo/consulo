@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl.local;
 
-import com.intellij.concurrency.JobScheduler;
+import consulo.application.impl.internal.JobScheduler;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.FileDocumentManager;

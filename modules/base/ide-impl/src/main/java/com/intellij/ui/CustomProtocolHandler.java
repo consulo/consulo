@@ -19,7 +19,7 @@ import com.intellij.ide.CommandLineProcessor;
 import consulo.logging.Logger;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.io.URLUtil;
-import consulo.start.CommandLineArgs;
+import consulo.application.impl.internal.start.CommandLineArgs;
 import javax.annotation.Nonnull;
 
 import java.net.URI;

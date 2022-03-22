@@ -27,7 +27,7 @@ import consulo.process.event.ProcessListener;
 import consulo.process.ProcessOutputTypes;
 import com.intellij.execution.runners.DefaultProgramRunner;
 import consulo.execution.runner.ProgramRunner;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.ProgressManager;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;

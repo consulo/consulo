@@ -15,59 +15,55 @@
  */
 package com.intellij.diagnostic;
 
-import consulo.application.CommonBundle;
 import com.intellij.diagnostic.errordialog.*;
-import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataSink;
+import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
+import com.intellij.openapi.diagnostic.SubmittedReportInfo;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.HeaderlessTabbedPane;
+import com.intellij.ui.HyperlinkLabel;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.text.DateFormatUtil;
+import com.intellij.xml.util.XmlStringUtil;
+import consulo.application.*;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.logging.IdeaLoggingEvent;
+import consulo.component.util.PluginExceptionUtil;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.externalService.ExternalService;
+import consulo.externalService.ExternalServiceConfiguration;
+import consulo.ide.ServiceManager;
+import consulo.ide.base.BaseDataManager;
+import consulo.logging.Logger;
+import consulo.logging.attachment.Attachment;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
-import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
-import consulo.application.util.logging.IdeaLoggingEvent;
-import com.intellij.openapi.diagnostic.SubmittedReportInfo;
-import consulo.component.extension.ExtensionException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
-import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.util.lang.function.Condition;
-import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.ui.HeaderlessTabbedPane;
-import com.intellij.ui.HyperlinkLabel;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.DateFormatUtil;
-import consulo.ui.ex.awt.UIUtil;
-import com.intellij.xml.util.XmlStringUtil;
-import consulo.application.ApplicationProperties;
-import consulo.container.PluginException;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginId;
-import consulo.container.plugin.PluginIds;
-import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
-import consulo.externalService.ExternalService;
-import consulo.externalService.ExternalServiceConfiguration;
-import consulo.ide.base.BaseDataManager;
-import consulo.logging.Logger;
-import consulo.logging.attachment.Attachment;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.IdeBorderFactory;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ThreeState;
+import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -429,7 +425,7 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(pluginId);
     final SimpleReference<Boolean> hasDependants = SimpleReference.create(false);
     consulo.container.plugin.PluginManager.checkDependants(plugin, PluginManager::getPlugin, pluginId1 -> {
-      if (PluginManager.isSystemPlugin(pluginId1)) {
+      if (PluginIds.isPlatformPlugin(pluginId1)) {
         return true;
       }
       hasDependants.set(true);
@@ -800,44 +796,9 @@ public class IdeErrorsDialog extends DialogWrapper implements MessagePoolListene
     return myMergedMessages.get(idx).get(0);
   }
 
-  @Nonnull
-  public static Set<PluginId> findAllPluginIds(@Nonnull Throwable t) {
-    if (t instanceof PluginException) {
-      PluginId pluginId = ((PluginException)t).getPluginId();
-      return Set.of(pluginId);
-    }
-
-    if(t instanceof ExtensionException) {
-      Class extensionClass = ((ExtensionException)t).getExtensionClass();
-      PluginId pluginId = consulo.container.plugin.PluginManager.getPluginId(extensionClass);
-      if (pluginId == null) {
-        LOG.error("There no plugin for extension class: " + extensionClass);
-        return Set.of();
-      }
-      return Set.of(pluginId);
-    }
-
-    Set<PluginId> pluginIds = new TreeSet<>();
-
-    for (StackTraceElement element : t.getStackTrace()) {
-      String classLoaderName = element.getClassLoaderName();
-      if(classLoaderName == null) {
-        continue;
-      }
-
-      PluginDescriptor plugin = consulo.container.plugin.PluginManager.findPlugin(PluginId.getId(classLoaderName));
-      if(plugin == null) {
-        continue;
-      }
-      pluginIds.add(plugin.getPluginId());
-    }
-    return pluginIds;
-  }
-
   @Nullable
   public static PluginId findFirstPluginId(@Nonnull Throwable t) {
-    Set<PluginId> pluginIds = findAllPluginIds(t);
-    return pluginIds.stream().filter(pluginId -> !PluginIds.isPlatformPlugin(pluginId)).findFirst().orElse(null);
+    return PluginExceptionUtil.findFirstPluginId(t);
   }
 
   private class ClearFatalsAction extends AbstractAction {

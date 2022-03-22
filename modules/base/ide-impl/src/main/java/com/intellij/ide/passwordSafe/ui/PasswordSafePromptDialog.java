@@ -20,7 +20,7 @@ import com.intellij.ide.passwordSafe.PasswordSafeException;
 import com.intellij.ide.passwordSafe.config.PasswordSafeSettings;
 import com.intellij.ide.passwordSafe.impl.PasswordSafeImpl;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -203,7 +203,7 @@ public class PasswordSafePromptDialog extends DialogWrapper {
           }
         }
       }
-    }, ModalityState.any());
+    }, IdeaModalityState.any());
     return ref.get();
   }
 }

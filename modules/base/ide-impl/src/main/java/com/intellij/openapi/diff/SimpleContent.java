@@ -20,7 +20,7 @@ import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.LineSeparator;

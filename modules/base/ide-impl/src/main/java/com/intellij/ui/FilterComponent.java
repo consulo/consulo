@@ -15,7 +15,7 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.util.Alarm;
 
 import javax.swing.*;
@@ -109,7 +109,7 @@ public abstract class FilterComponent extends JPanel {
         public void run() {
           onlineFilter();
         }
-      }, 100, ModalityState.stateForComponent(myFilter));
+      }, 100, IdeaModalityState.stateForComponent(myFilter));
     }
   }
 

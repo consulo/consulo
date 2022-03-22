@@ -2,7 +2,7 @@
 package com.intellij.openapi.file.exclude;
 
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeOverrider;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;

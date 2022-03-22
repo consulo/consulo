@@ -15,45 +15,52 @@
  */
 package consulo.application;
 
-import javax.annotation.Nonnull;
+import consulo.component.macro.ExpandMacroToPathMap;
+import consulo.component.macro.ReplacePathToMacroMap;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Set;
 
-public abstract class PathMacros {
+public interface PathMacros {
 
   public static PathMacros getInstance() {
     return Application.get().getInstance(PathMacros.class);
   }
 
-  public abstract Set<String> getAllMacroNames();
+  Set<String> getAllMacroNames();
 
-  public abstract String getValue(String name);
+  String getValue(String name);
 
-  public abstract void setMacro(String name, String value);
+  void setMacro(String name, String value);
 
   /**
    * Obsolete macros that are to be removed gently from the project files. They can be read, but not written again. Not persisted.
+   *
    * @param name
    * @param value
    */
-  public abstract void addLegacyMacro(@Nonnull String name, @Nonnull String value);
+  void addLegacyMacro(@Nonnull String name, @Nonnull String value);
 
-  public abstract void removeMacro(String name);
+  void removeMacro(String name);
 
-  public abstract Set<String> getUserMacroNames();
+  Set<String> getUserMacroNames();
 
-  public abstract Set<String> getSystemMacroNames();
+  Set<String> getSystemMacroNames();
 
-  public abstract Collection<String> getIgnoredMacroNames();
+  Collection<String> getIgnoredMacroNames();
 
-  public abstract void setIgnoredMacroNames(@Nonnull final Collection<String> names);
+  void setIgnoredMacroNames(@Nonnull final Collection<String> names);
 
-  public abstract void addIgnoredMacro(@Nonnull final String name);
+  void addIgnoredMacro(@Nonnull final String name);
 
-  public abstract boolean isIgnoredMacroName(@Nonnull final String macro);
+  boolean isIgnoredMacroName(@Nonnull final String macro);
 
-  public abstract void removeAllMacros();
+  void removeAllMacros();
 
-  public abstract Collection<String> getLegacyMacroNames();
+  Collection<String> getLegacyMacroNames();
+
+  void addMacroReplacements(ReplacePathToMacroMap result);
+
+  void addMacroExpands(ExpandMacroToPathMap result);
 }

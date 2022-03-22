@@ -11,6 +11,7 @@ import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.openapi.util.Comparing;
+import consulo.language.file.FileTypeManager;
 import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;

@@ -16,8 +16,8 @@
 package consulo.web.startup;
 
 import com.intellij.ide.plugins.PluginManager;
-import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.StartupUtil;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import com.intellij.util.ReflectionUtil;

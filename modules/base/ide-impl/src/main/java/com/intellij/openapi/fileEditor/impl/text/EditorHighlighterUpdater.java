@@ -2,7 +2,7 @@
 package com.intellij.openapi.fileEditor.impl.text;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import com.intellij.openapi.application.impl.NonBlockingReadActionImpl;
 import consulo.codeEditor.HighlighterColors;
@@ -12,9 +12,9 @@ import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeEvent;
-import com.intellij.openapi.fileTypes.FileTypeListener;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -62,7 +62,7 @@ public class EditorHighlighterUpdater {
             .expireWith(myProject)
             .expireWhen(() -> (myFile != null && !myFile.isValid()) || myEditor.isDisposed())
             .coalesceBy(EditorHighlighterUpdater.class, myEditor)
-            .finishOnUiThread(ModalityState.any(), myEditor::setHighlighter)
+            .finishOnUiThread(IdeaModalityState.any(), myEditor::setHighlighter)
             .submit(NonUrgentExecutor.getInstance());
   }
 

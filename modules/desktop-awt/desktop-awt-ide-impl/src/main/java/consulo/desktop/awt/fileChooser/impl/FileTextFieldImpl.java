@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.*;
 
 import static consulo.ui.ex.action.IdeActions.ACTION_CODE_COMPLETION;
-import static com.intellij.openapi.application.ModalityState.stateForComponent;
+import static consulo.application.impl.internal.IdeaModalityState.stateForComponent;
 import static consulo.desktop.awt.fileChooser.impl.FileTextFieldUtil.createMatcher;
 
 public abstract class FileTextFieldImpl implements FileLookup, Disposable, FileTextField {

@@ -15,10 +15,12 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
-import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.project.internal.ProjectEx;
 import com.intellij.openapi.project.impl.ProjectImpl;
+import consulo.component.store.impl.internal.IComponentStore;
+import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

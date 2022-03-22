@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.codeStyle.presentation;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 
 public class CodeStyleSoftMarginsPresentation extends CodeStyleSettingPresentation {
 

@@ -16,6 +16,7 @@
 package com.intellij.diagnostic;
 
 import com.intellij.errorreport.ErrorReportSender;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.externalService.AuthorizationFailedException;
 import consulo.externalService.UpdateAvailableException;
 import consulo.dataContext.DataManager;
@@ -27,7 +28,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
@@ -102,7 +103,7 @@ public class ITNReporter extends ErrorReportSubmitter {
 
     Throwable t = event.getThrowable();
     if (t != null) {
-      Set<PluginId> pluginIds = IdeErrorsDialog.findAllPluginIds(t);
+      Set<PluginId> pluginIds = PluginExceptionUtil.findAllPluginIds(t);
       for (PluginId pluginId : pluginIds) {
         final PluginDescriptor pluginDescriptor = PluginManager.findPlugin(pluginId);
         if (pluginDescriptor != null) {

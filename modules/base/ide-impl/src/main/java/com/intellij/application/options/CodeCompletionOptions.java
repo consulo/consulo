@@ -17,7 +17,7 @@
 package com.intellij.application.options;
 
 import consulo.ui.ex.action.ActionManager;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.disposer.Disposable;

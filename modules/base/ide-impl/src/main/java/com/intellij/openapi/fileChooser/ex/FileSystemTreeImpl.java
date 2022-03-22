@@ -12,7 +12,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.undoRedo.CommandProcessor;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
@@ -90,7 +90,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
     //noinspection deprecation
     if (renderer == null && useNewAsyncModel()) {
       renderer = new FileRenderer().forTree();
-      myFileTreeModel = new FileTreeModel(descriptor, new FileRefresher(true, 3, () -> ModalityState.stateForComponent(tree)));
+      myFileTreeModel = new FileTreeModel(descriptor, new FileRefresher(true, 3, () -> IdeaModalityState.stateForComponent(tree)));
       myAsyncTreeModel = new AsyncTreeModel(myFileTreeModel, false, this);
       myTreeStructure = null;
     }
@@ -536,7 +536,7 @@ public class FileSystemTreeImpl implements FileSystemTree {
 
           final boolean async = myTreeBuilder.isToBuildChildrenInBackground(virtualFile);
           if (virtualFile instanceof NewVirtualFile) {
-            RefreshQueue.getInstance().refresh(async, false, null, ModalityState.stateForComponent(myTree), virtualFile);
+            RefreshQueue.getInstance().refresh(async, false, null, IdeaModalityState.stateForComponent(myTree), virtualFile);
           }
           else {
             virtualFile.refresh(async, false);

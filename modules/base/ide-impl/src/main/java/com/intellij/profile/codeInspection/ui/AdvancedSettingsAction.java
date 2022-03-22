@@ -18,7 +18,7 @@ package com.intellij.profile.codeInspection.ui;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;

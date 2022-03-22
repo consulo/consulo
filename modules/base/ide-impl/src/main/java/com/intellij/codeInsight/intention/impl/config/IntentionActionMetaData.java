@@ -25,7 +25,7 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;
 import consulo.container.plugin.PluginId;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import org.jetbrains.annotations.NonNls;

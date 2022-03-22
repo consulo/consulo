@@ -17,9 +17,9 @@
 package com.intellij.application.options.editor;
 
 import com.intellij.codeInsight.folding.CodeFoldingManager;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
@@ -91,6 +91,6 @@ public class CodeFoldingConfigurable extends SimpleConfigurableByProperties impl
         }
       }
       EditorGeneralConfigurable.reinitAllEditors();
-    }, ModalityState.NON_MODAL);
+    }, IdeaModalityState.NON_MODAL);
   }
 }

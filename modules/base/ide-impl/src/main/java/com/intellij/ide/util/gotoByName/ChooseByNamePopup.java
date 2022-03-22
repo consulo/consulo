@@ -2,12 +2,12 @@
 package com.intellij.ide.util.gotoByName;
 
 import com.google.common.util.concurrent.UncheckedTimeoutException;
-import com.intellij.diagnostic.PerformanceWatcher;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.application.ui.UISettings;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
@@ -79,7 +79,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   }
 
   @Override
-  protected void initUI(final Callback callback, final ModalityState modalityState, boolean allowMultipleSelection) {
+  protected void initUI(final Callback callback, final IdeaModalityState modalityState, boolean allowMultipleSelection) {
     super.initUI(callback, modalityState, allowMultipleSelection);
     if (myOldPopup != null) {
       myTextField.setCaretPosition(myOldPopup.myTextField.getCaretPosition());
@@ -90,7 +90,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
       if (selEnd > selStart) {
         myTextField.select(selStart, selEnd);
       }
-      rebuildList(SelectionPolicyKt.fromIndex(myInitialIndex), 0, ModalityState.current(), null);
+      rebuildList(SelectionPolicyKt.fromIndex(myInitialIndex), 0, IdeaModalityState.current(), null);
     }
     if (myOldFocusOwner != null) {
       myPreviouslyFocusedComponent = myOldFocusOwner;
@@ -454,7 +454,7 @@ public class ChooseByNamePopup extends ChooseByNameBase implements ChooseByNameP
   public List<Object> calcPopupElements(@Nonnull String text, boolean checkboxState) {
     List<Object> elements = ContainerUtil.newArrayList("empty");
     Semaphore semaphore = new Semaphore(1);
-    scheduleCalcElements(text, checkboxState, ModalityState.NON_MODAL, SelectMostRelevant.INSTANCE, set -> {
+    scheduleCalcElements(text, checkboxState, IdeaModalityState.NON_MODAL, SelectMostRelevant.INSTANCE, set -> {
       elements.clear();
       elements.addAll(set);
       semaphore.up();

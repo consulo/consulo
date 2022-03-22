@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.ui.EditorNotifications;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
@@ -125,7 +125,7 @@ public class AsyncEditorLoader {
       });
       future.complete(runnable);
       return runnable;
-    }).expireWith(myEditorComponent).expireWith(myProject).finishOnUiThread(ModalityState.any(), result -> loadingFinished(result)).submit(ourExecutor);
+    }).expireWith(myEditorComponent).expireWith(myProject).finishOnUiThread(IdeaModalityState.any(), result -> loadingFinished(result)).submit(ourExecutor);
     return future;
   }
 

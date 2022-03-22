@@ -15,13 +15,13 @@
  */
 package com.intellij.application.options.pathMacros;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.PathMacros;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.application.options.PathMacrosService;
+import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.logging.Logger;
 
 import javax.swing.*;

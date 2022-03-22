@@ -21,7 +21,7 @@ import com.intellij.compiler.impl.TranslationSourceFileInfo;
 import consulo.application.ApplicationManager;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.TranslatingCompiler;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.ProjectManager;

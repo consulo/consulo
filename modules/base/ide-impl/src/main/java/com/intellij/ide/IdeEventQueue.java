@@ -18,11 +18,12 @@ package com.intellij.ide;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.ide.dnd.DnDManagerImpl;
 import com.intellij.ide.plugins.PluginManager;
+import consulo.application.impl.internal.performance.ActivityTracker;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
-import com.intellij.idea.ApplicationStarter;
-import com.intellij.openapi.application.*;
+import consulo.application.impl.internal.start.ApplicationStarter;
 import com.intellij.openapi.application.impl.InvocationUtil2;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
 import com.intellij.openapi.keymap.KeyboardSettingsExternalizable;
@@ -264,7 +265,7 @@ public class IdeEventQueue extends EventQueue {
     myIdleTimeCounterAlarm.addRequest(() -> {
       myIdleTime += System.currentTimeMillis() - myLastActiveTime;
       addIdleTimeCounterRequest();
-    }, 20000, ModalityState.NON_MODAL);
+    }, 20000, IdeaModalityState.NON_MODAL);
   }
 
   /**
@@ -701,7 +702,7 @@ public class IdeEventQueue extends EventQueue {
             LOG.error("There is no request for " + idleListener);
           }
           else {
-            myIdleRequestsAlarm.addRequest(request, request.getTimeout(), ModalityState.NON_MODAL);
+            myIdleRequestsAlarm.addRequest(request, request.getTimeout(), IdeaModalityState.NON_MODAL);
           }
         }
         if (KeyEvent.KEY_PRESSED == e.getID() ||
@@ -979,7 +980,7 @@ public class IdeEventQueue extends EventQueue {
       synchronized (myLock) {
         if (myIdleListeners.contains(myRunnable)) // do not reschedule if not interested anymore
         {
-          myIdleRequestsAlarm.addRequest(this, myTimeout, ModalityState.NON_MODAL);
+          myIdleRequestsAlarm.addRequest(this, myTimeout, IdeaModalityState.NON_MODAL);
         }
       }
     }

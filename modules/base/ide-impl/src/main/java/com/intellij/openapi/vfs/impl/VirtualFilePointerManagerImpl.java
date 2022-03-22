@@ -7,7 +7,7 @@ import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;

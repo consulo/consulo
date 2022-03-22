@@ -17,7 +17,7 @@ import consulo.language.editor.completion.lookup.*;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.action.EditorActionManager;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;

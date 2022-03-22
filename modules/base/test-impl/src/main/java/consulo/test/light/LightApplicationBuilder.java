@@ -16,15 +16,15 @@
 package consulo.test.light;
 
 import consulo.ui.ex.UiActivityMonitor;
-import com.intellij.openapi.application.PathMacroFilter;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
+import consulo.component.macro.PathMacroFilter;
+import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.language.file.EncodingManager;
 import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
 import com.intellij.ui.TreeUIHelper;
 import consulo.application.Application;
 import consulo.application.PathMacros;
 import consulo.application.internal.concurrency.JobLauncher;
-import consulo.application.options.PathMacrosService;
+import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
 import consulo.component.extension.ExtensionExtender;

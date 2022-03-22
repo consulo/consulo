@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.VcsBundle;
@@ -62,8 +62,8 @@ public class ChangesBrowserDialog extends DialogWrapper {
     myMode = mode;
     setTitle(VcsBundle.message("dialog.title.changes.browser"));
     setCancelButtonText(CommonBundle.getCloseButtonText());
-    final ModalityState currentState = ModalityState.current();
-    if ((mode != Mode.Choose) && (ModalityState.NON_MODAL.equals(currentState))) {
+    final IdeaModalityState currentState = IdeaModalityState.current();
+    if ((mode != Mode.Choose) && (IdeaModalityState.NON_MODAL.equals(currentState))) {
       setModal(false);
     }
     myAppender = new AsynchConsumer<List<CommittedChangeList>>() {

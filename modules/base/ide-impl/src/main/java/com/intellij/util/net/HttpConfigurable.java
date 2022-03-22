@@ -17,7 +17,7 @@ package com.intellij.util.net;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -348,7 +348,7 @@ public class HttpConfigurable implements PersistentStateComponent<HttpConfigurab
     }
     else {
       Application app = ApplicationManager.getApplication();
-      app.invokeAndWait(runnable, ModalityState.any());
+      app.invokeAndWait(runnable, IdeaModalityState.any());
     }
   }
 

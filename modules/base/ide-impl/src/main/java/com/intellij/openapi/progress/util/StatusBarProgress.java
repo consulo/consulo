@@ -2,6 +2,7 @@
 package com.intellij.openapi.progress.util;
 
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Pair;

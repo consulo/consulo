@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.VcsTaskHandler;
 import com.intellij.util.Function;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FactoryMap;
+import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

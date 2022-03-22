@@ -23,10 +23,9 @@ import consulo.language.psi.ReferenceProvidersRegistry;
 import consulo.application.dumb.IndexNotReadyException;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.pattern.ElementPattern;
-import consulo.ide.impl.psi.*;
 import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FactoryMap;
+import consulo.util.collection.FactoryMap;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

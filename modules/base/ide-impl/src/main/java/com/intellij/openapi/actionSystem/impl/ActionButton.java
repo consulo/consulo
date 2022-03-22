@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.ex.TooltipDescriptionProvider;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.action.*;

@@ -23,7 +23,7 @@ import consulo.language.parser.ParserDefinition;
 import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeIdentifiableByVirtualFile;
 import consulo.project.Project;

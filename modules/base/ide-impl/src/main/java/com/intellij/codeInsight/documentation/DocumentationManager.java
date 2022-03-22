@@ -17,7 +17,7 @@ import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
 import com.intellij.lang.LanguageDocumentation;
 import com.intellij.lang.documentation.*;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.roots.libraries.LibraryUtil;
 import com.intellij.openapi.roots.ui.configuration.ProjectSettingsService;
@@ -748,7 +748,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
       }
     }
 
-    ModalityState modality = ModalityState.defaultModalityState();
+    IdeaModalityState modality = IdeaModalityState.defaultModalityState();
 
     myUpdateDocAlarm.addRequest(() -> {
       if (myProject.isDisposed()) return;
@@ -777,7 +777,7 @@ public final class DocumentationManager extends DockablePopupManager<Documentati
           component.setText(message, null, collector.provider);
           component.clearHistory();
           callback.setDone();
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
         return;
       }
 

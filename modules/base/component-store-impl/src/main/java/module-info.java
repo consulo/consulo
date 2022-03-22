@@ -1,0 +1,14 @@
+/**
+ * @author VISTALL
+ * @since 22-Mar-22
+ */
+module consulo.component.store.impl {
+  requires transitive consulo.component.impl;
+  requires transitive consulo.virtual.file.system.api;
+  requires transitive consulo.util.io;
+
+  requires org.lz4.java;
+
+  exports consulo.component.store.impl.internal to consulo.ide.impl;
+  exports consulo.component.store.impl.internal.storage to consulo.ide.impl;
+}

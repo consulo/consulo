@@ -15,7 +15,7 @@ import consulo.language.psi.PsiNavigationSupport;
 import consulo.ui.ex.tree.NodeDescriptor;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.document.Document;
@@ -213,7 +213,7 @@ abstract class TodoPanel extends SimpleToolWindowPanel implements OccurenceNavig
           if (myUsagePreviewPanel.isVisible()) {
             updatePreviewPanel();
           }
-        }, ModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
       }
     });
 

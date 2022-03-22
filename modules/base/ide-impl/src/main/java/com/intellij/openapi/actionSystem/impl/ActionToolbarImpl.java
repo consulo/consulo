@@ -5,7 +5,7 @@ import consulo.ui.ex.internal.ActionButtonComponent;
 import com.intellij.openapi.actionSystem.RightAlignedToolbarAction;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.awt.RelativeRectangle;

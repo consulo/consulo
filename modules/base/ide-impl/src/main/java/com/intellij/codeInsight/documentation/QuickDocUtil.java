@@ -3,7 +3,7 @@ package com.intellij.codeInsight.documentation;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.codeInsight.navigation.DocPreviewUtil;
-import com.intellij.concurrency.SensitiveProgressWrapper;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.intellij.openapi.progress.util.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
+import static consulo.application.impl.internal.progress.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
 
 /**
  * @author gregsh

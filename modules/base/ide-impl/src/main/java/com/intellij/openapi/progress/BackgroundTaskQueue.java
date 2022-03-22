@@ -17,7 +17,7 @@
 package com.intellij.openapi.progress;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
 import consulo.application.progress.EmptyProgressIndicator;
@@ -77,7 +77,7 @@ public class BackgroundTaskQueue {
     run(task, null, null);
   }
 
-  public void run(@Nonnull Task.Backgroundable task, @Nullable ModalityState modalityState, @Nullable ProgressIndicator indicator) {
+  public void run(@Nonnull Task.Backgroundable task, @Nullable IdeaModalityState modalityState, @Nullable ProgressIndicator indicator) {
     BackgroundableTaskData taskData = new BackgroundableTaskData(task, modalityState, indicator);
     if (!myForceAsyncInTests && ApplicationManager.getApplication().isUnitTestMode()) {
       runTaskInCurrentThread(taskData);
@@ -107,8 +107,8 @@ public class BackgroundTaskQueue {
     ProgressIndicator indicator = data.myIndicator;
     if (indicator == null) indicator = new EmptyProgressIndicator();
 
-    ModalityState modalityState = data.myModalityState;
-    if (modalityState == null) modalityState = ModalityState.NON_MODAL;
+    IdeaModalityState modalityState = data.myModalityState;
+    if (modalityState == null) modalityState = IdeaModalityState.NON_MODAL;
 
     ProgressManagerImpl pm = (ProgressManagerImpl)ProgressManager.getInstance();
 
@@ -125,12 +125,12 @@ public class BackgroundTaskQueue {
     @Nonnull
     private final Task.Backgroundable myTask;
     @Nullable
-    private final ModalityState myModalityState;
+    private final IdeaModalityState myModalityState;
     @Nullable
     private final ProgressIndicator myIndicator;
 
     public BackgroundableTaskData(@Nonnull Task.Backgroundable task,
-                                  @Nullable ModalityState modalityState,
+                                  @Nullable IdeaModalityState modalityState,
                                   @Nullable ProgressIndicator indicator) {
       myTask = task;
       myModalityState = modalityState;
@@ -151,8 +151,8 @@ public class BackgroundTaskQueue {
         }
       }
 
-      ModalityState modalityState = myModalityState;
-      if (modalityState == null) modalityState = ModalityState.NON_MODAL;
+      IdeaModalityState modalityState = myModalityState;
+      if (modalityState == null) modalityState = IdeaModalityState.NON_MODAL;
 
       if (StringUtil.isEmptyOrSpaces(task.getTitle())) {
         task.setTitle(myTitle);

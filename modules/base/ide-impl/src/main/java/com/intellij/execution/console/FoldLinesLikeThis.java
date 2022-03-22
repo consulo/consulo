@@ -6,7 +6,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
@@ -72,7 +72,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
           public void run() {
             addRule(selection);
           }
-        }, ModalityState.stateForComponent(createComponent()));
+        }, IdeaModalityState.stateForComponent(createComponent()));
       }
     });
     final ConsoleView consoleView = e.getData(LangDataKeys.CONSOLE_VIEW);

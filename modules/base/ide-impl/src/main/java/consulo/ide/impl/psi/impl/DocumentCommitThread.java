@@ -2,8 +2,8 @@
 package consulo.ide.impl.psi.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
@@ -24,7 +24,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.PooledThreadExecutor;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.language.ast.FileASTNode;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;

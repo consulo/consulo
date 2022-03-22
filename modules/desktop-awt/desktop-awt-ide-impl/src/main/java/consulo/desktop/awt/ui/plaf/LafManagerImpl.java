@@ -64,7 +64,7 @@ import consulo.desktop.awt.ui.LookAndFeelProvider;
 import consulo.ui.ex.UIModificationTracker;
 import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
 import consulo.disposer.Disposable;
-import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;
 import consulo.desktop.awt.ui.plaf.mac.MacButtonlessScrollbarUI;
 import consulo.localize.LocalizeManager;

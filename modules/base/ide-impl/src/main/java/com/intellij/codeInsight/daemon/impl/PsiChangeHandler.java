@@ -5,7 +5,7 @@ import com.intellij.codeInsight.daemon.ChangeLocalityDetector;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -109,7 +109,7 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
           PsiFile file = PsiDocumentManager.getInstance(myProject).getPsiFile(editor.getDocument());
           ErrorStripeUpdateManager.getInstance(myProject).setOrRefreshErrorStripeRenderer(markupModel, file);
         }
-      }, ModalityState.stateForComponent(editor.getComponent()), myProject.getDisposed());
+      }, IdeaModalityState.stateForComponent(editor.getComponent()), myProject.getDisposed());
     }
 
     for (Pair<PsiElement, Boolean> changedElement : toUpdate) {

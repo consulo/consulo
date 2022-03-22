@@ -38,8 +38,8 @@ import com.intellij.diff.tools.simple.MergeInnerDifferences;
 import com.intellij.diff.tools.util.base.HighlightPolicy;
 import com.intellij.diff.tools.util.base.IgnorePolicy;
 import com.intellij.diff.tools.util.base.TextDiffViewerUtil;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.command.undo.DocumentReference;
 import com.intellij.openapi.command.undo.DocumentReferenceManager;
 import com.intellij.openapi.command.undo.UndoManager;
@@ -1143,7 +1143,7 @@ public class DiffUtil {
    * Difference with {@link VfsUtil#markDirtyAndRefresh} is that refresh from VfsUtil will be performed with ModalityState.NON_MODAL.
    */
   public static void markDirtyAndRefresh(boolean async, boolean recursive, boolean reloadChildren, @Nonnull VirtualFile... files) {
-    ModalityState modalityState = (ModalityState)ApplicationManager.getApplication().getDefaultModalityState();
+    IdeaModalityState modalityState = (IdeaModalityState)ApplicationManager.getApplication().getDefaultModalityState();
     VfsUtil.markDirty(recursive, reloadChildren, files);
     RefreshQueue.getInstance().refresh(async, recursive, null, modalityState, files);
   }

@@ -2,7 +2,7 @@
 package com.intellij.util.gist;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -96,7 +96,7 @@ public final class GistManagerImpl extends GistManager {
       for (Project project : ProjectManager.getInstance().getOpenProjects()) {
         PsiManager.getInstance(project).dropPsiCaches();
       }
-    }, ModalityState.NON_MODAL);
+    }, IdeaModalityState.NON_MODAL);
   }
 
   @TestOnly

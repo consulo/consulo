@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import com.intellij.openapi.project.ModuleAdapter;
 import com.intellij.openapi.ui.Messages;
@@ -216,6 +216,6 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
           myVcsManager.removeDirectoryMapping(mapping);
         }
       }
-    }, ModalityState.NON_MODAL);
+    }, IdeaModalityState.NON_MODAL);
   }
 }

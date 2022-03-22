@@ -15,12 +15,12 @@
  */
 package consulo.web.main;
 
-import com.intellij.ide.StartupProgress;
-import com.intellij.idea.ApplicationStarter;
+import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.Application;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import consulo.container.util.StatCollector;
-import consulo.start.CommandLineArgs;
+import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.web.application.impl.WebApplicationImpl;
 import consulo.web.application.impl.WebStartupProgressImpl;

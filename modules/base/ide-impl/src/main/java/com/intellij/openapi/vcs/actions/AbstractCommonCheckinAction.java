@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.actions;
 
 import consulo.ui.ex.action.Presentation;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FilePath;
@@ -53,7 +53,7 @@ public abstract class AbstractCommonCheckinAction extends AbstractVcsAction {
       FilePath[] roots = prepareRootsForCommit(getRoots(context), project);
       ChangeListManager.getInstance(project)
               .invokeAfterUpdate(() -> performCheckIn(context, project, roots), InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE,
-                                 VcsBundle.message("waiting.changelists.update.for.show.commit.dialog.message"), ModalityState.current());
+                                 VcsBundle.message("waiting.changelists.update.for.show.commit.dialog.message"), IdeaModalityState.current());
     }
   }
 

@@ -8,7 +8,7 @@ import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.impl.FindManagerImpl;
 import consulo.application.WriteAction;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.keymap.KeymapUtil;

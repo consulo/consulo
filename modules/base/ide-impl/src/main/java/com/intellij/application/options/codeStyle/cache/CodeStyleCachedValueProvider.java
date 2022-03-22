@@ -3,7 +3,7 @@ package com.intellij.application.options.codeStyle.cache;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -140,7 +140,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
     private void start() {
       if (isRunOnBackground()) {
         myPromise = ReadAction.nonBlocking(() -> computeSettings()).expireWith(myProject).expireWhen(() -> myFileRef.get() == null)
-                .finishOnUiThread(ModalityState.NON_MODAL, val -> notifyCachedValueComputed()).submit(ourExecutorService);
+                .finishOnUiThread(IdeaModalityState.NON_MODAL, val -> notifyCachedValueComputed()).submit(ourExecutorService);
       }
       else {
         ReadAction.run((() -> computeSettings()));
@@ -179,7 +179,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
         notifyCachedValueComputed();
       }
       else {
-        application.invokeLater(() -> notifyCachedValueComputed(), ModalityState.any());
+        application.invokeLater(() -> notifyCachedValueComputed(), IdeaModalityState.any());
       }
     }
 

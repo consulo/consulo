@@ -3,7 +3,7 @@ package com.intellij.dupLocator.treeHash;
 import com.intellij.dupLocator.*;
 import com.intellij.dupLocator.util.DuplocatorUtil;
 import com.intellij.dupLocator.util.PsiFragment;
-import com.intellij.openapi.components.PathMacroManager;
+import consulo.component.macro.PathMacroManager;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.project.Project;

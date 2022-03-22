@@ -18,7 +18,7 @@ package com.intellij.refactoring.extractMethod;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.find.FindManager;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;

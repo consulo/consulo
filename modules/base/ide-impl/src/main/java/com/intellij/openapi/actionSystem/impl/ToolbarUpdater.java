@@ -2,7 +2,7 @@
 package com.intellij.openapi.actionSystem.impl;
 
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.Application;
@@ -119,8 +119,8 @@ public abstract class ToolbarUpdater implements Activatable {
   private final class MyTimerListener implements TimerListener {
 
     @Override
-    public ModalityState getModalityState() {
-      return ModalityState.stateForComponent(myComponent);
+    public IdeaModalityState getModalityState() {
+      return IdeaModalityState.stateForComponent(myComponent);
     }
 
     @Override

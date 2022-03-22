@@ -38,7 +38,7 @@ import consulo.container.plugin.PluginId;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.ide.plugins.PluginsPanel;
 import consulo.localize.LocalizeValue;
-import consulo.plugins.internal.PluginsLoader;
+import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;
 import consulo.util.collection.ArrayUtil;

@@ -25,7 +25,7 @@ import com.intellij.diff.requests.DiffRequest;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diff.impl.patch.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBCurrentTheme;
@@ -383,7 +383,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
       final FilePresentationModel filePresentationModel = myRecentPathFileChange.get();
       final VirtualFile file = filePresentationModel != null ? filePresentationModel.getVf() : null;
       if (file == null) {
-        ApplicationManager.getApplication().invokeLater(myReset, ModalityState.stateForComponent(myCenterPanel));
+        ApplicationManager.getApplication().invokeLater(myReset, IdeaModalityState.stateForComponent(myCenterPanel));
         return;
       }
 
@@ -404,7 +404,7 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
         updateTree(true);
         paintBusy(false);
         updateOkActions();
-      }, ModalityState.stateForComponent(myCenterPanel));
+      }, IdeaModalityState.stateForComponent(myCenterPanel));
     }
   }
 

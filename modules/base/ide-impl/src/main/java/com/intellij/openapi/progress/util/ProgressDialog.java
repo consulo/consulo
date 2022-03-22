@@ -2,7 +2,7 @@
 package com.intellij.openapi.progress.util;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.PopupBorder;
@@ -259,7 +259,7 @@ public class ProgressDialog implements consulo.progress.util.ProgressDialog {
 
   @Override
   public void hide() {
-    ApplicationManager.getApplication().invokeLater(this::hideImmediately, ModalityState.any());
+    ApplicationManager.getApplication().invokeLater(this::hideImmediately, IdeaModalityState.any());
   }
 
   public void hideImmediately() {

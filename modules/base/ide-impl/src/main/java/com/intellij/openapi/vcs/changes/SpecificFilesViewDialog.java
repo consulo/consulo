@@ -22,7 +22,7 @@ import com.intellij.ide.TreeExpander;
 import consulo.ui.ex.awt.tree.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -177,7 +177,7 @@ abstract class SpecificFilesViewDialog extends DialogWrapper {
       finally {
         myInRefresh = false;
       }
-    }, InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE, "", ModalityState.current());
+    }, InvokeAfterUpdateMode.BACKGROUND_NOT_CANCELLABLE, "", IdeaModalityState.current());
   }
 
   @Nonnull

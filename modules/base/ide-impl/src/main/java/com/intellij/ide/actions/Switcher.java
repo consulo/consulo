@@ -8,7 +8,7 @@ import com.intellij.ide.util.gotoByName.QuickSearchComponent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
@@ -605,7 +605,7 @@ public class Switcher extends AnAction implements DumbAware {
       if (isPinnedMode()) return false;
       if (event.getID() == KEY_RELEASED && event.getKeyCode() == myBaseModifier) {
         event.consume();
-        ApplicationManager.getApplication().invokeLater(() -> navigate(null), ModalityState.current());
+        ApplicationManager.getApplication().invokeLater(() -> navigate(null), IdeaModalityState.current());
         return true;
       }
       if (event.getID() == KEY_PRESSED) {
@@ -1042,7 +1042,7 @@ public class Switcher extends AnAction implements DumbAware {
       }
       else if (values.get(0) instanceof ToolWindow) {
         ToolWindow toolWindow = (ToolWindow)values.get(0);
-        ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> toolWindow.activate(null, true, true), ModalityState.current());
+        ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> toolWindow.activate(null, true, true), IdeaModalityState.current());
       }
       else {
         ProjectIdeFocusManager.getInstance(project).doWhenFocusSettlesDown(() -> {
@@ -1073,7 +1073,7 @@ public class Switcher extends AnAction implements DumbAware {
               }
             }
           }
-        }, ModalityState.current());
+        }, IdeaModalityState.current());
       }
     }
 
@@ -1085,7 +1085,7 @@ public class Switcher extends AnAction implements DumbAware {
         DataContext dataContext = SimpleDataContext.getSimpleContext(PlatformDataKeys.PREDEFINED_TEXT, fileName, fromFocus);
         AnActionEvent event = AnActionEvent.createFromAnAction(gotoFile, e, ActionPlaces.EDITOR_POPUP, dataContext);
         gotoFile.actionPerformed(event);
-      }), ModalityState.current());
+      }), IdeaModalityState.current());
     }
 
     @Nullable

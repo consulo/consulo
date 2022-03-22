@@ -22,7 +22,7 @@ import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;
 import com.intellij.openapi.vcs.VcsBundle;

@@ -19,6 +19,8 @@
  */
 package com.intellij.openapi.fileTypes;
 
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.event.FileTypeListener;
 import consulo.project.Project;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;

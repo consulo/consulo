@@ -16,7 +16,7 @@
 package consulo.copyright.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.event.DocumentEvent;
@@ -145,6 +145,6 @@ public class CopyrightBulkFileListener implements BulkFileListener {
           new UpdateCopyrightProcessor(project, module, file).run();
         }
       }
-    }, ModalityState.NON_MODAL, project.getDisposed());
+    }, IdeaModalityState.NON_MODAL, project.getDisposed());
   }
 }

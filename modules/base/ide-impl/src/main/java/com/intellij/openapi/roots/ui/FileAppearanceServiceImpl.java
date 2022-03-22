@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui;
 
 import consulo.application.AllIcons;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.roots.ui.util.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.impl.local;
 
 import com.intellij.ide.actions.ShowFilePathAction;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.local.FileWatcherNotificationSink;

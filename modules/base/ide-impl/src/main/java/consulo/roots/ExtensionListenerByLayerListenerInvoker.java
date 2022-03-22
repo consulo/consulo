@@ -16,7 +16,7 @@
 package consulo.roots;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.event.ModuleExtensionChangeListener;
@@ -63,6 +63,6 @@ public class ExtensionListenerByLayerListenerInvoker extends ModuleRootLayerList
       for (Couple<ModuleExtension> couple : list) {
         moduleExtensionChangeListener.beforeExtensionChanged(couple.getFirst(), couple.getSecond());
       }
-    }, ModalityState.NON_MODAL);
+    }, IdeaModalityState.NON_MODAL);
   }
 }

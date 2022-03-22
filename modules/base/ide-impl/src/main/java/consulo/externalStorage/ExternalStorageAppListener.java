@@ -17,8 +17,8 @@ package consulo.externalStorage;
 
 import consulo.application.event.ApplicationLoadListener;
 import consulo.application.Application;
-import consulo.components.impl.stores.IApplicationStore;
-import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.application.impl.internal.store.IApplicationStore;
+import consulo.component.store.impl.internal.StateStorageManager;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalStorage.storage.ExternalStorage;
 import jakarta.inject.Inject;

@@ -16,7 +16,9 @@
 package consulo.components.impl.stores.storage;
 
 import consulo.component.persist.StoragePathMacros;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.impl.internal.storage.StateStorageFacade;
+import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
 

@@ -16,7 +16,7 @@
 package com.intellij.util.concurrency;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 
 /**
@@ -36,7 +36,7 @@ public abstract class SwingWorker {
   private Object value;
   // see getValue(), setValue()
 
-  private final ModalityState myModalityState;
+  private final IdeaModalityState myModalityState;
 
   /**
    * Class to maintain reference to current worker thread
@@ -141,7 +141,7 @@ public abstract class SwingWorker {
    */
 
   public SwingWorker() {
-    myModalityState = ModalityState.current();
+    myModalityState = IdeaModalityState.current();
 
     final Runnable doFinished = new Runnable() {
       public void run() {

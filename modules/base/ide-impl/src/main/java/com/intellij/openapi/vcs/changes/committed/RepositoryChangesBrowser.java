@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.committed;
 import consulo.application.AllIcons;
 import com.intellij.ide.actions.EditSourceAction;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
@@ -115,7 +115,7 @@ public class RepositoryChangesBrowser extends ChangesBrowser implements DataProv
       super.update(event);
       event.getPresentation().setIcon(AllIcons.Actions.EditSource);
       event.getPresentation().setText("Edit Source");
-      if ((!ModalityState.NON_MODAL.equals(ModalityState.current())) || CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))) {
+      if ((!IdeaModalityState.NON_MODAL.equals(IdeaModalityState.current())) || CommittedChangesBrowserUseCase.IN_AIR.equals(event.getData(CommittedChangesBrowserUseCase.DATA_KEY))) {
         event.getPresentation().setEnabled(false);
       }
       else {

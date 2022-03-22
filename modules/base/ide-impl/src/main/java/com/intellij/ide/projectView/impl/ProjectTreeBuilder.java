@@ -26,7 +26,7 @@ import com.intellij.ide.projectView.ProjectViewPsiTreeChangeListener;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.tree.NodeDescriptor;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
@@ -185,7 +185,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
             synchronized (myFilesToRefresh) {
               myFilesToRefresh.removeAll(filesToRefresh);
             }
-          }, 200, ModalityState.NON_MODAL);
+          }, 200, IdeaModalityState.NON_MODAL);
         }
       }
     }

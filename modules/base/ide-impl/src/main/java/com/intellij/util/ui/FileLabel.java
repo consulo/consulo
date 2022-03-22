@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.swing.*;

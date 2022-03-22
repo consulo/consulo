@@ -2,6 +2,7 @@
 package com.intellij.openapi.vfs.encoding;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.file.EncodingManager;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

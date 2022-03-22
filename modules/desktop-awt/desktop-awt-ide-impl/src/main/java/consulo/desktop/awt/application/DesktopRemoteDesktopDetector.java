@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.application;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import com.sun.jna.platform.win32.User32;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.RemoteDesktopService;

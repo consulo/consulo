@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
@@ -370,7 +370,7 @@ public class MultipleChangeListBrowser extends ChangesBrowserBase<Object> {
       runnable.run();
     }
     else {
-      ApplicationManager.getApplication().invokeLater(runnable, ModalityState.stateForComponent(this));
+      ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.stateForComponent(this));
     }
   }
 

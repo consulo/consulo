@@ -15,22 +15,70 @@
  */
 package consulo.component.util;
 
+import consulo.component.extension.ExtensionException;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author VISTALL
  * @since 2019-11-01
  */
 public class PluginExceptionUtil {
+  private static final Logger LOG = Logger.getInstance(PluginExceptionUtil.class);
+
+  @Nonnull
+  public static Set<PluginId> findAllPluginIds(@Nonnull Throwable t) {
+    if (t instanceof PluginException) {
+      PluginId pluginId = ((PluginException)t).getPluginId();
+      return Set.of(pluginId);
+    }
+
+    if (t instanceof ExtensionException) {
+      Class extensionClass = ((ExtensionException)t).getExtensionClass();
+      PluginId pluginId = PluginManager.getPluginId(extensionClass);
+      if (pluginId == null) {
+        LOG.error("There no plugin for extension class: " + extensionClass);
+        return Set.of();
+      }
+      return Set.of(pluginId);
+    }
+
+    Set<PluginId> pluginIds = new TreeSet<>();
+
+    for (StackTraceElement element : t.getStackTrace()) {
+      String classLoaderName = element.getClassLoaderName();
+      if (classLoaderName == null) {
+        continue;
+      }
+
+      PluginDescriptor plugin = PluginManager.findPlugin(PluginId.getId(classLoaderName));
+      if (plugin == null) {
+        continue;
+      }
+      pluginIds.add(plugin.getPluginId());
+    }
+    return pluginIds;
+  }
+
+  @Nullable
+  public static PluginId findFirstPluginId(@Nonnull Throwable t) {
+    Set<PluginId> pluginIds = findAllPluginIds(t);
+    return pluginIds.stream().filter(pluginId -> !PluginIds.isPlatformPlugin(pluginId)).findFirst().orElse(null);
+  }
+
   public static void logPluginError(Logger log, String message, Throwable t, Class<?> aClass) {
     PluginDescriptor plugin = PluginManager.getPlugin(aClass);
 
-    if(plugin == null) {
+    if (plugin == null) {
       log.error(message, t);
     }
     else {

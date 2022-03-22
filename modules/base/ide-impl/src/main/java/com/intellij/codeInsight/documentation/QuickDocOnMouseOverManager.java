@@ -19,7 +19,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ref.Ref;

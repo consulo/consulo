@@ -21,7 +21,7 @@ import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.application.AccessToken;
@@ -95,7 +95,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
         return (T)component;
       }
       if (PlatformDataKeys.MODALITY_STATE == dataId) {
-        return (T)(component != null ? ModalityState.stateForComponent(component) : ModalityState.NON_MODAL);
+        return (T)(component != null ? IdeaModalityState.stateForComponent(component) : IdeaModalityState.NON_MODAL);
       }
 
       Object data = calcData(dataId, component);

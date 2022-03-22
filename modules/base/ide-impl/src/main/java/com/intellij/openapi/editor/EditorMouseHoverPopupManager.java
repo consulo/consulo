@@ -37,7 +37,7 @@ import consulo.language.psi.*;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;

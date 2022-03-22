@@ -36,7 +36,7 @@ import com.intellij.ide.util.EditorHelper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataContext;
 import consulo.logging.Logger;
@@ -600,7 +600,7 @@ public class CommanderPanel extends JPanel {
             });
           }
         }
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
     }
 
     private PsiDirectory getDirectory() {

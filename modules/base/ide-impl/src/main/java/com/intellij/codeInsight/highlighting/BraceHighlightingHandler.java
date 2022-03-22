@@ -26,8 +26,8 @@ package com.intellij.codeInsight.highlighting;
 
 import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
 import com.intellij.openapi.editor.ex.util.HighlighterIteratorWrapper;
 import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
 import com.intellij.ui.LightweightHint;
@@ -160,13 +160,13 @@ public class BraceHighlightingHandler {
               PROCESSED_EDITORS.remove(editor);
             }
           }
-        }, ModalityState.stateForComponent(editor.getComponent()));
+        }, IdeaModalityState.stateForComponent(editor.getComponent()));
       })) {
         // write action is queued in AWT. restart after it's finished
         application.invokeLater(() -> {
           PROCESSED_EDITORS.remove(editor);
           lookForInjectedAndMatchBracesInOtherThread(editor, alarm, processor);
-        }, ModalityState.stateForComponent(editor.getComponent()));
+        }, IdeaModalityState.stateForComponent(editor.getComponent()));
       }
     });
   }
@@ -555,7 +555,7 @@ public class BraceHighlightingHandler {
           myEditor.putUserData(HINT_IN_EDITOR_KEY, hint);
         }
       });
-    }, 300, ModalityState.stateForComponent(myEditor.getComponent()));
+    }, 300, IdeaModalityState.stateForComponent(myEditor.getComponent()));
   }
 
   void clearBraceHighlighters() {

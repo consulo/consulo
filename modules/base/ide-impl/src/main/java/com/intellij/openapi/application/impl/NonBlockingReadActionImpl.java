@@ -2,13 +2,13 @@
 package com.intellij.openapi.application.impl;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.concurrency.SensitiveProgressWrapper;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.application.util.concurrent.ThreadDumper;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
 import consulo.application.progress.EmptyProgressIndicator;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -50,7 +50,7 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
 
   private final
   @Nullable
-  Pair<ModalityState, Consumer<T>> myEdtFinish;
+  Pair<IdeaModalityState, Consumer<T>> myEdtFinish;
   private final
   @Nullable
   List<Object> myCoalesceEquality;
@@ -68,7 +68,7 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
   }
 
   private NonBlockingReadActionImpl(@Nonnull Callable<T> computation,
-                                    @Nullable Pair<ModalityState, Consumer<T>> edtFinish,
+                                    @Nullable Pair<IdeaModalityState, Consumer<T>> edtFinish,
                                     @Nonnull ContextConstraint[] constraints,
                                     @Nonnull BooleanSupplier[] cancellationConditions,
                                     @Nonnull Set<? extends Expiration> expirationSet,
@@ -89,7 +89,7 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
 
   @Override
   public void dispatchLaterUnconstrained(@Nonnull Runnable runnable) {
-    ApplicationManager.getApplication().invokeLater(runnable, ModalityState.any());
+    ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.any());
   }
 
   @Override
@@ -99,7 +99,7 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
 
   @Override
   public NonBlockingReadAction<T> withDocumentsCommitted(@Nonnull ComponentManager project) {
-    return withConstraint(new WithDocumentsCommitted((Project)project, ModalityState.any()), project);
+    return withConstraint(new WithDocumentsCommitted((Project)project, IdeaModalityState.any()), project);
   }
 
   @Override
@@ -115,7 +115,7 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
 
   @Override
   public NonBlockingReadAction<T> finishOnUiThread(@Nonnull consulo.ui.ModalityState modality, @Nonnull Consumer<T> uiThreadAction) {
-    return new NonBlockingReadActionImpl<>(myComputation, Pair.create((ModalityState)modality, uiThreadAction), getConstraints(), getCancellationConditions(), getExpirationSet(), myCoalesceEquality,
+    return new NonBlockingReadActionImpl<>(myComputation, Pair.create((IdeaModalityState)modality, uiThreadAction), getConstraints(), getCancellationConditions(), getExpirationSet(), myCoalesceEquality,
                                            myProgressIndicator);
   }
 
@@ -166,7 +166,7 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
     @Nonnull
     private final Executor backendExecutor;
     private volatile ProgressIndicator currentIndicator;
-    private final ModalityState creationModality = ModalityState.defaultModalityState();
+    private final IdeaModalityState creationModality = IdeaModalityState.defaultModalityState();
     @Nullable
     private final BooleanSupplier myExpireCondition;
     @Nullable
@@ -253,7 +253,7 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
         final ProgressIndicator indicator = myProgressIndicator != null ? new SensitiveProgressWrapper(myProgressIndicator) {
           @Nonnull
           @Override
-          public ModalityState getModalityState() {
+          public IdeaModalityState getModalityState() {
             return creationModality;
           }
         } : new EmptyProgressIndicator(creationModality);
@@ -329,7 +329,7 @@ public class NonBlockingReadActionImpl<T> extends ExpirableConstrainedExecution<
       return false;
     }
 
-    void safeTransferToEdt(T result, Pair<? extends ModalityState, ? extends Consumer<T>> edtFinish, ReschedulingAttempt previousAttempt) {
+    void safeTransferToEdt(T result, Pair<? extends IdeaModalityState, ? extends Consumer<T>> edtFinish, ReschedulingAttempt previousAttempt) {
       if (Promises.isRejected(promise)) return;
 
       long stamp = AsyncExecutionServiceImpl.getWriteActionCounter();

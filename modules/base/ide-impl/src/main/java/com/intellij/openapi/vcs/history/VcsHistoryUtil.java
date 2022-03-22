@@ -35,7 +35,7 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsException;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
+import consulo.language.file.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.util.WaitForProgressToShow;
 import consulo.ui.ex.awt.JBUI;

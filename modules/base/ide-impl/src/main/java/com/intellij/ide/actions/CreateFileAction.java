@@ -24,7 +24,7 @@ import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.lang.LangBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

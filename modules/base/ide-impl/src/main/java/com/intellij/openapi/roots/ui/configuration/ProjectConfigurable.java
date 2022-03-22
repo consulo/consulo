@@ -23,7 +23,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.project.internal.ProjectEx;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;

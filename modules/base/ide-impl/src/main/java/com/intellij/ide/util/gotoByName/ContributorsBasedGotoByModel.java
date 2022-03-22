@@ -10,7 +10,7 @@ import consulo.application.util.ReadActionProcessor;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;

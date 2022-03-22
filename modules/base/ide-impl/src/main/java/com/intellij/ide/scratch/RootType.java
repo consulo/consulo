@@ -20,7 +20,7 @@ import consulo.language.util.LanguageUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

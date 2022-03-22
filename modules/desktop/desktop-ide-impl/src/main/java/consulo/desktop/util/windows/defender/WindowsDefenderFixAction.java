@@ -25,7 +25,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.UIUtil;
 

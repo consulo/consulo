@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.progress.util;
 
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import consulo.application.progress.ProgressIndicatorEx;
 
 /**

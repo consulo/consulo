@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.libraries.ui.impl;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.DialogWrapper;

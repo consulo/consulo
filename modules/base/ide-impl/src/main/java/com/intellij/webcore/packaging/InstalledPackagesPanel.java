@@ -3,14 +3,14 @@ package com.intellij.webcore.packaging;
 
 import consulo.application.CommonBundle;
 import consulo.process.ExecutionException;
-import com.intellij.ide.ActivityTracker;
+import consulo.application.impl.internal.performance.ActivityTracker;
 import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;
@@ -228,7 +228,7 @@ public class InstalledPackagesPanel extends JPanel {
         }
 
         ApplicationManager.getApplication().invokeLater(() -> {
-          ModalityState modalityState = ModalityState.current();
+          IdeaModalityState modalityState = IdeaModalityState.current();
           final PackageManagementService.Listener listener = new PackageManagementService.Listener() {
             @Override
             public void operationStarted(final String packageName) {
@@ -266,14 +266,14 @@ public class InstalledPackagesPanel extends JPanel {
             myPackageManagementService.installPackage(new RepoPackage(pkg.getName(), null /* TODO? */), null, true, null, listener, false);
           }
           myUpgradeButton.setEnabled(false);
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
       }
 
       @Override
       public void consume(Exception e) {
         ApplicationManager.getApplication()
                 .invokeLater(() -> Messages.showErrorDialog(IdeBundle.message("error.occurred.please.check.your.internet.connection"), IdeBundle.message("upgrade.package.failed.title")),
-                             ModalityState.any());
+                             IdeaModalityState.any());
       }
     });
   }
@@ -337,7 +337,7 @@ public class InstalledPackagesPanel extends JPanel {
     final List<InstalledPackage> packages = getSelectedPackages();
     final PackageManagementService selPackageManagementService = myPackageManagementService;
     if (selPackageManagementService != null) {
-      ModalityState modalityState = ModalityState.current();
+      IdeaModalityState modalityState = IdeaModalityState.current();
       PackageManagementService.Listener listener = new PackageManagementService.Listener() {
         @Override
         public void operationStarted(String packageName) {
@@ -530,7 +530,7 @@ public class InstalledPackagesPanel extends JPanel {
               myPackagesTableModel.setValueAt(repoPackage == null ? null : repoPackage.getLatestVersion(), i, 2);
             }
             myPackagesTable.setPaintBusy(!myCurrentlyInstalling.isEmpty());
-          }, ModalityState.stateForComponent(myPackagesTable));
+          }, IdeaModalityState.stateForComponent(myPackagesTable));
         }
         catch (IOException ignored) {
           LOG.warn("Cannot refresh the list of available packages with their latest versions", ignored);

@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.newvfs;
 
-import com.intellij.concurrency.SensitiveProgressWrapper;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.ApplicationEx;
 import com.intellij.openapi.diagnostic.FrequentEventDetector;
 import consulo.application.event.ApplicationListener;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.VfsBundle;
@@ -16,14 +16,14 @@ import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.*;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import consulo.ide.impl.PooledThreadExecutor;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -203,7 +203,7 @@ public class RefreshQueueImpl extends RefreshQueue implements Disposable {
 
   @Nonnull
   @Override
-  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
+  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull IdeaModalityState state) {
     return new RefreshSessionImpl(async, recursively, finishRunnable, state);
   }
 

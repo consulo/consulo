@@ -15,19 +15,19 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StateStorage.SaveSession;
+import consulo.component.store.impl.internal.*;
+import consulo.component.store.impl.internal.storage.StateStorage;
+import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.Storage;
+import consulo.component.store.impl.internal.storage.StorageData;
+import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
+import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.project.Project;
 import com.intellij.openapi.project.impl.DefaultProjectImpl;
 import com.intellij.openapi.util.Couple;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.components.impl.stores.storage.StateStorageManager;
-import consulo.components.impl.stores.storage.StorageData;
-import consulo.components.impl.stores.storage.VfsFileBasedStorage;
-import consulo.components.impl.stores.storage.XmlElementStorage;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

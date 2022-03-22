@@ -28,7 +28,7 @@ import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;

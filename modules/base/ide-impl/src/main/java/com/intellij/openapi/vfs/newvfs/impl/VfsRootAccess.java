@@ -3,7 +3,7 @@ package com.intellij.openapi.vfs.newvfs.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;

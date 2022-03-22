@@ -15,15 +15,15 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.diagnostic.PerformanceWatcher;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
 import com.intellij.find.FindManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.progress.util.ProgressWrapper;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Factory;
@@ -324,7 +324,7 @@ class SearchForUsagesRunnable implements Runnable {
       notifyByFindBalloon(null, NotificationType.WARNING, myProcessPresentation, myProject,
                           Collections.singletonList(StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(myPresentation))));
       findStartedBalloonShown.set(true);
-    }, 300, ModalityState.NON_MODAL);
+    }, 300, IdeaModalityState.NON_MODAL);
     UsageSearcher usageSearcher = mySearcherFactory.create();
 
     usageSearcher.generate(usage -> {
@@ -421,7 +421,7 @@ class SearchForUsagesRunnable implements Runnable {
             }
           }
         }
-      }, ModalityState.NON_MODAL, myProject.getDisposed());
+      }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
     }
     else if (usageCount == 1 && !myProcessPresentation.isShowPanelIfOnlyOneUsage()) {
       ApplicationManager.getApplication().invokeLater(() -> {
@@ -439,7 +439,7 @@ class SearchForUsagesRunnable implements Runnable {
         lines.add(createOptionsHtml(mySearchFor));
         NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
         notifyByFindBalloon(createGotToOptionsListener(mySearchFor), type, myProcessPresentation, myProject, lines);
-      }, ModalityState.NON_MODAL, myProject.getDisposed());
+      }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
     }
     else {
       final UsageViewImpl usageView = myUsageViewRef.get();
@@ -465,7 +465,7 @@ class SearchForUsagesRunnable implements Runnable {
         ApplicationManager.getApplication().invokeLater(() -> {
           NotificationType type = myOutOfScopeUsages.get() == 0 ? NotificationType.INFO : NotificationType.WARNING;
           notifyByFindBalloon(hyperlinkListener, type, myProcessPresentation, myProject, lines);
-        }, ModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
       }
     }
 

@@ -6,9 +6,9 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.codeStyle.LanguageFormatting;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -346,7 +346,7 @@ public abstract class AbstractLayoutCodeProcessor {
     progressWindow.setTitle(myCommandName);
     progressWindow.setText(myProgressText);
 
-    final ModalityState modalityState = ModalityState.current();
+    final IdeaModalityState modalityState = IdeaModalityState.current();
 
     final Runnable process = () -> ApplicationManager.getApplication().runReadAction(readAction);
 

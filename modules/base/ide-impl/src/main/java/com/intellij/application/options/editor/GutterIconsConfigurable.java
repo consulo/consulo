@@ -18,7 +18,7 @@ package com.intellij.application.options.editor;
 import com.intellij.codeInsight.daemon.*;
 import consulo.language.LanguageExtensionPoint;
 import consulo.application.Application;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointName;

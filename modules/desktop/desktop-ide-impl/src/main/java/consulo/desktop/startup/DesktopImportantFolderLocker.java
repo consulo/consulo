@@ -32,7 +32,7 @@ import consulo.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer
 import consulo.builtInServer.impl.net.http.MessageDecoder;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.start.CommandLineArgs;
+import consulo.application.impl.internal.start.CommandLineArgs;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandler;

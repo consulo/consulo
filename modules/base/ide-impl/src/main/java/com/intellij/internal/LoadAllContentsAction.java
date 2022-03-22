@@ -21,7 +21,7 @@
 package com.intellij.internal;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.application.internal.ApplicationManagerEx;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;

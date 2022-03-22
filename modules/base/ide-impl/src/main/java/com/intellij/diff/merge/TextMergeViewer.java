@@ -38,7 +38,7 @@ import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.undoRedo.UndoConfirmationPolicy;
@@ -576,7 +576,7 @@ public class TextMergeViewer implements MergeTool.MergeViewer {
           if (!myScheduled.isEmpty()) {
             launchRediff();
           }
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
       }
     }
 

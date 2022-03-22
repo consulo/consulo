@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.concurrency.JobScheduler;
+import consulo.application.impl.internal.JobScheduler;
 import com.intellij.diagnostic.VMOptions;
 import com.intellij.ide.plugins.UninstallPluginAction;
 import consulo.application.ui.RemoteDesktopService;
@@ -26,7 +26,7 @@ import com.intellij.notification.*;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.application.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ui.ex.action.DumbAwareAction;

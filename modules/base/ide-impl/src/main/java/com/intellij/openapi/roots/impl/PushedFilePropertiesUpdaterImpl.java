@@ -2,9 +2,9 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.application.WriteAction;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectTopics;
-import com.intellij.openapi.application.*;
 import consulo.component.extension.ExtensionException;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -15,7 +15,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressWrapper;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.util.ClearableLazyValue;
 import consulo.util.lang.function.Condition;
@@ -124,7 +124,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
       queueTasks(delayedTasks);
     }
     if (pushingSomethingSynchronously) {
-      GuiUtils.invokeLaterIfNeeded(() -> scheduleDumbModeReindexingIfNeeded(), ModalityState.defaultModalityState());
+      GuiUtils.invokeLaterIfNeeded(() -> scheduleDumbModeReindexingIfNeeded(), IdeaModalityState.defaultModalityState());
     }
   }
 

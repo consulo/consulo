@@ -20,7 +20,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.ast.IElementType;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.FactoryMap;
+import consulo.util.collection.FactoryMap;
 import consulo.util.lang.MergingCharSequence;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntIntMap;

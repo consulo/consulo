@@ -3,7 +3,7 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.application.internal.ApplicationManagerEx;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.TimedOutCallback;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;

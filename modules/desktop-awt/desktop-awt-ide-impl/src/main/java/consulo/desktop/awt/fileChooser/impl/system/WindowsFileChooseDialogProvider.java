@@ -23,7 +23,7 @@ import consulo.project.Project;
 import consulo.desktop.awt.uiOld.win.WinPathChooserDialog;
 import consulo.desktop.awt.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor;
 import consulo.desktop.awt.fileChooser.impl.system.windows2.WinPathChooserDialog2;
-import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.platform.Platform;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 

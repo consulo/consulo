@@ -22,7 +22,7 @@ import com.intellij.application.options.codeStyle.arrangement.color.ArrangementC
 import com.intellij.application.options.codeStyle.arrangement.group.ArrangementGroupingRulesPanel;
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesPanel;
 import consulo.language.Language;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.codeStyle.arrangement.std.*;
 import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;

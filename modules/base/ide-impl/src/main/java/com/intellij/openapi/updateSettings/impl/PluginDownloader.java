@@ -18,7 +18,7 @@ package com.intellij.openapi.updateSettings.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;

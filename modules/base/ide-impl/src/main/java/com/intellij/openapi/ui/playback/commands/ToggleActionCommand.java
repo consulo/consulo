@@ -17,7 +17,7 @@ package com.intellij.openapi.ui.playback.commands;
 
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.ui.playback.PlaybackContext;
 import consulo.ui.ex.action.*;
 import consulo.util.concurrent.ActionCallback;

@@ -18,6 +18,8 @@ package consulo.ide.eap;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.application.Application;
+import consulo.application.eap.EarlyAccessProgramDescriptor;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.VerticalFlowLayout;

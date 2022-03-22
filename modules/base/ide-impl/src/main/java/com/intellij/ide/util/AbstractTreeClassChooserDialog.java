@@ -24,7 +24,7 @@ import com.intellij.ide.util.gotoByName.*;
 import com.intellij.ide.util.treeView.AlphaComparator;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -255,7 +255,7 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
       }
 
       @Override
-      protected void initUI(ChooseByNamePopupComponent.Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
+      protected void initUI(ChooseByNamePopupComponent.Callback callback, IdeaModalityState modalityState, boolean allowMultipleSelection) {
         super.initUI(callback, modalityState, allowMultipleSelection);
         dummyPanel.add(myGotoByNamePanel.getPanel(), BorderLayout.CENTER);
         IdeFocusManager.getGlobalInstance()
@@ -395,8 +395,8 @@ public abstract class AbstractTreeClassChooserDialog<T extends PsiNamedElement> 
     }, getModalityState());
   }
 
-  private ModalityState getModalityState() {
-    return ModalityState.stateForComponent(getRootPane());
+  private IdeaModalityState getModalityState() {
+    return IdeaModalityState.stateForComponent(getRootPane());
   }
 
 

@@ -19,7 +19,7 @@
  */
 package com.intellij.openapi.vfs.newvfs.persistent;
 
-import com.intellij.concurrency.JobScheduler;
+import consulo.application.impl.internal.JobScheduler;
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.ScheduledFuture;

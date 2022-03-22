@@ -8,7 +8,7 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.SystemInfo;
 import com.intellij.ui.TreeUIHelper;
 import consulo.ui.ex.awt.EmptyIcon;
@@ -387,7 +387,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
 
   private void handleDoubleClickOrEnter(final TreePath treePath, final InputEvent e) {
     Runnable runnable = () -> getNodeFor(treePath).handleDoubleClickOrEnter(this, e);
-    ApplicationManager.getApplication().invokeLater(runnable, ModalityState.stateForComponent(this));
+    ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.stateForComponent(this));
   }
 
   // TODO: move to some util?

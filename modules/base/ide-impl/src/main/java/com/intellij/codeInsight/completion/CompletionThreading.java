@@ -2,13 +2,13 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.application.internal.ApplicationManagerEx;
 import consulo.language.editor.completion.CompletionResult;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressWrapper;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.util.function.Computable;
 import com.intellij.util.Consumer;
 import com.intellij.util.concurrency.FutureResult;

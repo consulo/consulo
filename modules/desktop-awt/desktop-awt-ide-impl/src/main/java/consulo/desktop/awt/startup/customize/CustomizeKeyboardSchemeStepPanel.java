@@ -16,7 +16,7 @@
 package consulo.desktop.awt.startup.customize;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;

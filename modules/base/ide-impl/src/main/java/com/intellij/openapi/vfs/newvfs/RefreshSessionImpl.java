@@ -2,8 +2,8 @@
 package com.intellij.openapi.vfs.newvfs;
 
 import com.intellij.codeInsight.daemon.impl.FileStatusMap;
-import com.intellij.openapi.application.*;
 import consulo.application.WriteAction;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -51,17 +51,17 @@ public class RefreshSessionImpl extends RefreshSession {
   private final TransactionId myTransaction;
   private boolean myLaunched;
 
-  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState context) {
+  public RefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull IdeaModalityState context) {
     myIsAsync = async;
     myIsRecursive = recursive;
     myFinishRunnable = finishRunnable;
     myTransaction = ((TransactionGuardEx)TransactionGuard.getInstance()).getModalityTransaction(context);
-    LOG.assertTrue(context == ModalityState.NON_MODAL || context != ModalityState.any(), "Refresh session should have a specific modality");
+    LOG.assertTrue(context == IdeaModalityState.NON_MODAL || context != IdeaModalityState.any(), "Refresh session should have a specific modality");
     myStartTrace = rememberStartTrace();
   }
 
   public RefreshSessionImpl(@Nonnull List<? extends VFileEvent> events) {
-    this(false, false, null, ModalityState.defaultModalityState());
+    this(false, false, null, IdeaModalityState.defaultModalityState());
     myEvents.addAll(events);
   }
 

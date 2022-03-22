@@ -3,7 +3,7 @@ package com.intellij.ui.breadcrumbs;
 
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
@@ -187,7 +187,7 @@ public class BreadcrumbsWrapper extends JComponent implements Disposable {
     int offset = myEditor.getCaretModel().getOffset();
     Boolean forcedShown = BreadcrumbsForceShownSettings.getForcedShown(myEditor);
     ReadAction.nonBlocking(() -> myBreadcrumbsCollector.computeCrumbs(myFile, document, offset, forcedShown)).withDocumentsCommitted(myProject).expireWith(this).coalesceBy(this)
-            .finishOnUiThread(ModalityState.any(), (_crumbs) -> {
+            .finishOnUiThread(IdeaModalityState.any(), (_crumbs) -> {
               Iterable<? extends Crumb> crumbs = breadcrumbs.isShowing() || ApplicationManager.getApplication().isHeadlessEnvironment() ? _crumbs : EMPTY_BREADCRUMBS;
               breadcrumbs.setFont(getNewFont(myEditor));
               breadcrumbs.setCrumbs(crumbs);

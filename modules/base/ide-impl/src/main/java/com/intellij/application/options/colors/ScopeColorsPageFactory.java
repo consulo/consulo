@@ -20,7 +20,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.util.scopeChooser.EditScopesDialog;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import com.intellij.openapi.options.ex.Settings;
 import consulo.project.Project;

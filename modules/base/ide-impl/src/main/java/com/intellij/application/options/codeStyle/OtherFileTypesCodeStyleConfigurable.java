@@ -3,7 +3,7 @@ package com.intellij.application.options.codeStyle;
 
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
 import org.jetbrains.annotations.Nls;
 

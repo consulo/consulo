@@ -16,7 +16,7 @@
 <consulo-plugin>
   <application-components>
     <component>
-      <interface-class>com.intellij.openapi.fileTypes.FileTypeManager</interface-class>
+      <interface-class>consulo.language.file.FileTypeManager</interface-class>
       <implementation-class>com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl</implementation-class>
     </component>
 
@@ -56,7 +56,7 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.diagnostic.PerformanceWatcher</implementation-class>
+      <implementation-class>consulo.application.impl.internal.performance.PerformanceWatcher</implementation-class>
     </component>
 
     <component>

@@ -26,20 +26,20 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.diff.DiffContent;
 import com.intellij.openapi.diff.DocumentContent;
 import com.intellij.openapi.diff.SimpleContent;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.*;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.document.FileDocumentManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
+import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
@@ -539,7 +539,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
     if (ok) {
       if (myProject.isDefault() || (ProjectLevelVcsManager.getInstance(myProject).getAllActiveVcss().length == 0) ||
-          (! ModalityState.NON_MODAL.equals(ModalityState.current()))) {
+          (! IdeaModalityState.NON_MODAL.equals(IdeaModalityState.current()))) {
         final List<CommittedChangeList> versions = new ArrayList<>();
 
         if (parent == null || !parent.isValid()) {
@@ -749,7 +749,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
 
     // we can's use runProcessWithProgressAsynchronously(task) because then ModalityState.NON_MODAL would be used
     CoreProgressManager progressManager = (CoreProgressManager)ProgressManager.getInstance();
-    progressManager.runProcessWithProgressAsynchronously(task, new BackgroundableProcessIndicator(task), null, ModalityState.current());
+    progressManager.runProcessWithProgressAsynchronously(task, new BackgroundableProcessIndicator(task), null, IdeaModalityState.current());
   }
 
   @Nullable
@@ -830,7 +830,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
                 public void run() {
                   myDlg.close(-1);
                 }
-              }, ModalityState.stateForComponent(myDlg.getWindow()));
+              }, IdeaModalityState.stateForComponent(myDlg.getWindow()));
             }
           }
         });
@@ -842,7 +842,7 @@ public class AbstractVcsHelperImpl extends AbstractVcsHelper {
           public void run() {
             myDlg.close(-1);
           }
-        }, ModalityState.stateForComponent(myDlg.getWindow()));
+        }, IdeaModalityState.stateForComponent(myDlg.getWindow()));
       }
     }
 

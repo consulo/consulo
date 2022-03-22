@@ -15,28 +15,27 @@
  */
 package consulo.desktop.awt.application.impl;
 
-import consulo.application.CommonBundle;
+import consulo.application.*;
 import com.intellij.diagnostic.LogEventException;
+import consulo.application.impl.internal.*;
+import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.ide.*;
-import com.intellij.idea.StartupUtil;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.application.impl.ReadMostlyRWLock;
+import consulo.application.impl.internal.start.StartupUtil;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
-import com.intellij.openapi.progress.impl.ProgressResult;
-import com.intellij.openapi.progress.impl.ProgressRunner;
+import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.impl.internal.progress.ProgressResult;
+import consulo.application.impl.internal.progress.ProgressRunner;
 import com.intellij.openapi.progress.util.PotemkinProgress;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
+import consulo.project.internal.ProjectManagerEx;
 import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
@@ -51,10 +50,6 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.AppScheduledExecutorService;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.ApplicationManager;
-import consulo.application.ApplicationProperties;
-import consulo.application.TransactionGuard;
-import consulo.application.impl.BaseApplication;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
 import consulo.desktop.application.util.Restarter;
@@ -64,7 +59,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
-import consulo.start.CommandLineArgs;
+import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ExceptionUtil;
@@ -96,9 +91,9 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private static final String WAS_EVER_SHOWN = "was.ever.shown";
 
-  private static final ModalityState ANY = new ModalityState() {
+  private static final IdeaModalityState ANY = new IdeaModalityState() {
     @Override
-    public boolean dominates(@Nonnull ModalityState anotherState) {
+    public boolean dominates(@Nonnull IdeaModalityState anotherState) {
       return false;
     }
 
@@ -178,7 +173,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Nonnull
   @Override
-  protected Runnable wrapLaterInvocation(Runnable action, ModalityState state) {
+  protected Runnable wrapLaterInvocation(Runnable action, IdeaModalityState state) {
     return transactionGuard().wrapLaterInvocation(action, state);
   }
 
@@ -238,7 +233,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final BooleanSupplier expired) {
-    invokeLater(runnable, ModalityState.defaultModalityState(), expired);
+    invokeLater(runnable, IdeaModalityState.defaultModalityState(), expired);
   }
 
   @Override
@@ -248,8 +243,8 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state, @Nonnull final BooleanSupplier expired) {
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (ModalityState)state);
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), (ModalityState)state, expired, null, true);
+    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)state);
+    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), (IdeaModalityState)state, expired, null, true);
   }
 
   @RequiredUIAccess
@@ -317,19 +312,19 @@ public class DesktopApplicationImpl extends BaseApplication {
       throw new IllegalStateException("Calling invokeAndWait from read-action leads to possible deadlock.");
     }
 
-    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (ModalityState)modalityState);
-    LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(r), (ModalityState)modalityState);
+    Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)modalityState);
+    LaterInvocator.invokeAndWait(() -> runIntendedWriteActionOnCurrentThread(r), (IdeaModalityState)modalityState);
   }
 
   @Override
   @Nonnull
-  public ModalityState getCurrentModalityState() {
+  public IdeaModalityState getCurrentModalityState() {
     return LaterInvocator.getCurrentModalityState();
   }
 
   @Override
   @Nonnull
-  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
     if (!isDispatchThread()) LOG.debug("please, use application dispatch thread to get a modality state");
     Window window = UIUtil.getWindow(c);
     if (window == null) return getNoneModalityState();
@@ -338,20 +333,20 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   @Nonnull
-  public ModalityState getAnyModalityState() {
+  public IdeaModalityState getAnyModalityState() {
     return ANY;
   }
 
   @Override
   @Nonnull
-  public ModalityState getDefaultModalityState() {
+  public IdeaModalityState getDefaultModalityState() {
     return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
   }
 
   @Override
   @Nonnull
-  public ModalityState getNoneModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getNoneModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @RequiredUIAccess
@@ -394,7 +389,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
     exiting = true;
     try {
-      if (!force && !exitConfirmed && getDefaultModalityState() != ModalityState.NON_MODAL) {
+      if (!force && !exitConfirmed && getDefaultModalityState() != IdeaModalityState.NON_MODAL) {
         return;
       }
 
@@ -418,7 +413,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         runnable.run();
       }
       else {
-        invokeLater(runnable, ModalityState.NON_MODAL);
+        invokeLater(runnable, IdeaModalityState.NON_MODAL);
       }
     }
     finally {

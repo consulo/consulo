@@ -16,6 +16,7 @@
 package com.intellij.openapi.fileTypes;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.language.file.FileTypeManager;
 import consulo.language.file.LanguageFileType;
 
 @Deprecated

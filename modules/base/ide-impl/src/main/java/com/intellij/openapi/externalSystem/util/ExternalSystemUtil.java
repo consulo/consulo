@@ -35,9 +35,9 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.dataContext.DataProvider;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
 import com.intellij.openapi.externalSystem.importing.ImportSpec;
@@ -632,7 +632,7 @@ public class ExternalSystemUtil {
                 LOG.error(e);
               }
             }
-          }, ModalityState.NON_MODAL);
+          }, IdeaModalityState.NON_MODAL);
         }
         catch (Exception e) {
           LOG.error(e);
@@ -897,7 +897,7 @@ public class ExternalSystemUtil {
       action.run();
     }
     else {
-      app.invokeAndWait(action, ModalityState.defaultModalityState());
+      app.invokeAndWait(action, IdeaModalityState.defaultModalityState());
     }
     return file[0];
   }

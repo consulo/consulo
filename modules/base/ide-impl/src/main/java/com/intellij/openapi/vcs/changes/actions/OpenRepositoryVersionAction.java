@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -61,7 +61,7 @@ public class OpenRepositoryVersionAction extends AnAction implements DumbAware {
     e.getPresentation().setEnabled(project != null && changes != null &&
                                    (! CommittedChangesBrowserUseCase.IN_AIR.equals(e.getDataContext().getData(CommittedChangesBrowserUseCase.DATA_KEY))) &&
                                    hasValidChanges(changes) &&
-                                   ModalityState.NON_MODAL.equals(ModalityState.current()));
+                                   IdeaModalityState.NON_MODAL.equals(IdeaModalityState.current()));
   }
 
   private static boolean hasValidChanges(final Change[] changes) {

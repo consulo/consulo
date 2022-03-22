@@ -20,7 +20,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import consulo.ide.impl.PooledThreadExecutor;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

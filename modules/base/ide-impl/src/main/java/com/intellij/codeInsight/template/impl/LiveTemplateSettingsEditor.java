@@ -21,7 +21,7 @@ import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
 import consulo.language.editor.template.context.EverywhereContextType;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.editor.template.Variable;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.IdeBorderFactory;
@@ -606,7 +606,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
     myKeyField.selectAll();
     //todo[peter,kirillk] without these invokeLaters this requestFocus conflicts with com.intellij.openapi.ui.impl.DialogWrapperPeerImpl.MyDialog.MyWindowListener.windowOpened()
     IdeFocusManager.findInstanceByComponent(myKeyField).requestFocus(myKeyField, true);
-    final ModalityState modalityState = ModalityState.stateForComponent(myKeyField);
+    final IdeaModalityState modalityState = IdeaModalityState.stateForComponent(myKeyField);
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {

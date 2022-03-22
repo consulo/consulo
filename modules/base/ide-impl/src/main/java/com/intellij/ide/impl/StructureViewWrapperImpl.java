@@ -27,7 +27,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProvider;
@@ -109,8 +109,8 @@ public class StructureViewWrapperImpl implements StructureViewWrapper, Disposabl
 
     final TimerListener timerListener = new TimerListener() {
       @Override
-      public ModalityState getModalityState() {
-        return ModalityState.stateForComponent(myToolWindow.getComponent());
+      public IdeaModalityState getModalityState() {
+        return IdeaModalityState.stateForComponent(myToolWindow.getComponent());
       }
 
       @Override

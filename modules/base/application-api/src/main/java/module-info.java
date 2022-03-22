@@ -24,6 +24,7 @@ module consulo.application.api {
 
   exports consulo.application;
   exports consulo.application.dumb;
+  exports consulo.application.eap;
   exports consulo.application.event;
   exports consulo.application.constraint;
   exports consulo.application.extension;

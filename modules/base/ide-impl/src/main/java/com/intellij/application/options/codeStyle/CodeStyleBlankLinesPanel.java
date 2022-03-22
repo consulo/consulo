@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.codeStyle;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.valueEditor.ValueValidationException;
 import consulo.util.lang.Trinity;

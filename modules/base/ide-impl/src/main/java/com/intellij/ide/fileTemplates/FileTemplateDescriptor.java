@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.fileTemplates;
 
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 

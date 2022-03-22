@@ -23,7 +23,7 @@ import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleBuffer;
 import com.intellij.execution.testframework.*;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.progress.ProgressManager;
 import consulo.util.lang.ref.Ref;
 import consulo.util.xml.serializer.WriteExternalException;

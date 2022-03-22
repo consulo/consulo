@@ -17,16 +17,16 @@ package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
-import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.UriUtil;
 import com.intellij.util.io.URLUtil;
-import consulo.components.impl.stores.StorageUtil;
+import consulo.components.impl.stores.ProjectStorageUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,7 +72,7 @@ public class FileTemplatesLoader {
     myTypeManager = typeManager;
     File configDir = project == null || project.isDefault()
                      ? new File(ContainerPathManager.get().getConfigPath(), TEMPLATES_DIR)
-                     : new File(UriUtil.trimTrailingSlashes(StorageUtil.getStoreDir(project) + "/" + TEMPLATES_DIR));
+                     : new File(UriUtil.trimTrailingSlashes(ProjectStorageUtil.getStoreDir(project) + "/" + TEMPLATES_DIR));
     myDefaultTemplatesManager = new FTManager(FileTemplateManager.DEFAULT_TEMPLATES_CATEGORY, configDir);
     myInternalTemplatesManager = new FTManager(FileTemplateManager.INTERNAL_TEMPLATES_CATEGORY, new File(configDir, INTERNAL_DIR), true);
     myPatternsManager = new FTManager(FileTemplateManager.INCLUDES_TEMPLATES_CATEGORY, new File(configDir, INCLUDES_DIR));

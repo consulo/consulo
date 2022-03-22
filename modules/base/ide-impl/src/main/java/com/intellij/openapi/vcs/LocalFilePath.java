@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
+import consulo.language.file.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import com.intellij.util.PathUtil;
 import consulo.document.Document;

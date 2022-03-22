@@ -6,7 +6,9 @@ import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
 import consulo.language.impl.psi.internal.LoadTextUtil;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.ex.ExternalizableFileType;
@@ -70,7 +72,7 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
-import consulo.ide.impl.PooledThreadExecutor;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -233,7 +235,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
           app.runWriteAction(() -> fireBeforeFileTypesChanged());
           myPatternsTable.removeAllAssociations(scheme);
           app.runWriteAction(() -> fireFileTypesChanged(null, scheme));
-        }, ModalityState.NON_MODAL);
+        }, IdeaModalityState.NON_MODAL);
       }
 
       @Nonnull

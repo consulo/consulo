@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.configurable;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;

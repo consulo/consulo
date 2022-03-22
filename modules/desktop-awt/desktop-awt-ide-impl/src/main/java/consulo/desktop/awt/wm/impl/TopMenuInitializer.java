@@ -17,7 +17,7 @@ package consulo.desktop.awt.wm.impl;
 
 import com.intellij.ide.CommandLineProcessor;
 import consulo.dataContext.DataManager;
-import com.intellij.idea.ApplicationStarter;
+import consulo.application.impl.internal.start.ApplicationStarter;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ide.actions.AboutManager;
-import consulo.start.CommandLineArgs;
+import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;

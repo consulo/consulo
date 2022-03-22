@@ -15,7 +15,7 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessToken;
@@ -200,31 +200,31 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
   @Nonnull
   @Override
-  public ModalityState getCurrentModalityState() {
+  public IdeaModalityState getCurrentModalityState() {
     throw new UnsupportedOperationException();
   }
 
   @Nonnull
   @Override
-  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
+  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
     return getNoneModalityState();
   }
 
   @Nonnull
   @Override
-  public ModalityState getDefaultModalityState() {
+  public IdeaModalityState getDefaultModalityState() {
     return getNoneModalityState();
   }
 
   @Nonnull
   @Override
-  public ModalityState getNoneModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getNoneModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
   @Override
-  public ModalityState getAnyModalityState() {
+  public IdeaModalityState getAnyModalityState() {
     throw new UnsupportedOperationException();
   }
 

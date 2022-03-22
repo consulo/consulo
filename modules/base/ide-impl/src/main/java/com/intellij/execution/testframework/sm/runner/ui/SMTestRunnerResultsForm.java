@@ -28,7 +28,7 @@ import com.intellij.execution.testframework.sm.runner.history.actions.AbstractIm
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
 import com.intellij.execution.testframework.ui.TestResultsPanel;
 import com.intellij.execution.testframework.ui.TestsProgressAnimator;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import com.intellij.openapi.progress.util.ColorProgressBar;
 import com.intellij.openapi.util.Pass;
@@ -678,7 +678,7 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
         }
         myTreeBuilder.select(testProxy, onDone);
       }
-    }, ModalityState.NON_MODAL);
+    }, IdeaModalityState.NON_MODAL);
   }
 
   private void updateStatusLabel(final boolean testingFinished) {

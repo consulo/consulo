@@ -1,11 +1,11 @@
 package consulo.builtInServer.impl;
 
-import com.intellij.idea.StartupUtil;
+import consulo.application.impl.internal.start.StartupUtil;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import consulo.application.Application;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -17,7 +17,7 @@ import com.intellij.util.net.NetUtils;
 import consulo.builtInServer.BuiltInServerManager;
 import consulo.builtInServer.custom.CustomPortServerManager;
 import consulo.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
-import consulo.start.ImportantFolderLocker;
+import consulo.application.impl.internal.start.ImportantFolderLocker;
 import io.netty.channel.oio.OioEventLoopGroup;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

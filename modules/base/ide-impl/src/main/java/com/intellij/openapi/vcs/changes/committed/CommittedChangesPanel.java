@@ -24,7 +24,7 @@ package com.intellij.openapi.vcs.changes.committed;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
@@ -161,7 +161,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
 
             @Override
             public void consume(final List<CommittedChangeList> list) {
-              new AbstractCalledLater((Project)myProject, ModalityState.stateForComponent(myBrowser)) {
+              new AbstractCalledLater((Project)myProject, IdeaModalityState.stateForComponent(myBrowser)) {
                 @Override
                 public void run() {
                   myBrowser.append(list);
@@ -212,7 +212,7 @@ public class CommittedChangesPanel extends JPanel implements TypeSafeDataProvide
           public void run() {
             updateFilteredModel(Collections.<CommittedChangeList>emptyList(), true);
           }
-        }, ModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
       }
     });
   }

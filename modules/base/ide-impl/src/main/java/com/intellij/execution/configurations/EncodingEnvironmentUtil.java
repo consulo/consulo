@@ -18,7 +18,7 @@ package com.intellij.execution.configurations;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
+import consulo.language.file.EncodingManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
 import consulo.process.local.EnvironmentUtil;
 import consulo.annotation.UsedInPlugin;

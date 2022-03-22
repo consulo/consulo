@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import com.intellij.openapi.progress.BackgroundTaskQueue;
 import consulo.application.progress.ProgressIndicator;
@@ -49,7 +49,7 @@ public class BackgroundTaskGroup extends BackgroundTaskQueue {
   }
 
   @Override
-  public void run(@Nonnull Task.Backgroundable task, @javax.annotation.Nullable ModalityState modalityState, @javax.annotation.Nullable ProgressIndicator indicator) {
+  public void run(@Nonnull Task.Backgroundable task, @javax.annotation.Nullable IdeaModalityState modalityState, @javax.annotation.Nullable ProgressIndicator indicator) {
     throw new UnsupportedOperationException();
   }
 

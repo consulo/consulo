@@ -21,8 +21,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.diagram.provider.GraphProvider;
-import consulo.ide.eap.EarlyAccessProgramDescriptor;
-import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.application.eap.EarlyAccessProgramDescriptor;
+import consulo.application.eap.EarlyAccessProgramManager;
 import javax.annotation.Nonnull;
 
 /**

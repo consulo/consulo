@@ -21,17 +21,17 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.components.StateStorage;
-import com.intellij.openapi.components.TrackingPathMacroSubstitutor;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.component.store.impl.internal.storage.StateStorage;
+import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.module.impl.ModuleManagerComponent;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
-import com.intellij.openapi.progress.NonCancelableSection;
+import consulo.application.impl.internal.progress.NonCancelableSection;
 import com.intellij.openapi.project.ProjectReloadState;
-import com.intellij.openapi.project.ex.ProjectEx;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
+import consulo.project.internal.ProjectEx;
+import consulo.project.internal.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.io.FileUtil;
@@ -55,10 +55,10 @@ import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.components.impl.stores.ProjectStorageUtil;
-import consulo.components.impl.stores.StorageUtil;
-import consulo.components.impl.stores.storage.StateStorageBase;
-import consulo.components.impl.stores.storage.StateStorageManager;
-import consulo.components.impl.stores.storage.VfsFileBasedStorage;
+import consulo.component.store.impl.internal.storage.StorageUtil;
+import consulo.component.store.impl.internal.storage.StateStorageBase;
+import consulo.component.store.impl.internal.StateStorageManager;
+import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
@@ -345,7 +345,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
     for (Project p : getOpenProjects()) {
       if (ProjectUtil.isSameProject(project.getProjectFilePath(), p)) {
-        GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), ModalityState.NON_MODAL);
+        GuiUtils.invokeLaterIfNeeded(() -> ProjectUtil.focusProjectWindow(p, false), IdeaModalityState.NON_MODAL);
         return false;
       }
     }
@@ -380,7 +380,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
             }
           }
         }
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
     };
 
     ProgressIndicator indicator = myProgressManager.getProgressIndicator();
@@ -501,7 +501,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   @Override
   public void unblockReloadingProjectOnExternalChanges() {
     if (myReloadBlockCount.decrementAndGet() == 0 && myChangedFilesAlarm.isEmpty()) {
-      myApplication.invokeLater(restartApplicationOrReloadProjectTask, ModalityState.NON_MODAL);
+      myApplication.invokeLater(restartApplicationOrReloadProjectTask, IdeaModalityState.NON_MODAL);
     }
   }
 
@@ -928,7 +928,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         if (!project.isDisposedOrDisposeInProgress()) {
           startupManager.scheduleBackgroundPostStartupActivities(uiAccess);
         }
-      }, ModalityState.NON_MODAL, project::isDisposedOrDisposeInProgress);
+      }, IdeaModalityState.NON_MODAL, project::isDisposedOrDisposeInProgress);
     }
   }
 

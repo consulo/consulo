@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser.tree;
 
 import consulo.disposer.Disposable;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -43,7 +43,7 @@ public class FileRefresher implements Disposable {
   private final ScheduledExecutorService executor = EdtExecutorService.getScheduledExecutorInstance();
   private final boolean recursive;
   private final long delay;
-  private final NotNullProducer<? extends ModalityState> producer;
+  private final NotNullProducer<? extends IdeaModalityState> producer;
   private final ArrayList<Object> watchers = new ArrayList<>();
   private final ArrayList<VirtualFile> files = new ArrayList<>();
   private final AtomicBoolean scheduled = new AtomicBoolean();
@@ -58,7 +58,7 @@ public class FileRefresher implements Disposable {
    * @param producer  a provider for modality state that can be invoked on background thread
    * @throws IllegalArgumentException if the specified delay is not positive
    */
-  public FileRefresher(boolean recursive, long delay, @Nonnull NotNullProducer<? extends ModalityState> producer) {
+  public FileRefresher(boolean recursive, long delay, @Nonnull NotNullProducer<? extends IdeaModalityState> producer) {
     if (delay <= 0) throw new IllegalArgumentException("delay");
     this.recursive = recursive;
     this.delay = delay;
@@ -153,7 +153,7 @@ public class FileRefresher implements Disposable {
     RefreshSession session;
     synchronized (files) {
       if (this.session != null || files.isEmpty()) return;
-      ModalityState state = producer.produce();
+      IdeaModalityState state = producer.produce();
       LOG.debug("modality state ", state);
       session = RefreshQueue.getInstance().createSession(true, recursive, this::finish, state);
       session.addAllFiles(files);

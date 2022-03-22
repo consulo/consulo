@@ -21,7 +21,7 @@ import com.intellij.application.options.codeStyle.arrangement.match.ArrangementM
 import com.intellij.application.options.codeStyle.arrangement.util.TitleWithToolbar;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;

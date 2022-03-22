@@ -9,7 +9,7 @@ import consulo.ui.ex.awt.tree.TreeState;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
@@ -167,7 +167,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
         public void run() {
           updateModel();
         }
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
     }
   }
 
@@ -525,7 +525,7 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
   }
 
   public void setLoading(final boolean value) {
-    new AbstractCalledLater(myProject, ModalityState.NON_MODAL) {
+    new AbstractCalledLater(myProject, IdeaModalityState.NON_MODAL) {
       public void run() {
         myChangesTree.setPaintBusy(value);
       }

@@ -8,7 +8,7 @@ import consulo.project.ui.notification.Notifications;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;

@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.application;
 
+import consulo.component.macro.PathMacroFilter;
 import org.jdom.Attribute;
 
 /**

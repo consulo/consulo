@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import static com.intellij.application.options.colors.ColorAndFontOptions.selectOrEditColor;
-import static com.intellij.openapi.application.ApplicationBundle.message;
+import static consulo.application.ApplicationBundle.message;
 import static com.intellij.openapi.util.text.StringUtil.naturalCompare;
 import static com.intellij.util.containers.ContainerUtil.newSmartList;
 import static javax.swing.SwingConstants.LEFT;

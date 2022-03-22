@@ -17,7 +17,7 @@ package com.intellij.openapi.fileTypes.ex;
 
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;

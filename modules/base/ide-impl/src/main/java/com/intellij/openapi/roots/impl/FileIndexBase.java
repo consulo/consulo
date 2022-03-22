@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.impl;
 
 import consulo.language.file.inject.VirtualFileWindow;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.module.Module;
 import consulo.content.ContentIterator;
 import consulo.content.FileIndex;

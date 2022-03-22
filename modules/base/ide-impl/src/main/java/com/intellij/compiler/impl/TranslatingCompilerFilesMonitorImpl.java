@@ -22,10 +22,10 @@ import consulo.module.content.ProjectTopics;
 import consulo.compiler.impl.CompilerIOUtil;
 import com.intellij.ide.caches.CachesInvalidator;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.compiler.impl.CompileContextEx;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.layer.event.ModuleRootEvent;
@@ -201,7 +201,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
                   }
                 }.queue();
               }
-            }, 500, ModalityState.NON_MODAL);
+            }, 500, IdeaModalityState.NON_MODAL);
           }
           catch (ProjectRef.ProjectClosedException e) {
             LOG.info(e);

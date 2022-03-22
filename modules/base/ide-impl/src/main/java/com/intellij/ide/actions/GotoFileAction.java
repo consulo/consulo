@@ -27,7 +27,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;

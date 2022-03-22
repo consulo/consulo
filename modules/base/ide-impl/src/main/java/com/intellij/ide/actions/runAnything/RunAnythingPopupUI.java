@@ -31,7 +31,7 @@ import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.DumbService;
 import consulo.project.Project;

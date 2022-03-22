@@ -19,8 +19,8 @@
  */
 package com.intellij.openapi.vfs.newvfs.impl;
 
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.application.internal.ApplicationEx;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;

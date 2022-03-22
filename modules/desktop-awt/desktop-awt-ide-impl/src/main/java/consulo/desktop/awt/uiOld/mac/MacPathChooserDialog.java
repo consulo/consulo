@@ -16,7 +16,7 @@
 package consulo.desktop.awt.uiOld.mac;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
 import consulo.component.ComponentManager;

@@ -4,12 +4,13 @@
 package com.intellij.openapi.progress.impl;
 
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import com.intellij.openapi.progress.util.PingProgress;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;

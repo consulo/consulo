@@ -21,7 +21,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
@@ -118,7 +118,7 @@ public class ProjectListBuilder extends AbstractListBuilder {
           // Rely on project view to commit PSI and wait until it's updated.
           if (myTreeStructure.hasSomethingToCommit() ) {
             myUpdateAlarm.cancelAllRequests();
-            myUpdateAlarm.addRequest(this, 300, ModalityState.stateForComponent(myList));
+            myUpdateAlarm.addRequest(this, 300, IdeaModalityState.stateForComponent(myList));
             return;
           }
           updateList(shouldRefreshSelection);
@@ -128,7 +128,7 @@ public class ProjectListBuilder extends AbstractListBuilder {
 
     if (!ApplicationManager.getApplication().isUnitTestMode()) {
       myUpdateAlarm.cancelAllRequests();
-      myUpdateAlarm.addRequest(request, 300, ModalityState.stateForComponent(myList));
+      myUpdateAlarm.addRequest(request, 300, IdeaModalityState.stateForComponent(myList));
     }
     else {
       request.run();

@@ -1,19 +1,15 @@
 package com.intellij.remoteServer.impl.configuration;
 
 import consulo.application.Application;
-import com.intellij.openapi.components.*;
 import com.intellij.remoteServer.ServerType;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.RemoteServerListener;
 import com.intellij.remoteServer.configuration.RemoteServersManager;
 import com.intellij.remoteServer.configuration.ServerConfiguration;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.persist.StoragePathMacros;
+import consulo.component.persist.*;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

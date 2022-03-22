@@ -2,7 +2,7 @@
 package com.intellij.openapi.roots.impl.libraries;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.ComponentSerializationUtil;
+import consulo.component.persist.ComponentSerializationUtil;
 import consulo.content.library.*;
 import consulo.module.Module;
 import consulo.project.Project;

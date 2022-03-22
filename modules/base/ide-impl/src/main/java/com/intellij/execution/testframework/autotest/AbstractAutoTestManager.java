@@ -32,7 +32,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -202,7 +202,7 @@ public abstract class AbstractAutoTestManager implements PersistentStateComponen
           if (isAutoTestEnabledForDescriptor(descriptor) && watcher.isUpToDate(modificationStamp)) {
             restart(descriptor);
           }
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
       }
     };
     ON_TERMINATION_RESTARTER_KEY.set(processHandler, restarterListener);

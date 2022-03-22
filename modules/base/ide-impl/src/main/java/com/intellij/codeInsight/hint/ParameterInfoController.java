@@ -17,7 +17,7 @@ import consulo.codeEditor.VisualPosition;
 import consulo.language.ast.ASTNode;
 import com.intellij.lang.parameterInfo.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import com.intellij.openapi.command.undo.UndoManager;
 import consulo.codeEditor.event.CaretEvent;
@@ -306,7 +306,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
 
   private void rescheduleUpdate() {
     myAlarm.cancelAllRequests();
-    myAlarm.addRequest(() -> updateWhenAllCommitted(), DELAY, ModalityState.stateForComponent(myEditor.getComponent()));
+    myAlarm.addRequest(() -> updateWhenAllCommitted(), DELAY, IdeaModalityState.stateForComponent(myEditor.getComponent()));
   }
 
   private void updateWhenAllCommitted() {

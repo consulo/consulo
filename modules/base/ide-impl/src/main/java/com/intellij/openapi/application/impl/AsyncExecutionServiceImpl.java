@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.application.impl;
 
-import com.intellij.openapi.application.*;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
+import consulo.application.impl.internal.IdeaModalityState;
 import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 
@@ -36,13 +36,13 @@ public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   @Nonnull
   @Override
   protected AppUIExecutor createUIExecutor(@Nonnull consulo.ui.ModalityState modalityState) {
-    return new AppUIExecutorImpl((ModalityState)modalityState, ExecutionThread.EDT);
+    return new AppUIExecutorImpl((IdeaModalityState)modalityState, ExecutionThread.EDT);
   }
 
   @Nonnull
   @Override
   protected AppUIExecutor createWriteThreadExecutor(@Nonnull consulo.ui.ModalityState modalityState) {
-    return new AppUIExecutorImpl((ModalityState)modalityState, ExecutionThread.WT);
+    return new AppUIExecutorImpl((IdeaModalityState)modalityState, ExecutionThread.WT);
   }
 
   @Nonnull

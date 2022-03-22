@@ -15,7 +15,7 @@
  */
 package consulo.fileEditor.impl;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.project.Project;
@@ -108,8 +108,8 @@ public class UnifiedFileEditorsSplitters extends FileEditorsSplittersBase<Unifie
 
   @Nonnull
   @Override
-  protected ModalityState getComponentModality() {
-    return ModalityState.any();
+  protected IdeaModalityState getComponentModality() {
+    return IdeaModalityState.any();
   }
 
   @Override

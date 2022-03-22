@@ -16,8 +16,9 @@
 
 package com.intellij.tools;
 
+import com.intellij.openapi.components.impl.ApplicationPathMacroManagerImpl;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.PathMacroManager;
+import consulo.component.macro.PathMacroManager;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -67,7 +68,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
     String groupName = root.getAttributeValue(ATTRIBUTE_NAME);
     ToolsGroup<T> result = createToolsGroup(groupName);
 
-    final PathMacroManager macroManager = PathMacroManager.getInstance(ApplicationManager.getApplication());
+    final PathMacroManager macroManager = ApplicationPathMacroManagerImpl.getInstance(ApplicationManager.getApplication());
 
     for (final Object o : root.getChildren(TOOL)) {
       Element element = (Element)o;
@@ -168,7 +169,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
 
     Element taskElement = new Element(EXEC);
 
-    final PathMacroManager macroManager = PathMacroManager.getInstance(ApplicationManager.getApplication());
+    final PathMacroManager macroManager = ApplicationPathMacroManagerImpl.getInstance(ApplicationManager.getApplication());
 
     Element option = new Element(ELEMENT_OPTION);
     taskElement.addContent(option);

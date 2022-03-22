@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes;
 
 import consulo.module.content.ProjectTopics;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootAdapter;
@@ -55,7 +55,7 @@ public class VcsEventWatcher implements ProjectComponent {
             if (myProject.isDisposed()) return;
             VcsDirtyScopeManager.getInstance(myProject).markEverythingDirty();
           }
-        }, ModalityState.NON_MODAL);
+        }, IdeaModalityState.NON_MODAL);
       }
     });
     connection.subscribe(ProblemListener.TOPIC, new MyProblemListener());

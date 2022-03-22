@@ -10,7 +10,7 @@ import consulo.language.Language;
 import consulo.disposer.Disposable;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.codeEditor.CaretModel;
 import consulo.document.Document;
@@ -133,7 +133,7 @@ public abstract class CompletionPhase implements Disposable {
         loadContributorsOutsideEdt(completionEditor, file);
 
         return completionEditor;
-      }).withDocumentsCommitted(project).expireWith(phase).expireWhen(() -> phase.isExpired()).finishOnUiThread(ModalityState.current(), completionEditor -> {
+      }).withDocumentsCommitted(project).expireWith(phase).expireWhen(() -> phase.isExpired()).finishOnUiThread(IdeaModalityState.current(), completionEditor -> {
         if (completionEditor != null) {
           int time = prevIndicator == null ? 0 : prevIndicator.getInvocationCount();
           CodeCompletionHandlerBase handler = CodeCompletionHandlerBase.createHandler(completionType, false, autopopup, false);

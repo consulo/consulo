@@ -11,7 +11,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.UIBundle;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ThreeState;
-import consulo.application.impl.BaseApplication;
+import consulo.application.impl.internal.BaseApplication;
 import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;

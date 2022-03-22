@@ -7,7 +7,7 @@ import consulo.application.Application;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.dumb.IndexNotReadyException;
 import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import static consulo.application.ApplicationManager.getApplication;
-import static com.intellij.openapi.progress.util.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
+import static consulo.application.impl.internal.progress.ProgressIndicatorUtils.runInReadActionWithWriteActionPriority;
 import static consulo.disposer.Disposer.register;
 import static java.awt.EventQueue.isDispatchThread;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;

@@ -19,6 +19,7 @@ import com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.FileTypeRenderer;
+import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;

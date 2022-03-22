@@ -2,6 +2,7 @@
 package com.intellij.util.indexing;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.impl.AppTopics;
 import com.intellij.history.LocalHistory;
 import com.intellij.ide.plugins.PluginManager;
@@ -10,27 +11,28 @@ import consulo.application.util.function.*;
 import consulo.content.scope.SearchScope;
 import consulo.index.io.ID;
 import consulo.language.ast.ASTNode;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
 import consulo.language.impl.psi.internal.stub.FileContentImpl;
 import consulo.language.impl.psi.internal.stub.SubstitutedFileType;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.event.ApplicationListener;
 import consulo.document.Document;
 import com.intellij.openapi.editor.impl.EditorHighlighterCache;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
-import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import consulo.application.*;
 import consulo.language.psi.stub.*;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import com.intellij.openapi.project.*;
 import com.intellij.openapi.roots.CollectingContentIterator;
 import consulo.content.ContentIterator;
@@ -86,7 +88,7 @@ import com.intellij.util.indexing.provided.ProvidedIndexExtension;
 import com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.container.boot.ContainerPathManager;
@@ -2069,7 +2071,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
             startDumbMode.run();
           }
           else {
-            app.invokeLater(startDumbMode, ModalityState.NON_MODAL);
+            app.invokeLater(startDumbMode, IdeaModalityState.NON_MODAL);
           }
         }
       }

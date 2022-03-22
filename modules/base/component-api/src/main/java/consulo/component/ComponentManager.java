@@ -123,4 +123,8 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     Supplier<ThreeState> disposeState = getDisposeState();
     return disposeState.get() != ThreeState.NO;
   }
+
+  default boolean isInitialized() {
+    return true;
+  }
 }

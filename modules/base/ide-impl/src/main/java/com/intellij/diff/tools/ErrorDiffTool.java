@@ -23,8 +23,8 @@ import com.intellij.diff.contents.FileContent;
 import com.intellij.diff.requests.*;
 import com.intellij.diff.util.DiffUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.JBUI;
@@ -123,7 +123,7 @@ public class ErrorDiffTool implements FrameDiffTool {
               public void run() {
                 ((DiffContextEx)myContext).reloadDiffRequest();
               }
-            }, ModalityState.current());
+            }, IdeaModalityState.current());
           }
         }
       }

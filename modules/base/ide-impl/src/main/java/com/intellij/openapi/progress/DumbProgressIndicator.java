@@ -1,6 +1,6 @@
 package com.intellij.openapi.progress;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.StandardProgressIndicator;
 import consulo.localize.LocalizeValue;
 import consulo.application.progress.ProgressIndicator;
@@ -86,8 +86,8 @@ public class DumbProgressIndicator implements StandardProgressIndicator {
 
   @Override
   @Nonnull
-  public ModalityState getModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Override

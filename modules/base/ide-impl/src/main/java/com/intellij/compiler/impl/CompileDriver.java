@@ -17,20 +17,13 @@
 package com.intellij.compiler.impl;
 
 import com.intellij.build.BuildContentManager;
-import consulo.compiler.impl.CompilerMessageImpl;
-import consulo.compiler.impl.CompilerWorkspaceConfiguration;
-import consulo.compiler.impl.ModuleCompilerUtil;
-import consulo.compiler.ProblemsView;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.progress.CompilerTask;
-import com.intellij.diagnostic.IdeErrorsDialog;
-import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
@@ -46,6 +39,7 @@ import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.WriteAction;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.Semaphore;
@@ -63,6 +57,7 @@ import consulo.compiler.impl.make.CompositeDependencyCache;
 import consulo.compiler.scope.CompileScope;
 import consulo.compiler.scope.FileIndexCompileScope;
 import consulo.component.ProcessCanceledException;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.container.PluginException;
 import consulo.container.plugin.PluginId;
 import consulo.content.ContentFolderTypeProvider;
@@ -90,6 +85,7 @@ import consulo.util.lang.Trinity;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
 import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -508,7 +504,7 @@ public class CompileDriver {
       }
 
       wereExceptions = true;
-      final PluginId pluginId = IdeErrorsDialog.findFirstPluginId(ex);
+      final PluginId pluginId = PluginExceptionUtil.findFirstPluginId(ex);
 
       final StringBuilder message = new StringBuilder();
       message.append("Internal error");
@@ -530,7 +526,7 @@ public class CompileDriver {
         ApplicationManager.getApplication().invokeLater(() -> {
           final CompilerMessageImpl msg = new CompilerMessageImpl(myProject, CompilerMessageCategory.INFORMATION, compileContext.getRebuildReason());
           doRebuild(callback, msg, false, compileContext.getCompileScope());
-        }, ModalityState.NON_MODAL);
+        }, IdeaModalityState.NON_MODAL);
       }
       else {
         if (!myProject.isDisposed()) {

@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WindowManager;

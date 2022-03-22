@@ -12,7 +12,7 @@ import consulo.language.impl.psi.internal.PsiAnchor;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import com.intellij.openapi.components.PathMacroManager;
+import consulo.component.macro.PathMacroManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
 import consulo.document.Document;

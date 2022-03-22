@@ -26,7 +26,7 @@ import consulo.language.codeStyle.LanguageFormatting;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;

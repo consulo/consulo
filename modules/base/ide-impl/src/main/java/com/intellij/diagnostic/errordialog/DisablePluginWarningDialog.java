@@ -1,7 +1,7 @@
 package com.intellij.diagnostic.errordialog;
 
 import com.intellij.diagnostic.DiagnosticBundle;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.SystemInfo;

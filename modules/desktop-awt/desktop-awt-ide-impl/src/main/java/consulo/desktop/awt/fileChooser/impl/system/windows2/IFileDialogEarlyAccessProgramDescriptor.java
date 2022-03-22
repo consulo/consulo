@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl.system.windows2;
 
-import consulo.ide.eap.EarlyAccessProgramDescriptor;
+import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.platform.Platform;
 
 import javax.annotation.Nonnull;

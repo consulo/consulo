@@ -28,7 +28,7 @@ import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.editor.colors.impl.DefaultColorsScheme;
 import com.intellij.openapi.editor.colors.impl.EditorColorsSchemeImpl;

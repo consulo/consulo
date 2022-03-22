@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import com.intellij.openapi.vcs.versionBrowser.ChangesBrowserSettingsEditor;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.util.Alarm;
 import org.jetbrains.annotations.NonNls;
 
@@ -42,7 +42,7 @@ public class CommittedChangesFilterDialog extends DialogWrapper {
   private final Runnable myValidateRunnable = new Runnable() {
     public void run() {
       validateInput();
-      myValidateAlarm.addRequest(myValidateRunnable, 500, ModalityState.stateForComponent(myPanel.getComponent()));
+      myValidateAlarm.addRequest(myValidateRunnable, 500, IdeaModalityState.stateForComponent(myPanel.getComponent()));
     }
   };
 
@@ -55,7 +55,7 @@ public class CommittedChangesFilterDialog extends DialogWrapper {
     init();
     myErrorLabel.setForeground(Color.red);
     validateInput();
-    myValidateAlarm.addRequest(myValidateRunnable, 500, ModalityState.stateForComponent(myPanel.getComponent()));
+    myValidateAlarm.addRequest(myValidateRunnable, 500, IdeaModalityState.stateForComponent(myPanel.getComponent()));
   }
 
   @javax.annotation.Nullable

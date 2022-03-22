@@ -21,7 +21,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -400,7 +400,7 @@ public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx impleme
         getOrCreateConsoleContent(contentManager);
         line.print(myConsole);
       }
-    }, ModalityState.defaultModalityState());
+    }, IdeaModalityState.defaultModalityState());
   }
 
   private Content getOrCreateConsoleContent(final ContentManager contentManager) {

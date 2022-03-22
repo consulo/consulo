@@ -19,7 +19,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.progress.impl.ProgressSuspender;
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.*;

@@ -24,7 +24,7 @@ import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import com.intellij.openapi.actionSystem.impl.WeakTimerListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -442,8 +442,8 @@ public class IdeMenuBar extends JMenuBar implements IdeEventQueue.EventDispatche
 
   private final class MyTimerListener implements TimerListener {
     @Override
-    public ModalityState getModalityState() {
-      return ModalityState.stateForComponent(IdeMenuBar.this);
+    public IdeaModalityState getModalityState() {
+      return IdeaModalityState.stateForComponent(IdeMenuBar.this);
     }
 
     @Override

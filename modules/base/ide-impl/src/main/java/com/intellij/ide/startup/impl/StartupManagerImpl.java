@@ -3,16 +3,17 @@ package com.intellij.ide.startup.impl;
 
 import com.intellij.diagnostic.Activity;
 import com.intellij.diagnostic.ActivityCategory;
-import com.intellij.diagnostic.PerformanceWatcher;
+import consulo.application.ApplicationBundle;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
 import com.intellij.diagnostic.StartUpMeasurer;
 import com.intellij.diagnostic.StartUpMeasurer.Phases;
 import com.intellij.ide.startup.ServiceNotReadyException;
 import com.intellij.ide.startup.StartupManagerEx;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import com.intellij.openapi.application.*;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -32,7 +33,7 @@ import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.TimeoutUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -482,7 +483,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
       }
 
       startupActivity.runActivity(myProject, UIAccess.current());
-    }, ModalityState.defaultModalityState());
+    }, IdeaModalityState.defaultModalityState());
   }
 
   @Override

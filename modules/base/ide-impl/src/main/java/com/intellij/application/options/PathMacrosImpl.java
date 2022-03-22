@@ -16,7 +16,9 @@
 package com.intellij.application.options;
 
 import consulo.application.PathMacros;
-import com.intellij.openapi.components.*;
+import consulo.component.macro.ExpandMacroToPathMap;
+import consulo.component.macro.PathMacroUtil;
+import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.component.persist.*;
 import com.intellij.util.containers.ContainerUtil;
@@ -34,7 +36,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 @State(name = "PathMacrosImpl", storages = @Storage(value = "path.macros.xml", roamingType = RoamingType.DISABLED))
 @Singleton
-public class PathMacrosImpl extends PathMacros implements PersistentStateComponent<Element> {
+public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(PathMacrosImpl.class);
   private final Map<String, String> myLegacyMacros = new HashMap<>();
   private final Map<String, String> myMacros = new HashMap<>();
@@ -57,7 +59,7 @@ public class PathMacrosImpl extends PathMacros implements PersistentStateCompone
   @NonNls
   public static final String MODULE_DIR_MACRO_NAME = PathMacroUtil.MODULE_DIR_MACRO_NAME;
   @NonNls
-  public static final String USER_HOME_MACRO_NAME = PathMacroUtil.USER_HOME_NAME;
+  public static final String USER_HOME_MACRO_NAME = PathMacroUtil.USER_HOME_MACRO_NAME;
 
   private static final Set<String> SYSTEM_MACROS = new HashSet<>();
   @NonNls

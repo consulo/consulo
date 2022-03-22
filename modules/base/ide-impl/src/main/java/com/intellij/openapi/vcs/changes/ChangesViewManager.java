@@ -25,7 +25,7 @@ import com.intellij.ide.actions.ContextHelpAction;
 import com.intellij.ide.dnd.DnDEvent;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.StoragePathMacros;
 import consulo.project.ProjectComponent;
 import consulo.ui.ex.awt.*;
@@ -175,7 +175,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
           public void run() {
             refreshView();
           }
-        }, ModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
       }
     });
 
@@ -332,7 +332,7 @@ public class ChangesViewManager implements ChangesViewI, ProjectComponent, Persi
         public void run() {
           refreshView();
         }
-      }, 100, ModalityState.NON_MODAL);
+      }, 100, IdeaModalityState.NON_MODAL);
     }
   }
 

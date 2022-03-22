@@ -18,7 +18,7 @@ package com.intellij.openapi.diff.impl.settings;
 import com.intellij.application.options.colors.*;
 import com.intellij.diff.util.DiffLineSeparatorRenderer;
 import com.intellij.diff.util.TextDiffTypeFactory;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.configurable.OptionsBundle;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;

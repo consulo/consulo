@@ -31,7 +31,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.colorScheme.TextAttributesKey;
 import com.intellij.openapi.options.BaseSchemeProcessor;
 import com.intellij.openapi.options.SchemesManager;
@@ -100,7 +100,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
               Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()),
                                        InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
             }
-          }, ModalityState.NON_MODAL);
+          }, IdeaModalityState.NON_MODAL);
         }
         return profile;
       }
@@ -226,7 +226,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
             Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file),
                                      InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
           }
-        }, ModalityState.NON_MODAL);
+        }, IdeaModalityState.NON_MODAL);
       }
     }
     return getProfile(path, false);

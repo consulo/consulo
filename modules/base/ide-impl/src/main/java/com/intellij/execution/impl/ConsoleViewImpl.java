@@ -15,7 +15,7 @@ import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.OccurenceNavigator;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.colorScheme.TextAttributes;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.codeEditor.action.EditorActionHandler;
@@ -378,7 +378,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     if (myJLayeredPane == null) {
       getComponent();
     }
-    mySpareTimeAlarm.addRequest(() -> performWhenNoDeferredOutput(runnable), 100, ModalityState.stateForComponent(myJLayeredPane));
+    mySpareTimeAlarm.addRequest(() -> performWhenNoDeferredOutput(runnable), 100, IdeaModalityState.stateForComponent(myJLayeredPane));
   }
 
   @Override
@@ -598,7 +598,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     }
   }
 
-  protected ModalityState getStateForUpdate() {
+  protected IdeaModalityState getStateForUpdate() {
     return null;
   }
 

@@ -23,7 +23,7 @@ import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.impl.PooledThreadExecutor;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.logging.Logger;
 import consulo.util.lang.StringHash;
 import jakarta.inject.Singleton;

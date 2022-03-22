@@ -17,7 +17,7 @@ package com.intellij.codeInspection.export;
 
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -46,7 +46,7 @@ public class HTMLExportUtil {
           );
         }
       };
-      ApplicationManager.getApplication().invokeLater(showError, ModalityState.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(showError, IdeaModalityState.NON_MODAL);
       throw new ProcessCanceledException();
     }
   }
@@ -67,7 +67,7 @@ public class HTMLExportUtil {
           );
         }
       };
-      ApplicationManager.getApplication().invokeLater(showError, ModalityState.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(showError, IdeaModalityState.NON_MODAL);
       throw new ProcessCanceledException();
     }
   }

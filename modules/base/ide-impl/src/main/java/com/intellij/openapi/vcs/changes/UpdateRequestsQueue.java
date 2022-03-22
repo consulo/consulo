@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.util.Consumer;
 import consulo.application.util.Semaphore;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -185,7 +185,7 @@ public class UpdateRequestsQueue {
                                 @Nonnull InvokeAfterUpdateMode mode,
                                 @Nullable String title,
                                 @Nullable Consumer<VcsDirtyScopeManager> dirtyScopeManagerFiller,
-                                @javax.annotation.Nullable ModalityState state) {
+                                @javax.annotation.Nullable IdeaModalityState state) {
     LOG.debug("invokeAfterUpdate for project: " + myProject.getName());
     final CallbackData data = CallbackData.create(myProject, mode, afterUpdate, title, state);
 

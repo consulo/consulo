@@ -18,7 +18,7 @@ package com.intellij.ide.ui;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SearchTopHitProvider;
 import com.intellij.ide.ui.search.BooleanOptionDescription;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

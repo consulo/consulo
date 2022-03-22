@@ -18,7 +18,7 @@ package com.intellij.diff.requests;
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.DiffContextEx;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import com.intellij.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;

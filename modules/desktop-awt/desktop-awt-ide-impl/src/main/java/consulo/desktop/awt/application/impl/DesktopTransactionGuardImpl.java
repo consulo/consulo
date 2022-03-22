@@ -16,8 +16,8 @@
 package consulo.desktop.awt.application.impl;
 
 import com.google.common.base.MoreObjects;
-import com.intellij.openapi.application.*;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.Semaphore;
@@ -57,7 +57,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   private static boolean ourTestingTransactions;
 
   public DesktopTransactionGuardImpl() {
-    myWriteSafeModalities.put(ModalityState.NON_MODAL, true);
+    myWriteSafeModalities.put(IdeaModalityState.NON_MODAL, true);
   }
 
   @Nonnull
@@ -148,8 +148,8 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
         String message = "Cannot run synchronous submitTransactionAndWait from invokeLater. " +
                          "Please use asynchronous submit*Transaction. " +
                          "See TransactionGuard FAQ for details.\nTransaction: " + runnable;
-        if (!isWriteSafeModality(ModalityState.current())) {
-          message += "\nUnsafe modality: " + ModalityState.current();
+        if (!isWriteSafeModality(IdeaModalityState.current())) {
+          message += "\nUnsafe modality: " + IdeaModalityState.current();
         }
         LOG.error(message);
       }
@@ -210,7 +210,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   @Nonnull
   public AccessToken startActivity(boolean userActivity) {
     myErrorReported = false;
-    boolean allowWriting = userActivity && isWriteSafeModality(ModalityState.current());
+    boolean allowWriting = userActivity && isWriteSafeModality(IdeaModalityState.current());
     if (myWritingAllowed == allowWriting) {
       return AccessToken.EMPTY_ACCESS_TOKEN;
     }
@@ -236,7 +236,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
     ApplicationManager.getApplication().assertIsWriteThread();
     if (areAssertionsEnabled() && !myWritingAllowed && !myErrorReported) {
       // please assign exceptions here to Peter
-      LOG.error(reportWriteUnsafeContext(ModalityState.current()));
+      LOG.error(reportWriteUnsafeContext(IdeaModalityState.current()));
       myErrorReported = true;
     }
   }
@@ -271,9 +271,9 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   @Override
   public void submitTransactionLater(@Nonnull final Disposable parentDisposable, @Nonnull final Runnable transaction) {
     final TransactionIdImpl id = getContextTransaction();
-    final ModalityState startModality = ModalityState.defaultModalityState();
+    final IdeaModalityState startModality = IdeaModalityState.defaultModalityState();
     invokeLater(() -> {
-      boolean allowWriting = ModalityState.current() == startModality;
+      boolean allowWriting = IdeaModalityState.current() == startModality;
       AccessToken token = startActivity(allowWriting);
       try {
         submitTransaction(parentDisposable, id, transaction);
@@ -285,13 +285,13 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   }
 
   private static void invokeLater(Runnable runnable) {
-    ApplicationManager.getApplication().invokeLater(runnable, ModalityState.any(), () -> false);
+    ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.any(), () -> false);
   }
 
   @Override
   public TransactionIdImpl getContextTransaction() {
     if (!ApplicationManager.getApplication().isDispatchThread()) {
-      return myModality2Transaction.get(ModalityState.defaultModalityState());
+      return myModality2Transaction.get(IdeaModalityState.defaultModalityState());
     }
 
     return myWritingAllowed ? myCurrentTransaction : null;
@@ -313,7 +313,7 @@ public class DesktopTransactionGuardImpl extends TransactionGuardEx {
   }
 
   @Nonnull
-  public Runnable wrapLaterInvocation(@Nonnull final Runnable runnable, @Nonnull ModalityState modalityState) {
+  public Runnable wrapLaterInvocation(@Nonnull final Runnable runnable, @Nonnull IdeaModalityState modalityState) {
     if (isWriteSafeModality(modalityState)) {
       return new Runnable() {
         @Override

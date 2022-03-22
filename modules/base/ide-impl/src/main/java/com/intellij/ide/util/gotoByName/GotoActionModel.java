@@ -12,7 +12,7 @@ import com.intellij.ide.ui.search.BooleanOptionDescription;
 import com.intellij.ide.ui.search.OptionDescription;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.configurable.Configurable;
@@ -96,13 +96,13 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     return map;
   });
 
-  private final ModalityState myModality;
+  private final IdeaModalityState myModality;
 
   public GotoActionModel(@Nullable Project project, Component component, @Nullable Editor editor) {
-    this(project, component, editor, ModalityState.defaultModalityState());
+    this(project, component, editor, IdeaModalityState.defaultModalityState());
   }
 
-  public GotoActionModel(@Nullable Project project, Component component, @Nullable Editor editor, @Nullable ModalityState modalityState) {
+  public GotoActionModel(@Nullable Project project, Component component, @Nullable Editor editor, @Nullable IdeaModalityState modalityState) {
     myProject = project;
     myContextComponent = component;
     myEditor = editor;

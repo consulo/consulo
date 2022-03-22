@@ -27,6 +27,7 @@ module consulo.component.api {
   exports consulo.component;
   exports consulo.component.extension;
   exports consulo.component.persist;
+  exports consulo.component.macro;
   exports consulo.component.messagebus;
   exports consulo.component.util;
   exports consulo.component.util.localize;

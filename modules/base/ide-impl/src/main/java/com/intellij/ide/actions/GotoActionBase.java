@@ -22,7 +22,7 @@ import com.intellij.ide.actions.searcheverywhere.SearchEverywhereManager;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.Pair;
@@ -257,7 +257,7 @@ public abstract class GotoActionBase extends AnAction {
       public void elementChosen(Object element) {
         callback.elementChosen(popup, element);
       }
-    }, ModalityState.current(), allowMultipleSelection);
+    }, IdeaModalityState.current(), allowMultipleSelection);
 
     final JTextField editor = popup.getTextField();
 

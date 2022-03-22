@@ -17,10 +17,10 @@ package com.intellij.application.options;
 
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacroManager;
-import com.intellij.openapi.application.PathMacroFilter;
+import consulo.component.macro.PathMacroFilter;
 import consulo.application.PathMacros;
-import com.intellij.openapi.components.PathMacroMap;
-import consulo.application.options.PathMacrosService;
+import consulo.component.macro.PathMacroMap;
+import consulo.component.store.impl.internal.PathMacrosService;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

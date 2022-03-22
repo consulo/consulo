@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.util.gotoByName.ChooseByNamePanel;
 import com.intellij.ide.util.gotoByName.ChooseByNamePopupComponent;
 import com.intellij.ide.util.gotoByName.GotoClassModel2;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
@@ -163,7 +163,7 @@ public class DirectoryChooser extends DialogWrapper {
       public void elementChosen(Object element) {
         setSelection(element);
       }
-    }, ModalityState.stateForComponent(getRootPane()), false);
+    }, IdeaModalityState.stateForComponent(getRootPane()), false);
     myTabbedPaneWrapper.addTab("Choose By Neighbor Class", myChooseByNamePanel.getPanel());
 
     return myTabbedPaneWrapper.getComponent();

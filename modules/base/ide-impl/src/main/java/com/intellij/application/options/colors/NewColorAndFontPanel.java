@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;

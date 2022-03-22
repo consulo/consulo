@@ -5,14 +5,14 @@ import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import com.intellij.openapi.fileTypes.FileTypeEvent;
-import com.intellij.openapi.fileTypes.FileTypeListener;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
+import consulo.language.file.FileTypeManager;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -218,7 +218,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
           myContentManager.addContent(myChangeListTodosContent);
           myIsVisible = true;
         }
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
     }
   }
 
@@ -275,7 +275,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
           panel.rebuildCache(ObjectUtils.notNull(files.get(panel), new HashSet<>()));
           panel.updateTree();
         }
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
     });
   }
 

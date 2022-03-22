@@ -18,7 +18,7 @@ package com.intellij.openapi.ui;
 import consulo.application.CommonBundle;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
@@ -1430,7 +1430,7 @@ public class Messages {
           }
         }
       };
-      animator.addRequest(runnable, 10, ModalityState.stateForComponent(getRootPane()));
+      animator.addRequest(runnable, 10, IdeaModalityState.stateForComponent(getRootPane()));
     }
 
     protected JComponent doCreateCenterPanel() {

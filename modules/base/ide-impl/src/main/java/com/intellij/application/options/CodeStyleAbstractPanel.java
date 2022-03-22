@@ -21,7 +21,7 @@ import consulo.codeEditor.*;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.Language;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
 import consulo.language.codeStyle.*;
 import consulo.undoRedo.CommandProcessor;

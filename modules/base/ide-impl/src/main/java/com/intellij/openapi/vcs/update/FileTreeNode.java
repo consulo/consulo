@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.update;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;

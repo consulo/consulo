@@ -5,15 +5,15 @@ import com.intellij.ide.caches.FileContent;
 import consulo.application.Application;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ApplicationManagerEx;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.progress.util.ProgressWrapper;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.util.registry.Registry;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -112,7 +112,7 @@ public class CacheUpdateRunner {
     };
     final Application application = ApplicationManager.getApplication();
     Disposable listenerDisposable = Disposable.newDisposable();
-    application.invokeAndWait(() -> application.addApplicationListener(canceller, listenerDisposable), ModalityState.any());
+    application.invokeAndWait(() -> application.addApplicationListener(canceller, listenerDisposable), IdeaModalityState.any());
 
     final AtomicBoolean isFinished = new AtomicBoolean();
     try {

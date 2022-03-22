@@ -14,7 +14,7 @@ import consulo.application.ui.UISettings;
 import consulo.language.editor.inject.EditorWindow;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -54,7 +54,7 @@ class LookupUi {
   private final LookupImpl myLookup;
   private final Advertiser myAdvertiser;
   private final JBList myList;
-  private final ModalityState myModalityState;
+  private final IdeaModalityState myModalityState;
   private final Alarm myHintAlarm = new Alarm();
   private final JScrollPane myScrollPane;
   private final AsyncProcessIcon myProcessIcon = new AsyncProcessIcon("Completion progress");
@@ -110,7 +110,7 @@ class LookupUi {
 
     layeredPane.mainPanel.add(myScrollPane, BorderLayout.CENTER);
 
-    myModalityState = ModalityState.stateForComponent(lookup.getTopLevelEditor().getComponent());
+    myModalityState = IdeaModalityState.stateForComponent(lookup.getTopLevelEditor().getComponent());
 
     addListeners();
 

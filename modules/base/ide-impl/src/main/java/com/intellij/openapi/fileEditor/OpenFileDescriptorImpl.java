@@ -18,7 +18,7 @@ package com.intellij.openapi.fileEditor;
 import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInManager;
 import com.intellij.ide.SelectInTarget;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.codeEditor.*;
 import consulo.dataContext.DataContext;

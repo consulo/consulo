@@ -19,7 +19,7 @@ import com.intellij.application.options.ImportSchemeChooserDialog;
 import com.intellij.application.options.ImportSourceChooserDialog;
 import com.intellij.application.options.SaveSchemeDialog;
 import com.intellij.application.options.SchemesToImportPopup;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.FileChooserFactory;

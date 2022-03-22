@@ -17,7 +17,7 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import com.intellij.util.ui.GridBag;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.AllIcons;

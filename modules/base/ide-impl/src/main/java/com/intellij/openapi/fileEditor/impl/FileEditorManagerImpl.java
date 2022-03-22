@@ -18,14 +18,14 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.fileTypes.FileTypeEvent;
-import com.intellij.openapi.fileTypes.FileTypeListener;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NullUtils;
@@ -1711,7 +1711,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
             LOG.debug("updating file status in tab for " + file.getPath());
           }
           updateFileStatus(file);
-        }, ModalityState.NON_MODAL, myProject.getDisposed());
+        }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
       }
     }
 

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.stubs;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.project.NoAccessDuringPsiEvents;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.FileBasedIndexImpl;
@@ -232,7 +232,7 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
       // avoid deadlock by requesting reindex later.
       // processError may be invoked under stub index's read action and requestReindex in EDT starts dumb mode in writeAction (IDEA-197296)
       FileBasedIndex.getInstance().requestReindex(vFile);
-    }, ModalityState.NON_MODAL);
+    }, IdeaModalityState.NON_MODAL);
 
     return null;
   }

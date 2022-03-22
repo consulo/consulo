@@ -231,8 +231,8 @@
 
     <extensionPoint name="fileTypeDetector" interface="consulo.virtualFileSystem.fileType.FileTypeRegistry$FileTypeDetector"/>
 
-    <extensionPoint name="pathMacroFilter" interface="com.intellij.openapi.application.PathMacroFilter"/>
-    <extensionPoint name="pathMacroExpendableProtocol" beanClass="com.intellij.application.options.PathMacroExpendableProtocolBean"/>
+    <extensionPoint name="pathMacroFilter" interface="consulo.component.macro.PathMacroFilter"/>
+    <extensionPoint name="pathMacroExpendableProtocol" beanClass="consulo.component.macro.PathMacroExpendableProtocolBean"/>
 
     <extensionPoint name="httpRequestHandler" interface="consulo.builtInServer.http.HttpRequestHandler"/>
 
@@ -1238,7 +1238,7 @@
 
     <applicationService serviceImplementation="com.intellij.openapi.wm.impl.WindowDressing" lazy="false"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.vfs.tracker.VirtualFileTracker"
+    <applicationService serviceInterface="consulo.virtualFileSystem.internal.VirtualFileTracker"
                         serviceImplementation="com.intellij.openapi.vfs.tracker.VirtualFileTrackerImpl"/>
 
     <applicationService serviceInterface="consulo.application.progress.ProgressManager"
@@ -1277,7 +1277,7 @@
 
     <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
-    <applicationService serviceImplementation="consulo.components.impl.stores.ApplicationDefaultStoreCache"/>
+    <applicationService serviceImplementation="consulo.component.store.impl.internal.ApplicationDefaultStoreCache"/>
 
     <applicationService serviceInterface="com.intellij.ui.TreeUIHelper"
                         serviceImplementation="com.intellij.ui.TreeUIHelperImpl"/>
@@ -1289,7 +1289,7 @@
                         serviceImplementation="com.intellij.openapi.editor.highlighter.EditorHighlighterFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.ide.dnd.DnDManager"
                         serviceImplementation="com.intellij.ide.dnd.DnDManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.vfs.encoding.EncodingManager"
+    <applicationService serviceInterface="consulo.language.file.EncodingManager"
                         serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingManagerImpl"/>
     <applicationService serviceInterface="com.intellij.ide.plugins.PluginManagerUISettings"
                         serviceImplementation="com.intellij.ide.plugins.PluginManagerUISettings"/>
@@ -1344,7 +1344,7 @@
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.TextAttributeKeyDefaultsProviderImpl"/>
     <applicationService serviceInterface="consulo.colorScheme.EditorColorsManager"
                         serviceImplementation="com.intellij.openapi.editor.colors.impl.EditorColorsManagerImpl"/>
-    <applicationService serviceInterface="consulo.application.options.PathMacrosService"
+    <applicationService serviceInterface="consulo.component.store.impl.internal.PathMacrosService"
                         serviceImplementation="consulo.application.options.PathMacrosServiceImpl"/>
     <schemeOwner serviceInterface="consulo.colorScheme.EditorColorsManager"/>
 

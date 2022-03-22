@@ -18,7 +18,7 @@ package com.intellij.application.options.codeStyle.arrangement.action;
 import com.intellij.application.options.codeStyle.arrangement.group.ArrangementGroupingRulesControl;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.dumb.DumbAware;
 
 import javax.swing.table.DefaultTableModel;

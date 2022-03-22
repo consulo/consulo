@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes;
 
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Factory;

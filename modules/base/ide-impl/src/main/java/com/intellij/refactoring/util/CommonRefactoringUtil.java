@@ -18,7 +18,7 @@ package com.intellij.refactoring.util;
 import com.intellij.codeInsight.hint.HintManager;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;

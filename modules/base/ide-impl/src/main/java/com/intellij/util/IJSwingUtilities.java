@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
@@ -41,7 +41,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
     if (ApplicationManager.getApplication().isDispatchThread()) {
       runnable.run();
     } else {
-      ApplicationManager.getApplication().invokeLater(runnable, ModalityState.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.NON_MODAL);
     }
   }
 

@@ -15,7 +15,7 @@
  */
 package consulo.vfs.newvfs;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -32,12 +32,12 @@ import java.util.List;
 public class AsyncRefreshSessionImpl extends RefreshSession {
   private final boolean myAsync;
 
-  public AsyncRefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull ModalityState context) {
+  public AsyncRefreshSessionImpl(boolean async, boolean recursive, @Nullable Runnable finishRunnable, @Nonnull IdeaModalityState context) {
     myAsync = async;
   }
 
   public AsyncRefreshSessionImpl(@Nonnull List<? extends VFileEvent> events) {
-    this(false, false, null, ModalityState.defaultModalityState());
+    this(false, false, null, IdeaModalityState.defaultModalityState());
     //myEvents.addAll(events);
   }
 

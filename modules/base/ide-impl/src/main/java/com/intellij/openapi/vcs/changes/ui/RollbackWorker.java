@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.changes.ui;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
@@ -72,7 +72,7 @@ public class RollbackWorker {
               afterVcsRefreshInAwt.run();
             }
           }
-        }, updateMode, "Refresh changelists after update", ModalityState.current());
+        }, updateMode, "Refresh changelists after update", IdeaModalityState.current());
       }
     };
 

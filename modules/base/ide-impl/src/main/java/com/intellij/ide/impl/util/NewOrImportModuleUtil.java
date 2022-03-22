@@ -20,7 +20,7 @@ import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
+import consulo.project.internal.ProjectManagerEx;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.ModuleRootManager;

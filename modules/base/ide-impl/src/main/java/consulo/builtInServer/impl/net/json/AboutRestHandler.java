@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.json;
 
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.builtInServer.json.JsonGetRequestHandler;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;

@@ -16,7 +16,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.hints.InlayParameterHintsProvider;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import consulo.language.editor.DefaultLanguageHighlighterColors;
 import consulo.codeEditor.Editor;
@@ -111,7 +111,7 @@ public class ParameterHintsPresentationManager implements Disposable {
 
   private void scheduleAnimationStep(AnimationStep step) {
     myAlarm.cancelRequest(step);
-    myAlarm.addRequest(step, ANIMATION_STEP_MS, ModalityState.any());
+    myAlarm.addRequest(step, ANIMATION_STEP_MS, IdeaModalityState.any());
   }
 
   private static Font getFont(@Nonnull Editor editor) {

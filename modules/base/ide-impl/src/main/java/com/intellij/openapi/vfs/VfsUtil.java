@@ -19,7 +19,7 @@ import consulo.application.WriteAction;
 import consulo.util.lang.SystemProperties;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.SystemInfo;

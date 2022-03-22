@@ -10,16 +10,16 @@ import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.ide.todo.TodoConfiguration;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ModalityStateListener;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.ModalityStateListener;
+import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.command.undo.UndoManager;
 import com.intellij.openapi.editor.ex.EditorEventMulticasterEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
-import com.intellij.openapi.fileTypes.FileTypeEvent;
-import com.intellij.openapi.fileTypes.FileTypeListener;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;
@@ -159,7 +159,7 @@ public final class DaemonListeners implements Disposable {
               if ((editor.isShowing() || app.isHeadlessEnvironment()) && !myProject.isDisposed()) {
                 IntentionsUI.getInstance(myProject).invalidate();
               }
-            }, ModalityState.current());
+            }, IdeaModalityState.current());
           }
         }
       }

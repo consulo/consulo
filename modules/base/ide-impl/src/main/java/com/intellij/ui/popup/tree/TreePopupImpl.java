@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.util.treeView.AlphaComparator;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -345,7 +345,7 @@ public class TreePopupImpl extends WizardPopup implements TreePopup, NextStepHan
           if (insideOnChosen.get()) {
             LOG.error("Showing dialogs from popup onChosen can result in focus issues. Please put the handler into BaseStep.doFinalStep or PopupStep.getFinalRunnable.");
           }
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
 
         final PopupStep queriedStep;
         try {

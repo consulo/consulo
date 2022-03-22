@@ -14,7 +14,7 @@ import consulo.language.codeStyle.LanguageFormatting;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import com.intellij.openapi.editor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.document.internal.DocumentEx;

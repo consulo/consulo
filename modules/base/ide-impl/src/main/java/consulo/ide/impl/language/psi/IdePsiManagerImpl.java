@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.language.psi;
 
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
-import com.intellij.openapi.progress.util.ProgressWrapper;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.language.content.FileIndexFacade;

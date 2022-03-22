@@ -12,13 +12,13 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
 import consulo.application.ui.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.progress.util.ReadTask;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ReadTask;
 import com.intellij.openapi.project.DumbAwareToggleAction;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.Comparing;
@@ -379,7 +379,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
           }
         });
       }
-      ApplicationManager.getApplication().invokeLater(this::scheduleResultsUpdate, ModalityState.any());
+      ApplicationManager.getApplication().invokeLater(this::scheduleResultsUpdate, IdeaModalityState.any());
     }
   }
 
@@ -1022,7 +1022,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
   @Override
   public void addNotify() {
     super.addNotify();
-    ApplicationManager.getApplication().invokeLater(() -> ScrollingUtil.ensureSelectionExists(myResultsPreviewTable), ModalityState.any());
+    ApplicationManager.getApplication().invokeLater(() -> ScrollingUtil.ensureSelectionExists(myResultsPreviewTable), IdeaModalityState.any());
     myScopeSelectionToolbar.updateActionsImmediately();
   }
 
@@ -1142,7 +1142,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
     if (isShowing()) {
       ScrollingUtil.ensureSelectionExists(myResultsPreviewTable);
     }
-    final ModalityState state = ModalityState.current();
+    final IdeaModalityState state = IdeaModalityState.current();
     finishPreviousPreviewSearch();
     mySearchRescheduleOnCancellationsAlarm.cancelAllRequests();
     applyTo(myHelper.getModel());

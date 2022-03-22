@@ -15,7 +15,7 @@
  */
 package com.intellij.codeStyle;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import com.intellij.util.LineSeparator;
 
 /**

@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import consulo.module.content.ProjectTopics;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerListener;
@@ -25,9 +25,9 @@ import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.progress.util.ReadTask;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ReadTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
@@ -166,7 +166,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
               update.run();
             }
           }
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
       }
 
       @Override

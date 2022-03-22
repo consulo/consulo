@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.readOnlyHandler;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.EditFileProvider;
@@ -88,7 +88,7 @@ public class VcsHandleType extends HandleType {
             myChangeListManager.moveChangesTo(list, changes.toArray(new Change[changes.size()]));
           }
         }
-      }, InvokeAfterUpdateMode.SILENT, "", ModalityState.NON_MODAL);
+      }, InvokeAfterUpdateMode.SILENT, "", IdeaModalityState.NON_MODAL);
     }
   }
 

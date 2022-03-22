@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.localize.LocalizeValue;
@@ -120,8 +120,8 @@ public class DelegatingProgressIndicator implements WrappedProgressIndicator, St
 
   @Override
   @Nonnull
-  public ModalityState getModalityState() {
-    return (ModalityState)myIndicator.getModalityState();
+  public IdeaModalityState getModalityState() {
+    return (IdeaModalityState)myIndicator.getModalityState();
   }
 
   @Override

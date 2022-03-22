@@ -17,9 +17,10 @@ package consulo.desktop.awt.container.impl;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.idea.ApplicationStarter;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.impl.internal.start.StartupAbortedException;
 import consulo.desktop.startup.DesktopImportantFolderLocker;
-import com.intellij.idea.StartupUtil;
+import consulo.application.impl.internal.start.StartupUtil;
 import consulo.desktop.awt.startup.DesktopApplicationStarter;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
@@ -81,7 +82,7 @@ public class DesktopContainerStartup implements ContainerStartup {
         start(stat, appInitializeMark, args);
       }
       catch (Throwable t) {
-        throw new PluginManager.StartupAbortedException(t);
+        throw new StartupAbortedException(t);
       }
     };
 

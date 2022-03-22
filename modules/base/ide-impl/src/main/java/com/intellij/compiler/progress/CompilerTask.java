@@ -31,7 +31,7 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import com.intellij.openapi.progress.util.AbstractProgressIndicatorExBase;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;

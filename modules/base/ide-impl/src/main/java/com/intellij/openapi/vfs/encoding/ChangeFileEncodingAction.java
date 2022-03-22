@@ -18,7 +18,8 @@ package com.intellij.openapi.vfs.encoding;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.language.file.EncodingManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.GlobalUndoableAction;
@@ -175,14 +176,14 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
       public void undo() {
         // invoke later because changing document inside undo/redo is not allowed
         Application application = ApplicationManager.getApplication();
-        application.invokeLater(undo, ModalityState.NON_MODAL, (project == null ? application : project).getDisposed());
+        application.invokeLater(undo, IdeaModalityState.NON_MODAL, (project == null ? application : project).getDisposed());
       }
 
       @Override
       public void redo() {
         // invoke later because changing document inside undo/redo is not allowed
         Application application = ApplicationManager.getApplication();
-        application.invokeLater(redo, ModalityState.NON_MODAL, (project == null ? application : project).getDisposed());
+        application.invokeLater(redo, IdeaModalityState.NON_MODAL, (project == null ? application : project).getDisposed());
       }
     };
 

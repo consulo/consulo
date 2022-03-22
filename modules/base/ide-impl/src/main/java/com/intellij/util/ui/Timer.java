@@ -16,7 +16,7 @@
 
 package com.intellij.util.ui;
 
-import com.intellij.concurrency.JobScheduler;
+import consulo.application.impl.internal.JobScheduler;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;
 

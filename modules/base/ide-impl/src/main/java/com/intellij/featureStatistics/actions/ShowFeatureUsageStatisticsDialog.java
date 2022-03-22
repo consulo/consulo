@@ -20,7 +20,7 @@ import com.intellij.featureStatistics.*;
 import com.intellij.ide.util.TipUIUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.logging.Logger;
 import consulo.application.ui.HelpManager;
 import consulo.project.Project;

@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.stub.FileBasedIndex;
 
@@ -23,7 +23,7 @@ public final class StubProcessingHelper extends StubProcessingHelperBase {
     set.add(file);
     // requestReindex() may want to acquire write lock (for indices not requiring content loading)
     // thus, because here we are under read lock, need to use invoke later
-    ApplicationManager.getApplication().invokeLater(() -> FileBasedIndex.getInstance().requestReindex(file), ModalityState.NON_MODAL);
+    ApplicationManager.getApplication().invokeLater(() -> FileBasedIndex.getInstance().requestReindex(file), IdeaModalityState.NON_MODAL);
   }
 
   @Nullable

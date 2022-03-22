@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import consulo.component.extension.ExtensionPointId;
-import consulo.components.impl.PlatformComponentManagerImpl;
+import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginListenerDescriptor;

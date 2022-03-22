@@ -10,7 +10,7 @@ import com.intellij.ide.impl.ContentManagerWatcher;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.lang.LangBundle;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
@@ -106,7 +106,7 @@ public final class BuildContentManagerImpl implements BuildContentManager {
       return;
     }
     StartupManagerEx.getInstanceEx(myProject).runAfterOpened(() -> {
-      GuiUtils.invokeLaterIfNeeded(runnable, ModalityState.defaultModalityState(), myProject.getDisposed());
+      GuiUtils.invokeLaterIfNeeded(runnable, IdeaModalityState.defaultModalityState(), myProject.getDisposed());
     });
   }
 

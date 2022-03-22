@@ -20,7 +20,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.event.AnActionListener;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.actionSystem.impl.Utils;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesListView;

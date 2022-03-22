@@ -13,7 +13,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;
 import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
@@ -102,7 +102,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
     Keymap activeKeymap = km != null ? km.getActiveKeymap() : null;
     ChooseByNamePopup popup = new ChooseByNamePopup(project, model, new GotoActionItemProvider(model), oldPopup, initialText, false, initialIndex) {
       @Override
-      protected void initUI(Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
+      protected void initUI(Callback callback, IdeaModalityState modalityState, boolean allowMultipleSelection) {
         super.initUI(callback, modalityState, allowMultipleSelection);
         myList.addListSelectionListener(new ListSelectionListener() {
           @Override

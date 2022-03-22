@@ -15,7 +15,7 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.Application;
 import consulo.application.internal.concurrency.Job;
 import consulo.application.internal.concurrency.JobLauncher;

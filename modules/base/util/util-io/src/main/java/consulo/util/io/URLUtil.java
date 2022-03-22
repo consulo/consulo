@@ -26,6 +26,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -161,5 +164,52 @@ public class URLUtil {
       }
       throw ex;
     }
+  }
+
+  @Nonnull
+  public static String unescapePercentSequences(@Nonnull String s) {
+    if (s.indexOf('%') == -1) {
+      return s;
+    }
+
+    StringBuilder decoded = new StringBuilder();
+    final int len = s.length();
+    int i = 0;
+    while (i < len) {
+      char c = s.charAt(i);
+      if (c == '%') {
+        List<Byte> bytes = new ArrayList<>();
+        while (i + 2 < len && s.charAt(i) == '%') {
+          final int d1 = decode(s.charAt(i + 1));
+          final int d2 = decode(s.charAt(i + 2));
+          if (d1 != -1 && d2 != -1) {
+            bytes.add((byte)((d1 & 0xf) << 4 | d2 & 0xf));
+            i += 3;
+          }
+          else {
+            break;
+          }
+        }
+        if (!bytes.isEmpty()) {
+          final byte[] bytesArray = new byte[bytes.size()];
+          for (int j = 0; j < bytes.size(); j++) {
+            bytesArray[j] = bytes.get(j);
+          }
+          decoded.append(new String(bytesArray, StandardCharsets.UTF_8));
+          continue;
+        }
+      }
+
+      decoded.append(c);
+      i++;
+    }
+    return decoded.toString();
+  }
+
+  private static int decode(char c) {
+    if ((c >= '0') && (c <= '9')) return c - '0';
+    if ((c >= 'a') && (c <= 'f')) return c - 'a' + 10;
+    if ((c >= 'A') && (c <= 'F')) return c - 'A' + 10;
+    return -1;
   }
 }

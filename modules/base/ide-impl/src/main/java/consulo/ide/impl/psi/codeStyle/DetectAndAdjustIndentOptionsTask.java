@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.codeStyle;
 
 import consulo.language.codeStyle.CodeStyle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.language.codeStyle.CodeStyleSettings;
@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.progress.DumbProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
 import consulo.language.psi.PsiDocumentManager;
@@ -107,7 +107,7 @@ class DetectAndAdjustIndentOptionsTask {
           return EmptyRunnable.INSTANCE;
         }
         return indentAdjuster;
-      }).finishOnUiThread(ModalityState.defaultModalityState(), Runnable::run).withDocumentsCommitted(myProject).submit(BOUNDED_EXECUTOR);
+      }).finishOnUiThread(IdeaModalityState.defaultModalityState(), Runnable::run).withDocumentsCommitted(myProject).submit(BOUNDED_EXECUTOR);
     }
   }
 

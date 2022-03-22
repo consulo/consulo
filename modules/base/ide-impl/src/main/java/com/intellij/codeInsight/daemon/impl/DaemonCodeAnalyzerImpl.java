@@ -13,7 +13,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.impl.FileLevelIntentionComponent;
 import com.intellij.codeInsight.intention.impl.IntentionHintComponent;
 import consulo.application.PowerSaveMode;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.application.impl.NonBlockingReadActionImpl;
 import consulo.codeEditor.markup.RangeHighlighterEx;
@@ -22,12 +22,12 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.psi.RefResolveService;
-import com.intellij.util.io.storage.HeavyProcessLatch;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
@@ -873,7 +873,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
       }
     }
 
-    if (app.getCurrentModalityState() != ModalityState.NON_MODAL) {
+    if (app.getCurrentModalityState() != IdeaModalityState.NON_MODAL) {
       return activeTextEditors;
     }
 

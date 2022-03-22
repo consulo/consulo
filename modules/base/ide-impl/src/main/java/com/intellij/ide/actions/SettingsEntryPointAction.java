@@ -8,7 +8,7 @@ import consulo.application.ui.event.UISettingsListener;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.TooltipDescriptionProvider;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
@@ -129,7 +129,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
     }
 
     return JBPopupFactory.getInstance().createActionGroupPopup(null, group.build(), context, JBPopupFactory.ActionSelectionAid.MNEMONICS, true, () -> {
-      AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> ApplicationManager.getApplication().invokeLater(disposeCallback, ModalityState.any()), 250, TimeUnit.MILLISECONDS);
+      AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> ApplicationManager.getApplication().invokeLater(disposeCallback, IdeaModalityState.any()), 250, TimeUnit.MILLISECONDS);
     }, -1);
   }
 

@@ -28,7 +28,7 @@ import consulo.ui.ex.action.UpdateInBackground;
 import consulo.application.ApplicationManager;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
+import consulo.project.internal.ProjectManagerEx;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.actions.AbstractVcsAction;

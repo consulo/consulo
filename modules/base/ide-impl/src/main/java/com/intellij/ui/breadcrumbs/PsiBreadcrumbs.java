@@ -16,7 +16,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
@@ -103,7 +103,7 @@ final class PsiBreadcrumbs extends Breadcrumbs {
         final IdeTooltipManager tooltipManager = IdeTooltipManager.getInstance();
         final Component component = event == null ? null : event.getComponent();
         tooltipLazy = ReadAction.nonBlocking(() -> crumb.getTooltip()).expireWhen(() -> !tooltipManager.isProcessing(component))
-                .finishOnUiThread(ModalityState.any(), toolTipText -> tooltipManager.updateShownTooltip(component)).submit(AppExecutorUtil.getAppExecutorService()).onError(throwable -> {
+                .finishOnUiThread(IdeaModalityState.any(), toolTipText -> tooltipManager.updateShownTooltip(component)).submit(AppExecutorUtil.getAppExecutorService()).onError(throwable -> {
                   if (!(throwable instanceof CancellationException)) {
                     LOG.error("Exception in LazyTooltipCrumb", throwable);
                   }

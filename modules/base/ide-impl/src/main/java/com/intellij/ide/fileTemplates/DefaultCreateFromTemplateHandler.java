@@ -18,7 +18,7 @@ package com.intellij.ide.fileTemplates;
 
 import com.intellij.ide.IdeBundle;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;

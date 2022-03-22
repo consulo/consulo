@@ -3,10 +3,10 @@ package com.intellij.openapi.vfs.newvfs.persistent;
 
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
+import consulo.project.internal.ProjectManagerEx;
 import consulo.module.content.ProjectFileIndex;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.io.FileAttributes;

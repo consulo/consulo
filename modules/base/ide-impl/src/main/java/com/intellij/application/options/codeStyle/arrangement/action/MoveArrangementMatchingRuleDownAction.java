@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle.arrangement.action;
 
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.util.collection.primitive.ints.IntList;
 
 import javax.annotation.Nonnull;

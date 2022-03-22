@@ -17,7 +17,7 @@ package com.intellij.webcore.packaging;
 
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -54,7 +54,7 @@ public class ManageRepoDialog extends DialogWrapper {
           for (String repoUrl : repoUrls) {
             repoModel.addElement(repoUrl);
           }
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
       }
 
       @Override

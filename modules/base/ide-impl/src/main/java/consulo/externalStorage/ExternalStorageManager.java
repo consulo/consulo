@@ -22,8 +22,8 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.application.AccessToken;
 import consulo.application.AppUIExecutor;
 import consulo.application.Application;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
@@ -36,8 +36,8 @@ import consulo.project.ui.wm.WindowManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.application.ApplicationProperties;
-import consulo.components.impl.stores.IApplicationStore;
-import consulo.components.impl.stores.StoreUtil;
+import consulo.application.impl.internal.store.IApplicationStore;
+import consulo.component.store.impl.internal.StoreUtil;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.ExternalServiceConfigurationListener;
@@ -172,7 +172,7 @@ public class ExternalStorageManager {
           if (PluginInstallUtil.showRestartIDEADialog() == Messages.YES) {
             Application.get().restart(true);
           }
-        }, ModalityState.NON_MODAL);
+        }, IdeaModalityState.NON_MODAL);
       }
     }
     catch (Exception e) {
@@ -209,7 +209,7 @@ public class ExternalStorageManager {
 
       LOG.info("Reloading components: " + reloadComponentNames);
 
-      AppUIExecutor.onWriteThread(ModalityState.NON_MODAL).later().execute(() -> {
+      AppUIExecutor.onWriteThread(IdeaModalityState.NON_MODAL).later().execute(() -> {
         myApplicationStore.reinitComponents(reloadComponentNames, true);
 
         myApplication.invokeLater(() -> {
@@ -272,7 +272,7 @@ public class ExternalStorageManager {
       // add action for restart
       StartupActionScriptManager.addActionCommand(new StartupActionScriptManager.CreateFileCommand(myStorage.getInitializedFile()));
 
-      myApplication.invokeLater(this::showRestartDialog, ModalityState.NON_MODAL);
+      myApplication.invokeLater(this::showRestartDialog, IdeaModalityState.NON_MODAL);
     }
     catch (NoContentException ignored) {
       // there no content on server. it will throw at doGetBytes. In this case we need initialize all data
@@ -289,7 +289,7 @@ public class ExternalStorageManager {
 
       // if there plugins change - require restart
       if(myPluginManager.updatePlugins(indicator)) {
-        myApplication.invokeLater(this::showRestartDialog, ModalityState.NON_MODAL);
+        myApplication.invokeLater(this::showRestartDialog, IdeaModalityState.NON_MODAL);
       }
     }
     catch (IOException e) {

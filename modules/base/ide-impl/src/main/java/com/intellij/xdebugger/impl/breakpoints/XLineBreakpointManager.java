@@ -20,7 +20,7 @@ import com.intellij.ide.startup.StartupManagerEx;
 import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.codeEditor.Editor;
@@ -129,7 +129,7 @@ public class XLineBreakpointManager {
 
     myStartupManager.runAfterOpened((project, uiAccess) -> {
       for (XLineBreakpointImpl<?> breakpoint : myBreakpoints.keySet()) {
-        project.getApplication().invokeLater(breakpoint::updateUI, ModalityState.NON_MODAL, project.getDisposed());
+        project.getApplication().invokeLater(breakpoint::updateUI, IdeaModalityState.NON_MODAL, project.getDisposed());
       }
     });
   }

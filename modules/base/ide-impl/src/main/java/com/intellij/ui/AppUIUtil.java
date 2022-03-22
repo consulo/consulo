@@ -16,9 +16,9 @@
 package com.intellij.ui;
 
 import consulo.application.Application;
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;

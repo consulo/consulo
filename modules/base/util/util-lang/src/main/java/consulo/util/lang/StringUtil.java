@@ -100,10 +100,51 @@ public class StringUtil {
   private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
   private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
 
+  /**
+   * Given a fqName returns the package name for the type or the containing type.
+   * <p/>
+   * <ul>
+   * <li><code>java.lang.String</code> -> <code>java.lang</code></li>
+   * <li><code>java.util.Map.Entry</code> -> <code>java.util.Map</code></li>
+   * </ul>
+   *
+   * @param fqName    a fully qualified type name. Not supposed to contain any type arguments
+   * @param separator the separator to use. Typically '.'
+   * @return the package name of the type or the declarator of the type. The empty string if the given fqName is unqualified
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String getPackageName(@Nonnull String fqName, char separator) {
+    int lastPointIdx = fqName.lastIndexOf(separator);
+    if (lastPointIdx >= 0) {
+      return fqName.substring(0, lastPointIdx);
+    }
+    return "";
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String replaceSubstring(@Nonnull String original, int startOffset, int endOffset, @Nonnull String replacement) {
+    try {
+      String beginning = original.substring(0, startOffset);
+      String ending = original.substring(endOffset, original.length());
+      return beginning + replacement + ending;
+    }
+    catch (StringIndexOutOfBoundsException e) {
+      throw new StringIndexOutOfBoundsException("Can't replace " + startOffset + ":" + endOffset + " range from '" + original + "' with '" + replacement + "'");
+    }
+  }
+
+  @Contract(pure = true)
+  public static boolean isChar(CharSequence seq, int index, char c) {
+    return index >= 0 && index < seq.length() && seq.charAt(index) == c;
+  }
+
   @Contract(pure = true)
   public static int hashCode(@Nonnull CharSequence s) {
     return stringHashCode(s);
   }
+
   /**
    * Allows to answer if target symbol is contained at given char sequence at <code>[start; end)</code> interval.
    *

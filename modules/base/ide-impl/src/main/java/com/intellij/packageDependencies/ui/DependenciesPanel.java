@@ -31,7 +31,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.components.PathMacroManager;
+import consulo.component.macro.PathMacroManager;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.component.extension.Extensions;

@@ -17,9 +17,9 @@ package com.intellij.ui.mac;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.BuildNumber;
+import consulo.component.util.BuildNumber;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeFrameDecorator;

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorKey;
@@ -176,7 +176,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
         public void run() {
           fileStatusesChanged();
         }
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
       return;
     }
 

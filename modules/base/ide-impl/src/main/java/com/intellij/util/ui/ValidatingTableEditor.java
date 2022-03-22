@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.awt.StatusText;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import com.intellij.openapi.util.NullableComputable;
 import com.intellij.openapi.util.Pair;
 import consulo.application.ui.wm.IdeFocusManager;

@@ -25,7 +25,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressWrapper;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.project.DumbServiceImpl;
 import consulo.application.dumb.IndexNotReadyException;

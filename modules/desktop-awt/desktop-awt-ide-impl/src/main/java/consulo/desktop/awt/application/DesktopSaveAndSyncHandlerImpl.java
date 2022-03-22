@@ -18,9 +18,9 @@ package consulo.desktop.awt.application;
 import com.intellij.ide.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
@@ -141,10 +141,10 @@ public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements
     if (canSyncOrSave()) {
       refreshOpenFiles();
     }
-    maybeRefresh(ModalityState.NON_MODAL);
+    maybeRefresh(IdeaModalityState.NON_MODAL);
   }
 
-  public void maybeRefresh(@Nonnull ModalityState modalityState) {
+  public void maybeRefresh(@Nonnull IdeaModalityState modalityState) {
     if (myBlockSyncOnFrameActivationCount.get() == 0 && mySettings.isSyncOnFrameActivation()) {
       RefreshQueue queue = RefreshQueue.getInstance();
       queue.cancelSession(myRefreshSessionId);

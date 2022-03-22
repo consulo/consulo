@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -63,7 +63,7 @@ public class HighlightingSessionImpl implements HighlightingSession {
     }, () -> myProject.isDisposed() || getProgressIndicator().isCanceled()) {
       @Override
       protected void schedule(@Nonnull Runnable updateRunnable) {
-        ApplicationManager.getApplication().invokeLater(updateRunnable, ModalityState.any());
+        ApplicationManager.getApplication().invokeLater(updateRunnable, IdeaModalityState.any());
       }
     };
   }

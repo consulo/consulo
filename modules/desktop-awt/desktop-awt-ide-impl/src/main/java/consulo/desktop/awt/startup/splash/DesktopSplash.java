@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.startup.splash;
 
-import com.intellij.ide.StartupProgress;
+import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.JBUI;

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.disposer.Disposable;
@@ -34,7 +34,7 @@ public class ChooseByNamePanel extends ChooseByNameBase implements Disposable {
   }
 
   @Override
-  protected void initUI(ChooseByNamePopupComponent.Callback callback, ModalityState modalityState, boolean allowMultipleSelection) {
+  protected void initUI(ChooseByNamePopupComponent.Callback callback, IdeaModalityState modalityState, boolean allowMultipleSelection) {
     super.initUI(callback, modalityState, allowMultipleSelection);
 
     //myTextFieldPanel.setBorder(new EmptyBorder(0,0,0,0));

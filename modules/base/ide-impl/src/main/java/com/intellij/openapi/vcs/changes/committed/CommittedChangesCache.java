@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.concurrency.JobScheduler;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.JobScheduler;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.StoragePathMacros;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
@@ -309,7 +309,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
             myConsumer.consume(new ArrayList<CommittedChangeList>(myResult));
           }
         }
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
     }
   }
 
@@ -951,7 +951,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
         debug("Incoming changes refresh complete, clearing cached incoming changes");
         notifyReloadIncomingChanges();
       }
-    }, ModalityState.NON_MODAL, myProject.getDisposed());
+    }, IdeaModalityState.NON_MODAL, myProject.getDisposed());
   }
 
   public void refreshAllCachesAsync(final boolean initIfEmpty, final boolean inBackground) {

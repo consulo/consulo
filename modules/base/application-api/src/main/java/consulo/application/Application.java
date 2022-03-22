@@ -112,6 +112,13 @@ public interface Application extends ComponentManager {
   <T> T runReadAction(@Nonnull Computable<T> computation);
 
   /**
+   * Grab the lock and run the action, in a non-blocking fashion
+   *
+   * @return true if action was run while holding the lock, false if was unable to get the lock and action was not run
+   */
+  boolean tryRunReadAction(@Nonnull Runnable action);
+
+  /**
    * Runs the specified computation in a read action. Can be called from any thread. The action is executed
    * immediately if no write action is currently running, or blocked until the currently running write action
    * completes.

@@ -35,7 +35,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
-import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.project.internal.ProjectEx;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.EmptyRunnable;
 import com.intellij.openapi.util.Pair;

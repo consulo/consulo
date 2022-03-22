@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.navigation;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
@@ -81,7 +81,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     if (myCanceled) return false;
 
     if (myPopup.isDisposed()) return false;
-    ModalityState modalityState = ModalityState.stateForComponent(myPopup.getContent());
+    IdeaModalityState modalityState = IdeaModalityState.stateForComponent(myPopup.getContent());
 
     synchronized (lock) {
       if (myData.contains(element)) return true;
@@ -122,7 +122,7 @@ public abstract class BackgroundUpdaterTaskBase<T> extends Task.Backgroundable {
     myAlarm.addRequest(() -> {
       myAlarm.cancelAllRequests();
       refreshModelImmediately();
-    }, 200, ModalityState.stateForComponent(myPopup.getContent()));
+    }, 200, IdeaModalityState.stateForComponent(myPopup.getContent()));
     return true;
   }
 

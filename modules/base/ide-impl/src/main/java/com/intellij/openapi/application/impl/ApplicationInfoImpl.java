@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.annotation.DeprecationInfo;
 
 @Deprecated

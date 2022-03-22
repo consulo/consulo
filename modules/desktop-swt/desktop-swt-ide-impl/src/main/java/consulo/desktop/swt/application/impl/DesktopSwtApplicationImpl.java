@@ -15,14 +15,14 @@
  */
 package consulo.desktop.swt.application.impl;
 
-import com.intellij.ide.StartupProgress;
+import consulo.application.impl.internal.start.StartupProgress;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.TransactionGuard;
-import com.intellij.openapi.application.impl.ReadMostlyRWLock;
+import consulo.application.impl.internal.ReadMostlyRWLock;
 import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.impl.BaseApplication;
+import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.UnifiedTransactionGuardImpl;
 import consulo.desktop.swt.ui.impl.DesktopSwtUIAccess;
 import consulo.injecting.InjectingContainerBuilder;
@@ -120,32 +120,32 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
 
   @Nonnull
   @Override
-  public ModalityState getCurrentModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getCurrentModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
   @Override
-  public ModalityState getModalityStateForComponent(@Nonnull Component c) {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getModalityStateForComponent(@Nonnull Component c) {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
   @Override
-  public ModalityState getDefaultModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getDefaultModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
   @Override
-  public ModalityState getNoneModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getNoneModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @Nonnull
   @Override
-  public ModalityState getAnyModalityState() {
-    return ModalityState.NON_MODAL;
+  public IdeaModalityState getAnyModalityState() {
+    return IdeaModalityState.NON_MODAL;
   }
 
   @RequiredUIAccess

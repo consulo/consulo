@@ -21,32 +21,32 @@ import com.intellij.ide.fileTemplates.FileTemplate;
 import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplatesScheme;
 import com.intellij.ide.fileTemplates.InternalTemplateBean;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.language.file.FileTypeManager;
+import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.text.DateFormatUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.component.extension.Extensions;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.components.impl.stores.StorageUtil;
+import consulo.components.impl.stores.ProjectStorageUtil;
 import consulo.logging.Logger;
-import consulo.component.extension.Extensions;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtil;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.SystemProperties;
-import com.intellij.util.text.DateFormatUtil;
 import consulo.util.xml.serializer.XmlSerializerUtil;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -85,7 +85,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
       @Nonnull
       @Override
       public String getTemplatesDir() {
-        return FileUtilRt.toSystemDependentName(StorageUtil.getStoreDir(project) + "/" + TEMPLATES_DIR);
+        return FileUtil.toSystemDependentName(ProjectStorageUtil.getStoreDir(project) + "/" + TEMPLATES_DIR);
       }
 
       @Nonnull

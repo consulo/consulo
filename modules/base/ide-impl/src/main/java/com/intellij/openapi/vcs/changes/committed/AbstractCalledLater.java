@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import com.intellij.util.WaitForProgressToShow;
 
@@ -32,7 +32,7 @@ public abstract class AbstractCalledLater implements Runnable {
 
   protected AbstractCalledLater(Project project, Component component) {
     myProject = project;
-    myState = ModalityState.stateForComponent(component);
+    myState = IdeaModalityState.stateForComponent(component);
   }
 
   public void callMe() {

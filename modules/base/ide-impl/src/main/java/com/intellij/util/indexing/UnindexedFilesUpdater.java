@@ -3,7 +3,7 @@ package com.intellij.util.indexing;
 
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.module.content.ProjectTopics;
-import com.intellij.diagnostic.PerformanceWatcher;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
 import com.intellij.ide.IdeBundle;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

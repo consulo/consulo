@@ -20,7 +20,7 @@ import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementEdit
 import com.intellij.application.options.codeStyle.arrangement.ui.ArrangementRepresentationAware;
 import com.intellij.application.options.codeStyle.arrangement.util.ArrangementListRowDecorator;
 import com.intellij.application.options.codeStyle.arrangement.util.IntObjectMap;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.arrangement.match.StdArrangementEntryMatcher;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;

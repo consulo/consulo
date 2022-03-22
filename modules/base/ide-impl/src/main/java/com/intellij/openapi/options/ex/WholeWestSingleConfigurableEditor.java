@@ -17,7 +17,7 @@ package com.intellij.openapi.options.ex;
 
 import consulo.application.CommonBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.HelpManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -233,7 +233,7 @@ public abstract class WholeWestSingleConfigurableEditor extends WholeWestDialogW
     }
 
     private void addUpdateRequest(final Runnable updateRequest) {
-      myUpdateAlarm.addRequest(updateRequest, 500, ModalityState.stateForComponent(getWindow()));
+      myUpdateAlarm.addRequest(updateRequest, 500, IdeaModalityState.stateForComponent(getWindow()));
     }
 
     @Override

@@ -20,7 +20,7 @@ import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.ScopeToolState;
 import com.intellij.codeInspection.ex.ToolsImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
@@ -310,7 +310,7 @@ public class InspectionsConfigTreeTable extends TreeTable {
       if (myTreeTable != null) {
         if (!myUpdateAlarm.isDisposed()) {
           myUpdateAlarm.cancelAllRequests();
-          myUpdateAlarm.addRequest(myUpdateRunnable, 10, ModalityState.stateForComponent(myTreeTable));
+          myUpdateAlarm.addRequest(myUpdateRunnable, 10, IdeaModalityState.stateForComponent(myTreeTable));
         }
       }
     }

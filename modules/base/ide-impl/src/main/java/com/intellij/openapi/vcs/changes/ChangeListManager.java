@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
@@ -45,13 +45,13 @@ public abstract class ChangeListManager implements ChangeListModification {
 
   public abstract void scheduleUpdate(boolean updateUnversionedFiles);
 
-  public abstract void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, final String title, final ModalityState state);
+  public abstract void invokeAfterUpdate(final Runnable afterUpdate, final InvokeAfterUpdateMode mode, final String title, final IdeaModalityState state);
 
   public abstract void invokeAfterUpdate(final Runnable afterUpdate,
                                          final InvokeAfterUpdateMode mode,
                                          final String title,
                                          final Consumer<VcsDirtyScopeManager> dirtyScopeManager,
-                                         final ModalityState state);
+                                         final IdeaModalityState state);
 
   @TestOnly
   public abstract boolean ensureUpToDate(boolean canBeCanceled);

@@ -15,8 +15,8 @@
  */
 package consulo.ui.ex.impl;
 
-import consulo.ide.eap.EarlyAccessProgramDescriptor;
-import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.application.eap.EarlyAccessProgramDescriptor;
+import consulo.application.eap.EarlyAccessProgramManager;
 import javax.annotation.Nonnull;
 
 /**

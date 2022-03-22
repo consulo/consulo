@@ -20,7 +20,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.ide.impl.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.containers.FactoryMap;
+import consulo.util.collection.FactoryMap;
 
 import java.text.MessageFormat;
 import java.util.HashMap;

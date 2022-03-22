@@ -23,7 +23,7 @@ import com.intellij.ide.actions.PreviousOccurenceToolbarAction;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.ide.errorTreeView.impl.ErrorViewTextExporter;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
@@ -463,7 +463,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
           myProgressLabel.setText(text);
         }
       }
-    }, 50, ModalityState.NON_MODAL);
+    }, 50, IdeaModalityState.NON_MODAL);
 
   }
 

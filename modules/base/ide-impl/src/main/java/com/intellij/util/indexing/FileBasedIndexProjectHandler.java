@@ -19,7 +19,7 @@
  */
 package com.intellij.util.indexing;
 
-import com.intellij.diagnostic.PerformanceWatcher;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;

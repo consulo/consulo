@@ -20,7 +20,7 @@ import com.intellij.application.options.codeStyle.CodeStyleSchemesModel;
 import com.intellij.application.options.codeStyle.CodeStyleSpacesPanel;
 import com.intellij.application.options.codeStyle.WrappingAndBracesPanel;
 import consulo.language.Language;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CodeStyleSettings;

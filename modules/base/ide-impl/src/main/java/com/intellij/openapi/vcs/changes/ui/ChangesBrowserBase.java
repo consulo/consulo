@@ -22,7 +22,7 @@ import consulo.disposer.Disposable;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CheckboxAction;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -335,7 +335,7 @@ public abstract class ChangesBrowserBase<T> extends JPanel implements TypeSafeDa
   }
 
   private static boolean isInFrame() {
-    return ModalityState.current().equals(ModalityState.NON_MODAL);
+    return IdeaModalityState.current().equals(IdeaModalityState.NON_MODAL);
   }
 
   protected List<AnAction> createDiffActions() {

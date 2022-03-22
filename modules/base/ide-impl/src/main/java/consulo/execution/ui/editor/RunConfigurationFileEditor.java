@@ -16,13 +16,13 @@
 package consulo.execution.ui.editor;
 
 import com.intellij.execution.impl.RunConfigurable;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.project.internal.ProjectEx;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.Splitter;
@@ -119,7 +119,7 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
   }
 
   private void addUpdateRequest(final Runnable updateRequest) {
-    myUpdateAlarm.addRequest(updateRequest, 500, ModalityState.any());
+    myUpdateAlarm.addRequest(updateRequest, 500, IdeaModalityState.any());
   }
 
   @Nullable

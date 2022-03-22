@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.plaf;
 
 import consulo.application.util.SystemInfo;
-import consulo.ide.eap.EarlyAccessProgramDescriptor;
+import consulo.application.eap.EarlyAccessProgramDescriptor;
 import javax.annotation.Nonnull;
 
 /**

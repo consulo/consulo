@@ -22,7 +22,7 @@ import com.intellij.ide.passwordSafe.impl.providers.ByteArrayWrapper;
 import com.intellij.ide.passwordSafe.impl.providers.EncryptionUtil;
 import com.intellij.ide.passwordSafe.impl.providers.masterKey.windows.WindowsCryptUtils;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.SystemInfo;
@@ -208,7 +208,7 @@ public class MasterKeyPasswordSafe extends BasePasswordSafeProvider {
               }
             }
           }
-        }, ModalityState.defaultModalityState());
+        }, IdeaModalityState.defaultModalityState());
         //noinspection ThrowableResultOfMethodCallIgnored
         if (ex.get() != null) {
           throw ex.get();

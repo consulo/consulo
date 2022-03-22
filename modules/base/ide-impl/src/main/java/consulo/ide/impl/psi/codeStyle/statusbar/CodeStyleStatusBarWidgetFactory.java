@@ -5,7 +5,7 @@ import com.intellij.application.options.CodeStyleSchemesConfigurable;
 import com.intellij.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.language.Language;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;

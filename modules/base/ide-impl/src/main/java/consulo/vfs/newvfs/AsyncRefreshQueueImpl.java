@@ -16,7 +16,7 @@
 package consulo.vfs.newvfs;
 
 import consulo.application.Application;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
 import com.intellij.openapi.vfs.newvfs.RefreshSession;
@@ -47,7 +47,7 @@ public class AsyncRefreshQueueImpl extends RefreshQueue implements Disposable {
 
   @Nonnull
   @Override
-  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull ModalityState state) {
+  public RefreshSession createSession(boolean async, boolean recursively, @Nullable Runnable finishRunnable, @Nonnull IdeaModalityState state) {
     return new AsyncRefreshSessionImpl(async, recursively, finishRunnable, state);
   }
 

@@ -17,8 +17,8 @@ package com.intellij.ui;
 
 import consulo.disposer.Disposable;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ApplicationManagerEx;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.application.ui.wm.IdeFocusManager;

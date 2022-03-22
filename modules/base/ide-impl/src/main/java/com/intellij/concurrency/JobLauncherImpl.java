@@ -1,11 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.concurrency;
 
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationUtil;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.util.ApplicationUtil;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.impl.CoreProgressManager;
-import com.intellij.openapi.progress.util.StandardProgressIndicatorBase;
+import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.concurrency.Job;

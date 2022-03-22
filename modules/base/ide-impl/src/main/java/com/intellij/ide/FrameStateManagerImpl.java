@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import consulo.disposer.Disposable;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import consulo.component.util.BusyObject;
 import consulo.disposer.Disposer;
 import consulo.project.ui.wm.IdeFrame;

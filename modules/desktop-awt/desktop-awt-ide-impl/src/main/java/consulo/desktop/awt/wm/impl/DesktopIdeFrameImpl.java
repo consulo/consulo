@@ -29,7 +29,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -578,7 +578,7 @@ public final class DesktopIdeFrameImpl implements IdeFrameEx, AccessibleContextA
         modalBlockerField.setAccessible(true);
         final Window modalBlocker = (Window)modalBlockerField.get(myJFrame);
         if (modalBlocker != null) {
-          ApplicationManager.getApplication().invokeLater(() -> toggleFullScreen(state), ModalityState.NON_MODAL);
+          ApplicationManager.getApplication().invokeLater(() -> toggleFullScreen(state), IdeaModalityState.NON_MODAL);
           return true;
         }
       }

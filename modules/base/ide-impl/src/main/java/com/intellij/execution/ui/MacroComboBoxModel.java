@@ -16,7 +16,7 @@
 package com.intellij.execution.ui;
 
 import consulo.application.PathMacros;
-import com.intellij.openapi.components.PathMacroUtil;
+import consulo.component.macro.PathMacroUtil;
 import consulo.util.collection.SmartList;
 
 import javax.swing.*;

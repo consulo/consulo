@@ -21,7 +21,7 @@ package consulo.desktop.awt.uiOld;
 
 import com.google.common.annotations.VisibleForTesting;
 import consulo.application.PowerSaveMode;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.PaintingParent;
 import com.intellij.ui.RetrievableIcon;

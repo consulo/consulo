@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -49,6 +50,34 @@ public class FileUtil {
       return new byte[THREAD_LOCAL_BUFFER_LENGTH];
     }
   };
+
+  public static void writeToFile(@Nonnull File file, @Nonnull byte[] text) throws IOException {
+    writeToFile(file, text, false);
+  }
+
+  public static void writeToFile(@Nonnull File file, @Nonnull String text) throws IOException {
+    writeToFile(file, text, false);
+  }
+
+  public static void writeToFile(@Nonnull File file, @Nonnull String text, boolean append) throws IOException {
+    writeToFile(file, text.getBytes(StandardCharsets.UTF_8), append);
+  }
+
+  public static void writeToFile(@Nonnull File file, @Nonnull byte[] text, int off, int len) throws IOException {
+    writeToFile(file, text, off, len, false);
+  }
+
+  public static void writeToFile(@Nonnull File file, @Nonnull byte[] text, boolean append) throws IOException {
+    writeToFile(file, text, 0, text.length, append);
+  }
+
+  private static void writeToFile(@Nonnull File file, @Nonnull byte[] text, int off, int len, boolean append) throws IOException {
+    createParentDirs(file);
+
+    try (OutputStream stream = new FileOutputStream(file, append)) {
+      stream.write(text, off, len);
+    }
+  }
 
   @Nonnull
   public static String makeFileName(@Nonnull String name, @Nullable String extension) {

@@ -17,7 +17,7 @@ package com.intellij.openapi.fileChooser.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
@@ -27,6 +27,6 @@ import com.intellij.openapi.vfs.newvfs.RefreshQueue;
 */
 public class RefreshFileChooserAction extends AnAction implements DumbAware {
   public void actionPerformed(final AnActionEvent e) {
-    RefreshQueue.getInstance().refresh(true, true, null, ModalityState.current(), ManagingFS.getInstance().getLocalRoots());
+    RefreshQueue.getInstance().refresh(true, true, null, IdeaModalityState.current(), ManagingFS.getInstance().getLocalRoots());
   }
 }

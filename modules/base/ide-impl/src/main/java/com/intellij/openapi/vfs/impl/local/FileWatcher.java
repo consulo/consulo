@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.impl.local;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.registry.Registry;
@@ -192,7 +192,7 @@ public class FileWatcher {
     if (myFailureShown.compareAndSet(false, true)) {
       NotificationGroup group = NOTIFICATION_GROUP.getValue();
       String title = ApplicationBundle.message("watcher.slow.sync");
-      ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(group.createNotification(title, cause, NotificationType.WARNING, listener)), ModalityState.NON_MODAL);
+      ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus.notify(group.createNotification(title, cause, NotificationType.WARNING, listener)), IdeaModalityState.NON_MODAL);
     }
   }
 

@@ -17,13 +17,13 @@ package com.intellij.ide.plugins;
 
 import com.google.gson.Gson;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.application.ApplicationInfo;
+import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.net.HttpConfigurable;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.ide.eap.plugins.ExperimentalPluginsDescriptor;
 import consulo.ide.plugins.PluginJsonNode;
 import consulo.ide.updateSettings.UpdateChannel;

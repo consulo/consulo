@@ -23,7 +23,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.extension.Extensions;
 import consulo.document.FileDocumentManager;
 import consulo.application.progress.ProgressManager;
@@ -1173,7 +1173,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
           component.refresh();
         }
       }
-    }, InvokeAfterUpdateMode.SILENT, "commit dialog", ModalityState.current());   // title not shown for silently
+    }, InvokeAfterUpdateMode.SILENT, "commit dialog", IdeaModalityState.current());   // title not shown for silently
   }
 
   @Override
@@ -1203,7 +1203,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
       }
     }
     myOKButtonUpdateAlarm.cancelAllRequests();
-    myOKButtonUpdateAlarm.addRequest(myUpdateButtonsRunnable, 300, ModalityState.stateForComponent(myBrowser));
+    myOKButtonUpdateAlarm.addRequest(myUpdateButtonsRunnable, 300, IdeaModalityState.stateForComponent(myBrowser));
   }
 
   private void updateLegend() {
@@ -1248,7 +1248,7 @@ public class CommitChangeListDialog extends DialogWrapper implements CheckinProj
   }
 
   private void ensureDataIsActual(final Runnable runnable) {
-    ChangeListManager.getInstance(myProject).invokeAfterUpdate(runnable, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, "Refreshing changelists...", ModalityState.current());
+    ChangeListManager.getInstance(myProject).invokeAfterUpdate(runnable, InvokeAfterUpdateMode.SYNCHRONOUS_CANCELLABLE, "Refreshing changelists...", IdeaModalityState.current());
   }
 
   private class CommitExecutorAction extends AbstractAction {

@@ -23,7 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.Application;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.ui.ex.awt.JBPopupMenu;
 import com.intellij.openapi.util.Getter;
 import consulo.project.ui.wm.IdeFrame;

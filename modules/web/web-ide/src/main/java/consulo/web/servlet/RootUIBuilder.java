@@ -16,7 +16,7 @@
 package consulo.web.servlet;
 
 import consulo.application.WriteAction;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.internal.ApplicationEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.application.util.concurrent.AppExecutorUtil;

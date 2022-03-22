@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.breakpoints;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.components.ComponentSerializationUtil;
+import consulo.component.persist.ComponentSerializationUtil;
 import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.application.dumb.DumbAware;

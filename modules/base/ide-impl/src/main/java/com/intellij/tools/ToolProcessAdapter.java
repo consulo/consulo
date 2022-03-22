@@ -19,7 +19,7 @@ import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
+import consulo.project.internal.ProjectManagerEx;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;

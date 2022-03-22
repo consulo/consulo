@@ -22,8 +22,8 @@ import consulo.project.ui.notification.*;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
 import consulo.ui.ex.awt.internal.DialogWrapperDialog;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.awt.*;
@@ -154,7 +154,7 @@ public class NotificationsManagerImpl extends NotificationsManager {
   private static void showNotification(@Nonnull final Notification notification, @Nullable final Project project) {
     Application application = ApplicationManager.getApplication();
     if (application instanceof ApplicationEx && !((ApplicationEx)application).isLoaded()) {
-      application.invokeLater(() -> showNotification(notification, project), ModalityState.current());
+      application.invokeLater(() -> showNotification(notification, project), IdeaModalityState.current());
       return;
     }
 

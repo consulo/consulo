@@ -6,7 +6,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.externalSystem.ExternalSystemConfigurableAware;
 import com.intellij.openapi.externalSystem.ExternalSystemManager;
@@ -157,7 +157,7 @@ public class ExternalSystemNotificationManager {
             action.run();
           }
           else {
-            app.invokeAndWait(action, ModalityState.defaultModalityState());
+            app.invokeAndWait(action, IdeaModalityState.defaultModalityState());
           }
         }
 

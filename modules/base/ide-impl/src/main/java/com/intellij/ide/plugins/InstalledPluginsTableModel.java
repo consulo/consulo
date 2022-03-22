@@ -19,6 +19,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
+import consulo.container.plugin.PluginIds;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
@@ -54,7 +55,7 @@ public class InstalledPluginsTableModel extends PluginTableModel {
 
     for (Iterator<PluginDescriptor> iterator = view.iterator(); iterator.hasNext(); ) {
       final PluginId pluginId = iterator.next().getPluginId();
-      if (PluginManagerCore.isSystemPlugin(pluginId)) {
+      if (PluginIds.isPlatformPlugin(pluginId)) {
         iterator.remove();
       }
     }

@@ -42,7 +42,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.TransactionGuard;
 import consulo.ide.ServiceManager;
 import consulo.component.ProcessCanceledException;
@@ -648,7 +648,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
         if (ui != null && !ui.isDisposed()) {
           ui.updateActionsNow();
         }
-      }, ModalityState.any());
+      }, IdeaModalityState.any());
 
       myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminated(myExecutorId, myEnvironment, myProcessHandler, event.getExitCode());
 

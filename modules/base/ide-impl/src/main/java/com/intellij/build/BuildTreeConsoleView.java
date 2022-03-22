@@ -26,7 +26,7 @@ import com.intellij.idea.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.dataContext.DataProvider;
 import consulo.document.Document;
@@ -531,7 +531,7 @@ public class BuildTreeConsoleView implements ConsoleView, DataProvider, BuildCon
       return () -> {
         TreeUtil.promiseSelect(myTree, visitor(node));
         if (myNavigateToTheFirstErrorLocation && navigatable != null && navigatable != NonNavigatable.INSTANCE) {
-          ApplicationManager.getApplication().invokeLater(() -> navigatable.navigate(true), ModalityState.defaultModalityState(), myProject.getDisposed());
+          ApplicationManager.getApplication().invokeLater(() -> navigatable.navigate(true), IdeaModalityState.defaultModalityState(), myProject.getDisposed());
         }
       };
     }

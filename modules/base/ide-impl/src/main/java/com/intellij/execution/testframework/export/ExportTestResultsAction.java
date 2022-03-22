@@ -22,7 +22,7 @@ import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -201,7 +201,7 @@ public class ExportTestResultsAction extends DumbAwareAction {
                       }
                     }));
                   }
-                }, ModalityState.defaultModalityState());
+                }, IdeaModalityState.defaultModalityState());
 
                 if (!result.isNull()) {
                   if (config.isOpenResults()) {

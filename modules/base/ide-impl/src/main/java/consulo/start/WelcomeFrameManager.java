@@ -18,7 +18,7 @@ package consulo.start;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
@@ -111,7 +111,7 @@ public abstract class WelcomeFrameManager {
       if (frames.length == 0) {
         showFrame();
       }
-    }, ModalityState.NON_MODAL);
+    }, IdeaModalityState.NON_MODAL);
   }
 
   @Nonnull

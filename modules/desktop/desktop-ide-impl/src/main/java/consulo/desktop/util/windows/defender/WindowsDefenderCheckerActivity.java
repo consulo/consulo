@@ -18,7 +18,7 @@ package consulo.desktop.util.windows.defender;
 import com.intellij.diagnostic.DiagnosticBundle;
 import consulo.project.ui.notification.Notification;
 import consulo.application.Application;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.text.StringUtil;

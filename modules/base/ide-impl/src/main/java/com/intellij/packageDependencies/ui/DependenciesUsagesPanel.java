@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -85,7 +85,7 @@ public class DependenciesUsagesPanel extends UsagesPanel {
             final UsageInfo[] finalUsages = usages;
             final PsiElement[] _elementsToSearch =
                     elementsToSearch != null ? PsiUtilCore.toPsiElementArray(elementsToSearch) : PsiElement.EMPTY_ARRAY;
-            ApplicationManager.getApplication().invokeLater(() -> showUsages(_elementsToSearch, finalUsages), ModalityState.stateForComponent(
+            ApplicationManager.getApplication().invokeLater(() -> showUsages(_elementsToSearch, finalUsages), IdeaModalityState.stateForComponent(
                     this));
           }
         });

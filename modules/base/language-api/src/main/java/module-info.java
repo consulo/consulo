@@ -14,6 +14,7 @@ module consulo.language.api {
   exports consulo.language.ast;
   exports consulo.language.content;
   exports consulo.language.file;
+  exports consulo.language.file.event;
   exports consulo.language.file.inject;
   exports consulo.language.file.light;
   exports consulo.language.lexer;

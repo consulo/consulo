@@ -1,7 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.hint;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.ui.components.JBLoadingPanel;
 import consulo.application.NonBlockingReadAction;
@@ -53,7 +53,7 @@ class ParameterInfoTaskRunnerUtil {
 
     final Component focusOwner = getFocusOwner(project);
 
-    cancellablePromiseRef.set(nonBlockingReadAction.finishOnUiThread(ModalityState.defaultModalityState(), continuation -> {
+    cancellablePromiseRef.set(nonBlockingReadAction.finishOnUiThread(IdeaModalityState.defaultModalityState(), continuation -> {
       CancellablePromise<?> promise = cancellablePromiseRef.get();
       if (promise != null && promise.isSucceeded() && Objects.equals(focusOwner, getFocusOwner(project))) {
         continuationConsumer.accept(continuation);
@@ -117,7 +117,7 @@ class ParameterInfoTaskRunnerUtil {
           loadingPanel.startLoading();
           popup.show(popupPosition);
         }
-      }, ModalityState.defaultModalityState(), DEFAULT_PROGRESS_POPUP_DELAY_MS, TimeUnit.MILLISECONDS);
+      }, IdeaModalityState.defaultModalityState(), DEFAULT_PROGRESS_POPUP_DELAY_MS, TimeUnit.MILLISECONDS);
 
       stopActionRef.set((cancel) -> {
         try {

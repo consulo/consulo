@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.execution.ui.editor.RunConfigurationFileEditorEarlyAccessDescriptor;
 import consulo.execution.ui.editor.RunConfigurationVirtualFile;
-import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.UIAccess;

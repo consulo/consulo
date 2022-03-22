@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -392,7 +392,7 @@ public class LineStatusTrackerManager implements ProjectComponent, LineStatusTra
     }
 
     private void nonModalAliveInvokeLater(@Nonnull Runnable runnable) {
-      myApplication.invokeLater(runnable, ModalityState.NON_MODAL, () -> isDisabled());
+      myApplication.invokeLater(runnable, IdeaModalityState.NON_MODAL, () -> isDisabled());
     }
 
     private void reportTrackerBaseLoadFailed() {

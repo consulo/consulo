@@ -23,7 +23,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.process.local.OSProcessHandler;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vfs.encoding.EncodingManager;
+import consulo.language.file.EncodingManager;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;

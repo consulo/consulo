@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerEvent;
@@ -65,8 +65,8 @@ public abstract class AutoScrollFromSourceHandler implements Disposable {
 
   protected abstract void selectElementFromEditor(@Nonnull FileEditor editor);
 
-  protected ModalityState getModalityState() {
-    return ModalityState.current();
+  protected IdeaModalityState getModalityState() {
+    return IdeaModalityState.current();
   }
 
   protected long getAlarmDelay() {

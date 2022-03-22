@@ -16,8 +16,8 @@
 package com.intellij.concurrency;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationEx;
-import com.intellij.openapi.application.ex.ApplicationManagerEx;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.ApplicationManagerEx;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;

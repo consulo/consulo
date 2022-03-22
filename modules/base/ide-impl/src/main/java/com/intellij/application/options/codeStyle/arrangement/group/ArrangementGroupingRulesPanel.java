@@ -19,7 +19,7 @@ import com.intellij.application.options.codeStyle.arrangement.ArrangementConstan
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import com.intellij.application.options.codeStyle.arrangement.util.TitleWithToolbar;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
 import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;

@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import com.intellij.openapi.actionSystem.*;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.fileChooser.ex.FileNodeDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
@@ -354,7 +354,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     ApplicationManager.getApplication().getMessageBus().connect(getDisposable()).subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
       @Override
       public void applicationActivated(IdeFrame ideFrame) {
-        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(ModalityState.current());
+        ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());
       }
     });
 

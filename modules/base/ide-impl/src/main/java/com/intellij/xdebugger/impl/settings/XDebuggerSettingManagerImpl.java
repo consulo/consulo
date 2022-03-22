@@ -15,9 +15,8 @@
  */
 package com.intellij.xdebugger.impl.settings;
 
-import com.intellij.openapi.components.*;
 import com.intellij.openapi.util.JDOMUtil;
-import consulo.component.persist.StoragePathMacros;
+import consulo.component.persist.*;
 import consulo.util.collection.SmartList;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
@@ -27,9 +26,6 @@ import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.debugger.setting.XDebuggerSettings;
 import consulo.debugger.setting.XDebuggerSettingsManager;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 

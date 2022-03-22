@@ -20,7 +20,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -719,7 +719,7 @@ public final class CtrlMouseHandler {
       }
 
       myExecutionProgress = ReadAction.nonBlocking(() -> doExecute()).withDocumentsCommitted(myProject).expireWhen(() -> isTaskOutdated(myHostEditor))
-              .finishOnUiThread(ModalityState.defaultModalityState(), Runnable::run).submit(AppExecutorUtil.getAppExecutorService());
+              .finishOnUiThread(IdeaModalityState.defaultModalityState(), Runnable::run).submit(AppExecutorUtil.getAppExecutorService());
     }
 
     private Runnable createDisposalContinuation() {
@@ -850,7 +850,7 @@ public final class CtrlMouseHandler {
           showDumbModeNotification(myProject);
           return createDisposalContinuation();
         }
-      }).finishOnUiThread(ModalityState.defaultModalityState(), Runnable::run).withDocumentsCommitted(myProject).expireWith(hintDisposable).expireWhen(() -> !info.isValid(editor.getDocument()))
+      }).finishOnUiThread(IdeaModalityState.defaultModalityState(), Runnable::run).withDocumentsCommitted(myProject).expireWith(hintDisposable).expireWhen(() -> !info.isValid(editor.getDocument()))
               .coalesceBy(hint).submit(AppExecutorUtil.getAppExecutorService()));
     }
 

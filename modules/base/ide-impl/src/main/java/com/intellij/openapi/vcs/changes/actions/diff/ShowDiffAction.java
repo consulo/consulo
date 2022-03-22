@@ -23,7 +23,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -112,7 +112,7 @@ public class ShowDiffAction extends AnAction implements DumbAware {
 
     if (needsConversion) {
       ChangeListManager.getInstance(project).invokeAfterUpdate(performer, InvokeAfterUpdateMode.BACKGROUND_CANCELLABLE,
-                                                               ActionsBundle.actionText("ChangesView.Diff"), ModalityState.current());
+                                                               ActionsBundle.actionText("ChangesView.Diff"), IdeaModalityState.current());
     }
     else {
       performer.run();

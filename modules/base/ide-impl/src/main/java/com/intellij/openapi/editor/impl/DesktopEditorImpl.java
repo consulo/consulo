@@ -6,7 +6,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.EditorTextInsertHandler;
 import com.intellij.openapi.editor.actionSystem.LatencyListener;
@@ -587,7 +587,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         ApplicationManager.getApplication().invokeLater(() -> {
           myScrollingToCaret = false;
           if (!isReleased) EditorUtil.runWithAnimationDisabled(this, () -> myScrollingModel.scrollToCaret(ScrollType.MAKE_VISIBLE));
-        }, ModalityState.any());
+        }, IdeaModalityState.any());
       }
     }
   }
@@ -1382,7 +1382,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
         finally {
           updatingSize = false;
         }
-      }, ModalityState.any(), () -> isDisposed());
+      }, IdeaModalityState.any(), () -> isDisposed());
     }
   }
 
@@ -2607,7 +2607,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       if (myMouseSelectionStateResetRunnable == null) {
         myMouseSelectionStateResetRunnable = () -> resetMouseSelectionState(null);
       }
-      myMouseSelectionStateAlarm.addRequest(myMouseSelectionStateResetRunnable, Registry.intValue("editor.mouseSelectionStateResetTimeout"), ModalityState.stateForComponent(myEditorComponent));
+      myMouseSelectionStateAlarm.addRequest(myMouseSelectionStateResetRunnable, Registry.intValue("editor.mouseSelectionStateResetTimeout"), IdeaModalityState.stateForComponent(myEditorComponent));
     }
   }
 

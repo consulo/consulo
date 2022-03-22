@@ -39,7 +39,7 @@ import com.intellij.ide.BrowserUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.components.PathMacroManager;
+import consulo.component.macro.PathMacroManager;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;

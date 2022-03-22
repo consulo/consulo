@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.ui.ex.DeleteProvider;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.WriteAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.application.progress.ProgressIndicator;

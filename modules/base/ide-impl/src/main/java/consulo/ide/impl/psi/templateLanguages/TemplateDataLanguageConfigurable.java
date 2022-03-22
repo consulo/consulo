@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.templateLanguages;
 
 import com.intellij.lang.LangBundle;
 import consulo.language.Language;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

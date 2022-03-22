@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.http;
 
-import consulo.start.ImportantFolderLocker;
+import consulo.application.impl.internal.start.ImportantFolderLocker;
 
 import javax.annotation.Nullable;
 

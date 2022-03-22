@@ -20,11 +20,11 @@ import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
@@ -538,7 +538,7 @@ public class VcsUtil {
       }
     };
 
-    app.invokeAndWait(action, ModalityState.defaultModalityState());
+    app.invokeAndWait(action, IdeaModalityState.defaultModalityState());
 
     return file[0];
   }

@@ -9,7 +9,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -298,7 +298,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
         finishUpdate.run();
       }
       afterVisibleUpdate(state);
-    }, 200, ModalityState.any());
+    }, 200, IdeaModalityState.any());
   }
 
   protected void afterVisibleUpdate(@Nonnull WidgetState state) {

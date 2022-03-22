@@ -20,7 +20,7 @@ import com.intellij.diagnostic.ActivityCategory;
 import com.intellij.diagnostic.StartUpMeasurer;
 import consulo.dataContext.DataManager;
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
@@ -131,8 +131,8 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
   @Nonnull
   @Override
-  protected ModalityState getComponentModality() {
-    return ModalityState.stateForComponent(myComponent);
+  protected IdeaModalityState getComponentModality() {
+    return IdeaModalityState.stateForComponent(myComponent);
   }
 
   @Override

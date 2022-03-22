@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.CommonBundle;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;

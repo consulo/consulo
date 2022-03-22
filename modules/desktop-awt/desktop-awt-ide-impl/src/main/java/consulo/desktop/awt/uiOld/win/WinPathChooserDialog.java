@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.uiOld.win;
 
-import com.intellij.openapi.application.impl.LaterInvocator;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.CommandProcessorEx;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;

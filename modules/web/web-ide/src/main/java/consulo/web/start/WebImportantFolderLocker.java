@@ -15,8 +15,8 @@
  */
 package consulo.web.start;
 
-import consulo.start.CommandLineArgs;
-import consulo.start.ImportantFolderLocker;
+import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.application.impl.internal.start.ImportantFolderLocker;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.fileTypes.impl;
 
-import consulo.fileTypes.ZipArchiveFileType;
+import consulo.virtualFileSystem.archive.ZipArchiveFileType;
 import com.intellij.openapi.fileTypes.*;
 import consulo.language.plain.PlainTextFileType;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;

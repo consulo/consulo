@@ -16,7 +16,7 @@
 package com.intellij.application.options.codeStyle;
 
 import consulo.language.Language;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.CodeStyleConstraints;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;

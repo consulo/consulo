@@ -19,7 +19,7 @@ package com.intellij.application.options.colors;
 import consulo.application.util.Patches;
 import com.intellij.application.options.OptionsConstants;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.FontPreferences;

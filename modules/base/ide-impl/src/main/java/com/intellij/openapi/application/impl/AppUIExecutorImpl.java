@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.application.impl;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.application.*;
 import consulo.application.constraint.Expiration;
@@ -34,16 +34,16 @@ import java.util.function.BooleanSupplier;
  */
 public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecutorImpl> implements AppUIExecutor {
   private static class MyEdtExecutor implements Executor {
-    private final ModalityState modality;
+    private final IdeaModalityState modality;
 
-    private MyEdtExecutor(ModalityState modalityState) {
+    private MyEdtExecutor(IdeaModalityState modalityState) {
       modality = modalityState;
     }
 
     @Override
     public void execute(@Nonnull Runnable command) {
       Application application = Application.get();
-      if (application.isDispatchThread() && !ModalityState.current().dominates(modality)) {
+      if (application.isDispatchThread() && !IdeaModalityState.current().dominates(modality)) {
         command.run();
       }
       else {
@@ -53,16 +53,16 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
   }
 
   private static class MyWtExecutor implements Executor {
-    private final ModalityState modality;
+    private final IdeaModalityState modality;
 
-    private MyWtExecutor(ModalityState modalityState) {
+    private MyWtExecutor(IdeaModalityState modalityState) {
       modality = modalityState;
     }
 
     @Override
     public void execute(@Nonnull Runnable command) {
       Application application = Application.get();
-      if (application.isWriteThread() && !ModalityState.current().dominates(modality)) {
+      if (application.isWriteThread() && !IdeaModalityState.current().dominates(modality)) {
         command.run();
       }
       else {
@@ -71,7 +71,7 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     }
   }
 
-  private static Executor getExecutorForThread(ExecutionThread thread, ModalityState modality) {
+  private static Executor getExecutorForThread(ExecutionThread thread, IdeaModalityState modality) {
     switch (thread) {
       case EDT:
         return new MyEdtExecutor(modality);
@@ -82,16 +82,16 @@ public class AppUIExecutorImpl extends BaseExpirableExecutorMixinImpl<AppUIExecu
     }
   }
 
-  private final ModalityState modality;
+  private final IdeaModalityState modality;
   private final ExecutionThread thread;
 
-  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread) {
+  public AppUIExecutorImpl(IdeaModalityState modalityState, ExecutionThread thread) {
     super(new ContextConstraint[0], new BooleanSupplier[0], Collections.emptySet(), getExecutorForThread(thread, modalityState));
     modality = modalityState;
     this.thread = thread;
   }
 
-  public AppUIExecutorImpl(ModalityState modalityState, ExecutionThread thread, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
+  public AppUIExecutorImpl(IdeaModalityState modalityState, ExecutionThread thread, ContextConstraint[] constraints, BooleanSupplier[] cancellationConditions, Set<? extends Expiration> expirableHandles) {
     super(constraints, cancellationConditions, expirableHandles, getExecutorForThread(thread, modalityState));
     this.thread = thread;
     this.modality = modalityState;

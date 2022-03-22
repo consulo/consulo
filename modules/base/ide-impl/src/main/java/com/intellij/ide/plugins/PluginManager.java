@@ -15,9 +15,10 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.StartupUtil;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.impl.internal.start.StartupAbortedException;
+import consulo.application.impl.internal.start.StartupUtil;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.component.impl.extension.PluginExtensionInitializationException;
 import consulo.component.ProcessCanceledException;
 import consulo.annotation.DeprecationInfo;
@@ -28,6 +29,7 @@ import consulo.container.classloader.PluginClassLoader;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
+import consulo.container.plugin.PluginIds;
 import consulo.logging.Logger;
 import consulo.logging.internal.LoggerFactoryInitializer;
 import org.jetbrains.annotations.NonNls;
@@ -46,37 +48,6 @@ import java.io.StringWriter;
 public class PluginManager extends PluginManagerCore {
   private static class LoggerHolder {
     private static final Logger ourLogger = Logger.getInstance(PluginManagerCore.class);
-  }
-
-  public static class StartupAbortedException extends RuntimeException {
-    private int exitCode = ExitCodes.STARTUP_EXCEPTION;
-    private boolean logError = true;
-
-    public StartupAbortedException(Throwable cause) {
-      super(cause);
-    }
-
-    public StartupAbortedException(String message, Throwable cause) {
-      super(message, cause);
-    }
-
-    public int exitCode() {
-      return exitCode;
-    }
-
-    public StartupAbortedException exitCode(int exitCode) {
-      this.exitCode = exitCode;
-      return this;
-    }
-
-    public boolean logError() {
-      return logError;
-    }
-
-    public StartupAbortedException logError(boolean logError) {
-      this.logError = logError;
-      return this;
-    }
   }
 
   @NonNls
@@ -149,42 +120,8 @@ public class PluginManager extends PluginManagerCore {
     return plugin.getPath();
   }
 
+  @Deprecated
   public static void handleComponentError(@Nonnull Throwable t, @Nullable Class componentClass, @Nullable ComponentConfig config) {
-    if (t instanceof StartupAbortedException) {
-      throw (StartupAbortedException)t;
-    }
-
-    PluginId pluginId = null;
-    if (config != null) {
-      pluginId = config.getPluginId();
-    }
-    if (pluginId == null || CORE_PLUGIN.equals(pluginId)) {
-      pluginId = componentClass == null ? null : consulo.container.plugin.PluginManager.getPluginId(componentClass);
-    }
-    if (pluginId == null || CORE_PLUGIN.equals(pluginId)) {
-      if (t instanceof PluginExtensionInitializationException) {
-        pluginId = ((PluginExtensionInitializationException)t).getPluginId();
-      }
-    }
-
-    if (pluginId != null && !isSystemPlugin(pluginId)) {
-      getLogger().warn(t);
-
-      if (!ApplicationProperties.isInSandbox()) {
-        consulo.container.plugin.PluginManager.disablePlugin(pluginId.getIdString());
-      }
-
-      StringWriter message = new StringWriter();
-      message.append("Plugin '").append(pluginId.getIdString()).append("' failed to initialize and will be disabled. ");
-      message.append(" Please restart ").append(ApplicationNamesInfo.getInstance().getFullProductName()).append('.');
-      message.append("\n\n");
-      t.printStackTrace(new PrintWriter(message));
-      StartupUtil.showMessage("Plugin Error", message.toString(), false, false);
-
-      throw new StartupAbortedException(t).exitCode(ExitCodes.PLUGIN_ERROR).logError(false);
-    }
-    else {
-      throw new StartupAbortedException("Fatal error initializing '" + (componentClass == null ? null : componentClass.getName()) + "'", t);
-    }
+    StartupUtil.handleComponentError(t, componentClass, config);
   }
 }

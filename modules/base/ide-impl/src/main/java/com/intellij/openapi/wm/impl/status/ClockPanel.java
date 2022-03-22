@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.concurrency.JobScheduler;
+import consulo.application.impl.internal.JobScheduler;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;

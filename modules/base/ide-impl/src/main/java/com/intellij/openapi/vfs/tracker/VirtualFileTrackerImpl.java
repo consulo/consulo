@@ -20,6 +20,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.internal.VirtualFileTracker;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

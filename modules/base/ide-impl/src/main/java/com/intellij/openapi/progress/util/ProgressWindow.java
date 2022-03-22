@@ -15,12 +15,15 @@
  */
 package com.intellij.openapi.progress.util;
 
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.application.impl.ModalityStateEx;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.IdeaModalityStateEx;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
+import consulo.application.impl.internal.progress.BlockingProgressIndicator;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
@@ -158,7 +161,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
       else {
         Disposer.dispose(this);
         final IdeFocusManager focusManager = ProjectIdeFocusManager.getInstance(myProject);
-        focusManager.doWhenFocusSettlesDown(() -> focusManager.requestDefaultFocus(true), ModalityState.defaultModalityState());
+        focusManager.doWhenFocusSettlesDown(() -> focusManager.requestDefaultFocus(true), IdeaModalityState.defaultModalityState());
       }
     }, getModalityState()));
     timer.setRepeats(false);
@@ -167,7 +170,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
 
   final void enterModality() {
     if (isModalEntity() && !myModalityEntered) {
-      LaterInvocator.enterModal(this, (ModalityStateEx)getModalityState());
+      LaterInvocator.enterModal(this, (IdeaModalityStateEx)getModalityState());
       myModalityEntered = true;
     }
   }

@@ -41,7 +41,7 @@ import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import com.intellij.openapi.progress.util.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.DumbService;
 import consulo.project.Project;

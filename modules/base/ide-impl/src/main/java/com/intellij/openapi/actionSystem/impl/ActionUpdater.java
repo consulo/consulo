@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.concurrency.SensitiveProgressWrapper;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
@@ -12,8 +12,8 @@ import consulo.application.progress.EmptyProgressIndicator;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
-import com.intellij.openapi.progress.util.ProgressWrapper;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.dataContext.DataContext;
 import consulo.project.DumbService;
 import consulo.project.Project;

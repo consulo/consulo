@@ -28,7 +28,7 @@ import consulo.document.FileDocumentManager;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.module.content.ProjectFileIndex;

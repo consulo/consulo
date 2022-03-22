@@ -21,7 +21,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.*;
-import com.intellij.codeWithMe.ClientId;
+import consulo.application.util.ClientId;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.TemplateManager;
 import consulo.language.util.AttachmentFactoryUtil;

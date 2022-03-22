@@ -2,10 +2,9 @@
 package com.intellij.ui.mac.foundation;
 
 import com.intellij.openapi.util.Comparing;
+import com.sun.jna.Pointer;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.mac.foundation.ID;
-import consulo.application.util.registry.Registry;
-import com.sun.jna.Pointer;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -223,7 +222,7 @@ public class MacUtil {
   }
 
   public static Activity wakeUpNeo(@Nonnull Object reason) {
-    return SystemInfo.isMacOSMavericks && Registry.is("idea.mac.prevent.app.nap") ? new ActivityImpl(reason) : null;
+    return new ActivityImpl(reason);
   }
 
   @Nonnull

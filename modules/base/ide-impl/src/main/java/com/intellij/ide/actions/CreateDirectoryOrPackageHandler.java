@@ -22,7 +22,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.InputValidatorEx;

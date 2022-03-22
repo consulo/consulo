@@ -4,7 +4,7 @@ package com.intellij.openapi.actionSystem.impl;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.dataContext.DataContext;
@@ -106,8 +106,8 @@ public class ButtonToolbarImpl extends JPanel {
 
   private final class MyTimerListener implements TimerListener {
     @Override
-    public ModalityState getModalityState() {
-      return ModalityState.stateForComponent(ButtonToolbarImpl.this);
+    public IdeaModalityState getModalityState() {
+      return IdeaModalityState.stateForComponent(ButtonToolbarImpl.this);
     }
 
     @Override

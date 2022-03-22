@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl.build;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
@@ -134,8 +134,8 @@ public class DummyProgressIndicator implements ProgressIndicatorEx {
 
   @Nonnull
   @Override
-  public ModalityState getModalityState() {
-    return ModalityState.defaultModalityState();
+  public IdeaModalityState getModalityState() {
+    return IdeaModalityState.defaultModalityState();
   }
 
   @Override

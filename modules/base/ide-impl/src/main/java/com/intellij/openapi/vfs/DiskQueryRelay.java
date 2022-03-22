@@ -4,7 +4,7 @@ package com.intellij.openapi.vfs;
 import consulo.process.io.ProcessIOExecutorService;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
-import com.intellij.openapi.progress.util.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import javax.annotation.Nonnull;
 
 import java.util.Map;

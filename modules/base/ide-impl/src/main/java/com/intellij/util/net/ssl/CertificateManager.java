@@ -2,7 +2,7 @@ package com.intellij.util.net.ssl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -307,7 +307,7 @@ public class CertificateManager implements PersistentStateComponent<CertificateM
       showDialog.run();
     }
     else {
-      app.invokeLater(showDialog, ModalityState.any());
+      app.invokeLater(showDialog, IdeaModalityState.any());
     }
     try {
       // IDEA-123467 and IDEA-123335 workaround

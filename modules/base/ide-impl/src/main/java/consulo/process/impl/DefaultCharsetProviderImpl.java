@@ -15,7 +15,7 @@
  */
 package consulo.process.impl;
 
-import com.intellij.openapi.vfs.encoding.EncodingManager;
+import consulo.language.file.EncodingManager;
 import consulo.process.DefaultCharsetProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

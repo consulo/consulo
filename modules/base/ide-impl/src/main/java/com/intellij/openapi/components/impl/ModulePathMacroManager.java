@@ -17,10 +17,11 @@
 package com.intellij.openapi.components.impl;
 
 import com.intellij.application.options.PathMacrosImpl;
-import com.intellij.application.options.ReplacePathToMacroMap;
+import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.application.PathMacros;
-import com.intellij.openapi.components.ExpandMacroToPathMap;
-import com.intellij.openapi.components.PathMacroUtil;
+import consulo.component.macro.ExpandMacroToPathMap;
+import consulo.component.macro.PathMacroUtil;
+import consulo.component.impl.macro.BasePathMacroManager;
 import consulo.module.Module;
 
 import jakarta.inject.Inject;

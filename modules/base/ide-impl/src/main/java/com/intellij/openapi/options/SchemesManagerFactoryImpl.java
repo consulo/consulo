@@ -17,11 +17,11 @@ package com.intellij.openapi.options;
 
 import consulo.component.persist.RoamingType;
 import com.intellij.openapi.components.ServiceBean;
-import com.intellij.openapi.components.SettingsSavingComponent;
+import consulo.component.persist.SettingsSavingComponent;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.components.impl.stores.IApplicationStore;
-import consulo.components.impl.stores.StreamProvider;
-import consulo.components.impl.stores.storage.StateStorageManager;
+import consulo.application.impl.internal.store.IApplicationStore;
+import consulo.component.store.impl.internal.StreamProvider;
+import consulo.component.store.impl.internal.StateStorageManager;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

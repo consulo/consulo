@@ -10,7 +10,7 @@ import com.intellij.ide.ui.PopupLocationTracker;
 import com.intellij.ide.ui.ScreenAreaConsumer;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.WindowStateService;
@@ -1467,12 +1467,12 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       final ActionCallback typeAheadDone = new ActionCallback();
       ProjectIdeFocusManager.getInstance(myProject).typeAheadUntil(typeAheadDone, "Abstract Popup Disposal");
 
-      ModalityState modalityState = ModalityState.current();
+      IdeaModalityState modalityState = IdeaModalityState.current();
       Runnable finalRunnable = myFinalRunnable;
 
       getFocusManager().doWhenFocusSettlesDown(() -> {
 
-        if (ModalityState.current().equals(modalityState)) {
+        if (IdeaModalityState.current().equals(modalityState)) {
           typeAheadDone.setDone();
           ((TransactionGuardEx)TransactionGuard.getInstance()).performUserActivity(finalRunnable);
         }

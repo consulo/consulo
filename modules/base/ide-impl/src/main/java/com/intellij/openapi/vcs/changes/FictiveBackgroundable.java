@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
@@ -29,13 +29,13 @@ import static com.intellij.util.WaitForProgressToShow.runOrInvokeLaterAboveProgr
 class FictiveBackgroundable extends Task.Backgroundable {
   @Nonnull
   private final Waiter myWaiter;
-  @Nullable private final ModalityState myState;
+  @Nullable private final IdeaModalityState myState;
 
   FictiveBackgroundable(@Nonnull Project project,
                         @Nonnull Runnable runnable,
                         String title,
                         boolean cancellable,
-                        @Nullable ModalityState state) {
+                        @Nullable IdeaModalityState state) {
     super(project, VcsBundle.message("change.list.manager.wait.lists.synchronization", title), cancellable);
     myState = state;
     myWaiter = new Waiter(project, runnable, title, cancellable);
@@ -43,7 +43,7 @@ class FictiveBackgroundable extends Task.Backgroundable {
 
   public void run(@Nonnull ProgressIndicator indicator) {
     myWaiter.run(indicator);
-    runOrInvokeLaterAboveProgress(() -> myWaiter.onSuccess(), (ModalityState)notNull(myState, ModalityState.NON_MODAL), (Project)myProject);
+    runOrInvokeLaterAboveProgress(() -> myWaiter.onSuccess(), (IdeaModalityState)notNull(myState, IdeaModalityState.NON_MODAL), (Project)myProject);
   }
 
   @Override

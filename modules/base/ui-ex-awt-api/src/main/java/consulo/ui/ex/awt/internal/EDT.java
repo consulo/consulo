@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ui.ex.awt.internal;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 
 import javax.annotation.Nullable;
@@ -13,6 +14,8 @@ import java.awt.*;
  * @implNote Note that EDT can change over time, this class tries to sort out all the changes, accompanied by IdeEventQueue.
  * See {@link #updateEdt()} usage for the details
  */
+@Deprecated
+@DeprecationInfo("Remove usage of it, and move to desktop awt")
 public final class EDT {
   private static Thread ourEventDispatchThread = null;
 

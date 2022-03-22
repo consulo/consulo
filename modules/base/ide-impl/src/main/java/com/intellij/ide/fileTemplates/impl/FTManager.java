@@ -17,8 +17,8 @@ package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.ide.fileTemplates.FileTemplate;
 import consulo.logging.Logger;
-import com.intellij.openapi.fileTypes.FileTypeManager;
-import com.intellij.openapi.project.ex.ProjectManagerEx;
+import consulo.language.file.FileTypeManager;
+import consulo.project.internal.ProjectManagerEx;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

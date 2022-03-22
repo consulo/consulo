@@ -17,7 +17,7 @@ package com.intellij.execution.testframework.sm;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.UIUtil;
 
@@ -60,7 +60,7 @@ public class SMRunnerUtil {
     });
   }
 
-  public static void runInEventDispatchThread(final Runnable runnable, final ModalityState state) {
+  public static void runInEventDispatchThread(final Runnable runnable, final IdeaModalityState state) {
     try {
       if (SwingUtilities.isEventDispatchThread()) {
         runnable.run();

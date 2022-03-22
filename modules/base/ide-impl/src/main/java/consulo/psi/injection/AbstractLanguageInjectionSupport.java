@@ -19,7 +19,7 @@ package consulo.psi.injection;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
 import com.intellij.openapi.ui.DialogBuilder;

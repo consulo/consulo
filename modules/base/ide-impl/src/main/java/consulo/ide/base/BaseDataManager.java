@@ -18,7 +18,7 @@ package consulo.ide.base;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.dataRules.*;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -151,7 +151,7 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
         return (T)component;
       }
       if (PlatformDataKeys.MODALITY_STATE == dataId) {
-        return (T)ModalityState.NON_MODAL; //FIXME [VISTALL] stub
+        return (T)IdeaModalityState.NON_MODAL; //FIXME [VISTALL] stub
       }
       if (CommonDataKeys.EDITOR == dataId || CommonDataKeys.HOST_EDITOR == dataId) {
         Editor editor = (Editor)getDataManager().getData(dataId, component);
@@ -218,7 +218,7 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
   @Override
   public AsyncResult<DataContext> getDataContextFromFocus() {
     AsyncResult<DataContext> context = AsyncResult.undefined();
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> context.setDone(getDataContext()), ModalityState.current());
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> context.setDone(getDataContext()), IdeaModalityState.current());
     return context;
   }
 
@@ -226,7 +226,7 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
   @Override
   public Promise<DataContext> getDataContextFromFocusAsync() {
     AsyncPromise<DataContext> result = new AsyncPromise<>();
-    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> result.setResult(getDataContext()), ModalityState.any());
+    IdeFocusManager.getGlobalInstance().doWhenFocusSettlesDown(() -> result.setResult(getDataContext()), IdeaModalityState.any());
     return result;
   }
 

@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
@@ -109,7 +109,7 @@ public class ChangeListChooserPanel extends JPanel {
       @RequiredUIAccess
       protected void nameChanged(String errorMessage) {
         //invoke later because of undo manager problem: when you try to undo changelist after description was already changed manually
-        ApplicationManager.getApplication().invokeLater(() -> updateDescription(), ModalityState.current());
+        ApplicationManager.getApplication().invokeLater(() -> updateDescription(), IdeaModalityState.current());
         myOkEnabledListener.consume(errorMessage);
       }
 

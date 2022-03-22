@@ -1,6 +1,6 @@
 package com.intellij.application.options;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
 import javax.annotation.Nonnull;

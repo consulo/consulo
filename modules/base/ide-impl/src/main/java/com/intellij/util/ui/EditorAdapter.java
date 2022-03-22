@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.logging.Logger;
@@ -93,7 +93,7 @@ public class EditorAdapter {
     }
 
     if (myFlushAlarm.getActiveRequestCount() == 0) {
-      myFlushAlarm.addRequest(myFlushDeferredRunnable, 200, ModalityState.NON_MODAL);
+      myFlushAlarm.addRequest(myFlushDeferredRunnable, 200, IdeaModalityState.NON_MODAL);
     }
   }
 

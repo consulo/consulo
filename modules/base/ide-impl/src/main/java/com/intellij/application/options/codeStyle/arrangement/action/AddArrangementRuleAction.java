@@ -19,7 +19,7 @@ import com.intellij.application.options.codeStyle.arrangement.match.ArrangementM
 import com.intellij.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesModel;
 import com.intellij.application.options.codeStyle.arrangement.match.EmptyArrangementRuleComponent;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import consulo.application.dumb.DumbAware;
 import com.intellij.util.IconUtil;
 import consulo.util.collection.primitive.ints.IntList;

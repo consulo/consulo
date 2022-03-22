@@ -25,7 +25,7 @@ import com.intellij.lang.documentation.ExternalDocumentationHandler;
 import com.intellij.lang.documentation.ExternalDocumentationProvider;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
@@ -137,7 +137,7 @@ public class ExternalJavaDocAction extends AnAction {
             }
           }).showInBestPositionFor(DataManager.getInstance().getDataContext(contextComponent));
         }
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
     });
 
   }

@@ -16,7 +16,7 @@
 
 package com.intellij.compiler.impl.packagingCompiler;
 
-import com.intellij.openapi.fileTypes.FileTypeManager;
+import consulo.language.file.FileTypeManager;
 
 import java.io.File;
 import java.io.FileFilter;

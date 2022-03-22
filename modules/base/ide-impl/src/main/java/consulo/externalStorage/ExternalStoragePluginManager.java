@@ -31,7 +31,7 @@ import consulo.externalService.impl.WebServiceApi;
 import consulo.externalService.impl.WebServiceApiSender;
 import consulo.externalStorage.plugin.StoragePlugin;
 import consulo.externalStorage.plugin.StoragePluginState;
-import consulo.ide.eap.EarlyAccessProgramManager;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.ide.plugins.InstalledPluginsState;
 import consulo.ide.plugins.PluginActionListener;
 import consulo.ide.updateSettings.UpdateSettings;

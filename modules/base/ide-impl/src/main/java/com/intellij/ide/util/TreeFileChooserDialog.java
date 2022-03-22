@@ -31,7 +31,7 @@ import com.intellij.ide.util.gotoByName.GotoFileCellRenderer;
 import com.intellij.ide.util.treeView.AlphaComparator;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
@@ -238,7 +238,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
 
       @Override
       protected void initUI(final ChooseByNamePopupComponent.Callback callback,
-                            final ModalityState modalityState,
+                            final IdeaModalityState modalityState,
                             boolean allowMultipleSelection) {
         super.initUI(callback, modalityState, allowMultipleSelection);
         dummyPanel.add(myGotoByNamePanel.getPanel(), BorderLayout.CENTER);
@@ -264,7 +264,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
     SwingUtilities.invokeLater(new Runnable() {
       @Override
       public void run() {
-        myGotoByNamePanel.invoke(new MyCallback(), ModalityState.stateForComponent(getRootPane()), false);
+        myGotoByNamePanel.invoke(new MyCallback(), IdeaModalityState.stateForComponent(getRootPane()), false);
       }
     });
 
@@ -317,7 +317,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
           myBuilder.select(file, file.getVirtualFile(), true);
         }
       }
-    }, ModalityState.stateForComponent(getWindow()));
+    }, IdeaModalityState.stateForComponent(getWindow()));
   }
 
   @Override

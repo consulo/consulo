@@ -3,7 +3,7 @@ package com.intellij.openapi.actionSystem.impl;
 
 import consulo.ui.ex.action.TimerListener;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import javax.annotation.Nonnull;
 
 import java.lang.ref.Reference;
@@ -17,10 +17,10 @@ public class WeakTimerListener implements TimerListener {
   }
 
   @Override
-  public ModalityState getModalityState() {
+  public IdeaModalityState getModalityState() {
     TimerListener delegate = myRef.get();
     if (delegate != null) {
-      return (ModalityState)delegate.getModalityState();
+      return (IdeaModalityState)delegate.getModalityState();
     }
     else {
       ActionManagerEx.getInstanceEx().removeTimerListener(this);

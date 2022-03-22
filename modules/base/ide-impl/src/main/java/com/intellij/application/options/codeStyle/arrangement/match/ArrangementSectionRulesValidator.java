@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options.codeStyle.arrangement.match;
 
-import com.intellij.openapi.application.ApplicationBundle;
+import consulo.application.ApplicationBundle;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import com.intellij.util.containers.ContainerUtil;

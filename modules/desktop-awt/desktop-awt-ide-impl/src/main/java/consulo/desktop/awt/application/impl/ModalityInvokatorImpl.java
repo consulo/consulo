@@ -16,8 +16,8 @@
 package consulo.desktop.awt.application.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.impl.LaterInvocator;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -44,13 +44,13 @@ class ModalityInvokatorImpl implements ModalityInvokator {
 
   @Nonnull
   @Override
-  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state, @Nonnull BooleanSupplier expired) {
+  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull IdeaModalityState state, @Nonnull BooleanSupplier expired) {
     return LaterInvocator.invokeLater(runnable, state, expired);
   }
 
   @Nonnull
   @Override
-  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull ModalityState state) {
+  public AsyncResult<Void> invokeLater(@Nonnull Runnable runnable, @Nonnull IdeaModalityState state) {
     return invokeLater(runnable, state, ApplicationManager.getApplication().getDisposed());
   }
 }

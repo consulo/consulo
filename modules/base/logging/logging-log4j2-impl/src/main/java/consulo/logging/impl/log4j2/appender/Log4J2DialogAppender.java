@@ -18,7 +18,7 @@ package consulo.logging.impl.log4j2.appender;
 import com.intellij.diagnostic.DefaultIdeaErrorLogger;
 import com.intellij.diagnostic.LogEventException;
 import com.intellij.diagnostic.LogMessageEx;
-import com.intellij.idea.ApplicationStarter;
+import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.logging.IdeaLoggingEvent;

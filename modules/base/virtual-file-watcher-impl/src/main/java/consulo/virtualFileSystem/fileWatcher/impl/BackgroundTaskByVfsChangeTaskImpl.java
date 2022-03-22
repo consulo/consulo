@@ -15,10 +15,10 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
-import com.intellij.application.options.ReplacePathToMacroMap;
+import consulo.component.macro.ReplacePathToMacroMap;
 import com.intellij.build.progress.BuildProgress;
 import com.intellij.build.progress.BuildProgressDescriptor;
-import com.intellij.openapi.components.ExpandMacroToPathMap;
+import consulo.component.macro.ExpandMacroToPathMap;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

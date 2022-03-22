@@ -17,8 +17,9 @@ package consulo.desktop.swt.container.boot;
 
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.idea.ApplicationStarter;
-import com.intellij.idea.StartupUtil;
+import consulo.application.impl.internal.start.ApplicationStarter;
+import consulo.application.impl.internal.start.StartupAbortedException;
+import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.bootstrap.concurrent.IdeaForkJoinWorkerThreadFactory;
 import consulo.container.boot.ContainerPathManager;
@@ -70,7 +71,7 @@ public class DesktopSwtContainerStartup implements ContainerStartup {
       }
       catch (Throwable t) {
         t.printStackTrace();
-        throw new PluginManager.StartupAbortedException(t);
+        throw new StartupAbortedException(t);
       }
     };
 

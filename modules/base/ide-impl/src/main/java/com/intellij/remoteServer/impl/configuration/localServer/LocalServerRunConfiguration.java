@@ -22,7 +22,7 @@ import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.runner.ExecutionEnvironment;
-import com.intellij.openapi.components.ComponentSerializationUtil;
+import consulo.component.persist.ComponentSerializationUtil;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;

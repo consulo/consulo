@@ -17,16 +17,17 @@ package consulo.desktop.awt.startup;
 
 import com.google.gson.Gson;
 import com.intellij.ide.*;
-import com.intellij.idea.ApplicationStarter;
+import consulo.application.impl.internal.start.ApplicationStarter;
 import com.intellij.internal.statistic.UsageTrigger;
+import consulo.application.impl.internal.start.StartupProgress;
 import consulo.platform.Platform;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.application.Application;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ex.ApplicationEx;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.internal.ApplicationEx;
 import consulo.desktop.awt.application.impl.DesktopApplicationImpl;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
@@ -53,8 +54,8 @@ import consulo.desktop.awt.startup.splash.DesktopSplash;
 import consulo.desktop.awt.startup.customize.FirstStartCustomizeUtil;
 import consulo.ide.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
-import consulo.plugins.internal.PluginsInitializeInfo;
-import consulo.start.CommandLineArgs;
+import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
+import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
@@ -197,10 +198,10 @@ public class DesktopApplicationStarter extends ApplicationStarter {
       RecentProjectsManagerBase recentProjectsManager = (RecentProjectsManagerBase)RecentProjectsManager.getInstance();
 
       if (recentProjectsManager.willReopenProjectOnStart() && !args.isNoRecentProjects()) {
-        app.invokeLater(windowManager::showFrame, ModalityState.any());
+        app.invokeLater(windowManager::showFrame, IdeaModalityState.any());
       }
       else {
-        app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), ModalityState.any());
+        app.invokeLater(() -> WelcomeFrameManager.getInstance().showFrame(), IdeaModalityState.any());
       }
 
       app.invokeLater(() -> {
@@ -221,7 +222,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
         SwingUtilities.invokeLater(() -> reportPluginError(myPluginsInitializeInfo));
 
         UsageTrigger.trigger("consulo.app.started");
-      }, ModalityState.NON_MODAL);
+      }, IdeaModalityState.NON_MODAL);
     }
   }
 

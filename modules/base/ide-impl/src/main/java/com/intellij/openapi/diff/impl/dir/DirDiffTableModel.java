@@ -19,7 +19,7 @@ import com.intellij.diff.DiffRequestFactory;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.diff.*;
 import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diff.impl.dir.actions.popup.WarnOnDeletion;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
@@ -220,7 +220,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
     final JBLoadingPanel loadingPanel = getLoadingPanel();
     loadingPanel.startLoading();
 
-    final ModalityState modalityState = ModalityState.current();
+    final IdeaModalityState modalityState = IdeaModalityState.current();
 
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       EmptyProgressIndicator indicator = new EmptyProgressIndicator(modalityState);
@@ -336,7 +336,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
       if (myProject == null || myProject.isDefault()) {
         SwingUtilities.invokeLater(uiThread);
       } else {
-        app.invokeLater(uiThread, ModalityState.any());
+        app.invokeLater(uiThread, IdeaModalityState.any());
       }
     });
   }
@@ -864,7 +864,7 @@ public class DirDiffTableModel extends AbstractTableModel implements DirDiffMode
           if (s != null && myLoadingPanel.isLoading()) {
             myLoadingPanel.setLoadingText(s);
           }
-        }, ModalityState.stateForComponent(myLoadingPanel));
+        }, IdeaModalityState.stateForComponent(myLoadingPanel));
         myUpdater = new Updater(myLoadingPanel, mySleep);
         myUpdater.start();
       } else {

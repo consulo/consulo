@@ -19,7 +19,7 @@
  */
 package consulo.desktop.awt.application.impl;
 
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;
@@ -45,7 +45,7 @@ public interface ModalityInvokator {
    * @param runnable the runnable to execute.
    * @param state the state in which the runnable will be executed.
    */
-  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull ModalityState state);
+  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull IdeaModalityState state);
 
-  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull ModalityState state, @Nonnull BooleanSupplier expired);
+  AsyncResult<Void> invokeLater(Runnable runnable, @Nonnull IdeaModalityState state, @Nonnull BooleanSupplier expired);
 }

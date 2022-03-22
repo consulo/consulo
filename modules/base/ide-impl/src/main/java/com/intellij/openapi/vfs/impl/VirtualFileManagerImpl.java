@@ -16,7 +16,7 @@
 package com.intellij.openapi.vfs.impl;
 
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.virtualFileSystem.StandardFileSystems;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;
 import consulo.virtualFileSystem.CachingVirtualFileSystem;
@@ -223,7 +223,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
         }
       }
     };
-    application.invokeLater(runnable, ModalityState.NON_MODAL);
+    application.invokeLater(runnable, IdeaModalityState.NON_MODAL);
   }
 
   @Override

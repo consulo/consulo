@@ -22,7 +22,7 @@ import com.intellij.openapi.externalSystem.model.ProjectSystemId;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.util.*;
 import consulo.project.Project;
-import com.intellij.openapi.project.ex.ProjectEx;
+import consulo.project.internal.ProjectEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 

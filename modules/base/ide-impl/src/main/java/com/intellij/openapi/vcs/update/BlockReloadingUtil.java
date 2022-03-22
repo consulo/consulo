@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import com.intellij.openapi.project.ex.ProjectManagerEx;
+import consulo.project.internal.ProjectManagerEx;
 
 public class BlockReloadingUtil {
   private BlockReloadingUtil() {

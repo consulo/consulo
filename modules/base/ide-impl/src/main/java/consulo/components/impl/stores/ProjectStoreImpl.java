@@ -15,12 +15,15 @@
  */
 package consulo.components.impl.stores;
 
+import consulo.component.store.impl.internal.*;
 import consulo.component.persist.*;
+import consulo.component.store.impl.internal.storage.StateStorage;
+import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
+import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.components.*;
-import com.intellij.openapi.components.StateStorage.SaveSession;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.project.Project;
 import com.intellij.openapi.project.impl.ProjectImpl;
@@ -34,9 +37,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.component.messagebus.MessageBus;
 import consulo.application.AccessRule;
 import consulo.components.impl.stores.storage.ProjectStateStorageManager;
-import consulo.components.impl.stores.storage.StateStorageManager;
-import consulo.components.impl.stores.storage.VfsFileBasedStorage;
-import consulo.components.impl.stores.storage.XmlElementStorage;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -95,7 +95,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
     stateStorageManager.addMacro(StoragePathMacros.PROJECT_CONFIG_DIR, dirStore.getPath());
 
-    ApplicationManager.getApplication().invokeAndWait(() -> VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), ModalityState.defaultModalityState());
+    ApplicationManager.getApplication().invokeAndWait(() -> VfsUtil.markDirtyAndRefresh(false, true, true, fs.refreshAndFindFileByIoFile(dirStore)), IdeaModalityState.defaultModalityState());
 
     myPresentableUrl = null;
   }

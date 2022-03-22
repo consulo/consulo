@@ -43,14 +43,14 @@ public final class Lists {
    */
   @Nonnull
   @Contract(pure = true)
-  public static <T> List<T> newLockFreeCopyOnWriteList() {
+  public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList() {
     return new LockFreeCopyOnWriteArrayList<>();
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T> List<T> newLockFreeCopyOnWriteList(@Nonnull Collection<? extends T> c) {
-    return new LockFreeCopyOnWriteArrayList<T>(c);
+  public static <T> ConcurrentList<T> newLockFreeCopyOnWriteList(@Nonnull Collection<? extends T> c) {
+    return new LockFreeCopyOnWriteArrayList<>(c);
   }
 
   @Nonnull

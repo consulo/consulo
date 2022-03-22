@@ -16,7 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.*;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
@@ -95,7 +95,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
   Key<Disposable> UI_DISPOSABLE = Key.create("ui.disposable");
 
   Key<ContentManager> NONEMPTY_CONTENT_MANAGER = Key.create("nonemptyContentManager");
-  Key<ModalityState> MODALITY_STATE = Key.create("ModalityState");
+  Key<IdeaModalityState> MODALITY_STATE = Key.create("ModalityState");
   Key<Boolean> SOURCE_NAVIGATION_LOCKED = Key.create("sourceNavigationLocked");
 
   Key<String> PREDEFINED_TEXT = Key.create("predefined.text.value");

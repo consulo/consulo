@@ -4,7 +4,7 @@ package com.intellij.openapi.vfs.encoding;
 import com.intellij.concurrency.ConcurrentCollectionFactory;
 import com.intellij.ide.IdeBundle;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.TransactionGuard;
 import consulo.application.util.SystemInfo;
 import consulo.component.persist.PersistentStateComponent;
@@ -15,6 +15,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.component.util.ModificationTracker;
+import consulo.language.file.EncodingManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.application.progress.ProgressManager;
@@ -87,7 +88,7 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
   static final class EncodingProjectManagerStartUpActivity implements IdeaStartupActivity.DumbAware {
     @Override
     public void runActivity(@Nonnull Project project) {
-      GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)getInstance(project)).reloadAlreadyLoadedDocuments(), ModalityState.NON_MODAL, project.getDisposed());
+      GuiUtils.invokeLaterIfNeeded(() -> ((EncodingProjectManagerImpl)getInstance(project)).reloadAlreadyLoadedDocuments(), IdeaModalityState.NON_MODAL, project.getDisposed());
     }
   }
 
