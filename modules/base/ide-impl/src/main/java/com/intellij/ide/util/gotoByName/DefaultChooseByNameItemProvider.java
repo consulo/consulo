@@ -11,7 +11,7 @@ import com.intellij.util.CollectConsumer;
 import com.intellij.util.Consumer;
 import com.intellij.util.SynchronizedCollectConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import com.intellij.util.indexing.FindSymbolParameters;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.component.ProcessCanceledException;

@@ -1955,6 +1955,11 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     myStartIconAreaWidth = width;
   }
 
+  @Override
+  public JComponent getComponent() {
+    return this;
+  }
+
   private void invokePopup(MouseEvent e) {
     int logicalLineAtCursor = EditorUtil.yPositionToLogicalLine(myEditor, e);
     myLastActionableClick = new ClickInfo(logicalLineAtCursor, getClickedIconCenter(e));

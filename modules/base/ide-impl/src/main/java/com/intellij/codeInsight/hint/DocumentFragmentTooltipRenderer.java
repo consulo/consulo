@@ -61,7 +61,7 @@ public class DocumentFragmentTooltipRenderer implements TooltipRenderer {
     VisualPosition visual = editor.offsetToVisualPosition(startOffset);
     p = editor.visualPositionToXY(visual);
     p = SwingUtilities.convertPoint(
-            ((EditorEx)editor).getGutterComponentEx(),
+            ((EditorEx)editor).getGutterComponentEx().getComponent(),
             p,
             layeredPane
     );

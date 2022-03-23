@@ -1161,4 +1161,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
   public static void assertReadAccess() {
     ApplicationManager.getApplication().assertReadAccessAllowed();
   }
+
+  public void setDropHandler(@Nonnull EditorDropHandler dropHandler) {
+  }
 }

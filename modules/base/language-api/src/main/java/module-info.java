@@ -40,7 +40,7 @@ module consulo.language.api {
   exports consulo.language.psi.stub.internal to consulo.ide.impl, consulo.language.impl;
 
   exports consulo.language.psi.util;
-  opens consulo.language.psi.util to consulo.ide.impl;
+  opens consulo.language.psi.util to consulo.ide.impl, consulo.language.impl;
 
   exports consulo.language.template;
   exports consulo.language.util;

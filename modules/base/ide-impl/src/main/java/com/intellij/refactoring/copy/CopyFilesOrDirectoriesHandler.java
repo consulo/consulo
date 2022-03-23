@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.copy;
 
+import consulo.application.Application;
 import consulo.application.CommonBundle;
 import com.intellij.ide.CopyPasteDelegator;
 import com.intellij.ide.actions.CreateFileFromTemplateAction;
@@ -297,7 +298,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         protected void run(@Nonnull Result<PsiFile> result) throws Throwable {
           PsiFile returnFile = targetDirectory.copyFileFrom(name, file);
 
-          Module module = CreateFileFromTemplateAction.ModuleResolver.EP_NAME.composite().resolveModule(targetDirectory, file.getFileType());
+          Module module = CreateFileFromTemplateAction.ModuleResolver.EP.computeSafeIfAny(Application.get(), it -> it.resolveModule(targetDirectory, file.getFileType()));
           if (module != null) {
             ModuleRootManager manager = ModuleRootManager.getInstance(module);
             ModifiableRootModel modifiableModel = manager.getModifiableModel();

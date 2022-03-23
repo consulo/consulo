@@ -20,7 +20,7 @@ import consulo.language.editor.completion.CompletionResultSet;
 import consulo.language.editor.completion.PrefixMatcher;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.psi.codeStyle.MinusculeMatcher;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;

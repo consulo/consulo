@@ -660,7 +660,7 @@ public class EditorView implements TextDrawingCallback, Disposable, Dumpable, Hi
   }
 
   @Override
-  public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, FontInfo f) {
+  public void drawChars(@Nonnull Graphics g, @Nonnull char[] data, int start, int end, int x, int y, Color color, Object f) {
     FontInfo fontInfo = (FontInfo)f;
 
     myPainter.drawChars(g, data, start, end, x, y, color, fontInfo);

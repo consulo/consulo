@@ -51,7 +51,7 @@
     </component>
 
     <component>
-      <interface-class>consulo.command.undo.ApplicationUndoManager</interface-class>
+      <interface-class>consulo.undoRedo.ApplicationUndoManager</interface-class>
       <implementation-class>consulo.command.undo.impl.ApplicationUndoManagerImpl</implementation-class>
     </component>
 

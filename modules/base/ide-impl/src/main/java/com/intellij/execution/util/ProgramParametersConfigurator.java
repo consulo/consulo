@@ -15,21 +15,22 @@
  */
 package com.intellij.execution.util;
 
-import consulo.execution.CommonProgramRunConfigurationParameters;
-import consulo.execution.configuration.ModuleBasedConfiguration;
 import com.intellij.execution.configurations.RuntimeConfigurationWarning;
 import com.intellij.execution.configurations.SimpleProgramParameters;
-import consulo.component.macro.PathMacroManager;
-import consulo.component.macro.PathMacroUtil;
-import consulo.component.extension.ExtensionPointName;
-import consulo.module.Module;
-import consulo.execution.WorkingDirectoryProvider;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
+import com.intellij.openapi.components.impl.ModulePathMacroManager;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.component.extension.ExtensionPointName;
+import consulo.component.macro.PathMacroUtil;
+import consulo.execution.CommonProgramRunConfigurationParameters;
+import consulo.execution.WorkingDirectoryProvider;
+import consulo.execution.configuration.ModuleBasedConfiguration;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
 import consulo.process.local.EnvironmentUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.SystemIndependent;
 
@@ -129,9 +130,9 @@ public class ProgramParametersConfigurator {
   }
 
   protected String expandPath(@Nullable String path, Module module, Project project) {
-    path = PathMacroManager.getInstance(project).expandPath(path);
+    path = ProjectPathMacroManager.getInstance(project).expandPath(path);
     if (module != null) {
-      path = PathMacroManager.getInstance(module).expandPath(path);
+      path = ModulePathMacroManager.getInstance(module).expandPath(path);
     }
     return path;
   }

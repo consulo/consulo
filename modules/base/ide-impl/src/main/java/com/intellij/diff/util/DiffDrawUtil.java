@@ -224,7 +224,7 @@ public class DiffDrawUtil {
         Graphics2D g2 = (Graphics2D)g;
 
         int x1 = gutter.getWhitespaceSeparatorOffset();
-        int x2 = gutter.getWidth();
+        int x2 = gutter.getComponent().getWidth();
 
         int y = r.y;
         if (placement == SeparatorPlacement.BOTTOM) y += editor.getLineHeight();

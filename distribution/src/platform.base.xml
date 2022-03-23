@@ -76,6 +76,13 @@
         <include>consulo:consulo-component-impl</include>
         <include>consulo:consulo-ide-api</include>
         <include>consulo:consulo-language-code-style-api</include>
+        <include>consulo:consulo-component-store-impl</include>
+        <include>consulo:consulo-language-editor-impl</include>
+        <include>consulo:consulo-language-inject-impl</include>
+        <include>consulo:consulo-application-impl</include>
+        <include>consulo:consulo-code-editor-impl</include>
+        <include>consulo:consulo-language-editor-ui-api</include>
+        <include>consulo:consulo-color-scheme-impl</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

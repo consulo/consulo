@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 23-Mar-22
  */
-public class IdeProgressActivityFactory implements ProgressActivityFactory {
+public class DesktopProgressActivityFactory implements ProgressActivityFactory {
   private boolean myShouldStartActivity = SystemInfo.isMac && Boolean.parseBoolean(System.getProperty("consulo.mac.prevent.app.nap", "true"));
 
   @Nullable

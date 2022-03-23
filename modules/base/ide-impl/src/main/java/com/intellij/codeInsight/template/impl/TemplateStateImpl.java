@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.RecalculatableResult;
@@ -24,9 +25,8 @@ import consulo.language.editor.template.TemplateCompletionProcessor;
 import com.intellij.openapi.command.CommandAdapter;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.DocumentReference;
-import com.intellij.openapi.command.undo.DocumentReferenceManager;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.document.DocumentReference;
+import consulo.document.DocumentReferenceManager;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.event.CaretAdapter;
 import com.intellij.openapi.util.text.StringUtil;
@@ -370,7 +370,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
     myProcessor = processor;
 
     DocumentReference[] refs = myDocument != null ? new DocumentReference[]{DocumentReferenceManager.getInstance().create(myDocument)} : null;
-    UndoManager.getInstance(myProject).undoableActionPerformed(new BasicUndoableAction(refs) {
+    ProjectUndoManager.getInstance(myProject).undoableActionPerformed(new BasicUndoableAction(refs) {
       @Override
       public void undo() {
         if (myDocument != null) {

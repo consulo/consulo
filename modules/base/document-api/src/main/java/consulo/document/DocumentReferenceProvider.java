@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.command.undo;
+package consulo.document;
 
-import com.intellij.openapi.command.undo.UndoManager;
+import java.util.Collection;
 
 /**
- * @author VISTALL
- * @since 2018-08-24
+ * @author Konstantin Bulenkov
  */
-public interface ProjectUndoManager extends UndoManager {
+public interface DocumentReferenceProvider {
+  Collection<DocumentReference> getDocumentReferences();
 }

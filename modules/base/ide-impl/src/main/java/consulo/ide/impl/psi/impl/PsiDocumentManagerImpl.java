@@ -2,16 +2,11 @@
 
 package consulo.ide.impl.psi.impl;
 
-import consulo.ide.impl.AppTopics;
 import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
-import consulo.document.event.FileDocumentManagerListener;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.core.impl.PomModelImpl;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
-import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.FileContentUtil;
 import com.intellij.util.containers.ContainerUtil;
@@ -24,15 +19,21 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
+import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.AppTopics;
+import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.impl.psi.internal.BooleanRunnable;
 import consulo.language.impl.psi.internal.DocumentCommitProcessor;
 import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -124,7 +125,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
 
   @Override
   protected void beforeDocumentChangeOnUnlockedDocument(@Nonnull final FileViewProvider viewProvider) {
-    PostprocessReformattingAspectImpl.getInstance(myProject).assertDocumentChangeIsAllowed(viewProvider);
+    ((PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(myProject)).assertDocumentChangeIsAllowed(viewProvider);
     super.beforeDocumentChangeOnUnlockedDocument(viewProvider);
   }
 
@@ -143,7 +144,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
   @Override
   public boolean isDocumentBlockedByPsi(@Nonnull Document doc) {
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
-    return viewProvider != null && PostprocessReformattingAspectImpl.getInstance(myProject).isViewProviderLocked(viewProvider);
+    return viewProvider != null && PostprocessReformattingAspect.getInstance(myProject).isViewProviderLocked(viewProvider);
   }
 
   @Override

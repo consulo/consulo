@@ -88,7 +88,7 @@ public class EditorFragmentComponent extends JPanel {
       EditorUIUtil.setupAntialiasing(textGraphics);
 
       if (showGutter) {
-        rowHeader = editor.getGutterComponentEx();
+        rowHeader = editor.getGutterComponentEx().getComponent();
         markersImageWidth = Math.max(1, rowHeader.getWidth());
 
         markersImage = UIUtil.createImage(editor.getComponent(), markersImageWidth, textImageHeight, BufferedImage.TYPE_INT_RGB);

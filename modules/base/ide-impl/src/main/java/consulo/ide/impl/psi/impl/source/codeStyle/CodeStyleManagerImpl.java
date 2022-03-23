@@ -326,7 +326,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Override
   public int adjustLineIndent(@Nonnull final PsiFile file, final int offset) throws IncorrectOperationException {
-    return PostprocessReformattingAspectImpl.getInstance(file.getProject()).disablePostprocessFormattingInside(() -> doAdjustLineIndentByOffset(file, offset, FormattingMode.ADJUST_INDENT));
+    return PostprocessReformattingAspect.getInstance(file.getProject()).disablePostprocessFormattingInside(() -> doAdjustLineIndentByOffset(file, offset, FormattingMode.ADJUST_INDENT));
   }
 
   @Nullable
@@ -346,7 +346,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Override
   public int adjustLineIndent(@Nonnull final Document document, final int offset, FormattingMode mode) {
-    return PostprocessReformattingAspectImpl.getInstance(getProject()).disablePostprocessFormattingInside(() -> {
+    return PostprocessReformattingAspect.getInstance(getProject()).disablePostprocessFormattingInside(() -> {
       final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
       documentManager.commitDocument(document);
 
@@ -705,7 +705,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   @Override
   public <T> T performActionWithFormatterDisabled(final Computable<T> r) {
     return ((FormatterImpl)FormatterEx.getInstance()).runWithFormattingDisabled(() -> {
-      final PostprocessReformattingAspectImpl component = PostprocessReformattingAspectImpl.getInstance(getProject());
+      final PostprocessReformattingAspect component = PostprocessReformattingAspect.getInstance(getProject());
       return component.disablePostprocessFormattingInside(r);
     });
   }

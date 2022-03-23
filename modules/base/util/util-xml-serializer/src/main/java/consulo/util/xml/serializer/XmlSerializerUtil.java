@@ -15,8 +15,6 @@
  */
 package consulo.util.xml.serializer;
 
-import consulo.util.lang.reflect.ReflectionUtil;
-
 import javax.annotation.Nonnull;
 import java.util.List;
 
@@ -35,7 +33,7 @@ public class XmlSerializerUtil {
   public static <T> T createCopy(@Nonnull T from) {
     try {
       @SuppressWarnings("unchecked")
-      T to = (T)ReflectionUtil.newInstance(from.getClass());
+      T to = (T)InternalReflectionUtil.newInstance(from.getClass());
       copyBean(from, to);
       return to;
     }

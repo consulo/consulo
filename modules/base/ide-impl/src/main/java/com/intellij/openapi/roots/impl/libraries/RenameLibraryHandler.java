@@ -17,14 +17,14 @@ package com.intellij.openapi.roots.impl.libraries;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.TitledHandler;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UndoableAction;
-import com.intellij.openapi.command.undo.UnexpectedUndoException;
+import consulo.undoRedo.UndoableAction;
+import consulo.undoRedo.UnexpectedUndoException;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
@@ -116,7 +116,7 @@ public class RenameLibraryHandler implements RenameHandler, TitledHandler {
               }
             }
           };
-          UndoManager.getInstance(myProject).undoableActionPerformed(action);
+          ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
           ApplicationManager.getApplication().runWriteAction(new Runnable() {
             @Override
             public void run() {

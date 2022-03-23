@@ -80,7 +80,7 @@ public class DuplicateAction extends EditorAction {
 
   @Nullable
   static Pair<Integer, Integer> duplicateLinesRange(Editor editor, Document document, VisualPosition rangeStart, VisualPosition rangeEnd) {
-    Pair<LogicalPosition, LogicalPosition> lines = EditorUtil.calcSurroundingRange(editor, rangeStart, rangeEnd);
+    consulo.util.lang.Pair<LogicalPosition, LogicalPosition> lines = EditorUtil.calcSurroundingRange(editor, rangeStart, rangeEnd);
     int offset = editor.getCaretModel().getOffset();
 
     LogicalPosition lineStart = lines.first;

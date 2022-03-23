@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.command.impl;
 
-import com.intellij.openapi.command.undo.DocumentReference;
-import com.intellij.openapi.command.undo.UndoableAction;
+import consulo.document.DocumentReference;
+import consulo.undoRedo.UndoableAction;
 import consulo.logging.Logger;
 
 class NonUndoableAction implements UndoableAction {

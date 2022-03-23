@@ -56,7 +56,7 @@ public abstract class EditBreakpointActionHandler extends DebuggerActionHandler 
     EditorGutterComponentEx gutterComponent = ((EditorEx)editor).getGutterComponentEx();
     Point point = gutterComponent.getCenterPoint(breakpointGutterRenderer);
     if (point != null) {
-      doShowPopup(project, gutterComponent, point, breakpoint);
+      doShowPopup(project, gutterComponent.getComponent(), point, breakpoint);
     }
   }
 

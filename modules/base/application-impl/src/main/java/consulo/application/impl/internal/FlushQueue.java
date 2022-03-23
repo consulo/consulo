@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
-final class FlushQueue {
+public final class FlushQueue {
   private static final Logger LOG = Logger.getInstance(LaterInvocator.class);
   private static final boolean DEBUG = LOG.isDebugEnabled();
   private final Object LOCK = new Object();
@@ -188,7 +188,7 @@ final class FlushQueue {
     }
   }
 
-  final class FlushNow implements Runnable {
+  public final class FlushNow implements Runnable {
     @Override
     public void run() {
       flushNow();

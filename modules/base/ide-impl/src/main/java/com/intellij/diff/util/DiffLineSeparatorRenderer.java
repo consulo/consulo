@@ -129,7 +129,7 @@ public class DiffLineSeparatorRenderer implements LineMarkerRendererEx, LineSepa
 
     y++; // we want y to be line's top position
 
-    final int gutterWidth = ((EditorEx)myEditor).getGutterComponentEx().getWidth();
+    final int gutterWidth = ((EditorEx)myEditor).getGutterComponentEx().getComponent().getWidth();
     int lineHeight = myEditor.getLineHeight();
     int interval = getStepSize(lineHeight) * 2;
 

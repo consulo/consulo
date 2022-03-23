@@ -291,7 +291,7 @@ public class XLineBreakpointManager {
               breakpoint.setLogMessage(true);
             }
             // edit breakpoint
-            DebuggerUIUtil.showXBreakpointEditorBalloon(myProject, mouseEvent.getPoint(), ((EditorEx)editor).getGutterComponentEx(), false, breakpoint);
+            DebuggerUIUtil.showXBreakpointEditorBalloon(myProject, mouseEvent.getPoint(), ((EditorEx)editor).getGutterComponentEx().getComponent(), false, breakpoint);
           }
         });
       }

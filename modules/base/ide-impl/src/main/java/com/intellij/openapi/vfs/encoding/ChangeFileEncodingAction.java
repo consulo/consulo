@@ -15,33 +15,35 @@
  */
 package com.intellij.openapi.vfs.encoding;
 
+import com.intellij.openapi.command.undo.GlobalUndoableAction;
+import consulo.undoRedo.UndoManager;
+import consulo.undoRedo.UndoableAction;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.file.EncodingManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import com.intellij.openapi.command.undo.GlobalUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UndoableAction;
+import consulo.codeEditor.Editor;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
-import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.file.EncodingManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -189,7 +191,7 @@ public class ChangeFileEncodingAction extends AnAction implements DumbAware {
 
     redo.run();
     CommandProcessor.getInstance().executeCommand(project, () -> {
-      UndoManager undoManager = project == null ? UndoManager.getGlobalInstance() : UndoManager.getInstance(project);
+      UndoManager undoManager = project == null ? ApplicationUndoManager.getGlobalInstance() : ProjectUndoManager.getInstance(project);
       undoManager.undoableActionPerformed(action);
     }, "Change encoding for '" + virtualFile.getName() + "'", null, UndoConfirmationPolicy.REQUEST_CONFIRMATION);
 

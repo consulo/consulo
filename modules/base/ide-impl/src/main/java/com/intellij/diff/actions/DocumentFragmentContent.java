@@ -18,7 +18,7 @@ package com.intellij.diff.actions;
 import com.intellij.diff.contents.DiffContentBase;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.util.LineCol;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.undoRedo.UndoManager;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.RangeMarker;

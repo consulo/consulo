@@ -16,7 +16,7 @@
 <consulo-plugin>
   <project-components>
     <component>
-      <interface-class>consulo.command.undo.ProjectUndoManager</interface-class>
+      <interface-class>consulo.undoRedo.ProjectUndoManager</interface-class>
       <implementation-class>consulo.command.undo.impl.ProjectUndoManagerImpl</implementation-class>
     </component>
 

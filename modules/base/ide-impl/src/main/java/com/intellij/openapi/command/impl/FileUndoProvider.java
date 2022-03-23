@@ -9,16 +9,20 @@ import com.intellij.history.core.changes.StructuralChange;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.LocalHistoryImpl;
 import com.intellij.openapi.command.undo.*;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.document.DocumentReference;
+import consulo.document.DocumentReferenceManager;
+import consulo.document.util.FileContentUtilCore;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.undoRedo.UnexpectedUndoException;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.*;
-import consulo.document.util.FileContentUtilCore;
 
 import javax.annotation.Nonnull;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -179,9 +183,9 @@ public class FileUndoProvider implements UndoProvider, BulkFileListener {
 
   private UndoManagerImpl getUndoManager() {
     if (myProject != null) {
-      return (UndoManagerImpl)UndoManager.getInstance(myProject);
+      return (UndoManagerImpl)ProjectUndoManager.getInstance(myProject);
     }
-    return (UndoManagerImpl)UndoManager.getGlobalInstance();
+    return (UndoManagerImpl)ApplicationUndoManager.getGlobalInstance();
   }
 
   private class MyUndoableAction extends GlobalUndoableAction {

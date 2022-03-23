@@ -26,7 +26,7 @@ public abstract class EnterBetweenBracesNoCommitDelegate extends EnterBetweenBra
   @Override
   public boolean isInComment(@Nonnull PsiFile file, @Nonnull Editor editor, int offset) {
     final HighlighterIterator it = createBeforeIterator(editor, offset);
-    return !it.atEnd() && isCommentType(it.getTokenType());
+    return !it.atEnd() && isCommentType((IElementType)it.getTokenType());
   }
 
   public abstract boolean isCommentType(IElementType type);

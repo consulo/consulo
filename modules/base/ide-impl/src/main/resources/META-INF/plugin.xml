@@ -1378,7 +1378,7 @@
 
     <applicationService serviceInterface="consulo.ui.ex.UiActivityMonitor" serviceImplementation="com.intellij.ide.UiActivityMonitorImpl"/>
 
-    <projectService serviceInterface="com.intellij.openapi.vfs.ReadonlyStatusHandler"
+    <projectService serviceInterface="consulo.virtualFileSystem.ReadonlyStatusHandler"
                     serviceImplementation="com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl"/>
     <projectService serviceInterface="consulo.project.startup.StartupManager"
                     serviceImplementation="com.intellij.ide.startup.impl.StartupManagerImpl"/>
@@ -1404,7 +1404,7 @@
                     serviceImplementation="com.intellij.openapi.project.DumbServiceImpl"/>
 
     <projectService serviceInterface="consulo.language.psi.util.CachedValuesManager"
-                    serviceImplementation="com.intellij.util.CachedValuesManagerImpl"/>
+                    serviceImplementation="consulo.language.impl.psi.internal.CachedValuesManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.projectlevelman.AllVcsesI"
                     serviceImplementation="com.intellij.openapi.vcs.impl.projectlevelman.AllVcses"/>
@@ -1868,8 +1868,8 @@
                     serviceImplementation="com.intellij.pom.core.impl.PomModelImpl"/>
     <projectService serviceInterface="consulo.ide.impl.psi.impl.include.FileIncludeManager"
                     serviceImplementation="consulo.ide.impl.psi.impl.include.FileIncludeManagerImpl"/>
-    <projectService serviceInterface="com.intellij.util.CachedValuesFactory"
-                    serviceImplementation="consulo.ide.impl.psi.impl.PsiCachedValuesFactory"/>
+    <projectService serviceInterface="consulo.language.impl.psi.internal.CachedValuesFactory"
+                    serviceImplementation="consulo.language.impl.psi.internal.PsiCachedValuesFactory"/>
 
 
     <projectService serviceInterface="com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable"
@@ -2664,7 +2664,7 @@
 
     <applicationService serviceImplementation="com.intellij.util.text.DateTimeFormatManager"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.command.undo.DocumentReferenceManager" serviceImplementation="com.intellij.openapi.command.impl.DocumentReferenceManagerImpl"
+    <applicationService serviceInterface="consulo.document.DocumentReferenceManager" serviceImplementation="com.intellij.openapi.command.impl.DocumentReferenceManagerImpl"
                         lazy="false"/>
 
     <applicationService serviceInterface="consulo.codeEditor.action.TabOutScopesTracker" serviceImplementation="com.intellij.codeInsight.editorActions.TabOutScopesTrackerImpl"/>
@@ -2798,7 +2798,10 @@
     <projectService serviceInterface="consulo.language.impl.psi.internal.FormattingService" serviceImplementation="consulo.ide.impl.language.psi.FormattingServiceImpl"/>
     <projectService serviceInterface="consulo.fileEditor.OpenFileDescriptorFactory" serviceImplementation="consulo.ide.impl.fileEditor.OpenFileDescriptorFactoryImpl"/>
 
-    <applicationService serviceInterface="consulo.ui.ex.util.InvokerFactory" serviceImplementation="consulo.ide.ui.ex.impl.util.InvokerFactoryImpl" />
+    <applicationService serviceInterface="consulo.ui.ex.util.InvokerFactory" serviceImplementation="consulo.ide.ui.ex.impl.util.InvokerFactoryImpl"/>
+    <applicationService serviceInterface="consulo.component.store.impl.internal.StorageNotificationService" serviceImplementation="consulo.ide.impl.store.IdeStorageNotificationService"/>
+    <projectService serviceInterface="consulo.codeEditor.internal.EditorInternalHelper" serviceImplementation="consulo.ide.impl.language.IdeEditorInternalHelper"/>
+    <projectService serviceInterface="consulo.language.codeStyle.PostprocessReformattingAspect" serviceImplementation="consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl"/>
   </extensions>
 
   <applicationListeners>

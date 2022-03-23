@@ -17,18 +17,21 @@
 package com.intellij.openapi.components.impl;
 
 import consulo.application.impl.internal.macro.PathMacrosImpl;
-import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.application.macro.PathMacros;
+import consulo.component.impl.macro.BasePathMacroManager;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.PathMacroUtil;
-import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.module.Module;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
 public class ModulePathMacroManager extends BasePathMacroManager {
+  public static ModulePathMacroManager getInstance(Module module) {
+    return module.getInstance(ModulePathMacroManager.class);
+  }
+
   private final Module myModule;
 
   @Inject
@@ -56,8 +59,7 @@ public class ModulePathMacroManager extends BasePathMacroManager {
 
     if (!myModule.isDisposed()) {
 
-      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath(), PathMacroUtil
-        .getUserHomePath());
+      addFileHierarchyReplacements(result, PathMacrosImpl.MODULE_DIR_MACRO_NAME, myModule.getModuleDirPath(), PathMacroUtil.getUserHomePath());
     }
 
     return result;

@@ -38,7 +38,7 @@ import consulo.ide.impl.psi.codeStyle.NameUtil;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;

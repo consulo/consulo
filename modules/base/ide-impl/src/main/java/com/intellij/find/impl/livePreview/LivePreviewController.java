@@ -4,6 +4,7 @@ package com.intellij.find.impl.livePreview;
 import com.intellij.find.*;
 import com.intellij.find.impl.FindResultImpl;
 import consulo.application.ApplicationManager;
+import consulo.language.util.ReadonlyStatusHandlerUtil;
 import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -15,7 +16,6 @@ import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.event.SelectionListener;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.disposer.Disposable;
 
@@ -152,7 +152,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
   @Nullable
   public TextRange performReplace(final FindResult occurrence, final String replacement, final Editor editor) {
     Project project = mySearchResults.getProject();
-    if (myReplaceDenied || !ReadonlyStatusHandler.ensureDocumentWritable(project, editor.getDocument())) return null;
+    if (myReplaceDenied || !ReadonlyStatusHandlerUtil.ensureDocumentWritable(project, editor.getDocument())) return null;
     FindModel findModel = mySearchResults.getFindModel();
     CommandProcessor.getInstance().runUndoTransparentAction(() -> getEditor().getCaretModel().moveToOffset(occurrence.getEndOffset()));
     TextRange result = FindUtil.doReplace(project, editor.getDocument(), findModel, new FindResultImpl(occurrence.getStartOffset(), occurrence.getEndOffset()), replacement, true, new ArrayList<>());
@@ -162,7 +162,7 @@ public class LivePreviewController implements LivePreview.Delegate, FindUtil.Rep
 
   private void performReplaceAll(Editor e) {
     Project project = mySearchResults.getProject();
-    if (!ReadonlyStatusHandler.ensureDocumentWritable(project, e.getDocument())) {
+    if (!ReadonlyStatusHandlerUtil.ensureDocumentWritable(project, e.getDocument())) {
       return;
     }
     if (mySearchResults.getFindModel() != null) {

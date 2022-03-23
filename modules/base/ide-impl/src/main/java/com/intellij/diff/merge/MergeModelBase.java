@@ -17,19 +17,21 @@ package com.intellij.diff.merge;
 
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineRange;
-import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UnexpectedUndoException;
+import consulo.undoRedo.UndoManager;
+import consulo.undoRedo.UnexpectedUndoException;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.project.Project;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.collection.primitive.ints.IntSet;
@@ -67,7 +69,7 @@ public abstract class MergeModelBase<S extends MergeModelBase.State> implements 
   public MergeModelBase(@Nullable Project project, @Nonnull Document document) {
     myProject = project;
     myDocument = document;
-    myUndoManager = myProject != null ? UndoManager.getInstance(myProject) : UndoManager.getGlobalInstance();
+    myUndoManager = myProject != null ? ProjectUndoManager.getInstance(myProject) : ApplicationUndoManager.getGlobalInstance();
 
     myDocument.addDocumentListener(new MyDocumentListener(), this);
   }

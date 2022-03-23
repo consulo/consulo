@@ -47,19 +47,19 @@ public class DesktopCaretImpl extends CodeEditorCaretBase {
     final EditorComponentImpl content = (EditorComponentImpl)myEditor.getContentComponent();
 
     int editorUpdateWidth = myEditor.getScrollPane().getHorizontalScrollBar().getValue() + visibleArea.width;
-    int gutterUpdateWidth = gutter.getWidth();
+    int gutterUpdateWidth = gutter.getComponent().getWidth();
     int additionalRepaintHeight = this == myCaretModel.getPrimaryCaret() && Registry.is("editor.adjust.right.margin") && EditorPainter.isMarginShown(myEditor) ? 1 : 0;
     if ((oldY <= newY + newHeight) && (oldY + oldHeight >= newY)) { // repaint regions overlap
       int y = Math.min(oldY, newY);
       int height = Math.max(oldY + oldHeight, newY + newHeight) - y;
       content.repaintEditorComponent(0, y - additionalRepaintHeight, editorUpdateWidth, height + additionalRepaintHeight);
-      gutter.repaint(0, y, gutterUpdateWidth, height);
+      gutter.getComponent().repaint(0, y, gutterUpdateWidth, height);
     }
     else {
       content.repaintEditorComponent(0, oldY - additionalRepaintHeight, editorUpdateWidth, oldHeight + additionalRepaintHeight);
-      gutter.repaint(0, oldY, gutterUpdateWidth, oldHeight);
+      gutter.getComponent().repaint(0, oldY, gutterUpdateWidth, oldHeight);
       content.repaintEditorComponent(0, newY - additionalRepaintHeight, editorUpdateWidth, newHeight + additionalRepaintHeight);
-      gutter.repaint(0, newY, gutterUpdateWidth, newHeight);
+      gutter.getComponent().repaint(0, newY, gutterUpdateWidth, newHeight);
     }
   }
 }

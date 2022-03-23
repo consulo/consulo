@@ -15,15 +15,17 @@
  */
 package com.intellij.diff.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.EmptyAction;
-import consulo.ui.ex.action.IdeActions;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.undoRedo.UndoManager;
 import consulo.codeEditor.Editor;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.IdeActions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,7 +45,7 @@ public class ProxyUndoRedoAction extends DumbAwareAction {
   }
 
   public static void register(@Nullable Project project, @Nonnull Editor editor, @Nonnull JComponent component) {
-    UndoManager undoManager = project != null ? UndoManager.getInstance(project) : UndoManager.getGlobalInstance();
+    UndoManager undoManager = project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getGlobalInstance();
     TextEditor textEditor = TextEditorProvider.getInstance().getTextEditor(editor);
     if (undoManager != null) {
       EmptyAction.setupAction(new ProxyUndoRedoAction(undoManager, textEditor, true), IdeActions.ACTION_UNDO, component);

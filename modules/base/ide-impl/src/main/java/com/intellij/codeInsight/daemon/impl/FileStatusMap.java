@@ -281,6 +281,11 @@ public final class FileStatusMap implements Disposable {
   }
 
   private static final RangeMarker WHOLE_FILE_DIRTY_MARKER = new RangeMarker() {
+    @Override
+    public long getId() {
+      throw new UnsupportedOperationException();
+    }
+
     @Nonnull
     @Override
     public Document getDocument() {

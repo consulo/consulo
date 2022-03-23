@@ -3,16 +3,17 @@ package com.intellij.dupLocator.treeHash;
 import com.intellij.dupLocator.*;
 import com.intellij.dupLocator.util.DuplocatorUtil;
 import com.intellij.dupLocator.util.PsiFragment;
-import consulo.component.macro.PathMacroManager;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.project.Project;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import com.intellij.usageView.UsageInfo;
+import consulo.component.macro.PathMacroManager;
+import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.usageView.UsageInfo;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntObjectProcedure;
 import gnu.trove.TObjectIntHashMap;
@@ -341,7 +342,7 @@ public class DuplocatorHashCallback implements FragmentsCollector {
 
   @SuppressWarnings({"HardCodedStringLiteral"})
   private static void writeFragments(final List<? extends PsiFragment> psiFragments, Element duplicateElement, Project project, final boolean shouldWriteOffsets) {
-    final PathMacroManager macroManager = PathMacroManager.getInstance(project);
+    final PathMacroManager macroManager = ProjectPathMacroManager.getInstance(project);
     final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
 
     for (PsiFragment fragment : psiFragments) {

@@ -18,14 +18,10 @@ package com.intellij.openapi.fileEditor.impl;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.plugins.PluginManagerCore;
-import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NullUtils;
@@ -47,6 +43,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.dumb.PossiblyDumbAware;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.application.ui.wm.ExpirableRunnable;
@@ -73,6 +70,9 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.FileEditorsSplittersBase;
 import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectTopics;
@@ -303,7 +303,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     assertDispatchThread();
 
     // FIXME [VISTALL] reimpl this
-    if(myProject.getApplication().isSwingApplication()) {
+    if (myProject.getApplication().isSwingApplication()) {
       final IdeFocusManager fm = ProjectIdeFocusManager.getInstance(myProject);
       Component focusOwner = fm.getFocusOwner();
       if (focusOwner == null) {
@@ -661,7 +661,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     if (!myProject.getApplication().isSwingApplication()) {
       return false;
     }
-    
+
     AWTEvent event = IdeEventQueue.getInstance().getTrueCurrentEvent();
 
     // Shift was used while clicking
@@ -1770,7 +1770,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
           VirtualFile file = editor.getFile();
           if (!file.isValid()) continue;
 
-          Pair<VirtualFile, Integer> newFilePair = null;
+          com.intellij.openapi.util.Pair<VirtualFile, Integer> newFilePair = null;
 
           for (EditorFileSwapper each : swappers) {
             newFilePair = each.getFileToSwapTo(myProject, editor);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.command.undo;
+package consulo.undoRedo;
 
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
-public abstract class DocumentReferenceManager {
-  @Nonnull
-  public static DocumentReferenceManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(DocumentReferenceManager.class);
+/**
+ * @author VISTALL
+ * @since 2018-08-24
+ */
+public interface ProjectUndoManager extends UndoManager {
+  static UndoManager getInstance(@Nonnull Project project) {
+    return project.getInstance(ProjectUndoManager.class);
   }
-
-  @Nonnull
-  public abstract DocumentReference create(@Nonnull Document document);
-
-  @Nonnull
-  public abstract DocumentReference create(@Nonnull VirtualFile file);
 }

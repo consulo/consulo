@@ -15,12 +15,12 @@
  */
 package consulo.configurationStore.vcs;
 
-import consulo.components.impl.stores.IProjectStore;
-import consulo.project.Project;
-import consulo.project.internal.ProjectEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.changes.IgnoredFileProvider;
+import consulo.components.impl.stores.IProjectStore;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 public class StoreIgnoredFileProvider implements IgnoredFileProvider {
   @Override
   public boolean isIgnoredFile(@Nonnull Project project, @Nonnull FilePath filePath) {
-    IProjectStore stateStore = ((ProjectEx)project).getStateStore();
+    IProjectStore stateStore = project.getInstance(IProjectStore.class);
     return Comparing.equal(filePath.getVirtualFile(), stateStore.getWorkspaceFile());
   }
 }

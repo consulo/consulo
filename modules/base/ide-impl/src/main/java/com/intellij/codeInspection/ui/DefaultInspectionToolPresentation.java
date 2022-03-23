@@ -15,34 +15,36 @@
  */
 package com.intellij.codeInspection.ui;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.language.editor.inspection.*;
-import com.intellij.codeInspection.*;
+import com.intellij.codeInspection.ActionClassHolder;
+import com.intellij.codeInspection.ProblemDescriptorUtil;
 import com.intellij.codeInspection.ex.*;
-import com.intellij.codeInspection.reference.*;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.component.macro.PathMacroManager;
-import consulo.codeEditor.Editor;
-import consulo.language.editor.inspection.reference.*;
-import consulo.language.editor.inspection.scheme.*;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.project.Project;
+import com.intellij.codeInspection.reference.RefUtil;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.codeEditor.Editor;
+import consulo.component.macro.PathMacroManager;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.reference.*;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
 import org.jdom.Element;
 import org.jdom.IllegalDataException;
 import org.jetbrains.annotations.NonNls;
@@ -270,7 +272,7 @@ public class DefaultInspectionToolPresentation implements ProblemDescriptionsPro
 
     @NonNls final String ext = ".xml";
     final String fileName = ourOutputPath + File.separator + myToolWrapper.getShortName() + ext;
-    final PathMacroManager pathMacroManager = PathMacroManager.getInstance(getContext().getProject());
+    final PathMacroManager pathMacroManager = ProjectPathMacroManager.getInstance(getContext().getProject());
     PrintWriter printWriter = null;
     try {
       new File(ourOutputPath).mkdirs();

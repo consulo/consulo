@@ -15,17 +15,19 @@
  */
 package com.intellij.ide.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.undoRedo.UndoManager;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.dataContext.DataContext;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.action.Presentation;
+import consulo.util.lang.Pair;
 
 public abstract class UndoRedoAction extends DumbAwareAction {
   public UndoRedoAction() {
@@ -68,7 +70,7 @@ public abstract class UndoRedoAction extends DumbAwareAction {
 
   private static UndoManager getUndoManager(FileEditor editor, DataContext dataContext) {
     Project project = getProject(editor, dataContext);
-    return project != null ? UndoManager.getInstance(project) : UndoManager.getGlobalInstance();
+    return project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getGlobalInstance();
   }
 
   private static Project getProject(FileEditor editor, DataContext dataContext) {
@@ -86,5 +88,5 @@ public abstract class UndoRedoAction extends DumbAwareAction {
 
   protected abstract boolean isAvailable(FileEditor editor, UndoManager undoManager);
 
-  protected abstract Pair<String, String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager);
+  protected abstract consulo.util.lang.Pair<String, String> getActionNameAndDescription(FileEditor editor, UndoManager undoManager);
 }

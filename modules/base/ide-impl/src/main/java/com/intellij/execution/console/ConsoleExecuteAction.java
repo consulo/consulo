@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.console;
 
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -24,8 +25,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.EmptyAction;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
-import com.intellij.openapi.command.undo.DocumentReferenceManager;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.document.DocumentReferenceManager;
 import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.function.Condition;
@@ -140,7 +140,7 @@ public class ConsoleExecuteAction extends DumbAwareAction {
 
       String text = ((LanguageConsoleImpl)consoleView).prepareExecuteAction(myAddToHistory && !myUseProcessStdIn,
                                                                             myPreserveMarkup, true);
-      ((UndoManagerImpl)UndoManager.getInstance(consoleView.getProject())).invalidateActionsFor(DocumentReferenceManager.getInstance().create(
+      ((UndoManagerImpl)ProjectUndoManager.getInstance(consoleView.getProject())).invalidateActionsFor(DocumentReferenceManager.getInstance().create(
               consoleView.getCurrentEditor().getDocument()));
 
       if (myUseProcessStdIn) {

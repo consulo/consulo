@@ -103,7 +103,7 @@ public class DaemonProgressIndicator extends AbstractProgressIndicatorBase imple
     return super.toString() + (debug ? "; "+myTraceableDisposable.getStackTrace()+"\n;" : "");
   }
 
-  boolean isDisposed() {
+  public boolean isDisposed() {
     return myDisposed;
   }
 }

@@ -2,6 +2,7 @@
 
 package com.intellij.codeInsight.hint;
 
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.CodeInsightSettings;
@@ -19,7 +20,6 @@ import com.intellij.lang.parameterInfo.*;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
-import com.intellij.openapi.command.undo.UndoManager;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.document.RangeMarker;
@@ -170,7 +170,7 @@ public class ParameterInfoController extends UserDataHolderBase implements Dispo
     myEditorCaretListener = new CaretListener() {
       @Override
       public void caretPositionChanged(@Nonnull CaretEvent e) {
-        if (!UndoManager.getInstance(myProject).isUndoOrRedoInProgress()) {
+        if (!ProjectUndoManager.getInstance(myProject).isUndoOrRedoInProgress()) {
           syncUpdateOnCaretMove();
           rescheduleUpdate();
         }

@@ -1,17 +1,17 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util;
+package consulo.language.impl.psi.internal;
 
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.application.util.ConcurrentFactoryMap;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -73,7 +74,7 @@ final class CachedValueStabilityChecker {
   }
 
   static void checkProvidersEquivalent(CachedValueProvider<?> p1, CachedValueProvider<?> p2, Key<?> key) throws Exception {
-    if (p1 == p2 || !DO_CHECKS || ApplicationInfoImpl.isInStressTest()) return;
+    if (p1 == p2 || !DO_CHECKS) return;
 
     if (p1.getClass() != p2.getClass()) {
       if (!seemConcurrentlyCreatedLambdas(p1.getClass(), p2.getClass())) {
@@ -176,7 +177,7 @@ final class CachedValueStabilityChecker {
     Class<?> superclass = clazz.getSuperclass();
     if (superclass == null) return false;
 
-    if ((o instanceof Supplier || o instanceof Function || o instanceof java.util.function.Function) && Object.class.equals(clazz.getSuperclass())) {
+    if ((o instanceof Supplier || o instanceof Function) && Object.class.equals(clazz.getSuperclass())) {
       return true;
     }
 

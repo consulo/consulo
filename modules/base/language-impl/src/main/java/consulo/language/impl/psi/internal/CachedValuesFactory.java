@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.language.impl.psi.internal;
 
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;

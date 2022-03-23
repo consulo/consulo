@@ -6,7 +6,6 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.dnd.DnDManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.EditorTextInsertHandler;
 import com.intellij.openapi.editor.actionSystem.LatencyListener;
@@ -24,12 +23,12 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.ui.mac.MacGestureSupportForEditor;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.Consumer;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.ui.UISettings;
@@ -50,7 +49,7 @@ import consulo.codeEditor.internal.RealEditor;
 import consulo.codeEditor.markup.GutterDraggableObject;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.LineMarkerRenderer;
-import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -503,7 +502,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   }
 
   @Override
-  protected boolean canImpactGutterSize(@Nonnull RangeHighlighterEx highlighter) {
+  protected boolean canImpactGutterSize(@Nonnull RangeHighlighter highlighter) {
     if (highlighter.getGutterIconRenderer() != null) return true;
     LineMarkerRenderer lineMarkerRenderer = highlighter.getLineMarkerRenderer();
     if (lineMarkerRenderer == null) return false;
@@ -513,7 +512,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   }
 
   @Override
-  protected void onHighlighterChanged(@Nonnull RangeHighlighterEx highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
+  protected void onHighlighterChanged(@Nonnull RangeHighlighter highlighter, boolean canImpactGutterSize, boolean fontStyleOrColorChanged, boolean remove) {
     if (myDocument.isInBulkUpdate()) return; // bulkUpdateFinished() will repaint anything
 
     if (canImpactGutterSize) {
@@ -620,7 +619,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   }
 
   @Override
-  public void registerScrollBarRepaintCallback(@Nullable Consumer<Graphics> callback) {
+  public void registerScrollBarRepaintCallback(@Nullable java.util.function.Consumer<Graphics> callback) {
     myVerticalScrollBar.registerRepaintCallback(callback);
   }
 
@@ -2509,7 +2508,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
   }
 
   class MyVerticalScrollBar extends JBScrollBar implements IdeGlassPane.TopComponent {
-    private Consumer<Graphics> myRepaintCallback;
+    private java.util.function.Consumer<Graphics> myRepaintCallback;
 
     private MyVerticalScrollBar(@JdkConstants.AdjustableOrientation int orientation) {
       super(orientation);
@@ -2519,7 +2518,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     public void paint(Graphics g) {
       super.paint(g);
       if (myRepaintCallback != null) {
-        myRepaintCallback.consume(g);
+        myRepaintCallback.accept(g);
       }
     }
 
@@ -2537,7 +2536,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
       return myEditorComponent.getScrollableBlockIncrement(vr, SwingConstants.VERTICAL, direction);
     }
 
-    private void registerRepaintCallback(@Nullable Consumer<Graphics> callback) {
+    private void registerRepaintCallback(@Nullable java.util.function.Consumer<Graphics> callback) {
       myRepaintCallback = callback;
     }
   }

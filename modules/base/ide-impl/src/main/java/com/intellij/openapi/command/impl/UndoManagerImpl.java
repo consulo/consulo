@@ -15,43 +15,43 @@
  */
 package com.intellij.openapi.command.impl;
 
-import consulo.application.CommonBundle;
-import consulo.dataContext.DataManager;
 import com.intellij.idea.ActionsBundle;
-import consulo.language.editor.CommonDataKeys;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.ex.WindowManagerEx;
+import com.intellij.util.ObjectUtils;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.*;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.fileEditor.TextEditor;
-import consulo.undoRedo.event.CommandEvent;
-import consulo.undoRedo.event.CommandListener;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import com.intellij.openapi.command.undo.*;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.internal.ExternalChangeAction;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
-import com.intellij.openapi.util.Comparing;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.UndoManager;
+import consulo.undoRedo.UndoableAction;
+import consulo.undoRedo.event.CommandEvent;
+import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
-import com.intellij.openapi.util.Pair;
-import consulo.application.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.document.FileDocumentManager;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import consulo.language.psi.internal.ExternalChangeAction;
-import consulo.language.psi.PsiDocumentManager;
-import com.intellij.util.ObjectUtils;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.text.TextEditorProvider;
-import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -86,7 +86,13 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   private int myCommandTimestamp = 1;
 
   private int myCommandLevel;
-  private enum OperationState { NONE, UNDO, REDO }
+
+  private enum OperationState {
+    NONE,
+    UNDO,
+    REDO
+  }
+
   private OperationState myCurrentOperationState = OperationState.NONE;
 
   private DocumentReference myOriginatorReference;
@@ -165,9 +171,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
       }
     }, this);
 
-    myUndoProviders = myProject == null
-                      ? UndoProvider.EP_NAME.getExtensionList()
-                      : UndoProvider.PROJECT_EP_NAME.getExtensionList(myProject);
+    myUndoProviders = myProject == null ? UndoProvider.EP_NAME.getExtensionList() : UndoProvider.PROJECT_EP_NAME.getExtensionList(myProject);
     for (UndoProvider undoProvider : myUndoProviders) {
       if (undoProvider instanceof Disposable) {
         Disposer.register(this, (Disposable)undoProvider);
@@ -297,8 +301,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     if (myCurrentOperationState != OperationState.NONE) return;
 
     if (myCommandLevel == 0) {
-      LOG.assertTrue(action instanceof NonUndoableAction,
-                     "Undoable actions allowed inside commands only (see com.intellij.openapi.command.CommandProcessor.executeCommand())");
+      LOG.assertTrue(action instanceof NonUndoableAction, "Undoable actions allowed inside commands only (see com.intellij.openapi.command.CommandProcessor.executeCommand())");
       commandStarted(UndoConfirmationPolicy.DEFAULT, false);
       myCurrentMerger.addAction(action);
       commandFinished("", null);
@@ -351,20 +354,20 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   @Override
-  public void undo(@Nullable FileEditor editor) {
+  public void undo(@Nullable Object editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     LOG.assertTrue(isUndoAvailable(editor));
     undoOrRedo(editor, true);
   }
 
   @Override
-  public void redo(@Nullable FileEditor editor) {
+  public void redo(@Nullable Object editor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     LOG.assertTrue(isRedoAvailable(editor));
     undoOrRedo(editor, false);
   }
 
-  private void undoOrRedo(final FileEditor editor, final boolean isUndo) {
+  private void undoOrRedo(final Object editor, final boolean isUndo) {
     myCurrentOperationState = isUndo ? OperationState.UNDO : OperationState.REDO;
 
     final RuntimeException[] exception = new RuntimeException[1];
@@ -374,7 +377,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
           PsiDocumentManager.getInstance(myProject).commitAllDocuments();
         }
         CopyPasteManager.getInstance().stopKillRings();
-        myMerger.undoOrRedo(editor, isUndo);
+        myMerger.undoOrRedo((FileEditor)editor, isUndo);
       }
       catch (RuntimeException ex) {
         exception[0] = ex;
@@ -384,9 +387,8 @@ public class UndoManagerImpl implements UndoManager, Disposable {
       }
     };
 
-    String name = getUndoOrRedoActionNameAndDescription(editor, isUndoInProgress()).second;
-    CommandProcessor.getInstance()
-            .executeCommand(myProject, executeUndoOrRedoAction, name, null, myMerger.getUndoConfirmationPolicy());
+    String name = getUndoOrRedoActionNameAndDescription((FileEditor)editor, isUndoInProgress()).second;
+    CommandProcessor.getInstance().executeCommand(myProject, executeUndoOrRedoAction, name, null, myMerger.getUndoConfirmationPolicy());
     if (exception[0] != null) throw exception[0];
   }
 
@@ -401,16 +403,16 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   }
 
   @Override
-  public boolean isUndoAvailable(@Nullable FileEditor editor) {
+  public boolean isUndoAvailable(@Nullable Object editor) {
     return isUndoOrRedoAvailable(editor, true);
   }
 
   @Override
-  public boolean isRedoAvailable(@Nullable FileEditor editor) {
+  public boolean isRedoAvailable(@Nullable Object editor) {
     return isUndoOrRedoAvailable(editor, false);
   }
 
-  boolean isUndoOrRedoAvailable(@Nullable FileEditor editor, boolean undo) {
+  boolean isUndoOrRedoAvailable(@Nullable Object editor, boolean undo) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
     Collection<DocumentReference> refs = getDocRefs(editor);
@@ -428,14 +430,14 @@ public class UndoManagerImpl implements UndoManager, Disposable {
     return stackHolder.canBeUndoneOrRedone(refs);
   }
 
-  private static Collection<DocumentReference> getDocRefs(@Nullable FileEditor editor) {
+  private static Collection<DocumentReference> getDocRefs(@Nullable Object editor) {
     if (editor instanceof TextEditor && ((TextEditor)editor).getEditor().isViewer()) {
       return null;
     }
     if (editor == null) {
       return Collections.emptyList();
     }
-    return getDocumentReferences(editor);
+    return getDocumentReferences((FileEditor)editor);
   }
 
   @Nonnull
@@ -467,36 +469,32 @@ public class UndoManagerImpl implements UndoManager, Disposable {
 
   @Nonnull
   @Override
-  public Pair<String, String> getUndoActionNameAndDescription(FileEditor editor) {
+  public Pair<String, String> getUndoActionNameAndDescription(Object editor) {
     return getUndoOrRedoActionNameAndDescription(editor, true);
   }
 
   @Nonnull
   @Override
-  public Pair<String, String> getRedoActionNameAndDescription(FileEditor editor) {
+  public Pair<String, String> getRedoActionNameAndDescription(Object editor) {
     return getUndoOrRedoActionNameAndDescription(editor, false);
   }
 
   @Nonnull
-  private Pair<String, String> getUndoOrRedoActionNameAndDescription(FileEditor editor, boolean undo) {
+  private Pair<String, String> getUndoOrRedoActionNameAndDescription(Object editor, boolean undo) {
     String desc = isUndoOrRedoAvailable(editor, undo) ? doFormatAvailableUndoRedoAction(editor, undo) : null;
     if (desc == null) desc = "";
     String shortActionName = StringUtil.first(desc, 30, true);
 
     if (desc.isEmpty()) {
-      desc = undo
-             ? ActionsBundle.message("action.undo.description.empty")
-             : ActionsBundle.message("action.redo.description.empty");
+      desc = undo ? ActionsBundle.message("action.undo.description.empty") : ActionsBundle.message("action.redo.description.empty");
     }
 
-    return Pair.create((undo ? ActionsBundle.message("action.undo.text", shortActionName)
-                             : ActionsBundle.message("action.redo.text", shortActionName)).trim(),
-                       (undo ? ActionsBundle.message("action.undo.description", desc)
-                             : ActionsBundle.message("action.redo.description", desc)).trim());
+    return Pair.create((undo ? ActionsBundle.message("action.undo.text", shortActionName) : ActionsBundle.message("action.redo.text", shortActionName)).trim(),
+                       (undo ? ActionsBundle.message("action.undo.description", desc) : ActionsBundle.message("action.redo.description", desc)).trim());
   }
 
   @Nullable
-  private String doFormatAvailableUndoRedoAction(FileEditor editor, boolean isUndo) {
+  private String doFormatAvailableUndoRedoAction(Object editor, boolean isUndo) {
     Collection<DocumentReference> refs = getDocRefs(editor);
     if (refs == null) return null;
     if (isUndo && myMerger.isUndoAvailable(refs)) return myMerger.getCommandName();

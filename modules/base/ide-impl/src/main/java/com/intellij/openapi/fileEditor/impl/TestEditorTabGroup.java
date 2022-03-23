@@ -3,10 +3,10 @@ package com.intellij.openapi.fileEditor.impl;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
-import com.intellij.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 
 public class TestEditorTabGroup {
@@ -31,7 +31,7 @@ public class TestEditorTabGroup {
   }
 
   @Nullable
-  public Pair<FileEditor, FileEditorProvider> getOpenedEditor(){
+  public Pair<FileEditor, FileEditorProvider> getOpenedEditor() {
     VirtualFile openedFile = getOpenedFile();
     if (openedFile == null) {
       return null;

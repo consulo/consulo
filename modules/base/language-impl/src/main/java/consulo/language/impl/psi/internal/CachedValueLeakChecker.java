@@ -1,18 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util;
+package consulo.language.impl.psi.internal;
 
-import consulo.language.ast.ASTNode;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.module.Module;
-import consulo.project.Project;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ref.DebugReflectionUtil;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 
@@ -31,7 +29,7 @@ final class CachedValueLeakChecker {
   private static final Set<String> ourCheckedKeys = ContainerUtil.newConcurrentSet();
 
   static void checkProvider(@Nonnull CachedValueProvider<?> provider, @Nonnull Key<?> key, @Nonnull UserDataHolder userDataHolder) {
-    if (!DO_CHECKS || ApplicationInfoImpl.isInStressTest()) return;
+    if (!DO_CHECKS) return;
     if (!ourCheckedKeys.add(key.toString())) return; // store strings because keys are created afresh in each (test) project
 
     findReferencedPsi(provider, key, userDataHolder);

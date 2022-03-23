@@ -25,6 +25,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
+import consulo.container.impl.classloader.PluginLoadStatistics;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
@@ -114,6 +115,10 @@ public abstract class ApplicationStarter {
     libraryStats.dump("Libraries", LOG::info);
     
     createApplication(isHeadlessMode, mySplashRef, args);
+  }
+
+  protected void dumpPluginClassStatistics() {
+    PluginLoadStatistics.get().dumpPluginClassStatistics(LOG::info);
   }
 
   protected void analyzeLibraries(Map<String, List<String>> filesWithMarkers) {

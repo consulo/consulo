@@ -143,7 +143,7 @@ class ApplyPatchChange {
 
     Color color = getStatusColor();
     if (isResolved()) {
-      color = ColorUtil.mix(color, myViewer.getPatchEditor().getGutterComponentEx().getBackground(), 0.6f);
+      color = ColorUtil.mix(color, myViewer.getPatchEditor().getGutterComponentEx().getComponent().getBackground(), 0.6f);
     }
 
     String tooltip = getStatusText();

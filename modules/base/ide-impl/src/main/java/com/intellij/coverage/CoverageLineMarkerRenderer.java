@@ -260,8 +260,8 @@ public class CoverageLineMarkerRenderer implements LineMarkerRendererEx, ActiveG
       public void run() {
         Point p = editor.visualPositionToXY(editor.offsetToVisualPosition(firstOffset));
         EditorGutterComponentEx editorComponent = (EditorGutterComponentEx)editor.getGutter();
-        JLayeredPane layeredPane = editorComponent.getRootPane().getLayeredPane();
-        p = SwingUtilities.convertPoint(editorComponent, THICKNESS, p.y, layeredPane);
+        JLayeredPane layeredPane = editorComponent.getComponent().getRootPane().getLayeredPane();
+        p = SwingUtilities.convertPoint(editorComponent.getComponent(), THICKNESS, p.y, layeredPane);
         showHint(editor, p, lineNumber);
       }
     });

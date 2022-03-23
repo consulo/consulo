@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;

@@ -31,7 +31,7 @@ import com.intellij.packaging.impl.elements.*;
 import com.intellij.util.PathUtil;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.application.util.function.Processor;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;

@@ -3,20 +3,20 @@ package com.intellij.ide.scratch;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.LangBundle;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import com.intellij.lang.PerFileMappings;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UnexpectedUndoException;
+import consulo.undoRedo.UnexpectedUndoException;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.ui.ex.popup.*;
 import consulo.virtualFileSystem.VirtualFile;
@@ -293,7 +293,7 @@ public abstract class LRUPopupBuilder<T> {
       }
     };
     action.redo();
-    UndoManager.getInstance(project).undoableActionPerformed(action);
+    ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
 
     for (VirtualFile file : matchedExtensions) {
       try {

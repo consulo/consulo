@@ -19,6 +19,7 @@ module consulo.document.api {
           consulo.document.impl,
           consulo.ide.impl,
           consulo.language.editor.api,
+          consulo.language.editor.impl,
           consulo.code.editor.api,
           consulo.code.editor.impl,
           consulo.language.inject.impl,

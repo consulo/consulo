@@ -8,6 +8,7 @@ import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.function.IntUnaryOperator;
@@ -79,5 +80,9 @@ public interface EditorGutterComponentEx extends EditorGutter {
   }
 
   default void repaint() {
+  }
+
+  default JComponent getComponent() {
+    throw new AbstractMethodError("unsupported platform");
   }
 }

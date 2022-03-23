@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.codeStyle;
 
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.index.io.data.IOUtil;
 import com.intellij.util.text.CharArrayCharSequence;
 import com.intellij.util.text.CharArrayUtil;

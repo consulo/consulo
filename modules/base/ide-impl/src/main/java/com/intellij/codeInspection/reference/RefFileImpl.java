@@ -15,17 +15,18 @@
  */
 package com.intellij.codeInspection.reference;
 
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.application.ApplicationManager;
-import consulo.component.macro.PathMacroManager;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefFile;
 import consulo.language.editor.inspection.reference.RefManager;
 import consulo.language.editor.inspection.reference.RefVisitor;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -69,7 +70,7 @@ public class RefFileImpl extends RefElementImpl implements RefFile {
 
   @Nullable
   static RefElement fileFromExternalName(final RefManager manager, final String fqName) {
-    final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(PathMacroManager.getInstance(manager.getProject()).expandPath(fqName));
+    final VirtualFile virtualFile = VirtualFileManager.getInstance().findFileByUrl(ProjectPathMacroManager.getInstance(manager.getProject()).expandPath(fqName));
     if (virtualFile != null) {
       final PsiFile psiFile = PsiManager.getInstance(manager.getProject()).findFile(virtualFile);
       if (psiFile != null) {

@@ -33,7 +33,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

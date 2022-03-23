@@ -17,7 +17,7 @@ package com.intellij.util.graph.impl;
 
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.util.collection.MultiMap;
 import consulo.component.util.graph.Graph;
 import consulo.logging.Logger;

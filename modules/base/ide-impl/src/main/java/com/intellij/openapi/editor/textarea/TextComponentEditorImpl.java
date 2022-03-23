@@ -23,6 +23,7 @@ import consulo.codeEditor.event.EditorMouseMotionListener;
 import com.intellij.openapi.editor.impl.EmptyIndentsModel;
 import consulo.codeEditor.impl.SettingsImpl;
 import consulo.codeEditor.markup.MarkupModel;
+import consulo.dataContext.DataContext;
 import consulo.ui.ex.awt.JBUI;
 import consulo.document.Document;
 import consulo.project.Project;
@@ -139,6 +140,12 @@ public class TextComponentEditorImpl extends UserDataHolderBase implements TextC
   @Override
   public EditorKind getEditorKind() {
     return EditorKind.UNTYPED;
+  }
+
+  @Nonnull
+  @Override
+  public DataContext getDataContext() {
+    throw new UnsupportedOperationException();
   }
 
   @Nonnull

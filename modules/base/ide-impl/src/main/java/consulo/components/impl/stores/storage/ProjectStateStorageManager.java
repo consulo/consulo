@@ -16,6 +16,7 @@
 package consulo.components.impl.stores.storage;
 
 import consulo.component.persist.StoragePathMacros;
+import consulo.component.store.impl.internal.PathMacrosService;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.component.store.impl.internal.storage.StateStorageFacade;
 import consulo.component.store.impl.internal.storage.StateStorageManagerImpl;
@@ -28,8 +29,8 @@ public class ProjectStateStorageManager extends StateStorageManagerImpl {
   @NonNls
   protected static final String ROOT_TAG_NAME = "project";
 
-  public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor) {
-    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, StateStorageFacade.CONSULO_VFS);
+  public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor, PathMacrosService pathMacroManager) {
+    super(macroSubstitutor, ROOT_TAG_NAME, project, project::getMessageBus, ()-> pathMacroManager,StateStorageFacade.CONSULO_VFS);
   }
 
   @Nonnull

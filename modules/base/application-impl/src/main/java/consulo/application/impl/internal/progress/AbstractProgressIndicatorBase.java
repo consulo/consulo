@@ -93,7 +93,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     myActivity = myShouldStartActivity ? ProgressActivityFactory.getInstance().createActivity() : null;
   }
 
-  void stopSystemActivity() {
+  public void stopSystemActivity() {
     Runnable macActivity = myActivity;
     if (macActivity != null) {
       macActivity.run();
@@ -227,7 +227,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
     return myModalityProgress != null;
   }
 
-  final boolean isModalEntity() {
+  public final boolean isModalEntity() {
     return myModalityProgress == this;
   }
 

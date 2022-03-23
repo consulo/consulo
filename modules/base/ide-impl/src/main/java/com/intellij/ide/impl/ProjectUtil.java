@@ -18,10 +18,7 @@ package com.intellij.ide.impl;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
-import consulo.project.internal.ProjectEx;
-import consulo.project.internal.ProjectManagerEx;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
@@ -33,6 +30,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.impl.ProjectOpenProcessors;
+import consulo.project.internal.ProjectManagerEx;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.start.WelcomeFrameManager;
@@ -40,6 +38,7 @@ import consulo.ui.Alert;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -62,7 +61,7 @@ public class ProjectUtil {
   public static boolean isSameProject(@Nullable String projectFilePath, @Nonnull Project project) {
     if (projectFilePath == null) return false;
 
-    IProjectStore projectStore = ((ProjectEx)project).getStateStore();
+    IProjectStore projectStore = project.getInstance(IProjectStore.class);
     String existingBaseDirPath = projectStore.getProjectBasePath();
     if (existingBaseDirPath == null) {
       // could be null if not yet initialized

@@ -18,8 +18,8 @@ package com.intellij.refactoring.changeSignature;
 import com.intellij.ide.actions.CopyReferenceAction;
 import com.intellij.lang.findUsages.DescriptiveNameUtil;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UndoableAction;
+import consulo.undoRedo.UndoableAction;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
@@ -148,7 +148,7 @@ public abstract class ChangeSignatureProcessorBase extends BaseRefactoringProces
         public void redo() {
         }
       };
-      UndoManager.getInstance(myProject).undoableActionPerformed(action);
+      ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action);
     }
     try {
       final ChangeSignatureUsageProcessor[] processors = ChangeSignatureUsageProcessor.EP_NAME.getExtensions();

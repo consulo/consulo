@@ -60,7 +60,7 @@ public class DiffLineMarkerRenderer implements LineMarkerRendererEx {
     EditorGutterComponentEx gutter = ((EditorEx)editor).getGutterComponentEx();
     Graphics2D g2 = (Graphics2D)g;
     int x1 = 0;
-    int x2 = x1 + gutter.getWidth();
+    int x2 = x1 + gutter.getComponent().getWidth();
 
     int y1, y2;
     if (myEmptyRange && myLastLine) {

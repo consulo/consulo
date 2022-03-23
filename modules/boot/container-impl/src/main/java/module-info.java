@@ -7,17 +7,17 @@ module consulo.container.impl {
   // required by gson
   requires transitive java.sql;
   // this dependency fix batik runtime
-  requires transitive jdk.xml.dom;
+  requires transitive jdk.xml.dom;                                                         
   // required consulo-util-lang
   requires transitive jdk.unsupported;
 
-  exports consulo.container.impl to consulo.ide.impl, consulo.application.impl, consulo.component.impl;
-  exports consulo.container.impl.classloader to consulo.ide.impl, consulo.application.impl;
+  exports consulo.container.impl to consulo.ide.impl, consulo.application.impl, consulo.component.impl, consulo.proxy, consulo.desktop.awt.bootstrap;
+  exports consulo.container.impl.classloader to consulo.ide.impl, consulo.application.impl, consulo.desktop.awt.bootstrap;
   exports consulo.container.impl.classloader.proxy to consulo.proxy;
   exports consulo.container.impl.parser to consulo.ide.impl, consulo.application.impl, consulo.component.impl;
 
   // FIXME this export not work as expected in multiclassloader system, but need for compilation, this export hardcoded in Java9ModuleInitializer
-  exports consulo.container.impl.securityManager.impl to consulo.application.impl;
+  exports consulo.container.impl.securityManager.impl to consulo.application.impl, consulo.ide.impl;
 
   uses consulo.container.boot.ContainerStartup;
 

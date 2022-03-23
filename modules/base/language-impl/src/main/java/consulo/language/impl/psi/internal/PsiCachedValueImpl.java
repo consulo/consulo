@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.psi.internal;
 
-import consulo.language.impl.psi.internal.PsiCachedValue;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.util.CachedValue;
 import consulo.language.psi.util.CachedValueProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

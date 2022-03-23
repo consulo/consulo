@@ -15,19 +15,18 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
-import consulo.colorScheme.EditorColorsScheme;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.codeEditor.*;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.codeEditor.event.EditorMouseMotionListener;
 import consulo.codeEditor.markup.MarkupModel;
-import consulo.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import com.intellij.ui.popup.AbstractPopup;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.codeEditor.*;
+import consulo.fileEditor.FileEditorManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.UserDataHolderBase;
 
 import javax.annotation.Nonnull;
@@ -311,5 +310,11 @@ class LazyEditor extends UserDataHolderBase implements Editor {
   @Override
   public int getAscent() {
     return getEditor().getAscent();
+  }
+
+  @Nonnull
+  @Override
+  public DataContext getDataContext() {
+    return getEditor().getDataContext();
   }
 }

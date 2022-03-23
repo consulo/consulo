@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.command.impl;
 
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.DocumentReference;
-import com.intellij.openapi.command.undo.DocumentReferenceManager;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.document.DocumentReference;
+import consulo.document.DocumentReferenceManager;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
@@ -75,7 +75,7 @@ public class FinishMarkAction extends BasicUndoableAction {
     CommandProcessor.getInstance().executeCommand(project, new Runnable() {
       public void run() {
         DocumentReference reference = DocumentReferenceManager.getInstance().create(editor.getDocument());
-        UndoManager.getInstance(project).undoableActionPerformed(new FinishMarkAction(reference, startAction));
+        ProjectUndoManager.getInstance(project).undoableActionPerformed(new FinishMarkAction(reference, startAction));
         StartMarkAction.markFinished(project);
       }
     }, "finish", null);

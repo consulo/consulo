@@ -17,7 +17,7 @@
 package com.intellij.tasks.context;
 
 import com.intellij.openapi.command.undo.GlobalUndoableAction;
-import com.intellij.openapi.command.undo.UnexpectedUndoException;
+import consulo.undoRedo.UnexpectedUndoException;
 import com.intellij.tasks.Task;
 import org.jetbrains.annotations.NonNls;
 

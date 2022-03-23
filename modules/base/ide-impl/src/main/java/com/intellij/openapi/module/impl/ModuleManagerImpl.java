@@ -16,49 +16,50 @@
 
 package com.intellij.openapi.module.impl;
 
-import consulo.component.util.graph.*;
-import consulo.module.*;
-import consulo.application.ApplicationManager;
-import consulo.application.TransactionGuard;
-import consulo.application.WriteAction;
-import consulo.component.macro.PathMacroManager;
-import consulo.component.persist.PersistentStateComponentWithModificationTracker;
-import consulo.component.store.impl.internal.StateStorageException;
-import com.intellij.openapi.module.*;
-import consulo.module.Module;
-import consulo.module.event.ModuleListener;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.module.content.layer.ModifiableRootModel;
-import consulo.module.content.ModuleRootManager;
+import com.intellij.openapi.components.impl.ModulePathMacroManager;
+import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
 import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
 import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
 import com.intellij.openapi.util.Comparing;
-import consulo.component.util.ModificationTracker;
-import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.StandardFileSystems;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.util.ExceptionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
-import consulo.component.messagebus.MessageBus;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
+import consulo.application.WriteAction;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.component.ProcessCanceledException;
+import consulo.component.macro.PathMacroManager;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.persist.PersistentStateComponentWithModificationTracker;
+import consulo.component.store.impl.internal.StateStorageException;
+import consulo.component.util.ModificationTracker;
+import consulo.component.util.graph.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.*;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.event.ModuleListener;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.StandardFileSystems;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -438,7 +439,7 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
    * If dirurl equals file://$PROJECT_DIR$ it ill replace to  file://$MODULE_DIR$, and after restart it ill throw error directory not found
    */
   private static void collapseOrExpandMacros(Module module, Element element, boolean collapse) {
-    final PathMacroManager pathMacroManager = PathMacroManager.getInstance(module);
+    final PathMacroManager pathMacroManager = ModulePathMacroManager.getInstance(module);
     for (Element child : element.getChildren()) {
       if (collapse) {
         pathMacroManager.collapsePaths(child);

@@ -80,7 +80,7 @@ public class ProjectStorageUtil {
 
   @RequiredUIAccess
   public static void checkUnknownMacros(ProjectEx project, final boolean showDialog) {
-    final IProjectStore stateStore = project.getStateStore();
+    final IProjectStore stateStore = project.getInstance(IProjectStore.class);
 
     final TrackingPathMacroSubstitutor[] substitutors = stateStore.getSubstitutors();
     final Set<String> unknownMacros = new HashSet<>();

@@ -579,7 +579,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
             if (myVisualLine == -1) return;
             Dimension size = getPreferredSize();
             EditorGutterComponentEx gutterComponentEx = myEditor.getGutterComponentEx();
-            int gutterWidth = gutterComponentEx.getWidth();
+            int gutterWidth = gutterComponentEx.getComponent().getWidth();
             if (myCacheLevel2 == null || myCacheStartLine > myStartVisualLine || myCacheEndLine < myEndVisualLine) {
               myCacheStartLine = fitLineToEditor(myVisualLine - myCachePreviewLines);
               myCacheEndLine = fitLineToEditor(myCacheStartLine + 2 * myCachePreviewLines + JBUI.scale(1));
@@ -596,7 +596,7 @@ public class DesktopEditorMarkupModelImpl extends MarkupModelImpl implements Edi
               cg.setTransform(translateInstance);
 
               cg.setClip(0, -lineShift, gutterWidth, myCacheLevel2.getHeight());
-              gutterComponentEx.paint(cg);
+              gutterComponentEx.getComponent().paint(cg);
               translateInstance = AffineTransform.getTranslateInstance(gutterWidth - JBUI.scale(3), lineShift);
               translateInstance.preConcatenate(t);
               cg.setTransform(translateInstance);

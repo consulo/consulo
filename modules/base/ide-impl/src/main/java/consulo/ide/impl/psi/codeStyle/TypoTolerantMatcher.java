@@ -7,7 +7,7 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.SmartList;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.index.io.data.IOUtil;
 import com.intellij.util.text.NameUtilCore;
 import org.jetbrains.annotations.Contract;

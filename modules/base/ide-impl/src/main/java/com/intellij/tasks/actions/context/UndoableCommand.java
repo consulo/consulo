@@ -16,10 +16,10 @@
 
 package com.intellij.tasks.actions.context;
 
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UndoableAction;
-import com.intellij.openapi.command.undo.UnexpectedUndoException;
+import consulo.undoRedo.UndoableAction;
+import consulo.undoRedo.UnexpectedUndoException;
 import consulo.project.Project;
 
 /**
@@ -37,7 +37,7 @@ public class UndoableCommand {
         catch (UnexpectedUndoException e) {
           throw new RuntimeException(e);
         }
-        UndoManager.getInstance(project).undoableActionPerformed(action);
+        ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
 
       }
     }, name, groupId);

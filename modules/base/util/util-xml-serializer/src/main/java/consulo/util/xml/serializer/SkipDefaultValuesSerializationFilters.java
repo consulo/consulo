@@ -44,7 +44,7 @@ public class SkipDefaultValuesSerializationFilters extends SerializationFilterBa
     Class<?> c = bean.getClass();
     Object o = myDefaultBeans.get(c);
     if (o == null) {
-      o = ReflectionUtil.newInstance(c);
+      o = InternalReflectionUtil.newInstance(c);
       configure(o);
 
       myDefaultBeans.put(c, o);

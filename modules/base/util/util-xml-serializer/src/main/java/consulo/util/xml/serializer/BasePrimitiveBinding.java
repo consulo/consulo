@@ -16,7 +16,6 @@
 package consulo.util.xml.serializer;
 
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.reflect.ReflectionUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,7 +41,7 @@ abstract class BasePrimitiveBinding extends Binding {
     }
     else {
       //noinspection unchecked
-      myConverter = ReflectionUtil.newInstance(converterClass);
+      myConverter = InternalReflectionUtil.newInstance(converterClass);
     }
   }
 }

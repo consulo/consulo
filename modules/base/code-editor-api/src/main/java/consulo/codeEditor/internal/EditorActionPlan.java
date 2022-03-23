@@ -69,12 +69,12 @@ public class EditorActionPlan implements ActionPlan {
     return myCaretOffset - myEditor.getCaretModel().getOffset();
   }
 
-  static class Replacement {
+  public static class Replacement {
     private final int myBegin;
     private final int myEnd;
     private final String myText;
 
-    Replacement(int begin, int end, String text) {
+    public Replacement(int begin, int end, String text) {
       myBegin = begin;
       myEnd = end;
       myText = text;

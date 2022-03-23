@@ -2,17 +2,19 @@
 package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.command.CommandToken;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.undoRedo.UndoManager;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.util.ExceptionUtil;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ExceptionUtil;
-import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @Singleton
 public class CommandProcessorImpl extends CoreCommandProcessor {
@@ -45,7 +47,7 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
       Project project = command.getProject();
       if (project != null) {
         FileEditor editor = new FocusBasedCurrentEditorProvider().getCurrentEditor();
-        final UndoManager undoManager = UndoManager.getInstance(project);
+        final UndoManager undoManager = ProjectUndoManager.getInstance(project);
         if (undoManager.isUndoAvailable(editor)) {
           undoManager.undo(editor);
         }
@@ -60,7 +62,7 @@ public class CommandProcessorImpl extends CoreCommandProcessor {
   }
 
   private static UndoManagerImpl getUndoManager(Project project) {
-    return (UndoManagerImpl)(project != null ? UndoManager.getInstance(project) : UndoManager.getGlobalInstance());
+    return (UndoManagerImpl)(project != null ? ProjectUndoManager.getInstance(project) : ApplicationUndoManager.getGlobalInstance());
   }
 
   @Override

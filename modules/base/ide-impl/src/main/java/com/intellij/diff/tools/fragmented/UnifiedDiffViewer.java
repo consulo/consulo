@@ -32,7 +32,7 @@ import com.intellij.diff.util.*;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.undoRedo.UndoManager;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.disposer.Disposable;
 import consulo.document.Document;

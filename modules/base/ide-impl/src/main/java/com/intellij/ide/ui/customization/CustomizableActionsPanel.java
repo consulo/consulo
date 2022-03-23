@@ -17,6 +17,7 @@ package com.intellij.ide.ui.customization;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
+import consulo.application.Application;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
@@ -251,7 +252,7 @@ public class CustomizableActionsPanel implements Disposable {
 
     myRestoreAllDefaultButton = new JButton("Restore All Defaults");
     myRestoreAllDefaultButton.addActionListener(e -> {
-      mySelectedSchema.copyFrom(new CustomActionsSchemaImpl());
+      mySelectedSchema.copyFrom(new CustomActionsSchemaImpl(Application.get()));
       patchActionsTreeCorrespondingToSchema(root);
       myRestoreAllDefaultButton.setEnabled(false);
     });
@@ -260,7 +261,7 @@ public class CustomizableActionsPanel implements Disposable {
     myRestoreDefaultButton.addActionListener(e -> {
       final List<ActionUrl> otherActions = new ArrayList<>(mySelectedSchema.getActions());
       otherActions.removeAll(findActionsUnderSelection());
-      mySelectedSchema.copyFrom(new CustomActionsSchemaImpl());
+      mySelectedSchema.copyFrom(new CustomActionsSchemaImpl(Application.get()));
       for (ActionUrl otherAction : otherActions) {
         mySelectedSchema.addAction(otherAction);
       }
@@ -424,10 +425,12 @@ public class CustomizableActionsPanel implements Disposable {
   }
 
   public void reset() {
-    mySelectedSchema = new CustomActionsSchemaImpl();
+    Application application = Application.get();
+
+    mySelectedSchema = new CustomActionsSchemaImpl(application);
     mySelectedSchema.copyFrom(CustomActionsSchemaImpl.getInstance());
     patchActionsTreeCorrespondingToSchema((DefaultMutableTreeNode)myModel.getRoot());
-    myRestoreAllDefaultButton.setEnabled(mySelectedSchema.isModified(new CustomActionsSchemaImpl()));
+    myRestoreAllDefaultButton.setEnabled(mySelectedSchema.isModified(new CustomActionsSchemaImpl(application)));
   }
 
   public boolean isModified() {

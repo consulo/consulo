@@ -2,46 +2,44 @@
 
 package com.intellij.codeInspection.reference;
 
-import consulo.language.editor.scope.AnalysisScope;
-import consulo.language.editor.inspection.GlobalInspectionContext;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.inspection.InspectionExtensionsFactory;
-import consulo.language.editor.inspection.reference.RefManagerExtension;
-import consulo.language.Language;
-import consulo.language.impl.psi.internal.PsiAnchor;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.component.macro.PathMacroManager;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.diagnostic.Attachment;
 import com.intellij.openapi.diagnostic.RuntimeExceptionWithAttachments;
-import consulo.document.Document;
-import consulo.language.editor.inspection.reference.*;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.*;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.module.content.util.ProjectUtilCore;
 import com.intellij.openapi.util.NullableFactory;
-import consulo.document.util.Segment;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileWithId;
-import consulo.ide.impl.psi.impl.light.LightElement;
-import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Interner;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
+import consulo.document.Document;
+import consulo.document.util.Segment;
+import consulo.ide.impl.psi.impl.light.LightElement;
+import consulo.language.Language;
+import consulo.language.editor.inspection.GlobalInspectionContext;
+import consulo.language.editor.inspection.InspectionExtensionsFactory;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.reference.*;
+import consulo.language.editor.scope.AnalysisScope;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.psi.internal.PsiAnchor;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.util.ProjectUtilCore;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileWithId;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -586,7 +584,7 @@ public class RefManagerImpl extends RefManager {
       return getRefProject();
     }
     if (SmartRefElementPointer.DIR.equals(type)) {
-      String url = VfsUtilCore.pathToUrl(PathMacroManager.getInstance(getProject()).expandPath(fqName));
+      String url = VfsUtilCore.pathToUrl(ProjectPathMacroManager.getInstance(getProject()).expandPath(fqName));
       VirtualFile vFile = VirtualFileManager.getInstance().findFileByUrl(url);
       if (vFile != null) {
         final PsiDirectory dir = PsiManager.getInstance(getProject()).findDirectory(vFile);

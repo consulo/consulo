@@ -16,13 +16,12 @@
 package consulo.desktop.util.windows.defender;
 
 import com.intellij.diagnostic.DiagnosticBundle;
-import consulo.project.ui.notification.Notification;
-import consulo.application.Application;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
+import consulo.project.ui.notification.Notification;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -48,10 +47,10 @@ public class WindowsDefenderCheckerActivity implements IdeaStartupActivity.Backg
 
   @Override
   public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
-    if(!Boolean.getBoolean("consulo.windows.defender.activity")) {
+    if (!Boolean.getBoolean("consulo.windows.defender.activity")) {
       return;
     }
-    
+
     if (myApplication.isUnitTestMode()) {
       return;
     }
@@ -66,8 +65,8 @@ public class WindowsDefenderCheckerActivity implements IdeaStartupActivity.Backg
     if (checkResult.status == WindowsDefenderChecker.RealtimeScanningStatus.SCANNING_ENABLED && ContainerUtil.any(checkResult.pathStatus, (it) -> !it.getValue())) {
       List<Path> nonExcludedPaths = checkResult.pathStatus.entrySet().stream().filter(it -> !it.getValue()).map(Map.Entry::getKey).collect(Collectors.toList());
 
-      WindowsDefenderNotification notification = new WindowsDefenderNotification(
-              DiagnosticBundle.message("virus.scanning.warn.message", ApplicationNamesInfo.getInstance().getFullProductName(), StringUtil.join(nonExcludedPaths, "<br/>")), nonExcludedPaths);
+      WindowsDefenderNotification notification =
+              new WindowsDefenderNotification(DiagnosticBundle.message("virus.scanning.warn.message", Application.get().getName(), StringUtil.join(nonExcludedPaths, "<br/>")), nonExcludedPaths);
 
       notification.setImportant(true);
       notification.setCollapseActionsDirection(Notification.CollapseActionsDirection.KEEP_LEFTMOST);

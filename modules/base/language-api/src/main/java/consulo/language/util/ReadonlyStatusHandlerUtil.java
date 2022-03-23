@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs;
+package consulo.language.util;
 
-import consulo.ide.ServiceManager;
 import consulo.document.Document;
-import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
-import java.util.Collection;
-
-public abstract class ReadonlyStatusHandler {
-  public static boolean ensureFilesWritable(@Nonnull Project project, @Nonnull VirtualFile... files) {
-    return !getInstance(project).ensureFilesWritable(files).hasReadonlyFiles();
-  }
-
+/**
+ * @author VISTALL
+ * @since 23-Mar-22
+ */
+public class ReadonlyStatusHandlerUtil {
   public static boolean ensureDocumentWritable(@Nonnull Project project, @Nonnull Document document) {
     final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(document);
     boolean okWritable;
@@ -40,7 +38,7 @@ public abstract class ReadonlyStatusHandler {
     else {
       final VirtualFile virtualFile = psiFile.getVirtualFile();
       if (virtualFile != null) {
-        okWritable = ensureFilesWritable(project, virtualFile);
+        okWritable = ReadonlyStatusHandler.ensureFilesWritable(project, virtualFile);
       }
       else {
         okWritable = psiFile.isWritable();
@@ -48,25 +46,4 @@ public abstract class ReadonlyStatusHandler {
     }
     return okWritable;
   }
-
-  public abstract static class OperationStatus {
-    @Nonnull
-    public abstract VirtualFile[] getReadonlyFiles();
-
-    public abstract boolean hasReadonlyFiles();
-
-    @Nonnull
-    public abstract String getReadonlyFilesMessage();
-  }
-
-  public abstract OperationStatus ensureFilesWritable(@Nonnull VirtualFile... files);
-
-  public OperationStatus ensureFilesWritable(@Nonnull Collection<VirtualFile> files) {
-    return ensureFilesWritable(VfsUtilCore.toVirtualFileArray(files));
-  }
-
-  public static ReadonlyStatusHandler getInstance(Project project) {
-    return ServiceManager.getService(project, ReadonlyStatusHandler.class);
-  }
-
 }

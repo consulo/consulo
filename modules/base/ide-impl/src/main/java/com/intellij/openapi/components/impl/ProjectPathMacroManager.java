@@ -16,20 +16,23 @@
 package com.intellij.openapi.components.impl;
 
 import consulo.application.impl.internal.macro.PathMacrosImpl;
-import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.application.macro.PathMacros;
-import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.macro.ExpandMacroToPathMap;
+import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
 
-import jakarta.inject.Singleton;
-
 @Singleton
 public class ProjectPathMacroManager extends BasePathMacroManager {
+  public static ProjectPathMacroManager getInstance(Project project) {
+    return project.getInstance(ProjectPathMacroManager.class);
+  }
+
   private final Project myProject;
 
   @Inject

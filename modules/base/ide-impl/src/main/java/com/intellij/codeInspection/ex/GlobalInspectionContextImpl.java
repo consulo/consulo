@@ -26,10 +26,7 @@ import com.intellij.codeInspection.ui.DefaultInspectionToolPresentation;
 import com.intellij.codeInspection.ui.InspectionResultsView;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
 import com.intellij.concurrency.JobLauncherImpl;
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
-import consulo.application.internal.ApplicationEx;
-import consulo.component.macro.PathMacroManager;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
@@ -41,9 +38,12 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.application.progress.*;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.component.ProcessCanceledException;
@@ -71,7 +71,6 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectRootManager;
 import consulo.module.content.util.ProjectUtilCore;
-import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.project.ui.notification.NotificationGroup;
@@ -79,6 +78,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.ToggleAction;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
@@ -267,18 +267,14 @@ public class GlobalInspectionContextImpl extends GlobalInspectionContextBase imp
       Element element = entry.getKey();
       element.setAttribute(LOCAL_TOOL_ATTRIBUTE, Boolean.toString(false));
       final org.jdom.Document doc = new org.jdom.Document(element);
-      PathMacroManager.getInstance(getProject()).collapsePaths(doc.getRootElement());
+      ProjectPathMacroManager.getInstance(getProject()).collapsePaths(doc.getRootElement());
       try {
         new File(outputPath).mkdirs();
         final File file = new File(outputPath, toolName + ext);
         inspectionsResults.add(file);
 
-        OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), CharsetToolkit.UTF8_CHARSET);
-        try {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), CharsetToolkit.UTF8_CHARSET)) {
           JDOMUtil.writeDocument(doc, writer, "\n");
-        }
-        finally {
-          writer.close();
         }
       }
       catch (IOException e) {

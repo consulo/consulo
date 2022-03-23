@@ -17,7 +17,7 @@
 package com.intellij.openapi.command.impl;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.command.undo.DocumentReference;
+import consulo.document.DocumentReference;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;

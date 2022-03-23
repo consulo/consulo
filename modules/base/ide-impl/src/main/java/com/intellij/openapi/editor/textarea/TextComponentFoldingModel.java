@@ -16,9 +16,16 @@
 package com.intellij.openapi.editor.textarea;
 
 import consulo.codeEditor.FoldRegion;
+import consulo.codeEditor.FoldingGroup;
 import consulo.codeEditor.FoldingModel;
+import consulo.codeEditor.event.FoldingListener;
+import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposable;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
+import java.util.List;
 
 /**
  * @author Denis Zhdanov
@@ -72,5 +79,77 @@ public class TextComponentFoldingModel implements FoldingModel {
 
   @Override
   public void runBatchFoldingOperationDoNotCollapseCaret(@Nonnull Runnable operation) {
+  }
+
+  @Override
+  public void setFoldingEnabled(boolean isEnabled) {
+
+  }
+
+  @Override
+  public boolean isFoldingEnabled() {
+    return false;
+  }
+
+  @Override
+  public FoldRegion getFoldingPlaceholderAt(@Nonnull Point p) {
+    return null;
+  }
+
+  @Override
+  public boolean intersectsRegion(int startOffset, int endOffset) {
+    return false;
+  }
+
+  @Override
+  public int getLastCollapsedRegionBefore(int offset) {
+    return 0;
+  }
+
+  @Override
+  public TextAttributes getPlaceholderAttributes() {
+    return null;
+  }
+
+  @Override
+  public FoldRegion[] fetchTopLevel() {
+    return new FoldRegion[0];
+  }
+
+  @Nullable
+  @Override
+  public FoldRegion createFoldRegion(int startOffset, int endOffset, @Nonnull String placeholder, @Nullable FoldingGroup group, boolean neverExpands) {
+    return null;
+  }
+
+  @Override
+  public void addListener(@Nonnull FoldingListener listener, @Nonnull Disposable parentDisposable) {
+
+  }
+
+  @Override
+  public void clearFoldRegions() {
+
+  }
+
+  @Override
+  public void rebuild() {
+
+  }
+
+  @Nonnull
+  @Override
+  public List<FoldRegion> getGroupedRegions(FoldingGroup group) {
+    return List.of();
+  }
+
+  @Override
+  public void clearDocumentRangesModificationStatus() {
+
+  }
+
+  @Override
+  public boolean hasDocumentRegionChangedFor(@Nonnull FoldRegion region) {
+    return false;
   }
 }

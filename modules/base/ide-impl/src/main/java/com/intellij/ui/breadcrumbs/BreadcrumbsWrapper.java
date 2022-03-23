@@ -146,7 +146,7 @@ public class BreadcrumbsWrapper extends JComponent implements Disposable {
         @Nonnull
         @Override
         protected MouseEvent convert(@Nonnull MouseEvent event) {
-          return convert(event, gutterComponent);
+          return convert(event, gutterComponent.getComponent());
         }
       };
       ComponentAdapter resizeListener = new ComponentAdapter() {
@@ -158,11 +158,11 @@ public class BreadcrumbsWrapper extends JComponent implements Disposable {
       };
 
       addComponentListener(resizeListener);
-      gutterComponent.addComponentListener(resizeListener);
+      gutterComponent.getComponent().addComponentListener(resizeListener);
       breadcrumbs.addMouseListener(mouseListener);
       Disposer.register(this, () -> {
         removeComponentListener(resizeListener);
-        gutterComponent.removeComponentListener(resizeListener);
+        gutterComponent.getComponent().removeComponentListener(resizeListener);
         breadcrumbs.removeMouseListener(mouseListener);
       });
       breadcrumbs.updateBorder(gutterComponent.getWhitespaceSeparatorOffset());

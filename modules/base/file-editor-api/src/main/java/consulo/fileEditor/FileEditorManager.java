@@ -60,7 +60,7 @@ public abstract class FileEditorManager {
    */
   @Nonnull
   public FileEditor[] openFile(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForOpen) {
-    throw new UnsupportedOperationException("Not implemented");
+    return openFileWithProviders(file, focusEditor, false).getFirst();
   }
 
   /**

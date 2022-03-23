@@ -17,7 +17,7 @@ package consulo.command.undo.impl;
 
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
-import consulo.command.undo.ApplicationUndoManager;
+import consulo.undoRedo.ApplicationUndoManager;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

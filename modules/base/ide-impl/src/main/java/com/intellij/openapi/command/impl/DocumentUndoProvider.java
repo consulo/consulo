@@ -1,20 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.command.impl;
 
+import consulo.document.DocumentReference;
+import consulo.document.DocumentReferenceManager;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.undo.DocumentReference;
-import com.intellij.openapi.command.undo.DocumentReferenceManager;
-import consulo.undoRedo.util.UndoConstants;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.FileDocumentManager;
+import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.undoRedo.util.UndoConstants;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.file.AbstractFileViewProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -26,7 +28,7 @@ public final class DocumentUndoProvider implements DocumentListener {
 
   @Nonnull
   private static UndoManagerImpl getUndoManager(@Nullable Project project) {
-    return (UndoManagerImpl)(project == null ? UndoManager.getGlobalInstance() : UndoManager.getInstance(project));
+    return (UndoManagerImpl)(project == null ? ApplicationUndoManager.getGlobalInstance() : ProjectUndoManager.getInstance(project));
   }
 
   public static void startDocumentUndo(@Nullable Document doc) {

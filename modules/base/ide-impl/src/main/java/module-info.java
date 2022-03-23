@@ -62,9 +62,11 @@ open module consulo.ide.impl {
   requires transitive consulo.ui.ex.awt.api;
   requires transitive consulo.virtual.file.system.impl;
   requires transitive consulo.language.editor.ui.api;
+  requires transitive consulo.language.editor.impl;
   requires transitive consulo.code.editor.impl;
   requires transitive consulo.language.inject.impl;
   requires transitive consulo.component.store.impl;
+  requires transitive consulo.application.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -624,7 +626,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.progress.impl;
   exports com.intellij.openapi.progress.util;
   exports com.intellij.openapi.project;
-  exports com.intellij.openapi.project.ex;
   exports com.intellij.openapi.project.impl;
   exports com.intellij.openapi.projectRoots;
   exports com.intellij.openapi.projectRoots.impl;
@@ -905,7 +906,6 @@ open module consulo.ide.impl {
   exports com.intellij.util.net.ssl;
   exports com.intellij.util.properties;
   exports com.intellij.util.proxy;
-  exports com.intellij.util.ref;
   exports com.intellij.util.text;
   exports com.intellij.util.textCompletion;
   exports com.intellij.util.treeWithCheckedNodes;
@@ -1008,7 +1008,6 @@ open module consulo.ide.impl {
   exports consulo.codeInspection.ui;
   exports consulo.codeStyle;
   exports consulo.command.impl;
-  exports consulo.command.undo;
   exports consulo.command.undo.impl;
   exports consulo.compiler.impl;
   exports consulo.compiler.impl.build;
@@ -1108,7 +1107,6 @@ open module consulo.ide.impl {
   exports consulo.packaging.impl.elements.moduleContent;
   exports consulo.packaging.impl.run;
   exports consulo.packaging.impl.util;
-  exports consulo.plugins.internal;
   exports consulo.progress.util;
   exports consulo.progress.util.impl;
   exports consulo.project.impl;
@@ -1135,7 +1133,6 @@ open module consulo.ide.impl {
   exports consulo.roots.ui.configuration.session.internal;
   exports consulo.security.impl;
   exports consulo.start;
-  exports consulo.startup;
   exports consulo.startup.customize;
   exports consulo.task.api.repository;
   exports consulo.tasks.impl;

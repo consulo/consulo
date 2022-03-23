@@ -90,7 +90,7 @@ class BeanBinding extends Binding {
 
       //todo: optimize. Cache it.
       Property property = accessor.getAnnotation(Property.class);
-      if (property != null && property.filter() != SerializationFilter.class && !ReflectionUtil.newInstance(property.filter()).accepts(accessor, o)) {
+      if (property != null && property.filter() != SerializationFilter.class && !InternalReflectionUtil.newInstance(property.filter()).accepts(accessor, o)) {
         continue;
       }
 
@@ -113,7 +113,7 @@ class BeanBinding extends Binding {
 
   @Override
   public Object deserialize(Object context, @Nonnull Element element) {
-    Object instance = ReflectionUtil.newInstance(myBeanClass);
+    Object instance = InternalReflectionUtil.newInstance(myBeanClass);
     deserializeInto(instance, element, null);
     return instance;
   }

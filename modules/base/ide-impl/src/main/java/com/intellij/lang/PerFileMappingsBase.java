@@ -1,12 +1,12 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.lang;
 
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -334,7 +334,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
         if (action == null) return;
         action.doRemove(action.removed);
         lastAction = new WeakReference<>(action);
-        UndoManager.getInstance(project).undoableActionPerformed(action);
+        ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
       }
 
       @Override

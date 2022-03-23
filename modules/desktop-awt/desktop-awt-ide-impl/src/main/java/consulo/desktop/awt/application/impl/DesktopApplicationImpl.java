@@ -43,6 +43,7 @@ import consulo.application.util.concurrent.AppScheduledExecutorService;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
+import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.desktop.application.util.Restarter;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
@@ -254,7 +255,7 @@ public class DesktopApplicationImpl extends BaseApplication {
                                                      @Nonnull final String progressTitle,
                                                      final boolean canBeCanceled,
                                                      boolean shouldShowModalWindow,
-                                                     @Nullable final Project project,
+                                                     @Nullable final ComponentManager project,
                                                      final JComponent parentComponent,
                                                      final String cancelText) {
     if (isDispatchThread() && isWriteAccessAllowed()
@@ -289,7 +290,7 @@ public class DesktopApplicationImpl extends BaseApplication {
   public final CompletableFuture<ProgressWindow> createProgressWindowAsyncIfNeeded(@Nonnull String progressTitle,
                                                                                    boolean canBeCanceled,
                                                                                    boolean shouldShowModalWindow,
-                                                                                   @Nullable Project project,
+                                                                                   @Nullable ComponentManager project,
                                                                                    @Nullable JComponent parentComponent,
                                                                                    @Nullable String cancelText) {
     if (SwingUtilities.isEventDispatchThread()) {
@@ -341,7 +342,7 @@ public class DesktopApplicationImpl extends BaseApplication {
   @Override
   @Nonnull
   public IdeaModalityState getDefaultModalityState() {
-    return isDispatchThread() ? getCurrentModalityState() : CoreProgressManager.getCurrentThreadProgressModality();
+    return isDispatchThread() ? getCurrentModalityState() : (IdeaModalityState)CoreProgressManager.getCurrentThreadProgressModality();
   }
 
   @Override
@@ -495,7 +496,7 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   public boolean runWriteActionWithNonCancellableProgressInDispatchThread(@Nonnull String title,
-                                                                          @Nullable Project project,
+                                                                          @Nullable ComponentManager project,
                                                                           @Nullable JComponent parentComponent,
                                                                           @Nonnull Consumer<? super ProgressIndicator> action) {
     return runEdtProgressWriteAction(title, project, parentComponent, null, action);
@@ -503,21 +504,21 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   @Override
   public boolean runWriteActionWithCancellableProgressInDispatchThread(@Nonnull String title,
-                                                                       @Nullable Project project,
+                                                                       @Nullable ComponentManager project,
                                                                        @Nullable JComponent parentComponent,
                                                                        @Nonnull Consumer<? super ProgressIndicator> action) {
     return runEdtProgressWriteAction(title, project, parentComponent, IdeBundle.message("action.stop"), action);
   }
 
   private boolean runEdtProgressWriteAction(@Nonnull String title,
-                                            @Nullable Project project,
+                                            @Nullable ComponentManager project,
                                             @Nullable JComponent parentComponent,
                                             @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText,
                                             @Nonnull Consumer<? super ProgressIndicator> action) {
     if (!USE_SEPARATE_WRITE_THREAD) {
       // Use Potemkin progress in legacy mode; in the new model such execution will always move to a separate thread.
       return runWriteActionWithClass(action.getClass(), () -> {
-        PotemkinProgress indicator = new PotemkinProgress(title, project, parentComponent, cancelText);
+        PotemkinProgress indicator = new PotemkinProgress(title, (Project)project, parentComponent, cancelText);
         indicator.runInSwingThread(() -> action.accept(indicator));
         return !indicator.isCanceled();
       });
@@ -544,10 +545,10 @@ public class DesktopApplicationImpl extends BaseApplication {
   private ProgressWindow createProgressWindow(@Nonnull String progressTitle,
                                               boolean canBeCanceled,
                                               boolean shouldShowModalWindow,
-                                              @Nullable Project project,
+                                              @Nullable ComponentManager project,
                                               @Nullable JComponent parentComponent,
                                               @Nullable String cancelText) {
-    ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, project, parentComponent, cancelText);
+    ProgressWindow progress = new ProgressWindow(canBeCanceled, !shouldShowModalWindow, (Project)project, parentComponent, cancelText);
     // in case of abrupt application exit when 'ProgressManager.getInstance().runProcess(process, progress)' below
     // does not have a chance to run, and as a result the progress won't be disposed
     Disposer.register(this, progress);

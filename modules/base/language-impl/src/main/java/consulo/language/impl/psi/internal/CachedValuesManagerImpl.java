@@ -1,9 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util;
+package consulo.language.impl.psi.internal;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileViewProvider;
-import consulo.language.impl.psi.internal.CachedValueBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.*;
 import consulo.logging.Logger;
@@ -13,6 +12,7 @@ import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.util.lang.ObjectUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

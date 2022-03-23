@@ -15,6 +15,7 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.language.file.FileViewProvider;
 import consulo.language.pom.PomModelAspect;
 import consulo.project.Project;
 
@@ -37,4 +38,6 @@ public interface PostprocessReformattingAspect extends PomModelAspect {
   void postponeFormattingInside(@Nonnull final Runnable runnable);
 
   <T> T postponeFormattingInside(@Nonnull Supplier<T> computable);
+
+  boolean isViewProviderLocked(@Nonnull FileViewProvider fileViewProvider);
 }

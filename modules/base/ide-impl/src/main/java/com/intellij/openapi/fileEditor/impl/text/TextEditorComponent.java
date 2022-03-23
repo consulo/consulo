@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
+import consulo.codeEditor.internal.RealEditor;
 import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;

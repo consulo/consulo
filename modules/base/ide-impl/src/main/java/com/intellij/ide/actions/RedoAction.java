@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.undoRedo.UndoManager;
 import consulo.fileEditor.FileEditor;
-import com.intellij.openapi.util.Pair;
+import consulo.util.lang.Pair;
 
 public class RedoAction extends UndoRedoAction {
   @Override

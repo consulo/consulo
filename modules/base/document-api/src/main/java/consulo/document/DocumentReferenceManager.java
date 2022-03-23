@@ -13,21 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.command.undo;
+package consulo.document;
 
-import consulo.document.Document;
+import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
-/**
- * Do not implement this directly. Use DocumentReferenceManager instead.
- */
-public interface DocumentReference {
-  DocumentReference[] EMPTY_ARRAY = new DocumentReference[0];
+public abstract class DocumentReferenceManager {
+  @Nonnull
+  public static DocumentReferenceManager getInstance() {
+    return ApplicationManager.getApplication().getComponent(DocumentReferenceManager.class);
+  }
 
-  @Nullable
-  Document getDocument();
+  @Nonnull
+  public abstract DocumentReference create(@Nonnull Document document);
 
-  @Nullable
-  VirtualFile getFile();
+  @Nonnull
+  public abstract DocumentReference create(@Nonnull VirtualFile file);
 }

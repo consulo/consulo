@@ -15,18 +15,18 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.CommonBundle;
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.ide.BrowserUtil;
-import consulo.project.ui.notification.Notification;
 import com.intellij.notification.NotificationAction;
+import com.intellij.openapi.ui.Messages;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.annotation.Nonnull;
@@ -46,8 +46,8 @@ public class WindowsDefenderFixAction extends NotificationAction {
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull Notification notification) {
-    int rc = Messages.showDialog(e.getData(CommonDataKeys.PROJECT), DiagnosticBundle
-                                         .message("virus.scanning.fix.explanation", ApplicationNamesInfo.getInstance().getFullProductName(), WindowsDefenderChecker.getInstance().getConfigurationInstructionsUrl()),
+    int rc = Messages.showDialog(e.getData(CommonDataKeys.PROJECT),
+                                 DiagnosticBundle.message("virus.scanning.fix.explanation", Application.get().getName().get(), WindowsDefenderChecker.getInstance().getConfigurationInstructionsUrl()),
                                  DiagnosticBundle.message("virus.scanning.fix.title"),
                                  new String[]{DiagnosticBundle.message("virus.scanning.fix.automatically"), DiagnosticBundle.message("virus.scanning.fix.manually"),
                                          CommonBundle.getCancelButtonText()}, 0, null);

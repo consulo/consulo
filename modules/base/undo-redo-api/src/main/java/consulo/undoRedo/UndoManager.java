@@ -13,30 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.command.undo;
+package consulo.undoRedo;
 
-import com.intellij.openapi.util.Pair;
-import consulo.application.Application;
-import consulo.command.undo.ApplicationUndoManager;
-import consulo.command.undo.ProjectUndoManager;
 import consulo.document.Document;
-import consulo.fileEditor.FileEditor;
-import consulo.project.Project;
+import consulo.document.DocumentReference;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * @see ProjectUndoManager
+ * @see ApplicationUndoManager
+ */
 public interface UndoManager {
   Key<Document> ORIGINAL_DOCUMENT = Key.create("ORIGINAL_DOCUMENT");
-
-  static UndoManager getInstance(@Nonnull Project project) {
-    return project.getComponent(ProjectUndoManager.class);
-  }
-
-  static UndoManager getGlobalInstance() {
-    return Application.get().getComponent(ApplicationUndoManager.class);
-  }
 
   void undoableActionPerformed(@Nonnull UndoableAction action);
 
@@ -50,17 +42,35 @@ public interface UndoManager {
     return isUndoInProgress() || isRedoInProgress();
   }
 
-  void undo(@Nullable FileEditor editor);
+  /**
+   * @param editor instanceof FileEditor
+   */
+  void undo(@Nullable Object editor);
 
-  void redo(@Nullable FileEditor editor);
+  /**
+   * @param editor instanceof FileEditor
+   */
+  void redo(@Nullable Object editor);
 
-  boolean isUndoAvailable(@Nullable FileEditor editor);
+  /**
+   * @param editor instanceof FileEditor
+   */
+  boolean isUndoAvailable(@Nullable Object editor);
 
-  boolean isRedoAvailable(@Nullable FileEditor editor);
+  /**
+   * @param editor instanceof FileEditor
+   */
+  boolean isRedoAvailable(@Nullable Object editor);
 
+  /**
+   * @param editor instanceof FileEditor
+   */
   @Nonnull
-  Pair<String, String> getUndoActionNameAndDescription(FileEditor editor);
+  Pair<String, String> getUndoActionNameAndDescription(Object editor);
 
+  /**
+   * @param editor instanceof FileEditor
+   */
   @Nonnull
-  Pair<String, String> getRedoActionNameAndDescription(FileEditor editor);
+  Pair<String, String> getRedoActionNameAndDescription(Object editor);
 }

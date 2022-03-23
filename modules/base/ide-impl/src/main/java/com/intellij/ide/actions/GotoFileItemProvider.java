@@ -27,7 +27,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.PsiUtilCore;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.util.collection.JBIterable;
 import com.intellij.util.indexing.FindSymbolParameters;
 import consulo.logging.Logger;

@@ -20,22 +20,24 @@ import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.actions.CreateFromTemplateActionBase;
 import com.intellij.ide.util.PropertiesComponent;
+import consulo.application.Application;
 import consulo.application.WriteAction;
+import consulo.component.extension.ExtensionList;
+import consulo.component.extension.ExtensionType;
 import consulo.fileEditor.FileEditorManager;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.module.content.layer.ModifiableRootModel;
-import consulo.module.content.ModuleRootManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import consulo.container.plugin.PluginIds;
 import consulo.localize.LocalizeValue;
+import consulo.module.Module;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.apache.velocity.runtime.parser.ParseException;
 
 import javax.annotation.Nonnull;
@@ -47,8 +49,9 @@ import java.util.Map;
  * @author Dmitry Avdeev
  */
 public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAction<PsiFile> {
+  @ExtensionType(value = "createFromTemplateActionModuleResolver", component = Application.class)
   public static interface ModuleResolver {
-    public static final CompositeExtensionPointName<ModuleResolver> EP_NAME = CompositeExtensionPointName.applicationPoint(PluginIds.CONSULO_BASE + ".createFromTemplateActionModuleResolver", ModuleResolver.class);
+    ExtensionList<ModuleResolver, Application> EP = ExtensionList.of(ModuleResolver.class);
 
     @Nullable
     Module resolveModule(@Nonnull PsiDirectory directory, @Nonnull FileType fileType);
@@ -130,11 +133,11 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     super.postProcess(createdElement, templateName, customProperties);
 
     FileType templateFileType = getFileTypeForModuleResolve();
-    if(templateFileType != null) {
+    if (templateFileType != null) {
       PsiDirectory parent = createdElement.getParent();
       assert parent != null;
-      Module module = ModuleResolver.EP_NAME.composite().resolveModule(parent, templateFileType);
-      if(module != null) {
+      Module module = ModuleResolver.EP.computeSafeIfAny(Application.get(), it -> it.resolveModule(parent, templateFileType));
+      if (module != null) {
         ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
 
         rootModel.addContentEntry(createdElement.getVirtualFile());

@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.command.undo;
+package consulo.undoRedo;
+
+import consulo.document.DocumentReference;
 
 import javax.annotation.Nullable;
 
 /**
- * @see com.intellij.openapi.command.undo.UndoManager#undoableActionPerformed(UndoableAction) 
+ * @see UndoManager#undoableActionPerformed(UndoableAction)
  */
 public interface UndoableAction {
   void undo() throws UnexpectedUndoException;
+
   void redo() throws UnexpectedUndoException;
 
   /**

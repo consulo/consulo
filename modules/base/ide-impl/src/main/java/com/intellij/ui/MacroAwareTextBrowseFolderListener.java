@@ -1,11 +1,13 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import consulo.component.macro.PathMacroManager;
+import com.intellij.openapi.components.impl.ModulePathMacroManager;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.awt.TextBrowseFolderListener;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -20,7 +22,7 @@ public class MacroAwareTextBrowseFolderListener extends TextBrowseFolderListener
   protected String expandPath(@Nonnull String path) {
     Project project = (Project)getProject();
     if (project != null) {
-      path = PathMacroManager.getInstance(project).expandPath(path);
+      path = ProjectPathMacroManager.getInstance(project).expandPath(path);
     }
 
     Module module = myFileChooserDescriptor.getUserData(LangDataKeys.MODULE_CONTEXT);
@@ -28,7 +30,7 @@ public class MacroAwareTextBrowseFolderListener extends TextBrowseFolderListener
       module = myFileChooserDescriptor.getUserData(LangDataKeys.MODULE);
     }
     if (module != null) {
-      path = PathMacroManager.getInstance(module).expandPath(path);
+      path = ModulePathMacroManager.getInstance(module).expandPath(path);
     }
 
     return super.expandPath(path);

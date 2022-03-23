@@ -7,7 +7,6 @@ import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.SafeWriteRequestor;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.pom.core.impl.PomModelImpl;
@@ -22,6 +21,7 @@ import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.FileDocumentManagerListener;
@@ -140,7 +140,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
   static final class MyProjectCloseHandler implements Predicate<Project> {
     @Override
     public boolean test(@Nonnull Project project) {
-      FileDocumentManagerImpl manager = (FileDocumentManagerImpl)getInstance();
+      FileDocumentManagerImpl manager = (FileDocumentManagerImpl)FileDocumentManager.getInstance();
       if (!manager.myUnsavedDocuments.isEmpty()) {
         manager.myOnClose = true;
         try {
@@ -530,7 +530,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
   @Nonnull
   @Override
   public WriteAccessStatus requestWritingStatus(@Nonnull Document document, @Nullable ComponentManager project) {
-    final VirtualFile file = getInstance().getFile(document);
+    final VirtualFile file = FileDocumentManager.getInstance().getFile(document);
     if (project != null && file != null && file.isValid()) {
       if (file.getFileType().isBinary()) return WriteAccessStatus.NON_WRITABLE;
       ReadonlyStatusHandler.OperationStatus writableStatus = ReadonlyStatusHandler.getInstance((Project)project).ensureFilesWritable(Collections.singletonList(file));
@@ -621,7 +621,7 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
   }
 
   static final class MyAsyncFileListener implements AsyncFileListener {
-    private final FileDocumentManagerImpl myFileDocumentManager = (FileDocumentManagerImpl)getInstance();
+    private final FileDocumentManagerImpl myFileDocumentManager = (FileDocumentManagerImpl)FileDocumentManager.getInstance();
 
     @Override
     public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {

@@ -12,7 +12,7 @@ import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ide.impl.psi.codeStyle.MinusculeMatcher;
 import consulo.ide.impl.psi.codeStyle.NameUtil;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import com.intellij.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 

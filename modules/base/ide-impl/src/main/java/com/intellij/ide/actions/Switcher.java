@@ -676,7 +676,7 @@ public class Switcher extends AnAction implements DumbAware {
       final ArrayList<FileInfo> filesData = new ArrayList<>();
       final ArrayList<FileInfo> editors = new ArrayList<>();
       if (!pinned) {
-        for (Pair<VirtualFile, FileEditorWindow> pair : editorManager.getSelectionHistory()) {
+        for (consulo.util.lang.Pair<VirtualFile, FileEditorWindow> pair : editorManager.getSelectionHistory()) {
           editors.add(new FileInfo(pair.first, pair.second, project));
         }
       }

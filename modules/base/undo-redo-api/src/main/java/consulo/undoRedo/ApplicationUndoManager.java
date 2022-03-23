@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.command.undo;
+package consulo.undoRedo;
 
-public class UnexpectedUndoException extends Exception{
-  public UnexpectedUndoException(String s) {
-    super(s);
+import consulo.application.Application;
+
+/**
+ * @author VISTALL
+ * @since 2018-08-24
+ */
+public interface ApplicationUndoManager extends UndoManager {
+  static UndoManager getGlobalInstance() {
+    return Application.get().getInstance(ApplicationUndoManager.class);
   }
 }

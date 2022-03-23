@@ -1,15 +1,14 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util.ref;
+package consulo.language.impl.psi.internal;
 
-import com.intellij.concurrency.ConcurrentCollectionFactory;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PairProcessor;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.collection.Maps;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.reflect.unsafe.UnsafeDelegate;
 
 import javax.annotation.Nonnull;
@@ -19,10 +18,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public final class DebugReflectionUtil {
-  private static final Map<Class<?>, Field[]> allFields = Collections.synchronizedMap(ConcurrentCollectionFactory.createMap(new HashingStrategy<Class<?>>() {
+  private static final Map<Class<?>, Field[]> allFields = Collections.synchronizedMap(Maps.newHashMap(new HashingStrategy<Class<?>>() {
     // default strategy seems to be too slow
     @Override
     public int hashCode(@Nullable Class<?> aClass) {
@@ -85,7 +85,7 @@ public final class DebugReflectionUtil {
                                     @Nonnull Map<Object, String> startRoots,
                                     @Nonnull Class<?> lookFor,
                                     @Nonnull Predicate<Object> shouldExamineValue,
-                                    @Nonnull PairProcessor<Object, ? super BackLink> leakProcessor) {
+                                    @Nonnull BiPredicate<Object, ? super BackLink> leakProcessor) {
     IntSet visited = IntSets.newHashSet(100);
     Deque<BackLink> toVisit = new ArrayDeque<>(100);
 
@@ -112,7 +112,7 @@ public final class DebugReflectionUtil {
         continue;
       }
       Object value = backLink.value;
-      if (lookFor.isAssignableFrom(value.getClass()) && markLeaked(value) && !leakProcessor.process(value, backLink)) {
+      if (lookFor.isAssignableFrom(value.getClass()) && markLeaked(value) && !leakProcessor.test(value, backLink)) {
         return false;
       }
 

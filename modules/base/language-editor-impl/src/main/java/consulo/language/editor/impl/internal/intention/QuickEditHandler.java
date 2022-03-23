@@ -61,9 +61,12 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UndoManager;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.*;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.TestOnly;
@@ -71,7 +74,6 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
-import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -274,7 +276,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
 
   @Override
   public void documentChanged(DocumentEvent e) {
-    UndoManager undoManager = UndoManager.getInstance(myProject);
+    UndoManager undoManager = ProjectUndoManager.getInstance(myProject);
     boolean undoOrRedo = undoManager.isUndoInProgress() || undoManager.isRedoInProgress();
     if (undoOrRedo) {
       // allow undo/redo up until 'creation stamp' back in time

@@ -16,20 +16,21 @@
 package com.intellij.execution.ui;
 
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import consulo.component.macro.PathMacroManager;
+import com.intellij.openapi.components.impl.ModulePathMacroManager;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import consulo.ui.ex.awt.TextComponentAccessor;
 import consulo.ui.ex.awt.TextAccessor;
+import consulo.ui.ex.awt.TextComponentAccessor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
-import java.awt.Component;
+import java.awt.*;
 
 public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<ComboBox<String>> implements TextAccessor {
   private Module module;
@@ -62,10 +63,10 @@ public class MacroComboBoxWithBrowseButton extends ComponentWithBrowseButton<Com
       @Override
       protected String expandPath(@Nonnull String path) {
         Project project = getProject();
-        if (project != null) path = PathMacroManager.getInstance(project).expandPath(path);
+        if (project != null) path = ProjectPathMacroManager.getInstance(project).expandPath(path);
 
         Module module = getModule();
-        if (module != null) path = PathMacroManager.getInstance(module).expandPath(path);
+        if (module != null) path = ModulePathMacroManager.getInstance(module).expandPath(path);
 
         return super.expandPath(path);
       }

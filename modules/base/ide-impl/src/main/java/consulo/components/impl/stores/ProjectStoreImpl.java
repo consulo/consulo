@@ -15,28 +15,30 @@
  */
 package consulo.components.impl.stores;
 
-import consulo.component.store.impl.internal.*;
-import consulo.component.persist.*;
-import consulo.component.store.impl.internal.storage.StateStorage;
-import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
-import consulo.component.store.impl.internal.storage.XmlElementStorage;
-import consulo.project.ui.notification.NotificationsManager;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import consulo.project.Project;
 import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.component.messagebus.MessageBus;
 import consulo.application.AccessRule;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.persist.*;
+import consulo.component.store.impl.internal.*;
+import consulo.component.store.impl.internal.storage.StateStorage;
+import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
+import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
+import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.components.impl.stores.storage.ProjectStateStorageManager;
+import consulo.project.Project;
+import consulo.project.ui.notification.NotificationsManager;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -244,7 +246,7 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
   @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
-    return new ProjectStateStorageManager(myProject, myPathMacroManager.createTrackingSubstitutor());
+    return new ProjectStateStorageManager(myProject, new TrackingPathMacroSubstitutorImpl((BasePathMacroManager)myPathMacroManager), Application.get().getInstance(PathMacrosService.class));
   }
 
   @Nonnull
@@ -261,7 +263,8 @@ public class ProjectStoreImpl extends BaseFileConfigurableStoreImpl implements I
 
   @Override
   protected final void doSave(boolean force, @Nullable List<SaveSession> saveSessions, @Nonnull List<Pair<SaveSession, File>> readonlyFiles) {
-    ProjectStorageUtil.UnableToSaveProjectNotification[] notifications = NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, myProject);
+    ProjectStorageUtil.UnableToSaveProjectNotification[] notifications =
+            NotificationsManager.getNotificationsManager().getNotificationsOfType(ProjectStorageUtil.UnableToSaveProjectNotification.class, myProject);
     if (notifications.length > 0) {
       throw new SaveCancelledException();
     }

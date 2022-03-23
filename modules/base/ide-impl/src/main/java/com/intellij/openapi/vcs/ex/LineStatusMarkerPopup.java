@@ -112,7 +112,7 @@ public abstract class LineStatusMarkerPopup {
   public void showHint(@Nonnull MouseEvent e) {
     final JComponent comp = (JComponent)e.getComponent(); // shall be EditorGutterComponent, cast is safe.
     final JLayeredPane layeredPane = comp.getRootPane().getLayeredPane();
-    final Point point = SwingUtilities.convertPoint(comp, ((EditorEx)myEditor).getGutterComponentEx().getWidth(), e.getY(), layeredPane);
+    final Point point = SwingUtilities.convertPoint(comp, ((EditorEx)myEditor).getGutterComponentEx().getComponent().getWidth(), e.getY(), layeredPane);
     showHintAt(point);
     e.consume();
   }

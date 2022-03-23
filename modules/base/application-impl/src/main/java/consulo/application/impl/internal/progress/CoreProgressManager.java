@@ -61,7 +61,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   private static final ConcurrentLongObjectMap<ProgressIndicator> threadTopLevelIndicators = LongMaps.newConcurrentLongObjectHashMap();
   // threads which are running under canceled indicator
   // THashSet is avoided here because of possible tombstones overhead
-  static final Set<Thread> threadsUnderCanceledIndicator = new HashSet<>(); // guarded by threadsUnderIndicator
+  protected static final Set<Thread> threadsUnderCanceledIndicator = new HashSet<>(); // guarded by threadsUnderIndicator
 
   @Nonnull
   private static volatile CheckCanceledBehavior ourCheckCanceledBehavior = CheckCanceledBehavior.NONE;
@@ -125,7 +125,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
     }
   }
 
-  List<ProgressIndicator> getCurrentIndicators() {
+  public List<ProgressIndicator> getCurrentIndicators() {
     synchronized (threadsUnderIndicator) {
       return new ArrayList<>(threadsUnderIndicator.keySet());
     }
@@ -450,7 +450,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
     }));
   }
 
-  void notifyTaskFinished(@Nonnull Task.Backgroundable task, long elapsed) {
+  public void notifyTaskFinished(@Nonnull Task.Backgroundable task, long elapsed) {
 
   }
 
@@ -643,7 +643,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   }
 
   @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
-  final void updateShouldCheckCanceled() {
+  public final void updateShouldCheckCanceled() {
     synchronized (threadsUnderIndicator) {
       CheckCanceledHook hook = createCheckCanceledHook();
       boolean hasCanceledIndicator = !threadsUnderCanceledIndicator.isEmpty();
@@ -938,7 +938,7 @@ public class CoreProgressManager extends ProgressManager implements Disposable {
   }
 
   @FunctionalInterface
-  interface CheckCanceledHook {
+  public interface CheckCanceledHook {
     CheckCanceledHook[] EMPTY_ARRAY = new CheckCanceledHook[0];
 
     /**

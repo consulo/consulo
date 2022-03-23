@@ -3,8 +3,8 @@ package com.intellij.openapi.command.impl;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.undo.DocumentReference;
-import com.intellij.openapi.command.undo.DocumentReferenceManager;
+import consulo.document.DocumentReference;
+import consulo.document.DocumentReferenceManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.util.dataholder.Key;

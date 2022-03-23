@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.codeStyle;
 
 import consulo.document.util.TextRange;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import com.intellij.util.text.Matcher;
 import javax.annotation.Nonnull;
 

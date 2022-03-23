@@ -344,7 +344,7 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
     public void addGutterToTrack(@Nonnull EditorGutterComponentEx gutterComponentEx) {
       myGutters.add(gutterComponentEx);
 
-      gutterComponentEx.addComponentListener(myAdjustToGutterListener);
+      gutterComponentEx.getComponent().addComponentListener(myAdjustToGutterListener);
     }
 
     public void refresh() {
@@ -355,10 +355,10 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
     private void adjustSpacing() {
       EditorGutterComponentEx leftMostGutter = null;
       for (EditorGutterComponentEx gutter : myGutters) {
-        if (!gutter.isShowing()) {
+        if (!gutter.getComponent().isShowing()) {
           continue;
         }
-        if (leftMostGutter == null || leftMostGutter.getX() > gutter.getX()) {
+        if (leftMostGutter == null || leftMostGutter.getComponent().getX() > gutter.getComponent().getX()) {
           leftMostGutter = gutter;
         }
       }
@@ -371,7 +371,7 @@ public class TextEditorWithPreview extends UserDataHolderBase implements FileEdi
     public void dispose() {
       removeComponentListener(myAdjustToGutterListener);
       for (EditorGutterComponentEx gutter : myGutters) {
-        gutter.removeComponentListener(myAdjustToGutterListener);
+        gutter.getComponent().removeComponentListener(myAdjustToGutterListener);
       }
     }
   }

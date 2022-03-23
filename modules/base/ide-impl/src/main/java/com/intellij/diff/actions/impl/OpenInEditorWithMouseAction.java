@@ -48,7 +48,7 @@ public abstract class OpenInEditorWithMouseAction extends AnAction implements Du
   public void install(@Nonnull List<? extends Editor> editors) {
     myEditors = editors;
     for (Editor editor : editors) {
-      registerCustomShortcutSet(getShortcutSet(), (EditorGutterComponentEx)editor.getGutter());
+      registerCustomShortcutSet(getShortcutSet(), ((EditorGutterComponentEx)editor.getGutter()).getComponent());
     }
   }
 

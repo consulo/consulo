@@ -15,19 +15,21 @@
  */
 package consulo.components.impl.stores;
 
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
+import com.intellij.openapi.project.impl.DefaultProjectImpl;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.component.impl.macro.BasePathMacroManager;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.*;
 import consulo.component.store.impl.internal.storage.StateStorage;
 import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;
-import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.storage.StorageData;
 import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
 import consulo.project.Project;
-import com.intellij.openapi.project.impl.DefaultProjectImpl;
-import com.intellij.openapi.util.Couple;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.lang.Couple;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -44,7 +46,6 @@ import java.util.List;
 
 @Singleton
 public class DefaultProjectStoreImpl extends ProjectStoreImpl {
-  @NonNls
   private static final String ROOT_TAG_NAME = "defaultProject";
 
   @Inject
@@ -67,7 +68,8 @@ public class DefaultProjectStoreImpl extends ProjectStoreImpl {
   @Nonnull
   @Override
   protected StateStorageManager createStateStorageManager() {
-    final XmlElementStorage storage = new XmlElementStorage("", RoamingType.DISABLED, myPathMacroManager.createTrackingSubstitutor(), ROOT_TAG_NAME, null) {
+    final XmlElementStorage storage = new XmlElementStorage("", RoamingType.DISABLED, new TrackingPathMacroSubstitutorImpl((BasePathMacroManager)myPathMacroManager), ROOT_TAG_NAME, null,
+                                                            Application.get().getInstance(PathMacrosService.class)) {
       @Override
       @Nullable
       protected Element loadLocalData() {

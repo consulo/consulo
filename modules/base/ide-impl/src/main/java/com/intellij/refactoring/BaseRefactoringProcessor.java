@@ -5,6 +5,7 @@ package com.intellij.refactoring;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.dataContext.DataManager;
 import consulo.language.Language;
 import consulo.language.editor.CommonDataKeys;
@@ -16,8 +17,7 @@ import consulo.application.internal.ApplicationEx;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UndoableAction;
+import consulo.undoRedo.UndoableAction;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.module.ModuleManager;
 import consulo.module.UnloadedModuleDescription;
@@ -493,7 +493,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         try {
           if (refactoringId != null) {
             UndoableAction action1 = new UndoRefactoringAction(myProject, refactoringId);
-            UndoManager.getInstance(myProject).undoableActionPerformed(action1);
+            ProjectUndoManager.getInstance(myProject).undoableActionPerformed(action1);
           }
 
           performRefactoring(writableUsageInfos);

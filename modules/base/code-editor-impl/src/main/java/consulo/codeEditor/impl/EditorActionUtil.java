@@ -57,7 +57,7 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 public class EditorActionUtil {
-  protected static final Object EDIT_COMMAND_GROUP = Key.create("EditGroup");
+  public static final Object EDIT_COMMAND_GROUP = Key.create("EditGroup");
   public static final Object DELETE_COMMAND_GROUP = Key.create("DeleteGroup");
 
   private EditorActionUtil() {

@@ -17,7 +17,6 @@ package consulo.util.lang.reflect;
 
 import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +32,13 @@ import java.util.function.Predicate;
  */
 public class ReflectionUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtil.class);
+
+  @Nonnull
+  public static List<Field> collectFields(@Nonnull Class clazz) {
+    Set<Field> result = new LinkedHashSet<>();
+    processFields(clazz, result::add);
+    return new ArrayList<>(result);
+  }
 
   public static Type resolveVariableInHierarchy(@Nonnull TypeVariable variable, @Nonnull Class aClass) {
     Type type;

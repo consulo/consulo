@@ -18,6 +18,7 @@ package com.intellij.refactoring.rename;
 
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.ide.actions.CopyReferenceAction;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.document.util.ProperTextRange;
 import consulo.ide.impl.psi.ElementDescriptionUtil;
 import consulo.util.lang.function.Condition;
@@ -25,9 +26,8 @@ import consulo.language.Language;
 import com.intellij.lang.LanguageNamesValidation;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UndoableAction;
-import com.intellij.openapi.command.undo.UnexpectedUndoException;
+import consulo.undoRedo.UndoableAction;
+import consulo.undoRedo.UnexpectedUndoException;
 import consulo.document.Document;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -37,7 +37,6 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.pom.PomTargetPsiElement;
-import consulo.ide.impl.psi.*;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.ide.impl.psi.meta.PsiWritableMetaData;
@@ -190,7 +189,7 @@ public class RenameUtil {
         public void redo() throws UnexpectedUndoException {
         }
       };
-      UndoManager.getInstance(project).undoableActionPerformed(action);
+      ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
     }
     processor.renameElement(element, newName, usages, listener);
   }

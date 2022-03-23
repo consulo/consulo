@@ -208,7 +208,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
   @Nonnull
   private ShelvedChangeList readOneShelvedChangeList(@Nonnull Element element) throws InvalidDataException {
     ShelvedChangeList data = new ShelvedChangeList();
-    myPathMacroSubstitutor.expandPaths(element);
+    ProjectPathMacroManager.getInstance(myProject).expandPaths(element);
     data.readExternal(element);
     return data;
   }

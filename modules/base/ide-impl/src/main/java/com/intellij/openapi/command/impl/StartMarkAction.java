@@ -16,9 +16,9 @@
 package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.DocumentReference;
-import com.intellij.openapi.command.undo.DocumentReferenceManager;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.document.DocumentReference;
+import consulo.document.DocumentReferenceManager;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
@@ -87,7 +87,7 @@ public class StartMarkAction extends BasicUndoableAction {
                                         existingMark.getAffectedDocuments());
     }
     final StartMarkAction markAction = new StartMarkAction(editor, commandName);
-    UndoManager.getInstance(project).undoableActionPerformed(markAction);
+    ProjectUndoManager.getInstance(project).undoableActionPerformed(markAction);
     ourCurrentMarks.put(project, markAction);
     return markAction;
   }

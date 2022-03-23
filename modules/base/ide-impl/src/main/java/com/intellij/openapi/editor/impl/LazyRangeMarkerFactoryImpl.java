@@ -241,6 +241,11 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
     }
 
     @Override
+    public long getId() {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean isValid() {
       RangeMarker delegate = myDelegate;
       if (delegate == null) {
@@ -271,6 +276,11 @@ public class LazyRangeMarkerFactoryImpl extends LazyRangeMarkerFactory {
       myTabSize = CodeStyleFacade.getInstance(project).getTabSize(file.getFileType());
     }
 
+    @Override
+    public long getId() {
+      throw new UnsupportedOperationException();
+    }
+    
     @Override
     @Nullable
     public RangeMarker createDelegate(@Nonnull VirtualFile file, @Nonnull Document document) {

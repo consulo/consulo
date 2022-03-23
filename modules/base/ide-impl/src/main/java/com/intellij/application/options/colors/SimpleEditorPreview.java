@@ -149,7 +149,7 @@ public class SimpleEditorPreview implements PreviewPanel {
 
   @Nullable
   private static String selectItem(HighlighterIterator itr, SyntaxHighlighter highlighter) {
-    IElementType tokenType = itr.getTokenType();
+    IElementType tokenType = (IElementType)itr.getTokenType();
     if (tokenType == null) return null;
 
     TextAttributesKey[] highlights = highlighter.getTokenHighlights(tokenType);
@@ -275,7 +275,7 @@ public class SimpleEditorPreview implements PreviewPanel {
     if (!found && highlighter != null) {
       HighlighterIterator iterator = editor.getHighlighter().createIterator(0);
       do {
-        IElementType tokenType = iterator.getTokenType();
+        IElementType tokenType = (IElementType)iterator.getTokenType();
         TextAttributesKey[] tokenHighlights = highlighter.getTokenHighlights(tokenType);
         for (final TextAttributesKey tokenHighlight : tokenHighlights) {
           String type = tokenHighlight.getExternalName();

@@ -21,24 +21,14 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.component.store.impl.internal.storage.StateStorage;
-import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import com.intellij.openapi.module.impl.ModuleManagerComponent;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
-import consulo.application.impl.internal.progress.NonCancelableSection;
 import com.intellij.openapi.project.ProjectReloadState;
-import consulo.project.internal.ProjectEx;
-import consulo.project.internal.ProjectManagerEx;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;
 import com.intellij.openapi.vfs.impl.ZipHandler;
-import consulo.ui.ex.awt.internal.GuiUtils;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.SingleAlarm;
@@ -47,6 +37,10 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.progress.NonCancelableSection;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -54,11 +48,14 @@ import consulo.application.progress.Task;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.components.impl.stores.ProjectStorageUtil;
-import consulo.component.store.impl.internal.storage.StorageUtil;
-import consulo.component.store.impl.internal.storage.StateStorageBase;
 import consulo.component.store.impl.internal.StateStorageManager;
+import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
+import consulo.component.store.impl.internal.storage.StateStorage;
+import consulo.component.store.impl.internal.storage.StateStorageBase;
+import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
+import consulo.components.impl.stores.IProjectStore;
+import consulo.components.impl.stores.ProjectStorageUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
@@ -68,6 +65,7 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.internal.ProjectManagerEx;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.WindowManager;
@@ -76,12 +74,14 @@ import consulo.start.WelcomeFrameManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.SmartList;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.TimeoutUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -367,7 +367,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
 
           if (!myApplication.isHeadlessEnvironment() && !myApplication.isUnitTestMode()) {
-            final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
+            final TrackingPathMacroSubstitutor macroSubstitutor = project.getInstance(IProjectStore.class).getStateStorageManager().getMacroSubstitutor();
             if (macroSubstitutor != null) {
               StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
             }
@@ -532,7 +532,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
   @Override
   public void saveChangedProjectFile(@Nonnull VirtualFile file, @Nonnull Project project) {
-    StateStorageManager storageManager = ((ProjectEx)project).getStateStore().getStateStorageManager();
+    StateStorageManager storageManager = project.getInstance(IProjectStore.class).getStateStorageManager();
     String fileSpec = storageManager.collapseMacros(file.getPath());
     Couple<Collection<VfsFileBasedStorage>> storages = storageManager.getCachedFileStateStorages(Collections.singletonList(fileSpec), Collections.<String>emptyList());
     VfsFileBasedStorage storage = ContainerUtil.getFirstItem(storages.first);
@@ -911,7 +911,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
       Application application = Application.get();
       if (!application.isHeadlessEnvironment() && !application.isUnitTestMode()) {
-        final TrackingPathMacroSubstitutor macroSubstitutor = ((ProjectEx)project).getStateStore().getStateStorageManager().getMacroSubstitutor();
+        final TrackingPathMacroSubstitutor macroSubstitutor = project.getInstance(IProjectStore.class).getStateStorageManager().getMacroSubstitutor();
         if (macroSubstitutor != null) {
           StorageUtil.notifyUnknownMacros(macroSubstitutor, project, null);
         }

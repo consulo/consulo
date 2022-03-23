@@ -21,7 +21,7 @@ import consulo.annotation.DeprecationInfo;
  * @author nik
  */
 @Deprecated
-@DeprecationInfo("Use ApplicationInfo")
+@DeprecationInfo("Use Application#getName")
 public class ApplicationNamesInfo {
   public static final ApplicationNamesInfo INSTANCE = new ApplicationNamesInfo();
 

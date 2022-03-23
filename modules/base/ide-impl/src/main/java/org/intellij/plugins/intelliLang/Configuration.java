@@ -15,6 +15,7 @@
  */
 package org.intellij.plugins.intelliLang;
 
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.lang.function.Condition;
@@ -22,8 +23,7 @@ import consulo.language.Language;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.command.undo.GlobalUndoableAction;
-import com.intellij.openapi.command.undo.UndoManager;
-import com.intellij.openapi.command.undo.UndoableAction;
+import consulo.undoRedo.UndoableAction;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
@@ -484,7 +484,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
           annotation.delete();
         }
         actualProcessor.process(add, remove);
-        UndoManager.getInstance(project).undoableActionPerformed(action);
+        ProjectUndoManager.getInstance(project).undoableActionPerformed(action);
       }
 
       @Override

@@ -165,7 +165,7 @@
 
     <applicationService serviceInterface="consulo.actionSystem.ActionToolbarFactory" serviceImplementation="consulo.desktop.awt.actionSystem.DesktopActionToolbarFactory"/>
 
-    <applicationService serviceImplementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState" />
+    <applicationService serviceImplementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
 
     <applicationService serviceInterface="consulo.start.WelcomeFrameManager"
                         serviceImplementation="consulo.desktop.awt.welcomeScreen.DesktopWelcomeFrameManager"/>
@@ -247,5 +247,7 @@
 
     <applicationService serviceInterface="consulo.application.ui.UISettings" serviceImplementation="consulo.desktop.awt.application.ui.impl.DesktopAWTUISettings"/>
     <applicationService serviceInterface="consulo.application.ui.UIFontManager" serviceImplementation="consulo.desktop.awt.application.ui.impl.UIFontManagerImpl"/>
+
+    <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.ide.impl.progress.DesktopProgressActivityFactory"/>
   </extensions>
 </consulo-plugin>

@@ -16,7 +16,7 @@
 package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.command.undo.BasicUndoableAction;
-import com.intellij.openapi.command.undo.UnexpectedUndoException;
+import consulo.undoRedo.UnexpectedUndoException;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.DocumentEx;
 import consulo.project.Project;

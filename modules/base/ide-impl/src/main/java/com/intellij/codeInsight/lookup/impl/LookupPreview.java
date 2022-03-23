@@ -27,7 +27,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.ui.ex.JBColor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.FList;
+import consulo.util.collection.FList;
 import consulo.codeEditor.*;
 
 import javax.annotation.Nonnull;

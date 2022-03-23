@@ -15,10 +15,11 @@
  */
 package com.intellij.formatting;
 
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.command.undo.UndoManager;
+import consulo.undoRedo.UndoManager;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
@@ -227,7 +228,7 @@ public class FormattingProgressTask extends SequentialModalProgressTask implemen
         return;
       }
 
-      UndoManager manager = UndoManager.getInstance((Project)myProject);
+      UndoManager manager = ProjectUndoManager.getInstance((Project)myProject);
       while (manager.isUndoAvailable(editor) && document.getModificationStamp() != myDocumentModificationStampBefore) {
         manager.undo(editor);
       }

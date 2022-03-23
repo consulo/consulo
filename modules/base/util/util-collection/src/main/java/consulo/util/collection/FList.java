@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.containers;
+package consulo.util.collection;
 
-import com.intellij.openapi.util.Comparing;
 import javax.annotation.Nonnull;
-
 import java.util.AbstractList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Immutable list in functional style
@@ -128,7 +127,7 @@ public class FList<E> extends AbstractList<E> {
       FList list2 = (FList)o;
       if (mySize != list2.mySize) return false;
       while (list1 != null) {
-        if (!Comparing.equal(list1.myHead, list2.myHead)) return false;
+        if (!Objects.equals(list1.myHead, list2.myHead)) return false;
         list1 = list1.getTail();
         list2 = list2.getTail();
         if (list1 == list2) return true;

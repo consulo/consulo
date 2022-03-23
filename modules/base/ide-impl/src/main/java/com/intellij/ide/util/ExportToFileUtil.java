@@ -15,32 +15,31 @@
  */
 package com.intellij.ide.util;
 
-import consulo.application.CommonBundle;
 import com.intellij.ide.ExporterToTextFile;
 import com.intellij.ide.IdeBundle;
-import consulo.component.macro.PathMacroManager;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
-import consulo.codeEditor.EditorEx;
-import consulo.document.impl.DocumentImpl;
+import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import consulo.language.plain.PlainTextFileType;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.FixedSizeButton;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.CommonBundle;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.EditorSettings;
+import consulo.document.Document;
+import consulo.document.impl.DocumentImpl;
+import consulo.language.plain.PlainTextFileType;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
-import consulo.util.lang.SystemProperties;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.FixedSizeButton;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.SystemProperties;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -204,7 +203,7 @@ public class ExportToFileUtil {
 
       String defaultFilePath = myExporter.getDefaultFilePath();
       if (! new File(defaultFilePath).isAbsolute()) {
-        defaultFilePath = PathMacroManager.getInstance(myProject).collapsePath(defaultFilePath).replace('/', File.separatorChar);
+        defaultFilePath = ProjectPathMacroManager.getInstance(myProject).collapsePath(defaultFilePath).replace('/', File.separatorChar);
       } else {
         defaultFilePath = defaultFilePath.replace('/', File.separatorChar);
       }

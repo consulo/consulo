@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.editor.highlighter;
 
-import consulo.document.Document;
-import consulo.codeEditor.HighlighterColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.document.event.DocumentEvent;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterClient;
+import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.HighlighterIterator;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
 
@@ -48,10 +48,7 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
     this(sourceIterator, ranges, 0, false);
   }
 
-  public FragmentedEditorHighlighter(HighlighterIterator sourceIterator,
-                                     List<TextRange> ranges,
-                                     final int additionalOffset,
-                                     boolean mergeByTextAttributes) {
+  public FragmentedEditorHighlighter(HighlighterIterator sourceIterator, List<TextRange> ranges, final int additionalOffset, boolean mergeByTextAttributes) {
     myMergeByTextAttributes = mergeByTextAttributes;
     myDocument = sourceIterator.getDocument();
     myPieces = new TreeMap<Integer, Element>();
@@ -70,21 +67,19 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
       while (range.getEndOffset() >= iterator.getEnd()) {
         int relativeStart = iterator.getStart() - range.getStartOffset();
         boolean merged = false;
-        if (myMergeByTextAttributes && ! myPieces.isEmpty()) {
+        if (myMergeByTextAttributes && !myPieces.isEmpty()) {
           final Integer first = myPieces.descendingKeySet().first();
           final Element element = myPieces.get(first);
           if (element.getEnd() >= offset + relativeStart && myPieces.get(first).getAttributes().equals(iterator.getTextAttributes())) {
             // merge
             merged = true;
-            myPieces.put(element.getStart(), new Element(element.getStart(),
-                                                         offset + (iterator.getEnd() - range.getStartOffset()), iterator.getTokenType(),
-                                                         iterator.getTextAttributes()));
+            myPieces.put(element.getStart(),
+                         new Element(element.getStart(), offset + (iterator.getEnd() - range.getStartOffset()), (IElementType)iterator.getTokenType(), iterator.getTextAttributes()));
           }
         }
-        if (! merged) {
-          myPieces.put(offset + relativeStart, new Element(offset + relativeStart,
-                                                           offset + (iterator.getEnd() - range.getStartOffset()), iterator.getTokenType(),
-                                                           iterator.getTextAttributes()));
+        if (!merged) {
+          myPieces.put(offset + relativeStart,
+                       new Element(offset + relativeStart, offset + (iterator.getEnd() - range.getStartOffset()), (IElementType)iterator.getTokenType(), iterator.getTextAttributes()));
         }
         iterator.advance();
         if (iterator.atEnd()) return;
@@ -194,7 +189,7 @@ public class FragmentedEditorHighlighter implements EditorHighlighter {
     }
     return myUsualAttributes.equals(ta);
   }
-  
+
   private static class Element {
     private final int myStart;
     private final int myEnd;
