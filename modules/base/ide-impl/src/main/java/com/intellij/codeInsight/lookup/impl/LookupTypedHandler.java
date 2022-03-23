@@ -18,7 +18,7 @@ import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

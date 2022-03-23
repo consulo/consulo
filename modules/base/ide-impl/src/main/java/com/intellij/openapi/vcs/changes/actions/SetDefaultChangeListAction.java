@@ -23,8 +23,8 @@
 package com.intellij.openapi.vcs.changes.actions;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;

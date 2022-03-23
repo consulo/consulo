@@ -24,6 +24,7 @@ import com.intellij.ide.projectView.actions.MoveModulesToGroupAction;
 import com.intellij.ide.projectView.actions.MoveModulesToSubGroupAction;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;

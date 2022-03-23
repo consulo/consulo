@@ -24,7 +24,7 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import consulo.ui.ex.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;

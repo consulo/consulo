@@ -15,8 +15,8 @@
  */
 package com.intellij.ui;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighterFactory;

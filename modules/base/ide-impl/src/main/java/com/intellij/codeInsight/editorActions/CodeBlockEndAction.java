@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

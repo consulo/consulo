@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.intellij.openapi.actionSystem.CommonDataKeys.*;
+import static consulo.language.editor.CommonDataKeys.*;
 import static com.intellij.openapi.actionSystem.LangDataKeys.PSI_ELEMENT_ARRAY;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 

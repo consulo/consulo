@@ -16,8 +16,8 @@
 package com.intellij.usages.impl;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.usageView.UsageViewBundle;
 import com.intellij.usages.UsageView;

@@ -111,11 +111,6 @@ public class DummyProject extends UserDataHolderBase implements Project {
   }
 
   @Override
-  public <T> T getComponent(@Nonnull Class<T> clazz) {
-    return null;
-  }
-
-  @Override
   public boolean isDisposed() {
     return false;
   }

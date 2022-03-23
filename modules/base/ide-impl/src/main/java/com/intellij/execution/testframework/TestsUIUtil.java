@@ -21,7 +21,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.util.Comparing;

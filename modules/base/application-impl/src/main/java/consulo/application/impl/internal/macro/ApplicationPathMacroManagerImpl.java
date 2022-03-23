@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.components.impl;
+package consulo.application.impl.internal.macro;
 
+import consulo.application.macro.ApplicationPathMacroManager;
 import consulo.component.impl.macro.BasePathMacroManager;
-import consulo.component.macro.PathMacroManager;
-import consulo.application.Application;
 import jakarta.inject.Singleton;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author mike
  */
 @Singleton
-public class ApplicationPathMacroManagerImpl extends BasePathMacroManager {
-  public static PathMacroManager getInstance(@Nonnull Application application) {
-    return application.getComponent(ApplicationPathMacroManagerImpl.class);
-  }
-
+public class ApplicationPathMacroManagerImpl extends BasePathMacroManager implements ApplicationPathMacroManager {
   public ApplicationPathMacroManagerImpl() {
     super(null);
   }

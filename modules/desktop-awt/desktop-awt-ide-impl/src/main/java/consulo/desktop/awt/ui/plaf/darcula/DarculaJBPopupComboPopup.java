@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;

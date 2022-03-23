@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vcs.AbstractVcsHelper;

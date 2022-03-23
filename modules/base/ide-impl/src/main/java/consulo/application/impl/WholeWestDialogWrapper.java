@@ -16,7 +16,7 @@
 package consulo.application.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.Couple;

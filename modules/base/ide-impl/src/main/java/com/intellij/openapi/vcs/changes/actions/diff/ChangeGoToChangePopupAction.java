@@ -3,7 +3,7 @@ package com.intellij.openapi.vcs.changes.actions.diff;
 import com.intellij.diff.actions.impl.GoToChangePopupBuilder;
 import com.intellij.diff.chains.DiffRequestChain;
 import com.intellij.diff.chains.DiffRequestProducer;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.VcsException;

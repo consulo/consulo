@@ -17,7 +17,7 @@ package com.intellij.lang.customFolding;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.lang.folding.*;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.PopupAction;
 import consulo.annotation.access.RequiredReadAction;

@@ -24,7 +24,7 @@ import consulo.execution.RunManager;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 

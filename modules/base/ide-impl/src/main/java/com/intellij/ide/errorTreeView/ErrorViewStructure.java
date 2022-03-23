@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;

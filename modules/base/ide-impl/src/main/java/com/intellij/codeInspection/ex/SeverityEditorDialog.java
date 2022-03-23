@@ -27,7 +27,7 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsScheme;

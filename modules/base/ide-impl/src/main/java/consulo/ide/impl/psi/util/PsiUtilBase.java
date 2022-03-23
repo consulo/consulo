@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.psi.util;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;

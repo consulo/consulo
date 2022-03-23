@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonBundle;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.configurable.Configurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;

@@ -17,6 +17,7 @@ import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.colorScheme.TextAttributes;
+import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;

@@ -18,7 +18,7 @@ package consulo.desktop.awt.action;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;

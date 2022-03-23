@@ -20,6 +20,7 @@ import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.ide.BrowserUtil;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.documentation.DocumentationProvider;
 import com.intellij.lang.documentation.ExternalDocumentationHandler;
 import com.intellij.lang.documentation.ExternalDocumentationProvider;

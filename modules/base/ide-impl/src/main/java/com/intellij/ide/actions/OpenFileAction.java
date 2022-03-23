@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;

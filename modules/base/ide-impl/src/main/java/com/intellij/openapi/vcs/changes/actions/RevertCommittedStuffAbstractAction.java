@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.actions;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.diff.impl.patch.BinaryFilePatch;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.IdeaTextPatchBuilder;

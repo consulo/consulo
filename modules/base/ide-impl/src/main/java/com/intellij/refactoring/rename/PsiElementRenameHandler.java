@@ -18,7 +18,7 @@ package com.intellij.refactoring.rename;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.scratch.ScratchUtil;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

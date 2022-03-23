@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.codeStyle.statusbar;
 
 import com.intellij.application.options.CodeStyleSchemesConfigurable;
 import com.intellij.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.Language;
 import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;

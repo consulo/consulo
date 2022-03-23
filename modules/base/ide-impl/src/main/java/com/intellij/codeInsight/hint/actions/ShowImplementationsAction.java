@@ -18,6 +18,7 @@ package com.intellij.codeInsight.hint.actions;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.navigation.BackgroundUpdaterTaskBase;
 import com.intellij.codeInsight.navigation.ImplementationSearcher;

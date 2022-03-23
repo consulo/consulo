@@ -2,7 +2,7 @@
 package com.intellij.ui.popup.list;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.awt.CopyPasteManager;

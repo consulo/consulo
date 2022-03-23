@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;

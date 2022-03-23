@@ -180,11 +180,11 @@ public class MacUtil {
     private static final long latencyCritical = 0xFF00000000L;
   }
 
-  public interface Activity {
+  public interface Activity extends Runnable {
     /**
      * Ends activity, allowing macOS to trigger AppNap (idempotent).
      */
-    void matrixHasYou();
+    void run();
   }
 
   private static final class ActivityImpl extends AtomicReference<ID> implements Activity {
@@ -200,7 +200,7 @@ public class MacUtil {
     }
 
     @Override
-    public void matrixHasYou() {
+    public void run() {
       end(getAndSet(null));
     }
 

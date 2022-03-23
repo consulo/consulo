@@ -17,7 +17,7 @@ package consulo.application.options;
 
 import com.intellij.application.options.PathMacrosCollectorImpl;
 import consulo.component.macro.PathMacroFilter;
-import consulo.application.PathMacros;
+import consulo.application.macro.PathMacros;
 import consulo.component.store.impl.internal.PathMacrosService;
 import jakarta.inject.Singleton;
 import org.jdom.Element;

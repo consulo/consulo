@@ -19,7 +19,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;

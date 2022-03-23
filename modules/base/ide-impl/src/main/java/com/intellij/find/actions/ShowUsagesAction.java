@@ -23,7 +23,7 @@ import com.intellij.find.FindSettings;
 import com.intellij.find.findUsages.*;
 import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.ide.util.gotoByName.ModelDiff;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PopupAction;
 import com.intellij.openapi.fileEditor.impl.text.AsyncEditorLoader;

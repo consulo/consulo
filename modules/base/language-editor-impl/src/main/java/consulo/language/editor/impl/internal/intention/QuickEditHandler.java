@@ -35,15 +35,14 @@ import consulo.document.util.DocumentUtil;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.fileEditor.*;
 import consulo.language.Language;
 import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.impl.intention.QuickEditAction;
+import consulo.language.editor.template.TemplateManager;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.psi.internal.FileContextUtil;
@@ -76,6 +75,7 @@ import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author Gregory Shrago
@@ -158,7 +158,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
             @RequiredUIAccess
             @Override
             public void update(AnActionEvent e) {
-              Editor editor = e.getDataContext().getData(CommonDataKeys.EDITOR);
+              Editor editor = e.getDataContext().getData(Editor.KEY);
               e.getPresentation().setEnabled(editor != null &&
                                              LookupManager.getActiveLookup(editor) == null &&
                                              TemplateManager.getInstance(myProject).getActiveTemplate(editor) == null &&
@@ -179,7 +179,7 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
         if (event.getEditor().getDocument() != myNewDocument) return;
         if (--myEditorCount > 0) return;
 
-        if (Boolean.TRUE.equals(myNewVirtualFile.getUserData(FileEditorManagerImpl.CLOSING_TO_REOPEN))) return;
+        if (Boolean.TRUE.equals(myNewVirtualFile.getUserData(FileEditorManager.CLOSING_TO_REOPEN))) return;
 
         Disposer.dispose(QuickEditHandler.this);
       }
@@ -239,13 +239,13 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
       }
     }
     else {
-      final FileEditorManager fileEditorManager = FileEditorManager.getInstanceEx(myProject);
+      final FileEditorManager fileEditorManager = FileEditorManager.getInstance(myProject);
       final FileEditor[] editors = fileEditorManager.getEditors(myNewVirtualFile);
       if (editors.length == 0) {
         FileEditorWindow curWindow = fileEditorManager.getCurrentWindow();
         mySplittedWindow = curWindow.split(SwingConstants.HORIZONTAL, false, myNewVirtualFile, true);
       }
-      Editor editor = fileEditorManager.openTextEditor(new OpenFileDescriptorImpl(myProject, myNewVirtualFile, injectedOffset), true);
+      Editor editor = fileEditorManager.openTextEditor(OpenFileDescriptorFactory.getInstance(myProject).builder(myNewVirtualFile).offset(injectedOffset).build(), true);
       // fold missing values
       if (editor != null) {
         editor.putUserData(QuickEditAction.QUICK_EDIT_HANDLER, this);
@@ -402,9 +402,9 @@ public class QuickEditHandler extends DocumentAdapter implements Disposable {
   private void commitToOriginalInner() {
     final String text = myNewDocument.getText();
     final Map<PsiLanguageInjectionHost, Set<Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer>>> map =
-            ContainerUtil.classify(myMarkers.iterator(), new Convertor<Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer>, PsiLanguageInjectionHost>() {
+            ContainerUtil.classify(myMarkers.iterator(), new Function<Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer>, PsiLanguageInjectionHost>() {
               @Override
-              public PsiLanguageInjectionHost convert(final Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer> o) {
+              public PsiLanguageInjectionHost apply(final Trinity<RangeMarker, RangeMarker, SmartPsiElementPointer> o) {
                 final PsiElement element = o.third.getElement();
                 return (PsiLanguageInjectionHost)element;
               }

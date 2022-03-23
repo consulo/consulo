@@ -21,7 +21,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;

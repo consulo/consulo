@@ -27,7 +27,7 @@ import com.intellij.diff.util.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.ide.diff.DiffElement;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.diff.impl.dir.actions.DirDiffToolbarActions;
 import com.intellij.openapi.diff.impl.dir.actions.RefreshDirDiffAction;

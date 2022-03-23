@@ -20,6 +20,7 @@ import com.intellij.find.FindManager;
 import com.intellij.find.FindUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.CommandProcessor;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;

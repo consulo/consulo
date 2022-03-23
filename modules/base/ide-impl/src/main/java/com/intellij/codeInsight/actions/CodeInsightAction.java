@@ -3,8 +3,8 @@
 package com.intellij.codeInsight.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.action.UpdateInBackground;
 import consulo.undoRedo.CommandProcessor;

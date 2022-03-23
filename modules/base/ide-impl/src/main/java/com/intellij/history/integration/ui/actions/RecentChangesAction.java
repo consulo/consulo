@@ -18,7 +18,7 @@ package com.intellij.history.integration.ui.actions;
 
 import com.intellij.history.integration.ui.views.RecentChangesPopup;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 
 public class RecentChangesAction extends LocalHistoryAction {
   @Override

@@ -16,7 +16,7 @@
 package com.intellij.util.ui.update;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;

@@ -23,7 +23,7 @@ import com.intellij.ide.util.gotoByName.ChooseByNamePopup;
 import com.intellij.ide.util.gotoByName.GotoFileConfiguration;
 import com.intellij.ide.util.gotoByName.GotoFileModel;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;

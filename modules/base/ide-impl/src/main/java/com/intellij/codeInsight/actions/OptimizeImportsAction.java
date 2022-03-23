@@ -19,6 +19,7 @@ package com.intellij.codeInsight.actions;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.idea.ActionsBundle;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.refactoring.ImportOptimizer;
 import com.intellij.lang.LanguageImportStatements;
 import com.intellij.openapi.actionSystem.*;

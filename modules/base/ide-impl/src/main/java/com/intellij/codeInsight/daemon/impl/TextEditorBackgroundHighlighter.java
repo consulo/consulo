@@ -19,7 +19,7 @@ import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;

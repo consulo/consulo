@@ -4,7 +4,7 @@ package com.intellij.ide.actions.runAnything;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.BigPopupUI;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;

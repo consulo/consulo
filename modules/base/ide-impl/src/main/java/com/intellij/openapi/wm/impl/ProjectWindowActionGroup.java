@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl;
 
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.ui.ex.action.DefaultActionGroup;

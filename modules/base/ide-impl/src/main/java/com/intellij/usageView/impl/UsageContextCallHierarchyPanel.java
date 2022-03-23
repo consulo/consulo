@@ -19,7 +19,7 @@ package com.intellij.usageView.impl;
 import com.intellij.ide.hierarchy.*;
 import com.intellij.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import consulo.disposer.Disposable;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.project.Project;

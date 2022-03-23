@@ -22,6 +22,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.favoritesTreeView.actions.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;

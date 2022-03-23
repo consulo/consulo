@@ -16,7 +16,7 @@
 package com.intellij.ide.browsers;
 
 import com.intellij.execution.filters.HyperlinkWithPopupMenuInfo;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;

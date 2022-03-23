@@ -20,7 +20,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.CloseAction;
 import com.intellij.ide.actions.ShowFilePathAction;
 import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;

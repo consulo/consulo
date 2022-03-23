@@ -15,10 +15,10 @@
  */
 package com.intellij.openapi.vfs.encoding;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.file.EncodingManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;

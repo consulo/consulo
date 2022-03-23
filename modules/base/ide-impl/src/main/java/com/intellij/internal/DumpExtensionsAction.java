@@ -16,7 +16,7 @@
 package com.intellij.internal;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.impl.BaseComponentManager;

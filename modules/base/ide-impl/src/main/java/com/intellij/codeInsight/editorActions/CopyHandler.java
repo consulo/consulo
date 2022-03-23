@@ -18,7 +18,7 @@ package com.intellij.codeInsight.editorActions;
 
 import consulo.codeEditor.*;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.editor.actions.CopyAction;

@@ -24,7 +24,7 @@ import com.intellij.diff.merge.MergeTool;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.*;
 import com.intellij.openapi.diff.impl.patch.apply.ApplyFilePatch;

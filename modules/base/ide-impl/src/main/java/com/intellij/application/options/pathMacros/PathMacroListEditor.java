@@ -16,7 +16,7 @@
 package com.intellij.application.options.pathMacros;
 
 import consulo.application.ApplicationManager;
-import consulo.application.PathMacros;
+import consulo.application.macro.PathMacros;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AnActionButton;

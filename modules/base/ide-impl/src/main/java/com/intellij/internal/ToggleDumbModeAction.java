@@ -17,7 +17,7 @@ package com.intellij.internal;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.dumb.DumbAware;

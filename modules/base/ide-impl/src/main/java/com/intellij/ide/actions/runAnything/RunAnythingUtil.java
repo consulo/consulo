@@ -3,7 +3,7 @@ package com.intellij.ide.actions.runAnything;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.runAnything.activity.RunAnythingProvider;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.LangDataKeys;

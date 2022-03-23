@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;

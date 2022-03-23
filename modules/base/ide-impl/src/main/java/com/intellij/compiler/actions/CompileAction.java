@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;

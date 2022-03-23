@@ -17,7 +17,7 @@ package com.intellij.codeInsight.generation;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.component.extension.Extensions;
 import com.intellij.util.ArrayUtil;
 

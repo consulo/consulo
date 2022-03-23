@@ -13,6 +13,7 @@ import com.intellij.ide.util.ElementsChooser;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
 import com.intellij.ide.util.gotoByName.SearchEverywhereConfiguration;
 import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;

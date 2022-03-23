@@ -18,7 +18,7 @@ import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
+import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
 import consulo.ide.impl.psi.util.PsiUtilBase;
@@ -572,7 +572,7 @@ public class CodeCompletionHandlerBase {
           PsiDocumentManager.getInstance(project).commitAllDocuments();
         }
         item.handleInsert(context);
-        PostprocessReformattingAspect.getInstance(project).doPostponedFormatting();
+        PostprocessReformattingAspectImpl.getInstance(project).doPostponedFormatting();
       }
       finally {
         context.stopWatching();

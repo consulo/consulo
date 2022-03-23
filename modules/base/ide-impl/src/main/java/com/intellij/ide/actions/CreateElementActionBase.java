@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeView;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.ui.InputValidator;

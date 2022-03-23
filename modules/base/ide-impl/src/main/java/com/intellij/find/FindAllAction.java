@@ -6,6 +6,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;

@@ -33,7 +33,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-08-25
  */
-public class LightFileDocumentManager extends FileDocumentManager {
+public class LightFileDocumentManager implements FileDocumentManager {
   private static final Key<VirtualFile> MOCK_VIRTUAL_FILE_KEY = Key.create("MockVirtualFile");
   private final Function<? super CharSequence, ? extends Document> myFactory;
   @Nullable

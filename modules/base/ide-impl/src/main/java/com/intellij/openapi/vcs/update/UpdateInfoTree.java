@@ -23,6 +23,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.*;
 import consulo.project.Project;
 import com.intellij.openapi.ui.PanelWithActionsAndCloseButton;

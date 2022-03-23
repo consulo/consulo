@@ -25,6 +25,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.application.dumb.DumbAware;

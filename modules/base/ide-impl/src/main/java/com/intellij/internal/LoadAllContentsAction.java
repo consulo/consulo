@@ -20,7 +20,7 @@
  */
 package com.intellij.internal;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.internal.ApplicationManagerEx;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.dumb.DumbAware;

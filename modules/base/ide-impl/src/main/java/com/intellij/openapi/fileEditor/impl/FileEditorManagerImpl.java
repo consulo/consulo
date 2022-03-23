@@ -139,7 +139,6 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
 
   private static final FileEditor[] EMPTY_EDITOR_ARRAY = {};
   private static final FileEditorProvider[] EMPTY_PROVIDER_ARRAY = {};
-  public static final Key<Boolean> CLOSING_TO_REOPEN = Key.create("CLOSING_TO_REOPEN");
   public static final String FILE_EDITOR_MANAGER = "FileEditorManager";
 
   protected FileEditorsSplitters mySplitters;

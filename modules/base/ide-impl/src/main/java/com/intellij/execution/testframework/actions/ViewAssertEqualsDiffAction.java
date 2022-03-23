@@ -28,6 +28,7 @@ import com.intellij.execution.testframework.TestTreeViewAction;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.action.AnAction;

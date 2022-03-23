@@ -19,7 +19,7 @@ package com.intellij.execution.actions;
 import com.intellij.execution.impl.EditConfigurationsDialog;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ui.ex.action.DumbAwareAction;

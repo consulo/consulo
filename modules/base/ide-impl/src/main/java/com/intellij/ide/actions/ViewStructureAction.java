@@ -26,7 +26,7 @@ import com.intellij.ide.util.FileStructurePopup;
 import com.intellij.ide.util.StructureViewCompositeModel;
 import com.intellij.ide.util.treeView.smartTree.TreeStructureUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;

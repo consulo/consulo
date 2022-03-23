@@ -8,7 +8,7 @@ module consulo.virtual.file.system.impl {
   requires static com.sun.jna;
 
   exports consulo.virtualFileSystem.impl.internal.mediator to consulo.ide.impl;
-  exports consulo.virtualFileSystem.impl.internal.windows to consulo.ide.impl;
+  exports consulo.virtualFileSystem.impl.internal.windows to consulo.ide.impl, consulo.application.impl;
   exports consulo.virtualFileSystem.impl.internal to consulo.ide.impl;
 
   opens consulo.virtualFileSystem.impl.internal to consulo.injecting.pico.impl;

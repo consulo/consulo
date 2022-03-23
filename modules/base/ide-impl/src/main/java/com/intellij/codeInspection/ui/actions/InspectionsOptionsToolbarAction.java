@@ -1,7 +1,7 @@
 package com.intellij.codeInspection.ui.actions;
 
 import consulo.application.CommonBundle;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.scheme.ModifiableModel;

@@ -4,7 +4,7 @@ package com.intellij.ide.actions;
 import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.actions.searcheverywhere.SymbolSearchEverywhereContributor;
 import com.intellij.ide.util.gotoByName.*;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.Language;
 import com.intellij.navigation.ChooseByNameContributor;
 import consulo.ui.ex.action.AnActionEvent;

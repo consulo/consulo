@@ -22,7 +22,7 @@ import consulo.language.editor.inject.EditorWindow;
 import consulo.language.CompositeLanguage;
 import consulo.language.Language;
 import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.*;
 import consulo.logging.Logger;

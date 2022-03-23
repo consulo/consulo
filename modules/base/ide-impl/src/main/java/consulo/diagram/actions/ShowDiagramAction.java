@@ -17,7 +17,7 @@ package consulo.diagram.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.diagram.provider.GraphProvider;

@@ -14,7 +14,7 @@ package com.intellij.openapi.vcs.ex;
 
 import com.intellij.diff.util.DiffUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.action.DumbAwareAction;

@@ -1,5 +1,6 @@
 package com.intellij.openapi.vcs.changes.committed;
 
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CopyProvider;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.TreeExpander;

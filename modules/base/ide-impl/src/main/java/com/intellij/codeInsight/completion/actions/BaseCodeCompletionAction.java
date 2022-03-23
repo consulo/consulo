@@ -5,7 +5,7 @@ import com.intellij.codeInsight.completion.CodeCompletionHandlerBase;
 import consulo.language.editor.completion.CompletionType;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

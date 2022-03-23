@@ -21,7 +21,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.language.Language;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;

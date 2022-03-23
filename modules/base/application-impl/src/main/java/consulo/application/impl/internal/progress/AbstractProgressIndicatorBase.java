@@ -8,7 +8,6 @@ import consulo.application.impl.internal.IdeaModalityStateEx;
 import consulo.application.internal.TransactionGuardEx;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.SystemInfo;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -40,8 +39,8 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private volatile boolean myFinished;
 
   private volatile boolean myIndeterminate = Boolean.parseBoolean(System.getProperty("consulo.progress.indeterminate.by.default", "true"));
-  private volatile MacUtil.Activity myMacActivity;
-  private volatile boolean myShouldStartActivity = SystemInfo.isMac && Boolean.parseBoolean(System.getProperty("consulo.mac.prevent.app.nap", "true"));
+  private volatile Runnable myActivity;
+  private volatile boolean myShouldStartActivity = true;
 
   private Stack<LocalizeValue> myTextStack; // guarded by this
   private DoubleList myFractionStack; // guarded by this
@@ -91,14 +90,14 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   }
 
   private void startSystemActivity() {
-    myMacActivity = myShouldStartActivity ? MacUtil.wakeUpNeo(this) : null;
+    myActivity = myShouldStartActivity ? ProgressActivityFactory.getInstance().createActivity() : null;
   }
 
   void stopSystemActivity() {
-    MacUtil.Activity macActivity = myMacActivity;
+    Runnable macActivity = myActivity;
     if (macActivity != null) {
-      macActivity.matrixHasYou();
-      myMacActivity = null;
+      macActivity.run();
+      myActivity = null;
     }
   }
 

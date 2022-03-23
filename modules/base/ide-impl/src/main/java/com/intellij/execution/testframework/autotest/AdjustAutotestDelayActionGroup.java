@@ -19,6 +19,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;

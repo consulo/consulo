@@ -16,13 +16,13 @@
 
 package com.intellij.codeInspection.actions;
 
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import com.intellij.codeInspection.ex.GlobalInspectionContextImpl;
 import com.intellij.codeInspection.ex.InspectionManagerEx;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;

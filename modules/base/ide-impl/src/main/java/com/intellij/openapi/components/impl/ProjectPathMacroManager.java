@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.components.impl;
 
-import com.intellij.application.options.PathMacrosImpl;
+import consulo.application.impl.internal.macro.PathMacrosImpl;
 import consulo.component.macro.ReplacePathToMacroMap;
-import consulo.application.PathMacros;
+import consulo.application.macro.PathMacros;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.impl.macro.BasePathMacroManager;
 import consulo.project.Project;

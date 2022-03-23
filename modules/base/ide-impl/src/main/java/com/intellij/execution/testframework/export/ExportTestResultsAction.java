@@ -21,7 +21,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.fileEditor.FileEditorManager;

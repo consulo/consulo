@@ -16,6 +16,7 @@
 
 package com.intellij.profile.codeInspection.ui;
 
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -32,7 +33,6 @@ import com.intellij.ide.TreeExpander;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.language.editor.annotation.HighlightSeverity;
-import com.intellij.openapi.actionSystem.*;
 import consulo.ui.ex.awt.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

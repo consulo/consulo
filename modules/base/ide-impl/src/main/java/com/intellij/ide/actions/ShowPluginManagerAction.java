@@ -20,7 +20,7 @@
 package com.intellij.ide.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.plugins.PluginsConfigurable;

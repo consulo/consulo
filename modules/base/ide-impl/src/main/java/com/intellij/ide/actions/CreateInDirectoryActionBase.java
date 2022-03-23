@@ -19,6 +19,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.IdeView;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.localize.LocalizeValue;

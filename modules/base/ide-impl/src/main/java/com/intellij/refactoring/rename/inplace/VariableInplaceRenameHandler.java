@@ -19,7 +19,7 @@ package com.intellij.refactoring.rename.inplace;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.lang.LanguageRefactoringSupport;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

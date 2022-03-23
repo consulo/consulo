@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.actions;
 import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import com.intellij.xdebugger.impl.DebuggerSupport;

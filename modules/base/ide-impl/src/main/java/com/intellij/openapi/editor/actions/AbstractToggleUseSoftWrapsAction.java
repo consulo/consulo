@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;

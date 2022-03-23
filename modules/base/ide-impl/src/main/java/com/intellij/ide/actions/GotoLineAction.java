@@ -5,6 +5,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.EditorGotoLineNumberDialog;
 import com.intellij.ide.util.GotoLineNumberDialog;
 import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;

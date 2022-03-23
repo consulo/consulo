@@ -19,7 +19,7 @@ import com.intellij.execution.TestStateStorage;
 import com.intellij.execution.testframework.sm.TestHistoryConfiguration;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;

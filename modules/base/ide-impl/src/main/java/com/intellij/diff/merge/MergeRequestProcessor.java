@@ -28,6 +28,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.util.BooleanGetter;

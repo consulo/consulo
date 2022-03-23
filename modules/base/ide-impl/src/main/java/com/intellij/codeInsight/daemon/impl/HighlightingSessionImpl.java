@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.containers.ContainerUtil;

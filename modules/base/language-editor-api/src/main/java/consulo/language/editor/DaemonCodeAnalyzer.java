@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.daemon;
+package consulo.language.editor;
 
+import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditor;
-import consulo.project.Project;
-import consulo.language.psi.PsiFile;
 import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
+import consulo.fileEditor.FileEditor;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 
 /**
@@ -40,15 +40,22 @@ public abstract class DaemonCodeAnalyzer {
   public abstract void settingsChanged();
 
   public abstract void setUpdateByTimerEnabled(boolean value);
+
   public abstract void disableUpdateByTimer(@Nonnull Disposable parentDisposable);
 
   public abstract boolean isHighlightingAvailable(@Nullable PsiFile file);
 
   public abstract void setImportHintsEnabled(@Nonnull PsiFile file, boolean value);
+
   public abstract void resetImportHintsEnabledForProject();
+
   public abstract void setHighlightingEnabled(@Nonnull PsiFile file, boolean value);
+
   public abstract boolean isImportHintsEnabled(@Nonnull PsiFile file);
+
   public abstract boolean isAutohintsAvailable(@Nullable PsiFile file);
+
+  public abstract ProgressIndicator createDaemonProgressIndicator();
 
   /**
    * Force rehighlighting for all files.
@@ -57,6 +64,7 @@ public abstract class DaemonCodeAnalyzer {
 
   /**
    * Force rehighlighting for a specific file.
+   *
    * @param file the file to rehighlight.
    */
   public abstract void restart(@Nonnull PsiFile file);

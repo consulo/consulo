@@ -17,7 +17,7 @@
 package com.intellij.refactoring.rename;
 
 import com.intellij.ide.TitledHandler;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.component.extension.Extensions;

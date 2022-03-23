@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;

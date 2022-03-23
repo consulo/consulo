@@ -2,13 +2,13 @@
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
 import consulo.language.codeStyle.*;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.codeStyle.event.CodeStyleSettingsChangeEvent;
 import consulo.language.codeStyle.event.CodeStyleSettingsListener;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.ActionGroup;

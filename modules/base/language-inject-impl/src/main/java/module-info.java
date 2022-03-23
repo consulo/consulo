@@ -12,6 +12,7 @@ module consulo.language.inject.impl {
   requires transitive consulo.document.impl;
   requires transitive consulo.code.editor.api;
   requires transitive consulo.code.editor.impl;
+  requires consulo.application.impl;
 
   exports consulo.language.inject.impl.internal to consulo.ide.impl;
 }

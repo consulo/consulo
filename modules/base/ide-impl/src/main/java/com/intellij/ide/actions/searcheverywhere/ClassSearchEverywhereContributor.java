@@ -10,7 +10,7 @@ import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
 import com.intellij.ide.util.gotoByName.GotoClassModel2;
 import com.intellij.ide.util.gotoByName.GotoClassSymbolConfiguration;
 import consulo.language.DependentLanguage;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import consulo.ui.ex.action.AnAction;

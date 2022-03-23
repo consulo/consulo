@@ -25,7 +25,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

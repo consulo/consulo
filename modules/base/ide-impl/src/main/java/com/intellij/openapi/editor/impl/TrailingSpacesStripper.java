@@ -22,7 +22,7 @@ import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.language.file.inject.DocumentWindow;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;

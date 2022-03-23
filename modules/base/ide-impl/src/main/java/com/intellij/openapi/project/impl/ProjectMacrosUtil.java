@@ -23,7 +23,7 @@ package com.intellij.openapi.project.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.PathMacros;
+import consulo.application.macro.PathMacros;
 import consulo.logging.Logger;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;

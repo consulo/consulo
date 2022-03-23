@@ -2,7 +2,7 @@
 package com.intellij.dvcs.ui;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.EmptyAction;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;

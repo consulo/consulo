@@ -17,6 +17,7 @@ import com.intellij.lang.LanguageStructureViewBuilder;
 import com.intellij.lang.PsiStructureViewFactory;
 import com.intellij.navigation.AnonymousElementProvider;
 import com.intellij.navigation.ChooseByNameContributor;
+import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.NavigationItem;
 import com.intellij.openapi.actionSystem.*;
 import consulo.fileEditor.FileEditor;

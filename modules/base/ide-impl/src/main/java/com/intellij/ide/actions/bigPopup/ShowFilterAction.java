@@ -5,7 +5,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.ElementsChooser;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.ui.ex.action.Toggleable;
 import consulo.application.dumb.DumbAware;

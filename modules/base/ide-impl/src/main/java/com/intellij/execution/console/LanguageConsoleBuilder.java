@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.console;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.util.text.StringUtil;

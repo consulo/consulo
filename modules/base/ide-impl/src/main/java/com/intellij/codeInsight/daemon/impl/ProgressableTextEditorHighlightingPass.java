@@ -18,6 +18,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;

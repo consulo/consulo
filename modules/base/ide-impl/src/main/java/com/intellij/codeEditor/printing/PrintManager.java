@@ -18,7 +18,7 @@ package com.intellij.codeEditor.printing;
 
 import consulo.application.CommonBundle;
 import consulo.language.editor.highlight.HighlighterFactory;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;

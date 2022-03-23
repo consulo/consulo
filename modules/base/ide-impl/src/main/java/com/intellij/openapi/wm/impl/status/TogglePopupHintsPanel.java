@@ -2,7 +2,7 @@
 
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.HectorComponent;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSettingListener;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;

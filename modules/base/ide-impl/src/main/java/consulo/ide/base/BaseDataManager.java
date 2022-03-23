@@ -24,6 +24,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.dataContext.internal.DataRuleHoler;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.concurrent.AsyncResult;

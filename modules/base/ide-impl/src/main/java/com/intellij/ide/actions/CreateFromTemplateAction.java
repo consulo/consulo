@@ -23,6 +23,7 @@ import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.ui.ex.action.AnAction;

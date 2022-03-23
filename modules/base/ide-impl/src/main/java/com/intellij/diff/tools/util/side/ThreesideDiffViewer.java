@@ -31,7 +31,7 @@ import com.intellij.diff.tools.util.base.ListenerDiffViewerBase;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.ThreeSide;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.disposer.Disposer;

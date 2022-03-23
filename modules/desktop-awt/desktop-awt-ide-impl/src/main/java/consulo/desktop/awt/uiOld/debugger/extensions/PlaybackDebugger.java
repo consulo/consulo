@@ -17,7 +17,6 @@
 package consulo.desktop.awt.uiOld.debugger.extensions;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -28,6 +27,7 @@ import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileChooserKeys;
 import com.intellij.openapi.ui.Messages;
 import consulo.ide.ServiceManager;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.ui.playback.PlaybackContext;
 import com.intellij.openapi.ui.playback.PlaybackRunner;

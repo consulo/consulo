@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.impl;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.template.context.EverywhereContextType;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.application.ApplicationManager;

@@ -25,6 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;

@@ -21,7 +21,7 @@ import com.intellij.find.FindModel;
 import com.intellij.ide.IdeTooltipManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.EditorColors;

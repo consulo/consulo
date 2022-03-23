@@ -15,9 +15,9 @@
  */
 package com.intellij.codeStyle;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;

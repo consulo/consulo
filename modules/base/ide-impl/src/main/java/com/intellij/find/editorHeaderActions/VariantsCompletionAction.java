@@ -16,12 +16,12 @@
 package com.intellij.find.editorHeaderActions;
 
 import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ide.impl.psi.codeStyle.NameUtil;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ArrayUtil;

@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.ui.LafManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.ui.UISettings;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnAction;

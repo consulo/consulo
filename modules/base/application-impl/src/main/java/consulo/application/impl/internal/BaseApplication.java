@@ -22,6 +22,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.event.ApplicationListener;
 import consulo.application.event.ApplicationLoadListener;
+import consulo.application.impl.internal.macro.ApplicationPathMacroManagerImpl;
 import consulo.application.impl.internal.performance.ActivityTracker;
 import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
@@ -30,6 +31,7 @@ import consulo.application.impl.internal.store.ApplicationStoreImpl;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationWithIntentWriteLock;
+import consulo.application.macro.ApplicationPathMacroManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
@@ -237,7 +239,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     builder.bind(ContainerPathManager.class).to(ContainerPathManager::get);
 
     builder.bind(IApplicationStore.class).to(ApplicationStoreImpl.class).forceSingleton();
-    builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManager.class).forceSingleton();
+    builder.bind(ApplicationPathMacroManager.class).to(ApplicationPathMacroManagerImpl.class).forceSingleton();
 
     builder.bind(FileTypeRegistry.class).to(FileTypeManager::getInstance);
     builder.bind(ProgressIndicatorProvider.class).to(this::getProgressManager);
@@ -828,8 +830,8 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return UIAccess.isUIThread();
   }
 
-  public boolean isCurrentWriteOnEdt() {
-    return EDT.isEdt(myLock.writeThread);
+  public boolean isCurrentWriteOnUIThread() {
+    return false;
   }
 
   @Override

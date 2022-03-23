@@ -3,7 +3,7 @@ package com.intellij.ide.actions.searcheverywhere;
 
 import com.intellij.ide.actions.GotoActionBase;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.action.DumbAwareAction;

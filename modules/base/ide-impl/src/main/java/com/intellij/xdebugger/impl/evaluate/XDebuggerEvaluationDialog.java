@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.evaluate;
 
 import consulo.language.editor.completion.lookup.LookupManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;

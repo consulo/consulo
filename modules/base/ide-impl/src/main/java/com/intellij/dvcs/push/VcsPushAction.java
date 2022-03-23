@@ -20,7 +20,7 @@ import com.intellij.dvcs.push.ui.VcsPushDialog;
 import com.intellij.dvcs.repo.Repository;
 import com.intellij.dvcs.repo.VcsRepositoryManager;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ide.ServiceManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;

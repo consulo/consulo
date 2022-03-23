@@ -11,13 +11,13 @@ module consulo.container.impl {
   // required consulo-util-lang
   requires transitive jdk.unsupported;
 
-  exports consulo.container.impl;
-  exports consulo.container.impl.classloader;
+  exports consulo.container.impl to consulo.ide.impl, consulo.application.impl, consulo.component.impl;
+  exports consulo.container.impl.classloader to consulo.ide.impl, consulo.application.impl;
   exports consulo.container.impl.classloader.proxy to consulo.proxy;
-  exports consulo.container.impl.parser;
+  exports consulo.container.impl.parser to consulo.ide.impl, consulo.application.impl, consulo.component.impl;
 
   // FIXME this export not work as expected in multiclassloader system, but need for compilation, this export hardcoded in Java9ModuleInitializer
-  exports consulo.container.impl.securityManager.impl to consulo.ide.impl;
+  exports consulo.container.impl.securityManager.impl to consulo.application.impl;
 
   uses consulo.container.boot.ContainerStartup;
 

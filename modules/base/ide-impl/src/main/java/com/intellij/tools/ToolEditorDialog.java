@@ -20,7 +20,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.macro.MacroManager;
 import com.intellij.ide.macro.MacrosDialog;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;

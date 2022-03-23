@@ -15,7 +15,7 @@
  */
 package consulo.test.light.impl;
 
-import consulo.application.PathMacros;
+import consulo.application.macro.PathMacros;
 import consulo.component.macro.ReplacePathToMacroMap;
 
 import javax.annotation.Nonnull;

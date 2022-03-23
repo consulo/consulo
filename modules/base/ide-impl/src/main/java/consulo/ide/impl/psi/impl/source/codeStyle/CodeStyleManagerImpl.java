@@ -33,10 +33,9 @@ import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.psi.codeStyle.IndentOld;
-import consulo.ide.impl.psi.codeStyle.*;
 import consulo.language.codeStyle.FormatterUtil;
 import consulo.language.impl.psi.CheckUtil;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
+import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.ide.impl.psi.impl.source.codeStyle.lineIndent.FormatterBasedIndentAdjuster;
 import consulo.language.impl.ast.FileElement;
@@ -327,7 +326,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Override
   public int adjustLineIndent(@Nonnull final PsiFile file, final int offset) throws IncorrectOperationException {
-    return PostprocessReformattingAspect.getInstance(file.getProject()).disablePostprocessFormattingInside(() -> doAdjustLineIndentByOffset(file, offset, FormattingMode.ADJUST_INDENT));
+    return PostprocessReformattingAspectImpl.getInstance(file.getProject()).disablePostprocessFormattingInside(() -> doAdjustLineIndentByOffset(file, offset, FormattingMode.ADJUST_INDENT));
   }
 
   @Nullable
@@ -347,7 +346,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
 
   @Override
   public int adjustLineIndent(@Nonnull final Document document, final int offset, FormattingMode mode) {
-    return PostprocessReformattingAspect.getInstance(getProject()).disablePostprocessFormattingInside(() -> {
+    return PostprocessReformattingAspectImpl.getInstance(getProject()).disablePostprocessFormattingInside(() -> {
       final PsiDocumentManager documentManager = PsiDocumentManager.getInstance(myProject);
       documentManager.commitDocument(document);
 
@@ -706,7 +705,7 @@ public class CodeStyleManagerImpl extends CodeStyleManager implements Formatting
   @Override
   public <T> T performActionWithFormatterDisabled(final Computable<T> r) {
     return ((FormatterImpl)FormatterEx.getInstance()).runWithFormattingDisabled(() -> {
-      final PostprocessReformattingAspect component = PostprocessReformattingAspect.getInstance(getProject());
+      final PostprocessReformattingAspectImpl component = PostprocessReformattingAspectImpl.getInstance(getProject());
       return component.disablePostprocessFormattingInside(r);
     });
   }

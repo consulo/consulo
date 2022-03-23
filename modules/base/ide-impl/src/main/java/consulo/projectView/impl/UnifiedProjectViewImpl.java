@@ -22,7 +22,7 @@ import com.intellij.ide.projectView.impl.*;
 import com.intellij.ide.projectView.impl.nodes.*;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.ui.ex.tree.NodeDescriptor;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;

@@ -2,7 +2,7 @@
 package com.intellij.ui.popup;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.popup.TreePopupStep;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;

@@ -25,6 +25,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.AnActionEvent;

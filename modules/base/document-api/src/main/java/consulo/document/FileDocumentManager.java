@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
  * Tracks the correspondence between {@link VirtualFile} instances and corresponding {@link Document} instances.
  * Manages the saving of changes to disk.
  */
-public abstract class FileDocumentManager implements SavingRequestor {
+public interface FileDocumentManager extends SavingRequestor {
   @Nonnull
   public static FileDocumentManager getInstance() {
     return ApplicationManager.getApplication().getComponent(FileDocumentManager.class);
@@ -142,7 +142,7 @@ public abstract class FileDocumentManager implements SavingRequestor {
    * Requests writing access info on the given document. Can involve interaction with user.
    */
   @Nonnull
-  public WriteAccessStatus requestWritingStatus(@Nonnull Document document, @Nullable ComponentManager project) {
+  default WriteAccessStatus requestWritingStatus(@Nonnull Document document, @Nullable ComponentManager project) {
     return requestWriting(document, project) ? WriteAccessStatus.WRITABLE : WriteAccessStatus.NON_WRITABLE;
   }
 

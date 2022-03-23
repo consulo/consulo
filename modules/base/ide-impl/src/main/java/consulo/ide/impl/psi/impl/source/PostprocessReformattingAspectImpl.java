@@ -10,7 +10,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.Computable;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
@@ -43,7 +42,6 @@ import consulo.language.impl.psi.internal.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.psi.internal.TreeUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.pom.PomManager;
-import consulo.language.pom.PomModelAspect;
 import consulo.language.pom.TreeAspect;
 import consulo.language.pom.event.ChangeInfo;
 import consulo.language.pom.event.PomModelEvent;
@@ -59,16 +57,16 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Supplier;
 
 @Singleton
-public class PostprocessReformattingAspect implements PomModelAspect {
-  private static final Logger LOG = Logger.getInstance(PostprocessReformattingAspect.class);
+public class PostprocessReformattingAspectImpl implements PostprocessReformattingAspect {
+  private static final Logger LOG = Logger.getInstance(PostprocessReformattingAspectImpl.class);
   private final Project myProject;
   private final PsiManager myPsiManager;
   private final TreeAspect myTreeAspect;
@@ -82,11 +80,11 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   private final ThreadLocal<Context> myContext = ThreadLocal.withInitial(Context::new);
 
   @Inject
-  public PostprocessReformattingAspect(Project project, PsiManager psiManager, TreeAspect treeAspect, CommandProcessor processor) {
+  public PostprocessReformattingAspectImpl(Project project, PsiManager psiManager, TreeAspect treeAspect, CommandProcessor processor) {
     myProject = project;
     myPsiManager = psiManager;
     myTreeAspect = treeAspect;
-    PomManager.getModel(psiManager.getProject()).registerAspect(PostprocessReformattingAspect.class, this, Collections.singleton(treeAspect));
+    PomManager.getModel(psiManager.getProject()).registerAspect(PostprocessReformattingAspectImpl.class, this, Collections.singleton(treeAspect));
 
     ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
       @Override
@@ -111,6 +109,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }, project);
   }
 
+  @Override
   public void disablePostprocessFormattingInside(@Nonnull final Runnable runnable) {
     disablePostprocessFormattingInside((NullableComputable<Object>)() -> {
       runnable.run();
@@ -118,10 +117,11 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     });
   }
 
-  public <T> T disablePostprocessFormattingInside(@Nonnull Computable<T> computable) {
+  @Override
+  public <T> T disablePostprocessFormattingInside(@Nonnull Supplier<T> computable) {
     try {
       getContext().myDisabledCounter++;
-      return computable.compute();
+      return computable.get();
     }
     finally {
       getContext().myDisabledCounter--;
@@ -129,6 +129,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     }
   }
 
+  @Override
   public void postponeFormattingInside(@Nonnull final Runnable runnable) {
     postponeFormattingInside((NullableComputable<Object>)() -> {
       runnable.run();
@@ -136,12 +137,13 @@ public class PostprocessReformattingAspect implements PomModelAspect {
     });
   }
 
-  public <T> T postponeFormattingInside(@Nonnull Computable<T> computable) {
+  @Override
+  public <T> T postponeFormattingInside(@Nonnull Supplier<T> computable) {
     Application application = ApplicationManager.getApplication();
     application.assertIsDispatchThread();
     try {
       incrementPostponedCounter();
-      return computable.compute();
+      return computable.get();
     }
     finally {
       decrementPostponedCounter();
@@ -287,7 +289,7 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   }
 
   public static void assertDocumentChangeIsAllowed(@Nonnull PsiFile file) {
-    PostprocessReformattingAspect reformattingAspect = getInstance(file.getProject());
+    PostprocessReformattingAspectImpl reformattingAspect = (PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(file.getProject());
     reformattingAspect.assertDocumentChangeIsAllowed(file.getViewProvider());
   }
 
@@ -301,10 +303,11 @@ public class PostprocessReformattingAspect implements PomModelAspect {
   public void assertDocumentChangeIsAllowed(@Nonnull FileViewProvider viewProvider) {
     if (isViewProviderLocked(viewProvider)) {
       Throwable cause = viewProvider.getUserData(REFORMAT_ORIGINATOR);
-      @NonNls String message = "Document is locked by write PSI operations. " +
-                               "Use PsiDocumentManager.doPostponedOperationsAndUnblockDocument() to commit PSI changes to the document." +
-                               "\nUnprocessed elements: " + dumpUnprocessedElements(viewProvider) +
-                               (cause == null ? "" : " \nSee cause stacktrace for the reason to lock.");
+      String message = "Document is locked by write PSI operations. " +
+                       "Use PsiDocumentManager.doPostponedOperationsAndUnblockDocument() to commit PSI changes to the document." +
+                       "\nUnprocessed elements: " +
+                       dumpUnprocessedElements(viewProvider) +
+                       (cause == null ? "" : " \nSee cause stacktrace for the reason to lock.");
       throw cause == null ? new RuntimeException(message) : new RuntimeException(message, cause);
     }
   }
@@ -323,10 +326,6 @@ public class PostprocessReformattingAspect implements PomModelAspect {
       count++;
     }
     return sb.toString();
-  }
-
-  public static PostprocessReformattingAspect getInstance(Project project) {
-    return project.getComponent(PostprocessReformattingAspect.class);
   }
 
   private void postponeFormatting(@Nonnull FileViewProvider viewProvider, @Nonnull ASTNode child) {

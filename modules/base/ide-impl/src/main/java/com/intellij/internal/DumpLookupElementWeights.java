@@ -17,7 +17,7 @@
 package com.intellij.internal;
 
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.dumb.DumbAware;

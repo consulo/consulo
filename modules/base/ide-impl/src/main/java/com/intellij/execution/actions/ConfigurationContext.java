@@ -24,7 +24,7 @@ import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.configurations.ConfigurationTypeUtil;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.Editor;

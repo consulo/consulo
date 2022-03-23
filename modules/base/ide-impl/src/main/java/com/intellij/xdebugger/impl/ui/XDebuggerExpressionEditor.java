@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui;
 
 import consulo.language.Language;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;

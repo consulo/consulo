@@ -2,7 +2,7 @@
 package com.intellij.codeHighlighting;
 
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerEx;
-import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.colorScheme.EditorColorsScheme;

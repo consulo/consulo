@@ -5,12 +5,10 @@ import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import com.intellij.openapi.editor.impl.TrailingSpacesStripper;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorImpl;
 import com.intellij.openapi.project.ProjectUtil;
-import consulo.project.internal.ProjectManagerEx;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.SafeWriteRequestor;
-import consulo.language.file.EncodingManager;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import com.intellij.pom.core.impl.PomModelImpl;
 import com.intellij.util.ExceptionUtil;
@@ -24,18 +22,19 @@ import consulo.component.messagebus.MessageBus;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.document.FileDocumentManager;
 import consulo.document.FileDocumentSynchronizationVetoer;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.impl.FrozenDocument;
 import consulo.document.internal.DocumentEx;
+import consulo.document.internal.FileDocumentManagerEx;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.AppTopics;
 import consulo.language.codeStyle.CodeStyle;
+import consulo.language.file.EncodingManager;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.psi.PsiFileImpl;
@@ -47,6 +46,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
+import consulo.project.internal.ProjectManagerEx;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBScrollPane;
@@ -77,7 +77,7 @@ import java.util.List;
 import java.util.*;
 import java.util.function.Predicate;
 
-public class FileDocumentManagerImpl extends FileDocumentManager implements SafeWriteRequestor {
+public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWriteRequestor {
   private static final Logger LOG = Logger.getInstance(FileDocumentManagerImpl.class);
 
   public static final Key<Document> HARD_REF_TO_DOCUMENT_KEY = Key.create("HARD_REF_TO_DOCUMENT_KEY");
@@ -221,7 +221,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
         }
 
         if (file instanceof LightVirtualFile) {
-          registerDocument(document, file);
+          registerDocumentImpl(document, file);
         }
         else {
           document.putUserData(FILE_KEY, file);
@@ -261,7 +261,12 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
     return hard != null ? hard : getDocumentFromCache(file);
   }
 
-  public static void registerDocument(@Nonnull final Document document, @Nonnull VirtualFile virtualFile) {
+  @Override
+  public void registerDocument(@Nonnull Document document, @Nonnull VirtualFile virtualFile) {
+    registerDocumentImpl(document, virtualFile);
+  }
+
+  public static void registerDocumentImpl(@Nonnull final Document document, @Nonnull VirtualFile virtualFile) {
     synchronized (lock) {
       document.putUserData(FILE_KEY, virtualFile);
       virtualFile.putUserData(HARD_REF_TO_DOCUMENT_KEY, document);
@@ -423,7 +428,7 @@ public class FileDocumentManagerImpl extends FileDocumentManager implements Safe
     }
 
     if (!file.equals(getFile(document))) {
-      registerDocument(document, file);
+      registerDocumentImpl(document, file);
     }
 
     boolean saveNeeded = false;

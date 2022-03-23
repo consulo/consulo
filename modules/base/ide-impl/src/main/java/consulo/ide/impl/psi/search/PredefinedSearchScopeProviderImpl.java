@@ -20,7 +20,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.hierarchy.HierarchyBrowserBase;
 import com.intellij.ide.projectView.impl.AbstractUrl;
 import com.intellij.ide.scratch.ScratchesSearchScope;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.util.Pair;

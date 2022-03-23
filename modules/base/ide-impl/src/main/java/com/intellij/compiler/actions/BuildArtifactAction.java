@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.CommonShortcuts;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;

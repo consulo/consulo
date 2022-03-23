@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.execution.TestStateStorage;
 import com.intellij.execution.testframework.*;
 import com.intellij.execution.testframework.actions.ScrollToTestSourceAction;

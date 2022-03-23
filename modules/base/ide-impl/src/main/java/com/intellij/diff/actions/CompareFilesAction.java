@@ -19,7 +19,7 @@ import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.requests.DiffRequest;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;

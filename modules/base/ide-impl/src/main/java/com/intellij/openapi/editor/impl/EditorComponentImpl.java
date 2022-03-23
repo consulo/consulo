@@ -19,7 +19,7 @@ import consulo.ui.ex.CutProvider;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
 import consulo.ui.ex.PasteProvider;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

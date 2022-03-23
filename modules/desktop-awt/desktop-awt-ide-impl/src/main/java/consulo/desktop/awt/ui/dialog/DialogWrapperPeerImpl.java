@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.dialog;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.application.internal.ApplicationEx;

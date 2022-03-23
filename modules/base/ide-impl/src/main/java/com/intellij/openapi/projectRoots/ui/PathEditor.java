@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;

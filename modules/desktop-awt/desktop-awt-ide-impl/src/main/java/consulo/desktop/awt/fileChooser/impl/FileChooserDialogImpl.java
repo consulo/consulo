@@ -17,10 +17,10 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import com.intellij.ide.SaveAndSyncHandler;
 import com.intellij.ide.util.PropertiesComponent;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.tree.NodeRenderer;
-import com.intellij.openapi.actionSystem.*;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileChooser.FileSystemTree;

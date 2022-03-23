@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import consulo.language.editor.scope.AnalysisScopeBundle;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.ide.util.scopeChooser.PackageSetChooserCombo;
 import consulo.logging.Logger;
 import consulo.configurable.Configurable;

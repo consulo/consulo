@@ -20,7 +20,7 @@
 package com.intellij.openapi.fileEditor.impl.text;
 
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import consulo.language.editor.completion.lookup.LookupManager;

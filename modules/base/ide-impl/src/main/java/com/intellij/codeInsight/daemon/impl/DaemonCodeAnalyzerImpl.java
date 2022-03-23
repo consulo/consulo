@@ -1,11 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.highlight.HighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassManager;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
 import com.intellij.codeInsight.daemon.ReferenceImporter;
@@ -522,6 +523,11 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   @Override
   public boolean isAutohintsAvailable(PsiFile file) {
     return isHighlightingAvailable(file) && !(file instanceof PsiCompiledElement);
+  }
+
+  @Override
+  public ProgressIndicator createDaemonProgressIndicator() {
+    return new DaemonProgressIndicator();
   }
 
   @Override

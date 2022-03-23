@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;

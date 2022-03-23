@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.action.AnAction;

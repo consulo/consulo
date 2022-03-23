@@ -15,7 +15,6 @@
  */
 package com.intellij.application.options.editor;
 
-import com.intellij.codeInsight.daemon.*;
 import consulo.language.LanguageExtensionPoint;
 import consulo.application.Application;
 import consulo.application.ApplicationBundle;
@@ -25,6 +24,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.gutter.LineMarkerProvider;
 import consulo.language.editor.gutter.LineMarkerProviderDescriptor;

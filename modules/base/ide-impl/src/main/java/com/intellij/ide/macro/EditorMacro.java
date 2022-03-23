@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.macro;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.Editor;

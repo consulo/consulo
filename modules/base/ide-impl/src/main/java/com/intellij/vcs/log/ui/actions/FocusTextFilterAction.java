@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.actions;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.vcs.log.VcsLogDataKeys;
 import com.intellij.vcs.log.VcsLogUi;
 import com.intellij.vcs.log.ui.VcsLogUiImpl;

@@ -15,6 +15,7 @@
  */
 package com.intellij.profile.codeInspection.ui;
 
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
@@ -22,7 +23,6 @@ import com.intellij.codeInsight.daemon.impl.SeverityUtil;
 import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import com.intellij.codeInspection.ex.SeverityEditorDialog;
 import consulo.language.editor.annotation.HighlightSeverity;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;

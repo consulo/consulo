@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;

@@ -26,7 +26,7 @@ import com.intellij.notification.NotificationAction;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;

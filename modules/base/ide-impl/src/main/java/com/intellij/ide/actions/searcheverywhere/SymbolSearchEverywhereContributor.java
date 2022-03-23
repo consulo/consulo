@@ -5,7 +5,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.ide.util.gotoByName.FilteringGotoByModel;
 import com.intellij.ide.util.gotoByName.GotoSymbolModel2;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

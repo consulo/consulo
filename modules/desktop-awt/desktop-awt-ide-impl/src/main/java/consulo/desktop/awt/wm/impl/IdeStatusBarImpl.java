@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.ui.wm.impl.StatusWidgetBorders;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.dataContext.DataProvider;

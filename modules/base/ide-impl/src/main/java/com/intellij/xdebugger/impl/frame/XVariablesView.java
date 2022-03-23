@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.frame;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.Comparing;

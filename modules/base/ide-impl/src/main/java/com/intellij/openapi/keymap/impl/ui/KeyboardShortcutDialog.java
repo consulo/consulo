@@ -17,7 +17,7 @@ package com.intellij.openapi.keymap.impl.ui;
 
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.KeyboardShortcut;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import consulo.application.ui.HelpManager;

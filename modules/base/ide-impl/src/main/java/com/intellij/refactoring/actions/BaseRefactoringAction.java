@@ -16,7 +16,8 @@
 
 package com.intellij.refactoring.actions;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;

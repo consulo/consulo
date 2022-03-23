@@ -3,6 +3,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.EditorBoundHighlightingPass;
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.fileEditor.highlight.HighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import consulo.application.internal.concurrency.Job;

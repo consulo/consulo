@@ -3,6 +3,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.actions.searcheverywhere.SearchEverywhereManager;
 import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;

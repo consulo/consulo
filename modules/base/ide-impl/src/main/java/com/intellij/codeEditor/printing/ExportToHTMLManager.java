@@ -18,7 +18,7 @@ package com.intellij.codeEditor.printing;
 
 import consulo.application.CommonBundle;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

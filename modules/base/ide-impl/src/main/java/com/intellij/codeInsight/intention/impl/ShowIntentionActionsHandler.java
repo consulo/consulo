@@ -4,7 +4,7 @@ package com.intellij.codeInsight.intention.impl;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.FileModificationService;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import com.intellij.codeInsight.daemon.impl.IntentionsUI;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;

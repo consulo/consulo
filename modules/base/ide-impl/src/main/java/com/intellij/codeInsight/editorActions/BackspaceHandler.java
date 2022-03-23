@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.editorActions;
 
 import consulo.language.editor.action.BraceMatchingUtil;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.annotation.access.RequiredWriteAction;

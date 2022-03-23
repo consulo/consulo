@@ -16,11 +16,11 @@
 
 package com.intellij.tasks.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnActionEvent;

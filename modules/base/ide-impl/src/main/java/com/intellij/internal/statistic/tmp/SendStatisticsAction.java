@@ -18,7 +18,7 @@ package com.intellij.internal.statistic.tmp;
 import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
 import com.intellij.internal.statistic.updater.StatisticsSendManager;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.Alerts;

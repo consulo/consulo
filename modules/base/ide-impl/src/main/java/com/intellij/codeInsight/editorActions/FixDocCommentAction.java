@@ -5,7 +5,7 @@ import consulo.language.codeStyle.CodeStyle;
 import com.intellij.codeInsight.documentation.DocCommentFixer;
 import com.intellij.lang.LanguageDocumentation;
 import com.intellij.lang.documentation.CompositeDocumentationProvider;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.util.text.StringUtil;

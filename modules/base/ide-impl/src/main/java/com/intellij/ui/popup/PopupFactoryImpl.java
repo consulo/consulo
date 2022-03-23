@@ -3,7 +3,7 @@ package com.intellij.ui.popup;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;

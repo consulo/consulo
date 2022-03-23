@@ -15,7 +15,7 @@
  */
 package consulo.component.store.impl.internal;
 
-import consulo.application.PathMacros;
+import consulo.application.macro.PathMacros;
 import consulo.component.macro.CompositePathMacroFilter;
 import consulo.component.macro.PathMacroFilter;
 import org.jdom.Element;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;

@@ -15,6 +15,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.function.Conditions;

@@ -19,6 +19,7 @@ import consulo.application.CommonBundle;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import consulo.application.AllIcons;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CopyProvider;
 import com.intellij.ide.actions.RefreshAction;
 import com.intellij.openapi.actionSystem.*;
@@ -520,7 +521,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
     VcsFileRevision firstSelectedRevision = getFirstSelectedRevision();
-    if (CommonDataKeys.NAVIGATABLE== dataId) {
+    if (CommonDataKeys.NAVIGATABLE == dataId) {
       List selectedItems = getSelection();
       if (selectedItems.size() != 1) return null;
       if (!myHistorySession.isContentAvailable(firstSelectedRevision)) {

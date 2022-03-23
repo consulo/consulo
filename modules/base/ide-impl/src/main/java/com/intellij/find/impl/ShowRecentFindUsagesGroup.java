@@ -18,7 +18,7 @@ package com.intellij.find.impl;
 
 import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesManager;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.usages.ConfigurableUsageTarget;
 import com.intellij.usages.impl.UsageViewImpl;

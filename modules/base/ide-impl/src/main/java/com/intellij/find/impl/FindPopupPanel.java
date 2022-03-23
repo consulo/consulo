@@ -8,7 +8,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.scratch.ScratchUtil;
 import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.ui.ex.internal.ActionButtonComponent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;

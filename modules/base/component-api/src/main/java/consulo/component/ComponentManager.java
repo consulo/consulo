@@ -55,7 +55,7 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
 
   @Nonnull
   default <T> T getInstance(@Nonnull Class<T> clazz) {
-    return getComponent(clazz);
+    return getInjectingContainer().getInstance(clazz);
   }
 
   @Nullable
@@ -68,8 +68,9 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     return getInjectingContainer().getUnbindedInstance(clazz);
   }
 
+  @Deprecated
   default <T> T getComponent(@Nonnull Class<T> clazz) {
-    return getInjectingContainer().getInstance(clazz);
+    return getInstance(clazz);
   }
 
   @Nonnull

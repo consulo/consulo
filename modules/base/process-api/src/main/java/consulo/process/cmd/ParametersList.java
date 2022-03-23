@@ -17,7 +17,7 @@ package consulo.process.cmd;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.PathMacros;
+import consulo.application.macro.PathMacros;
 import consulo.logging.Logger;
 import consulo.process.local.EnvironmentUtil;
 import consulo.util.collection.ArrayUtil;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.CommonBundle;
 import com.intellij.diagnostic.DiagnosticBundle;
 import com.intellij.ide.BrowserUtil;

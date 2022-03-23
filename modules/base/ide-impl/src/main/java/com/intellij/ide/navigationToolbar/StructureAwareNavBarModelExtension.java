@@ -25,7 +25,7 @@ import consulo.fileEditor.structureView.tree.NodeProvider;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.language.Language;
 import com.intellij.lang.LanguageStructureViewBuilder;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiElement;

@@ -15,6 +15,7 @@
 */
 package com.intellij.ide.actions;
 
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CutProvider;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;

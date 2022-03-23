@@ -15,54 +15,55 @@
  */
 package consulo.desktop.awt.application.impl;
 
-import consulo.application.*;
 import com.intellij.diagnostic.LogEventException;
-import consulo.application.impl.internal.*;
-import consulo.application.impl.internal.start.StartupProgress;
-import consulo.application.util.concurrent.ThreadDumper;
 import com.intellij.ide.*;
-import consulo.application.impl.internal.start.StartupUtil;
-import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.diagnostic.Attachment;
-import consulo.application.progress.EmptyProgressIndicator;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
+import com.intellij.openapi.progress.util.PotemkinProgress;
+import com.intellij.openapi.progress.util.ProgressWindow;
+import com.intellij.openapi.project.impl.ProjectManagerImpl;
+import com.intellij.openapi.ui.MessageDialogBuilder;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.AppIcon;
+import com.intellij.util.ArrayUtil;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.*;
+import consulo.application.impl.internal.*;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.impl.internal.progress.ProgressResult;
 import consulo.application.impl.internal.progress.ProgressRunner;
-import com.intellij.openapi.progress.util.PotemkinProgress;
-import com.intellij.openapi.progress.util.ProgressWindow;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.internal.ProjectManagerEx;
-import com.intellij.openapi.project.impl.ProjectManagerImpl;
-import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.ui.Messages;
-import consulo.util.lang.ShutDownTracker;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.WindowManager;
-import com.intellij.ui.AppIcon;
-import com.intellij.util.ArrayUtil;
+import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.application.impl.internal.start.StartupProgress;
+import consulo.application.impl.internal.start.StartupUtil;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.AppScheduledExecutorService;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.concurrent.ThreadDumper;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.awt.hacking.AWTAutoShutdownHacking;
+import consulo.component.ProcessCanceledException;
 import consulo.desktop.application.util.Restarter;
-import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.desktop.awt.ui.impl.AWTUIAccessImpl;
+import consulo.desktop.boot.main.windows.WindowsCommandLineProcessor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
-import consulo.application.impl.internal.start.CommandLineArgs;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.internal.ProjectManagerEx;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.EDT;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.lang.ExceptionUtil;
+import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
@@ -678,6 +679,11 @@ public class DesktopApplicationImpl extends BaseApplication {
   @Override
   public boolean isSwingApplication() {
     return true;
+  }
+
+  @Override
+  public boolean isCurrentWriteOnUIThread() {
+    return EDT.isEdt(myLock.writeThread);
   }
 
   @TestOnly

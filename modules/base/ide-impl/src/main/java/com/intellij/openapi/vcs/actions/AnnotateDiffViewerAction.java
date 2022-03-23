@@ -39,7 +39,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import com.intellij.notification.impl.NotificationsManagerImpl;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.ApplicationManager;

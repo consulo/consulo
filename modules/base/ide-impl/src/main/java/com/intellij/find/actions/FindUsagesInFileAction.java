@@ -26,6 +26,7 @@ import com.intellij.lang.findUsages.LanguageFindUsages;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import consulo.language.psi.PsiDocumentManager;

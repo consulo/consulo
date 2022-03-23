@@ -20,7 +20,7 @@ import com.intellij.diff.util.*;
 import com.intellij.diff.util.DiffUtil.UpdatedLineRange;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.document.Document;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.GutterIconRenderer;

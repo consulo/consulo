@@ -6,7 +6,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import consulo.language.editor.action.BraceMatchingUtil;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import com.intellij.lang.LanguageQuoteHandling;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.impl.DefaultRawTypedHandler;
 import com.intellij.openapi.editor.impl.TypedActionImpl;

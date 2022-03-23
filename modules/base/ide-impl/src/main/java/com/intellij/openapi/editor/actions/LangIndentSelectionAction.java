@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.codeInsight.completion.NextPrevParameterAction;
 import consulo.language.editor.completion.lookup.LookupManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;

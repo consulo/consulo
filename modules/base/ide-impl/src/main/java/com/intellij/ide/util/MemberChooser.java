@@ -21,6 +21,7 @@ import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.keymap.KeymapManager;

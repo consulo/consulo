@@ -7,7 +7,7 @@ import com.intellij.find.editorHeaderActions.*;
 import com.intellij.find.impl.HelpID;
 import com.intellij.find.impl.livePreview.LivePreviewController;
 import com.intellij.find.impl.livePreview.SearchResults;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.ex.DefaultCustomComponentAction;

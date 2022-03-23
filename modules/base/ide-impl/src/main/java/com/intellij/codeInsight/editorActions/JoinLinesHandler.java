@@ -11,7 +11,7 @@ import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
 import consulo.language.codeStyle.LanguageFormatting;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.application.internal.ApplicationEx;

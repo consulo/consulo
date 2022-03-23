@@ -16,7 +16,7 @@
 package consulo.ide.impl;
 
 import com.intellij.ide.impl.DataValidator;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

@@ -4,7 +4,7 @@ package com.intellij.ui.breadcrumbs;
 import consulo.application.ui.UISettings;
 import consulo.language.Language;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;

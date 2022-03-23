@@ -9,6 +9,7 @@ import com.intellij.codeInspection.GlobalSimpleInspectionTool;
 import com.intellij.codeInspection.ex.GlobalInspectionContextBase;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.document.Document;

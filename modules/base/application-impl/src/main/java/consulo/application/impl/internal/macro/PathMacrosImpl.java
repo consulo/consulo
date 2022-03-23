@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.application.options;
+package consulo.application.impl.internal.macro;
 
-import consulo.application.PathMacros;
+import consulo.application.macro.PathMacros;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.component.macro.PathMacroUtil;
 import consulo.component.macro.ReplacePathToMacroMap;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.component.persist.*;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.RoamingType;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.logging.Logger;
+import consulo.util.collection.Lists;
+import consulo.util.xml.serializer.InvalidDataException;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -34,36 +36,31 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * @author dsl
  */
-@State(name = "PathMacrosImpl", storages = @Storage(value = "path.macros.xml", roamingType = RoamingType.DISABLED))
+@State(name = "PathMacrosImpl", storages = @Storage(value = PathMacrosImpl.STORE_FILE, roamingType = RoamingType.DISABLED))
 @Singleton
 public class PathMacrosImpl implements PathMacros, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(PathMacrosImpl.class);
+  public static final String STORE_FILE = "path.macros.xml";
+
   private final Map<String, String> myLegacyMacros = new HashMap<>();
   private final Map<String, String> myMacros = new HashMap<>();
   private int myModificationStamp = 0;
   private final ReentrantReadWriteLock myLock = new ReentrantReadWriteLock();
-  private final List<String> myIgnoredMacros = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<String> myIgnoredMacros = Lists.newLockFreeCopyOnWriteList();
 
   public static final String MACRO_ELEMENT = "macro";
   public static final String NAME_ATTR = "name";
   public static final String VALUE_ATTR = "value";
 
-  @NonNls
   public static final String IGNORED_MACRO_ELEMENT = "ignoredMacro";
 
   // predefined macros
-  @NonNls
   public static final String APPLICATION_HOME_MACRO_NAME = PathMacroUtil.APPLICATION_HOME_DIR;
-  @NonNls
   public static final String PROJECT_DIR_MACRO_NAME = PathMacroUtil.PROJECT_DIR_MACRO_NAME;
-  @NonNls
   public static final String MODULE_DIR_MACRO_NAME = PathMacroUtil.MODULE_DIR_MACRO_NAME;
-  @NonNls
   public static final String USER_HOME_MACRO_NAME = PathMacroUtil.USER_HOME_MACRO_NAME;
 
   private static final Set<String> SYSTEM_MACROS = new HashSet<>();
-  @NonNls
-  public static final String EXT_FILE_NAME = "path.macros";
 
   static {
     SYSTEM_MACROS.add(APPLICATION_HOME_MACRO_NAME);

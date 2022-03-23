@@ -17,6 +17,7 @@
 package com.intellij.analysis;
 
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.ui.ex.action.ActionPlaces;

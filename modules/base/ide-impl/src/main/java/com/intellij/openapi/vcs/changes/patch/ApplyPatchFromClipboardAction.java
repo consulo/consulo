@@ -2,7 +2,7 @@
 package com.intellij.openapi.vcs.changes.patch;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.application.ex.ClipboardUtil;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.DumbAwareAction;

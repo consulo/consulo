@@ -5,7 +5,7 @@ import com.intellij.ide.IdeBundle;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.WriteAction;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.application.dumb.DumbAware;

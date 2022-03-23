@@ -17,7 +17,7 @@
 package com.intellij.ide.projectView.actions;
 
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;

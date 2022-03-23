@@ -15,9 +15,9 @@
  */
 package com.intellij.internal;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.project.DumbServiceImpl;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.action.AnAction;

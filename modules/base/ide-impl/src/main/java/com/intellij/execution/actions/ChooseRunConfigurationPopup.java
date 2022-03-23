@@ -32,7 +32,7 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapUtil;

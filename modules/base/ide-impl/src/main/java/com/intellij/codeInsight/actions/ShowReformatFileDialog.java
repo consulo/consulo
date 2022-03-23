@@ -16,10 +16,10 @@
 package com.intellij.codeInsight.actions;
 
 import consulo.language.codeStyle.LanguageFormatting;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;

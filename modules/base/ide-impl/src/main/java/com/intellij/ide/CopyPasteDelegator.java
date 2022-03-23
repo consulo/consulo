@@ -2,7 +2,7 @@
 
 package com.intellij.ide;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.TransactionGuard;

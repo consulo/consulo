@@ -17,11 +17,11 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.application.options.OptionsContainingConfigurable;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.ide.bookmarks.BookmarkManager;
 import com.intellij.ide.todo.TodoConfiguration;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.colorScheme.*;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;

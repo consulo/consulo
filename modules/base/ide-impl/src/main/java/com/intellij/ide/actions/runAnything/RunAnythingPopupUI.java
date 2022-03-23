@@ -24,6 +24,7 @@ import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.keymap.KeymapUtil;

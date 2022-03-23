@@ -21,10 +21,10 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory;

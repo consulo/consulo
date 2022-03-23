@@ -17,7 +17,7 @@ package com.intellij.usages;
 
 import consulo.navigation.NavigationItem;
 import com.intellij.navigation.NavigationItemFileStatus;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;

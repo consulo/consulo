@@ -18,9 +18,9 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.OccurenceNavigator;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;

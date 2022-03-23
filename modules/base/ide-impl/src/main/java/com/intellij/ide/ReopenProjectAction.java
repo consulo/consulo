@@ -16,8 +16,8 @@
 package com.intellij.ide;
 
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.FileUtil;

@@ -22,7 +22,7 @@ import com.intellij.ide.dnd.DnDImage;
 import com.intellij.ide.dnd.DnDSupport;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.Function;

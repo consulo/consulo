@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.debugger.*;
 import consulo.debugger.breakpoint.*;
 import consulo.language.Language;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;

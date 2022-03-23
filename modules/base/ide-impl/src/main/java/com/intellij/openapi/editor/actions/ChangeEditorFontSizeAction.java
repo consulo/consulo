@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.application.options.EditorFontsConstants;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;

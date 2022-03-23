@@ -19,6 +19,7 @@ import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.featureStatistics.FeatureUsageTracker;

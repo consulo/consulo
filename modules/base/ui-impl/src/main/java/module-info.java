@@ -19,7 +19,7 @@ module consulo.ui.impl {
   requires consulo.util.io;
 
   exports consulo.ui.impl to consulo.ide.impl, consulo.desktop.awt.ide.impl;
-  exports consulo.ui.impl.image to consulo.ide.impl, consulo.desktop.awt.ide.impl;
+  exports consulo.ui.impl.image to consulo.application.impl, consulo.desktop.awt.ide.impl;
   exports consulo.ui.impl.model to consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.ui.impl.style to consulo.ide.impl, consulo.desktop.awt.ide.impl;
 }

@@ -15,9 +15,9 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

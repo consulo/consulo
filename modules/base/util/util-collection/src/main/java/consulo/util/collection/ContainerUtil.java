@@ -16,12 +16,12 @@
 package consulo.util.collection;
 
 import consulo.util.collection.impl.map.*;
-import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
+import java.util.LinkedHashMap;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -1213,5 +1213,20 @@ public class ContainerUtil {
       }
     }
     return true;
+  }
+
+  @Nonnull
+  public static <K, V> Map<K, Set<V>> classify(@Nonnull Iterator<V> iterator, @Nonnull Function<V, K> keyConvertor) {
+    Map<K, Set<V>> hashMap = new LinkedHashMap<K, Set<V>>();
+    while (iterator.hasNext()) {
+      V value = iterator.next();
+      final K key = keyConvertor.apply(value);
+      Set<V> set = hashMap.get(key);
+      if (set == null) {
+        hashMap.put(key, set = new LinkedHashSet<V>()); // ordered set!!
+      }
+      set.add(value);
+    }
+    return hashMap;
   }
 }

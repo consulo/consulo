@@ -25,7 +25,7 @@ import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.util.DiffUserDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;

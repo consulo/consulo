@@ -10,6 +10,7 @@ module consulo.language.editor.api {
   requires transitive consulo.language.code.style.api;
   requires transitive consulo.code.editor.api;
   requires transitive consulo.undo.redo.api;
+  requires transitive consulo.file.editor.api;
   requires consulo.util.jdom;
   
   exports consulo.language.editor;

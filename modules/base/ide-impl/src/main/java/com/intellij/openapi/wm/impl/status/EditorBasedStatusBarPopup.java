@@ -3,7 +3,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;

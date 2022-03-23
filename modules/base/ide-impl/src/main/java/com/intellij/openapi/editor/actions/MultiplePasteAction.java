@@ -20,6 +20,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;

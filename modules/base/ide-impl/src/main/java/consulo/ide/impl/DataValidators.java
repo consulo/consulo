@@ -16,7 +16,7 @@
 package consulo.ide.impl;
 
 import com.intellij.ide.impl.DataValidator;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;

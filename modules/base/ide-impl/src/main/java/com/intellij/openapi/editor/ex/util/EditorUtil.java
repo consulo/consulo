@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DesktopScrollingModelImpl;

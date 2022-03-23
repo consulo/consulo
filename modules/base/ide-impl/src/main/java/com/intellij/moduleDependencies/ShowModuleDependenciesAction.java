@@ -16,6 +16,7 @@
 
 package com.intellij.moduleDependencies;
 
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import com.intellij.openapi.actionSystem.*;

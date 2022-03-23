@@ -11,7 +11,7 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
@@ -35,7 +35,7 @@ import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.psi.formatter.DocumentBasedFormattingModel;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
+import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -223,7 +223,7 @@ public class CodeFormatterFacade {
         i++;
       }
     }
-    final PostprocessReformattingAspect component = file.getProject().getComponent(PostprocessReformattingAspect.class);
+    final PostprocessReformattingAspectImpl component = file.getProject().getComponent(PostprocessReformattingAspectImpl.class);
     FormattingProgressTask.FORMATTING_CANCELLED_FLAG.set(false);
     component.doPostponedFormatting(file.getViewProvider());
     i = 0;
@@ -416,7 +416,7 @@ public class CodeFormatterFacade {
    */
   private void wrapLongLinesIfNecessary(@Nonnull final PsiFile file, @Nullable final Document document, final int startOffset, final int endOffset) {
     if (!mySettings.getCommonSettings(file.getLanguage()).WRAP_LONG_LINES ||
-        PostprocessReformattingAspect.getInstance(file.getProject()).isViewProviderLocked(file.getViewProvider()) ||
+        PostprocessReformattingAspectImpl.getInstance(file.getProject()).isViewProviderLocked(file.getViewProvider()) ||
         document == null) {
       return;
     }

@@ -20,7 +20,7 @@ import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.util.*;
 import com.intellij.internal.statistic.UsageTrigger;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;

@@ -9,7 +9,7 @@ import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.pom.core.impl.PomModelImpl;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
+import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.inject.impl.internal.InjectedLanguageManagerImpl;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.util.ArrayUtil;
@@ -124,7 +124,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
 
   @Override
   protected void beforeDocumentChangeOnUnlockedDocument(@Nonnull final FileViewProvider viewProvider) {
-    PostprocessReformattingAspect.getInstance(myProject).assertDocumentChangeIsAllowed(viewProvider);
+    PostprocessReformattingAspectImpl.getInstance(myProject).assertDocumentChangeIsAllowed(viewProvider);
     super.beforeDocumentChangeOnUnlockedDocument(viewProvider);
   }
 
@@ -143,13 +143,13 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
   @Override
   public boolean isDocumentBlockedByPsi(@Nonnull Document doc) {
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
-    return viewProvider != null && PostprocessReformattingAspect.getInstance(myProject).isViewProviderLocked(viewProvider);
+    return viewProvider != null && PostprocessReformattingAspectImpl.getInstance(myProject).isViewProviderLocked(viewProvider);
   }
 
   @Override
   public void doPostponedOperationsAndUnblockDocument(@Nonnull Document doc) {
     if (doc instanceof DocumentWindow) doc = ((DocumentWindow)doc).getDelegate();
-    final PostprocessReformattingAspect component = myProject.getComponent(PostprocessReformattingAspect.class);
+    final PostprocessReformattingAspectImpl component = myProject.getComponent(PostprocessReformattingAspectImpl.class);
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
     if (viewProvider != null && component != null) component.doPostponedFormatting(viewProvider);
   }
@@ -217,7 +217,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
         throw new IllegalStateException("Can't replace existing document");
       }
 
-      FileDocumentManagerImpl.registerDocument(document, vFile);
+      FileDocumentManagerImpl.registerDocumentImpl(document, vFile);
     }
   }
 }

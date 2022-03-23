@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.shelf;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchDefaultExecutor;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchDifferentiatedDialog;
 import com.intellij.openapi.vcs.changes.patch.ApplyPatchExecutor;

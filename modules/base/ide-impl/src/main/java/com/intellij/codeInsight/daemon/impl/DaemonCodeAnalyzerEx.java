@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.application.ApplicationManager;

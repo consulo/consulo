@@ -18,7 +18,7 @@ package com.intellij.codeInsight.navigation;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import consulo.application.AllIcons;
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;

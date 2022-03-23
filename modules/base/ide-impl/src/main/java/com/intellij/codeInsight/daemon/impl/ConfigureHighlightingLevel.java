@@ -16,14 +16,14 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.DaemonBundle;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.analysis.FileHighlightingSetting;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightLevelUtil;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.editor.markup.InspectionsLevel;
 import consulo.module.content.ProjectFileIndex;
 import consulo.ui.ex.action.DefaultActionGroup;

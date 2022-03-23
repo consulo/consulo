@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnActionEvent;

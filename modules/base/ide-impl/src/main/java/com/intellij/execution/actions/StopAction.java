@@ -3,6 +3,7 @@ package com.intellij.execution.actions;
 
 import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionManager;
+import consulo.language.editor.CommonDataKeys;
 import consulo.process.KillableProcess;
 import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.impl.ExecutionManagerImpl;

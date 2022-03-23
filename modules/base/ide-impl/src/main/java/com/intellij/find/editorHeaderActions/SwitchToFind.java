@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 
 import javax.swing.*;
 
-import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
+import static consulo.language.editor.CommonDataKeys.EDITOR;
 
 /**
  * Created by IntelliJ IDEA.

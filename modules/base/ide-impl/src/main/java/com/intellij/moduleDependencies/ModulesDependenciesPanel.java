@@ -18,6 +18,7 @@ package com.intellij.moduleDependencies;
 
 import consulo.application.CommonBundle;
 import consulo.dataContext.DataProvider;
+import consulo.language.editor.CommonDataKeys;
 import consulo.module.content.ProjectTopics;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;

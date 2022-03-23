@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.xdebugger.impl.DebuggerSupport;
 import consulo.ui.ex.action.ActionPlaces;

@@ -18,7 +18,7 @@ package consulo.desktop.awt.data.impl;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ProhibitAWTEvents;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.application.impl.internal.IdeaModalityState;

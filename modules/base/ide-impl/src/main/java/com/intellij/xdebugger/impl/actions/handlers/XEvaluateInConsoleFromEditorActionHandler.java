@@ -4,7 +4,7 @@ import com.intellij.execution.console.ConsoleExecuteAction;
 import com.intellij.execution.console.LanguageConsoleView;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.codeEditor.Editor;

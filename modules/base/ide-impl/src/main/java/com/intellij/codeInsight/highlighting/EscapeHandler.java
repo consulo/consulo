@@ -17,7 +17,7 @@ package com.intellij.codeInsight.highlighting;
 
 import com.intellij.find.FindManager;
 import com.intellij.find.FindModel;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionHandler;

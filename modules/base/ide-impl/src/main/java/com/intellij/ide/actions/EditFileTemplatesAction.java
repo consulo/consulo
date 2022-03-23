@@ -19,7 +19,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 
 public class EditFileTemplatesAction extends AnAction{
   public EditFileTemplatesAction(String text) {

@@ -17,10 +17,10 @@
 package com.intellij.codeInsight.navigation.actions;
 
 import com.intellij.codeInsight.navigation.IncrementalSearchHandler;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;

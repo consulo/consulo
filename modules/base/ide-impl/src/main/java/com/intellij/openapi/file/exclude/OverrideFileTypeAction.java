@@ -2,7 +2,7 @@
 package com.intellij.openapi.file.exclude;
 
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

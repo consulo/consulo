@@ -18,7 +18,7 @@ package com.intellij.ide.projectView.actions;
 import consulo.application.AllIcons;
 import com.intellij.idea.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.Module;
 import consulo.module.content.layer.ContentEntry;

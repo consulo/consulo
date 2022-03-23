@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.console;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnAction;

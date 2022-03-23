@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.actions;
 
 import com.intellij.idea.ActionsBundle;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.FileStatus;

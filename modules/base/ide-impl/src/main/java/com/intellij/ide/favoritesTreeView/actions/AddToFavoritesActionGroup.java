@@ -18,7 +18,7 @@ package com.intellij.ide.favoritesTreeView.actions;
 
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;

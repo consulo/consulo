@@ -15,10 +15,10 @@
  */
 package com.intellij.ui;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionManager;

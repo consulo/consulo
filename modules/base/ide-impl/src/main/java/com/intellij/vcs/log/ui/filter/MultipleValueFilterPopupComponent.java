@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.filter;
 
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;

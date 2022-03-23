@@ -5,7 +5,7 @@ import com.intellij.codeInsight.daemon.impl.IdentifierUtil;
 import com.intellij.codeInsight.highlighting.HighlightManager;
 import com.intellij.ide.scratch.RootType;
 import com.intellij.ide.scratch.ScratchFileService;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.codeEditor.Editor;

@@ -3,7 +3,7 @@ package com.intellij.notification.impl.actions;
 import consulo.application.AllIcons;
 import com.intellij.notification.EventLog;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -3,7 +3,7 @@ package com.intellij.coverage.actions;
 import com.intellij.coverage.CoverageDataManager;
 import com.intellij.coverage.CoverageSuitesBundle;
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;

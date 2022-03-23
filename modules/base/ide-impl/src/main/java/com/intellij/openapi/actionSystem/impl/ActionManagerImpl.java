@@ -11,6 +11,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionPopupMenuListener;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.action.ActionStubBase;
 import consulo.ui.ex.action.DefaultActionGroup;

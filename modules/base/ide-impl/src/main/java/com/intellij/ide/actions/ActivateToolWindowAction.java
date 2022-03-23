@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import consulo.application.AllIcons;
 import com.intellij.notification.EventLog;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.action.DumbAwareAction;

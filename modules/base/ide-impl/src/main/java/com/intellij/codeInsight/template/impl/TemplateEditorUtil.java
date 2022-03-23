@@ -21,7 +21,7 @@ import consulo.dataContext.DataManager;
 import consulo.language.lexer.CompositeLexer;
 import consulo.language.lexer.Lexer;
 import consulo.language.lexer.MergingLexerAdapter;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;

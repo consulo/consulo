@@ -26,6 +26,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
+import consulo.language.editor.CommonDataKeys;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.application.dumb.DumbAware;

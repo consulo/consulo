@@ -17,6 +17,7 @@
 package com.intellij.codeInspection.ui;
 
 import consulo.application.CommonBundle;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.AnalysisUIOptions;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;

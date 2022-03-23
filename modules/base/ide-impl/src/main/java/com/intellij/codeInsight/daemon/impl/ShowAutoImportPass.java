@@ -6,7 +6,7 @@ import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeInsight.daemon.DaemonBundle;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.ReferenceImporter;
 import consulo.language.editor.intention.IntentionAction;

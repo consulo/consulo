@@ -73,13 +73,13 @@
       <loadForDefaultProject/>
     </component>
     <component>
-      <implementation-class>consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect</implementation-class>
+      <implementation-class>consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl</implementation-class>
       <loadForDefaultProject/>
       <!-- <skipForDefaultProject/> -->
     </component>
 
     <component>
-      <interface-class>com.intellij.codeInsight.daemon.DaemonCodeAnalyzer</interface-class>
+      <interface-class>consulo.language.editor.DaemonCodeAnalyzer</interface-class>
       <implementation-class>com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>

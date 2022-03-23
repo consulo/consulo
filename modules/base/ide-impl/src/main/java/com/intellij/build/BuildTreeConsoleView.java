@@ -7,6 +7,7 @@ import com.intellij.build.events.impl.SkippedResultImpl;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewImpl;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.*;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.console.ConsoleView;

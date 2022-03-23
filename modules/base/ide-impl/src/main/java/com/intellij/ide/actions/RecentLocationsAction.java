@@ -5,7 +5,7 @@ import com.intellij.featureStatistics.FeatureUsageTracker;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.codeEditor.Editor;

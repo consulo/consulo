@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.folding.impl.FoldingUtil;
 import com.intellij.codeInsight.hint.TooltipController;
@@ -9,7 +9,7 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.scratch.ScratchUtil;
 import com.intellij.ide.todo.TodoConfiguration;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.ModalityStateListener;
 import consulo.application.impl.internal.LaterInvocator;

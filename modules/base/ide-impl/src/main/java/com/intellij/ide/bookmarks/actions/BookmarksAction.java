@@ -22,7 +22,7 @@ package com.intellij.ide.bookmarks.actions;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkItem;
 import com.intellij.ide.bookmarks.BookmarkManager;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.ui.popup.util.DetailViewImpl;
 import com.intellij.ui.popup.util.ItemWrapper;

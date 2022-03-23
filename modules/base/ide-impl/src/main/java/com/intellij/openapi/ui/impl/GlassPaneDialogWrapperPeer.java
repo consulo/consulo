@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.application.ui.RemoteDesktopService;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.application.Application;

@@ -16,7 +16,7 @@
 package com.intellij.vcs;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager;

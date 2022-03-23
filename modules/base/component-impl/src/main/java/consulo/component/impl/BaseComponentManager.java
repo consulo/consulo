@@ -412,8 +412,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     return getInjectingContainer().getInstanceIfCreated(clazz);
   }
 
+  @Nonnull
   @Override
-  public <T> T getComponent(@Nonnull Class<T> clazz) {
+  public <T> T getInstance(@Nonnull Class<T> clazz) {
     if (myDisposeState == ThreeState.YES) {
       checkCanceled();
       throw new AssertionError("Already disposed: " + this);

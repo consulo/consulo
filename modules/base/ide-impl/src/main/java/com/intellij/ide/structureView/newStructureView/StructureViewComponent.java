@@ -15,7 +15,7 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.GroupWrapper;
 import com.intellij.ide.util.treeView.smartTree.SmartTreeStructure;
 import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;

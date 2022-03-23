@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorEx;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.SourceItemsTree;

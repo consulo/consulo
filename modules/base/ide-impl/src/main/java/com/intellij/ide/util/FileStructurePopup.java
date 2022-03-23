@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.ide.CopyPasteDelegator;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.IdeBundle;
@@ -18,7 +18,7 @@ import com.intellij.ide.util.treeView.smartTree.SmartTreeStructure;
 import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
 import com.intellij.ide.util.treeView.smartTree.TreeStructureUtil;
 import consulo.ui.ex.awt.internal.MnemonicHelper;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;

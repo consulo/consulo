@@ -16,9 +16,9 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.codeInsight.CodeSmellInfo;
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
-import com.intellij.codeInsight.daemon.impl.DaemonProgressIndicator;
+import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;

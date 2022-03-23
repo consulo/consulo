@@ -23,7 +23,7 @@ import com.intellij.diff.requests.DiffRequest;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.Side;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

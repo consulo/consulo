@@ -19,7 +19,7 @@ import consulo.compiler.impl.setting.CompilerConfigurable;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.compiler.CompilerBundle;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;

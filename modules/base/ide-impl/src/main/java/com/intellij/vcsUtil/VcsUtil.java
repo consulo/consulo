@@ -17,7 +17,7 @@ package com.intellij.vcsUtil;
 
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;

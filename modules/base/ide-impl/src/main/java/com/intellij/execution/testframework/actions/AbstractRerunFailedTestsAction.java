@@ -20,6 +20,7 @@ import consulo.execution.configuration.*;
 import consulo.execution.configuration.log.LogFileOptions;
 import consulo.execution.configuration.log.PredefinedLogFile;
 import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.CommonDataKeys;
 import consulo.process.ExecutionException;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunnerRegistry;

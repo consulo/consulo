@@ -25,7 +25,7 @@ package com.intellij.codeInspection;
 import consulo.dataContext.DataManager;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.bootstrap.charset.Native2AsciiCharset;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;

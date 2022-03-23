@@ -15,7 +15,7 @@
  */
 package consulo.execution.impl;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.execution.internal.ExecutionDataContextCacher;

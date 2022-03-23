@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.daemon.impl;
+package consulo.application.impl.internal.progress;
 
 import consulo.disposer.Disposable;
 import consulo.application.progress.StandardProgressIndicator;
-import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.disposer.Disposer;
 import consulo.disposer.TraceableDisposable;
 import org.jetbrains.annotations.TestOnly;

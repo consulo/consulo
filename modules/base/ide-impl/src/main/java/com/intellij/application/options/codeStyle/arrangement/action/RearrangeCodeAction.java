@@ -18,7 +18,7 @@ package com.intellij.application.options.codeStyle.arrangement.action;
 import com.intellij.codeInsight.actions.RearrangeCodeProcessor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;

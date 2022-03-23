@@ -35,6 +35,7 @@ import com.intellij.diff.util.*;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.codeEditor.event.VisibleAreaListener;

@@ -2,7 +2,7 @@
 package com.intellij.ide.navigationToolbar;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.Consumer;
 import consulo.application.util.registry.Registry;

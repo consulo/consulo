@@ -12,7 +12,7 @@ import com.intellij.ide.actions.runAnything.RunAnythingAction;
 import com.intellij.ide.actions.runAnything.RunAnythingCache;
 import com.intellij.ide.actions.runAnything.commands.RunAnythingCommandCustomizer;
 import com.intellij.ide.actions.runAnything.execution.RunAnythingRunProfile;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;

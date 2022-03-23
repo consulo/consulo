@@ -4,7 +4,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.project.Project;

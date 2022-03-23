@@ -12,6 +12,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
+import consulo.document.internal.FileDocumentManagerEx;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
@@ -20,6 +21,7 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.FileASTNode;
 import consulo.language.ast.IElementType;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.highlight.EditorHighlighterProvider;
 import consulo.language.editor.highlight.FileTypeEditorHighlighterProviders;
 import consulo.language.file.FileViewProvider;
@@ -382,7 +384,7 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
 
   // returns true if shreds were set, false if old ones were reused
   private static boolean cacheEverything(@Nonnull PlaceImpl place, @Nonnull DocumentWindowImpl documentWindow, @Nonnull InjectedFileViewProvider viewProvider, @Nonnull PsiFile psiFile) {
-    FileDocumentManagerImpl.registerDocument(documentWindow, viewProvider.getVirtualFile());
+    ((FileDocumentManagerEx)FileDocumentManager.getInstance()).registerDocument(documentWindow, viewProvider.getVirtualFile());
 
     DebugUtil.performPsiModification("MultiHostRegistrar cacheEverything", () -> viewProvider.forceCachedPsi(psiFile));
 
@@ -530,7 +532,8 @@ class InjectionRegistrarImpl implements MultiHostRegistrar {
     if (!oldFile.textMatches(injectedPsi)) {
       InjectedFileViewProvider oldViewProvider = (InjectedFileViewProvider)oldFile.getViewProvider();
       oldViewProvider.performNonPhysically(() -> DebugUtil.performPsiModification("injected tree diff", () -> {
-        final DiffLog diffLog = BlockSupportImpl.mergeTrees((PsiFileImpl)oldFile, oldFileNode, injectedNode, new DaemonProgressIndicator(), oldFileNode.getText());
+        final DiffLog diffLog = BlockSupportImpl
+                .mergeTrees((PsiFileImpl)oldFile, oldFileNode, injectedNode, DaemonCodeAnalyzer.getInstance(oldFile.getProject()).createDaemonProgressIndicator(), oldFileNode.getText());
         diffLog.doActualPsiChange(oldFile);
       }));
     }

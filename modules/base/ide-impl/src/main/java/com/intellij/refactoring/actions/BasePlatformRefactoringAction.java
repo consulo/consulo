@@ -18,7 +18,7 @@ package com.intellij.refactoring.actions;
 import consulo.language.Language;
 import com.intellij.lang.LanguageRefactoringSupport;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.codeEditor.Editor;

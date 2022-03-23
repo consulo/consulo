@@ -16,10 +16,10 @@
 
 package com.intellij.tools;
 
-import com.intellij.openapi.components.impl.ApplicationPathMacroManagerImpl;
-import consulo.application.ApplicationManager;
-import consulo.component.macro.PathMacroManager;
 import com.intellij.openapi.options.BaseSchemeProcessor;
+import consulo.application.ApplicationManager;
+import consulo.application.macro.ApplicationPathMacroManager;
+import consulo.component.macro.PathMacroManager;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Document;
@@ -27,8 +27,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Parent;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 
@@ -68,7 +68,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
     String groupName = root.getAttributeValue(ATTRIBUTE_NAME);
     ToolsGroup<T> result = createToolsGroup(groupName);
 
-    final PathMacroManager macroManager = ApplicationPathMacroManagerImpl.getInstance(ApplicationManager.getApplication());
+    final PathMacroManager macroManager = ApplicationPathMacroManager.getInstance(ApplicationManager.getApplication());
 
     for (final Object o : root.getChildren(TOOL)) {
       Element element = (Element)o;
@@ -169,7 +169,7 @@ abstract public class ToolsProcessor<T extends Tool> extends BaseSchemeProcessor
 
     Element taskElement = new Element(EXEC);
 
-    final PathMacroManager macroManager = ApplicationPathMacroManagerImpl.getInstance(ApplicationManager.getApplication());
+    final PathMacroManager macroManager = ApplicationPathMacroManager.getInstance(ApplicationManager.getApplication());
 
     Element option = new Element(ELEMENT_OPTION);
     taskElement.addContent(option);

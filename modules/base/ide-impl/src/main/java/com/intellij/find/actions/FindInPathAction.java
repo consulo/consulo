@@ -18,6 +18,7 @@
 package com.intellij.find.actions;
 
 import com.intellij.find.findInProject.FindInProjectManager;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
 import com.intellij.openapi.actionSystem.*;

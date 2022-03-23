@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 import com.intellij.ide.BrowserUtil;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import com.intellij.tasks.TaskManager;

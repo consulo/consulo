@@ -5,7 +5,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopupStepEx;

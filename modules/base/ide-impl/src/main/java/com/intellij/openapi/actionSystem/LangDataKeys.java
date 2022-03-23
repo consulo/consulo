@@ -22,6 +22,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.ide.IdeView;
 import consulo.language.Language;
+import consulo.language.editor.CommonDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.content.library.Library;

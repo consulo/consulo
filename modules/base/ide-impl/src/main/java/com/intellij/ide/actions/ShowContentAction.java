@@ -17,6 +17,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.ui.ShadowAction;
 import consulo.ui.ex.toolWindow.ToolWindow;

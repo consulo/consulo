@@ -20,6 +20,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.CopyProvider;

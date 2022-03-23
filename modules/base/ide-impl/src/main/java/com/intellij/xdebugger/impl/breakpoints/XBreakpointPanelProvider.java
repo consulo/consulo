@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.debugger.XBreakpointManager;
 import consulo.debugger.breakpoint.*;
 import consulo.debugger.event.XBreakpointListener;

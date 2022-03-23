@@ -17,7 +17,7 @@ package com.intellij.vcs.changes;
 
 import com.intellij.find.FindModel;
 import com.intellij.find.impl.FindInProjectExtension;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsDataKeys;

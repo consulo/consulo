@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.VirtualFile;

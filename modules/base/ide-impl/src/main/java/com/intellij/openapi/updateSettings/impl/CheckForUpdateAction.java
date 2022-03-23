@@ -17,7 +17,7 @@ package com.intellij.openapi.updateSettings.impl;
 
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.Task;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;

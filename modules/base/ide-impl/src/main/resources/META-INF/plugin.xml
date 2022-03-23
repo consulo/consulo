@@ -2756,7 +2756,7 @@
                     serviceImplementation="com.intellij.application.options.codeStyle.cache.CodeStyleCachingServiceImpl"/>
 
     <projectService serviceImplementation="com.intellij.ide.favoritesTreeView.FavoritesManager"/>
-    <applicationService serviceInterface="consulo.application.PathMacros" serviceImplementation="com.intellij.application.options.PathMacrosImpl"/>
+    <applicationService serviceInterface="consulo.application.macro.PathMacros" serviceImplementation="consulo.application.impl.internal.macro.PathMacrosImpl"/>
 
     <projectService serviceInterface="com.intellij.build.BuildContentManager"
                     serviceImplementation="com.intellij.build.BuildContentManagerImpl"/>

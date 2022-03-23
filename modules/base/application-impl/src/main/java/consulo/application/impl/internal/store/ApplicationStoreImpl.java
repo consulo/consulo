@@ -15,10 +15,10 @@
  */
 package consulo.application.impl.internal.store;
 
-import com.intellij.application.options.PathMacrosImpl;
 import consulo.application.Application;
+import consulo.application.impl.internal.macro.PathMacrosImpl;
+import consulo.application.macro.ApplicationPathMacroManager;
 import consulo.component.impl.macro.BasePathMacroManager;
-import consulo.component.macro.PathMacroManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.StoragePathMacros;
 import consulo.component.store.impl.internal.*;
@@ -49,7 +49,8 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
   public ApplicationStoreImpl(Application application, ApplicationPathMacroManager pathMacroManager, Provider<ApplicationDefaultStoreCache> applicationDefaultStoreCache) {
     super(applicationDefaultStoreCache);
     myApplication = application;
-    myStateStorageManager = new StateStorageManagerImpl(new TrackingPathMacroSubstitutorImpl((BasePathMacroManager)pathMacroManager), ROOT_ELEMENT_NAME, application, () -> null, StateStorageFacade.JAVA_IO) {
+    myStateStorageManager = new StateStorageManagerImpl(new TrackingPathMacroSubstitutorImpl((BasePathMacroManager)pathMacroManager), ROOT_ELEMENT_NAME, application, () -> null,
+                                                        () -> application.getInstance(PathMacrosService.class), StateStorageFacade.JAVA_IO) {
       @Nonnull
       @Override
       protected String getConfigurationMacro(boolean directorySpec) {
@@ -58,7 +59,7 @@ public class ApplicationStoreImpl extends ComponentStoreImpl implements IApplica
 
       @Override
       protected TrackingPathMacroSubstitutor getMacroSubstitutor(@Nonnull final String fileSpec) {
-        if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.EXT_FILE_NAME + DirectoryStorageData.DEFAULT_EXT)) return null;
+        if (fileSpec.equals(StoragePathMacros.APP_CONFIG + '/' + PathMacrosImpl.STORE_FILE)) return null;
         return super.getMacroSubstitutor(fileSpec);
       }
 

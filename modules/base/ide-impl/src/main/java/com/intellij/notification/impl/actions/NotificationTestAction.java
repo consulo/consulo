@@ -20,7 +20,7 @@ import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;

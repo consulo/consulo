@@ -2,6 +2,7 @@
 package com.intellij.openapi.wm.impl.status.widget;
 
 import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.project.DumbAwareToggleAction;
 import consulo.project.Project;

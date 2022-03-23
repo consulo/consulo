@@ -16,7 +16,7 @@ import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.ide.util.DeleteHandler;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;

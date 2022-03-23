@@ -16,7 +16,7 @@
 package com.intellij.usages.impl.rules;
 
 import consulo.language.file.inject.VirtualFileWindow;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import consulo.fileEditor.FileEditorManager;

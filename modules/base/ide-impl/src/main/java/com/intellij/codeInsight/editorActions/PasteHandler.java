@@ -19,7 +19,7 @@ import com.intellij.codeInsight.CodeInsightSettings;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import consulo.ui.ex.PasteProvider;
 import consulo.language.codeStyle.LanguageFormatting;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;

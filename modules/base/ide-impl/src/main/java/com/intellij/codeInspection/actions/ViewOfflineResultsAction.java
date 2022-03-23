@@ -20,6 +20,7 @@
  */
 package com.intellij.codeInspection.actions;
 
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
@@ -38,7 +39,6 @@ import com.intellij.codeInspection.offlineViewer.OfflineViewParseUtil;
 import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.codeInspection.ui.InspectionResultsView;
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.fileChooser.IdeaFileChooser;

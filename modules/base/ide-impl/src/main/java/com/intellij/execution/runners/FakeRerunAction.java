@@ -20,6 +20,7 @@ import consulo.execution.ExecutionManager;
 import consulo.execution.executor.ExecutorRegistry;
 import com.intellij.execution.impl.ExecutionManagerImpl;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.language.editor.CommonDataKeys;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;

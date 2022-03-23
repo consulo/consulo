@@ -118,7 +118,7 @@ public class WriteThreadIndicatorWidgetFactory implements StatusBarWidgetFactory
       ourTimer2.scheduleAtFixedRate(new TimerTask() {
         @Override
         public void run() {
-          boolean currentValue = application.isCurrentWriteOnEdt();
+          boolean currentValue = application.isCurrentWriteOnUIThread();
           AtomicIntegerArray currentStats = myCurrentStats;
           currentStats.incrementAndGet((currentValue ? ThreeState.YES : ThreeState.NO).ordinal());
           currentStats.incrementAndGet(3);

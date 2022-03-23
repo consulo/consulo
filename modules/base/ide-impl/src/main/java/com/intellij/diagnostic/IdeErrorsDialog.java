@@ -18,7 +18,7 @@ package com.intellij.diagnostic;
 import com.intellij.diagnostic.errordialog.*;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataSink;
 import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;

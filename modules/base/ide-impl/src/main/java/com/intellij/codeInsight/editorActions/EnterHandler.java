@@ -23,7 +23,7 @@ import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.language.lexer.Lexer;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.undoRedo.CommandProcessor;
@@ -45,7 +45,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.psi.codeStyle.lineIndent.LineIndentProvider;
 import consulo.language.codeStyle.FormatterUtil;
-import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspect;
+import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.ide.impl.psi.util.PsiUtilBase;
@@ -77,7 +77,7 @@ public class EnterHandler extends BaseEnterHandler {
   public void executeWriteAction(final Editor editor, final Caret caret, final DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
     if (project != null && !project.isDefault()) {
-      PostprocessReformattingAspect.getInstance(project).disablePostprocessFormattingInside(() -> executeWriteActionInner(editor, caret, getExtendedContext(dataContext, project, caret), project));
+      PostprocessReformattingAspectImpl.getInstance(project).disablePostprocessFormattingInside(() -> executeWriteActionInner(editor, caret, getExtendedContext(dataContext, project, caret), project));
     }
     else {
       executeWriteActionInner(editor, caret, dataContext, project);

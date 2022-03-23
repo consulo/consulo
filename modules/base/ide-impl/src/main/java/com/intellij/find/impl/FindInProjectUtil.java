@@ -6,6 +6,7 @@ import com.intellij.find.*;
 import com.intellij.find.findInProject.FindInProjectManager;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.scope.GlobalSearchScopesCore;
 import consulo.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.*;

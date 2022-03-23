@@ -16,7 +16,7 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInsight.daemon.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInspection.*;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
