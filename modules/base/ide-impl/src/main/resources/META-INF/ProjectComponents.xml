@@ -72,11 +72,6 @@
       <implementation-class>consulo.language.pom.TreeAspect</implementation-class>
       <loadForDefaultProject/>
     </component>
-    <component>
-      <implementation-class>consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl</implementation-class>
-      <loadForDefaultProject/>
-      <!-- <skipForDefaultProject/> -->
-    </component>
 
     <component>
       <interface-class>consulo.language.editor.DaemonCodeAnalyzer</interface-class>

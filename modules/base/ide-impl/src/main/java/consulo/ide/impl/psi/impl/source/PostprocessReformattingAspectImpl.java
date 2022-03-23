@@ -84,7 +84,7 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     myProject = project;
     myPsiManager = psiManager;
     myTreeAspect = treeAspect;
-    PomManager.getModel(psiManager.getProject()).registerAspect(PostprocessReformattingAspectImpl.class, this, Collections.singleton(treeAspect));
+    PomManager.getModel(psiManager.getProject()).registerAspect(PostprocessReformattingAspect.class, this, Collections.singleton(treeAspect));
 
     ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
       @Override
