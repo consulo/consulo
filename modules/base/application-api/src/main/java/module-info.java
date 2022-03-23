@@ -31,8 +31,16 @@ module consulo.application.api {
   exports consulo.application.progress;
   exports consulo.application.macro;
 
-  exports consulo.application.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.document.impl, consulo.language.impl, consulo.application.impl;
-  exports consulo.application.internal.concurrency;
+  exports consulo.application.internal to
+          consulo.ide.impl,
+          consulo.desktop.awt.ide.impl,
+          consulo.document.impl,
+          consulo.language.impl,
+          consulo.application.impl,
+          consulo.test.impl;
+  exports consulo.application.internal.concurrency to
+          consulo.ide.impl,
+          consulo.test.impl;
 
   exports consulo.application.util.mac.foundation;
 

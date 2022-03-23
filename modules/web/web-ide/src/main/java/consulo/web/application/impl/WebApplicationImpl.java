@@ -1,14 +1,14 @@
 package consulo.web.application.impl;
 
-import consulo.application.impl.internal.start.StartupProgress;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.TransactionGuard;
-import consulo.application.impl.internal.ReadMostlyRWLock;
-import consulo.project.Project;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.impl.internal.BaseApplication;
+import consulo.application.ApplicationManager;
+import consulo.application.TransactionGuard;
 import consulo.application.impl.UnifiedTransactionGuardImpl;
+import consulo.application.impl.internal.BaseApplication;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.ReadMostlyRWLock;
+import consulo.application.impl.internal.start.StartupProgress;
+import consulo.component.ComponentManager;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
 import consulo.ui.UIAccess;
@@ -204,7 +204,7 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
                                                      @Nonnull String progressTitle,
                                                      boolean canBeCanceled,
                                                      boolean shouldShowModalWindow,
-                                                     @Nullable Project project,
+                                                     @Nullable ComponentManager project,
                                                      @Nullable JComponent parentComponent,
                                                      @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText) {
     return true;

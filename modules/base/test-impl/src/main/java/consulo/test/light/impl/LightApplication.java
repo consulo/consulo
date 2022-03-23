@@ -97,6 +97,12 @@ public class LightApplication extends BaseComponentManager implements Applicatio
     return computation.compute();
   }
 
+  @Override
+  public boolean tryRunReadAction(@Nonnull Runnable action) {
+    action.run();
+    return true;
+  }
+
   @RequiredUIAccess
   @Override
   public void runWriteAction(@Nonnull Runnable action) {
