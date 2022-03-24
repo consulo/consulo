@@ -1,7 +1,6 @@
 package com.intellij.tasks.timeTracking;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskManager;
@@ -13,6 +12,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
+import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.IdeFrame;

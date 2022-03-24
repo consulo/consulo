@@ -1,7 +1,7 @@
 package com.intellij.tasks.timeTracking;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import consulo.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;
@@ -82,7 +82,7 @@ public class TasksToolWindowPanel extends SimpleToolWindowPanel implements Dispo
       public void taskRemoved(final LocalTask task) {
         updateTable();
       }
-    });
+    }, this);
 
     myTimer = new Timer(TimeTrackingManager.TIME_TRACKING_TIME_UNIT, new ActionListener() {
       @Override

@@ -15,7 +15,7 @@
  */
 package com.intellij.tasks.config;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
