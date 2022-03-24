@@ -512,7 +512,6 @@ open module consulo.ide.impl {
   exports com.intellij.notification.impl.actions;
   exports com.intellij.notification.impl.ui;
   exports com.intellij.notification.impl.widget;
-  exports com.intellij.openapi;
   exports com.intellij.openapi.actionSystem;
   exports com.intellij.openapi.actionSystem.ex;
   exports com.intellij.openapi.actionSystem.impl;
