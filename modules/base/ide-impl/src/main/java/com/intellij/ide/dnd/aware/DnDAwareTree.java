@@ -15,18 +15,18 @@
  */
 package com.intellij.ide.dnd.aware;
 
-import com.intellij.ide.dnd.DnDAware;
 import com.intellij.ide.dnd.TransferableList;
-import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.util.JBSwingUtilities;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
@@ -66,8 +66,7 @@ public class DnDAwareTree extends Tree implements DnDAware {
 
   @Override
   public final boolean isOverSelection(final Point point) {
-    final TreePath path = WideSelectionTreeUI.isWideSelection(this)
-                          ? getClosestPathForLocation(point.x, point.y) : getPathForLocation(point.x, point.y);
+    final TreePath path = WideSelectionTreeUI.isWideSelection(this) ? getClosestPathForLocation(point.x, point.y) : getPathForLocation(point.x, point.y);
     if (path == null) return false;
     return isPathSelected(path);
   }
@@ -96,10 +95,7 @@ public class DnDAwareTree extends Tree implements DnDAware {
   }
 
   @Nonnull
-  private static Pair<Image, Point> createDragImage(@Nonnull Tree tree,
-                                                    @Nonnull Component c,
-                                                    @Nullable Point dragOrigin,
-                                                    boolean adjustToPathUnderDragOrigin) {
+  private static Pair<Image, Point> createDragImage(@Nonnull Tree tree, @Nonnull Component c, @Nullable Point dragOrigin, boolean adjustToPathUnderDragOrigin) {
     if (c instanceof JComponent) {
       ((JComponent)c).setOpaque(true);
     }

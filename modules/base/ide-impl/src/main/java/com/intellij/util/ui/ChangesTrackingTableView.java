@@ -18,7 +18,7 @@ package com.intellij.util.ui;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.table.TableView;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

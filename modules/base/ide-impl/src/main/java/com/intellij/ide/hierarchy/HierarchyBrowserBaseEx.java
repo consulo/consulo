@@ -27,6 +27,10 @@ import com.intellij.ide.hierarchy.actions.BrowseHierarchyActionBase;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
 import com.intellij.ide.util.scopeChooser.EditScopesDialog;
 import consulo.language.editor.CommonDataKeys;
+import consulo.ui.ex.awt.dnd.DnDAction;
+import consulo.ui.ex.awt.dnd.DnDDragStartBean;
+import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.ui.ex.awt.dnd.DnDSource;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.language.LanguageExtension;
@@ -277,7 +281,7 @@ public abstract class HierarchyBrowserBaseEx extends HierarchyBrowserBase implem
           }
 
           @Override
-          public Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin) {
+          public consulo.util.lang.Pair<Image, Point> createDraggedImage(final DnDAction action, final Point dragOrigin) {
             return null;
           }
 

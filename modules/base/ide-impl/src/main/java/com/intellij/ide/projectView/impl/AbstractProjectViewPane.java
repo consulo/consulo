@@ -16,10 +16,12 @@ import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.util.treeView.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.awt.dnd.*;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.*;
 import consulo.ui.ex.awt.tree.TreeVisitor;
+import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.language.file.inject.VirtualFileWindow;
 import com.intellij.openapi.actionSystem.*;
@@ -853,7 +855,7 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
       label.paint(g2);
       g2.dispose();
 
-      return new Pair<>(image, new Point(-image.getWidth(null), -image.getHeight(null)));
+      return new consulo.util.lang.Pair<>(image, new Point(-image.getWidth(null), -image.getHeight(null)));
     }
 
     @Override

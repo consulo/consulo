@@ -15,7 +15,7 @@
  */
 package com.intellij.ide;
 
-import com.intellij.ide.dnd.DnDManager;
+import consulo.ui.ex.awt.dnd.DnDManager;
 import com.intellij.ide.dnd.DnDManagerImpl;
 import com.intellij.ide.plugins.PluginManager;
 import consulo.application.impl.internal.performance.ActivityTracker;

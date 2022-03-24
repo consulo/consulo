@@ -16,17 +16,12 @@
 package com.intellij.openapi.diff.impl.dir.actions;
 
 import com.intellij.ide.diff.DirDiffSettings;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.ShortcutSet;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -36,7 +31,7 @@ import java.util.ArrayList;
 /**
  * @author Konstantin Bulenkov
  */
-public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutProvider{
+public class ChangeCompareModeGroup extends ComboBoxAction implements ShortcutProvider {
   private final DefaultActionGroup myGroup;
   private DirDiffSettings mySettings;
   private ComboBoxButton myButton;

@@ -6,7 +6,7 @@ import com.intellij.ide.todo.nodes.TodoItemNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import com.intellij.ui.HighlightableCellRenderer;
-import com.intellij.ui.HighlightedRegion;
+import consulo.ui.ex.awt.HighlightedRegion;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 

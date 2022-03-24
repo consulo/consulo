@@ -7,7 +7,7 @@ import com.intellij.ide.actions.NewActionGroup;
 import consulo.ide.impl.psi.SyntaxTraverser;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiNavigationSupport;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;

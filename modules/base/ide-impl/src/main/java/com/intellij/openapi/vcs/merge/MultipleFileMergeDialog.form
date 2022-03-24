@@ -54,7 +54,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="466f6" class="com.intellij.ui.table.TableView" binding="myTable">
+          <component id="466f6" class="consulo.ui.ex.awt.table.TableView" binding="myTable">
             <constraints/>
             <properties/>
           </component>

@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 
 import javax.annotation.Nullable;

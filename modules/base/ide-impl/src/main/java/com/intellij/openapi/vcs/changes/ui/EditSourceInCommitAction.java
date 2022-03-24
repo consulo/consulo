@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

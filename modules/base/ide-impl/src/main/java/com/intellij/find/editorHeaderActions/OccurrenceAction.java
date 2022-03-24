@@ -18,7 +18,7 @@ package com.intellij.find.editorHeaderActions;
 import com.intellij.find.EditorSearchSession;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.ShortcutProvider;
+import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.image.Image;

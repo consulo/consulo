@@ -22,7 +22,7 @@ import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.execution.BeforeRunTaskProvider;
 import consulo.compiler.CompilerBundle;
-import com.intellij.openapi.ui.DialogBuilder;
+import consulo.ui.ex.awt.DialogBuilder;
 import consulo.application.AllIcons;
 import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;

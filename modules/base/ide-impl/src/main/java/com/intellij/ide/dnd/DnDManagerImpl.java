@@ -15,24 +15,24 @@
  */
 package com.intellij.ide.dnd;
 
-import consulo.application.ui.UISettings;
-import consulo.disposer.Disposable;
-import consulo.application.Application;
-import consulo.logging.Logger;
-import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Pair;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.MouseDragHelper;
-import com.intellij.ui.awt.RelativeRectangle;
 import com.intellij.util.ui.GeometryUtil;
+import consulo.application.Application;
+import consulo.application.ui.UISettings;
+import consulo.disposer.Disposable;
+import consulo.logging.Logger;
+import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.dnd.*;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Inject;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -46,8 +46,10 @@ import java.lang.ref.WeakReference;
 public class DnDManagerImpl extends DnDManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(DnDManagerImpl.class);
 
-  @NonNls private static final String SOURCE_KEY = "DnD Source";
-  @NonNls private static final String TARGET_KEY = "DnD Target";
+  @NonNls
+  private static final String SOURCE_KEY = "DnD Source";
+  @NonNls
+  private static final String TARGET_KEY = "DnD Target";
 
   public static final Key<Pair<Image, Point>> DRAGGED_IMAGE_KEY = new Key<>("draggedImage");
 
@@ -69,7 +71,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
   private static final Image EMPTY_IMAGE = UIUtil.createImage(1, 1, Transparency.TRANSLUCENT);
 
-  private final Timer myTooltipTimer = UIUtil.createNamedTimer("DndManagerImpl tooltip timer",ToolTipManager.sharedInstance().getInitialDelay(), new ActionListener() {
+  private final Timer myTooltipTimer = UIUtil.createNamedTimer("DndManagerImpl tooltip timer", ToolTipManager.sharedInstance().getInitialDelay(), new ActionListener() {
     public void actionPerformed(ActionEvent e) {
       onTimer();
     }
@@ -128,7 +130,8 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
 
     if (myApp.isDispatchThread()) {
       cleanup.run();
-    } else {
+    }
+    else {
       SwingUtilities.invokeLater(cleanup);
     }
   }
@@ -480,10 +483,10 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     final Window window = SwingUtilities.getWindowAncestor(aComponent);
 
     if (window instanceof JFrame) {
-      return ((JFrame) window).getRootPane().getLayeredPane();
+      return ((JFrame)window).getRootPane().getLayeredPane();
     }
     else if (window instanceof JDialog) {
-      return ((JDialog) window).getRootPane().getLayeredPane();
+      return ((JDialog)window).getRootPane().getLayeredPane();
     }
 
     return null;
@@ -594,7 +597,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
         action = altOnly ? DnDAction.MOVE : DnDAction.COPY;
         break;
       case DnDConstants.ACTION_MOVE:
-        action = altOnly? DnDAction.COPY : DnDAction.MOVE;
+        action = altOnly ? DnDAction.COPY : DnDAction.MOVE;
         break;
       case DnDConstants.ACTION_LINK:
         action = DnDAction.LINK;
@@ -648,8 +651,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
       try {
         final Component component = dtde.getDropTargetContext().getComponent();
 
-        DnDEventImpl event =
-                updateCurrentEvent(component, dtde.getLocation(), dtde.getDropAction(), dtde.getCurrentDataFlavors(), dtde.getTransferable());
+        DnDEventImpl event = updateCurrentEvent(component, dtde.getLocation(), dtde.getDropAction(), dtde.getCurrentDataFlavors(), dtde.getTransferable());
 
         if (event != null && event.isDropPossible()) {
           dtde.acceptDrop(dtde.getDropAction());
@@ -690,8 +692,7 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
     }
 
     public void dragOver(DropTargetDragEvent dtde) {
-      final DnDEventImpl event = updateCurrentEvent(dtde.getDropTargetContext().getComponent(), dtde.getLocation(), dtde.getDropAction(),
-                                                    dtde.getCurrentDataFlavors(), dtde.getTransferable());
+      final DnDEventImpl event = updateCurrentEvent(dtde.getDropTargetContext().getComponent(), dtde.getLocation(), dtde.getDropAction(), dtde.getCurrentDataFlavors(), dtde.getTransferable());
       if (myCurrentEvent == null) {
         if (event != null && event.isDropPossible()) {
           dtde.acceptDrag(event.getAction().getActionId());
@@ -739,7 +740,8 @@ public class DnDManagerImpl extends DnDManager implements Disposable {
   public void setLastDropHandler(@Nullable Component c) {
     if (c == null) {
       myLastDropHandler = null;
-    } else {
+    }
+    else {
       myLastDropHandler = new WeakReference<>(c);
     }
   }

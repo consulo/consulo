@@ -1287,7 +1287,7 @@
                         serviceImplementation="com.intellij.openapi.keymap.impl.KeymapGroupFactoryImpl"/>
     <applicationService serviceInterface="consulo.language.editor.highlight.EditorHighlighterFactory"
                         serviceImplementation="com.intellij.openapi.editor.highlighter.EditorHighlighterFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.ide.dnd.DnDManager"
+    <applicationService serviceInterface="consulo.ui.ex.awt.dnd.DnDManager"
                         serviceImplementation="com.intellij.ide.dnd.DnDManagerImpl"/>
     <applicationService serviceInterface="consulo.language.file.EncodingManager"
                         serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingManagerImpl"/>

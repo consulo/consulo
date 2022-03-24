@@ -14,9 +14,9 @@ import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.language.psi.search.scope.PackageSet;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
-import com.intellij.ui.ToolbarDecorator;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.AnActionButtonRunnable;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.containers.ContainerUtil;
 

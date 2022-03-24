@@ -35,6 +35,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.debugger.XDebugSession;
 import consulo.debugger.XDebuggerManager;
 import consulo.disposer.Disposable;
+import consulo.ui.ex.util.Storage;
 import org.intellij.lang.annotations.JdkConstants;
 import javax.annotation.Nonnull;
 

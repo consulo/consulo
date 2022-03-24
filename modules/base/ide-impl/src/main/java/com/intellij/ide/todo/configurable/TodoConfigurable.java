@@ -24,14 +24,13 @@ import consulo.ui.ex.JBColor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.*;
 import consulo.ide.impl.psi.search.TodoAttributesUtil;
 import consulo.ide.impl.psi.search.TodoPattern;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ui.Table;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.image.Image;
 

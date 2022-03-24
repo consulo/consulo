@@ -829,7 +829,6 @@ open module consulo.ide.impl {
   exports com.intellij.testIntegration;
   exports com.intellij.tools;
   exports com.intellij.ui;
-  exports com.intellij.ui.awt;
   exports com.intellij.ui.breadcrumbs;
   exports com.intellij.ui.components;
   exports com.intellij.ui.components.breadcrumbs;
@@ -861,7 +860,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.speedSearch;
   exports com.intellij.ui.stripe;
   exports com.intellij.ui.switcher;
-  exports com.intellij.ui.table;
   exports com.intellij.ui.tabs;
   exports com.intellij.ui.tabs.impl;
   exports com.intellij.ui.tabs.impl.singleRow;

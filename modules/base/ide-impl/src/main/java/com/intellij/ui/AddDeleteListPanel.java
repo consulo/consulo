@@ -16,10 +16,7 @@
 
 package com.intellij.ui;
 
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.ComponentWithEmptyText;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.StatusText;
+import consulo.ui.ex.awt.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

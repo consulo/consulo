@@ -23,13 +23,13 @@ import com.intellij.openapi.ui.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
-import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.AnActionButtonRunnable;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.ColumnInfo;
 import com.intellij.util.ui.ComboBoxCellEditor;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.module.content.layer.ContentFolderPropertyProvider;
 import javax.annotation.Nullable;
 

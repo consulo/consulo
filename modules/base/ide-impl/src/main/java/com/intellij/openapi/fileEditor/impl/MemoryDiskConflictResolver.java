@@ -14,7 +14,7 @@ import consulo.document.FileDocumentManager;
 import consulo.language.impl.psi.internal.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
-import com.intellij.openapi.ui.DialogBuilder;
+import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import consulo.virtualFileSystem.VirtualFile;

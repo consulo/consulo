@@ -11,7 +11,7 @@ import com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable;
 import com.intellij.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeBundle;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import com.intellij.lang.LangBundle;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;

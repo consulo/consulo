@@ -20,7 +20,7 @@
  */
 package com.intellij.xdebugger.impl.actions;
 
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

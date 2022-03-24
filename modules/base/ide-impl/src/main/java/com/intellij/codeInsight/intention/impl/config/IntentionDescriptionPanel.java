@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.options.ex.Settings;
-import com.intellij.ui.HyperlinkLabel;
+import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;

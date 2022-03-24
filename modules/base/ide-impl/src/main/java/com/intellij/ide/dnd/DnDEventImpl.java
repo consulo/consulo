@@ -16,9 +16,10 @@
 package com.intellij.ide.dnd;
 
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.dnd.*;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.awt.RelativeRectangle;
+import consulo.ui.ex.awt.RelativeRectangle;
 import com.intellij.util.ArrayUtil;
 
 import javax.annotation.Nullable;

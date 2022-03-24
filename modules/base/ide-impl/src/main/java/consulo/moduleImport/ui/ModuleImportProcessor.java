@@ -19,7 +19,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogBuilder;
+import consulo.ui.ex.awt.DialogBuilder;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;

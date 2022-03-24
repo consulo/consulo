@@ -33,7 +33,7 @@ import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.changes.ui.ChangesBrowser;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.ui.*;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.TableUtil;
 

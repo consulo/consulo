@@ -48,7 +48,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.ui.ToolbarDecorator;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.ArrayUtil;

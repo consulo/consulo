@@ -8,7 +8,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Function;
 import com.intellij.util.PathUtil;
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 import com.intellij.util.ui.LocalPathCellEditor;
 import com.intellij.util.ui.table.IconTableCellRenderer;
 import com.intellij.util.ui.table.TableModelEditor;

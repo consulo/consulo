@@ -15,13 +15,12 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.ide.dnd.AdvancedDnDSource;
-import com.intellij.ide.dnd.DnDAction;
-import com.intellij.ide.dnd.DnDDragStartBean;
-import com.intellij.ide.dnd.DnDManager;
+import consulo.ui.ex.awt.dnd.AdvancedDnDSource;
+import consulo.ui.ex.awt.dnd.DnDAction;
+import consulo.ui.ex.awt.dnd.DnDDragStartBean;
+import consulo.ui.ex.awt.dnd.DnDManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.TreeUIHelper;
@@ -37,6 +36,7 @@ import consulo.project.ProjectBundle;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

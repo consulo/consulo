@@ -38,7 +38,7 @@ import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.HyperlinkLabel;
+import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;

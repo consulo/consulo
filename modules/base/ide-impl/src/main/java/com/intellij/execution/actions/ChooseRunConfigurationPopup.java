@@ -31,7 +31,7 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;

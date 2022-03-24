@@ -33,13 +33,13 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.SpeedSearchBase;
 import consulo.ui.ex.awt.util.TableUtil;
 import com.intellij.ui.dualView.TreeTableView;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.table.TableView;
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModelOnColumns;
 import com.intellij.util.Consumer;
 import com.intellij.util.TreeItem;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

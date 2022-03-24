@@ -19,7 +19,7 @@ import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
 import consulo.project.Project;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.awt.RelativeRectangle;
+import consulo.ui.ex.awt.RelativeRectangle;
 import com.intellij.ui.docking.DockableContent;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditorsSplitters;

@@ -3,7 +3,7 @@ package com.intellij.openapi.wm.impl.status;
 
 import consulo.application.AllIcons;
 import consulo.application.PowerSaveMode;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import com.intellij.notification.EventLog;
 import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.*;

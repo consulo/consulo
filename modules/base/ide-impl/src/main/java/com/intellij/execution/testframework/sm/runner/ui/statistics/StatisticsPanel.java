@@ -22,10 +22,8 @@ import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsAdapter;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsListener;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.PropagateSelectionHandler;
-import com.intellij.ui.table.BaseTableView;
-import com.intellij.ui.table.TableView;
-import com.intellij.util.config.Storage;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
@@ -34,7 +32,10 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.table.BaseTableView;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
+import consulo.ui.ex.util.Storage;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -51,11 +52,11 @@ import java.util.List;
  * @author Roman Chernyatchik
  */
 public class StatisticsPanel implements DataProvider {
-  public static final Key<StatisticsPanel> SM_TEST_RUNNER_STATISTICS  = Key.create("SM_TEST_RUNNER_STATISTICS");
+  public static final Key<StatisticsPanel> SM_TEST_RUNNER_STATISTICS = Key.create("SM_TEST_RUNNER_STATISTICS");
 
   private TableView<SMTestProxy> myStatisticsTableView;
   private JPanel myContentPane;
-  private final Storage.PropertiesComponentStorage myStorage = new Storage.PropertiesComponentStorage("sm_test_statistics_table_columns");
+  private final Storage.PropertiesComponentStorage myStorage = new Storage.PropertiesComponentStorage("sm_test_statistics_table_columns", ApplicationPropertiesComponent.getInstance());
 
   private final StatisticsTableModel myTableModel;
   private final List<PropagateSelectionHandler> myPropagateSelectionHandlers = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -79,19 +80,15 @@ public class StatisticsPanel implements DataProvider {
 
     // Fire selection changed and move focus on SHIFT+ENTER
     final KeyStroke shiftEnterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_MASK);
-    SMRunnerUtil.registerAsAction(shiftEnterKey, "select-test-proxy-in-test-view",
-                            new Runnable() {
-                              public void run() {
-                                showSelectedProxyInTestsTree();
-                              }
-                            },
-                            myStatisticsTableView);
+    SMRunnerUtil.registerAsAction(shiftEnterKey, "select-test-proxy-in-test-view", new Runnable() {
+      public void run() {
+        showSelectedProxyInTestsTree();
+      }
+    }, myStatisticsTableView);
 
     // Expand selected or go to parent on ENTER
     final KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-    SMRunnerUtil.registerAsAction(enterKey, "go-to-selected-suite-or-parent",
-                            gotoSuiteOrParentAction,
-                            myStatisticsTableView);
+    SMRunnerUtil.registerAsAction(enterKey, "go-to-selected-suite-or-parent", gotoSuiteOrParentAction, myStatisticsTableView);
     // Contex menu in Table
     PopupHandler.installPopupHandler(myStatisticsTableView, IdeActions.GROUP_TESTTREE_POPUP, ActionPlaces.TESTTREE_VIEW_POPUP);
     // set this statistic tab as dataprovider for test's table view
@@ -169,21 +166,18 @@ public class StatisticsPanel implements DataProvider {
   /**
    * On event - change selection and probably requests focus. Is used when we want
    * navigate from other component to this
+   *
    * @return Listener
    */
   public PropagateSelectionHandler createSelectMeListener() {
     return new PropagateSelectionHandler() {
-      public void handlePropagateSelectionRequest(@javax.annotation.Nullable final SMTestProxy selectedTestProxy,
-                                    @Nonnull final Object sender,
-                                    final boolean requestFocus) {
+      public void handlePropagateSelectionRequest(@javax.annotation.Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
         selectProxy(selectedTestProxy, sender, requestFocus);
       }
     };
   }
 
-  public void selectProxy(@Nullable final SMTestProxy selectedTestProxy,
-                          @Nonnull final Object sender,
-                          final boolean requestFocus) {
+  public void selectProxy(@Nullable final SMTestProxy selectedTestProxy, @Nonnull final Object sender, final boolean requestFocus) {
     SMRunnerUtil.addToInvokeLater(new Runnable() {
       public void run() {
         // Select tab if focus was requested
@@ -226,7 +220,8 @@ public class StatisticsPanel implements DataProvider {
             // go to parent and current suit in it
             showInTableAndSelectRow(parentSuite, selectedProxy);
           }
-        } else {
+        }
+        else {
           // if selected element is suite - we should expand it
           if (selectedProxy.isSuite()) {
             // expand and select first (Total) row
@@ -246,8 +241,10 @@ public class StatisticsPanel implements DataProvider {
       findAndSelectInTable(selectedTestProxy);
     }
   }
+
   /**
    * Selects row in table
+   *
    * @param rowIndex Row's index
    */
   protected void selectRow(final int rowIndex) {

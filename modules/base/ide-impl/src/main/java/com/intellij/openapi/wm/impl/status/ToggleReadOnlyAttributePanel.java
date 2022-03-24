@@ -2,7 +2,7 @@
 package com.intellij.openapi.wm.impl.status;
 
 import consulo.application.AllIcons;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.application.WriteAction;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;

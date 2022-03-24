@@ -28,11 +28,12 @@ import com.intellij.packageDependencies.DependencyRule;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.PackageSet;
-import com.intellij.ui.ToolbarDecorator;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.table.TableView;
 import com.intellij.util.ui.*;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.EditableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

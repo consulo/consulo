@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.keymap.impl.ui;
 
-import com.intellij.openapi.actionSystem.ActionToolbarPosition;
+import consulo.ui.ex.action.ActionToolbarPosition;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.actionSystem.ex.QuickListsManager;
 import consulo.application.ApplicationManager;

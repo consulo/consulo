@@ -17,6 +17,7 @@ package com.intellij.ui;
 
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 package com.intellij.ui.docking;
 
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.awt.RelativeRectangle;
+import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.disposer.Disposable;
 import consulo.ui.Component;

@@ -27,7 +27,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.RawCommandLineEditor;
+import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBTextField;
 import com.intellij.util.ui.GridBag;

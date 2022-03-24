@@ -22,6 +22,7 @@ module consulo.ui.ex.awt.api {
   exports consulo.ui.ex.awt.event;
   exports consulo.ui.ex.awt.html;
   exports consulo.ui.ex.awt.paint;
+  exports consulo.ui.ex.awt.dnd;
   exports consulo.ui.ex.awt.scroll;
   exports consulo.ui.ex.awt.table;
   exports consulo.ui.ex.awt.tree;

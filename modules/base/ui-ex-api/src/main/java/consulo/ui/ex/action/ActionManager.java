@@ -63,6 +63,8 @@ public abstract class ActionManager {
    */
   public abstract ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal);
 
+  public abstract ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal, boolean decorateButtons);
+
   /**
    * Returns action associated with the specified actionId.
    *

@@ -33,7 +33,7 @@ import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.Filter;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;

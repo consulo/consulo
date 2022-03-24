@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.options.ex.Settings;
 import com.intellij.openapi.ui.MessageType;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.ToolbarDecorator;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;

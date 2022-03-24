@@ -20,7 +20,7 @@ import consulo.component.util.PluginExceptionUtil;
 import consulo.externalService.AuthorizationFailedException;
 import consulo.externalService.UpdateAvailableException;
 import consulo.dataContext.DataManager;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.project.ui.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import consulo.project.ui.notification.event.NotificationListener;

@@ -15,16 +15,16 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.ide.dnd.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
+import consulo.ui.ex.awt.dnd.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.awt.RelativeRectangle;
+import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.tree.Tree;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

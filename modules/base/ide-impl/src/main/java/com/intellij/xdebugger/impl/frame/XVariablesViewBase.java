@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import com.intellij.ide.dnd.DnDManager;
+import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.SelectionEvent;

@@ -23,7 +23,7 @@ import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import com.intellij.ui.CommonActionsPanel;
+import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.ui.image.ImageEffects;
 import jakarta.inject.Inject;
 

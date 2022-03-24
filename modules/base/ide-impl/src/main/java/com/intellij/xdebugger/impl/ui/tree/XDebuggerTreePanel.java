@@ -15,25 +15,25 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import com.intellij.ide.dnd.DnDAction;
-import com.intellij.ide.dnd.DnDDragStartBean;
-import com.intellij.ide.dnd.DnDSource;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.debugger.XDebuggerBundle;
-import consulo.debugger.XSourcePosition;
-import consulo.debugger.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.frame.XValueMarkers;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
+import consulo.debugger.XDebuggerBundle;
+import consulo.debugger.XSourcePosition;
+import consulo.debugger.evaluation.XDebuggerEditorsProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.dnd.DnDAction;
+import consulo.ui.ex.awt.dnd.DnDDragStartBean;
+import consulo.ui.ex.awt.dnd.DnDSource;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo;
 
-import com.intellij.ui.HighlightedRegion;
+import consulo.ui.ex.awt.HighlightedRegion;
 
 /**
  * @author Vladimir Kondratyev

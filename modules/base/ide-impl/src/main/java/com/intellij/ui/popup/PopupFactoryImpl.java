@@ -5,7 +5,7 @@ import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeTooltipManager;
 import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.ShortcutProvider;
+import consulo.ui.ex.action.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;

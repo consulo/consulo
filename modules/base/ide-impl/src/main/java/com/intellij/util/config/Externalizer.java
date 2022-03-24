@@ -17,6 +17,7 @@
 package com.intellij.util.config;
 
 import com.intellij.openapi.util.Factory;
+import consulo.ui.ex.util.Storage;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;

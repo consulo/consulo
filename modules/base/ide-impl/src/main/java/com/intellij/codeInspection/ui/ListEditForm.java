@@ -16,9 +16,9 @@
 package com.intellij.codeInspection.ui;
 
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
-import com.intellij.ui.ToolbarDecorator;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.AnActionButtonRunnable;
+import consulo.ui.ex.awt.ToolbarDecorator;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;

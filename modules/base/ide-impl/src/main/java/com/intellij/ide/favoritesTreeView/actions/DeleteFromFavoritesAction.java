@@ -26,7 +26,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.ui.CommonActionsPanel;
+import consulo.ui.ex.awt.CommonActionsPanel;
 import com.intellij.util.IconUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

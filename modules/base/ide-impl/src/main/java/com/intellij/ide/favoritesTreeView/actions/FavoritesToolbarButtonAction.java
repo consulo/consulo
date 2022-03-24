@@ -21,7 +21,7 @@ import com.intellij.ide.favoritesTreeView.FavoritesViewTreeBuilder;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Toggleable;
 import consulo.project.Project;
-import com.intellij.ui.AnActionButton;
+import consulo.ui.ex.awt.AnActionButton;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;

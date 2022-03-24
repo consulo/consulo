@@ -19,6 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.Toggleable;
 import consulo.localize.LocalizeValue;
+import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

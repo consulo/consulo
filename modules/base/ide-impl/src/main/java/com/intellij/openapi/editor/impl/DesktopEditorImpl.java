@@ -3,7 +3,7 @@ package com.intellij.openapi.editor.impl;
 
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.dnd.DnDManager;
+import consulo.ui.ex.awt.dnd.DnDManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.editor.EditorModificationUtil;

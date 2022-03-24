@@ -3,7 +3,6 @@ package com.intellij.find;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;

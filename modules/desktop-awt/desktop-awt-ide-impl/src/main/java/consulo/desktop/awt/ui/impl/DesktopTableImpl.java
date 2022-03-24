@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.ui.impl;
 
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.ui.Component;
 import consulo.ui.Table;

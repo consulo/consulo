@@ -32,11 +32,11 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="44ee8" class="com.intellij.ui.HyperlinkLabel$Croppable" binding="myInfoLabel">
+                      <component id="44ee8" class="consulo.ui.ex.awt.HyperlinkLabel$Croppable" binding="myInfoLabel">
                         <constraints border-constraint="West"/>
                         <properties/>
                       </component>
-                      <component id="3f648" class="com.intellij.ui.HyperlinkLabel$Croppable" binding="myDisableLink">
+                      <component id="3f648" class="consulo.ui.ex.awt.HyperlinkLabel$Croppable" binding="myDisableLink">
                         <constraints border-constraint="Center"/>
                         <properties/>
                       </component>
@@ -47,7 +47,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="596c6" class="com.intellij.ui.HyperlinkLabel$Croppable" binding="myForeignPluginWarningLabel">
+                      <component id="596c6" class="consulo.ui.ex.awt.HyperlinkLabel$Croppable" binding="myForeignPluginWarningLabel">
                         <constraints border-constraint="Center"/>
                         <properties/>
                       </component>
@@ -102,7 +102,7 @@
                   <size top="5" left="0" bottom="0" right="0"/>
                 </border>
                 <children>
-                  <component id="64a8b" class="com.intellij.ui.HyperlinkLabel" binding="myCredentialsLabel">
+                  <component id="64a8b" class="consulo.ui.ex.awt.HyperlinkLabel" binding="myCredentialsLabel">
                     <constraints border-constraint="East"/>
                     <properties/>
                   </component>
@@ -115,7 +115,7 @@
                   <size top="5" left="0" bottom="0" right="0"/>
                 </border>
                 <children>
-                  <component id="23d84" class="com.intellij.ui.HyperlinkLabel" binding="myAttachmentWarningLabel">
+                  <component id="23d84" class="consulo.ui.ex.awt.HyperlinkLabel" binding="myAttachmentWarningLabel">
                     <constraints border-constraint="East"/>
                     <properties/>
                   </component>

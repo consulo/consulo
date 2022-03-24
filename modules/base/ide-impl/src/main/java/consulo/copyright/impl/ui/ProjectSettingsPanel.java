@@ -15,6 +15,7 @@
  */
 package consulo.copyright.impl.ui;
 
+import consulo.ui.ex.awt.ElementProducer;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataManager;
@@ -31,16 +32,18 @@ import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
-import com.intellij.ui.HyperlinkLabel;
+import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.ListCellRendererWrapper;
-import com.intellij.ui.ToolbarDecorator;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import com.intellij.ui.components.editors.JBComboBoxTableCellEditorComponent;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.table.TableView;
 import com.intellij.util.Function;
 import com.intellij.util.ui.*;
 import consulo.copyright.impl.CopyrightManager;
 import consulo.copyright.impl.CopyrightProfile;
+import consulo.ui.ex.awt.table.ListTableModel;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

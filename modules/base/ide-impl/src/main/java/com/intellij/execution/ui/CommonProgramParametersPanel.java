@@ -17,13 +17,13 @@ package com.intellij.execution.ui;
 
 import consulo.execution.CommonProgramRunConfigurationParameters;
 import consulo.execution.ExecutionBundle;
-import com.intellij.execution.configuration.EnvironmentVariablesComponent;
+import consulo.execution.ui.awt.EnvironmentVariablesComponent;
 import com.intellij.ide.macro.Macro;
 import com.intellij.ide.macro.MacrosDialog;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.awt.PanelWithAnchor;
-import com.intellij.ui.RawCommandLineEditor;
+import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.ui.ex.awt.TextAccessor;
 import com.intellij.util.PathUtil;
 import consulo.ui.ex.awt.UIUtil;

@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ToolbarDecorator;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.CatchingConsumer;
 import consulo.ui.ex.awt.JBUI;

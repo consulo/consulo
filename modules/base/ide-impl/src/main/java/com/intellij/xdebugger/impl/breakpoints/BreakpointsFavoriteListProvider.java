@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import com.intellij.ui.CheckedTreeNode;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import com.intellij.ui.CommonActionsPanel;
+import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.debugger.XDebuggerManager;
 import consulo.debugger.breakpoint.ui.XBreakpointGroup;
 import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;

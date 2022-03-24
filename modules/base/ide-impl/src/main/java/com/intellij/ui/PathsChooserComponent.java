@@ -20,11 +20,10 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.project.Project;
 import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.JBList;
 import com.intellij.util.Consumer;
-import consulo.ui.ex.awt.ComponentWithEmptyText;
-import consulo.ui.ex.awt.StatusText;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

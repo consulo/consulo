@@ -28,7 +28,7 @@ import com.intellij.execution.ui.layout.impl.ViewImpl;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.util.registry.Registry;

@@ -19,6 +19,7 @@ import com.intellij.openapi.actionSystem.ActionPromoter;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
 import com.intellij.util.containers.SortedList;
+import consulo.ui.ex.awt.AnActionButton;
 
 import javax.swing.*;
 import java.util.Comparator;

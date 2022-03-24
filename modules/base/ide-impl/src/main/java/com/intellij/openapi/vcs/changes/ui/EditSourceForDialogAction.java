@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.actions.EditSourceAction;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.DialogWrapper;

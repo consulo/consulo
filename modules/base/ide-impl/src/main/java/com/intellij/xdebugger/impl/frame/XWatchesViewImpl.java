@@ -16,13 +16,12 @@
 package com.intellij.xdebugger.impl.frame;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.dnd.DnDEvent;
-import com.intellij.ide.dnd.DnDManager;
-import com.intellij.ide.dnd.DnDNativeTarget;
+import consulo.ui.ex.awt.dnd.DnDEvent;
+import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.ui.ex.awt.dnd.DnDNativeTarget;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.util.lang.EmptyRunnable;
 import consulo.dataContext.DataContext;
@@ -32,10 +31,8 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.*;
-import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.debugger.XDebugSession;
 import consulo.debugger.XDebuggerBundle;

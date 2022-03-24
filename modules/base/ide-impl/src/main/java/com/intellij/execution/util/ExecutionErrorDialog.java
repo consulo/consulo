@@ -20,7 +20,7 @@ import consulo.process.ExecutionException;
 import com.intellij.execution.RunCanceledByUserException;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.DialogBuilder;
+import consulo.ui.ex.awt.DialogBuilder;
 import com.intellij.openapi.ui.Messages;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;

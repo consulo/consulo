@@ -22,7 +22,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.PortField;
-import com.intellij.ui.RawCommandLineEditor;
+import consulo.execution.ui.awt.RawCommandLineEditor;
 import com.intellij.ui.RelativeFont;
 import com.intellij.ui.components.JBRadioButton;
 import com.intellij.util.io.HttpRequests;

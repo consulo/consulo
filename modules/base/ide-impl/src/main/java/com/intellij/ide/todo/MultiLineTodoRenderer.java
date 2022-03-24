@@ -4,7 +4,7 @@ package com.intellij.ide.todo;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.todo.nodes.TodoItemNode;
 import com.intellij.ui.HighlightableCellRenderer;
-import com.intellij.ui.HighlightedRegion;
+import consulo.ui.ex.awt.HighlightedRegion;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

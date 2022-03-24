@@ -33,7 +33,7 @@ import com.intellij.openapi.projectRoots.ui.Util;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.ToolbarDecorator;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import com.intellij.util.IconUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.content.base.DocumentationOrderRootType;

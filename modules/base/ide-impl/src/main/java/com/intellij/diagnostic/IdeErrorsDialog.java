@@ -25,7 +25,7 @@ import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.HeaderlessTabbedPane;
-import com.intellij.ui.HyperlinkLabel;
+import consulo.ui.ex.awt.HyperlinkLabel;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import com.intellij.xml.util.XmlStringUtil;

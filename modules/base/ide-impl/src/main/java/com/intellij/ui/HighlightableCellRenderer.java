@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.HighlightableComponent;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
 

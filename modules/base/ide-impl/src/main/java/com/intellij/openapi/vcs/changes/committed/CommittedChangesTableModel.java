@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.ChangeListColumn;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 
 import javax.swing.*;
 import java.util.Comparator;

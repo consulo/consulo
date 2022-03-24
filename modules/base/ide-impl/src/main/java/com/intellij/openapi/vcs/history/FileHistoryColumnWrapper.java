@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.history;
 
 import com.intellij.ui.dualView.DualView;
 import com.intellij.ui.dualView.DualViewColumnInfo;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.ColumnInfo;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

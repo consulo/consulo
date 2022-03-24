@@ -42,7 +42,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
-import com.intellij.util.config.Storage;
+import consulo.ui.ex.util.Storage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

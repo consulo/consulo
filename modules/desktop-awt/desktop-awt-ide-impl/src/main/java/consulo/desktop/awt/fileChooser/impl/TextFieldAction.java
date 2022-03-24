@@ -17,7 +17,7 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.ActionManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.LinkLabel;

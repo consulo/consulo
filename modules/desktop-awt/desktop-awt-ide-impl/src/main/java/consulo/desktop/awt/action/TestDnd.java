@@ -16,10 +16,10 @@
 package consulo.desktop.awt.action;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.dnd.DnDActionInfo;
-import com.intellij.ide.dnd.DnDDragStartBean;
-import com.intellij.ide.dnd.DnDImage;
-import com.intellij.ide.dnd.DnDSupport;
+import consulo.ui.ex.awt.dnd.DnDActionInfo;
+import consulo.ui.ex.awt.dnd.DnDDragStartBean;
+import consulo.ui.ex.awt.dnd.DnDImage;
+import consulo.ui.ex.awt.dnd.DnDSupport;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;

@@ -15,7 +15,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="73364" class="com.intellij.ui.table.TableView" binding="myStatisticsTableView" custom-create="true" default-binding="true">
+          <component id="73364" class="consulo.ui.ex.awt.table.TableView" binding="myStatisticsTableView" custom-create="true" default-binding="true">
             <constraints/>
             <properties>
               <showVerticalLines value="true"/>

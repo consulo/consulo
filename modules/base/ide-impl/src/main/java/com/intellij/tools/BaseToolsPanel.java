@@ -24,6 +24,9 @@ import com.intellij.openapi.util.Comparing;
 import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;
 import com.intellij.util.ArrayUtil;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.AnActionButtonRunnable;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 

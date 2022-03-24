@@ -20,6 +20,8 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.CatchingConsumer;

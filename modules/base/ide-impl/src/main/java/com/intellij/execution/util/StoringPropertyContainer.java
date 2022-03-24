@@ -18,7 +18,7 @@ package com.intellij.execution.util;
 
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.util.config.AbstractProperty;
-import com.intellij.util.config.Storage;
+import consulo.ui.ex.util.Storage;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.HashMap;

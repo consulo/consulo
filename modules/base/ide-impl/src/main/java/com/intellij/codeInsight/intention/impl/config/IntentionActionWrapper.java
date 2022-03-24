@@ -19,7 +19,7 @@ package com.intellij.codeInsight.intention.impl.config;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionBean;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;
-import com.intellij.openapi.actionSystem.ShortcutProvider;
+import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.logging.Logger;
 import consulo.codeEditor.Editor;

@@ -20,7 +20,7 @@ import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.ColoredTextContainer;
 import com.intellij.ui.EnumComboBoxModel;
-import com.intellij.ui.HyperlinkLabel;
+import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import com.intellij.util.ObjectUtils;

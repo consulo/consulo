@@ -15,6 +15,8 @@
  */
 package com.intellij.ide.dnd;
 
+import consulo.ui.ex.awt.dnd.DnDEvent;
+
 /**
  * @author Konstantin Bulenkov
  */

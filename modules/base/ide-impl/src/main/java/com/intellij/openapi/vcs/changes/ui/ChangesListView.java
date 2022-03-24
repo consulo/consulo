@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CopyProvider;
-import com.intellij.ide.dnd.DnDAware;
+import consulo.ui.ex.awt.dnd.DnDAware;
 import consulo.ui.ex.awt.tree.TreeState;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.fileChooser.actions.VirtualFileDeleteProvider;

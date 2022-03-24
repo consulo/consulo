@@ -17,6 +17,7 @@ package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.ide.dnd.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
+import consulo.ui.ex.awt.dnd.*;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
@@ -25,7 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import com.intellij.ui.awt.RelativeRectangle;
+import consulo.ui.ex.awt.RelativeRectangle;
 import com.intellij.util.Function;
 import consulo.disposer.Disposer;
 

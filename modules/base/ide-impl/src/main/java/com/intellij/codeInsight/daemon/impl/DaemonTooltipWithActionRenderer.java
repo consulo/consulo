@@ -27,7 +27,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BalloonImpl;
 import com.intellij.ui.HintHint;
-import com.intellij.ui.HyperlinkLabel;
+import consulo.ui.ex.awt.HyperlinkLabel;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.ui.GridBag;
 import consulo.application.AllIcons;

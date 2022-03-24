@@ -1,15 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.wm.impl.content;
 
-import com.intellij.ide.dnd.DnDSupport;
-import com.intellij.ide.dnd.DnDTarget;
+import consulo.ui.ex.awt.dnd.DnDSupport;
+import consulo.ui.ex.awt.dnd.DnDTarget;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.awt.RelativeRectangle;
+import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerEvent;

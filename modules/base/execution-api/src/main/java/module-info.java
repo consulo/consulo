@@ -23,6 +23,7 @@ module consulo.execution.api {
   exports consulo.execution.executor;
   exports consulo.execution.runner;
   exports consulo.execution.ui;
+  exports consulo.execution.ui.awt;
   exports consulo.execution.ui.console;
   exports consulo.execution.ui.event;
   exports consulo.execution.ui.layout;

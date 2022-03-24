@@ -8,7 +8,7 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.ui.awt.RelativeRectangle;
+import consulo.ui.ex.awt.RelativeRectangle;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.IJSwingUtilities;
 import consulo.application.AllIcons;

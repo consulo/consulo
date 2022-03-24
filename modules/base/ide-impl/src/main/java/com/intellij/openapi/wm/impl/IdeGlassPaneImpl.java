@@ -17,7 +17,7 @@ package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeTooltipManager;
-import com.intellij.ide.dnd.DnDAware;
+import consulo.ui.ex.awt.dnd.DnDAware;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import com.intellij.ui.BalloonImpl;
 import consulo.util.collection.FactoryMap;

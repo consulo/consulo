@@ -28,7 +28,7 @@ import com.intellij.refactoring.ui.CodeFragmentTableCellRenderer;
 import com.intellij.refactoring.ui.StringTableCellEditor;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

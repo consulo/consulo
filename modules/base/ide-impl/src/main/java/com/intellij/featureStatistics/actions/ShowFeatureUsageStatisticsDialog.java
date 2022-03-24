@@ -29,10 +29,10 @@ import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.TableViewSpeedSearch;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.table.TableView;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 

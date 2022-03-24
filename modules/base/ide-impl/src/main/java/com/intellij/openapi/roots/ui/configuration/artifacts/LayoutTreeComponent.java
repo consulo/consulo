@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
-import com.intellij.ide.dnd.DnDEvent;
-import com.intellij.ide.dnd.DnDManager;
-import com.intellij.ide.dnd.DnDTarget;
+import consulo.ui.ex.awt.dnd.DnDEvent;
+import consulo.ui.ex.awt.dnd.DnDManager;
+import consulo.ui.ex.awt.dnd.DnDTarget;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.ArtifactRootNode;
@@ -38,7 +38,7 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.awt.RelativeRectangle;
+import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.ui.treeStructure.SimpleTreeBuilder;

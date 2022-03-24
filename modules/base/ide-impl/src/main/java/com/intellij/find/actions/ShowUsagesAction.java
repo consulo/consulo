@@ -43,7 +43,7 @@ import com.intellij.usages.*;
 import com.intellij.usages.impl.*;
 import com.intellij.usages.rules.UsageFilteringRuleProvider;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.AccessRule;
 import consulo.application.AllIcons;

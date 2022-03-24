@@ -3,7 +3,7 @@ package com.intellij.ui.popup.list;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.Shortcut;
-import com.intellij.openapi.actionSystem.ShortcutProvider;
+import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;

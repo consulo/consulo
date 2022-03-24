@@ -18,15 +18,13 @@ package com.intellij.ide.actionMacro;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.Shortcut;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.keymap.Keymap;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.ui.Messages;
-import consulo.ui.ex.awt.ScrollingUtil;
-import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.util.Pair;
-import com.intellij.ui.*;
-import consulo.ui.ex.awt.JBList;
+
 import java.util.HashSet;
 import consulo.disposer.Disposable;
 

@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.ui.model.TableModel;
 
 import javax.annotation.Nonnull;

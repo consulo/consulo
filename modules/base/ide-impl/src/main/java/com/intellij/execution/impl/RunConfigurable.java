@@ -52,6 +52,7 @@ import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.configuration.ui.SettingsEditorConfigurable;
 import consulo.execution.configuration.ui.event.SettingsEditorListener;
 import consulo.execution.executor.Executor;
+import consulo.ui.ex.awt.dnd.RowsDnDSupport;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -89,7 +90,7 @@ import java.util.List;
 import java.util.*;
 
 import static com.intellij.execution.impl.RunConfigurable.NodeKind.*;
-import static com.intellij.ui.RowsDnDSupport.RefinedDropSupport.Position.*;
+import static consulo.ui.ex.awt.dnd.RowsDnDSupport.RefinedDropSupport.Position.*;
 
 public class RunConfigurable extends BaseConfigurable {
   private static ConfigurationType HIDDEN_ITEMS_STUB = new ConfigurationType() {

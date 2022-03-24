@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.ide.dnd.DnDTarget;
+import consulo.ui.ex.awt.dnd.DnDTarget;
 import com.intellij.ui.content.impl.ContentImpl;
 
 import javax.swing.*;

@@ -18,6 +18,7 @@ package com.intellij.util.ui;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.ReflectionUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.ElementProducer;
 import consulo.util.collection.OrderedSet;
 import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;

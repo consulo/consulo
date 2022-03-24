@@ -24,7 +24,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;

@@ -36,7 +36,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.ui.HighlightedRegion;
+import consulo.ui.ex.awt.HighlightedRegion;
 import com.intellij.usageView.UsageTreeColors;
 import com.intellij.usageView.UsageTreeColorsScheme;
 import com.intellij.util.ArrayUtil;

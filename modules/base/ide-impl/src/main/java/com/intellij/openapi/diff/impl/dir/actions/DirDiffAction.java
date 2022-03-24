@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.dir.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.ShortcutProvider;
+import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ui.ex.action.ShortcutSet;
 import consulo.ui.ex.action.ToggleAction;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;

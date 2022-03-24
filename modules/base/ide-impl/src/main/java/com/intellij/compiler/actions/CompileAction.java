@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;

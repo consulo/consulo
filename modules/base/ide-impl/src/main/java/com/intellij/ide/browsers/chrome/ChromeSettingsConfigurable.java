@@ -21,7 +21,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.RawCommandLineEditor;
+import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.Nls;
 

@@ -19,9 +19,9 @@ import consulo.application.ApplicationManager;
 import consulo.application.macro.PathMacros;
 import consulo.configurable.ConfigurationException;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
-import com.intellij.ui.ToolbarDecorator;
+import consulo.ui.ex.awt.AnActionButton;
+import consulo.ui.ex.awt.AnActionButtonRunnable;
+import consulo.ui.ex.awt.ToolbarDecorator;
 import com.intellij.util.text.StringTokenizer;
 
 import javax.swing.*;

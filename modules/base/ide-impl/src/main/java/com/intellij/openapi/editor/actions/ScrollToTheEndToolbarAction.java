@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.application.AllIcons;
-import com.intellij.idea.ActionsBundle;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.document.Document;

@@ -2,10 +2,10 @@ package com.intellij.diagnostic.errordialog;
 
 import com.intellij.diagnostic.DiagnosticBundle;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.table.TableView;
+import consulo.ui.ex.awt.table.TableView;
 import com.intellij.util.EventDispatcher;
 import consulo.ui.ex.awt.ColumnInfo;
-import com.intellij.util.ui.ListTableModel;
+import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.logging.attachment.Attachment;
 
 import javax.swing.*;

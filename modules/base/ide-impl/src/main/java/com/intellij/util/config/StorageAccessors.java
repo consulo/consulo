@@ -17,6 +17,8 @@ package com.intellij.util.config;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.ui.ex.util.Storage;
 import org.jetbrains.annotations.NonNls;
 
 /**
@@ -32,7 +34,7 @@ public class StorageAccessors {
   public static StorageAccessors createGlobal(@NonNls String prefix) {
     Application application = ApplicationManager.getApplication();
     Storage storage;
-    if (application != null) storage = new Storage.PropertiesComponentStorage(prefix + ".");
+    if (application != null) storage = new Storage.PropertiesComponentStorage(prefix + ".", ApplicationPropertiesComponent.getInstance());
     else storage = new Storage.MapStorage();
     return new StorageAccessors(storage);
   }
