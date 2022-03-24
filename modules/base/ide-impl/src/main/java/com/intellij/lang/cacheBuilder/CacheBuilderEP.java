@@ -18,6 +18,7 @@ package com.intellij.lang.cacheBuilder;
 
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.cacheBuilder.WordsScanner;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.component.extension.PluginAware;

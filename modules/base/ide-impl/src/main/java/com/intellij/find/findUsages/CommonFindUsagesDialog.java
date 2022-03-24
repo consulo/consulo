@@ -16,7 +16,7 @@
 
 package com.intellij.find.findUsages;
 
-import com.intellij.lang.findUsages.DescriptiveNameUtil;
+import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.application.ui.HelpManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

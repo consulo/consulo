@@ -15,6 +15,7 @@
  */
 package com.intellij.tools;
 
+import consulo.execution.process.ProcessTerminatedListener;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionManager;
 import consulo.execution.ExecutionResult;

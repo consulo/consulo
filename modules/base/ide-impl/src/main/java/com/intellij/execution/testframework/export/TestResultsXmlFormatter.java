@@ -20,7 +20,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.ui.console.HyperlinkInfo;
-import com.intellij.execution.impl.ConsoleBuffer;
+import consulo.execution.internal.ConsoleBuffer;
 import com.intellij.execution.testframework.*;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.impl.internal.ApplicationNamesInfo;

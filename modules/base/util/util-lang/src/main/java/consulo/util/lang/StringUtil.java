@@ -122,6 +122,32 @@ public class StringUtil {
     return "";
   }
 
+  @Contract(pure = true)
+  public static boolean equalsIgnoreCase(@Nullable CharSequence s1, @Nullable CharSequence s2) {
+    if (s1 == null ^ s2 == null) {
+      return false;
+    }
+
+    if (s1 == null) {
+      return true;
+    }
+
+    if (s1.length() != s2.length()) {
+      return false;
+    }
+    for (int i = 0; i < s1.length(); i++) {
+      if (!charsMatch(s1.charAt(i), s2.charAt(i), true)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  @Contract(pure = true)
+  public static boolean charsMatch(char c1, char c2, boolean ignoreCase) {
+    return compare(c1, c2, ignoreCase) == 0;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static String replaceSubstring(@Nonnull String original, int startOffset, int endOffset, @Nonnull String replacement) {
@@ -1121,6 +1147,12 @@ public class StringUtil {
   @Contract(pure = true)
   public static boolean charsEqualIgnoreCase(char a, char b) {
     return a == b || toUpperCase(a) == toUpperCase(b) || toLowerCase(a) == toLowerCase(b);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String toUpperCase(@Nonnull String s) {
+    return toUpperCase((CharSequence)s).toString();
   }
 
   @Nonnull

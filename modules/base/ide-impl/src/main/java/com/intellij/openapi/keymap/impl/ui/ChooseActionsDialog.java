@@ -33,7 +33,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import com.intellij.ui.FilterComponent;
+import consulo.ui.ex.awt.FilterComponent;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IJSwingUtilities;

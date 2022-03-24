@@ -15,7 +15,7 @@ import com.intellij.openapi.util.WindowStateService;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import com.intellij.ui.SearchTextField;
+import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.UIUtil;

@@ -15,29 +15,29 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.execution.ui.layout.ViewContext;
-import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.ui.content.ContentManagerUtil;
+import consulo.application.AllIcons;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.FileEditorWindow;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.action.Toggleable;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import com.intellij.ui.content.ContentManagerUtil;
-import consulo.fileEditor.FileEditorWindow;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Pins any kind of tab in context: editor tab, toolwindow tab or other tabs.
- *
+ * <p>
  * todo drop TW and EW, both are only for menu|Window tab/editor sub-menus.
  */
 public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
@@ -54,8 +54,9 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     }
   }
 
+  @RequiredUIAccess
   @Override
-  public void actionPerformed(AnActionEvent e) {
+  public void actionPerformed(@Nonnull AnActionEvent e) {
     Handler handler = getHandler(e);
     if (handler == null) return;
     boolean selected = !handler.isPinned;
@@ -63,6 +64,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
     e.getPresentation().putClientProperty(SELECTED_PROPERTY, selected);
   }
 
+  @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
     Handler handler = getHandler(e);
@@ -93,8 +95,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
       return createHandler(content);
     }
 
-    final FileEditorWindow window = currentWindow != null ? currentWindow :
-                                project != null ? FileEditorManagerEx.getInstanceEx(project).getCurrentWindow() : null;
+    final FileEditorWindow window = currentWindow != null ? currentWindow : project != null ? FileEditorManager.getInstance(project).getCurrentWindow() : null;
     VirtualFile selectedFile = window == null ? null : getFileFromEvent(e, window);
     if (selectedFile != null) {
       return createHandler(window, selectedFile);
@@ -137,12 +138,12 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
   @Nullable
   private static Content getNonToolWindowContent(@Nonnull AnActionEvent e) {
     Content result = null;
-    Content[] contents = e.getData(ViewContext.CONTENT_KEY);
+    Content[] contents = e.getData(Content.KEY_OF_ARRAY);
     if (contents != null && contents.length == 1) result = contents[0];
     if (result != null && result.isPinnable()) return result;
 
     ContentManager contentManager = ContentManagerUtil.getContentManagerFromContext(e.getDataContext(), true);
-    result = contentManager != null? contentManager.getSelectedContent() : null;
+    result = contentManager != null ? contentManager.getSelectedContent() : null;
     if (result != null && result.isPinnable()) return result;
     return null;
   }
@@ -150,7 +151,7 @@ public class PinActiveTabAction extends DumbAwareAction implements Toggleable {
   @Nullable
   private static Content getToolWindowContent(@Nonnull AnActionEvent e) {
     // note to future readers: TW tab "pinned" icon is shown when content.getUserData(TW.SHOW_CONTENT_ICON) is true
-    ToolWindow window = e.getData(PlatformDataKeys.TOOL_WINDOW);
+    ToolWindow window = e.getData(ToolWindow.KEY);
     Content result = window != null ? window.getContentManager().getSelectedContent() : null;
     return result != null && result.isPinnable() ? result : null;
   }

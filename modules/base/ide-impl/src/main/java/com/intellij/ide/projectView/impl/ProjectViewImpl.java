@@ -44,7 +44,7 @@ import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import consulo.ide.impl.psi.impl.file.PsiPackageHelper;
 import com.intellij.ui.AutoScrollFromSourceHandler;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import com.intellij.ui.content.ContentManagerAdapter;
+import consulo.ui.ex.content.event.ContentManagerAdapter;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IJSwingUtilities;

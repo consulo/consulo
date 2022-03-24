@@ -34,7 +34,7 @@ import com.intellij.openapi.diff.impl.dir.actions.RefreshDirDiffAction;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.FilterComponent;
+import consulo.ui.ex.awt.FilterComponent;
 import com.intellij.ui.TableSpeedSearch;
 import com.intellij.ui.components.JBLoadingPanel;
 import com.intellij.ui.components.JBLoadingPanelListener;

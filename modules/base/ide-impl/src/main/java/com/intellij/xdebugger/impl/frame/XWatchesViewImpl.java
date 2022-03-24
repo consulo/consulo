@@ -19,7 +19,6 @@ import consulo.dataContext.DataManager;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.awt.dnd.DnDManager;
 import consulo.ui.ex.awt.dnd.DnDNativeTarget;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;

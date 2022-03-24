@@ -23,7 +23,7 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.EmptyAction;
+import consulo.ui.ex.action.EmptyAction;
 import com.intellij.openapi.command.impl.UndoManagerImpl;
 import consulo.document.DocumentReferenceManager;
 import consulo.codeEditor.EditorEx;

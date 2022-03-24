@@ -45,6 +45,8 @@ public interface Content extends UserDataHolder, ComponentContainer {
   String PROP_PINNED = "pinned";
 
   Key<Content> KEY = Key.create(Content.class);
+  Key<Content[]> KEY_OF_ARRAY = Key.create(Content[].class);
+
   Key<Boolean> TABBED_CONTENT_KEY = Key.create("tabbedContent");
   Key<String> TAB_GROUP_NAME_KEY = Key.create("tabbedGroupName");
   Key<ComponentOrientation> TAB_LABEL_ORIENTATION_KEY = Key.create("tabLabelComponentOrientation");

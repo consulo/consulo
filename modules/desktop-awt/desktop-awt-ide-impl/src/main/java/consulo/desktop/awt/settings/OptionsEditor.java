@@ -45,7 +45,7 @@ import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.LightColors;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.SearchTextField;
+import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.speedSearch.ElementFilter;
 import com.intellij.ui.treeStructure.SimpleNode;

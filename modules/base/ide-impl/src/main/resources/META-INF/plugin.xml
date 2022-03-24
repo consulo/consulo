@@ -482,7 +482,7 @@
 
     <extensionPoint name="lang.findUsagesProvider"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.findUsages.FindUsagesProvider"/>
+      <with attribute="implementationClass" implements="consulo.language.findUsage.FindUsagesProvider"/>
     </extensionPoint>
 
     <extensionPoint name="lang.commenter"
@@ -592,7 +592,7 @@
 
     <extensionPoint name="cacheBuilder"
                     beanClass="com.intellij.lang.cacheBuilder.CacheBuilderEP">
-      <with attribute="wordsScannerClass" implements="com.intellij.lang.cacheBuilder.WordsScanner"/>
+      <with attribute="wordsScannerClass" implements="consulo.language.cacheBuilder.WordsScanner"/>
     </extensionPoint>
 
     <extensionPoint name="referencesSearch" interface="com.intellij.util.QueryExecutor"/>
@@ -1667,7 +1667,7 @@
     <applicationService serviceInterface="consulo.language.editor.completion.CompletionService"
                         serviceImplementation="com.intellij.codeInsight.completion.impl.CompletionServiceImpl"/>
 
-    <applicationService serviceInterface="com.intellij.lang.cacheBuilder.CacheBuilderRegistry"
+    <applicationService serviceInterface="consulo.language.cacheBuilder.CacheBuilderRegistry"
                         serviceImplementation="com.intellij.lang.cacheBuilder.CacheBuilderRegistryImpl"/>
 
     <applicationService serviceInterface="consulo.language.editor.intention.IntentionManager"
@@ -1902,8 +1902,8 @@
     <projectService serviceInterface="com.intellij.codeEditor.printing.ExportToHTMLSettings"
                     serviceImplementation="com.intellij.codeEditor.printing.ExportToHTMLSettings"/>
 
-    <projectService serviceInterface="com.intellij.diagnostic.logging.LogConsolePreferences"
-                    serviceImplementation="com.intellij.diagnostic.logging.LogConsolePreferences"/>
+    <projectService serviceInterface="consulo.execution.configuration.log.LogConsolePreferences"
+                    serviceImplementation="consulo.execution.configuration.log.LogConsolePreferences"/>
 
     <applicationService serviceInterface="consulo.language.psi.ReferenceProvidersRegistry"
                         serviceImplementation="consulo.ide.impl.psi.impl.source.resolve.reference.ReferenceProvidersRegistryImpl"/>

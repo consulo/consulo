@@ -352,9 +352,7 @@ public class ActionUtil {
   }
 
   public static void copyRegisteredShortcuts(@Nonnull JComponent to, @Nonnull JComponent from) {
-    for (AnAction anAction : getActions(from)) {
-      anAction.registerCustomShortcutSet(anAction.getShortcutSet(), to);
-    }
+    consulo.ui.ex.action.util.ActionUtil.copyRegisteredShortcuts(to, from);
   }
 
   public static void registerForEveryKeyboardShortcut(@Nonnull JComponent component, @Nonnull ActionListener action, @Nonnull ShortcutSet shortcuts) {
@@ -378,24 +376,7 @@ public class ActionUtil {
    * @param actionId action id to merge from
    */
   public static AnAction mergeFrom(@Nonnull AnAction action, @Nonnull String actionId) {
-    //noinspection UnnecessaryLocalVariable
-    AnAction a1 = action;
-    AnAction a2 = ActionManager.getInstance().getAction(actionId);
-    Presentation p1 = a1.getTemplatePresentation();
-    Presentation p2 = a2.getTemplatePresentation();
-    p1.setIcon(ObjectUtils.chooseNotNull(p1.getIcon(), p2.getIcon()));
-    p1.setDisabledIcon(ObjectUtils.chooseNotNull(p1.getDisabledIcon(), p2.getDisabledIcon()));
-    p1.setSelectedIcon(ObjectUtils.chooseNotNull(p1.getSelectedIcon(), p2.getSelectedIcon()));
-    p1.setHoveredIcon(ObjectUtils.chooseNotNull(p1.getHoveredIcon(), p2.getHoveredIcon()));
-    if (StringUtil.isEmpty(p1.getText())) {
-      p1.setTextValue(p2.getTextValue());
-    }
-    p1.setDescriptionValue(p1.getDescriptionValue() == LocalizeValue.empty() ? p2.getDescriptionValue() : p1.getDescriptionValue());
-    ShortcutSet ss1 = a1.getShortcutSet();
-    if (ss1 == null || ss1 == CustomShortcutSet.EMPTY) {
-      a1.copyShortcutFrom(a2);
-    }
-    return a1;
+    return consulo.ui.ex.action.util.ActionUtil.mergeFrom(action, actionId);
   }
 
   public static void invokeAction(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull String place, @Nullable InputEvent inputEvent, @Nullable Runnable onDone) {

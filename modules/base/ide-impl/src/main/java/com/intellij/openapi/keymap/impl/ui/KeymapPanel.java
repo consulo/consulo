@@ -33,7 +33,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.FilterComponent;
+import consulo.ui.ex.awt.FilterComponent;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.FormBuilder;
 import consulo.application.AllIcons;

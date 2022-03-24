@@ -31,7 +31,7 @@ import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.content.ContentManagerAdapter;
+import consulo.ui.ex.content.event.ContentManagerAdapter;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.containers.ContainerUtil;

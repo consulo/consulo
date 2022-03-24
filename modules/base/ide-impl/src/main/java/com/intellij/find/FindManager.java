@@ -15,6 +15,7 @@
  */
 package com.intellij.find;
 
+import consulo.language.findUsage.FindUsagesProvider;
 import consulo.navigation.NavigationItem;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
@@ -220,7 +221,7 @@ public abstract class FindManager {
    *
    * @param element the element to check the availability for.
    * @return true if Find Usages is available, false otherwise.
-   * @see com.intellij.lang.findUsages.FindUsagesProvider#canFindUsagesFor(PsiElement)
+   * @see FindUsagesProvider#canFindUsagesFor(PsiElement)
    */
   public abstract boolean canFindUsages(@Nonnull PsiElement element);
 

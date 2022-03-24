@@ -23,8 +23,8 @@ import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.ide.impl.psi.meta.PsiPresentableMetaData;
 import com.intellij.lang.LangBundle;
 import consulo.language.Language;
-import com.intellij.lang.findUsages.FindUsagesProvider;
-import com.intellij.lang.findUsages.LanguageFindUsages;
+import consulo.language.findUsage.FindUsagesProvider;
+import consulo.language.internal.LanguageFindUsages;
 import com.intellij.openapi.util.text.StringUtil;
 
 import javax.annotation.Nonnull;

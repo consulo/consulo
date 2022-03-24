@@ -21,6 +21,7 @@ package com.intellij.codeInsight.intention.impl.config;
 
 import com.intellij.ide.ui.search.SearchUtil;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.FilterComponent;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.util.lang.ref.Ref;
 import consulo.application.ui.wm.IdeFocusManager;

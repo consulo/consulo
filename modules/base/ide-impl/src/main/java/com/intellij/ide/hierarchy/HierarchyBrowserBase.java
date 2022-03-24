@@ -19,29 +19,30 @@ package com.intellij.ide.hierarchy;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.actions.CloseTabToolbarAction;
 import com.intellij.ide.actions.ContextHelpAction;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.tree.AbstractTreeUi;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.ui.SimpleToolWindowPanel;
+import com.intellij.ui.TreeSpeedSearch;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataProvider;
-import consulo.project.Project;
-import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import consulo.disposer.Disposable;
-import consulo.util.dataholder.Key;
-import consulo.navigation.Navigatable;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
-import com.intellij.ui.TreeSpeedSearch;
-import consulo.ui.ex.content.Content;
-import com.intellij.ui.content.tabs.PinToolwindowTabAction;
-import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.AbstractTreeUi;
+import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.toolWindow.action.ToolWindowActions;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
@@ -102,7 +103,7 @@ public abstract class HierarchyBrowserBase extends SimpleToolWindowPanel impleme
   protected void appendActions(@Nonnull DefaultActionGroup actionGroup, @Nullable String helpID) {
     actionGroup.add(myAutoScrollToSourceHandler.createToggleAction());
     actionGroup.add(ActionManager.getInstance().getAction(IdeActions.ACTION_EXPAND_ALL));
-    actionGroup.add(ActionManager.getInstance().getAction(PinToolwindowTabAction.ACTION_NAME));
+    actionGroup.add(ToolWindowActions.getPinAction());
     actionGroup.add(new CloseAction());
     if (helpID != null) {
       actionGroup.add(new ContextHelpAction(helpID));

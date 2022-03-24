@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.ui;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.EmptyAction;
+import consulo.ui.ex.action.EmptyAction;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.popup.ListPopupStep;
 import consulo.util.lang.function.Condition;

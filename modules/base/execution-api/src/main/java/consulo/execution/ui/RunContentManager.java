@@ -16,11 +16,12 @@
 package consulo.execution.ui;
 
 import consulo.component.messagebus.Topic;
-import consulo.execution.executor.Executor;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.event.RunContentWithExecutorListener;
 import consulo.process.ProcessHandler;
+import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.annotation.Nonnull;
@@ -74,4 +75,17 @@ public interface RunContentManager {
 
   @Nonnull
   String getToolWindowIdByEnvironment(@Nonnull ExecutionEnvironment executionEnvironment);
+
+  public static void copyContentAndBehavior(@Nonnull RunContentDescriptor descriptor, @Nullable RunContentDescriptor contentToReuse) {
+    if (contentToReuse != null) {
+      Content attachedContent = contentToReuse.getAttachedContent();
+      if (attachedContent != null && attachedContent.isValid()) {
+        descriptor.setAttachedContent(attachedContent);
+      }
+      if (contentToReuse.isReuseToolWindowActivation()) {
+        descriptor.setActivateToolWindowWhenAdded(contentToReuse.isActivateToolWindowWhenAdded());
+      }
+      descriptor.setContentToolWindowId(contentToReuse.getContentToolWindowId());
+    }
+  }
 }

@@ -30,7 +30,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import com.intellij.ui.content.ContentManagerAdapter;
+import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

@@ -21,7 +21,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.find.FindBundle;
 import com.intellij.find.FindSettings;
-import com.intellij.lang.findUsages.LanguageFindUsages;
+import consulo.language.internal.LanguageFindUsages;
 import consulo.ui.ex.action.IdeActions;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;

@@ -21,7 +21,7 @@ import consulo.process.ProcessHandler;
 import com.intellij.execution.testframework.*;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import com.intellij.execution.ui.ObservableConsoleView;
+import consulo.execution.ui.console.ObservableConsoleView;
 import consulo.ui.ex.HelpIdProvider;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnAction;

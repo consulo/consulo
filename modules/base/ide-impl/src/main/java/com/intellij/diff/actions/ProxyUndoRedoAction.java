@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.actions;
 
-import com.intellij.openapi.actionSystem.EmptyAction;
+import consulo.ui.ex.action.EmptyAction;
 import consulo.undoRedo.UndoManager;
 import consulo.codeEditor.Editor;
 import consulo.undoRedo.ApplicationUndoManager;

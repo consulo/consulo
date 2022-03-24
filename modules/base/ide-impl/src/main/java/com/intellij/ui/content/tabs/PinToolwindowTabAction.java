@@ -16,9 +16,9 @@
 package com.intellij.ui.content.tabs;
 
 import com.intellij.ide.actions.PinActiveTabAction;
-import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Toggleable;
+import consulo.ui.ex.toolWindow.action.ToolWindowActions;
 
 /**
  * @author spleaner
@@ -26,9 +26,7 @@ import consulo.ui.ex.action.Toggleable;
  */
 @Deprecated
 public class PinToolwindowTabAction extends PinActiveTabAction.TW implements Toggleable {
-  public static final String ACTION_NAME = "PinToolwindowTab";
-
   public static AnAction getPinAction() {
-    return ActionManager.getInstance().getAction(ACTION_NAME);
+    return ToolWindowActions.getPinAction();
   }
 }

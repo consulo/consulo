@@ -291,21 +291,8 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   @Override
   public void showRunContent(@Nonnull Executor info, @Nonnull RunContentDescriptor descriptor, @Nullable RunContentDescriptor contentToReuse) {
-    copyContentAndBehavior(descriptor, contentToReuse);
+    RunContentManager.copyContentAndBehavior(descriptor, contentToReuse);
     showRunContent(info, descriptor, descriptor.getExecutionId());
-  }
-
-  public static void copyContentAndBehavior(@Nonnull RunContentDescriptor descriptor, @Nullable RunContentDescriptor contentToReuse) {
-    if (contentToReuse != null) {
-      Content attachedContent = contentToReuse.getAttachedContent();
-      if (attachedContent != null && attachedContent.isValid()) {
-        descriptor.setAttachedContent(attachedContent);
-      }
-      if (contentToReuse.isReuseToolWindowActivation()) {
-        descriptor.setActivateToolWindowWhenAdded(contentToReuse.isActivateToolWindowWhenAdded());
-      }
-      descriptor.setContentToolWindowId(contentToReuse.getContentToolWindowId());
-    }
   }
 
   @Nullable

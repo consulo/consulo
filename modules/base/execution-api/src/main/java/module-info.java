@@ -13,6 +13,8 @@ module consulo.execution.api {
   requires transitive consulo.process.api;
   requires transitive consulo.project.ui.api;
   requires transitive consulo.code.editor.api;
+  requires transitive consulo.file.editor.api;
+  requires transitive consulo.language.api;
 
   exports consulo.execution;
   exports consulo.execution.configuration;
@@ -22,6 +24,7 @@ module consulo.execution.api {
   exports consulo.execution.event;
   exports consulo.execution.executor;
   exports consulo.execution.runner;
+  exports consulo.execution.process;
   exports consulo.execution.ui;
   exports consulo.execution.ui.awt;
   exports consulo.execution.ui.console;

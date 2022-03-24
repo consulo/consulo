@@ -17,9 +17,9 @@
 package com.intellij.usageView;
 
 import consulo.language.Language;
-import com.intellij.lang.findUsages.DescriptiveNameUtil;
-import com.intellij.lang.findUsages.FindUsagesProvider;
-import com.intellij.lang.findUsages.LanguageFindUsages;
+import consulo.language.findUsage.DescriptiveNameUtil;
+import consulo.language.findUsage.FindUsagesProvider;
+import consulo.language.internal.LanguageFindUsages;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;

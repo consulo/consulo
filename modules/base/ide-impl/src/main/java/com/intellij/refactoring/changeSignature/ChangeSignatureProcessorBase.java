@@ -16,7 +16,7 @@
 package com.intellij.refactoring.changeSignature;
 
 import com.intellij.ide.actions.CopyReferenceAction;
-import com.intellij.lang.findUsages.DescriptiveNameUtil;
+import consulo.language.findUsage.DescriptiveNameUtil;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import consulo.undoRedo.UndoableAction;
 import consulo.undoRedo.ProjectUndoManager;

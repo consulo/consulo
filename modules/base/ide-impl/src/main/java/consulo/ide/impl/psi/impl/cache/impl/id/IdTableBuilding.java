@@ -18,9 +18,9 @@ package consulo.ide.impl.psi.impl.cache.impl.id;
 
 import com.intellij.ide.highlighter.custom.CustomFileTypeLexer;
 import consulo.language.Language;
-import com.intellij.lang.cacheBuilder.*;
-import com.intellij.lang.findUsages.FindUsagesProvider;
-import com.intellij.lang.findUsages.LanguageFindUsages;
+import consulo.language.findUsage.FindUsagesProvider;
+import consulo.language.internal.LanguageFindUsages;
+import consulo.language.cacheBuilder.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;

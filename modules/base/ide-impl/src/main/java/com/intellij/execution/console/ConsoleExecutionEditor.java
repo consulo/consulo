@@ -2,7 +2,7 @@
 package com.intellij.execution.console;
 
 import com.intellij.ide.GeneralSettings;
-import com.intellij.openapi.actionSystem.EmptyAction;
+import consulo.ui.ex.action.EmptyAction;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.util.Comparing;

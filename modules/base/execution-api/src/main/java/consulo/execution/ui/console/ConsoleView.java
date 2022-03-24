@@ -55,4 +55,7 @@ public interface ConsoleView extends ExecutionConsole {
   AnAction[] createConsoleActions();
 
   void allowHeavyFilters();
+
+  default void requestScrollingToEnd() {
+  }
 }

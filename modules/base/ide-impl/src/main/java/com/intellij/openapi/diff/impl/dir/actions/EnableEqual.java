@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.dir.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.EmptyAction;
+import consulo.ui.ex.action.EmptyAction;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;
 
 /**

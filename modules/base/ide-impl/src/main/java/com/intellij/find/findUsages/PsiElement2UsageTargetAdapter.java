@@ -21,7 +21,7 @@ import com.intellij.find.FindBundle;
 import com.intellij.find.FindManager;
 import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.ide.presentation.VirtualFilePresentation;
-import com.intellij.lang.findUsages.DescriptiveNameUtil;
+import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;

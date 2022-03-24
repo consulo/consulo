@@ -15,10 +15,10 @@
  */
 package com.intellij.execution.dashboard;
 
-import com.intellij.ui.content.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
+import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 
 import javax.annotation.Nonnull;

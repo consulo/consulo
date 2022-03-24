@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.rename;
 
-import com.intellij.lang.findUsages.DescriptiveNameUtil;
+import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

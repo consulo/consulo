@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.util;
 
-import com.intellij.lang.findUsages.DescriptiveNameUtil;
+import consulo.language.findUsage.DescriptiveNameUtil;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import consulo.language.psi.PsiElement;

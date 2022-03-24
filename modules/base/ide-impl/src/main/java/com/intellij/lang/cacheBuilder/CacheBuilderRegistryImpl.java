@@ -16,6 +16,8 @@
 
 package com.intellij.lang.cacheBuilder;
 
+import consulo.language.cacheBuilder.CacheBuilderRegistry;
+import consulo.language.cacheBuilder.WordsScanner;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;

@@ -51,6 +51,25 @@ public class FileUtil {
     }
   };
 
+  public static boolean isAbsolute(@Nonnull String path) {
+    return new File(path).isAbsolute();
+  }
+
+  public static boolean createIfDoesntExist(@Nonnull File file) {
+    if (file.exists()) return true;
+    try {
+      if (!createParentDirs(file)) return false;
+
+      OutputStream s = new FileOutputStream(file);
+      s.close();
+      return true;
+    }
+    catch (IOException e) {
+      LOG.info(file.getPath(), e);
+      return false;
+    }
+  }
+
   public static void writeToFile(@Nonnull File file, @Nonnull byte[] text) throws IOException {
     writeToFile(file, text, false);
   }

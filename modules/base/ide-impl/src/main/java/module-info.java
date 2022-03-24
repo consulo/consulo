@@ -497,7 +497,6 @@ open module consulo.ide.impl {
   exports com.intellij.lang.cacheBuilder;
   exports com.intellij.lang.customFolding;
   exports com.intellij.lang.documentation;
-  exports com.intellij.lang.findUsages;
   exports com.intellij.lang.folding;
   exports com.intellij.lang.parameterInfo;
   exports com.intellij.lang.parser;

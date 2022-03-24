@@ -171,48 +171,48 @@
 
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
     <group id="Diff.KeymapGroup" text="Diff &amp;&amp; Merge">
-      <action id="Diff.ShowDiff" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
+      <action id="Diff.ShowDiff" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
       <!-- CommonShortcuts.getDiff() -->
       <action id="CompareTwoFiles" class="com.intellij.diff.actions.CompareFilesAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
       <action id="CompareFileWithEditor" class="com.intellij.diff.actions.CompareFileWithEditorAction"/>
       <action id="CompareClipboardWithSelection" class="com.intellij.diff.actions.CompareClipboardWithSelectionAction"/>
 
       <separator/>
-      <action id="Diff.FocusOppositePane" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <action id="Diff.FocusOppositePaneAndScroll" class="com.intellij.openapi.actionSystem.EmptyAction"/>
+      <action id="Diff.FocusOppositePane" class="consulo.ui.ex.action.EmptyAction"/>
+      <action id="Diff.FocusOppositePaneAndScroll" class="consulo.ui.ex.action.EmptyAction"/>
 
-      <action id="Diff.ShowSettingsPopup" class="com.intellij.openapi.actionSystem.EmptyAction" text="Show Diff Settings Popup..."/>
-      <action id="Diff.ShowInExternalTool" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@general.externaltoolssmall"
+      <action id="Diff.ShowSettingsPopup" class="consulo.ui.ex.action.EmptyAction" text="Show Diff Settings Popup..."/>
+      <action id="Diff.ShowInExternalTool" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@general.externaltoolssmall"
               text="Show Diff in External Tool"/>
       <separator/>
 
-      <action id="NextDiff" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.movedown"/>
-      <action id="PreviousDiff" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.moveup"/>
-      <action id="Diff.NextConflict" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.movedown"/>
-      <action id="Diff.PreviousConflict" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.moveup"/>
-      <action id="GotoChangedFile" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.showastree"/>
+      <action id="NextDiff" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.movedown"/>
+      <action id="PreviousDiff" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.moveup"/>
+      <action id="Diff.NextConflict" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.movedown"/>
+      <action id="Diff.PreviousConflict" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.moveup"/>
+      <action id="GotoChangedFile" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.showastree"/>
       <separator/>
 
-      <action id="Diff.ApplyLeftSide" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.arrowright"/>
-      <action id="Diff.ApplyRightSide" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.arrow"/>
-      <action id="Diff.AppendLeftSide" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.arrowrightdown"/>
-      <action id="Diff.AppendRightSide" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.arrowleftdown"/>
-      <action id="Diff.IgnoreLeftSide" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.remove"/>
-      <action id="Diff.IgnoreRightSide" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.remove"/>
-      <action id="Diff.ResolveConflict" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.magicresolve"/>
+      <action id="Diff.ApplyLeftSide" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.arrowright"/>
+      <action id="Diff.ApplyRightSide" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.arrow"/>
+      <action id="Diff.AppendLeftSide" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.arrowrightdown"/>
+      <action id="Diff.AppendRightSide" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.arrowleftdown"/>
+      <action id="Diff.IgnoreLeftSide" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.remove"/>
+      <action id="Diff.IgnoreRightSide" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.remove"/>
+      <action id="Diff.ResolveConflict" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.magicresolve"/>
       <separator/>
 
-      <action id="Diff.ApplyNonConflicts" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.applynotconflicts"/>
-      <action id="Diff.ApplyNonConflicts.Left" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.applynotconflictsleft"/>
-      <action id="Diff.ApplyNonConflicts.Right" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.applynotconflictsright"/>
+      <action id="Diff.ApplyNonConflicts" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.applynotconflicts"/>
+      <action id="Diff.ApplyNonConflicts.Left" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.applynotconflictsleft"/>
+      <action id="Diff.ApplyNonConflicts.Right" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.applynotconflictsright"/>
 
-      <action id="Diff.ComparePartial.Base.Left" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.leftdiff"/>
-      <action id="Diff.ComparePartial.Base.Right" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.rightdiff"/>
-      <action id="Diff.ComparePartial.Left.Right" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.branchdiff"/>
+      <action id="Diff.ComparePartial.Base.Left" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.leftdiff"/>
+      <action id="Diff.ComparePartial.Base.Right" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.rightdiff"/>
+      <action id="Diff.ComparePartial.Left.Right" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@diff.branchdiff"/>
 
-      <action id="Diff.CompareWithBase.Left" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <action id="Diff.CompareWithBase.Result" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <action id="Diff.CompareWithBase.Right" class="com.intellij.openapi.actionSystem.EmptyAction"/>
+      <action id="Diff.CompareWithBase.Left" class="consulo.ui.ex.action.EmptyAction"/>
+      <action id="Diff.CompareWithBase.Result" class="consulo.ui.ex.action.EmptyAction"/>
+      <action id="Diff.CompareWithBase.Right" class="consulo.ui.ex.action.EmptyAction"/>
       <separator/>
 
       <action id="CompareDirs" class="com.intellij.diff.actions.CompareFilesAction" text="Compare Directories" use-shortcut-of="CompareTwoFiles"/>
@@ -232,12 +232,12 @@
       <action id="DirDiffMenu.SetDefault" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetDefault" text="Set Default"/>
       <action id="DirDiffMenu.WarnOnDeletion" class="com.intellij.openapi.diff.impl.dir.actions.popup.WarnOnDeletion" text="Warn When Delete"/>
       <separator/>
-      <action id="DirDiffMenu.EnableLeft" class="com.intellij.openapi.actionSystem.EmptyAction" text="Show new files on left side"
+      <action id="DirDiffMenu.EnableLeft" class="consulo.ui.ex.action.EmptyAction" text="Show new files on left side"
               icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
-      <action id="DirDiffMenu.EnableRight" class="com.intellij.openapi.actionSystem.EmptyAction" text="Show new files on right side"
+      <action id="DirDiffMenu.EnableRight" class="consulo.ui.ex.action.EmptyAction" text="Show new files on right side"
               icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
-      <action id="DirDiffMenu.EnableEqual" class="com.intellij.openapi.actionSystem.EmptyAction" text="Show equal files" icon="consulo.platform.base.PlatformIconGroup@vcs.equal"/>
-      <action id="DirDiffMenu.EnableNotEqual" class="com.intellij.openapi.actionSystem.EmptyAction" text="Show difference" icon="consulo.platform.base.PlatformIconGroup@vcs.not_equal"/>
+      <action id="DirDiffMenu.EnableEqual" class="consulo.ui.ex.action.EmptyAction" text="Show equal files" icon="consulo.platform.base.PlatformIconGroup@vcs.equal"/>
+      <action id="DirDiffMenu.EnableNotEqual" class="consulo.ui.ex.action.EmptyAction" text="Show difference" icon="consulo.platform.base.PlatformIconGroup@vcs.not_equal"/>
       <separator/>
 
       <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
@@ -698,14 +698,14 @@
       <action id="UiDebugger" class="com.intellij.ui.debugger.ShowUiDebuggerAction"/>
     </group>
 
-    <action id="Console.Open" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-    <action id="Console.Execute" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-    <action id="Console.Execute.Multiline" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-    <action id="Console.SplitLine" class="com.intellij.openapi.actionSystem.EmptyAction" use-shortcut-of="EditorSplitLine"/>
+    <action id="Console.Open" class="consulo.ui.ex.action.EmptyAction"/>
+    <action id="Console.Execute" class="consulo.ui.ex.action.EmptyAction"/>
+    <action id="Console.Execute.Multiline" class="consulo.ui.ex.action.EmptyAction"/>
+    <action id="Console.SplitLine" class="consulo.ui.ex.action.EmptyAction" use-shortcut-of="EditorSplitLine"/>
     <group id="Console.HistoryActions">
-      <action id="Console.History.Previous" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <action id="Console.History.Next" class="com.intellij.openapi.actionSystem.EmptyAction"/>
-      <action id="Console.History.Browse" class="com.intellij.openapi.actionSystem.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
+      <action id="Console.History.Previous" class="consulo.ui.ex.action.EmptyAction"/>
+      <action id="Console.History.Next" class="consulo.ui.ex.action.EmptyAction"/>
+      <action id="Console.History.Browse" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
     </group>
 
     <group id="EditorContextBarMenu">
@@ -893,11 +893,11 @@
 
     <action id="ChangesView.Browse" class="com.intellij.openapi.vcs.changes.actions.BrowseChangesAction"/>
 
-    <action id="Diff.PrevChange" class="com.intellij.openapi.actionSystem.EmptyAction"
+    <action id="Diff.PrevChange" class="consulo.ui.ex.action.EmptyAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.prevfile" use-shortcut-of="PreviousTab"/>
-    <action id="Diff.NextChange" class="com.intellij.openapi.actionSystem.EmptyAction"
+    <action id="Diff.NextChange" class="consulo.ui.ex.action.EmptyAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.nextfile" use-shortcut-of="NextTab"/>
-    <action id="Diff.SelectedChange" class="com.intellij.openapi.actionSystem.EmptyAction"
+    <action id="Diff.SelectedChange" class="consulo.ui.ex.action.EmptyAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.showastree" use-shortcut-of="GotoChangedFile"/>
 
     <group id="EditorGutterVcsPopupMenu">
@@ -2024,7 +2024,7 @@
       <action id="MakeModule" class="com.intellij.compiler.actions.MakeModuleAction"/>
       <action id="Compile" class="com.intellij.compiler.actions.CompileAction"/>
 
-      <action id="RunAPT" class="com.intellij.openapi.actionSystem.EmptyAction"/>
+      <action id="RunAPT" class="consulo.ui.ex.action.EmptyAction"/>
       <!--com.intellij.compiler.actions.ProcessAnnotationsAction-->
       <separator/>
       <action id="CompileProject" class="com.intellij.compiler.actions.CompileProjectAction"/>
@@ -2267,15 +2267,15 @@
     </group>
 
     <group>
-      <action id="CreateLibraryFromFile" class="com.intellij.openapi.actionSystem.EmptyAction"/>
+      <action id="CreateLibraryFromFile" class="consulo.ui.ex.action.EmptyAction"/>
       <!--com.intellij.ide.projectView.actions.MarkLibraryRootAction-->
       <add-to-group group-id="ProjectViewPopupMenuSettingsGroup" relative-to-action="MarkRootGroup" anchor="after"/>
     </group>
 
     <group>
-      <action id="SaveProjectAsTemplateAction" class="com.intellij.openapi.actionSystem.EmptyAction" text="Save Project as Template..."/>
+      <action id="SaveProjectAsTemplateAction" class="consulo.ui.ex.action.EmptyAction" text="Save Project as Template..."/>
       <!--com.intellij.platform.templates.SaveProjectAsTemplateAction-->
-      <action id="ManageProjectTemplatesAction" class="com.intellij.openapi.actionSystem.EmptyAction" text="Manage Project Templates..."/>
+      <action id="ManageProjectTemplatesAction" class="consulo.ui.ex.action.EmptyAction" text="Manage Project Templates..."/>
       <!--com.intellij.platform.templates.ManageProjectTemplatesAction-->
       <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="SaveFileAsTemplate"/>
     </group>

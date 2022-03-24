@@ -16,7 +16,7 @@
 package com.intellij.diff.actions.impl;
 
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.EmptyAction;
+import consulo.ui.ex.action.EmptyAction;
 import consulo.application.dumb.DumbAware;
 
 public abstract class GoToChangePopupAction extends AnAction implements DumbAware {

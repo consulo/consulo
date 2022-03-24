@@ -22,7 +22,7 @@ import com.intellij.execution.impl.ConsoleViewImpl;
 import consulo.process.ProcessHandler;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import com.intellij.execution.ui.ObservableConsoleView;
+import consulo.execution.ui.console.ObservableConsoleView;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.application.ApplicationManager;

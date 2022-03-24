@@ -12,7 +12,7 @@ import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.LightColors;
 import com.intellij.ui.ListFocusTraversalPolicy;
-import com.intellij.ui.SearchTextField;
+import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.JBTextArea;
 import com.intellij.ui.mac.TouchbarDataKeys;
 import com.intellij.util.BooleanFunction;

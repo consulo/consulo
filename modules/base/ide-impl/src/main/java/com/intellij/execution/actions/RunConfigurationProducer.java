@@ -30,6 +30,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -74,7 +75,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
    * @return a container with a prepared run configuration and the context element from which it was created, or null if the context is
    * not applicable to this run configuration producer.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public ConfigurationFromContext createConfigurationFromContext(ConfigurationContext context) {
     final RunnerAndConfigurationSettings settings = cloneTemplateConfiguration(context);
     Ref<PsiElement> ref = new Ref<>(context.getPsiLocation());
@@ -160,7 +161,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
    * @param context contains the information about a location in the source code.
    * @return a configuration (new or existing) matching the context, or null if the context is not applicable to this producer.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public ConfigurationFromContext findOrCreateConfigurationFromContext(ConfigurationContext context) {
     Location location = context.getLocation();
     if (location == null) {
@@ -192,7 +193,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
    * @param context contains the information about a location in the source code.
    * @return an existing configuration matching the context, or null if no such configuration is found.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public RunnerAndConfigurationSettings findExistingConfiguration(ConfigurationContext context) {
     final RunManager runManager = RunManager.getInstance(context.getProject());
     final List<RunnerAndConfigurationSettings> configurations = runManager.getConfigurationSettingsList(myConfigurationFactory.getType());
@@ -223,7 +224,7 @@ public abstract class RunConfigurationProducer<T extends RunConfiguration> {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public RunConfiguration createLightConfiguration(@Nonnull final ConfigurationContext context) {
     RunConfiguration configuration = myConfigurationFactory.createTemplateConfiguration(context.getProject());
     final Ref<PsiElement> ref = new Ref<>(context.getPsiLocation());

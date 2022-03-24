@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
-import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
+import consulo.language.cacheBuilder.CacheBuilderRegistry;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import com.intellij.openapi.util.Comparing;

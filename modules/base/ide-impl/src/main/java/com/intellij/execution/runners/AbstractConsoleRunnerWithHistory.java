@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.runners;
 
+import consulo.execution.process.ProcessTerminatedListener;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionManager;
 import consulo.execution.executor.Executor;
@@ -22,7 +23,6 @@ import com.intellij.execution.console.ConsoleExecuteAction;
 import com.intellij.execution.console.LanguageConsoleView;
 import com.intellij.execution.console.ProcessBackedConsoleExecuteActionHandler;
 import consulo.execution.executor.DefaultRunExecutor;
-import com.intellij.execution.process.*;
 import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.actions.CloseAction;
 import com.intellij.ide.CommonActionsManager;

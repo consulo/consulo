@@ -23,6 +23,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.util.dataholder.Key;
 import com.intellij.ui.content.*;

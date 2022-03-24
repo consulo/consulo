@@ -19,7 +19,7 @@ package com.intellij.execution.configurations;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.OSProcessHandler;
-import com.intellij.execution.process.ProcessTerminatedListener;
+import consulo.execution.process.ProcessTerminatedListener;
 import com.intellij.openapi.projectRoots.JdkUtil;
 import consulo.content.bundle.Sdk;
 import consulo.process.cmd.ParametersList;

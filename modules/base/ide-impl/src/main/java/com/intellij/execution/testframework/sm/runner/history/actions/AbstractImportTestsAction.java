@@ -16,15 +16,11 @@
 package com.intellij.execution.testframework.sm.runner.history.actions;
 
 import com.intellij.execution.*;
-import com.intellij.execution.configurations.*;
+import consulo.execution.configuration.*;
 import consulo.execution.executor.DefaultRunExecutor;
 import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
 import consulo.execution.*;
-import consulo.execution.configuration.ConfigurationType;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.RunProfile;
-import consulo.execution.configuration.RunProfileState;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ExecutionEnvironment;

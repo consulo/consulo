@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.SearchTextField;
+import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.UIUtil;
 
 import javax.swing.*;

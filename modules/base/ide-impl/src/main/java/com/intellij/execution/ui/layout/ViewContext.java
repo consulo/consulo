@@ -31,7 +31,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface ViewContext extends Disposable {
-  Key<Content[]> CONTENT_KEY = Key.create("runnerContents");
+  @Deprecated
+  Key<Content[]> CONTENT_KEY = Content.KEY_OF_ARRAY;
   Key<ViewContext> CONTEXT_KEY = Key.create("runnerUiContext");
 
   String CELL_TOOLBAR_PLACE = "debuggerCellToolbar";

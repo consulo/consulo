@@ -2,7 +2,7 @@
 
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
-import com.intellij.lang.cacheBuilder.CacheBuilderRegistry;
+import consulo.language.cacheBuilder.CacheBuilderRegistry;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;

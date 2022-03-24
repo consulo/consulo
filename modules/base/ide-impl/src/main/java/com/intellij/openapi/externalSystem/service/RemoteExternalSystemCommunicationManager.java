@@ -26,7 +26,7 @@ import consulo.execution.configuration.RunProfileState;
 import com.intellij.execution.configurations.SimpleJavaParameters;
 import consulo.process.local.OSProcessHandler;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.process.ProcessTerminatedListener;
+import consulo.execution.process.ProcessTerminatedListener;
 import com.intellij.execution.rmi.RemoteProcessSupport;
 import consulo.execution.runner.ProgramRunner;
 import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;

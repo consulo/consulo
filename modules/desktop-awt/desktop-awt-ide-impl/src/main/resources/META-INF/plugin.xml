@@ -106,7 +106,7 @@
 
       <separator/>
 
-      <action internal="true" id="CompilerTest" class="com.intellij.openapi.actionSystem.EmptyAction"
+      <action internal="true" id="CompilerTest" class="consulo.ui.ex.action.EmptyAction"
               text="Test Rebuild Performance"/>
       <!--com.intellij.compiler.impl.javaCompiler.api.CompilerPerfTestAction-->
 
