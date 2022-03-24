@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service.task.ui;
 
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import consulo.execution.executor.DefaultRunExecutor;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import consulo.project.ui.notification.NotificationGroup;

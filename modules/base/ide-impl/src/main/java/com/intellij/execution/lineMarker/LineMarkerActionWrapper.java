@@ -2,8 +2,8 @@
 package com.intellij.execution.lineMarker;
 
 import com.intellij.codeInsight.intention.PriorityAction;
-import com.intellij.execution.Location;
-import com.intellij.execution.PsiLocation;
+import consulo.execution.action.Location;
+import consulo.execution.action.PsiLocation;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.util.Pair;
 import consulo.dataContext.DataContext;

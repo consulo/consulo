@@ -15,24 +15,24 @@
  */
 package com.intellij.execution.testframework;
 
-import consulo.execution.ExecutionBundle;
-import com.intellij.execution.Location;
-import consulo.execution.configuration.RunConfiguration;
-import consulo.execution.configuration.RunProfile;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.AppIconScheme;
-import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.AppIcon;
 import com.intellij.ui.SystemNotifications;
 import consulo.dataContext.DataContext;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.action.Location;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunProfile;
+import consulo.fileEditor.OpenFileDescriptor;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.util.dataholder.Key;
 
@@ -104,7 +104,7 @@ public class TestsUIUtil {
       if (openFailureLine) {
         return proxy.getDescriptor(location, testConsoleProperties);
       }
-      final OpenFileDescriptorImpl openFileDescriptor = location == null ? null : location.getOpenFileDescriptor();
+      final OpenFileDescriptor openFileDescriptor = location == null ? null : location.getOpenFileDescriptor();
       if (openFileDescriptor != null && openFileDescriptor.getFile().isValid()) {
         return openFileDescriptor;
       }

@@ -17,7 +17,7 @@ package com.intellij.execution.testframework.sm;
 
 import consulo.process.ExecutionException;
 import consulo.execution.executor.Executor;
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import consulo.execution.configuration.CommandLineState;
 import consulo.execution.configuration.ModuleRunConfiguration;
 import consulo.process.event.ProcessAdapter;

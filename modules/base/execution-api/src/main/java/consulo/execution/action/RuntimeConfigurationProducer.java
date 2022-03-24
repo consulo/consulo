@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.intellij.execution.junit;
+package consulo.execution.action;
 
-import com.intellij.execution.*;
-import com.intellij.execution.actions.ConfigurationContext;
 import consulo.execution.executor.Executor;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -41,7 +39,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * @deprecated please use {@link com.intellij.execution.actions.RunConfigurationProducer} instead
+ * @deprecated please use {@link RunConfigurationProducer} instead
  */
 public abstract class RuntimeConfigurationProducer implements Comparable, Cloneable {
   public static final ExtensionPointName<RuntimeConfigurationProducer> RUNTIME_CONFIGURATION_PRODUCER = ExtensionPointName.create("consulo.configurationProducer");

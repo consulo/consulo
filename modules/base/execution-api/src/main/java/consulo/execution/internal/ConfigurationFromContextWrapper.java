@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.impl;
+package consulo.execution.internal;
 
 import consulo.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.ConfigurationFromContext;
-import com.intellij.execution.junit.RuntimeConfigurationProducer;
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.action.ConfigurationFromContext;
+import consulo.execution.action.RuntimeConfigurationProducer;
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nonnull;
 
 /**
- * Wraps a {@link com.intellij.execution.junit.RuntimeConfigurationProducer} in a {@link com.intellij.execution.actions.ConfigurationFromContext}.
+ * Wraps a {@link RuntimeConfigurationProducer} in a {@link ConfigurationFromContext}.
  *
  * @author yole
  */
-public class ConfigurationFromContextWrapper extends ConfigurationFromContext {
+class ConfigurationFromContextWrapper extends ConfigurationFromContext {
   private final RuntimeConfigurationProducer myProducer;
 
-  public ConfigurationFromContextWrapper(RuntimeConfigurationProducer producer) {
+  ConfigurationFromContextWrapper(RuntimeConfigurationProducer producer) {
     myProducer = producer;
   }
 
@@ -58,7 +59,6 @@ public class ConfigurationFromContextWrapper extends ConfigurationFromContext {
 
   @Override
   public boolean isPreferredTo(ConfigurationFromContext other) {
-    return other instanceof ConfigurationFromContextWrapper &&
-           myProducer.compareTo(((ConfigurationFromContextWrapper) other).myProducer) < 0;
+    return other instanceof ConfigurationFromContextWrapper && myProducer.compareTo(((ConfigurationFromContextWrapper)other).myProducer) < 0;
   }
 }

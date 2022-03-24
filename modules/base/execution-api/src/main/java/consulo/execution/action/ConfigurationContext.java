@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package com.intellij.execution.actions;
+package consulo.execution.action;
 
-import com.intellij.execution.Location;
-import com.intellij.execution.PsiLocation;
-import consulo.execution.configuration.ConfigurationTypeUtil;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.util.Comparing;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.codeEditor.Editor;
@@ -29,8 +24,9 @@ import consulo.dataContext.DataManager;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationType;
+import consulo.execution.configuration.ConfigurationTypeUtil;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.language.editor.CommonDataKeys;
+import consulo.execution.internal.PreferredProducerFind;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -41,7 +37,9 @@ import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -89,8 +87,8 @@ public class ConfigurationContext {
   @RequiredUIAccess
   private ConfigurationContext(final DataContext dataContext) {
     myRuntimeConfiguration = dataContext.getData(RunConfiguration.DATA_KEY);
-    myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
-    myModule = dataContext.getData(CommonDataKeys.MODULE);
+    myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
+    myModule = dataContext.getData(Module.KEY);
     @SuppressWarnings({"unchecked"}) final Location<PsiElement> location = (Location<PsiElement>)dataContext.getData(Location.DATA_KEY);
     if (location != null) {
       myLocation = location;
@@ -98,7 +96,7 @@ public class ConfigurationContext {
       myMultipleSelection = locations != null && locations.length > 1;
       return;
     }
-    final Project project = dataContext.getData(CommonDataKeys.PROJECT);
+    final Project project = dataContext.getData(Project.KEY);
     if (project == null) {
       myLocation = null;
       return;
@@ -109,12 +107,12 @@ public class ConfigurationContext {
       return;
     }
     myLocation = new PsiLocation<>(project, myModule, element);
-    final PsiElement[] elements = dataContext.getData(CommonDataKeys.PSI_ELEMENT_ARRAY);
+    final PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
     if (elements != null) {
       myMultipleSelection = elements.length > 1;
     }
     else {
-      final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
       myMultipleSelection = files != null && files.length > 1;
     }
   }
@@ -137,7 +135,7 @@ public class ConfigurationContext {
    *
    * @return the configuration, or null if none of the producers were able to create a configuration from this context.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public synchronized RunnerAndConfigurationSettings getConfiguration() {
     if (myConfiguration == null && !myInitialized) {
       createConfiguration();
@@ -162,7 +160,7 @@ public class ConfigurationContext {
    *
    * @return the source code location, or null if no source code fragment is currently selected.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public Location getLocation() {
     return myLocation;
   }
@@ -182,7 +180,7 @@ public class ConfigurationContext {
    *
    * @return an existing configuration, or null if none was found.
    */
-  @javax.annotation.Nullable
+  @Nullable
   @SuppressWarnings("deprecation")
   public RunnerAndConfigurationSettings findExisting() {
     if (myExistingConfiguration != null) return myExistingConfiguration.get();
@@ -196,10 +194,10 @@ public class ConfigurationContext {
       return null;
     }
 
-    final List<com.intellij.execution.junit.RuntimeConfigurationProducer> producers = findPreferredProducers();
+    final List<RuntimeConfigurationProducer> producers = findPreferredProducers();
     if (myRuntimeConfiguration != null) {
       if (producers != null) {
-        for (com.intellij.execution.junit.RuntimeConfigurationProducer producer : producers) {
+        for (RuntimeConfigurationProducer producer : producers) {
           final RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(myLocation, this);
           if (configuration != null && configuration.getConfiguration() == myRuntimeConfiguration) {
             myExistingConfiguration.set(configuration);
@@ -214,7 +212,7 @@ public class ConfigurationContext {
       }
     }
     if (producers != null) {
-      for (com.intellij.execution.junit.RuntimeConfigurationProducer producer : producers) {
+      for (RuntimeConfigurationProducer producer : producers) {
         final RunnerAndConfigurationSettings configuration = producer.findExistingConfiguration(myLocation, this);
         if (configuration != null) {
           myExistingConfiguration.set(configuration);
@@ -234,7 +232,7 @@ public class ConfigurationContext {
   @RequiredUIAccess
   private static PsiElement getSelectedPsiElement(final DataContext dataContext, final Project project) {
     PsiElement element = null;
-    final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
+    final Editor editor = dataContext.getData(Editor.KEY);
     if (editor != null) {
       final PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
       if (psiFile != null) {
@@ -246,11 +244,11 @@ public class ConfigurationContext {
       }
     }
     if (element == null) {
-      final PsiElement[] elements = dataContext.getData(CommonDataKeys.PSI_ELEMENT_ARRAY);
+      final PsiElement[] elements = dataContext.getData(PsiElement.KEY_OF_ARRAY);
       element = elements != null && elements.length > 0 ? elements[0] : null;
     }
     if (element == null) {
-      final VirtualFile[] files = dataContext.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY);
+      final VirtualFile[] files = dataContext.getData(VirtualFile.KEY_OF_ARRAY);
       if (files != null && files.length > 0) {
         element = PsiManager.getInstance(project).findFile(files[0]);
       }
@@ -282,7 +280,7 @@ public class ConfigurationContext {
    * @param type {@link ConfigurationType} instance to filter original runtime configuration by its type
    * @return {@link RunConfiguration} instance, it could be null
    */
-  @javax.annotation.Nullable
+  @Nullable
   public RunConfiguration getOriginalConfiguration(@Nullable ConfigurationType type) {
     if (type == null) {
       return myRuntimeConfiguration;
@@ -317,20 +315,20 @@ public class ConfigurationContext {
 
   // region deprecated stuff
   @SuppressWarnings("deprecation")
-  private List<com.intellij.execution.junit.RuntimeConfigurationProducer> myPreferredProducers;
+  private List<RuntimeConfigurationProducer> myPreferredProducers;
 
   @Deprecated
-  @javax.annotation.Nullable
+  @Nullable
   @SuppressWarnings({"deprecation", "unused"})
-  public RunnerAndConfigurationSettings updateConfiguration(final com.intellij.execution.junit.RuntimeConfigurationProducer producer) {
+  public RunnerAndConfigurationSettings updateConfiguration(final RuntimeConfigurationProducer producer) {
     myConfiguration = producer.getConfiguration();
     return myConfiguration;
   }
 
   @Deprecated
-  @javax.annotation.Nullable
+  @Nullable
   @SuppressWarnings("deprecation")
-  public List<com.intellij.execution.junit.RuntimeConfigurationProducer> findPreferredProducers() {
+  public List<RuntimeConfigurationProducer> findPreferredProducers() {
     if (myPreferredProducers == null) {
       myPreferredProducers = PreferredProducerFind.findPreferredProducers(myLocation, this, true);
     }

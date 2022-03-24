@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import com.intellij.execution.testframework.*;

@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package com.intellij.execution.actions;
+package consulo.execution.internal;
 
-import com.intellij.execution.Location;
-import consulo.execution.RunnerAndConfigurationSettings;
-import consulo.execution.configuration.ConfigurationType;
-import com.intellij.execution.impl.ConfigurationFromContextWrapper;
-import com.intellij.execution.junit.RuntimeConfigurationProducer;
 import consulo.component.extension.ExtensionException;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.action.*;
+import consulo.execution.configuration.ConfigurationType;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -31,7 +29,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-class PreferredProducerFind {
+public class PreferredProducerFind {
   private static final Logger LOG = Logger.getInstance(PreferredProducerFind.class);
 
   private PreferredProducerFind() {}

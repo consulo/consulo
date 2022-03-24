@@ -254,7 +254,6 @@ open module consulo.ide.impl {
   exports com.intellij.compiler.impl.packagingCompiler;
   exports com.intellij.compiler.impl.resourceCompiler;
   exports com.intellij.compiler.make;
-  exports com.intellij.compiler.options;
   exports com.intellij.compiler.progress;
   exports com.intellij.concurrency;
   exports com.intellij.conversion;
@@ -322,7 +321,6 @@ open module consulo.ide.impl {
   exports com.intellij.execution.filters.impl;
   exports com.intellij.execution.impl;
   exports com.intellij.execution.impl.statistics;
-  exports com.intellij.execution.junit;
   exports com.intellij.execution.lineMarker;
   exports com.intellij.execution.process;
   exports com.intellij.execution.process.impl;

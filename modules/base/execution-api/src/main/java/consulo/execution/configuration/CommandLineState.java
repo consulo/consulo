@@ -42,6 +42,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.action.ToggleAction;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Base implementation of {@link RunProfileState}. Takes care of putting together a process and a console and wrapping them into an
@@ -92,7 +93,7 @@ public abstract class CommandLineState implements RunProfileState {
     return new DefaultExecutionResult(console, processHandler, createActions(console, processHandler, executor));
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   protected ConsoleView createConsole(@Nonnull final Executor executor) throws ExecutionException {
     TextConsoleBuilder builder = getConsoleBuilder();
     return builder != null ? builder.getConsole() : null;

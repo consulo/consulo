@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service.execution;
 
-import com.intellij.execution.PsiLocation;
+import consulo.execution.action.PsiLocation;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

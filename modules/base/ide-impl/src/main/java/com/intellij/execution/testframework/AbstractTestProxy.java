@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import consulo.project.Project;
 import consulo.disposer.Disposer;

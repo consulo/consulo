@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.externalSystem.service.execution;
 
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import com.intellij.execution.RunManagerEx;
 import consulo.execution.RunnerAndConfigurationSettings;
-import com.intellij.execution.actions.ConfigurationContext;
+import consulo.execution.action.ConfigurationContext;
 import consulo.execution.configuration.RunConfiguration;
-import com.intellij.execution.junit.RuntimeConfigurationProducer;
+import consulo.execution.action.RuntimeConfigurationProducer;
 import com.intellij.openapi.externalSystem.model.execution.ExternalSystemTaskExecutionSettings;
 import com.intellij.openapi.externalSystem.model.execution.ExternalTaskExecutionInfo;
 import consulo.language.psi.PsiElement;

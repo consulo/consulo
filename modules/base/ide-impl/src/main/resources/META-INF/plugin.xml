@@ -780,9 +780,9 @@
     <extensionPoint name="console.folding" interface="com.intellij.execution.ConsoleFolding"/>
 
     <extensionPoint name="configurationProducer"
-                    interface="com.intellij.execution.junit.RuntimeConfigurationProducer"/>
+                    interface="consulo.execution.action.RuntimeConfigurationProducer"/>
 
-    <extensionPoint name="runConfigurationProducer" interface="com.intellij.execution.actions.RunConfigurationProducer"/>
+    <extensionPoint name="runConfigurationProducer" interface="consulo.execution.action.RunConfigurationProducer"/>
 
     <extensionPoint name="runLineMarkerContributor" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.execution.lineMarker.RunLineMarkerContributor"/>
@@ -1640,8 +1640,8 @@
     <copyPastePostProcessor implementation="com.intellij.codeInsight.editorActions.CopyPasteFoldingProcessor"/>
 
 
-    <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRun" id="compileBeforeRun"/>
-    <stepsBeforeRunProvider implementation="com.intellij.compiler.options.CompileStepBeforeRunNoErrorCheck"
+    <stepsBeforeRunProvider implementation="consulo.compiler.execution.CompileStepBeforeRun" id="compileBeforeRun"/>
+    <stepsBeforeRunProvider implementation="consulo.compiler.execution.CompileStepBeforeRunNoErrorCheck"
                             id="compileBeforeRunNoErrorCheck" order="after compileBeforeRun"/>
     <stepsBeforeRunProvider implementation="consulo.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider"
                             order="after compileBeforeRunNoErrorCheck"/>

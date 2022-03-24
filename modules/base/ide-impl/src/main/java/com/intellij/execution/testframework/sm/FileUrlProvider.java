@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.testframework.sm;
 
-import com.intellij.execution.Location;
-import com.intellij.execution.PsiLocation;
+import consulo.execution.action.Location;
+import consulo.execution.action.PsiLocation;
 import com.intellij.execution.testframework.sm.runner.SMTestLocator;
 import consulo.document.Document;
 import consulo.language.psi.*;

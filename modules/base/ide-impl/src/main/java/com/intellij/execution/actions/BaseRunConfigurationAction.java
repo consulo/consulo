@@ -19,6 +19,8 @@ package com.intellij.execution.actions;
 import consulo.execution.ExecutionBundle;
 import com.intellij.execution.ProgramRunnerUtil;
 import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.LocatableConfiguration;
 import consulo.execution.configuration.LocatableConfigurationBase;

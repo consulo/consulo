@@ -16,7 +16,7 @@
 package com.intellij.execution.configuration;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;

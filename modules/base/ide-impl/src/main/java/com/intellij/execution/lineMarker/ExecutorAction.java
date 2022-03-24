@@ -15,6 +15,9 @@
  */
 package com.intellij.execution.lineMarker;
 
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.action.ConfigurationFromContext;
+import consulo.execution.action.RunConfigurationProducer;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import com.intellij.execution.actions.*;
@@ -23,6 +26,7 @@ import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.impl.RunManagerImpl;
 import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
 import consulo.dataContext.DataManager;
+import consulo.execution.internal.ConfigurationFromContextImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

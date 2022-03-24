@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import consulo.execution.executor.Executor;
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.filters.CompositeFilter;

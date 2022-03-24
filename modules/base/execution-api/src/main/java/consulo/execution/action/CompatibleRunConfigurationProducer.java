@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.actions;
+package consulo.execution.action;
 
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
-import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 
 public abstract class CompatibleRunConfigurationProducer<T extends RunConfiguration> extends RunConfigurationProducer<T> {

@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution;
+package consulo.execution.action;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.fileEditor.OpenFileDescriptor;
+import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Iterator;
 
 public abstract class Location<E extends PsiElement> {
@@ -52,12 +53,12 @@ public abstract class Location<E extends PsiElement> {
   }
 
   @Nullable
-  public OpenFileDescriptorImpl getOpenFileDescriptor() {
+  public OpenFileDescriptor getOpenFileDescriptor() {
     VirtualFile virtualFile = getVirtualFile();
     if (virtualFile == null) {
       return null;
     }
-    return new OpenFileDescriptorImpl(getProject(), virtualFile, getPsiElement().getTextOffset());
+    return OpenFileDescriptorFactory.getInstance(getProject()).builder(virtualFile).offset(getPsiElement().getTextOffset()).build();
   }
 
   @Nullable

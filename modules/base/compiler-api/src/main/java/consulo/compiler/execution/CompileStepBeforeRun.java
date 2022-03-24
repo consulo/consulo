@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.compiler.options;
+package consulo.compiler.execution;
 
-import consulo.execution.configuration.RunConfigurationBase;
-import com.intellij.openapi.util.Comparing;
 import consulo.application.AllIcons;
 import consulo.application.TransactionGuard;
 import consulo.compiler.CompileStatusNotification;
@@ -27,6 +25,7 @@ import consulo.execution.BeforeRunTask;
 import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfileWithCompileBeforeLaunchOption;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.logging.Logger;
@@ -37,6 +36,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Comparing;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

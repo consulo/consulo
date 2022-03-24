@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.execution.actions;
+package consulo.execution.action;
 
-import com.intellij.execution.Location;
-import com.intellij.execution.PsiLocation;
+import consulo.component.extension.ExtensionPointName;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.internal.ConfigurationFromContextImpl;
+import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
-import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

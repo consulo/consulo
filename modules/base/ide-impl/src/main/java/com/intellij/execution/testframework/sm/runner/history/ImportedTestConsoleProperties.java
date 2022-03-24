@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner.history;
 
 import consulo.execution.executor.Executor;
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.ui.console.Filter;
 import consulo.process.ProcessHandler;

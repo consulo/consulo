@@ -17,6 +17,7 @@ module consulo.execution.api {
   requires transitive consulo.language.api;
 
   exports consulo.execution;
+  exports consulo.execution.action;
   exports consulo.execution.configuration;
   exports consulo.execution.configuration.log;
   exports consulo.execution.configuration.ui;

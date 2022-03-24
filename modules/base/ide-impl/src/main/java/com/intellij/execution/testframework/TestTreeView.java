@@ -20,7 +20,7 @@
  */
 package com.intellij.execution.testframework;
 
-import com.intellij.execution.Location;
+import consulo.execution.action.Location;
 import com.intellij.execution.testframework.ui.BaseTestProxyNodeDescriptor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CopyProvider;

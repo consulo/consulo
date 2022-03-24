@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.compiler.options;
+package consulo.compiler.execution;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
