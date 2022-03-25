@@ -31,35 +31,6 @@
   <packaging>pom</packaging>
 
   <dependencies>
-    <!--test dependencies-->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jmock</groupId>
-      <artifactId>jmock</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jmock</groupId>
-      <artifactId>jmock-junit4</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jmock</groupId>
-      <artifactId>jmock-legacy</artifactId>
-    </dependency>
-
-    <!-- main provided dependencies-->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>consulo.internal</groupId>
-      <artifactId>forms_rt</artifactId>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
       <artifactId>consulo-annotation</artifactId>
