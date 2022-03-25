@@ -16,7 +16,7 @@
 package com.intellij.usages.impl;
 
 import com.intellij.find.SearchInBackgroundOption;
-import consulo.ide.impl.psi.search.EverythingGlobalScope;
+import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.ide.impl.psi.search.ProjectAndLibrariesScope;
 import consulo.ide.impl.psi.search.ProjectScopeImpl;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -39,7 +39,6 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.search.*;
 import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.content.Content;
 import com.intellij.usageView.UsageViewBundle;

@@ -44,7 +44,7 @@ import com.intellij.openapi.vfs.encoding.ChangeFileEncodingAction;
 import com.intellij.openapi.vfs.encoding.EncodingUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import consulo.util.collection.SmartList;
 import consulo.logging.Logger;

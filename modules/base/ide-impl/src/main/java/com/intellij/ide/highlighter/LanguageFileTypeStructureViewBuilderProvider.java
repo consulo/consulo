@@ -22,7 +22,7 @@ package com.intellij.ide.highlighter;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilderProvider;
 import com.intellij.lang.LanguageStructureViewBuilder;
-import com.intellij.lang.PsiStructureViewFactory;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;

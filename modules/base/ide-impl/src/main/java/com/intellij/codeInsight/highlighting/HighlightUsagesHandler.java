@@ -25,7 +25,7 @@ import consulo.language.editor.inject.EditorWindow;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.pom.PsiDeclaredTarget;
 import consulo.ide.impl.psi.ElementDescriptionUtil;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import com.intellij.usages.UsageTarget;
 import com.intellij.usages.UsageTargetUtil;
 import com.intellij.util.containers.ContainerUtil;

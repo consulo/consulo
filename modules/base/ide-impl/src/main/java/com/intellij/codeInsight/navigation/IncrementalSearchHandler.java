@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.navigation;
 
+import consulo.codeEditor.event.CaretAdapter;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
@@ -38,7 +39,6 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
 import consulo.codeEditor.action.TypedActionHandler;
 import consulo.codeEditor.EditorColors;
-import com.intellij.openapi.editor.event.*;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;

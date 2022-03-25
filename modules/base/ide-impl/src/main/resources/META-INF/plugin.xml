@@ -514,7 +514,7 @@
                     interface="com.intellij.lang.folding.CustomFoldingProvider"/>
     <extensionPoint name="lang.psiStructureViewFactory"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.PsiStructureViewFactory"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.structureView.PsiStructureViewFactory"/>
     </extensionPoint>
 
     <extensionPoint name="lang.structureViewExtension"
@@ -604,11 +604,11 @@
     <extensionPoint name="codeUsageScopeOptimizer" interface="consulo.language.psi.search.ScopeOptimizer"/>
 
     <extensionPoint name="gotoClassContributor"
-                    interface="com.intellij.navigation.ChooseByNameContributor"/>
+                    interface="consulo.ide.navigation.ChooseByNameContributor"/>
     <extensionPoint name="gotoSymbolContributor"
-                    interface="com.intellij.navigation.ChooseByNameContributor"/>
+                    interface="consulo.ide.navigation.ChooseByNameContributor"/>
     <extensionPoint name="gotoFileContributor"
-                    interface="com.intellij.navigation.ChooseByNameContributor"/>
+                    interface="consulo.ide.navigation.ChooseByNameContributor"/>
     <extensionPoint name="anonymousElementProvider"
                     interface="com.intellij.navigation.AnonymousElementProvider"/>
 
@@ -713,7 +713,7 @@
     </extensionPoint>
 
     <!-- File-Based Index-->
-    <extensionPoint name="fileBasedIndex" interface="com.intellij.util.indexing.FileBasedIndexExtension"/>
+    <extensionPoint name="fileBasedIndex" interface="consulo.language.psi.stub.FileBasedIndexExtension"/>
     <extensionPoint name="stubIndex" interface="consulo.language.psi.stub.StubIndexExtension"/>
     <extensionPoint name="indexedRootsContributor" interface="com.intellij.util.indexing.IndexableSetContributor"/>
     <extensionPoint name="include.provider" interface="consulo.ide.impl.psi.impl.include.FileIncludeProvider"/>
@@ -856,7 +856,7 @@
 
     <extensionPoint name="lang.implementationTextSelectioner"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.hint.ImplementationTextSelectioner"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.ImplementationTextSelectioner"/>
     </extensionPoint>
 
     <extensionPoint name="lang.lineWrapStrategy"
@@ -1071,7 +1071,7 @@
     </extensionPoint>
 
     <extensionPoint name="todoIndexer" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.util.indexing.DataIndexer"/>
+      <with attribute="implementationClass" implements="consulo.index.io.DataIndexer"/>
     </extensionPoint>
 
     <extensionPoint name="refactoring.elementListenerProvider"

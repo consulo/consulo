@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.navigation;
+package consulo.ide.navigation;
 
-import com.intellij.util.indexing.FindSymbolParameters;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.stub.IdFilter;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
@@ -42,6 +42,6 @@ public interface ChooseByNameContributorEx extends ChooseByNameContributor {
   default NavigationItem[] getItemsByName(String name, String pattern, Project project, boolean includeNonProjectItems) {
     List<NavigationItem> result = new ArrayList<>();
     processElementsWithName(name, result::add, FindSymbolParameters.simple(project, includeNonProjectItems));
-    return result.isEmpty() ? NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY : result.toArray(NavigationItem.EMPTY_NAVIGATION_ITEM_ARRAY);
+    return result.isEmpty() ? NavigationItem.EMPTY_ARRAY : result.toArray(NavigationItem.EMPTY_ARRAY);
   }
 }

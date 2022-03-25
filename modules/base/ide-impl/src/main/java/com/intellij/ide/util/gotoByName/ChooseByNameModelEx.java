@@ -17,7 +17,7 @@ package com.intellij.ide.util.gotoByName;
 
 import consulo.language.psi.PsiElement;
 import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.FindSymbolParameters;
+import consulo.language.psi.search.FindSymbolParameters;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

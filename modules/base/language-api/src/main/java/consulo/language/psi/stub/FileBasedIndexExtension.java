@@ -1,17 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util.indexing;
+package consulo.language.psi.stub;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.ID;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.language.psi.stub.FileContent;
-import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.vfs.PersistentFSConstants;
+import consulo.index.io.IndexExtension;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * <a href="http://www.jetbrains.org/intellij/sdk/docs/basics/indexing_and_psi_stubs/file_based_indexes.html">SDK Docs</a>
@@ -20,7 +18,6 @@ import java.util.Collections;
  *
  * @author Eugene Zhuravlev
  */
-//@ApiStatus.OverrideOnly
 public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V, FileContent> {
 
   public static final ExtensionPointName<FileBasedIndexExtension> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.fileBasedIndex");
@@ -64,7 +61,7 @@ public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V,
    */
   @Nonnull
   public Collection<FileType> getFileTypesWithSizeLimitNotApplicable() {
-    return Collections.emptyList();
+    return List.of();
   }
 
   public boolean keyIsUniqueForIndexedFile() {

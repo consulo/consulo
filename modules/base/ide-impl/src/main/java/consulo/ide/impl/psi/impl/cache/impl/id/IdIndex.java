@@ -2,9 +2,11 @@
 
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
+import consulo.index.io.DataIndexer;
 import consulo.language.cacheBuilder.CacheBuilderRegistry;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;

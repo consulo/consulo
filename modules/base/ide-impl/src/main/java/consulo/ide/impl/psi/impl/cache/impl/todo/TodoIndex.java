@@ -16,12 +16,14 @@
 
 package consulo.ide.impl.psi.impl.cache.impl.todo;
 
+import consulo.index.io.DataIndexer;
 import consulo.index.io.ID;
 import consulo.language.Language;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.application.Application;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
@@ -32,7 +34,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.ide.impl.psi.search.IndexPatternProvider;
 import consulo.language.ast.TokenSet;
-import com.intellij.util.indexing.*;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.IntInlineKeyDescriptor;
 import consulo.index.io.KeyDescriptor;

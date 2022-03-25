@@ -2,8 +2,10 @@
 
 package consulo.ide.impl.psi.impl.include;
 
+import consulo.index.io.DataIndexer;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
@@ -12,7 +14,6 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
-import com.intellij.util.indexing.*;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.data.IOUtil;

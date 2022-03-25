@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.util;
+package consulo.language.editor.internal;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Caret;

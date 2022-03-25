@@ -22,7 +22,6 @@ import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: ik
  * Date: 03.04.2003
  * Time: 11:22:05

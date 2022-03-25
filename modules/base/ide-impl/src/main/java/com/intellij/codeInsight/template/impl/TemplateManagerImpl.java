@@ -34,7 +34,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.OffsetKey;

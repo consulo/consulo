@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.editorActions;
+package consulo.language.editor.action;
 
-import consulo.language.ast.TokenSet;
-import consulo.language.ast.IElementType;
-import consulo.language.editor.action.QuoteHandler;
-import consulo.codeEditor.HighlighterIterator;
+import consulo.annotation.UsedInPlugin;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.HighlighterIterator;
 import consulo.document.Document;
+import consulo.language.ast.IElementType;
+import consulo.language.ast.TokenSet;
 
+@UsedInPlugin
 public class SimpleTokenSetQuoteHandler implements QuoteHandler {
   protected final TokenSet myLiteralTokenSet;
 

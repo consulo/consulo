@@ -35,7 +35,7 @@ import consulo.codeEditor.impl.EditorActionUtil;
 import com.intellij.openapi.editor.actions.IncrementalFindAction;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
-import com.intellij.openapi.editor.event.CaretAdapter;
+import consulo.codeEditor.event.CaretAdapter;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.codeEditor.markup.RangeHighlighterEx;

@@ -19,7 +19,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.plain.PlainTextLanguage;
 import javax.annotation.Nonnull;
 
-import static consulo.ide.impl.psi.util.PsiUtilBase.getLanguageInEditor;
+import static consulo.language.editor.internal.PsiUtilBase.getLanguageInEditor;
 
 /**
  * Is assumed to be a single place to hold various constants to use during formatting.

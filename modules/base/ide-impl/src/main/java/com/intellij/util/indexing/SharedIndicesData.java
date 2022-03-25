@@ -15,6 +15,8 @@
  */
 package com.intellij.util.indexing;
 
+import consulo.language.psi.stub.FileBasedIndexExtension;
+import consulo.index.io.IndexExtension;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.io.BufferExposingByteArrayOutputStream;

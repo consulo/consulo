@@ -17,13 +17,13 @@
 /*
  * @author max
  */
-package consulo.ide.impl.psi.search;
+package consulo.language.psi.scope;
 
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 public class EverythingGlobalScope extends GlobalSearchScope {

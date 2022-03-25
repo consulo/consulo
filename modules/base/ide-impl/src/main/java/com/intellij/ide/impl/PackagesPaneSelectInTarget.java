@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.component.extension.ExtensionTypeImpl;
 import consulo.virtualFileSystem.VirtualFile;
 

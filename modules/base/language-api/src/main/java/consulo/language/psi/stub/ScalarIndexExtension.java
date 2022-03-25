@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.intellij.util.indexing;
+package consulo.language.psi.stub;
 
+import consulo.index.io.VoidDataExternalizer;
 import consulo.index.io.data.DataExternalizer;
-import com.intellij.util.io.VoidDataExternalizer;
+
 import javax.annotation.Nonnull;
 
 /**
  * A specialization of FileBasedIndexExtension allowing to create a mapping [DataObject -> List of files containing this object]
  *
  */
-public abstract class ScalarIndexExtension<K> extends FileBasedIndexExtension<K, Void>{
+public abstract class ScalarIndexExtension<K> extends FileBasedIndexExtension<K, Void> {
 
   /**
    * To remove in IDEA 2018.1. Use {@link VoidDataExternalizer.INSTANCE}

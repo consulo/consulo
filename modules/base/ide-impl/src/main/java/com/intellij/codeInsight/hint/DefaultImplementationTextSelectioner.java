@@ -20,6 +20,7 @@
  */
 package com.intellij.codeInsight.hint;
 
+import consulo.language.editor.ImplementationTextSelectioner;
 import consulo.logging.Logger;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;

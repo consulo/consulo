@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.fileType.FileTypeExtension;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.indexing.DataIndexer;
+import consulo.index.io.DataIndexer;
 import consulo.language.psi.stub.FileContent;
 import consulo.container.plugin.PluginIds;
 

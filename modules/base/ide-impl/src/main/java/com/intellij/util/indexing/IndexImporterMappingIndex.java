@@ -2,6 +2,7 @@
 package com.intellij.util.indexing;
 
 import com.intellij.index.IndexImporterFactory;
+import consulo.index.io.IndexExtension;
 import consulo.logging.Logger;
 import com.intellij.util.indexing.impl.InputData;
 import javax.annotation.Nonnull;

@@ -18,7 +18,7 @@ package com.intellij.ide.util;
 
 import com.intellij.ide.IdeBundle;
 import consulo.language.internal.LanguageFindUsages;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.psi.*;
 
 import javax.annotation.Nonnull;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2016 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,17 @@
  * limitations under the License.
  */
 
-package com.intellij.util.indexing;
-
-import consulo.index.io.data.DataExternalizer;
-import consulo.index.io.KeyDescriptor;
-import consulo.index.io.IndexId;
+package consulo.index.io;
 
 import javax.annotation.Nonnull;
 
+import java.util.Map;
+
 /**
  * @author Eugene Zhuravlev
- * V class MUST have equals / hashcode properly defined!!!
+ *         Date: Dec 10, 2007
  */
-public abstract class IndexExtension<K, V, I> {
+public interface DataIndexer<Key, Value, Data> {
   @Nonnull
-  public abstract IndexId<K, V> getName();
-
-  @Nonnull
-  public abstract DataIndexer<K, V, I> getIndexer();
-
-  @Nonnull
-  public abstract KeyDescriptor<K> getKeyDescriptor();
-
-  @Nonnull
-  public abstract DataExternalizer<V> getValueExternalizer();
-
-  public abstract int getVersion();
+  Map<Key,Value> map(Data inputData);
 }

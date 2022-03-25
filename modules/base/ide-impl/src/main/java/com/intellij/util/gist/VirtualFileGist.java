@@ -17,7 +17,7 @@ package com.intellij.util.gist;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.indexing.FileBasedIndexExtension;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

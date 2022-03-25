@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.structureView;
+package consulo.language.editor.structureView;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import com.intellij.openapi.editor.event.CaretAdapter;
+import consulo.codeEditor.event.CaretAdapter;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -26,15 +26,15 @@ import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.fileEditor.structureView.event.FileEditorPositionListener;
 import consulo.fileEditor.structureView.event.ModelListener;
 import consulo.fileEditor.structureView.tree.*;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.util.PsiUtilBase;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.ReflectionUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.Lists;
+import consulo.util.lang.reflect.ReflectionUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,11 +45,10 @@ import java.util.List;
  *
  * @see TreeBasedStructureViewBuilder#createStructureViewModel(Editor editor)
  */
-
 public abstract class TextEditorBasedStructureViewModel implements StructureViewModel, ProvidingTreeModel {
   private final Editor myEditor;
   private final PsiFile myPsiFile;
-  private final List<FileEditorPositionListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<FileEditorPositionListener> myListeners = Lists.newLockFreeCopyOnWriteList();
   private List<ModelListener> myModelListeners = new ArrayList<>(2);
   private CaretAdapter myEditorCaretListener;
   private Disposable myEditorCaretListenerDisposable;

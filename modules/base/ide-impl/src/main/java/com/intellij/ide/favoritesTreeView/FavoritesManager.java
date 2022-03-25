@@ -41,7 +41,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.EventDispatcher;

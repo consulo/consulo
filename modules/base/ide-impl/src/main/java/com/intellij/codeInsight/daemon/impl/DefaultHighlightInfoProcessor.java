@@ -6,7 +6,7 @@ import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.impl.DocumentMarkupModel;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;

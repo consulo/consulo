@@ -2,7 +2,7 @@
 package com.intellij.index;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.util.indexing.IndexExtension;
+import consulo.index.io.IndexExtension;
 import com.intellij.util.indexing.SnapshotInputMappingIndex;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

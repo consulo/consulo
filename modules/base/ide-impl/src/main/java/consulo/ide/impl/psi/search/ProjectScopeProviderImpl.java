@@ -2,6 +2,7 @@
 package consulo.ide.impl.psi.search;
 
 import com.intellij.ide.scratch.RootType;
+import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.module.content.DirectoryInfo;
 import com.intellij.openapi.roots.impl.ProjectFileIndexImpl;
 import consulo.language.content.FileIndexFacade;

@@ -24,7 +24,7 @@ import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;

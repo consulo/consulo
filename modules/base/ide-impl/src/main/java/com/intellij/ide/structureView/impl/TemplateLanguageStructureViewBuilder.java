@@ -9,7 +9,7 @@ import com.intellij.ide.util.StructureViewCompositeModel;
 import consulo.language.Language;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.language.util.LanguageUtil;
-import com.intellij.lang.PsiStructureViewFactory;
+import consulo.language.editor.structureView.PsiStructureViewFactory;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.fileType.UnknownFileType;

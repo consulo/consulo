@@ -17,6 +17,7 @@
 package com.intellij.util.indexing;
 
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.KeyDescriptor;

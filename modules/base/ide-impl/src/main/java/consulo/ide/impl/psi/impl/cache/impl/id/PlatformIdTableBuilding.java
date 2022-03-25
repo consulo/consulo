@@ -41,7 +41,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.util.CommentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.DataIndexer;
+import consulo.index.io.DataIndexer;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.impl.psi.internal.stub.SubstitutedFileType;
 import consulo.language.version.LanguageVersion;

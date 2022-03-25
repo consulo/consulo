@@ -37,7 +37,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import com.intellij.refactoring.util.RadioUpDownListener;
 import consulo.ui.ex.awt.TitledSeparator;
 import javax.annotation.Nonnull;

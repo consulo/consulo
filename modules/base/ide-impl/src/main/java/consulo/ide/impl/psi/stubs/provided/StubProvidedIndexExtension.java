@@ -3,7 +3,6 @@ package consulo.ide.impl.psi.stubs.provided;
 
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ide.impl.psi.stubs.*;
 import consulo.ide.impl.psi.stubs.SerializationManagerImpl;
 import consulo.ide.impl.psi.stubs.SerializedStubTree;
 import consulo.ide.impl.psi.stubs.SerializedStubTreeDataExternalizer;
@@ -13,7 +12,7 @@ import com.intellij.util.indexing.provided.ProvidedIndexExtension;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.KeyDescriptor;
-import com.intellij.util.io.VoidDataExternalizer;
+import consulo.index.io.VoidDataExternalizer;
 import consulo.disposer.Disposer;
 import consulo.language.psi.stub.StubIndexExtension;
 

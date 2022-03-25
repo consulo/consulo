@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators;
 
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.AbstractElementManipulator;
+import consulo.language.psi.AbstractElementManipulator;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;

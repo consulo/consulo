@@ -4,7 +4,7 @@ package com.intellij.index;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
 import consulo.ide.impl.psi.stubs.provided.StubProvidedIndexExtension;
-import com.intellij.util.indexing.FileBasedIndexExtension;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.index.io.ID;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;
 import com.intellij.util.indexing.provided.ProvidedIndexExtensionLocator;

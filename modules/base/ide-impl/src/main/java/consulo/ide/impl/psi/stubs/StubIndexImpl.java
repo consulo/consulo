@@ -12,9 +12,7 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.application.progress.ProgressManager;
-import consulo.index.io.ID;
-import consulo.index.io.IdIterator;
-import consulo.index.io.KeyDescriptor;
+import consulo.index.io.*;
 import consulo.index.io.data.DataExternalizer;
 import consulo.language.psi.stub.*;
 import consulo.project.Project;
@@ -512,7 +510,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     if (index == null) return IdIterator.EMPTY;
 
     if (idFilter == null) {
-      idFilter = ((FileBasedIndexImpl)FileBasedIndex.getInstance()).projectIndexableFiles(project);
+      idFilter = ((FileBasedIndexImpl)FileBasedIndex.getInstance()).createProjectIndexableFiles(project);
     }
 
     fileBasedIndex.ensureUpToDate(stubUpdatingIndexId, project, scope);

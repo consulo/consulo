@@ -31,7 +31,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollingUtil;
 import com.intellij.ui.SpeedSearchBase;

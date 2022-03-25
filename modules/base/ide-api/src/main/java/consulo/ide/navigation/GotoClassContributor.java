@@ -14,21 +14,19 @@
  * limitations under the License.
  */
 
-/*
- * @author max
- */
-package com.intellij.lang;
+package consulo.ide.navigation;
 
-import consulo.fileEditor.structureView.StructureViewBuilder;
-import consulo.language.psi.PsiFile;
+import consulo.navigation.NavigationItem;
 
 import javax.annotation.Nullable;
 
 /**
- * Should be registered as language extension
- * @see LanguageStructureViewBuilder
+ * @author yole
  */
-public interface PsiStructureViewFactory {
+public interface GotoClassContributor extends ChooseByNameContributor {
   @Nullable
-  StructureViewBuilder getStructureViewBuilder(PsiFile psiFile);
+  String getQualifiedName(NavigationItem item);
+
+  @Nullable
+  String getQualifiedNameSeparator();
 }

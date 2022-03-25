@@ -2,7 +2,7 @@
 package com.intellij.util.indexing.provided;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.util.indexing.FileBasedIndexExtension;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

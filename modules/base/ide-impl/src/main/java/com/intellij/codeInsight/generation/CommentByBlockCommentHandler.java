@@ -56,7 +56,7 @@ import consulo.ide.impl.psi.templateLanguages.MultipleLangCommentProvider;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;

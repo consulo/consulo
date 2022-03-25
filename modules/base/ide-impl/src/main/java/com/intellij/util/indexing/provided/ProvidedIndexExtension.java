@@ -2,6 +2,7 @@
 package com.intellij.util.indexing.provided;
 
 import consulo.index.io.ID;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 import consulo.logging.Logger;
 import com.intellij.util.indexing.*;

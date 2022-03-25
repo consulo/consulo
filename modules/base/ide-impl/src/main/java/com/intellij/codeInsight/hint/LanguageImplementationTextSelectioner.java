@@ -22,6 +22,7 @@ package com.intellij.codeInsight.hint;
 
 import consulo.language.LanguageExtension;
 import consulo.container.plugin.PluginIds;
+import consulo.language.editor.ImplementationTextSelectioner;
 
 public class LanguageImplementationTextSelectioner extends LanguageExtension<ImplementationTextSelectioner>{
   public static final LanguageImplementationTextSelectioner INSTANCE = new LanguageImplementationTextSelectioner();

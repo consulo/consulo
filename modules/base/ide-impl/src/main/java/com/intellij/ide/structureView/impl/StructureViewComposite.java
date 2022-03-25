@@ -19,7 +19,7 @@ package com.intellij.ide.structureView.impl;
 import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
-import com.intellij.ide.structureView.TextEditorBasedStructureViewModel;
+import consulo.language.editor.structureView.TextEditorBasedStructureViewModel;
 import consulo.fileEditor.structureView.tree.TreeElement;
 import consulo.navigation.ItemPresentation;
 import consulo.fileEditor.FileEditor;

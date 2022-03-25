@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.navigation.ChooseByNameContributor;
+import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

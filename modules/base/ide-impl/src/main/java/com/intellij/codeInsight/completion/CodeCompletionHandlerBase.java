@@ -30,7 +30,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.internal.DocumentEx;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.ide.impl.psi.stubs.StubTextInconsistencyException;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.Language;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
 import consulo.language.editor.completion.*;

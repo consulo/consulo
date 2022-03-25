@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.editor.event;
-
-import consulo.codeEditor.event.CaretEvent;
-import consulo.codeEditor.event.CaretListener;
+package consulo.codeEditor.event;
 
 public abstract class CaretAdapter implements CaretListener {
   @Override

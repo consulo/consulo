@@ -211,6 +211,9 @@ public abstract class FileBasedIndex {
     throw new IncorrectOperationException();
   }
 
+  @Nullable
+  public abstract IdFilter createProjectIndexableFiles(@Nullable Project project);
+
   @FunctionalInterface
   public interface ValueProcessor<V> {
     /**

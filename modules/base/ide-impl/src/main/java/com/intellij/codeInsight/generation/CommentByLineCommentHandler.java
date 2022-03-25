@@ -51,7 +51,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.inject.impl.internal.InjectedCaret;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
 import consulo.document.util.DocumentUtil;
 import com.intellij.util.text.CharArrayUtil;

@@ -17,12 +17,13 @@
 package consulo.ide.impl.psi.search;
 
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
-import com.intellij.util.indexing.*;
+import consulo.index.io.DataIndexer;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
+import consulo.language.psi.stub.ScalarIndexExtension;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

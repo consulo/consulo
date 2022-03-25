@@ -24,7 +24,7 @@ import consulo.language.editor.util.UsedColors;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
-import com.intellij.openapi.editor.event.CaretAdapter;
+import consulo.codeEditor.event.CaretAdapter;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.EditorEx;

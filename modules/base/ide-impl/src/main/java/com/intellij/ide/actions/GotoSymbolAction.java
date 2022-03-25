@@ -6,7 +6,7 @@ import com.intellij.ide.actions.searcheverywhere.SymbolSearchEverywhereContribut
 import com.intellij.ide.util.gotoByName.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.Language;
-import com.intellij.navigation.ChooseByNameContributor;
+import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

@@ -16,6 +16,7 @@
 
 package com.intellij.util.indexing;
 
+import consulo.index.io.DataIndexer;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 
@@ -31,7 +32,7 @@ import java.util.Map;
  * @author Eugene Zhuravlev
  *         Date: Feb 18, 2009
  */
-public abstract class SingleEntryIndexer<V> implements DataIndexer<Integer, V, FileContent>{
+public abstract class SingleEntryIndexer<V> implements DataIndexer<Integer, V, FileContent> {
   private final boolean myAcceptNullValues;
 
   protected SingleEntryIndexer(boolean acceptNullValues) {

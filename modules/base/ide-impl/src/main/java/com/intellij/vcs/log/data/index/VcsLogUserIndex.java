@@ -17,9 +17,9 @@ package com.intellij.vcs.log.data.index;
 
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.DataIndexer;
+import consulo.index.io.DataIndexer;
 import com.intellij.util.indexing.StorageException;
-import com.intellij.util.io.VoidDataExternalizer;
+import consulo.index.io.VoidDataExternalizer;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.VcsUser;
 import com.intellij.vcs.log.data.VcsUserRegistryImpl;

@@ -32,7 +32,7 @@ import consulo.codeEditor.action.EditorActionManager;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import javax.annotation.Nonnull;
 import consulo.annotation.access.RequiredWriteAction;
 

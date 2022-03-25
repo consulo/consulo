@@ -16,9 +16,9 @@
 package com.intellij.vcs.log.data.index;
 
 import com.intellij.openapi.util.text.TrigramBuilder;
-import com.intellij.util.indexing.DataIndexer;
+import consulo.index.io.DataIndexer;
 import com.intellij.util.indexing.StorageException;
-import com.intellij.util.io.VoidDataExternalizer;
+import consulo.index.io.VoidDataExternalizer;
 import com.intellij.vcs.log.VcsFullCommitDetails;
 import com.intellij.vcs.log.impl.FatalErrorHandler;
 import consulo.disposer.Disposable;

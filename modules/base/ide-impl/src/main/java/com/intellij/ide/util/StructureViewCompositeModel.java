@@ -16,7 +16,7 @@
 package com.intellij.ide.util;
 
 import consulo.fileEditor.structureView.StructureViewModel;
-import com.intellij.ide.structureView.StructureViewModelBase;
+import consulo.language.editor.structureView.StructureViewModelBase;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import com.intellij.ide.structureView.impl.StructureViewComposite;
 import consulo.fileEditor.structureView.tree.Filter;

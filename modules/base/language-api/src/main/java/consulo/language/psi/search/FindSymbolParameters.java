@@ -1,14 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.util.indexing;
+package consulo.language.psi.search;
 
-import consulo.ide.impl.psi.search.EverythingGlobalScope;
-import com.intellij.util.ObjectUtils;
+import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.project.content.scope.ProjectScopes;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.IdFilter;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.project.content.scope.ProjectScopes;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.HiddenFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -62,7 +62,7 @@ public class FindSymbolParameters {
 
   @Nonnull
   public Project getProject() {
-    return ObjectUtils.notNull(mySearchScope.getProject());
+    return ObjectUtil.notNull(mySearchScope.getProject());
   }
 
   public boolean isSearchInLibraries() {
@@ -70,7 +70,7 @@ public class FindSymbolParameters {
   }
 
   public static FindSymbolParameters wrap(@Nonnull String pattern, @Nonnull Project project, boolean searchInLibraries) {
-    return new FindSymbolParameters(pattern, pattern, searchScopeFor(project, searchInLibraries), ((FileBasedIndexImpl)FileBasedIndex.getInstance()).projectIndexableFiles(project));
+    return new FindSymbolParameters(pattern, pattern, searchScopeFor(project, searchInLibraries), FileBasedIndex.getInstance().createProjectIndexableFiles(project));
   }
 
   public static FindSymbolParameters wrap(@Nonnull String pattern, @Nonnull GlobalSearchScope scope) {
@@ -78,7 +78,7 @@ public class FindSymbolParameters {
   }
 
   public static FindSymbolParameters simple(@Nonnull Project project, boolean searchInLibraries) {
-    return new FindSymbolParameters("", "", searchScopeFor(project, searchInLibraries), ((FileBasedIndexImpl)FileBasedIndex.getInstance()).projectIndexableFiles(project));
+    return new FindSymbolParameters("", "", searchScopeFor(project, searchInLibraries), FileBasedIndex.getInstance().createProjectIndexableFiles(project));
   }
 
   @Nonnull

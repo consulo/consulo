@@ -39,7 +39,7 @@ import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.util.ObjectUtils;

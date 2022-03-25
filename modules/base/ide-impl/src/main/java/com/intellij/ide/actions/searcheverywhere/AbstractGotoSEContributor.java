@@ -44,7 +44,7 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.ObjectUtils;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.FindSymbolParameters;
+import consulo.language.psi.search.FindSymbolParameters;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.dataholder.Key;

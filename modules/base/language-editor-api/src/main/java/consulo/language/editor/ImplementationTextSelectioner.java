@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-package com.intellij.navigation;
-
-import consulo.navigation.NavigationItem;
-
-import javax.annotation.Nullable;
-
-/**
- * @author yole
+/*
+ * User: anna
+ * Date: 01-Feb-2008
  */
-public interface GotoClassContributor extends ChooseByNameContributor {
-  @Nullable
-  String getQualifiedName(NavigationItem item);
+package consulo.language.editor;
 
-  @javax.annotation.Nullable
-  String getQualifiedNameSeparator();
+import consulo.language.psi.PsiElement;
+import javax.annotation.Nonnull;
+
+public interface ImplementationTextSelectioner {
+  int getTextStartOffset(@Nonnull PsiElement element);
+
+  int getTextEndOffset(@Nonnull PsiElement element);
 }

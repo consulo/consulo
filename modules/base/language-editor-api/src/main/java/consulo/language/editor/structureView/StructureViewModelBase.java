@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.ide.structureView;
+package consulo.language.editor.structureView;
 
 import consulo.fileEditor.structureView.tree.Sorter;
 import consulo.codeEditor.Editor;

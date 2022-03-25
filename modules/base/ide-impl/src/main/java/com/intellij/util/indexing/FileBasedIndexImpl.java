@@ -10,6 +10,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.function.*;
 import consulo.content.scope.SearchScope;
 import consulo.index.io.ID;
+import consulo.index.io.IndexExtension;
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileTypeManager;
 import consulo.language.file.event.FileTypeEvent;
@@ -73,7 +74,7 @@ import consulo.language.impl.psi.internal.PsiTreeChangeEventImpl;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.ide.impl.psi.search.EverythingGlobalScope;
+import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.psi.stubs.SerializationManagerEx;
 import com.intellij.util.*;
@@ -953,7 +954,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                                               @Nullable IdFilter idFilter,
                                               @Nonnull ValueProcessor<? super V> processor) {
     PersistentFS fs = (PersistentFS)ManagingFS.getInstance();
-    IdFilter filter = idFilter != null ? idFilter : projectIndexableFiles(((ProjectAwareSearchScope)scope).getProject());
+    IdFilter filter = idFilter != null ? idFilter : createProjectIndexableFiles(((ProjectAwareSearchScope)scope).getProject());
 
     return processValueIterator(indexId, dataKey, null, scope, valueIt -> {
       while (valueIt.hasNext()) {
@@ -994,7 +995,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
                                                       @Nonnull final SearchScope filter,
                                                       @Nullable Condition<? super V> valueChecker,
                                                       @Nonnull final Processor<? super VirtualFile> processor) {
-    ProjectIndexableFilesFilter filesSet = projectIndexableFiles(((ProjectAwareSearchScope)filter).getProject());
+    ProjectIndexableFilesFilter filesSet = createProjectIndexableFiles(((ProjectAwareSearchScope)filter).getProject());
     final IntSet set = collectFileIdsContainingAllKeys(indexId, dataKeys, filter, valueChecker, filesSet);
     return set != null && processVirtualFiles(set, filter, processor);
   }
@@ -1069,7 +1070,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   private final Lock myCalcIndexableFilesLock = new ReentrantLock();
 
   @Nullable
-  public ProjectIndexableFilesFilter projectIndexableFiles(@Nullable Project project) {
+  public ProjectIndexableFilesFilter createProjectIndexableFiles(@Nullable Project project) {
     if (project == null || project.isDefault() || myUpdatingFiles.get() > 0) return null;
     if (myProjectsBeingUpdated.contains(project)) return null;
 
@@ -1749,7 +1750,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     if (!allFilesToUpdate.isEmpty()) {
       boolean includeFilesFromOtherProjects = restrictedTo == null && System.currentTimeMillis() - myLastOtherProjectInclusionStamp > 100;
       List<VirtualFile> virtualFilesToBeUpdatedForProject =
-              ContainerUtil.filter(allFilesToUpdate, new ProjectFilesCondition(projectIndexableFiles(project), filter, restrictedTo, includeFilesFromOtherProjects));
+              ContainerUtil.filter(allFilesToUpdate, new ProjectFilesCondition(createProjectIndexableFiles(project), filter, restrictedTo, includeFilesFromOtherProjects));
 
       if (!virtualFilesToBeUpdatedForProject.isEmpty()) {
         myForceUpdateTask.processAll(virtualFilesToBeUpdatedForProject, project);

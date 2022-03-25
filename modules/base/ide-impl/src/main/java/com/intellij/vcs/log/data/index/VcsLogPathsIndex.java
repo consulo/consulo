@@ -23,7 +23,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.util.Consumer;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.DataIndexer;
+import consulo.index.io.DataIndexer;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.io.*;
 import com.intellij.vcs.log.VcsFullCommitDetails;

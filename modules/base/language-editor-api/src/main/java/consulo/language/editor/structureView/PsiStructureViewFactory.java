@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package com.intellij.util.indexing;
+/*
+ * @author max
+ */
+package consulo.language.editor.structureView;
 
-import javax.annotation.Nonnull;
+import consulo.fileEditor.structureView.StructureViewBuilder;
+import consulo.language.psi.PsiFile;
 
-import java.util.Map;
+import javax.annotation.Nullable;
 
 /**
- * @author Eugene Zhuravlev
- *         Date: Dec 10, 2007
+ * Should be registered as language extension
+ * @see LanguageStructureViewBuilder
  */
-public interface DataIndexer<Key, Value, Data> {
-  @Nonnull
-  Map<Key,Value> map(Data inputData);
+public interface PsiStructureViewFactory {
+  @Nullable
+  StructureViewBuilder getStructureViewBuilder(PsiFile psiFile);
 }

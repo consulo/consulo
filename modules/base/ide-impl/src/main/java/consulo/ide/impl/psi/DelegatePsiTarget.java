@@ -22,7 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiTarget;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.pom.PsiDeclaredTarget;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import javax.annotation.Nonnull;
 
 /**

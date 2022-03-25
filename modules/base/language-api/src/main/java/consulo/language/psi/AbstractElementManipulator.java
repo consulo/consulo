@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi;
+package consulo.language.psi;
 
 import consulo.document.util.TextRange;
-import consulo.language.psi.ElementManipulator;
 import consulo.language.util.IncorrectOperationException;
-import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
 

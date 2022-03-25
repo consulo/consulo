@@ -28,7 +28,7 @@ import com.intellij.openapi.command.undo.BasicUndoableAction;
 import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
 import com.intellij.openapi.editor.EditorModificationUtil;
-import com.intellij.openapi.editor.event.CaretAdapter;
+import consulo.codeEditor.event.CaretAdapter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.util.ObjectUtils;

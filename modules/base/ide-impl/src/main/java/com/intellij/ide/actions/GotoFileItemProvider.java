@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.actions.searcheverywhere.FoundItemDescriptor;
 import com.intellij.ide.util.gotoByName.*;
-import com.intellij.navigation.ChooseByNameContributor;
+import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.project.DumbService;
@@ -29,7 +29,7 @@ import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.FList;
 import consulo.util.collection.JBIterable;
-import com.intellij.util.indexing.FindSymbolParameters;
+import consulo.language.psi.search.FindSymbolParameters;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

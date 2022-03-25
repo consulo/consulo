@@ -21,7 +21,7 @@ import consulo.document.FileDocumentManager;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.plain.psi.PsiPlainTextFile;
-import consulo.ide.impl.psi.AbstractElementManipulator;
+import consulo.language.psi.AbstractElementManipulator;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;
 

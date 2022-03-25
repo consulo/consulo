@@ -20,6 +20,7 @@ import com.intellij.util.indexing.impl.AbstractUpdateData;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.stub.IdFilter;
+import consulo.index.io.IndexExtension;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 

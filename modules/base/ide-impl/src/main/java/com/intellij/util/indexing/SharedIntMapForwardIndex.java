@@ -3,6 +3,7 @@ package com.intellij.util.indexing;
 
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.ID;
+import consulo.index.io.IndexExtension;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;

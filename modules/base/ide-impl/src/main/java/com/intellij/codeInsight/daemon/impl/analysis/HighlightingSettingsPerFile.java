@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl.analysis;
 import consulo.ide.ServiceManager;
 import consulo.component.persist.StoragePathMacros;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.ide.impl.psi.util.PsiUtilBase;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;

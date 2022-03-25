@@ -4,7 +4,7 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.ide.actions.searcheverywhere.FoundItemDescriptor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
-import com.intellij.util.indexing.FindSymbolParameters;
+import consulo.language.psi.search.FindSymbolParameters;
 import javax.annotation.Nonnull;
 
 /**

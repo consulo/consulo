@@ -7,6 +7,7 @@ import com.intellij.util.indexing.impl.IndexStorage;
 import com.intellij.util.indexing.impl.MapIndexStorage;
 import com.intellij.util.indexing.provided.ProvidedIndexExtension;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
 
 import javax.annotation.Nonnull;
