@@ -159,6 +159,12 @@
     </dependency>
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
+      <artifactId>consulo-language-editor-impl</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.parent.groupId}</groupId>
       <artifactId>consulo-language-impl</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
