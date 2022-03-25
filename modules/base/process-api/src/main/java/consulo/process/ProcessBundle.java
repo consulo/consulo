@@ -16,6 +16,7 @@
 package consulo.process;
 
 import consulo.component.util.localize.AbstractBundle;
+import org.jetbrains.annotations.PropertyKey;
 
 /**
  * @author VISTALL
@@ -23,13 +24,17 @@ import consulo.component.util.localize.AbstractBundle;
  */
 public class ProcessBundle extends AbstractBundle {
   private static final ProcessBundle ourInstance = new ProcessBundle();
+  private static final String BUNDLE = "consulo.process.ProcessBundle";
 
+  private ProcessBundle() {
+    super(BUNDLE);
+  }
 
-  public static String message(String key) {
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = BUNDLE) String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }
