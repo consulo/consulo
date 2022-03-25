@@ -17,7 +17,7 @@ package com.intellij.util.ui;
 
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.RegionPainter;

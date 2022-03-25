@@ -10,7 +10,7 @@ import com.intellij.openapi.editor.impl.EditorHeaderComponent;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.BooleanGetter;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 import com.intellij.ui.ListFocusTraversalPolicy;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.JBTextArea;

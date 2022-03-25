@@ -19,7 +19,7 @@ import com.intellij.openapi.fileEditor.impl.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 
 import javax.annotation.Nullable;
 import java.awt.*;

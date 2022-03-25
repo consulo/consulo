@@ -23,7 +23,7 @@ import consulo.ui.ex.action.ActionToolbar;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.CustomLineBorder;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import consulo.ui.ex.awt.NonOpaquePanel;

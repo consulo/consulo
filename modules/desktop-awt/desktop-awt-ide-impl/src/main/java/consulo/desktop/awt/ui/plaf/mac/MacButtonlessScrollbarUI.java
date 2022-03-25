@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.plaf.mac;
 
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.RegionPainter;

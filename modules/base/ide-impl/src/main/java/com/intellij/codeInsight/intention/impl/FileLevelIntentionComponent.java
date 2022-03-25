@@ -8,7 +8,7 @@ import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.awt.ClickListener;
 import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterMark;

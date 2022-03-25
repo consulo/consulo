@@ -43,7 +43,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.NonOpaquePanel;

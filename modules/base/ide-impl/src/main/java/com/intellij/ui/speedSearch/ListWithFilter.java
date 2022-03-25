@@ -7,7 +7,7 @@ package com.intellij.ui.speedSearch;
 
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;

@@ -31,7 +31,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.codeStyle.WordPrefixMatcher;
 import consulo.ui.ex.awt.util.ColorUtil;
-import com.intellij.ui.LightColors;
+import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
