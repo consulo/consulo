@@ -513,5 +513,13 @@
       <groupId>org.jdom</groupId>
       <artifactId>jdom-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>forms_rt</artifactId>
+    </dependency>
   </dependencies>
 </project>
