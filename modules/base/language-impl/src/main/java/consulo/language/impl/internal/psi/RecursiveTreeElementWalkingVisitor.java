@@ -17,10 +17,7 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.ast.CompositeElement;
-import consulo.language.impl.ast.LeafElement;
-import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.ast.TreeElementVisitor;
+import consulo.language.impl.ast.*;
 import consulo.language.psi.PsiRecursiveVisitor;
 import consulo.util.collection.util.WalkingState;
 

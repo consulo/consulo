@@ -23,7 +23,6 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementTypeBase;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.internal.psi.TreeUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.util.lang.CharArrayUtil;

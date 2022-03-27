@@ -13,7 +13,6 @@ import consulo.language.impl.DebugUtil;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.language.impl.internal.ast.SharedImplUtil;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.impl.internal.psi.TreeUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;

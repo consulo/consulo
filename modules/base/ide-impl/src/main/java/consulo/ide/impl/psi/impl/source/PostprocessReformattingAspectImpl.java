@@ -39,7 +39,7 @@ import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.pom.PomManager;
 import consulo.language.pom.TreeAspect;

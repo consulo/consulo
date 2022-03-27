@@ -30,7 +30,6 @@ import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.internal.pom.TreeChangeEventImpl;
 import consulo.language.impl.psi.*;
 import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
-import consulo.language.impl.internal.psi.TreeUtil;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayFactory;

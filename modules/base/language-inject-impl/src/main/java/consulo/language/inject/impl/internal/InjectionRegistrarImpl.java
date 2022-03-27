@@ -29,6 +29,7 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.psi.PsiFileImpl;

@@ -18,10 +18,7 @@ package consulo.language.impl.internal.psi;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.ast.CompositeElement;
-import consulo.language.impl.ast.LazyParseableElement;
-import consulo.language.impl.ast.LeafElement;
-import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.ast.*;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
 import consulo.language.impl.internal.psi.diff.ShallowNodeComparator;
 import consulo.language.psi.PsiErrorElement;

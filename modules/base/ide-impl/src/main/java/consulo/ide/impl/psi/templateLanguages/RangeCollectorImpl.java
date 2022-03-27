@@ -11,7 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.impl.DebugUtil;
 import consulo.ide.impl.psi.templateLanguages.TemplateDataElementType.OuterLanguageRangePatcher;
 import consulo.language.impl.internal.ast.SharedImplUtil;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.util.CharTable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;

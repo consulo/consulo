@@ -26,7 +26,7 @@ import consulo.language.impl.internal.psi.diff.*;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
 import consulo.language.impl.psi.PsiWhiteSpaceImpl;
 import consulo.language.impl.internal.psi.FileContextUtil;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.*;
 import consulo.language.psi.PsiErrorElement;

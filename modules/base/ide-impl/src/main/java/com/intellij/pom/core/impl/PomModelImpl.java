@@ -49,7 +49,7 @@ import consulo.language.impl.psi.DummyHolder;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;

@@ -25,7 +25,7 @@ import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.internal.ast.Factory;
 import consulo.language.impl.internal.psi.IndentHelper;
 import consulo.language.impl.internal.psi.LanguageTokenSeparatorGenerators;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.psi.*;
 import consulo.language.util.CommentUtilCore;
 import consulo.util.dataholder.Key;

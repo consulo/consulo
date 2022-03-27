@@ -29,7 +29,7 @@ import consulo.language.impl.internal.ast.Factory;
 import consulo.language.impl.internal.ast.SharedImplUtil;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.CharTable;
 import consulo.undoRedo.CommandProcessor;

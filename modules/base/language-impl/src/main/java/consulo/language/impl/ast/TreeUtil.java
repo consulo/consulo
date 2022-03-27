@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.impl.internal.psi;
+package consulo.language.impl.ast;
 
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
@@ -23,14 +23,14 @@ import consulo.language.ast.IElementType;
 import consulo.language.ast.IStrongWhitespaceHolderElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.ast.*;
+import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
 import consulo.language.lexer.Lexer;
 import consulo.language.psi.OuterLanguageElement;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -153,7 +153,7 @@ public class TreeUtil {
   public static TreeElement findFirstLeafOrChameleon(final TreeElement element) {
     if (element == null) return null;
 
-    final Ref<TreeElement> result = Ref.create(null);
+    final SimpleReference<TreeElement> result = SimpleReference.create(null);
     element.acceptTree(new RecursiveTreeElementWalkingVisitor(false) {
       @Override
       protected void visitNode(final TreeElement element) {
@@ -342,18 +342,14 @@ public class TreeUtil {
   }
 
   private static void initStrongWhitespaceHolder(CommonParentState commonParent, ASTNode start, boolean slopeSide) {
-    if (start instanceof CompositeElement &&
-        (isStrongWhitespaceHolder(start.getElementType()) || slopeSide && start.getUserData(UNCLOSED_ELEMENT_PROPERTY) != null)) {
+    if (start instanceof CompositeElement && (isStrongWhitespaceHolder(start.getElementType()) || slopeSide && start.getUserData(UNCLOSED_ELEMENT_PROPERTY) != null)) {
       commonParent.strongWhiteSpaceHolder = (CompositeElement)start;
       commonParent.isStrongElementOnRisingSlope = slopeSide;
     }
   }
 
   @Nullable
-  private static TreeElement findFirstLeafOrType(@Nonnull TreeElement element,
-                                                 final IElementType searchedType,
-                                                 final CommonParentState commonParent,
-                                                 final boolean expandChameleons) {
+  private static TreeElement findFirstLeafOrType(@Nonnull TreeElement element, final IElementType searchedType, final CommonParentState commonParent, final boolean expandChameleons) {
     class MyVisitor extends RecursiveTreeElementWalkingVisitor {
       private TreeElement result;
 

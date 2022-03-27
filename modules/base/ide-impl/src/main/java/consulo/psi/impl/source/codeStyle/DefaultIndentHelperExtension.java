@@ -19,7 +19,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.impl.source.codeStyle.IndentHelperImpl;
 import consulo.language.impl.ast.CompositeElement;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;

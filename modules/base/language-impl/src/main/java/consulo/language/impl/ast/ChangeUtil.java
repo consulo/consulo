@@ -26,7 +26,6 @@ import consulo.language.impl.psi.CodeEditUtil;
 import consulo.language.impl.psi.DummyHolder;
 import consulo.language.impl.psi.DummyHolderFactory;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
-import consulo.language.impl.internal.psi.TreeUtil;
 import consulo.language.pom.PomManager;
 import consulo.language.pom.PomModel;
 import consulo.language.pom.TreeAspect;

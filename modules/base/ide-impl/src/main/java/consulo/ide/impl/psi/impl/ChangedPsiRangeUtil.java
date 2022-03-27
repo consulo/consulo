@@ -11,7 +11,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

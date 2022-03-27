@@ -21,7 +21,7 @@ import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.internal.ast.SharedImplUtil;
 import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
 import consulo.language.ast.ILazyParseableElementTypeBase;

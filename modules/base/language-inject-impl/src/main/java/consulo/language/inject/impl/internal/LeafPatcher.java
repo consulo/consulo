@@ -23,7 +23,7 @@ import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
 import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
-import consulo.language.impl.internal.psi.TreeUtil;
+import consulo.language.impl.ast.TreeUtil;
 import consulo.language.psi.LiteralTextEscaper;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
