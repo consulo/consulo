@@ -10,7 +10,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionList;
 import consulo.component.extension.ExtensionPointName;

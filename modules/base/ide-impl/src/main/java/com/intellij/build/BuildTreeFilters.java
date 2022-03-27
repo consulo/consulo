@@ -16,7 +16,7 @@
 package com.intellij.build;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;

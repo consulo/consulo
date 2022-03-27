@@ -22,7 +22,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.navigation.BackgroundUpdaterTaskBase;
 import com.intellij.codeInsight.navigation.ImplementationSearcher;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

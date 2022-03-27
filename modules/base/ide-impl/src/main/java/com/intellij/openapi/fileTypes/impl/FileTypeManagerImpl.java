@@ -9,7 +9,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import com.intellij.openapi.fileTypes.*;
 import com.intellij.openapi.fileTypes.ex.ExternalizableFileType;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;

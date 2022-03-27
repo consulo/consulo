@@ -18,7 +18,7 @@ package consulo.application;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;

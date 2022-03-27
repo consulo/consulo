@@ -17,7 +17,7 @@
 package com.intellij.ide.fileTemplates.ui;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.fileTemplates.FileTemplate;
+import consulo.fileTemplate.FileTemplate;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import com.intellij.openapi.util.Pair;

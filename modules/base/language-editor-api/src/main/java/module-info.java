@@ -45,4 +45,5 @@ module consulo.language.editor.api {
   exports consulo.language.editor.util;
 
   opens consulo.language.editor.inspection.scheme to consulo.util.xml.serializer;
+  opens consulo.language.editor to consulo.util.xml.serializer;
 }

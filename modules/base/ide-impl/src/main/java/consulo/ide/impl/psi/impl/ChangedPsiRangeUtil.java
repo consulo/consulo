@@ -6,12 +6,12 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.impl.psi.internal.PsiDocumentManagerBase;
+import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
-import consulo.language.impl.psi.internal.TreeUtil;
+import consulo.language.impl.internal.psi.TreeUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

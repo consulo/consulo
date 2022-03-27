@@ -2,10 +2,10 @@
 
 package com.intellij.codeInsight.lookup.impl;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CompletionProcess;
 import consulo.language.editor.completion.CompletionService;
-import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
+import consulo.language.editor.impl.internal.completion.CamelHumpMatcher;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.EditorHintListener;
 import com.intellij.codeInsight.hint.HintManager;

@@ -28,7 +28,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
-import consulo.language.impl.psi.internal.PsiToDocumentSynchronizer;
+import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

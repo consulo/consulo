@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ide.impl.psi.codeStyle.NameUtil;
+import consulo.language.editor.impl.internal.completion.NameUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

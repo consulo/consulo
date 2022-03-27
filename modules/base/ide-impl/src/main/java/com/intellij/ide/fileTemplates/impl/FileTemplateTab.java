@@ -16,7 +16,9 @@
 
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.impl.internal.FileTemplateBase;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

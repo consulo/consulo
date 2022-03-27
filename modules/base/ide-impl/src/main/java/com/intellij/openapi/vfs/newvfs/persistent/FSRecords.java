@@ -16,7 +16,7 @@ import com.intellij.util.io.*;
 import com.intellij.util.io.storage.*;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposer;
 import consulo.index.io.EnumeratorStringDescriptor;

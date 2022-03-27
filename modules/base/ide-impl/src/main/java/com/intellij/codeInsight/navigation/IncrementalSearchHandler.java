@@ -21,7 +21,7 @@ import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.IdeActions;
 import consulo.document.event.DocumentAdapter;

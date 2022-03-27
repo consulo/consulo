@@ -15,24 +15,24 @@
  */
 package com.intellij.tasks;
 
-import java.util.Set;
-import java.util.concurrent.Callable;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.intellij.lang.annotations.MagicConstant;
-import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.impl.CancellableRunnable;
 import com.intellij.tasks.impl.BaseRepository;
 import com.intellij.util.Function;
+import consulo.util.io.UriUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.progress.ProgressIndicator;
+import consulo.ui.image.Image;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
 import consulo.util.xml.serializer.annotation.Transient;
-import consulo.ui.image.Image;
+import org.intellij.lang.annotations.MagicConstant;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
+import java.util.concurrent.Callable;
 
 /**
  * This class describes bug-tracking server.
@@ -72,12 +72,12 @@ public abstract class TaskRepository
 	@Attribute("url")
 	public String getUrl()
 	{
-		return trimTrailingSlashes(myUrl);
+		return UriUtil.trimTrailingSlashes(myUrl);
 	}
 
 	public void setUrl(String url)
 	{
-		myUrl = trimTrailingSlashes(url);
+		myUrl = UriUtil.trimTrailingSlashes(url);
 	}
 
 	public boolean isConfigured()
@@ -387,22 +387,6 @@ public abstract class TaskRepository
 	public String toString()
 	{
 		return getClass().getSimpleName() + "(URL='" + myUrl + "')";
-	}
-
-	private static String trimTrailingSlashes(String url)
-	{
-		if(url == null)
-		{
-			return "";
-		}
-		for(int i = url.length() - 1; i >= 0; i--)
-		{
-			if(url.charAt(i) != '/')
-			{
-				return url.substring(0, i + 1);
-			}
-		}
-		return "";
 	}
 
 	@Nullable

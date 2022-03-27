@@ -8,6 +8,8 @@ import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementWeigher;
+import consulo.language.editor.impl.internal.completion.CamelHumpMatcher;
+import consulo.language.editor.impl.internal.completion.CompletionData;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;

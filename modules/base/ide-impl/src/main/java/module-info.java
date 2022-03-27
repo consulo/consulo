@@ -67,6 +67,8 @@ open module consulo.ide.impl {
   requires transitive consulo.language.inject.impl;
   requires transitive consulo.component.store.impl;
   requires transitive consulo.application.impl;
+  requires transitive consulo.file.template.api;
+  requires transitive consulo.file.template.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -187,7 +189,6 @@ open module consulo.ide.impl {
   exports com.intellij.codeInsight.daemon.impl.analysis.encoding;
   exports com.intellij.codeInsight.daemon.impl.quickfix;
   exports com.intellij.codeInsight.daemon.impl.tooltips;
-  exports com.intellij.codeInsight.daemon.quickFix;
   exports com.intellij.codeInsight.dataflow;
   exports com.intellij.codeInsight.dataflow.map;
   exports com.intellij.codeInsight.documentation;
@@ -414,7 +415,6 @@ open module consulo.ide.impl {
   exports com.intellij.ide.favoritesTreeView;
   exports com.intellij.ide.favoritesTreeView.actions;
   exports com.intellij.ide.file;
-  exports com.intellij.ide.fileTemplates;
   exports com.intellij.ide.fileTemplates.actions;
   exports com.intellij.ide.fileTemplates.impl;
   exports com.intellij.ide.fileTemplates.ui;
@@ -497,7 +497,6 @@ open module consulo.ide.impl {
   exports com.intellij.lang.documentation;
   exports com.intellij.lang.folding;
   exports com.intellij.lang.parameterInfo;
-  exports com.intellij.lang.parser;
   exports com.intellij.lang.pratt;
   exports com.intellij.lang.refactoring;
   exports com.intellij.model.search;

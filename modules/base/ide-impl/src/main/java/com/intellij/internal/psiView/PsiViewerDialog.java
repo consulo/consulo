@@ -66,7 +66,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.file.LanguageFileType;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.psi.internal.FileContextUtil;
+import consulo.language.impl.internal.psi.FileContextUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiElement;

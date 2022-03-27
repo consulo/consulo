@@ -11,7 +11,7 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.OpaquePanel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import com.intellij.util.IconUtil;
-import com.intellij.util.text.Matcher;
+import consulo.language.editor.impl.internal.completion.Matcher;
 import com.intellij.util.text.MatcherHolder;
 import consulo.application.ui.UISettings;
 import consulo.ui.ex.JBColor;

@@ -18,7 +18,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.language.editor.inspection.SuppressIntentionActionFromFix;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.inject.InjectedLanguageManager;

@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import com.intellij.codeInsight.hint.EditorFragmentComponent;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.internal.ApplicationEx;

@@ -24,13 +24,13 @@ import javax.annotation.Nonnull;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.psi.codeStyle.NameUtil;
+import consulo.language.editor.impl.internal.completion.NameUtil;
 import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.Matcher;
+import consulo.language.editor.impl.internal.completion.Matcher;
 
 /**
  * @author Dmitry Avdeev

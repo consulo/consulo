@@ -27,7 +27,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.ExceptionUtil;
 import consulo.application.util.function.Processor;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.index.io.KeyDescriptor;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;

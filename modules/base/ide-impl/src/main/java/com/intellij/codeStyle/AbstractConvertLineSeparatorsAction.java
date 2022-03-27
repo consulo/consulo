@@ -16,12 +16,12 @@
 package com.intellij.codeStyle;
 
 import consulo.application.Result;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

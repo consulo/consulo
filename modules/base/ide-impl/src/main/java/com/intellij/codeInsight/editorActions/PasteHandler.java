@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import consulo.ui.ex.PasteProvider;
 import consulo.language.codeStyle.LanguageFormatting;

@@ -53,7 +53,7 @@ import consulo.ide.impl.psi.RefResolveService;
 import consulo.language.editor.Pass;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
-import consulo.language.impl.psi.internal.PsiManagerEx;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.util.ModuleUtilCore;

@@ -18,6 +18,7 @@ package consulo.ide.impl.psi.filters;
 
 import consulo.language.psi.PsiElement;
 import com.intellij.util.ReflectionUtil;
+import consulo.language.psi.filter.ElementFilter;
 import org.jetbrains.annotations.NonNls;
 
 /**
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.NonNls;
  * Time: 19:30:55
  * To change this template use Options | File Templates.
  */
-public class ClassFilter implements ElementFilter{
+public class ClassFilter implements ElementFilter {
   private final Class myFilter;
   private final boolean myAcceptableFlag;
 

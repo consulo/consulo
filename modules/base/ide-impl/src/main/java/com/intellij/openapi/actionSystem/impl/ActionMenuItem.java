@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;

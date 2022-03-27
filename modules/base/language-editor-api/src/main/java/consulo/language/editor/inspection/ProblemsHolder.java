@@ -104,11 +104,9 @@ public class ProblemsHolder {
   }
 
   public void registerProblem(@Nonnull PsiReference reference, String descriptionTemplate, ProblemHighlightType highlightType) {
-    LocalQuickFix[] fixes = null;
-    if (reference instanceof LocalQuickFixProvider) {
-      fixes = ((LocalQuickFixProvider)reference).getQuickFixes();
-    }
-    registerProblemForReference(reference, highlightType, descriptionTemplate, fixes);
+    List<LocalQuickFix> quickFixes = new ArrayList<>();
+    PsiReferenceLocalQuickFixProvider.EP.forEachExtensionSafe(myFile.getProject(), provider -> provider.addQuickFixes(reference, quickFixes::add));
+    registerProblemForReference(reference, highlightType, descriptionTemplate, quickFixes.toArray(LocalQuickFix.ARRAY_FACTORY));
   }
 
   public void registerProblemForReference(@Nonnull PsiReference reference,

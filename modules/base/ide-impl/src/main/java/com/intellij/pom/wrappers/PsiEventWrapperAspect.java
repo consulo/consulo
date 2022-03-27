@@ -26,12 +26,12 @@ import consulo.language.pom.PomModelAspect;
 import consulo.language.pom.event.PomModelEvent;
 import consulo.language.pom.TreeAspect;
 import consulo.language.pom.event.TreeChangeEvent;
-import consulo.language.impl.pom.internal.TreeChangeEventImpl;
+import consulo.language.impl.internal.pom.TreeChangeEventImpl;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
-import consulo.language.impl.psi.internal.PsiManagerImpl;
-import consulo.language.impl.psi.internal.PsiToDocumentSynchronizer;
+import consulo.language.impl.internal.psi.PsiManagerImpl;
+import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
 import consulo.language.impl.psi.DummyHolder;
 import consulo.language.file.light.LightVirtualFile;
 

@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.filters.position;
 
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.filters.ElementFilter;
+import consulo.language.psi.filter.ElementFilter;
 
 /**
  * @author peter

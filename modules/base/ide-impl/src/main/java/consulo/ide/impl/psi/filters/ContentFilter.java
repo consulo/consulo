@@ -18,6 +18,7 @@ package consulo.ide.impl.psi.filters;
 
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.psi.filters.position.PositionElementFilter;
+import consulo.language.psi.filter.ElementFilter;
 
 /**
  * Created by IntelliJ IDEA.

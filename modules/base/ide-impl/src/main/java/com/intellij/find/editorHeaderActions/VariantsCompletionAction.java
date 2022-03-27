@@ -15,17 +15,17 @@
  */
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ide.impl.psi.codeStyle.NameUtil;
+import consulo.language.editor.impl.internal.completion.NameUtil;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.text.Matcher;
+import consulo.language.editor.impl.internal.completion.Matcher;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.ide.fileTemplates.FileTemplatesScheme;
+import consulo.fileTemplate.FileTemplatesScheme;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;

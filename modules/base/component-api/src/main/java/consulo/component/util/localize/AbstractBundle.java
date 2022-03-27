@@ -15,6 +15,8 @@
  */
 package consulo.component.util.localize;
 
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
@@ -40,6 +42,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Denis Zhdanov
  * @since 8/1/11 2:37 PM
  */
+@Deprecated
+@DeprecationInfo("Migrate to new localize")
 public abstract class AbstractBundle {
   private Reference<ResourceBundle> myBundle;
   private final String myPathToBundle;

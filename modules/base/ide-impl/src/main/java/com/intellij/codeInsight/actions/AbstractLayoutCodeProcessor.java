@@ -11,7 +11,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.document.Document;
 import consulo.codeEditor.SelectionModel;
 import consulo.document.FileDocumentManager;

@@ -18,6 +18,8 @@ package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import com.intellij.openapi.util.Comparing;
 import consulo.component.util.Iconable;
+import consulo.language.psi.path.FileReference;
+import consulo.language.psi.path.FileReferenceCompletion;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiNamedElement;

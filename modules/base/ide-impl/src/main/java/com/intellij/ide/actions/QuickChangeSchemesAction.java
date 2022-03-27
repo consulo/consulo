@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;

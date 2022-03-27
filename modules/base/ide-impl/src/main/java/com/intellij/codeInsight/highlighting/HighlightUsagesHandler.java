@@ -18,7 +18,7 @@ package com.intellij.codeInsight.highlighting;
 
 import com.intellij.codeInsight.daemon.impl.IdentifierUtil;
 import com.intellij.codeInsight.hint.HintManager;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.find.EditorSearchSession;
 import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
 import consulo.language.editor.inject.EditorWindow;

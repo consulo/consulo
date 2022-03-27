@@ -59,7 +59,7 @@ import consulo.components.impl.stores.ProjectStorageUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.language.impl.psi.internal.SingleProjectHolder;
+import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
 import consulo.project.Project;

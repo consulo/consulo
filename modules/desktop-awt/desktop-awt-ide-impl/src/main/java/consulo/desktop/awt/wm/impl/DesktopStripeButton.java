@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.ide.HelpTooltip;
 import com.intellij.ide.actions.ActivateToolWindowAction;
 import consulo.application.ui.UISettings;

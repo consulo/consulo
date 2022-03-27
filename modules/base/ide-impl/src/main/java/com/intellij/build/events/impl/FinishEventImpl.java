@@ -19,7 +19,7 @@ import com.intellij.build.events.BuildEventsNls;
 import com.intellij.build.events.EventResult;
 import com.intellij.build.events.FinishEvent;
 import com.intellij.build.events.SuccessResult;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

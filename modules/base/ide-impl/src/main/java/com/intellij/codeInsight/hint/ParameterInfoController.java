@@ -5,7 +5,7 @@ package com.intellij.codeInsight.hint;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import com.intellij.codeInsight.daemon.impl.ParameterHintsPresentationManager;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupManager;

@@ -19,7 +19,7 @@ package consulo.ide.impl.psi.impl.source.codeStyle;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.psi.internal.IndentHelper;
+import consulo.language.impl.internal.psi.IndentHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.psi.impl.source.codeStyle.IndentHelperExtension;

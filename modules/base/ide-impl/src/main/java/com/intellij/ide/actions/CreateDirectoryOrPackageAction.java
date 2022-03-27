@@ -22,7 +22,7 @@ import com.intellij.ide.IdeView;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
 import com.intellij.ide.ui.newItemPopup.NewItemSimplePopupPanel;
 import com.intellij.ide.util.DirectoryChooserUtil;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.module.Module;

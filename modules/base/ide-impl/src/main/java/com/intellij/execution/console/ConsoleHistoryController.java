@@ -19,7 +19,7 @@ import consulo.ide.impl.AppTopics;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.ide.scratch.ScratchFileService;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;

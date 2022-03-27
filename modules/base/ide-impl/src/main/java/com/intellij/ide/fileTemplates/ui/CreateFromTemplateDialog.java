@@ -16,29 +16,29 @@
 
 package com.intellij.ide.fileTemplates.ui;
 
-import consulo.application.CommonBundle;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.CreateFileAction;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
+import consulo.application.CommonBundle;
 import consulo.application.WriteAction;
 import consulo.disposer.Disposer;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.fileTemplate.FileTemplateParseException;
+import consulo.fileTemplate.FileTemplateUtil;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import consulo.annotation.DeprecationInfo;
-import org.apache.velocity.runtime.parser.ParseException;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
@@ -89,7 +89,7 @@ public class CreateFromTemplateDialog extends DialogWrapper {
     try {
       unsetAttributes = myTemplate.getUnsetAttributes(myDefaultProperties, myProject);
     }
-    catch (ParseException e) {
+    catch (FileTemplateParseException e) {
       showErrorDialog(e);
     }
 

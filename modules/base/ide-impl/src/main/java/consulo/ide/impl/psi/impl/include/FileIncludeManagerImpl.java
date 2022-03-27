@@ -13,7 +13,7 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiManager;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
+import consulo.language.psi.path.FileReferenceSet;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;

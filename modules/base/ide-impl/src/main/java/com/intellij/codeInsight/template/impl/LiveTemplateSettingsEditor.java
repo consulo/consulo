@@ -16,44 +16,46 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.template.context.EverywhereContextType;
-import consulo.language.editor.template.context.TemplateContextType;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.CheckboxTree;
+import com.intellij.ui.CheckedTreeNode;
+import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.ui.GridBag;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.document.Document;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.template.Template;
 import consulo.language.editor.template.Variable;
+import consulo.language.editor.template.context.EverywhereContextType;
+import consulo.language.editor.template.context.TemplateContextType;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.undoRedo.CommandProcessor;
-import consulo.ui.ex.JBColor;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.EditorEx;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import com.intellij.ui.*;
-import consulo.ui.ex.RelativePoint;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import com.intellij.util.ui.GridBag;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -62,8 +64,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class LiveTemplateSettingsEditor extends JPanel {
   private final TemplateImpl myTemplate;
@@ -627,7 +629,7 @@ public class LiveTemplateSettingsEditor extends JPanel {
 
   private static ArrayList<Variable> parseVariables(CharSequence text) {
     ArrayList<Variable> variables = new ArrayList<Variable>();
-    TemplateImplUtil.parseVariables(text, variables, TemplateImpl.INTERNAL_VARS_SET);
+    TemplateImplUtil.parseVariables(text, variables, Template.INTERNAL_VARS_SET);
     return variables;
   }
 

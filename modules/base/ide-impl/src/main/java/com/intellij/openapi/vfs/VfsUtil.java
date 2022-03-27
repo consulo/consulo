@@ -15,27 +15,26 @@
  */
 package com.intellij.openapi.vfs;
 
-import consulo.application.WriteAction;
-import consulo.util.lang.SystemProperties;
-import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.lang.function.Condition;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
+import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -195,19 +194,7 @@ public class VfsUtil extends VfsUtilCore {
 
   @Nullable
   public static VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
-    VirtualFile file = base;
-
-    for (String pathElement : path) {
-      if (file == null) return null;
-      if ("..".equals(pathElement)) {
-        file = file.getParent();
-      }
-      else {
-        file = file.findChild(pathElement);
-      }
-    }
-
-    return file;
+    return VirtualFileUtil.findRelativeFile(base, path);
   }
 
   /**
@@ -425,38 +412,16 @@ public class VfsUtil extends VfsUtilCore {
   }
 
   public static VirtualFile createDirectories(@Nonnull final String directoryPath) throws IOException {
-    return WriteAction.compute(() -> {
-      VirtualFile res = createDirectoryIfMissing(directoryPath);
-      return res;
-    });
+    return VirtualFileUtil.createDirectories(directoryPath);
   }
 
   public static VirtualFile createDirectoryIfMissing(VirtualFile parent, String relativePath) throws IOException {
-    for (String each : StringUtil.split(relativePath, "/")) {
-      VirtualFile child = parent.findChild(each);
-      if (child == null) {
-        child = parent.createChildDirectory(LocalFileSystem.getInstance(), each);
-      }
-      parent = child;
-    }
-    return parent;
+    return VirtualFileUtil.createDirectoryIfMissing(parent, relativePath);
   }
 
   @Nullable
   public static VirtualFile createDirectoryIfMissing(@Nonnull String directoryPath) throws IOException {
-    String path = FileUtil.toSystemIndependentName(directoryPath);
-    final VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
-    if (file == null) {
-      int pos = path.lastIndexOf('/');
-      if (pos < 0) return null;
-      VirtualFile parent = createDirectoryIfMissing(path.substring(0, pos));
-      if (parent == null) return null;
-      final String dirName = path.substring(pos + 1);
-      VirtualFile child = parent.findChild(dirName);
-      if (child != null && child.isDirectory()) return child;
-      return parent.createChildDirectory(LocalFileSystem.getInstance(), dirName);
-    }
-    return file;
+    return VirtualFileUtil.createDirectoryIfMissing(directoryPath);
   }
 
   /**

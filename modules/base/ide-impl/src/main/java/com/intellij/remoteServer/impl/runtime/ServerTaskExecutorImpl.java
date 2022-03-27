@@ -2,7 +2,7 @@ package com.intellij.remoteServer.impl.runtime;
 
 import com.intellij.remoteServer.runtime.RemoteOperationCallback;
 import com.intellij.remoteServer.runtime.ServerTaskExecutor;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.logging.Logger;
 

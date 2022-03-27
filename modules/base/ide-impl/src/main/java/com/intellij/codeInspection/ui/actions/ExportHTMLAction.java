@@ -39,7 +39,7 @@ import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.component.ProcessCanceledException;
 import consulo.container.boot.ContainerPathManager;
 import consulo.language.codeStyle.CodeStyleSettingsManager;

@@ -24,7 +24,7 @@ import com.intellij.execution.impl.RunConfigurationBeforeRunProvider;
 import com.intellij.execution.impl.RunConfigurationSelector;
 import com.intellij.execution.impl.RunManagerImpl;
 import consulo.dataContext.DataManager;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.ui.ex.action.ActionToolbarPosition;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;

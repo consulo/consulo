@@ -29,7 +29,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ui.ex.awt.*;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataContext;

@@ -25,7 +25,7 @@ import consulo.application.util.function.Computable;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.io.BufferExposingByteArrayOutputStream;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import com.intellij.util.indexing.*;
 import com.intellij.util.indexing.impl.forward.ForwardIndex;
 import com.intellij.util.indexing.impl.forward.ForwardIndexAccessor;

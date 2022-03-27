@@ -15,7 +15,7 @@ import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.language.psi.stub.StubIndexKey;
 import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
 import consulo.util.lang.SystemProperties;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.container.boot.ContainerPathManager;

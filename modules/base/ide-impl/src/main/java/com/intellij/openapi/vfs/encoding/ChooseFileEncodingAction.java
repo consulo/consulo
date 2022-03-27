@@ -8,7 +8,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.Pair;

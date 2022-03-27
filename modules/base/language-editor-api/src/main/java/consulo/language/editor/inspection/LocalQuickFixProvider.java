@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.psi.PsiReference;
 
 import javax.annotation.Nullable;
@@ -25,6 +26,8 @@ import javax.annotation.Nullable;
  * User: anna
  * Date: 30-Nov-2006
  */
+@Deprecated
+@DeprecationInfo("Use PsiReferenceLocalQuickFixProvider")
 public interface LocalQuickFixProvider {
   @Nullable
   LocalQuickFix[] getQuickFixes();

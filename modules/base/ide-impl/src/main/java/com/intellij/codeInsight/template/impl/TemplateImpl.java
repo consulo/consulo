@@ -35,7 +35,7 @@ public class TemplateImpl extends Template implements SchemeElement {
   private String myDescription;
   private String myGroupName;
   private char myShortcutChar = TemplateSettings.DEFAULT_CHAR;
-  private final ArrayList<Variable> myVariables = new ArrayList<Variable>();
+  private final ArrayList<Variable> myVariables = new ArrayList<>();
   private ArrayList<Segment> mySegments = null;
   private String myTemplateText = null;
   private String myId;
@@ -56,7 +56,7 @@ public class TemplateImpl extends Template implements SchemeElement {
     if (myString != null ? !myString.equals(template.myString) : template.myString != null) return false;
     if (myTemplateText != null ? !myTemplateText.equals(template.myTemplateText) : template.myTemplateText != null) return false;
 
-    if (!new HashSet<Variable>(myVariables).equals(new HashSet<Variable>(template.myVariables))) return false;
+    if (!new HashSet<>(myVariables).equals(new HashSet<>(template.myVariables))) return false;
     if (isDeactivated != template.isDeactivated) return false;
 
     return true;
@@ -77,8 +77,6 @@ public class TemplateImpl extends Template implements SchemeElement {
   private boolean isToShortenLongNames = true;
   private boolean toParseSegments = true;
   private TemplateContext myTemplateContext = new TemplateContext();
-
-  public static final Set<String> INTERNAL_VARS_SET = Set.of(END, SELECTION, SELECTION_START, SELECTION_END);
 
   private boolean isDeactivated = false;
 
@@ -101,7 +99,7 @@ public class TemplateImpl extends Template implements SchemeElement {
     this(key, null, group);
     toParseSegments = false;
     myTemplateText = "";
-    mySegments = new ArrayList<Segment>();
+    mySegments = new ArrayList<>();
   }
 
   public TemplateImpl(@Nonnull String key, String string, String group) {
@@ -109,7 +107,6 @@ public class TemplateImpl extends Template implements SchemeElement {
     myString = string;
     myGroupName = group;
   }
-
 
   @Override
   public void addTextSegment(@Nonnull String text) {
@@ -281,7 +278,7 @@ public class TemplateImpl extends Template implements SchemeElement {
 
     if (myString == null) myString = "";
     myString = StringUtil.convertLineSeparators(myString);
-    mySegments = new ArrayList<Segment>();
+    mySegments = new ArrayList<>();
     StringBuilder buffer = new StringBuilder("");
     TemplateTextLexer lexer = new TemplateTextLexer();
     lexer.start(myString);
@@ -416,7 +413,7 @@ public class TemplateImpl extends Template implements SchemeElement {
   }
 
   public Map<TemplateOptionalProcessor, Boolean> createOptions() {
-    Map<TemplateOptionalProcessor, Boolean> context = new LinkedHashMap<TemplateOptionalProcessor, Boolean>();
+    Map<TemplateOptionalProcessor, Boolean> context = new LinkedHashMap<>();
     for (TemplateOptionalProcessor processor : Extensions.getExtensions(TemplateOptionalProcessor.EP_NAME)) {
       context.put(processor, processor.isEnabled(this));
     }
@@ -425,7 +422,7 @@ public class TemplateImpl extends Template implements SchemeElement {
 
   public Map<TemplateContextType, Boolean> createContext() {
 
-    Map<TemplateContextType, Boolean> context = new LinkedHashMap<TemplateContextType, Boolean>();
+    Map<TemplateContextType, Boolean> context = new LinkedHashMap<>();
     for (TemplateContextType processor : TemplateContextType.EP_NAME.getExtensions()) {
       context.put(processor, getTemplateContext().isEnabled(processor));
     }

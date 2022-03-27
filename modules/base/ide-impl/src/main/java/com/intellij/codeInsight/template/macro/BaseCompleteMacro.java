@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.template.macro;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;

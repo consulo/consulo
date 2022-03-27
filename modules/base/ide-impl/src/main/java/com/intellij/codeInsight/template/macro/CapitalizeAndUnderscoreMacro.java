@@ -21,7 +21,7 @@ import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ide.impl.psi.codeStyle.NameUtil;
+import consulo.language.editor.impl.internal.completion.NameUtil;
 import javax.annotation.Nonnull;
 
 /**

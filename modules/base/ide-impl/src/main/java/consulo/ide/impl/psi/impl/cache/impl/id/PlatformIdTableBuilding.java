@@ -43,7 +43,7 @@ import consulo.language.util.CommentUtilCore;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.index.io.DataIndexer;
 import consulo.language.psi.stub.FileContent;
-import consulo.language.impl.psi.internal.stub.SubstitutedFileType;
+import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import javax.annotation.Nonnull;

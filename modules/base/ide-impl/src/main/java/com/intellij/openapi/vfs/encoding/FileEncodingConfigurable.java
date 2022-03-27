@@ -3,7 +3,7 @@
 package com.intellij.openapi.vfs.encoding;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import com.intellij.lang.PerFileMappingsEx;
 import consulo.language.file.EncodingManager;
 import consulo.ui.ex.action.ActionGroup;

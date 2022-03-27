@@ -10,7 +10,7 @@ import com.intellij.ide.actions.runAnything.items.RunAnythingItemBase;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.Matcher;
+import consulo.language.editor.impl.internal.completion.Matcher;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 

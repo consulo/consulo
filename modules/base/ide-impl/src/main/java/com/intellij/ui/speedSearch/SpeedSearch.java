@@ -17,11 +17,11 @@ package com.intellij.ui.speedSearch;
 
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.codeStyle.AllOccurrencesMatcher;
-import consulo.ide.impl.psi.codeStyle.FixingLayoutMatcher;
-import consulo.ide.impl.psi.codeStyle.MinusculeMatcher;
-import consulo.ide.impl.psi.codeStyle.NameUtil;
-import com.intellij.util.text.Matcher;
+import consulo.language.editor.impl.internal.completion.AllOccurrencesMatcher;
+import consulo.language.editor.impl.internal.completion.FixingLayoutMatcher;
+import consulo.language.editor.impl.internal.completion.MinusculeMatcher;
+import consulo.language.editor.impl.internal.completion.NameUtil;
+import consulo.language.editor.impl.internal.completion.Matcher;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import kava.beans.PropertyChangeListener;

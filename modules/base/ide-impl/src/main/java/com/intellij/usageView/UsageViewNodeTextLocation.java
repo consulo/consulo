@@ -26,7 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-import consulo.ide.impl.psi.meta.PsiPresentableMetaData;
+import consulo.language.psi.meta.PsiPresentableMetaData;
 import javax.annotation.Nonnull;
 
 /**

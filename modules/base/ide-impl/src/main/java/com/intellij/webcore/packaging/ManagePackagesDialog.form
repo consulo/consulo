@@ -78,7 +78,7 @@
                     <properties>
                       <enabled value="true"/>
                       <selected value="false"/>
-                      <text resource-bundle="messages/LangBundle" key="checkbox.package.specify.version"/>
+                      <text resource-bundle="consulo/language/LangBundle" key="checkbox.package.specify.version"/>
                     </properties>
                   </component>
                   <component id="a5b42" class="javax.swing.JCheckBox" binding="myOptionsCheckBox" default-binding="true">

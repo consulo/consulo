@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.application.Result;
 import consulo.application.RunResult;
 import consulo.undoRedo.UndoConfirmationPolicy;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;

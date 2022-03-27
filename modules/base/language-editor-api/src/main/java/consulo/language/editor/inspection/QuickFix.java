@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.inspection;
 
-import consulo.application.WriteActionAware;
 import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 

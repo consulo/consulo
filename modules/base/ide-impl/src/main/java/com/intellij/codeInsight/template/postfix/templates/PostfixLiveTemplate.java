@@ -9,7 +9,7 @@ import com.intellij.codeInsight.template.impl.CustomLiveTemplateLookupElement;
 import com.intellij.codeInsight.template.postfix.completion.PostfixTemplateLookupElement;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
 import consulo.language.util.AttachmentFactoryUtil;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import consulo.application.ApplicationManager;

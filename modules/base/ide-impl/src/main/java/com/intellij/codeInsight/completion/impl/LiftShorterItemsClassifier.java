@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.completion.impl;
 
-import com.intellij.codeInsight.completion.CompletionUtil;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.FlatteningIterator;
 import consulo.language.editor.completion.lookup.Classifier;

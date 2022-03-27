@@ -33,7 +33,7 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.PairFunction;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.ui.ex.util.TextAttributesUtil;

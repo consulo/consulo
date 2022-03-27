@@ -16,10 +16,11 @@
 
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateDescriptor;
-import com.intellij.ide.fileTemplates.FileTemplateGroupDescriptor;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateDescriptor;
+import consulo.fileTemplate.FileTemplateGroupDescriptor;
 import com.intellij.ui.TreeSpeedSearch;
+import consulo.fileTemplate.impl.internal.FileTemplateBase;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;

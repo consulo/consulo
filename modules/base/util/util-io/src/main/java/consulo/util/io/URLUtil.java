@@ -18,6 +18,7 @@ package consulo.util.io;
 import consulo.annotation.DeprecationInfo;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -204,6 +205,20 @@ public class URLUtil {
       i++;
     }
     return decoded.toString();
+  }
+
+  public static URL internProtocol(@Nonnull URL url) {
+    try {
+      final String protocol = url.getProtocol();
+      if ("file".equals(protocol) || "jar".equals(protocol)) {
+        return new URL(protocol.intern(), url.getHost(), url.getPort(), url.getFile());
+      }
+      return url;
+    }
+    catch (MalformedURLException e) {
+      LoggerFactory.getLogger(URLUtil.class).error(url.toString(), e);
+      return null;
+    }
   }
 
   private static int decode(char c) {

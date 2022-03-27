@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.rename.inplace;
 
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import com.intellij.openapi.util.Pair;

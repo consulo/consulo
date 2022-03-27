@@ -17,6 +17,7 @@
 package consulo.ide.impl.psi.filters;
 
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.filter.ElementFilter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +27,7 @@ import consulo.language.psi.PsiElement;
  * To change this template use Options | File Templates.
  */
 public class NotFilter
- implements ElementFilter{
+        implements ElementFilter {
   ElementFilter myFilter;
 
   public NotFilter(){}

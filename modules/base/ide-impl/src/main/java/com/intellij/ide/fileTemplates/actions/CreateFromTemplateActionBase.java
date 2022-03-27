@@ -15,33 +15,27 @@
  */
 package com.intellij.ide.fileTemplates.actions;
 
-import consulo.language.editor.template.TemplateManager;
-import com.intellij.codeInsight.template.impl.TemplateImpl;
 import com.intellij.ide.IdeView;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplateDialog;
 import com.intellij.ide.util.DirectoryChooserUtil;
-import com.intellij.ide.util.EditorHelper;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.command.WriteCommandAction;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
+import consulo.dataContext.DataContext;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.language.editor.impl.fileTemplate.EditorFileTemplateUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import static com.intellij.util.ObjectUtils.notNull;
 
@@ -85,33 +79,11 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
   }
 
   public static void startLiveTemplate(@Nonnull PsiFile file) {
-    startLiveTemplate(file, Collections.emptyMap());
+    EditorFileTemplateUtil.startLiveTemplate(file, Map.of());
   }
 
   public static void startLiveTemplate(@Nonnull PsiFile file, @Nonnull Map<String, String> defaultValues) {
-    Editor editor = EditorHelper.openInEditor(file);
-    if (editor == null) return;
-
-    TemplateImpl template = new TemplateImpl("", file.getText(), "");
-    template.setInline(true);
-    int count = template.getSegmentsCount();
-    if (count == 0) return;
-
-    Set<String> variables = new HashSet<>();
-    for (int i = 0; i < count; i++) {
-      variables.add(template.getSegmentName(i));
-    }
-    variables.removeAll(TemplateImpl.INTERNAL_VARS_SET);
-    for (String variable : variables) {
-      String defaultValue = defaultValues.getOrDefault(variable, variable);
-      template.addVariable(variable, null, '"' + defaultValue + '"', true);
-    }
-
-    Project project = file.getProject();
-    WriteCommandAction.runWriteCommandAction(project, () -> editor.getDocument().setText(template.getTemplateText()));
-
-    editor.getCaretModel().moveToOffset(0);  // ensures caret at the start of the template
-    TemplateManager.getInstance(project).startTemplate(editor, template);
+    EditorFileTemplateUtil.startLiveTemplate(file, defaultValues);
   }
 
   @Nullable
@@ -131,7 +103,8 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
     return null;
   }
 
-  protected void elementCreated(CreateFromTemplateDialog dialog, PsiElement createdElement) { }
+  protected void elementCreated(CreateFromTemplateDialog dialog, PsiElement createdElement) {
+  }
 
   @Nullable
   protected Map<String, String> getLiveTemplateDefaults(DataContext dataContext, @Nonnull PsiFile file) {

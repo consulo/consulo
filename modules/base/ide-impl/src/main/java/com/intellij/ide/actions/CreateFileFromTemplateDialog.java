@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.actions.newclass.CreateWithTemplatesDialogPanel;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.project.Project;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.InputValidatorEx;

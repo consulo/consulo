@@ -17,7 +17,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.ChildInfoImpl;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.util.ArrayUtil;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.Stack;
 import consulo.virtualFileSystem.event.*;

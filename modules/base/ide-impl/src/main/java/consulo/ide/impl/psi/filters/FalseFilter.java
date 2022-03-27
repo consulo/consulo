@@ -16,6 +16,7 @@
 package consulo.ide.impl.psi.filters;
 
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.filter.ElementFilter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,7 +25,7 @@ import consulo.language.psi.PsiElement;
  * Time: 17:31:05
  * To change this template use Options | File Templates.
  */
-public class FalseFilter implements ElementFilter{
+public class FalseFilter implements ElementFilter {
   public static final FalseFilter INSTANCE = new FalseFilter();
 
   @Override

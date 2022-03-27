@@ -29,7 +29,7 @@ import consulo.content.base.SourcesOrderRootType;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.ide.impl.psi.codeStyle.MinusculeMatcher;
+import consulo.language.editor.impl.internal.completion.MinusculeMatcher;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.editor.scope.GlobalSearchScopesCore;
 import consulo.application.util.function.Processor;

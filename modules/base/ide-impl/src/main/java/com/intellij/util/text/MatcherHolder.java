@@ -15,6 +15,8 @@
  */
 package com.intellij.util.text;
 
+import consulo.language.editor.impl.internal.completion.Matcher;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

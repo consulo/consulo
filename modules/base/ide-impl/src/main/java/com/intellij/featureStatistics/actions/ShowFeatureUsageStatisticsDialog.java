@@ -21,6 +21,7 @@ import com.intellij.ide.util.TipUIUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.logging.Logger;
 import consulo.application.ui.HelpManager;
 import consulo.project.Project;

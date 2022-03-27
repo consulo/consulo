@@ -23,7 +23,7 @@
 package com.intellij.openapi.vcs.changes.patch;
 
 import consulo.logging.Logger;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vcs.*;

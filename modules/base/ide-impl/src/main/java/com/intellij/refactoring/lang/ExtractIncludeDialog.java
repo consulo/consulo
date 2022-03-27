@@ -32,7 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.PsiFileSystemItemUtil;
+import consulo.language.psi.path.PsiFileSystemItemUtil;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;

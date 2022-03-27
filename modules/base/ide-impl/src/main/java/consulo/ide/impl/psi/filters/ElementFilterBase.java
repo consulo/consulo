@@ -16,11 +16,12 @@
 package consulo.ide.impl.psi.filters;
 
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.filter.ElementFilter;
 
 /**
  * @author peter
  */
-public abstract class ElementFilterBase<T> implements ElementFilter{
+public abstract class ElementFilterBase<T> implements ElementFilter {
   private final Class<T> myClass;
 
   public ElementFilterBase(final Class<T> aClass) {

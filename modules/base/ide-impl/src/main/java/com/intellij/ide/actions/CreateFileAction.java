@@ -21,7 +21,7 @@ import com.intellij.ide.IdeBundle;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
 import com.intellij.ide.ui.newItemPopup.NewItemSimplePopupPanel;
 import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.language.file.FileTypeManager;

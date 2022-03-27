@@ -18,6 +18,8 @@ package com.intellij.openapi.paths;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.OuterLanguageElement;
+import consulo.language.psi.path.DynamicContextProvider;
+import consulo.language.psi.path.PathReferenceProviderBase;
 
 /**
  * @author Dmitry Avdeev

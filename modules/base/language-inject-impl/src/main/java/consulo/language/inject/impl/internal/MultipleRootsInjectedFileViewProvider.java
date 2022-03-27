@@ -24,7 +24,7 @@ import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.impl.psi.internal.PsiManagerEx;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;

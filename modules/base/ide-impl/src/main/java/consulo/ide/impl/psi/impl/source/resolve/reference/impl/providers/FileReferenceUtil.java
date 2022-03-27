@@ -15,6 +15,10 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
+import consulo.language.psi.path.FileReference;
+import consulo.language.psi.path.FileReferenceOwner;
+import consulo.language.psi.path.FileReferenceSet;
+import consulo.language.psi.path.PsiFileReference;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;

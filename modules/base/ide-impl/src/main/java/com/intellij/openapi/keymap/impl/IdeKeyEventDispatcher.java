@@ -64,7 +64,7 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.KeyboardLayoutUtil;
+import consulo.ui.ex.KeyboardLayoutUtil;
 import consulo.ui.ex.awt.util.MacUIUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.application.internal.TransactionGuardEx;

@@ -17,23 +17,23 @@
 package com.intellij.ide.fileTemplates.impl;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.fileTemplates.FileTemplatesScheme;
-import com.intellij.ide.fileTemplates.InternalTemplateBean;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.component.extension.Extensions;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.components.impl.stores.ProjectStorageUtil;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.fileTemplate.FileTemplatesScheme;
+import consulo.fileTemplate.impl.internal.*;
+import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -245,7 +245,7 @@ public class FileTemplateManagerImpl extends FileTemplateManager implements Pers
   @Override
   @Nonnull
   public FileTemplate[] getInternalTemplates() {
-    InternalTemplateBean[] internalTemplateBeans = Extensions.getExtensions(InternalTemplateBean.EP_NAME);
+    InternalTemplateBean[] internalTemplateBeans = InternalTemplateBean.EP_NAME.getExtensions();
     FileTemplate[] result = new FileTemplate[internalTemplateBeans.length];
     for (int i = 0; i < internalTemplateBeans.length; i++) {
       result[i] = getInternalTemplate(internalTemplateBeans[i].name);

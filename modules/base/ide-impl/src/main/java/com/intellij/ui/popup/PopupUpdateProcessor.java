@@ -16,7 +16,7 @@
 
 package com.intellij.ui.popup;
 
-import com.intellij.codeInsight.completion.CompletionUtil;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.ide.util.gotoByName.ChooseByNameBase;
 import consulo.ide.ui.popup.HintUpdateSupply;

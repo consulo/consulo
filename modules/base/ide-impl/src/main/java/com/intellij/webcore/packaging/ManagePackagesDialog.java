@@ -5,7 +5,7 @@ import consulo.process.ExecutionException;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.SimpleTextAttributes;

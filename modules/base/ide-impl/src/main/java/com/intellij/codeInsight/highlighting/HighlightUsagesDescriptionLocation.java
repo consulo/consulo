@@ -19,7 +19,7 @@ package com.intellij.codeInsight.highlighting;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.meta.PsiPresentableMetaData;
+import consulo.language.psi.meta.PsiPresentableMetaData;
 import javax.annotation.Nonnull;
 
 /**

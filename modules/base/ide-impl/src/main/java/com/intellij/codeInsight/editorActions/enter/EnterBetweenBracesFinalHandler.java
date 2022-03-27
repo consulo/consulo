@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.editorActions.enter;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import com.intellij.codeInsight.editorActions.CodeDocumentationUtil;
 import com.intellij.codeInsight.editorActions.EnterHandler;
 import consulo.language.Language;

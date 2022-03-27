@@ -17,15 +17,16 @@
 package com.intellij.ide.fileTemplates.ui;
 
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import consulo.fileTemplate.FileTemplateUtil;
+import com.intellij.ui.ColoredListCellRenderer;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
+import consulo.language.psi.PsiDirectory;
 import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.language.psi.PsiDirectory;
-import com.intellij.ui.ColoredListCellRenderer;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -74,7 +75,7 @@ public class SelectTemplateDialog extends DialogWrapper {
     FileTemplate[] allTemplates = FileTemplateManager.getInstance(myProject).getAllTemplates();
     PsiDirectory[] dirs = {myDirectory};
     for (FileTemplate template : allTemplates) {
-      if (FileTemplateUtil.canCreateFromTemplate(dirs, template)) {
+      if (FileTemplateImplUtil.canCreateFromTemplate(dirs, template)) {
         model.addElement(template);
       }
     }

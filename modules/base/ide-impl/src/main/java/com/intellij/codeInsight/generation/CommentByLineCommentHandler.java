@@ -19,7 +19,7 @@ package com.intellij.codeInsight.generation;
 import consulo.language.codeStyle.CodeStyle;
 import com.intellij.codeInsight.CommentUtil;
 import com.intellij.codeInsight.actions.MultiCaretCodeInsightActionHandler;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.language.codeStyle.internal.IndentData;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import consulo.language.editor.inject.EditorWindow;

@@ -29,7 +29,7 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.io.UnsyncByteArrayInputStream;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.keyFMap.KeyFMap;
 import consulo.util.io.FileTooBigException;

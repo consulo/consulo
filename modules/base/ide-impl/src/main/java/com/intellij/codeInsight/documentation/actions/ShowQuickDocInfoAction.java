@@ -22,7 +22,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.openapi.actionSystem.*;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;

@@ -4,7 +4,7 @@ package com.intellij.build;
 import com.intellij.build.events.*;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;

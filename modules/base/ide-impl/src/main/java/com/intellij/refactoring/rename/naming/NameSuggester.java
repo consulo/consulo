@@ -19,7 +19,7 @@ package com.intellij.refactoring.rename.naming;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ide.impl.psi.codeStyle.NameUtil;
+import consulo.language.editor.impl.internal.completion.NameUtil;
 import gnu.trove.TIntIntHashMap;
 
 import javax.annotation.Nullable;

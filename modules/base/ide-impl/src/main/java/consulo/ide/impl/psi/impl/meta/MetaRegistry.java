@@ -24,7 +24,7 @@ import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.UserDataCache;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.filters.ElementFilter;
+import consulo.language.psi.filter.ElementFilter;
 import consulo.ide.impl.psi.filters.position.PatternFilter;
 import consulo.ide.impl.psi.meta.MetaDataContributor;
 import consulo.ide.impl.psi.meta.MetaDataRegistrar;

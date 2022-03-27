@@ -17,7 +17,7 @@ package com.intellij.codeInsight.daemon.impl.quickfix;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.FileModificationService;
-import com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement;
+import consulo.language.editor.inspection.LocalQuickFixAndIntentionActionOnPsiElement;
 import com.intellij.lang.LanguageNamesValidation;
 import com.intellij.lang.refactoring.NamesValidator;
 import consulo.logging.Logger;

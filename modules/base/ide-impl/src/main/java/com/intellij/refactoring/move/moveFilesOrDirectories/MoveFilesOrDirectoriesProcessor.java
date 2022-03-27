@@ -15,9 +15,9 @@
  */
 package com.intellij.refactoring.move.moveFilesOrDirectories;
 
-import com.intellij.ide.util.EditorHelper;
+import consulo.language.editor.impl.util.EditorHelper;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.paths.PsiDynaReference;
+import consulo.language.psi.path.PsiDynaReference;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
@@ -25,7 +25,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
-import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReference;
+import consulo.language.psi.path.FileReference;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.psi.search.searches.ReferencesSearch;
 import com.intellij.refactoring.BaseRefactoringProcessor;

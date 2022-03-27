@@ -21,6 +21,7 @@ import consulo.util.io.FileTooBigException;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 
 /**
@@ -39,6 +40,11 @@ public interface RawFileLoader {
 
   @Nonnull
   byte[] loadFileBytes(@Nonnull File file) throws IOException, FileTooBigException;
+
+  @Nonnull
+  default String loadFileText(@Nonnull File file, @Nonnull Charset charset) throws IOException, FileTooBigException {
+    return new String(loadFileBytes(file), charset);
+  }
 
   default boolean isTooLarge(long length) {
     return isLargeForContentLoading(length);

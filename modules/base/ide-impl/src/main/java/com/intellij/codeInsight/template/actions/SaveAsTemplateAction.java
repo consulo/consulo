@@ -24,7 +24,7 @@
  */
 package com.intellij.codeInsight.template.actions;
 
-import com.intellij.codeInsight.completion.CompletionUtil;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.editor.completion.OffsetKey;
 import com.intellij.codeInsight.completion.OffsetsInFile;
 import consulo.language.editor.template.context.TemplateActionContext;
@@ -35,7 +35,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;

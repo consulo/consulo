@@ -11,7 +11,7 @@ import com.intellij.diff.util.DiffUserDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.ui.ex.awt.DialogBuilder;

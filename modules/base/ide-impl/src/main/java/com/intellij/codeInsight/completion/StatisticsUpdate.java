@@ -20,7 +20,7 @@ import consulo.language.editor.completion.CompletionInitializationContext;
 import consulo.language.editor.completion.lookup.InsertionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.featureStatistics.FeatureUsageTrackerImpl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;

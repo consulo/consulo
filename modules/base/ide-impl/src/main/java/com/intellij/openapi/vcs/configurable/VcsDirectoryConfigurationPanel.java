@@ -41,7 +41,7 @@ import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.table.TableView;
 import com.intellij.util.Function;
-import com.intellij.util.UriUtil;
+import consulo.util.io.UriUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.*;
 import com.intellij.xml.util.XmlStringUtil;

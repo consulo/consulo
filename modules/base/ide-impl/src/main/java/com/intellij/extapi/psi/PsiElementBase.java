@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.navigation.Navigatable;
 import consulo.language.impl.psi.ResolveScopeManager;
-import consulo.language.impl.psi.internal.SharedPsiElementImplUtil;
+import consulo.language.impl.internal.psi.SharedPsiElementImplUtil;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;

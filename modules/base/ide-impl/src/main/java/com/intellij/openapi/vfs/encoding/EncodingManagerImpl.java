@@ -18,7 +18,7 @@ import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.file.EncodingManager;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;

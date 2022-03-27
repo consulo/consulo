@@ -23,7 +23,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
-import consulo.language.impl.psi.internal.SingleProjectHolder;
+import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

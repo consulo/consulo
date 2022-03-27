@@ -19,7 +19,7 @@ import consulo.component.ComponentManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.impl.DocumentImpl;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
 import consulo.virtualFileSystem.VirtualFile;

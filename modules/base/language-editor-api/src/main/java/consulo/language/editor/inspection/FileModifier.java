@@ -15,7 +15,6 @@
  */
 package consulo.language.editor.inspection;
 
-import consulo.application.WriteActionAware;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
-import consulo.ide.impl.psi.meta.PsiPresentableMetaData;
+import consulo.language.psi.meta.PsiPresentableMetaData;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.psi.search.searches.ReferencesSearch;

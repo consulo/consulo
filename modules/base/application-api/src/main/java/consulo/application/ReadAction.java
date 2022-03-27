@@ -17,7 +17,7 @@ package consulo.application;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

@@ -4,6 +4,7 @@ package com.intellij.codeInsight;
 import com.intellij.codeInsight.completion.CompletionPhase;
 import com.intellij.codeInsight.completion.CompletionProgressIndicator;
 import consulo.language.editor.AutoPopupController;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CompletionType;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.hint.ShowParameterInfoHandler;

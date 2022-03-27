@@ -18,7 +18,7 @@ package consulo.language.inject.impl.internal;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.language.impl.psi.internal.pointer.SmartPointerManagerImpl;
+import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;

@@ -16,7 +16,7 @@
 
 package com.intellij.application.options;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.dataContext.DataManager;
 import consulo.application.PowerSaveMode;

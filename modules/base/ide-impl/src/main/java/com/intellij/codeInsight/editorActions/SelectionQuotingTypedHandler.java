@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.action.TypedHandlerDelegate;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.CaretModel;

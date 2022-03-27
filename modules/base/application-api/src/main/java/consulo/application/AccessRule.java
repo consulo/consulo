@@ -18,7 +18,7 @@ package consulo.application;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.logging.Logger;
 import consulo.util.concurrent.AsyncResult;
 

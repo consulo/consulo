@@ -39,7 +39,7 @@ import consulo.application.util.concurrent.ThreadDumper;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.codeEditor.Editor;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;

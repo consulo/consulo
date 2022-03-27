@@ -16,9 +16,9 @@
 package com.intellij.lang.pratt;
 
 import consulo.language.parser.ITokenTypeRemapper;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.language.parser.PsiBuilder;
-import consulo.language.impl.parser.internal.PsiBuilderImpl;
+import consulo.language.impl.internal.parser.PsiBuilderImpl;
 import consulo.language.lexer.Lexer;
 import consulo.util.lang.Trinity;
 import consulo.language.ast.IElementType;

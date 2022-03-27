@@ -17,7 +17,7 @@
 package consulo.language.impl.psi;
 
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.ast.internal.SharedImplUtil;
+import consulo.language.impl.internal.ast.SharedImplUtil;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;

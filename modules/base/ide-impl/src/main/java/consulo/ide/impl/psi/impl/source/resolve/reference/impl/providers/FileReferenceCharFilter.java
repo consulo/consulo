@@ -18,6 +18,7 @@ package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 import com.intellij.codeInsight.lookup.CharFilter;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.psi.path.FileReference;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiReference;
 

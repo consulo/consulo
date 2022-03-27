@@ -50,7 +50,7 @@ public class VfsUtilCore {
   private static final String MAILTO = "mailto";
 
   public static final String LOCALHOST_URI_PATH_PREFIX = URLUtil.LOCALHOST_URI_PATH_PREFIX;
-  public static final char VFS_SEPARATOR_CHAR = '/';
+  public static final char VFS_SEPARATOR_CHAR = VirtualFileUtil.VFS_SEPARATOR_CHAR;
 
   private static final String PROTOCOL_DELIMITER = ":";
 
@@ -129,7 +129,7 @@ public class VfsUtilCore {
 
   @Nullable
   public static String getRelativePath(@Nonnull VirtualFile file, @Nonnull VirtualFile ancestor) {
-    return getRelativePath(file, ancestor, VFS_SEPARATOR_CHAR);
+    return VirtualFileUtil.getRelativePath(file, ancestor);
   }
 
   /**
@@ -143,37 +143,7 @@ public class VfsUtilCore {
    */
   @Nullable
   public static String getRelativePath(@Nonnull VirtualFile file, @Nonnull VirtualFile ancestor, char separator) {
-    if (!file.getFileSystem().equals(ancestor.getFileSystem())) {
-      return null;
-    }
-
-    int length = 0;
-    VirtualFile parent = file;
-    while (true) {
-      if (parent == null) return null;
-      if (parent.equals(ancestor)) break;
-      if (length > 0) {
-        length++;
-      }
-      length += parent.getNameSequence().length();
-      parent = parent.getParent();
-    }
-
-    char[] chars = new char[length];
-    int index = chars.length;
-    parent = file;
-    while (true) {
-      if (parent.equals(ancestor)) break;
-      if (index < length) {
-        chars[--index] = separator;
-      }
-      CharSequence name = parent.getNameSequence();
-      for (int i = name.length() - 1; i >= 0; i--) {
-        chars[--index] = name.charAt(i);
-      }
-      parent = parent.getParent();
-    }
-    return StringFactory.createShared(chars);
+    return VirtualFileUtil.getRelativePath(file, ancestor, separator);
   }
 
   @Nullable
@@ -428,53 +398,7 @@ public class VfsUtilCore {
 
   @Nullable
   public static VirtualFile findRelativeFile(@Nonnull String uri, @Nullable VirtualFile base) {
-    if (base != null) {
-      if (!base.isValid()) {
-        LOG.error("Invalid file name: " + base.getName() + ", url: " + uri);
-      }
-    }
-
-    uri = uri.replace('\\', '/');
-
-    if (uri.startsWith("file:///")) {
-      uri = uri.substring("file:///".length());
-      if (!SystemInfo.isWindows) uri = "/" + uri;
-    }
-    else if (uri.startsWith("file:/")) {
-      uri = uri.substring("file:/".length());
-      if (!SystemInfo.isWindows) uri = "/" + uri;
-    }
-    else {
-      uri = StringUtil.trimStart(uri, "file:");
-    }
-
-    VirtualFile file = null;
-
-    if (uri.startsWith("jar:file:/")) {
-      uri = uri.substring("jar:file:/".length());
-      if (!SystemInfo.isWindows) uri = "/" + uri;
-      file = VirtualFileManager.getInstance().findFileByUrl(StandardFileSystems.ZIP_PROTOCOL_PREFIX + uri);
-    }
-    else if (!SystemInfo.isWindows && StringUtil.startsWithChar(uri, '/') || SystemInfo.isWindows && uri.length() >= 2 && Character.isLetter(uri.charAt(0)) && uri.charAt(1) == ':') {
-      file = StandardFileSystems.local().findFileByPath(uri);
-    }
-
-    if (file == null && uri.contains(URLUtil.ARCHIVE_SEPARATOR)) {
-      file = StandardFileSystems.zip().findFileByPath(uri);
-      if (file == null && base == null) {
-        file = VirtualFileManager.getInstance().findFileByUrl(uri);
-      }
-    }
-
-    if (file == null) {
-      if (base == null) return StandardFileSystems.local().findFileByPath(uri);
-      if (!base.isDirectory()) base = base.getParent();
-      if (base == null) return StandardFileSystems.local().findFileByPath(uri);
-      file = VirtualFileManager.getInstance().findFileByUrl(base.getUrl() + "/" + uri);
-      if (file == null) return null;
-    }
-
-    return file;
+    return VirtualFileUtil.findRelativeFile(uri, base);
   }
 
   public static boolean processFilesRecursively(@Nonnull VirtualFile root, @Nonnull Processor<VirtualFile> processor) {

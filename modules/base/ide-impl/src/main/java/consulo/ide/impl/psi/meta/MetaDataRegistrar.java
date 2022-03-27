@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.meta;
 
 import consulo.ide.ServiceManager;
 import consulo.language.pattern.ElementPattern;
-import consulo.ide.impl.psi.filters.ElementFilter;
+import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.meta.PsiMetaData;
 
 /**

@@ -25,7 +25,7 @@ import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.project.Project;

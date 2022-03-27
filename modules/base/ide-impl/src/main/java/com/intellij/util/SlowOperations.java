@@ -2,7 +2,7 @@
 package com.intellij.util;
 
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 
 import javax.annotation.Nonnull;
 

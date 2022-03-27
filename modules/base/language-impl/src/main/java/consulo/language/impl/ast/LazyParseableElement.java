@@ -23,14 +23,13 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementTypeBase;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.psi.internal.TreeUtil;
+import consulo.language.impl.internal.psi.TreeUtil;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.ImmutableCharSequence;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.ref.SoftReference;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

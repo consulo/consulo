@@ -20,7 +20,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 
 /**
  * @author irengrig

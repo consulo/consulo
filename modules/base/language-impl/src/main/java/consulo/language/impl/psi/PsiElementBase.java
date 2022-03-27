@@ -18,7 +18,7 @@ package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.content.scope.SearchScope;
-import consulo.language.impl.psi.internal.SharedPsiElementImplUtil;
+import consulo.language.impl.internal.psi.SharedPsiElementImplUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.language.psi.resolve.ResolveState;

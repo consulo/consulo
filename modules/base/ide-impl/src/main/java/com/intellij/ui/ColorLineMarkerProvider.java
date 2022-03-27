@@ -17,7 +17,7 @@ package com.intellij.ui;
 
 import consulo.language.editor.Pass;
 import com.intellij.codeInsight.daemon.*;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.language.editor.internal.PsiUtilBase;

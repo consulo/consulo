@@ -7,7 +7,7 @@ import com.intellij.build.events.BuildEvent;
 import com.intellij.build.events.MessageEvent;
 import com.intellij.build.events.impl.FileMessageEventImpl;
 import com.intellij.build.events.impl.MessageEventImpl;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;

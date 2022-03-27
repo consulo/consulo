@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.runtime;
 
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import javax.annotation.Nonnull;
 
 import java.util.concurrent.Executor;

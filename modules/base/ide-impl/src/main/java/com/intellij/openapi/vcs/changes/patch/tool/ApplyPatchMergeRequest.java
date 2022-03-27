@@ -19,7 +19,7 @@ import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.merge.MergeRequest;
 import com.intellij.diff.merge.MergeResult;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;

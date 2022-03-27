@@ -21,6 +21,7 @@ import consulo.component.ComponentManager;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Deprecated
 @DeprecationInfo("Use com.intellij.openapi.extensions.ExtensionPointName")
 public class Extensions {
   private Extensions() {

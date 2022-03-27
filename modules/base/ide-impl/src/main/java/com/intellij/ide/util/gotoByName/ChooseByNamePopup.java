@@ -3,7 +3,7 @@ package com.intellij.ide.util.gotoByName;
 
 import com.google.common.util.concurrent.UncheckedTimeoutException;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.ui.UISettings;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;

@@ -4,7 +4,7 @@ package com.intellij.build.events.impl;
 import com.intellij.build.events.BuildEventsNls;
 import com.intellij.build.events.MessageEvent;
 import com.intellij.build.events.MessageEventResult;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.project.Project;
 import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;

@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
  *
  * @see ParserDefinition#createParser(LanguageVersion)
  */
-
 public interface PsiParser {
   /**
    * Parses the contents of the specified PSI builder and returns an AST tree with the

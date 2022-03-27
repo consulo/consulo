@@ -8,7 +8,7 @@ import com.intellij.execution.ui.RunContentManagerImpl;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import com.intellij.ide.startup.StartupManagerEx;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.dataContext.DataProvider;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;

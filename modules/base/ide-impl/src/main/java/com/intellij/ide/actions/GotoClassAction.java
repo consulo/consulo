@@ -2,7 +2,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
 import consulo.fileEditor.structureView.StructureView;
@@ -37,8 +37,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.codeStyle.MinusculeMatcher;
-import consulo.ide.impl.psi.codeStyle.NameUtil;
+import consulo.language.editor.impl.internal.completion.MinusculeMatcher;
+import consulo.language.editor.impl.internal.completion.NameUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.ObjectUtils;
 import consulo.disposer.Disposer;

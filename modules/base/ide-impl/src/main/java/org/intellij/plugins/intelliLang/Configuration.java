@@ -21,7 +21,7 @@ import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.util.lang.function.Condition;
 import consulo.language.Language;
 import consulo.undoRedo.UndoConfirmationPolicy;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import com.intellij.openapi.command.undo.GlobalUndoableAction;
 import consulo.undoRedo.UndoableAction;
 import consulo.component.persist.PersistentStateComponent;

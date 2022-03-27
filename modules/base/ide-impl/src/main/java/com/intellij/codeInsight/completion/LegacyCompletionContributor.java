@@ -15,20 +15,20 @@
  */
 package com.intellij.codeInsight.completion;
 
+import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.CompletionContributor;
-import consulo.language.editor.completion.CompletionParameters;
-import consulo.language.editor.completion.CompletionResultSet;
-import consulo.language.editor.completion.CompletionType;
+import consulo.language.editor.impl.internal.completion.CompletionData;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.language.editor.impl.internal.completion.CompletionVariant;
 import consulo.logging.Logger;
-import com.intellij.openapi.paths.PsiDynaReference;
+import consulo.language.psi.path.PsiDynaReference;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceRange;
-import consulo.language.impl.psi.reference.PsiMultiReference;
+import consulo.language.psi.PsiMultiReference;
 import com.intellij.util.PairConsumer;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;

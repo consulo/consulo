@@ -23,7 +23,7 @@ import consulo.disposer.Disposer;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.impl.DebugUtil;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import org.junit.Assert;
 import org.junit.Test;
 

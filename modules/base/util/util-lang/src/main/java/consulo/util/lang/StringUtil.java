@@ -100,6 +100,92 @@ public class StringUtil {
   private static final Pattern EOL_SPLIT_PATTERN_WITH_EMPTY = Pattern.compile(" *(\r|\n|\r\n) *");
   private static final Pattern EOL_SPLIT_DONT_TRIM_PATTERN = Pattern.compile("(\r|\n|\r\n)+");
 
+  private static final String VOWELS = "aeiouy";
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapePattern(@Nonnull final String text) {
+    return replace(replace(text, "'", "''"), "{", "'{'");
+  }
+
+  @Contract(pure = true)
+  public static boolean containsAnyChar(@Nonnull final String value, @Nonnull final String chars) {
+    if (chars.length() > value.length()) {
+      return containsAnyChar(value, chars, 0, value.length());
+    }
+    else {
+      return containsAnyChar(chars, value, 0, chars.length());
+    }
+  }
+
+  @Contract(pure = true)
+  public static boolean containsAnyChar(@Nonnull final String value, @Nonnull final String chars, final int start, final int end) {
+    for (int i = start; i < end; i++) {
+      if (chars.indexOf(value.charAt(i)) >= 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @Contract(pure = true)
+  public static int indexOfIgnoreCase(@Nonnull String where, char what, int fromIndex) {
+    int sourceCount = where.length();
+
+    if (fromIndex >= sourceCount) {
+      return -1;
+    }
+
+    if (fromIndex < 0) {
+      fromIndex = 0;
+    }
+
+    for (int i = fromIndex; i < sourceCount; i++) {
+      if (charsEqualIgnoreCase(where.charAt(i), what)) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+
+  @SuppressWarnings({"HardCodedStringLiteral"})
+  @Nonnull
+  @Contract(pure = true)
+  public static String pluralize(@Nonnull String suggestion) {
+    if (suggestion.endsWith("Child") || suggestion.endsWith("child")) {
+      return suggestion + "ren";
+    }
+
+    if (suggestion.equals("this")) {
+      return "these";
+    }
+    if (suggestion.equals("This")) {
+      return "These";
+    }
+
+    if (endsWithIgnoreCase(suggestion, "es")) {
+      return suggestion;
+    }
+
+    if (endsWithIgnoreCase(suggestion, "s") || endsWithIgnoreCase(suggestion, "x") || endsWithIgnoreCase(suggestion, "ch")) {
+      return suggestion + "es";
+    }
+
+    int len = suggestion.length();
+    if (endsWithIgnoreCase(suggestion, "y") && len > 1 && !isVowel(toLowerCase(suggestion.charAt(len - 2)))) {
+      return suggestion.substring(0, len - 1) + "ies";
+    }
+
+    return suggestion + "s";
+  }
+
+  @Contract(pure = true)
+  public static boolean isVowel(char c) {
+    return VOWELS.indexOf(c) >= 0;
+  }
+
   /**
    * Given a fqName returns the package name for the type or the containing type.
    * <p/>
@@ -184,6 +270,16 @@ public class StringUtil {
   @Contract(pure = true)
   public static boolean contains(@Nonnull CharSequence s, int start, int end, char c) {
     return indexOf(s, c, start, end) >= 0;
+  }
+
+  @Contract(pure = true)
+  public static boolean contains(@Nonnull CharSequence sequence, @Nonnull CharSequence infix) {
+    return indexOf(sequence, infix) >= 0;
+  }
+
+  @Contract(pure = true)
+  public static int indexOf(@Nonnull CharSequence sequence, @Nonnull CharSequence infix) {
+    return indexOf(sequence, infix, 0);
   }
 
   @Nonnull
@@ -1361,6 +1457,22 @@ public class StringUtil {
       }
       return 0;
     }
+  }
+
+  @Contract(pure = true)
+  public static int indexOf(@Nonnull CharSequence s, char c, int start, int end, boolean caseSensitive) {
+    for (int i = start; i < end; i++) {
+      if (charsMatch(s.charAt(i), c, !caseSensitive)) return i;
+    }
+    return -1;
+  }
+
+  @Contract(pure = true)
+  public static int indexOf(@Nonnull char[] s, char c, int start, int end, boolean caseSensitive) {
+    for (int i = start; i < end; i++) {
+      if (charsMatch(s[i], c, !caseSensitive)) return i;
+    }
+    return -1;
   }
 
   @Contract(pure = true)

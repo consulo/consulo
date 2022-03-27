@@ -26,7 +26,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.PsiManager;
 import consulo.language.file.FileViewProvider;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 
 /**
  * @author peter

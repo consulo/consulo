@@ -11,14 +11,13 @@ import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.file.MultiplePsiFilesPerDocumentFileViewProvider;
-import consulo.language.impl.psi.internal.PsiManagerEx;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.template.TemplateLanguageFileViewProvider;
-import consulo.util.lang.StringUtil;
 import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;

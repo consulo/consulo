@@ -2,8 +2,8 @@
 package consulo.language.inject.impl.internal;
 
 import consulo.component.util.SimpleModificationTracker;
-import consulo.language.impl.psi.internal.PsiManagerEx;
-import consulo.language.impl.psi.internal.PsiParameterizedCachedValue;
+import consulo.language.impl.internal.psi.PsiManagerEx;
+import consulo.language.impl.internal.psi.PsiParameterizedCachedValue;
 import consulo.language.inject.ConcatenationAwareInjector;
 import consulo.language.inject.MultiHostInjector;
 import consulo.language.inject.MultiHostRegistrar;

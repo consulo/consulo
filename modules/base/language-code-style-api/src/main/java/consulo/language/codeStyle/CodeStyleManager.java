@@ -2,7 +2,7 @@
 package consulo.language.codeStyle;
 
 import consulo.application.util.function.Computable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;

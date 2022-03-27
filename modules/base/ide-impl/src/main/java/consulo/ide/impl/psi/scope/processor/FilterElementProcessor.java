@@ -17,7 +17,7 @@
 package consulo.ide.impl.psi.scope.processor;
 
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.filters.ElementFilter;
+import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import javax.annotation.Nonnull;
 

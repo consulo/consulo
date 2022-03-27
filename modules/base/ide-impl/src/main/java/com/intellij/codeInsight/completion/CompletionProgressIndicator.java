@@ -2,14 +2,14 @@
 
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl;
 import com.intellij.codeInsight.hint.EditorHintListener;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.application.impl.internal.JobScheduler;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.Lookup;
@@ -18,13 +18,14 @@ import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.editor.inject.EditorWindow;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.Caret;
 import consulo.document.Document;

@@ -4,7 +4,7 @@ package com.intellij.codeInsight.intention.choice;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import com.intellij.codeInsight.intention.CustomizableIntentionAction;
 import consulo.language.editor.intention.IntentionAction;
-import com.intellij.codeInspection.IntentionAndQuickFixAction;
+import consulo.language.editor.inspection.IntentionAndQuickFixAction;
 import consulo.component.util.Iconable;
 import consulo.ui.image.Image;
 

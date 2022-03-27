@@ -16,14 +16,12 @@
 
 package com.intellij.ide.fileTemplates.actions;
 
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateUtil;
-import consulo.ui.ex.action.AnAction;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
-import javax.annotation.Nullable;
 
 public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
 
@@ -32,12 +30,6 @@ public class CreateFromTemplateAction extends CreateFromTemplateActionBase {
   public CreateFromTemplateAction(FileTemplate template){
     super(template.getName(), null, FileTemplateUtil.getIcon(template));
     myTemplate = template;
-  }
-
-  @Override
-  @Nullable
-  protected AnAction getReplacedAction(final FileTemplate template) {
-    return null;
   }
 
   @Override

@@ -70,6 +70,22 @@ public class FileUtil {
     }
   }
 
+  @Nonnull
+  public static String unquote(@Nonnull String urlString) {
+    urlString = urlString.replace('/', File.separatorChar);
+    return URLUtil.unescapePercentSequences(urlString);
+  }
+
+  /**
+   * optimized version of pathsEqual - it only compares pure names, without file separators
+   */
+  public static boolean namesEqual(@Nullable String name1, @Nullable String name2) {
+    if (name1 == name2) return true;
+    if (name1 == null || name2 == null) return false;
+
+    return PATH_HASHING_STRATEGY.equals(name1, name2);
+  }
+
   public static void writeToFile(@Nonnull File file, @Nonnull byte[] text) throws IOException {
     writeToFile(file, text, false);
   }

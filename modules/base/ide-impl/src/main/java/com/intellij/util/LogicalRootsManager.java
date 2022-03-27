@@ -17,7 +17,7 @@
 package com.intellij.util;
 
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceHelper;
+import consulo.language.psi.path.FileReferenceHelper;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.project.Project;

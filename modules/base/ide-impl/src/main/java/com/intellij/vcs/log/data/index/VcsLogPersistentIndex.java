@@ -32,7 +32,7 @@ import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.EmptyConsumer;
 import consulo.application.util.function.Processor;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.StorageException;
 import com.intellij.util.io.*;

@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.language.psi.PsiManager;
-import consulo.language.impl.psi.internal.PsiManagerEx;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.psi.PsiPackage;
 

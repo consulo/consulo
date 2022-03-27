@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.search;
 
 import consulo.index.io.DataIndexer;
 import consulo.index.io.ID;
-import consulo.language.impl.psi.internal.stub.SubstitutedFileType;
+import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.ScalarIndexExtension;

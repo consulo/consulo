@@ -17,7 +17,7 @@
 package com.intellij.ui;
 
 import consulo.application.Result;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.logging.Logger;
 import consulo.document.Document;

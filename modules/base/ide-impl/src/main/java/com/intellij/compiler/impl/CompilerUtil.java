@@ -36,7 +36,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.content.LanguageContentFolderScopes;
 

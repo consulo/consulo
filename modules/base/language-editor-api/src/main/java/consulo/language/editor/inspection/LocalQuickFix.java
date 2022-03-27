@@ -18,6 +18,7 @@ package consulo.language.editor.inspection;
 import consulo.component.util.Iconable;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.project.Project;
+import consulo.util.collection.ArrayFactory;
 
 /**
  * QuickFix based on {@link ProblemDescriptor ProblemDescriptor}
@@ -41,4 +42,6 @@ import consulo.project.Project;
  */
 public interface LocalQuickFix extends QuickFix<ProblemDescriptor>, FileModifier {
   LocalQuickFix[] EMPTY_ARRAY = new LocalQuickFix[0];
+  
+  ArrayFactory<LocalQuickFix> ARRAY_FACTORY = i -> i == 0 ? EMPTY_ARRAY : new LocalQuickFix[i];
 }

@@ -23,7 +23,7 @@ import com.intellij.history.core.revisions.Revision;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.LocalHistoryBundle;
 import consulo.application.Result;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.diff.FilesTooBigForDiffException;

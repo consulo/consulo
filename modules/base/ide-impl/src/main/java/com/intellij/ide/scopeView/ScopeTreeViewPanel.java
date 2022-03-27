@@ -33,7 +33,7 @@ import com.intellij.ide.scopeView.nodes.BasePsiNode;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.DirectoryChooserUtil;
-import com.intellij.ide.util.EditorHelper;
+import consulo.language.editor.impl.util.EditorHelper;
 import consulo.ui.ex.awt.tree.TreeState;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.search.scope.*;

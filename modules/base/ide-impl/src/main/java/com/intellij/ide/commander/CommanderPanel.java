@@ -32,7 +32,7 @@ import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.ide.util.EditSourceUtil;
-import com.intellij.ide.util.EditorHelper;
+import consulo.language.editor.impl.util.EditorHelper;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;

@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.editorActions;
 
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.CompositeLanguage;

@@ -17,28 +17,27 @@
 package com.intellij.codeInsight.completion.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
-import consulo.language.editor.FileModificationService;
-import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import consulo.language.editor.completion.lookup.LookupManager;
+import com.intellij.openapi.util.text.StringUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.HighlighterIterator;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.FileModificationService;
+import consulo.language.editor.completion.lookup.LookupManager;
+import consulo.language.editor.impl.internal.completion.CamelHumpMatcher;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import consulo.ui.annotation.RequiredUIAccess;
-
 import java.util.*;
 
 /**

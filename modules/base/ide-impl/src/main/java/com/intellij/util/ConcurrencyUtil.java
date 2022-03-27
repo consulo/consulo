@@ -17,7 +17,7 @@ package com.intellij.util;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.collection.Maps;
 import org.jetbrains.annotations.Contract;
 

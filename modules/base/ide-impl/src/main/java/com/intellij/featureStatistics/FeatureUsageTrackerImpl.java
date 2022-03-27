@@ -16,18 +16,19 @@
 package com.intellij.featureStatistics;
 
 import com.intellij.openapi.application.PermanentInstallationID;
+import consulo.application.statistic.FeatureUsageTracker;
+import consulo.component.ComponentManager;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.component.persist.PersistentStateComponent;
-import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import org.jdom.Element;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Set;
 
@@ -54,11 +55,11 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
   }
 
   @Override
-  public boolean isToBeShown(String featureId, Project project) {
+  public boolean isToBeShown(String featureId, ComponentManager project) {
     return isToBeShown(featureId, project, DAY);
   }
 
-  private boolean isToBeShown(String featureId, Project project, final long timeUnit) {
+  private boolean isToBeShown(String featureId, ComponentManager project, final long timeUnit) {
     ProductivityFeaturesRegistry registry = ProductivityFeaturesRegistry.getInstance();
     FeatureDescriptor descriptor = registry.getFeatureDescriptor(featureId);
     if (descriptor == null || !descriptor.isUnused()) return false;
@@ -82,7 +83,7 @@ public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements Pers
   }
 
   @Override
-  public boolean isToBeAdvertisedInLookup(@NonNls String featureId, Project project) {
+  public boolean isToBeAdvertisedInLookup(@NonNls String featureId, ComponentManager project) {
     FeatureDescriptor descriptor = ProductivityFeaturesRegistry.getInstance().getFeatureDescriptor(featureId);
     if (descriptor != null && System.currentTimeMillis() - descriptor.getLastTimeUsed() > 10 * DAY) {
       return true;

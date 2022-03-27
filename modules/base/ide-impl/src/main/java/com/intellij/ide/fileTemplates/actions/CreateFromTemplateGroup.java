@@ -19,17 +19,16 @@ package com.intellij.ide.fileTemplates.actions;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.EditFileTemplatesAction;
-import com.intellij.ide.fileTemplates.CreateFromTemplateActionReplacer;
-import com.intellij.ide.fileTemplates.FileTemplate;
-import com.intellij.ide.fileTemplates.FileTemplateManager;
-import com.intellij.ide.fileTemplates.FileTemplateUtil;
 import com.intellij.ide.fileTemplates.ui.SelectTemplateDialog;
-import com.intellij.openapi.actionSystem.*;
-import consulo.dataContext.DataContext;
+import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.fileTemplate.FileTemplate;
+import consulo.fileTemplate.FileTemplateManager;
+import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
 import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 
@@ -46,7 +45,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   public void update(@Nonnull AnActionEvent event) {
     Project project = event.getData(CommonDataKeys.PROJECT);
     Presentation presentation = event.getPresentation();
-    if(project != null && !project.isDisposed()) {
+    if (project != null && !project.isDisposed()) {
       FileTemplate[] allTemplates = FileTemplateManager.getInstance(project).getAllTemplates();
       for (FileTemplate template : allTemplates) {
         if (canCreateFromTemplate(event, template)) {
@@ -89,14 +88,11 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
       // group by name if same type
       return template1.getName().compareTo(template2.getName());
     });
-    List<AnAction> result = new ArrayList<AnAction>();
+    List<AnAction> result = new ArrayList<>();
 
     for (FileTemplate template : templates) {
       if (canCreateFromTemplate(e, template)) {
-        AnAction action = replaceAction(template);
-        if (action == null) {
-          action = new CreateFromTemplateAction(template);
-        }
+        AnAction action = new CreateFromTemplateAction(template);
         result.add(action);
       }
     }
@@ -113,16 +109,6 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     return result.toArray(new AnAction[result.size()]);
   }
 
-  private static AnAction replaceAction(final FileTemplate template) {
-    for (CreateFromTemplateActionReplacer actionFactory : CreateFromTemplateActionReplacer.CREATE_FROM_TEMPLATE_REPLACER.getExtensionList()) {
-      AnAction action = actionFactory.replaceCreateFromFileTemplateAction(template);
-      if (action != null) {
-        return action;
-      }
-    }
-    return null;
-  }
-
   static boolean canCreateFromTemplate(AnActionEvent e, FileTemplate template) {
     if (e == null) return false;
     DataContext dataContext = e.getDataContext();
@@ -132,18 +118,13 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
     PsiDirectory[] dirs = view.getDirectories();
     if (dirs.length == 0) return false;
 
-    return FileTemplateUtil.canCreateFromTemplate(dirs, template);
+    return FileTemplateImplUtil.canCreateFromTemplate(dirs, template);
   }
 
   private static class CreateFromTemplatesAction extends CreateFromTemplateActionBase {
 
     public CreateFromTemplatesAction(String title) {
       super(title, null, null);
-    }
-
-    @Override
-    protected AnAction getReplacedAction(final FileTemplate template) {
-      return replaceAction(template);
     }
 
     @Override

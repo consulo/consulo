@@ -16,7 +16,7 @@ import consulo.language.editor.completion.lookup.LookupManager;
 import com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction;
 import com.intellij.codeInsight.template.impl.TemplateSettings;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;

@@ -18,10 +18,14 @@ package com.intellij.ide.fileTemplates.impl;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
-import com.intellij.ide.fileTemplates.*;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
+import consulo.fileTemplate.*;
+import consulo.fileTemplate.impl.internal.InternalTemplateBean;
+import consulo.fileTemplate.impl.internal.BundledFileTemplate;
+import consulo.fileTemplate.impl.internal.CustomFileTemplate;
+import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
@@ -54,7 +58,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.*;
 
-import static com.intellij.ide.fileTemplates.FileTemplateManager.*;
+import static consulo.fileTemplate.FileTemplateManager.*;
 
 /*
  * @author: MYakovlev
@@ -113,7 +117,7 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
 
   private FileTemplate createTemplate(final @Nonnull String prefName, final @Nonnull String extension, final @Nonnull String content) {
     final FileTemplate[] templates = myCurrentTab.getTemplates();
-    final FileTemplate newTemplate = FileTemplateUtil.createTemplate(prefName, extension, content, templates);
+    final FileTemplate newTemplate = FileTemplateImplUtil.createTemplate(prefName, extension, content, templates);
     myCurrentTab.addTemplate(newTemplate);
     myModified = true;
     myCurrentTab.selectTemplate(newTemplate);

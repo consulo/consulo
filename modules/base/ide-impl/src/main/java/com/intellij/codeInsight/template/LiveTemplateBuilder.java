@@ -17,6 +17,7 @@ package com.intellij.codeInsight.template;
 
 import com.intellij.codeInsight.template.impl.TemplateImpl;
 import consulo.application.ApplicationManager;
+import consulo.language.editor.template.Template;
 import consulo.language.editor.template.Variable;
 import consulo.logging.Logger;
 import org.jetbrains.annotations.NonNls;
@@ -222,7 +223,7 @@ public class LiveTemplateBuilder {
     }
     for (int i = 0; i < template.getVariableCount(); i++) {
       String varName = template.getVariableNameAt(i);
-      if (!TemplateImpl.INTERNAL_VARS_SET.contains(varName)) {
+      if (!Template.INTERNAL_VARS_SET.contains(varName)) {
         if (predefinedVarValues != null && predefinedVarValues.containsKey(varName)) {
           continue;
         }

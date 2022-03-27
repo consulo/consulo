@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.editor;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;

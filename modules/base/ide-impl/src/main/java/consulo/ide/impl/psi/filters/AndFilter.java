@@ -17,6 +17,7 @@
 package consulo.ide.impl.psi.filters;
 
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.filter.ElementFilter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +30,7 @@ import java.util.List;
  * Time: 19:11:46
  * To change this template use Options | File Templates.
  */
-public class AndFilter implements ElementFilter{
+public class AndFilter implements ElementFilter {
   private final List<ElementFilter> myFilters = new ArrayList<ElementFilter>();
 
   public AndFilter(ElementFilter filter1, ElementFilter filter2){

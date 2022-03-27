@@ -4,7 +4,7 @@ package com.intellij.util.indexing.hash;
 import consulo.disposer.Disposable;
 import consulo.index.io.*;
 import consulo.index.io.data.DataExternalizer;
-import consulo.language.impl.psi.internal.stub.FileContentImpl;
+import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;

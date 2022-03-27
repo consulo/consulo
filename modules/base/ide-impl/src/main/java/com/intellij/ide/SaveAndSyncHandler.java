@@ -26,12 +26,16 @@ public abstract class SaveAndSyncHandler {
   }
 
   public abstract void saveProjectsAndDocuments();
+
   public abstract void scheduleRefresh();
+
   public abstract void refreshOpenFiles();
 
   public abstract void blockSaveOnFrameDeactivation();
+
   public abstract void unblockSaveOnFrameDeactivation();
 
   public abstract void blockSyncOnFrameActivation();
+
   public abstract void unblockSyncOnFrameActivation();
 }

@@ -102,6 +102,8 @@
     <module>modules/base/code-editor-impl</module>
     <module>modules/base/application-impl</module>
     <module>modules/base/component-store-impl</module>
+    <module>modules/base/file-template-api</module>
+    <module>modules/base/file-template-impl</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

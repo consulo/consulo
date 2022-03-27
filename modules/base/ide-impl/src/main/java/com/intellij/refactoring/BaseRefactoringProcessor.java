@@ -53,7 +53,7 @@ import com.intellij.usages.impl.UnknownUsagesInUnloadedModules;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.usages.rules.PsiElementUsage;
 import consulo.application.util.function.Processor;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.logging.Logger;

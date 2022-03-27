@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.script;
 
-import com.intellij.openapi.util.ClassLoaderUtil;
+import consulo.util.lang.ClassLoaderUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;

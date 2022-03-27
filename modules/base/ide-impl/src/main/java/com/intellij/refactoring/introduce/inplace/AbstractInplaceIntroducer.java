@@ -22,7 +22,7 @@ import com.intellij.codeInsight.template.impl.TemplateStateImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
 import consulo.undoRedo.CommandProcessor;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;

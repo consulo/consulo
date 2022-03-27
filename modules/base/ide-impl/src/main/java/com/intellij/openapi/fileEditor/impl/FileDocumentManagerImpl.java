@@ -38,7 +38,7 @@ import consulo.language.file.EncodingManager;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.impl.psi.internal.LoadTextUtil;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.internal.ExternalChangeAction;

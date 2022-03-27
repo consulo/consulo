@@ -23,7 +23,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.language.impl.psi.internal.FileContextUtil;
+import consulo.language.impl.internal.psi.FileContextUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.FilteredQuery;
 import consulo.application.util.Query;

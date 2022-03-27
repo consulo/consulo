@@ -18,7 +18,7 @@ package consulo.ui.ex.awt;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Computable;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.registry.Registry;
 import consulo.component.util.localize.BundleBase;

@@ -16,14 +16,14 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.codeInsight.CodeInsightSettings;
+import consulo.language.editor.CodeInsightSettings;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.RecalculatableResult;
 import consulo.language.editor.template.TemplateCompletionProcessor;
 import com.intellij.openapi.command.CommandAdapter;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;

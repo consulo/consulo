@@ -18,7 +18,7 @@ package consulo.copyright.impl.actions;
 
 import consulo.language.editor.FileModificationService;
 import consulo.application.Result;
-import com.intellij.openapi.command.WriteCommandAction;
+import consulo.language.editor.WriteCommandAction;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.application.progress.ProgressIndicator;

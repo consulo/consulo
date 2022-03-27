@@ -42,7 +42,7 @@ import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import com.intellij.packaging.impl.artifacts.ArtifactSortingUtil;
 import com.intellij.util.ExceptionUtil;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;

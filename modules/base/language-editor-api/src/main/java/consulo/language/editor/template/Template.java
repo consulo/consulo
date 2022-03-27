@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class Template {
   public static final String END = "END";
@@ -28,6 +29,8 @@ public abstract class Template {
   public static final String SELECTION_START = "SELECTION_START";
   public static final String SELECTION_END = "SELECTION_END";
   public static final String ARG = "ARG";
+
+  public static final Set<String> INTERNAL_VARS_SET = Set.of(END, SELECTION, SELECTION_START, SELECTION_END);
 
   public enum Property {
     USE_STATIC_IMPORT_IF_POSSIBLE

@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileReferenceSet;
+import consulo.language.psi.path.FileReferenceSet;
 import consulo.language.inject.ReferenceInjector;
 import consulo.language.util.ProcessingContext;
 

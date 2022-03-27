@@ -3,7 +3,7 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.completion.impl.CamelHumpMatcher;
+import consulo.language.editor.impl.internal.completion.CamelHumpMatcher;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
@@ -12,13 +12,14 @@ import com.intellij.codeInsight.lookup.LookupActionProvider;
 import com.intellij.codeInsight.lookup.LookupElementAction;
 import com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction;
 import com.intellij.codeInsight.template.impl.actions.NextVariableAction;
-import com.intellij.featureStatistics.FeatureUsageTracker;
-import com.intellij.lang.LangBundle;
+import consulo.application.statistic.FeatureUsageTracker;
+import consulo.language.LangBundle;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.colorScheme.impl.FontPreferencesImpl;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.CollectConsumer;

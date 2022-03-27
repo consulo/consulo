@@ -15,22 +15,24 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
-import consulo.language.editor.intention.IntentionAction;
-import com.intellij.lang.LangBundle;
-import consulo.language.Language;
+import consulo.language.LangBundle;
 import consulo.codeEditor.Editor;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.template.TemplateLanguageFileViewProvider;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.Language;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.file.FileViewProvider;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiElement;
+import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.language.util.IncorrectOperationException;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -39,7 +41,7 @@ import javax.annotation.Nonnull;
 public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvider{
 
   @Override
-  public void registerErrorQuickFix(final PsiErrorElement errorElement, final HighlightInfoImpl highlightInfo) {
+  public void registerErrorQuickFix(final PsiErrorElement errorElement, final HighlightInfo highlightInfo) {
     final PsiFile psiFile = errorElement.getContainingFile();
     final FileViewProvider provider = psiFile.getViewProvider();
     if (!(provider instanceof TemplateLanguageFileViewProvider)) return;
@@ -72,6 +74,7 @@ public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvi
         return true;
       }
 
+      @RequiredUIAccess
       @Override
       public void invoke(@Nonnull final Project project, final Editor editor, final PsiFile file) throws IncorrectOperationException {
         final TemplateDataLanguageConfigurable configurable = new TemplateDataLanguageConfigurable(project);

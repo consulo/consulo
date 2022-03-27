@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl.source.resolve.reference;
 
 import com.intellij.openapi.paths.GlobalPathReferenceProvider;
-import com.intellij.openapi.paths.PathReferenceManager;
+import consulo.language.psi.path.PathReferenceManager;
 import com.intellij.openapi.util.UserDataCache;
 import com.intellij.openapi.vcs.IssueNavigationConfiguration;
 import consulo.language.psi.PsiElement;

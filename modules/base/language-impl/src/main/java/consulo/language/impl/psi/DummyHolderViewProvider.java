@@ -7,7 +7,7 @@ import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.psi.internal.SharedPsiElementImplUtil;
+import consulo.language.impl.internal.psi.SharedPsiElementImplUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;

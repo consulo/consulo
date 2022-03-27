@@ -2,6 +2,7 @@
 package com.intellij.util;
 
 import consulo.application.util.Query;
+import consulo.util.collection.UnmodifiableIterator;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.concurrent.AsyncUtil;
 import consulo.application.ApplicationManager;

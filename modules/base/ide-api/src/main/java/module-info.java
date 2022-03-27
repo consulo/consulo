@@ -44,6 +44,7 @@ module consulo.ide.api {
   requires transitive consulo.language.editor.api;
   requires transitive consulo.undo.redo.api;
   requires transitive consulo.file.editor.api;
+  requires transitive consulo.file.template.api;
 
   exports consulo.ide;
   exports consulo.ide.navigation;

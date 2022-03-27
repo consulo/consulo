@@ -18,6 +18,7 @@ package consulo.ide.impl.psi.filters;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.filter.ElementFilter;
 
 /**
  * @author yole

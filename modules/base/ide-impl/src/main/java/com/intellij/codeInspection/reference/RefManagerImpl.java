@@ -28,7 +28,7 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.reference.*;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.file.FileViewProvider;
-import consulo.language.impl.psi.internal.PsiAnchor;
+import consulo.language.impl.internal.psi.PsiAnchor;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;

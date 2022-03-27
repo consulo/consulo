@@ -18,7 +18,7 @@ import consulo.virtualFileSystem.event.ChildInfo;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
-import consulo.language.impl.psi.internal.PsiCachedValue;
+import consulo.language.impl.internal.psi.PsiCachedValue;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.PairConsumer;

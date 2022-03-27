@@ -13,7 +13,7 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.language.editor.template.context.TemplateActionContext;
 import com.intellij.codeInsight.template.impl.*;
 import com.intellij.codeInsight.template.impl.editorActions.ExpandLiveTemplateCustomAction;
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

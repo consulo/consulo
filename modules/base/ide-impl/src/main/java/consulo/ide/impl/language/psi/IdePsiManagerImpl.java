@@ -20,7 +20,7 @@ import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.language.content.FileIndexFacade;
-import consulo.language.impl.psi.internal.PsiManagerImpl;
+import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.project.Project;
 import jakarta.inject.Inject;

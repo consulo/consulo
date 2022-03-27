@@ -16,7 +16,7 @@
 package consulo.language.impl.psi;
 
 import consulo.language.file.FileViewProvider;
-import consulo.language.impl.psi.internal.PsiManagerImpl;
+import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.PsiLargeBinaryFile;
 
 public class PsiLargeBinaryFileImpl extends PsiBinaryFileImpl implements PsiLargeBinaryFile {

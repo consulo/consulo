@@ -15,11 +15,15 @@
  */
 package consulo.virtualFileSystem.util;
 
+import consulo.application.WriteAction;
+import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.io.FileUtil;
 import consulo.util.io.URLUtil;
 import consulo.util.lang.Comparing;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 
 import javax.annotation.Nonnull;
@@ -32,11 +36,163 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 /**
- * @author VISTALL
- * @since 17/01/2022
+ * Extract part of com.intellij.openapi.vfs.VfsUtilCore
  */
 public final class VirtualFileUtil {
   private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
+  public static final char VFS_SEPARATOR_CHAR = '/';
+
+  public static VirtualFile createDirectories(@Nonnull final String directoryPath) throws IOException {
+    return WriteAction.compute(() -> {
+      VirtualFile res = createDirectoryIfMissing(directoryPath);
+      return res;
+    });
+  }
+
+  public static VirtualFile createDirectoryIfMissing(VirtualFile parent, String relativePath) throws IOException {
+    for (String each : StringUtil.split(relativePath, "/")) {
+      VirtualFile child = parent.findChild(each);
+      if (child == null) {
+        child = parent.createChildDirectory(LocalFileSystem.getInstance(), each);
+      }
+      parent = child;
+    }
+    return parent;
+  }
+
+  @Nullable
+  public static VirtualFile createDirectoryIfMissing(@Nonnull String directoryPath) throws IOException {
+    String path = FileUtil.toSystemIndependentName(directoryPath);
+    final VirtualFile file = LocalFileSystem.getInstance().refreshAndFindFileByPath(path);
+    if (file == null) {
+      int pos = path.lastIndexOf('/');
+      if (pos < 0) return null;
+      VirtualFile parent = createDirectoryIfMissing(path.substring(0, pos));
+      if (parent == null) return null;
+      final String dirName = path.substring(pos + 1);
+      VirtualFile child = parent.findChild(dirName);
+      if (child != null && child.isDirectory()) return child;
+      return parent.createChildDirectory(LocalFileSystem.getInstance(), dirName);
+    }
+    return file;
+  }
+
+  @Nullable
+  public static VirtualFile findRelativeFile(@Nullable VirtualFile base, String... path) {
+    VirtualFile file = base;
+
+    for (String pathElement : path) {
+      if (file == null) return null;
+      if ("..".equals(pathElement)) {
+        file = file.getParent();
+      }
+      else {
+        file = file.findChild(pathElement);
+      }
+    }
+
+    return file;
+  }
+
+  @Nullable
+  public static VirtualFile findRelativeFile(@Nonnull String uri, @Nullable VirtualFile base) {
+    if (base != null) {
+      if (!base.isValid()) {
+        LOG.error("Invalid file name: " + base.getName() + ", url: " + uri);
+      }
+    }
+
+    uri = uri.replace('\\', '/');
+
+    if (uri.startsWith("file:///")) {
+      uri = uri.substring("file:///".length());
+      if (!SystemInfo.isWindows) uri = "/" + uri;
+    }
+    else if (uri.startsWith("file:/")) {
+      uri = uri.substring("file:/".length());
+      if (!SystemInfo.isWindows) uri = "/" + uri;
+    }
+    else {
+      uri = StringUtil.trimStart(uri, "file:");
+    }
+
+    VirtualFile file = null;
+
+    if (uri.startsWith("jar:file:/")) {
+      uri = uri.substring("jar:file:/".length());
+      if (!SystemInfo.isWindows) uri = "/" + uri;
+      file = VirtualFileManager.getInstance().findFileByUrl(StandardFileSystems.ZIP_PROTOCOL_PREFIX + uri);
+    }
+    else if (!SystemInfo.isWindows && StringUtil.startsWithChar(uri, '/') || SystemInfo.isWindows && uri.length() >= 2 && Character.isLetter(uri.charAt(0)) && uri.charAt(1) == ':') {
+      file = StandardFileSystems.local().findFileByPath(uri);
+    }
+
+    if (file == null && uri.contains(URLUtil.ARCHIVE_SEPARATOR)) {
+      file = StandardFileSystems.zip().findFileByPath(uri);
+      if (file == null && base == null) {
+        file = VirtualFileManager.getInstance().findFileByUrl(uri);
+      }
+    }
+
+    if (file == null) {
+      if (base == null) return StandardFileSystems.local().findFileByPath(uri);
+      if (!base.isDirectory()) base = base.getParent();
+      if (base == null) return StandardFileSystems.local().findFileByPath(uri);
+      file = VirtualFileManager.getInstance().findFileByUrl(base.getUrl() + "/" + uri);
+      if (file == null) return null;
+    }
+
+    return file;
+  }
+
+  @Nullable
+  public static String getRelativePath(@Nonnull VirtualFile file, @Nonnull VirtualFile ancestor) {
+    return getRelativePath(file, ancestor, VFS_SEPARATOR_CHAR);
+  }
+
+  /**
+   * Gets the relative path of <code>file</code> to its <code>ancestor</code>. Uses <code>separator</code> for
+   * separating files.
+   *
+   * @param file      the file
+   * @param ancestor  parent file
+   * @param separator character to use as files separator
+   * @return the relative path or {@code null} if {@code ancestor} is not ancestor for {@code file}
+   */
+  @Nullable
+  public static String getRelativePath(@Nonnull VirtualFile file, @Nonnull VirtualFile ancestor, char separator) {
+    if (!file.getFileSystem().equals(ancestor.getFileSystem())) {
+      return null;
+    }
+
+    int length = 0;
+    VirtualFile parent = file;
+    while (true) {
+      if (parent == null) return null;
+      if (parent.equals(ancestor)) break;
+      if (length > 0) {
+        length++;
+      }
+      length += parent.getNameSequence().length();
+      parent = parent.getParent();
+    }
+
+    char[] chars = new char[length];
+    int index = chars.length;
+    parent = file;
+    while (true) {
+      if (parent.equals(ancestor)) break;
+      if (index < length) {
+        chars[--index] = separator;
+      }
+      CharSequence name = parent.getNameSequence();
+      for (int i = name.length() - 1; i >= 0; i--) {
+        chars[--index] = name.charAt(i);
+      }
+      parent = parent.getParent();
+    }
+    return new String(chars);
+  }
 
   /**
    * Returns {@code true} if given virtual file represents broken symbolic link (which points to non-existent file).

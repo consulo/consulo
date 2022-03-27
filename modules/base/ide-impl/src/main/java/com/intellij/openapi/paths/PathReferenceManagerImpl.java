@@ -17,6 +17,11 @@
 package com.intellij.openapi.paths;
 
 import consulo.component.extension.Extensions;
+import consulo.language.psi.path.PsiDynaReference;
+import consulo.language.psi.path.PathReference;
+import consulo.language.psi.path.PathReferenceManager;
+import consulo.language.psi.path.PathReferenceProvider;
+import consulo.language.editor.impl.internal.psi.path.StaticPathReferenceProvider;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.document.util.TextRange;

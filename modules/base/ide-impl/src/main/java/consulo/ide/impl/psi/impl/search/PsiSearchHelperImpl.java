@@ -46,7 +46,7 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.psi.internal.PsiManagerEx;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.ide.impl.psi.impl.cache.CacheManager;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdIndexEntry;

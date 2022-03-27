@@ -4,7 +4,7 @@ package com.intellij.build;
 import com.intellij.build.progress.BuildProgress;
 import com.intellij.build.progress.BuildProgressDescriptor;
 import com.intellij.build.progress.BuildRootProgressImpl;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import jakarta.inject.Inject;

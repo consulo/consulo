@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.filters.position;
 import consulo.language.pattern.ObjectPattern;
 import consulo.language.pattern.InitialPatternCondition;
 import consulo.language.util.ProcessingContext;
-import consulo.ide.impl.psi.filters.ElementFilter;
+import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nullable;
 

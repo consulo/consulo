@@ -26,7 +26,7 @@ import com.intellij.util.io.DifferentSerializableBytesImplyNonEqualityPolicy;
 import com.intellij.util.io.PagedFileStorage;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
-import consulo.application.util.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.content.scope.SearchScope;
 import consulo.index.io.KeyDescriptor;

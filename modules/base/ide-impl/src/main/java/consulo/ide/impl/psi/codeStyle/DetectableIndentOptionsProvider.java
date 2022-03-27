@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.codeStyle;
 
 import consulo.language.codeStyle.*;
 import com.intellij.ide.scratch.ScratchUtil;
-import com.intellij.lang.LangBundle;
+import consulo.language.LangBundle;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;

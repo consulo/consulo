@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ui;
 
-import com.intellij.featureStatistics.FeatureUsageTracker;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.AllIcons;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import com.intellij.util.text.NameUtilCore;
+import consulo.application.util.NameUtilCore;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
