@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.dnd.DnDAware;

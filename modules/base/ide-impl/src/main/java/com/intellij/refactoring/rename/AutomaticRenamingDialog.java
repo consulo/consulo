@@ -34,8 +34,8 @@ import com.intellij.ui.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.table.JBTable;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usages.UsageViewPresentation;
+import consulo.usage.UsageInfo;
+import consulo.usage.UsageViewPresentation;
 import com.intellij.usages.impl.UsagePreviewPanel;
 
 import javax.swing.*;

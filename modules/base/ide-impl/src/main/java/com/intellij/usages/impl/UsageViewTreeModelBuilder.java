@@ -16,9 +16,9 @@
 package com.intellij.usages.impl;
 
 import consulo.application.ApplicationManager;
-import com.intellij.usages.UsageTarget;
-import com.intellij.usages.UsageView;
-import com.intellij.usages.UsageViewPresentation;
+import consulo.usage.UsageTarget;
+import consulo.usage.UsageView;
+import consulo.usage.UsageViewPresentation;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 

@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
 import com.intellij.openapi.vfs.impl.http.RemoteFileState;
 import consulo.ide.impl.psi.search.FilenameIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

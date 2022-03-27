@@ -19,7 +19,7 @@ import consulo.application.WriteAction;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.navigation.Navigatable;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -2,10 +2,10 @@
 
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.ide.util.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.util.ui.FilePathSplittingPolicy;
 import consulo.ui.ex.JBColor;
 import consulo.component.util.Iconable;

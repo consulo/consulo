@@ -42,7 +42,7 @@ import com.intellij.openapi.util.Getter;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;

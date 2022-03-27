@@ -55,7 +55,7 @@ import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneEx;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.ComponentWithMnemonics;
 import com.intellij.ui.KeyStrokeAdapter;
 import consulo.ui.ex.SimpleTextAttributes;

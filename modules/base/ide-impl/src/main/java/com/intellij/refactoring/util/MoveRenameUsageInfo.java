@@ -20,7 +20,7 @@ import consulo.document.RangeMarker;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import javax.annotation.Nullable;
 
 public class MoveRenameUsageInfo extends UsageInfo{

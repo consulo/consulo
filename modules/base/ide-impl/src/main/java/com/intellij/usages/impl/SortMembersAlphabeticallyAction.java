@@ -16,8 +16,8 @@
 package com.intellij.usages.impl;
 
 import consulo.application.AllIcons;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usages.UsageViewSettings;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.UsageViewSettings;
 
 /**
 * @author cdr

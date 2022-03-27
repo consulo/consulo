@@ -1,7 +1,7 @@
 package com.intellij.dupLocator;
 
 import com.intellij.dupLocator.util.PsiFragment;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 
 import javax.annotation.Nullable;
 

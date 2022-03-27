@@ -39,7 +39,7 @@ import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.EditorTextField;
 import consulo.ui.ex.SimpleTextAttributes;
 

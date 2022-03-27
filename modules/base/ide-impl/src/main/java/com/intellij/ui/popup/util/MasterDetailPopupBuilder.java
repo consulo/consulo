@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.popup.util;
 
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.InplaceButton;
 import com.intellij.util.Function;
 import consulo.application.AllIcons;

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import consulo.dataContext.TypeSafeDataProvider;
 
 import javax.swing.*;
 import java.awt.*;

@@ -23,11 +23,11 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.ui.ex.UIBundle;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usageView.UsageViewContentManager;
-import com.intellij.usages.UsageView;
-import com.intellij.usages.UsageViewSettings;
-import com.intellij.usages.rules.UsageFilteringRuleProvider;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.UsageViewContentManager;
+import consulo.usage.UsageView;
+import consulo.usage.UsageViewSettings;
+import consulo.usage.rule.UsageFilteringRuleProvider;
 import com.intellij.util.containers.ContainerUtil;
 import jakarta.inject.Inject;
 

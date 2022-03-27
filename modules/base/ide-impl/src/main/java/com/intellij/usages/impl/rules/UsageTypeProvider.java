@@ -24,6 +24,7 @@ package com.intellij.usages.impl.rules;
 
 import consulo.language.psi.PsiElement;
 import consulo.component.extension.ExtensionPointName;
+import consulo.usage.UsageType;
 
 import javax.annotation.Nullable;
 

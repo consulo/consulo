@@ -19,7 +19,6 @@ import com.intellij.tasks.TaskRepository;
 import com.intellij.tasks.TaskRepositorySubtype;
 import com.intellij.tasks.TaskRepositoryType;
 import com.intellij.tasks.impl.TaskManagerImpl;
-import com.intellij.ui.*;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
 import consulo.application.util.ConcurrentFactoryMap;

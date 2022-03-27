@@ -5,7 +5,7 @@ import com.intellij.dupLocator.util.DuplocatorUtil;
 import com.intellij.dupLocator.util.PsiFragment;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import consulo.component.macro.PathMacroManager;
 import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;

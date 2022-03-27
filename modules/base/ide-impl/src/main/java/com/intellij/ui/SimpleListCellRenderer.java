@@ -2,6 +2,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.Function;
 import consulo.ui.ex.awt.JBUI;

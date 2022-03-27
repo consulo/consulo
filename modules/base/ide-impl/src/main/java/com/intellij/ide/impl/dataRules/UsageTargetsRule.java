@@ -19,9 +19,9 @@ package com.intellij.ide.impl.dataRules;
 import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;
-import com.intellij.usages.UsageTarget;
-import com.intellij.usages.UsageTargetUtil;
-import com.intellij.usages.UsageView;
+import consulo.usage.UsageTarget;
+import consulo.usage.UsageTargetUtil;
+import consulo.usage.UsageView;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

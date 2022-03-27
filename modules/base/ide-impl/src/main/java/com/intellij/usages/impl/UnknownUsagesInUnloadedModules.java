@@ -15,9 +15,9 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.usages.TextChunk;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsagePresentation;
+import consulo.usage.TextChunk;
+import consulo.usage.Usage;
+import consulo.usage.UsagePresentation;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AllIcons;

@@ -31,7 +31,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.RefactoringBundle;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Nls;
 

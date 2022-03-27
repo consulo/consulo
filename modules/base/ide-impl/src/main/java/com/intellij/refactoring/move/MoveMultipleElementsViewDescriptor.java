@@ -23,8 +23,8 @@ package com.intellij.refactoring.move;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usageView.UsageViewDescriptor;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.UsageViewDescriptor;
 import com.intellij.usageView.UsageViewUtil;
 import javax.annotation.Nonnull;
 

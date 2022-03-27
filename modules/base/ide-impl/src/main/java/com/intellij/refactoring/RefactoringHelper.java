@@ -18,7 +18,7 @@ package com.intellij.refactoring;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 
 /**
  * @author yole

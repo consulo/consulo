@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions;
 
-import com.intellij.ide.util.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import com.intellij.ide.util.gotoByName.GotoFileCellRenderer;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
@@ -16,7 +16,7 @@ import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiNamedElement;
 import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.util.ObjectUtils;
 
 import javax.annotation.Nullable;
@@ -32,7 +32,6 @@ import java.util.Optional;
 public class SearchEverywherePsiRenderer extends PsiElementListCellRenderer<PsiElement> {
 
   public SearchEverywherePsiRenderer() {
-    setFocusBorderEnabled(false);
     setLayout(new BorderLayout() {
       @Override
       public void layoutContainer(Container target) {

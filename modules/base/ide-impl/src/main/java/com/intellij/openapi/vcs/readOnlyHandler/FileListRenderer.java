@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.readOnlyHandler;
 import com.intellij.ide.presentation.VirtualFilePresentation;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;

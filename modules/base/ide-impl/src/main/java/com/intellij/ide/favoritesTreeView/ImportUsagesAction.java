@@ -21,8 +21,8 @@ import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageView;
+import consulo.usage.Usage;
+import consulo.usage.UsageView;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 

@@ -26,12 +26,12 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.usages.TextChunk;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsagePresentation;
-import com.intellij.usages.rules.UsageInFile;
+import consulo.usage.TextChunk;
+import consulo.usage.Usage;
+import consulo.usage.UsagePresentation;
+import consulo.usage.rule.UsageInFile;
 import consulo.language.icon.IconDescriptorUpdaters;
 
 import javax.annotation.Nonnull;

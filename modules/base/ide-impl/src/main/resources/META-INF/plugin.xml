@@ -644,8 +644,8 @@
     <extensionPoint name="highlightUsagesHandlerFactory" interface="consulo.language.editor.highlight.usage.HighlightUsagesHandlerFactory"/>
 
     <extensionPoint name="usageTargetProvider"
-                    interface="com.intellij.usages.UsageTargetProvider"/>
-    <extensionPoint name="usageToPsiElementProvider" interface="com.intellij.usages.UsageToPsiElementProvider"/>
+                    interface="consulo.usage.UsageTargetProvider"/>
+    <extensionPoint name="usageToPsiElementProvider" interface="consulo.usage.UsageToPsiElementProvider"/>
 
     <extensionPoint name="customScopesProvider"
                     interface="consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider"
@@ -945,11 +945,11 @@
                     beanClass="consulo.language.editor.impl.internal.completion.CompletionDataEP"/>
 
     <extensionPoint name="usageFilteringRuleProvider"
-                    interface="com.intellij.usages.rules.UsageFilteringRuleProvider"/>
+                    interface="consulo.usage.rule.UsageFilteringRuleProvider"/>
     <extensionPoint name="importFilteringRule"
-                    interface="com.intellij.usages.rules.ImportFilteringRule"/>
+                    interface="consulo.usage.rule.ImportFilteringRule"/>
     <extensionPoint name="usageGroupingRuleProvider"
-                    interface="com.intellij.usages.rules.UsageGroupingRuleProvider"/>
+                    interface="consulo.usage.rule.UsageGroupingRuleProvider"/>
     <extensionPoint name="usageTypeProvider"
                     interface="com.intellij.usages.impl.rules.UsageTypeProvider"/>
     <extensionPoint name="fileStructureGroupRuleProvider"
@@ -1388,7 +1388,7 @@
                     serviceImplementation="com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration"/>
 
 
-    <projectService serviceInterface="com.intellij.ide.SelectInEditorManager"
+    <projectService serviceInterface="consulo.fileEditor.SelectInEditorManager"
                     serviceImplementation="com.intellij.ide.impl.SelectInEditorManagerImpl"/>
     <projectService serviceInterface="com.intellij.ui.RecentsManager"
                     serviceImplementation="com.intellij.ui.RecentsManager"/>
@@ -1689,8 +1689,8 @@
     <applicationService serviceInterface="com.intellij.ide.PsiCopyPasteManager"
                         serviceImplementation="com.intellij.ide.PsiCopyPasteManager"/>
 
-    <applicationService serviceInterface="com.intellij.usages.UsageViewSettings"
-                        serviceImplementation="com.intellij.usages.UsageViewSettings"/>
+    <applicationService serviceInterface="consulo.usage.UsageViewSettings"
+                        serviceImplementation="consulo.usage.UsageViewSettings"/>
     <applicationService serviceInterface="com.intellij.refactoring.RefactoringSettings"
                         serviceImplementation="com.intellij.refactoring.RefactoringSettings"/>
     <applicationService serviceInterface="com.intellij.refactoring.RefactoringActionHandlerFactory"
@@ -1787,8 +1787,8 @@
     <applicationService serviceInterface="com.intellij.openapi.roots.libraries.LibraryTypeService"
                         serviceImplementation="com.intellij.openapi.roots.impl.libraries.LibraryTypeServiceImpl"/>
 
-    <applicationService serviceInterface="com.intellij.usageView.UsageTreeColorsScheme"
-                        serviceImplementation="com.intellij.usageView.UsageTreeColorsScheme"/>
+    <applicationService serviceInterface="consulo.usage.UsageTreeColorsScheme"
+                        serviceImplementation="consulo.usage.UsageTreeColorsScheme"/>
 
 
     <applicationService serviceInterface="consulo.language.codeStyle.AppCodeStyleSettingsManager"
@@ -1882,7 +1882,7 @@
     <projectService serviceInterface="consulo.codeStyle.ProjectCodeStyleFacade"
                     serviceImplementation="consulo.psi.impl.source.codeStyle.ProjectCodeStyleFacadeImpl"/>
 
-    <projectService serviceInterface="com.intellij.usages.UsageViewManager"
+    <projectService serviceInterface="consulo.usage.UsageViewManager"
                     serviceImplementation="com.intellij.usages.impl.UsageViewManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.analysis.AnalysisUIOptions"
@@ -2287,9 +2287,7 @@
     <projectService serviceInterface="consulo.language.editor.inspection.scheme.InspectionManager"
                     serviceImplementation="com.intellij.codeInspection.ex.InspectionManagerEx"/>
 
-    <projectService serviceImplementation="com.intellij.usageView.UsageViewManager"/>
-
-    <projectService serviceInterface="com.intellij.usageView.UsageViewContentManager" serviceImplementation="com.intellij.usageView.impl.UsageViewContentManagerImpl"/>
+    <projectService serviceInterface="consulo.usage.UsageViewContentManager" serviceImplementation="com.intellij.usageView.impl.UsageViewContentManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"
                         serviceImplementation="com.intellij.ide.projectView.impl.ProjectViewSharedSettings"/>

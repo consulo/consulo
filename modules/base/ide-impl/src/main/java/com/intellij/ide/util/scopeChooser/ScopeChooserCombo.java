@@ -15,7 +15,7 @@ import consulo.ide.impl.psi.search.SearchScopeProvider;
 import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.search.scope.NamedScopesHolder;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.BitUtil;

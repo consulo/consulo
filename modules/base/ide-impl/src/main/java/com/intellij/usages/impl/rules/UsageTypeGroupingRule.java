@@ -20,10 +20,10 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.usages.*;
-import com.intellij.usages.rules.PsiElementUsage;
-import com.intellij.usages.rules.SingleParentUsageGroupingRule;
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.SingleParentUsageGroupingRule;
 import consulo.ui.image.Image;
+import consulo.usage.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

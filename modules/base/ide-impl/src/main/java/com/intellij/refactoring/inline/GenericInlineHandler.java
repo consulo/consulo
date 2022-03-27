@@ -36,7 +36,7 @@ import com.intellij.refactoring.BaseRefactoringProcessor;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.ConflictsDialog;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import java.util.HashMap;
 
 import consulo.util.collection.MultiMap;

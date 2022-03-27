@@ -19,9 +19,9 @@ package com.intellij.usages.impl;
 import consulo.application.AppUIExecutor;
 import consulo.project.Project;
 import com.intellij.ui.components.JBPanelWithEmptyText;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import com.intellij.usages.UsageContextPanel;
-import com.intellij.usages.UsageViewPresentation;
+import consulo.usage.UsageViewPresentation;
 import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 

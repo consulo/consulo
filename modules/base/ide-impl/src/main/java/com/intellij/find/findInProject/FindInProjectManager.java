@@ -7,12 +7,12 @@ import com.intellij.find.FindModel;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
+import consulo.usage.UsageViewManager;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usages.*;
+import consulo.usage.*;
 import consulo.application.util.function.Processor;
 import jakarta.inject.Inject;
 

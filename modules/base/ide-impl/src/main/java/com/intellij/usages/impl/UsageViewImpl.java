@@ -3,72 +3,75 @@ package com.intellij.usages.impl;
 
 import com.intellij.concurrency.JobSchedulerImpl;
 import com.intellij.find.FindManager;
-import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.exclusion.ExclusionHandler;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.awt.*;
-import consulo.navigation.NavigationItem;
-import com.intellij.openapi.actionSystem.*;
+import consulo.dataContext.DataSink;
+import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.dataContext.TypeSafeDataProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.undoRedo.CommandProcessor;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataProvider;
-import consulo.language.psi.*;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.application.impl.internal.progress.ProgressWrapper;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;
-import consulo.util.lang.EmptyRunnable;
-import com.intellij.openapi.util.Factory;
-import consulo.application.util.SystemInfo;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
-import com.intellij.ui.*;
+import com.intellij.ui.SmartExpander;
+import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import com.intellij.ui.components.JBTabbedPane;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.awt.tree.Tree;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usageView.UsageViewContentManager;
-import com.intellij.usages.*;
-import com.intellij.usages.rules.*;
-import consulo.ui.ex.awt.util.Alarm;
+import com.intellij.usages.UsageContextPanel;
+import com.intellij.usages.UsageDataUtil;
+import consulo.usage.UsageInfo2UsageAdapter;
+import consulo.usage.UsageViewSettings;
 import com.intellij.util.Consumer;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.util.concurrent.BoundedTaskExecutor;
-import consulo.ui.ex.concurrent.EdtExecutorService;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.LinkedMultiMap;
-import consulo.util.collection.MultiMap;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.awt.util.DialogUtil;
-import consulo.ui.ex.awt.tree.TreeModelAdapter;
-import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ProgressWrapper;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.concurrent.PooledThreadExecutor;
 import consulo.awt.hacking.BasicTreeUIHacking;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NavigationItem;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeModelAdapter;
+import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awt.util.DialogUtil;
+import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.ui.ex.content.Content;
+import consulo.undoRedo.CommandProcessor;
+import consulo.usage.*;
+import consulo.usage.rule.*;
+import consulo.util.collection.LinkedMultiMap;
+import consulo.util.collection.MultiMap;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.EmptyRunnable;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,6 +85,7 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,7 +106,7 @@ public class UsageViewImpl implements UsageViewEx {
 
   private final UsageViewPresentation myPresentation;
   private final UsageTarget[] myTargets;
-  private final Factory<UsageSearcher> myUsageSearcherFactory;
+  private final Supplier<UsageSearcher> myUsageSearcherFactory;
   private final Project myProject;
 
   private volatile boolean mySearchInProgress = true;
@@ -169,7 +173,7 @@ public class UsageViewImpl implements UsageViewEx {
   private final ExecutorService updateRequests = AppExecutorUtil.createBoundedApplicationPoolExecutor("Usage View Update Requests", PooledThreadExecutor.INSTANCE, JobSchedulerImpl.getJobPoolParallelism(), this);
   private final List<ExcludeListener> myExcludeListeners = ContainerUtil.createConcurrentList();
 
-  public UsageViewImpl(@Nonnull final Project project, @Nonnull UsageViewPresentation presentation, @Nonnull UsageTarget[] targets, Factory<UsageSearcher> usageSearcherFactory) {
+  public UsageViewImpl(@Nonnull final Project project, @Nonnull UsageViewPresentation presentation, @Nonnull UsageTarget[] targets, Supplier<UsageSearcher> usageSearcherFactory) {
     // fire events every 50 ms, not more often to batch requests
     myFireEventsFuture = EdtExecutorService.getScheduledExecutorInstance().scheduleWithFixedDelay(this::fireEvents, 50, 50, TimeUnit.MILLISECONDS);
     Disposer.register(this, () -> myFireEventsFuture.cancel(false));
@@ -1572,7 +1576,7 @@ public class UsageViewImpl implements UsageViewEx {
   public boolean canPerformReRun() {
     if (myRerunAction != null && myRerunAction.isEnabled()) return allTargetsAreValid();
     try {
-      return myUsageSearcherFactory != null && allTargetsAreValid() && myUsageSearcherFactory.create() != null;
+      return myUsageSearcherFactory != null && allTargetsAreValid() && myUsageSearcherFactory.get() != null;
     }
     catch (PsiInvalidElementAccessException e) {
       return false;

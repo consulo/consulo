@@ -30,7 +30,6 @@ import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import com.intellij.openapi.vcs.changes.IgnoreSettingsType;
 import com.intellij.openapi.vcs.changes.IgnoredFileBean;
-import com.intellij.ui.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.ListUtil;

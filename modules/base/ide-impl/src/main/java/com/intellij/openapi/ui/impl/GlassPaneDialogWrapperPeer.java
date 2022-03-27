@@ -21,7 +21,7 @@ import consulo.application.ui.RemoteDesktopService;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;

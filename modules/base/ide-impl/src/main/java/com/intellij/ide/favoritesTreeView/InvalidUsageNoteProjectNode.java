@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.usages.TextChunk;
+import consulo.usage.TextChunk;
 import javax.annotation.Nonnull;
 
 import java.util.List;

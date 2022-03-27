@@ -17,10 +17,10 @@ package com.intellij.refactoring.safeDelete;
 
 import consulo.module.Module;
 import consulo.language.psi.PsiElement;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usages.UsageView;
-import com.intellij.usages.UsageViewManager;
-import com.intellij.usages.UsageViewPresentation;
+import consulo.usage.UsageInfo;
+import consulo.usage.UsageView;
+import consulo.usage.UsageViewManager;
+import consulo.usage.UsageViewPresentation;
 import javax.annotation.Nullable;
 
 import java.util.Collection;

@@ -2,8 +2,8 @@
 package com.intellij.usages.impl;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageView;
+import consulo.usage.Usage;
+import consulo.usage.UsageView;
 import javax.annotation.Nonnull;
 
 public interface UsageViewElementsListener {

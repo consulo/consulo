@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import consulo.language.editor.Pass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
 import com.intellij.codeHighlighting.TextEditorHighlightingPassFactory;
-import com.intellij.codeInsight.daemon.DaemonBundle;
+import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import com.intellij.codeInspection.ex.InspectionProfileWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;

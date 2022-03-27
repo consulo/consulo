@@ -2,7 +2,7 @@ package com.intellij.application.options;
 
 import consulo.application.AllIcons;
 import consulo.module.Module;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -21,11 +21,11 @@ import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import com.intellij.usageView.UsageViewUtil;
-import com.intellij.usages.TextChunk;
-import com.intellij.usages.UsageInfo2UsageAdapter;
-import com.intellij.usages.UsagePresentation;
+import consulo.usage.TextChunk;
+import consulo.usage.UsageInfo2UsageAdapter;
+import consulo.usage.UsagePresentation;
 import com.intellij.util.Function;
 import javax.annotation.Nonnull;
 

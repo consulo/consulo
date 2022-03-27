@@ -20,8 +20,8 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.usages.UsageView;
-import com.intellij.usages.rules.UsageFilteringRuleProvider;
+import consulo.usage.UsageView;
+import consulo.usage.rule.UsageFilteringRuleProvider;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

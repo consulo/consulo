@@ -21,8 +21,8 @@ import consulo.navigation.NavigationItem;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiElement;
-import com.intellij.usages.UsageTarget;
-import com.intellij.usages.UsageTargetProvider;
+import consulo.usage.UsageTarget;
+import consulo.usage.UsageTargetProvider;
 
 public class DefaultUsageTargetProvider implements UsageTargetProvider {
   @Override

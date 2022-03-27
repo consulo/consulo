@@ -52,7 +52,7 @@ import com.intellij.ui.ListCellRendererWrapper;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.JBScrollPane;
-import com.intellij.usages.UsageView;
+import consulo.usage.UsageView;
 import com.intellij.util.PairFunction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.fileEditor.impl.text.TextEditorProvider;

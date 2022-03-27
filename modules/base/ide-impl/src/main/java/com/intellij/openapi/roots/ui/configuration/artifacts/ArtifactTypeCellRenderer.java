@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.compiler.artifact.ArtifactType;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -30,7 +30,7 @@ import consulo.content.scope.SearchScope;
 import consulo.ide.impl.psi.search.searches.ReferencesSearch;
 import com.intellij.refactoring.RefactoringSettings;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.MultiMap;
 import org.jetbrains.annotations.NonNls;

@@ -19,7 +19,7 @@ package com.intellij.codeEditor.printing;
 import consulo.application.ui.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.TabbedPaneWrapper;
 

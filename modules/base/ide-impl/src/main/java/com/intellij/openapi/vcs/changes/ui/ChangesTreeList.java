@@ -16,6 +16,8 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.ui.ex.CopyProvider;
 import com.intellij.ide.projectView.impl.ProjectViewTree;
 import com.intellij.ide.util.PropertiesComponent;

@@ -19,11 +19,11 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.project.Project;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usages.UsageView;
-import com.intellij.usages.rules.ImportFilteringRule;
-import com.intellij.usages.rules.UsageFilteringRule;
-import com.intellij.usages.rules.UsageFilteringRuleProvider;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.UsageView;
+import consulo.usage.rule.ImportFilteringRule;
+import consulo.usage.rule.UsageFilteringRule;
+import consulo.usage.rule.UsageFilteringRuleProvider;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

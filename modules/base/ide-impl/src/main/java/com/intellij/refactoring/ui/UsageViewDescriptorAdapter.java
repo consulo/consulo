@@ -17,8 +17,8 @@
 package com.intellij.refactoring.ui;
 
 import com.intellij.refactoring.RefactoringBundle;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usageView.UsageViewDescriptor;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.UsageViewDescriptor;
 
 /**
  * @author dsl

@@ -34,7 +34,6 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListSeparator;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.ui.*;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.image.Image;
 

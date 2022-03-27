@@ -22,7 +22,7 @@ import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.util.ObjectUtil;
 import consulo.awt.hacking.BasicComboBoxUIHacking;
 import consulo.localize.LocalizeValue;

@@ -6,7 +6,7 @@ import com.intellij.navigation.NavigationItemFileStatus;
 import consulo.language.psi.PsiElementNavigationItem;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.problems.WolfTheProblemSolver;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.OpaquePanel;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;

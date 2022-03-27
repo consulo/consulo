@@ -17,8 +17,8 @@ package com.intellij.usages.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageView;
+import consulo.usage.Usage;
+import consulo.usage.UsageView;
 
 /**
  * @author max

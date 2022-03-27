@@ -45,7 +45,7 @@ import consulo.util.dataholder.Key;
 import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowId;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBTextField;

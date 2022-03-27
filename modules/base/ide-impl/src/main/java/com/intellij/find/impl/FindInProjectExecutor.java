@@ -19,9 +19,9 @@ import com.intellij.find.FindModel;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.progress.ProgressIndicatorEx;
-import com.intellij.usages.FindUsagesProcessPresentation;
-import com.intellij.usages.UsageInfo2UsageAdapter;
-import com.intellij.usages.UsageInfoAdapter;
+import consulo.usage.FindUsagesProcessPresentation;
+import consulo.usage.UsageInfo2UsageAdapter;
+import consulo.usage.UsageInfoAdapter;
 import consulo.application.util.function.Processor;
 
 import javax.annotation.Nonnull;

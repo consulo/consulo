@@ -15,24 +15,14 @@
  */
 package com.intellij.usages.impl;
 
-import consulo.application.impl.internal.performance.PerformanceWatcher;
 import com.intellij.find.FindManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.CodeInsightColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.TextAttributes;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.application.impl.internal.progress.ProgressWrapper;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.HyperlinkAdapter;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usages.*;
-import consulo.ui.ex.awt.util.Alarm;
+import consulo.usage.UsageInfo2UsageAdapter;
+import com.intellij.usages.UsageLimitUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ui.RangeBlinker;
 import com.intellij.xml.util.XmlStringUtil;
@@ -40,23 +30,32 @@ import consulo.application.AccessRule;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.performance.PerformanceWatcher;
+import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
+import consulo.codeEditor.CodeInsightColors;
+import consulo.codeEditor.Editor;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.TextAttributes;
+import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposer;
 import consulo.document.util.Segment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.action.KeyboardShortcut;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.Balloon;
+import consulo.usage.*;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,16 +67,14 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 class SearchForUsagesRunnable implements Runnable {
-  @NonNls
   private static final String FIND_OPTIONS_HREF_TARGET = "FindOptions";
-  @NonNls
   private static final String SEARCH_IN_PROJECT_HREF_TARGET = "SearchInProject";
-  @NonNls
   private static final String LARGE_FILES_HREF_TARGET = "LargeFiles";
-  @NonNls
   private static final String SHOW_PROJECT_FILE_OCCURRENCES_HREF_TARGET = "SHOW_PROJECT_FILE_OCCURRENCES";
+
   private final AtomicInteger myUsageCountWithoutDefinition = new AtomicInteger(0);
   private final AtomicReference<Usage> myFirstUsage = new AtomicReference<>();
   @Nonnull
@@ -85,7 +82,7 @@ class SearchForUsagesRunnable implements Runnable {
   private final AtomicReference<UsageViewImpl> myUsageViewRef;
   private final UsageViewPresentation myPresentation;
   private final UsageTarget[] mySearchFor;
-  private final Factory<UsageSearcher> mySearcherFactory;
+  private final Supplier<UsageSearcher> mySearcherFactory;
   private final FindUsagesProcessPresentation myProcessPresentation;
   @Nonnull
   private final SearchScope mySearchScopeToWarnOfFallingOutOf;
@@ -98,10 +95,10 @@ class SearchForUsagesRunnable implements Runnable {
                           @Nonnull AtomicReference<UsageViewImpl> usageViewRef,
                           @Nonnull UsageViewPresentation presentation,
                           @Nonnull UsageTarget[] searchFor,
-                          @Nonnull Factory<UsageSearcher> searcherFactory,
+                          @Nonnull Supplier<UsageSearcher> searcherFactory,
                           @Nonnull FindUsagesProcessPresentation processPresentation,
                           @Nonnull SearchScope searchScopeToWarnOfFallingOutOf,
-                          @javax.annotation.Nullable UsageViewManager.UsageViewStateListener listener) {
+                          @Nullable UsageViewManager.UsageViewStateListener listener) {
     myProject = project;
     myUsageViewRef = usageViewRef;
     myPresentation = presentation;
@@ -114,7 +111,7 @@ class SearchForUsagesRunnable implements Runnable {
   }
 
   @Nonnull
-  private static String createOptionsHtml(@NonNls UsageTarget[] searchFor) {
+  private static String createOptionsHtml(UsageTarget[] searchFor) {
     KeyboardShortcut shortcut = UsageViewImpl.getShowUsagesWithSettingsShortcut(searchFor);
     String shortcutText = "";
     if (shortcut != null) {
@@ -128,12 +125,12 @@ class SearchForUsagesRunnable implements Runnable {
     return "<a href='" + SEARCH_IN_PROJECT_HREF_TARGET + "'>Search in Project</a>";
   }
 
-  private static void notifyByFindBalloon(@javax.annotation.Nullable final HyperlinkListener listener,
+  private static void notifyByFindBalloon(@Nullable final HyperlinkListener listener,
                                           @Nonnull final NotificationType info,
                                           @Nonnull FindUsagesProcessPresentation processPresentation,
                                           @Nonnull final Project project,
                                           @Nonnull final List<String> lines) {
-    com.intellij.usageView.UsageViewManager.getInstance(project); // in case tool window not registered
+    UsageViewContentManager.getInstance(project); // in case tool window not registered
 
     final Collection<VirtualFile> largeFiles = processPresentation.getLargeFiles();
     List<String> resultLines = new ArrayList<>(lines);
@@ -325,7 +322,7 @@ class SearchForUsagesRunnable implements Runnable {
                           Collections.singletonList(StringUtil.escapeXml(UsageViewManagerImpl.getProgressTitle(myPresentation))));
       findStartedBalloonShown.set(true);
     }, 300, IdeaModalityState.NON_MODAL);
-    UsageSearcher usageSearcher = mySearcherFactory.create();
+    UsageSearcher usageSearcher = mySearcherFactory.get();
 
     usageSearcher.generate(usage -> {
       ProgressIndicator indicator1 = ProgressWrapper.unwrap(ProgressManager.getInstance().getProgressIndicator());

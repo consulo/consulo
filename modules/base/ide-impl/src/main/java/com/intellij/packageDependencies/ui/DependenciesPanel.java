@@ -33,7 +33,7 @@ import com.intellij.packageDependencies.actions.AnalyzeDependenciesHandler;
 import com.intellij.packageDependencies.actions.BackwardDependenciesHandler;
 import com.intellij.ui.SmartExpander;
 import com.intellij.ui.TreeSpeedSearch;
-import com.intellij.usageView.UsageViewBundle;
+import consulo.usage.UsageViewBundle;
 import com.intellij.util.EditSourceOnDoubleClickHandler;
 import com.intellij.util.Function;
 import com.intellij.xml.util.XmlStringUtil;

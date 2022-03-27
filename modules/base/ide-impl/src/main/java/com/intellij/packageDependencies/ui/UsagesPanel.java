@@ -16,6 +16,7 @@
 
 package com.intellij.packageDependencies.ui;
 
+import consulo.usage.UsageViewManager;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.disposer.Disposable;
 import consulo.dataContext.DataProvider;
@@ -25,9 +26,9 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
+import consulo.usage.*;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import com.intellij.usageView.UsageInfo;
 import com.intellij.usages.*;
 import consulo.ui.ex.awt.util.Alarm;
 

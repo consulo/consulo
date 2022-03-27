@@ -27,7 +27,6 @@ import consulo.colorScheme.EditorFontType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.speedSearch.FilteringListModel;
 import com.intellij.ui.speedSearch.ListWithFilter;

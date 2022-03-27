@@ -2,7 +2,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.daemon.DaemonBundle;
+import consulo.language.editor.DaemonBundle;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;

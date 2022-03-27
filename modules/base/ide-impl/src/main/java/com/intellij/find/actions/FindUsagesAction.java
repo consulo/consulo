@@ -31,9 +31,9 @@ import com.intellij.openapi.ui.Messages;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
-import com.intellij.usages.PsiElementUsageTarget;
-import com.intellij.usages.UsageTarget;
-import com.intellij.usages.UsageView;
+import consulo.usage.PsiElementUsageTarget;
+import consulo.usage.UsageTarget;
+import consulo.usage.UsageView;
 import javax.annotation.Nonnull;
 
 public class FindUsagesAction extends AnAction {

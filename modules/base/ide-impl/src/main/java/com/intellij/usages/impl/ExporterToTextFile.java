@@ -3,10 +3,10 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usages.TextChunk;
-import com.intellij.usages.UsageGroup;
-import com.intellij.usages.UsageViewSettings;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.TextChunk;
+import consulo.usage.UsageGroup;
+import consulo.usage.UsageViewSettings;
 import consulo.util.lang.SystemProperties;
 import javax.annotation.Nonnull;
 

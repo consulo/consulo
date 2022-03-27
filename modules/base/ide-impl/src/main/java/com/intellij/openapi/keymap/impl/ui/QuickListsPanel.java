@@ -24,7 +24,6 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ui.ex.awt.*;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;

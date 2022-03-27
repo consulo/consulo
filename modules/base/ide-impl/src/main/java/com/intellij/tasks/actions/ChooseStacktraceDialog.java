@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.tasks.Comment;
 import com.intellij.tasks.Task;
 import consulo.ui.ex.awt.CollectionListModel;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.unscramble.AnalyzeStacktraceUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;

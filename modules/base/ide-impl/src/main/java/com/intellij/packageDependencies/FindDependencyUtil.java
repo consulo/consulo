@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 
 import javax.annotation.Nullable;
 import java.util.*;

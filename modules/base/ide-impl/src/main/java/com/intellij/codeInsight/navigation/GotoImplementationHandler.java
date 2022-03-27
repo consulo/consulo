@@ -18,7 +18,7 @@ package com.intellij.codeInsight.navigation;
 
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.psi.search.ContainerProvider;
-import com.intellij.ide.util.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;
 import consulo.codeEditor.Editor;

@@ -19,9 +19,12 @@ import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.ReadWriteAccessUsageInfo2UsageAdapter;
+import consulo.usage.Usage;
+import consulo.usage.UsageInfo;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.usage.UsageInfo2UsageAdapter;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

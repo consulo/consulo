@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.usages.TextChunk;
+import consulo.usage.TextChunk;
 
 import java.util.List;
 import java.util.Set;

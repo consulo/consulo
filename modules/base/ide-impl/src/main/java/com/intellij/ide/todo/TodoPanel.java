@@ -36,7 +36,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import com.intellij.ui.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.Tree;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import com.intellij.usages.impl.UsagePreviewPanel;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.EditSourceOnDoubleClickHandler;

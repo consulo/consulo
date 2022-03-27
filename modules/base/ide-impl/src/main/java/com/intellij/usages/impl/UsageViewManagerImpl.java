@@ -16,44 +16,42 @@
 package com.intellij.usages.impl;
 
 import com.intellij.find.SearchInBackgroundOption;
-import consulo.language.psi.scope.EverythingGlobalScope;
-import consulo.ide.impl.psi.search.ProjectAndLibrariesScope;
-import consulo.ide.impl.psi.search.ProjectScopeImpl;
-import consulo.language.file.inject.VirtualFileWindow;
-import com.intellij.openapi.actionSystem.DataSink;
-import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
+import com.intellij.openapi.progress.util.TooManyUsagesStatus;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.usages.UsageLimitUtil;
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.UsageInFile;
 import consulo.application.ApplicationManager;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
-import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import com.intellij.openapi.progress.util.TooManyUsagesStatus;
-import consulo.project.Project;
-import com.intellij.openapi.util.Factory;
-import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.content.scope.SearchScope;
+import consulo.ide.impl.psi.search.ProjectAndLibrariesScope;
+import consulo.ide.impl.psi.search.ProjectScopeImpl;
+import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ui.ex.content.Content;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usages.*;
-import com.intellij.usages.rules.PsiElementUsage;
-import com.intellij.usages.rules.UsageInFile;
+import consulo.language.psi.scope.EverythingGlobalScope;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.usage.*;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
-
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 /**
  * @author max
@@ -71,7 +69,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   @Nonnull
-  public UsageView createUsageView(@Nonnull UsageTarget[] targets, @Nonnull Usage[] usages, @Nonnull UsageViewPresentation presentation, Factory<UsageSearcher> usageSearcherFactory) {
+  public UsageView createUsageView(@Nonnull UsageTarget[] targets, @Nonnull Usage[] usages, @Nonnull UsageViewPresentation presentation, Supplier<UsageSearcher> usageSearcherFactory) {
     UsageViewImpl usageView = new UsageViewImpl(myProject, presentation, targets, usageSearcherFactory);
     appendUsages(usages, usageView);
     usageView.setSearchInProgress(false);
@@ -80,7 +78,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   @Nonnull
-  public UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation, Factory<UsageSearcher> factory) {
+  public UsageView showUsages(@Nonnull UsageTarget[] searchedFor, @Nonnull Usage[] foundUsages, @Nonnull UsageViewPresentation presentation, Supplier<UsageSearcher> factory) {
     UsageView usageView = createUsageView(searchedFor, foundUsages, presentation, factory);
     addContent((UsageViewImpl)usageView, presentation);
     showToolWindow(true);
@@ -99,7 +97,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   void addContent(@Nonnull UsageViewImpl usageView, @Nonnull UsageViewPresentation presentation) {
-    Content content = com.intellij.usageView.UsageViewManager.getInstance(myProject)
+    Content content = UsageViewContentManager.getInstance(myProject)
             .addContent(presentation.getTabText(), presentation.getTabName(), presentation.getToolwindowTitle(), true, usageView.getComponent(), presentation.isOpenInNewTab(), true);
     usageView.setContent(content);
     content.putUserData(USAGE_VIEW_KEY, usageView);
@@ -107,7 +105,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   public UsageView searchAndShowUsages(@Nonnull final UsageTarget[] searchFor,
-                                       @Nonnull final Factory<UsageSearcher> searcherFactory,
+                                       @Nonnull final Supplier<UsageSearcher> searcherFactory,
                                        final boolean showPanelIfOnlyOneUsage,
                                        final boolean showNotFoundMessage,
                                        @Nonnull final UsageViewPresentation presentation,
@@ -120,7 +118,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
   }
 
   private UsageView doSearchAndShow(@Nonnull final UsageTarget[] searchFor,
-                                    @Nonnull final Factory<UsageSearcher> searcherFactory,
+                                    @Nonnull final Supplier<UsageSearcher> searcherFactory,
                                     @Nonnull final UsageViewPresentation presentation,
                                     @Nonnull final FindUsagesProcessPresentation processPresentation,
                                     @Nullable final UsageViewStateListener listener) {
@@ -166,7 +164,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   public void searchAndShowUsages(@Nonnull UsageTarget[] searchFor,
-                                  @Nonnull Factory<UsageSearcher> searcherFactory,
+                                  @Nonnull Supplier<UsageSearcher> searcherFactory,
                                   @Nonnull FindUsagesProcessPresentation processPresentation,
                                   @Nonnull UsageViewPresentation presentation,
                                   @Nullable UsageViewStateListener listener) {
@@ -175,7 +173,7 @@ public class UsageViewManagerImpl extends UsageViewManager {
 
   @Override
   public UsageView getSelectedUsageView() {
-    final Content content = com.intellij.usageView.UsageViewManager.getInstance(myProject).getSelectedContent();
+    final Content content = UsageViewContentManager.getInstance(myProject).getSelectedContent();
     if (content != null) {
       return content.getUserData(USAGE_VIEW_KEY);
     }

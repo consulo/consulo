@@ -1,7 +1,7 @@
 package com.intellij.usages.impl.rules;
 
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.usages.UsageGroup;
+import consulo.usage.UsageGroup;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

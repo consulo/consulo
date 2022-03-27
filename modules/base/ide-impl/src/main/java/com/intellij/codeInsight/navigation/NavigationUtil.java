@@ -18,62 +18,61 @@ package com.intellij.codeInsight.navigation;
 
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
-import com.intellij.ide.util.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
-import consulo.navigation.NavigationItem;
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.markup.MarkupModelEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
+import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import com.intellij.ui.SeparatorWithText;
+import com.intellij.ui.popup.list.ListPopupImpl;
+import com.intellij.ui.popup.list.PopupListElementRenderer;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.extension.Extensions;
+import consulo.dataContext.DataContext;
+import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
-import consulo.virtualFileSystem.fileType.INativeFileType;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
 import consulo.ide.ui.impl.PopupChooserBuilder;
-import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.resolve.PsiElementProcessor;
-import com.intellij.ui.ColoredListCellRenderer;
-import consulo.ui.ex.JBColor;
-import com.intellij.ui.SeparatorWithText;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBList;
-import consulo.ide.ui.popup.HintUpdateSupply;
-import com.intellij.ui.popup.list.ListPopupImpl;
-import com.intellij.ui.popup.list.PopupListElementRenderer;
-import consulo.application.util.function.Processor;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NavigationItem;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.color.RGBColor;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.INativeFileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author ven
@@ -115,37 +114,31 @@ public final class NavigationUtil {
                                                                   @Nonnull final PsiElementListCellRenderer<T> renderer,
                                                                   @Nullable final String title,
                                                                   @Nonnull final PsiElementProcessor<T> processor,
-                                                                  @Nullable final T selection) {
-    final JList list = new JBList(elements);
-    HintUpdateSupply.installSimpleHintUpdateSupply(list);
-    list.setCellRenderer(renderer);
-
-    list.setFont(EditorUtil.getEditorFont());
-
-    if (selection != null) {
-      list.setSelectedValue(selection, true);
+                                                                  @Nullable final T initialSelection) {
+    assert elements.length > 0 : "Attempted to show a navigation popup with zero elements";
+    IPopupChooserBuilder<T> builder =
+            JBPopupFactory.getInstance().createPopupChooserBuilder(ContainerUtil.newArrayList(elements)).setRenderer(renderer).setFont(EditorUtil.getEditorFont()).withHintUpdateSupply();
+    if (initialSelection != null) {
+      builder.setSelectedValue(initialSelection, true);
     }
-
-    final Runnable runnable = () -> {
-      int[] ids = list.getSelectedIndices();
-      if (ids == null || ids.length == 0) return;
-      for (Object element : list.getSelectedValues()) {
-        if (element != null) {
-          processor.execute((T)element);
-        }
-      }
-    };
-
-    PopupChooserBuilder builder = new PopupChooserBuilder(list);
     if (title != null) {
       builder.setTitle(title);
     }
     renderer.installSpeedSearch(builder, true);
 
-    JBPopup popup = builder.setItemChoosenCallback(runnable).createPopup();
+    JBPopup popup = builder.setItemsChosenCallback(selectedValues -> {
+      for (T element : selectedValues) {
+        if (element != null) {
+          processor.execute(element);
+        }
+      }
+    }).createPopup();
 
-    builder.getScrollPane().setBorder(null);
-    builder.getScrollPane().setViewportBorder(null);
+    if (builder instanceof PopupChooserBuilder) {
+      JScrollPane pane = ((PopupChooserBuilder<?>)builder).getScrollPane();
+      pane.setBorder(null);
+      pane.setViewportBorder(null);
+    }
 
     hidePopupIfDumbModeStarts(popup, elements[0].getProject());
 
@@ -307,10 +300,6 @@ public final class NavigationUtil {
 
     final Ref<Boolean> hasMnemonic = Ref.create(false);
     final DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
-      {
-        setFocusBorderEnabled(false);
-      }
-
       @Override
       public String getElementText(PsiElement element) {
         String customName = itemsMap.get(element).getCustomName();

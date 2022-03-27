@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.DesktopAntialiasingType;

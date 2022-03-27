@@ -6,7 +6,7 @@ import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.*;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.speedSearch.SpeedSearch;

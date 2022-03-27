@@ -38,8 +38,7 @@ import consulo.language.psi.search.PsiSearchHelper;
 import consulo.language.psi.search.SearchRequestCollector;
 import consulo.language.psi.search.SearchSession;
 import com.intellij.ui.LightweightHint;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usageView.UsageViewContentManager;
+import consulo.usage.*;
 import com.intellij.usageView.UsageViewUtil;
 import com.intellij.usages.*;
 import com.intellij.util.ArrayUtil;
@@ -99,12 +98,12 @@ public class FindUsagesManager {
   @NonNls
   private static final String VALUE_START_USAGE_AGAIN = "START_AGAIN";
   private final Project myProject;
-  private final com.intellij.usages.UsageViewManager myAnotherManager;
+  private final UsageViewManager myAnotherManager;
 
   private PsiElement2UsageTargetComposite myLastSearchInFileData; // EDT only
   private final UsageHistory myHistory = new UsageHistory();
 
-  public FindUsagesManager(@Nonnull Project project, @Nonnull com.intellij.usages.UsageViewManager anotherManager) {
+  public FindUsagesManager(@Nonnull Project project, @Nonnull UsageViewManager anotherManager) {
     myProject = project;
     myAnotherManager = anotherManager;
   }

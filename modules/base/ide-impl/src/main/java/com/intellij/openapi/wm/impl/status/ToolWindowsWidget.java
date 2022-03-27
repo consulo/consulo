@@ -18,7 +18,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBList;

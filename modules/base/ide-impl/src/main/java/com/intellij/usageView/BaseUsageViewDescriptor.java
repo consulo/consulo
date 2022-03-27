@@ -17,6 +17,9 @@ package com.intellij.usageView;
 
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.UsageViewDescriptor;
+
 import javax.annotation.Nonnull;
 
 /**

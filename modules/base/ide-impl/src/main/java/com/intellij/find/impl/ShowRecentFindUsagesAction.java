@@ -28,8 +28,8 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.usages.ConfigurableUsageTarget;
-import com.intellij.usages.UsageView;
+import consulo.usage.ConfigurableUsageTarget;
+import consulo.usage.UsageView;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

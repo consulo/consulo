@@ -16,7 +16,7 @@
 package com.intellij.ide.favoritesTreeView;
 
 import consulo.navigation.Navigatable;
-import com.intellij.usages.Usage;
+import consulo.usage.Usage;
 
 /**
  * Created with IntelliJ IDEA.

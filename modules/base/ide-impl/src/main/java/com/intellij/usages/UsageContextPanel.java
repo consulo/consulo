@@ -16,8 +16,9 @@
 package com.intellij.usages;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import consulo.disposer.Disposable;
+import consulo.usage.UsageView;
 
 import javax.annotation.Nonnull;
 

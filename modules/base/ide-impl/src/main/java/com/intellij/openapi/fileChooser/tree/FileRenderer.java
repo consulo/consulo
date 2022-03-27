@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.fileChooser.tree;
 
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;

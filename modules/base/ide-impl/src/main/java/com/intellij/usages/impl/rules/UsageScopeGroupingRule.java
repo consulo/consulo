@@ -23,11 +23,11 @@ import com.intellij.openapi.vcs.FileStatus;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageGroup;
-import com.intellij.usages.UsageView;
-import com.intellij.usages.rules.PsiElementUsage;
-import com.intellij.usages.rules.UsageGroupingRule;
+import consulo.usage.Usage;
+import consulo.usage.UsageGroup;
+import consulo.usage.UsageView;
+import consulo.usage.rule.PsiElementUsage;
+import consulo.usage.rule.UsageGroupingRule;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -22,7 +22,7 @@ import consulo.language.psi.PsiNamedElement;
 import com.intellij.refactoring.rename.RenameProcessor;
 import com.intellij.refactoring.rename.RenameUtil;
 import com.intellij.refactoring.rename.UnresolvableCollisionUsageInfo;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import com.intellij.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 import consulo.annotation.access.RequiredReadAction;

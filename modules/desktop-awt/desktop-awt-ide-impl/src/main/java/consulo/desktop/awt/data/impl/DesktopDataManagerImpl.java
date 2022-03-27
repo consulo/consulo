@@ -20,7 +20,7 @@ import com.intellij.ide.ProhibitAWTEvents;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.wm.ex.WindowManagerEx;

@@ -18,7 +18,7 @@ package com.intellij.openapi.fileTypes.impl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

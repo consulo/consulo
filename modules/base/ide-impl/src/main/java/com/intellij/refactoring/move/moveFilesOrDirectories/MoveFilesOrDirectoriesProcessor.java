@@ -37,8 +37,8 @@ import com.intellij.refactoring.move.MoveCallback;
 import com.intellij.refactoring.rename.RenameUtil;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import com.intellij.refactoring.util.NonCodeUsageInfo;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usageView.UsageViewDescriptor;
+import consulo.usage.UsageInfo;
+import consulo.usage.UsageViewDescriptor;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 

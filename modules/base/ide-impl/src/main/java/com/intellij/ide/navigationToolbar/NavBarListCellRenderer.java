@@ -18,7 +18,7 @@ package com.intellij.ide.navigationToolbar;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import com.intellij.problems.WolfTheProblemSolver;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;

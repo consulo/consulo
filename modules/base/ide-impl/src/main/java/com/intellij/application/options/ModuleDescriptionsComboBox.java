@@ -21,6 +21,7 @@ import consulo.module.*;
 import com.intellij.openapi.module.impl.LoadedModuleDescriptionImpl;
 import consulo.module.Module;
 import consulo.project.Project;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
 import com.intellij.ui.*;
 

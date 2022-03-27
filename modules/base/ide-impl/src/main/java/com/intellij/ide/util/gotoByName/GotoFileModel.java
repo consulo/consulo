@@ -5,7 +5,7 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.actions.GotoFileItemProvider;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.ide.util.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.navigation.NavigationItem;
 import consulo.application.ApplicationManager;

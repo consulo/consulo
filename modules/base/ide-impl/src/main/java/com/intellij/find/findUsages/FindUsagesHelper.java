@@ -24,8 +24,8 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiReferenceService;
 import consulo.ide.impl.psi.impl.search.PsiSearchHelperImpl;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usageView.UsageInfoFactory;
+import consulo.usage.UsageInfo;
+import consulo.usage.UsageInfoFactory;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

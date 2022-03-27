@@ -20,8 +20,11 @@ import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
+import consulo.usage.Usage;
+import consulo.usage.UsageInfo2UsageAdapter;
+import consulo.usage.UsageSearcher;
 import consulo.util.lang.ref.Ref;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

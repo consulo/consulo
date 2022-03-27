@@ -34,7 +34,7 @@ import consulo.application.util.function.Computable;
 import consulo.ui.ex.action.*;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.Consumer;

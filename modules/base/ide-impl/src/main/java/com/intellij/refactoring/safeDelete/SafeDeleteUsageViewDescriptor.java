@@ -19,7 +19,7 @@ package com.intellij.refactoring.safeDelete;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.UsageViewDescriptorAdapter;
-import com.intellij.usageView.UsageViewBundle;
+import consulo.usage.UsageViewBundle;
 import javax.annotation.Nonnull;
 
 /**

@@ -21,8 +21,8 @@ import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import consulo.dataContext.DataProvider;
-import com.intellij.usages.UsageView;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageView;
+import consulo.usage.UsageInfo;
 
 import java.util.Collections;
 import java.util.List;

@@ -31,7 +31,7 @@ import com.intellij.remoteServer.configuration.deployment.DeploymentConfigurator
 import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
 import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
 import com.intellij.remoteServer.impl.configuration.RemoteServerListConfigurable;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxWithBrowseButton;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.SortedComboBoxModel;

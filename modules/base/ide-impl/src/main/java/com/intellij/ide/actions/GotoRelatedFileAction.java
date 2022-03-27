@@ -32,7 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.SeparatorWithText;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -110,10 +110,6 @@ public class GotoRelatedFileAction extends AnAction {
     final Ref<ListCellRenderer> rendererRef = Ref.create(null);
 
     final DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
-      {
-        setFocusBorderEnabled(false);
-      }
-
       @Override
       public String getElementText(PsiElement element) {
         String customName = itemsMap.get(element).getCustomName();

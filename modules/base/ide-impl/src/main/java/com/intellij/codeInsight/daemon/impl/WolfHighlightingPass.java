@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.DaemonBundle;
+import consulo.language.editor.DaemonBundle;
 import com.intellij.codeInsight.problems.WolfTheProblemSolverImpl;
 import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;

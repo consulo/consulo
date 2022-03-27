@@ -18,7 +18,7 @@ package com.intellij.ide.fileTemplates.impl;
 
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateUtil;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.ListSpeedSearch;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.image.Image;

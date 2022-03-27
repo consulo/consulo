@@ -29,6 +29,7 @@ import com.intellij.ide.util.gotoByName.ChooseByNamePanel;
 import com.intellij.ide.util.gotoByName.ChooseByNamePopupComponent;
 import com.intellij.ide.util.gotoByName.GotoFileCellRenderer;
 import com.intellij.ide.util.treeView.AlphaComparator;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;

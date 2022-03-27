@@ -17,6 +17,8 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import com.intellij.diff.DiffDialogHints;
 import com.intellij.diff.util.DiffUserDataKeysEx;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.DeleteProvider;
 import consulo.disposer.Disposable;

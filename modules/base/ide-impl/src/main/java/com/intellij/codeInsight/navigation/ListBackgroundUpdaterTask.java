@@ -22,7 +22,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.popup.AbstractPopup;
-import com.intellij.usages.UsageView;
+import consulo.usage.UsageView;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

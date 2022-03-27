@@ -20,7 +20,7 @@ import com.intellij.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import com.intellij.usages.ConfigurableUsageTarget;
+import consulo.usage.ConfigurableUsageTarget;
 import com.intellij.usages.impl.UsageViewImpl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;

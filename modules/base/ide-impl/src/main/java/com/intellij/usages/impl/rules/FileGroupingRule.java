@@ -17,21 +17,21 @@ package com.intellij.usages.impl.rules;
 
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.DataSink;
-import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.fileEditor.FileEditorManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
+import consulo.usage.*;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.usages.*;
-import com.intellij.usages.rules.SingleParentUsageGroupingRule;
-import com.intellij.usages.rules.UsageInFile;
+import consulo.usage.rule.SingleParentUsageGroupingRule;
+import consulo.usage.rule.UsageInFile;
 import consulo.fileTypes.impl.VfsIconUtil;
 import consulo.ui.image.Image;
 

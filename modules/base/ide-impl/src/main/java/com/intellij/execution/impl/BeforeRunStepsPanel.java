@@ -34,7 +34,7 @@ import consulo.util.lang.function.Conditions;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.CollectionListModel;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.JBList;
 import consulo.dataContext.DataContext;

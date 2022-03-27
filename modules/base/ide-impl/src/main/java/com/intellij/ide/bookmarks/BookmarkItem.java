@@ -17,7 +17,7 @@ package com.intellij.ide.bookmarks;
 
 import com.intellij.openapi.vcs.FileStatus;
 import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import com.intellij.ui.FileColorManager;
 import consulo.ui.ex.awt.SimpleColoredComponent;

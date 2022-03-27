@@ -17,7 +17,7 @@ package com.intellij.usages.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.usages.UsageView;
+import consulo.usage.UsageView;
 import com.intellij.usages.impl.UsageViewImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 

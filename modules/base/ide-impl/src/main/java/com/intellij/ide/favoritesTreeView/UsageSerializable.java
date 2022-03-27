@@ -25,8 +25,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usages.UsageInfo2UsageAdapter;
+import consulo.usage.UsageInfo;
+import consulo.usage.UsageInfo2UsageAdapter;
 
 import java.io.File;
 import java.io.IOException;

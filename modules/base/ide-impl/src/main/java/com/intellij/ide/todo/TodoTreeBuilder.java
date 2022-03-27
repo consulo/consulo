@@ -46,7 +46,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.tree.StructureTreeModel;
-import com.intellij.usageView.UsageTreeColorsScheme;
+import consulo.usage.UsageTreeColorsScheme;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;

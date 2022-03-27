@@ -17,7 +17,7 @@ package com.intellij.openapi.ui;
 
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;

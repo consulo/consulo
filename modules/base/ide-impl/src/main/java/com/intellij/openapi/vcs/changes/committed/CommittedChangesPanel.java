@@ -22,9 +22,10 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.dataContext.DataSink;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicator;

@@ -15,8 +15,8 @@
  */
 package com.intellij.usages.actions;
 
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageView;
+import consulo.usage.Usage;
+import consulo.usage.UsageView;
 
 /**
  * @author max

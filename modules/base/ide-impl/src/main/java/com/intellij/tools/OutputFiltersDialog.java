@@ -22,7 +22,6 @@ package com.intellij.tools;
 import consulo.application.ui.HelpManager;
 import consulo.ui.ex.awt.*;
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.ui.*;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.ListUtil;
 

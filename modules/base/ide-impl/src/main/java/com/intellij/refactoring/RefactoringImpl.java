@@ -16,7 +16,7 @@
 package com.intellij.refactoring;
 
 import consulo.util.lang.ref.Ref;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import consulo.annotation.access.RequiredReadAction;
 
 /**

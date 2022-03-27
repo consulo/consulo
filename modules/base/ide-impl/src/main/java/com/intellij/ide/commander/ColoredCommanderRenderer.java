@@ -19,7 +19,7 @@ package com.intellij.ide.commander;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.ui.ex.tree.NodeDescriptor;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;

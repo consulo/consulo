@@ -16,7 +16,7 @@
 package com.intellij.refactoring;
 
 import consulo.util.lang.ref.Ref;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import consulo.annotation.access.RequiredReadAction;
 
 /**
@@ -97,8 +97,8 @@ public interface Refactoring {
    * <ol>
    * <li> execute {@link #findUsages()} (with progress dialog and all)
    * <li> execute {@link #preprocessUsages(Ref)}
-   * <li> if refactoring was not cancelled, check whether we {@link #shouldPreviewUsages(com.intellij.usageView.UsageInfo[])} , and show the preview
-   * <li> execute {@link #doRefactoring(com.intellij.usageView.UsageInfo[])} if appropiate (if either the preview
+   * <li> if refactoring was not cancelled, check whether we {@link #shouldPreviewUsages(UsageInfo[])} , and show the preview
+   * <li> execute {@link #doRefactoring(UsageInfo[])} if appropiate (if either the preview
    * was not shown, or 'Do Refactor' button have been pressed)
    * </ol>
    */

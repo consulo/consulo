@@ -18,6 +18,7 @@ package com.intellij.util.ui.table;
 import consulo.component.util.Iconable;
 import com.intellij.ui.*;
 import com.intellij.util.ListWithSelection;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

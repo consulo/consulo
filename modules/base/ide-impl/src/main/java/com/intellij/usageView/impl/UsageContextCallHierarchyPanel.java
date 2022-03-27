@@ -25,11 +25,11 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.language.psi.PsiElement;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usageView.UsageViewBundle;
+import consulo.usage.*;
 import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageContextPanelBase;
 import com.intellij.usages.impl.UsageViewImpl;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.usages.UsageView;
+import consulo.usage.UsageView;
 import com.intellij.util.BitUtil;
 import com.intellij.util.Consumer;
 import org.intellij.lang.annotations.MagicConstant;

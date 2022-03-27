@@ -16,9 +16,11 @@
 package com.intellij.usages;
 
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.usage.Usage;
+import consulo.usage.UsageTarget;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.usages.rules.UsageInFile;
-import com.intellij.usages.rules.UsageInFiles;
+import consulo.usage.rule.UsageInFile;
+import consulo.usage.rule.UsageInFiles;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nullable;

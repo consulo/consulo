@@ -16,20 +16,20 @@
 package com.intellij.usages.impl.rules;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.DataSink;
+import consulo.dataContext.DataSink;
 import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.TypeSafeDataProvider;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.usageView.UsageViewBundle;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageGroup;
-import com.intellij.usages.UsageView;
-import com.intellij.usages.rules.UsageGroupingRule;
-import com.intellij.usages.rules.UsageInLibrary;
-import com.intellij.usages.rules.UsageInModule;
+import consulo.usage.UsageViewBundle;
+import consulo.usage.Usage;
+import consulo.usage.UsageGroup;
+import consulo.usage.UsageView;
+import consulo.usage.rule.UsageGroupingRule;
+import consulo.usage.rule.UsageInLibrary;
+import consulo.usage.rule.UsageInModule;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package com.intellij.usages.impl.rules;
 
 import consulo.project.Project;
 import com.intellij.usages.impl.FileStructureGroupRuleProvider;
-import com.intellij.usages.rules.UsageGroupingRule;
+import consulo.usage.rule.UsageGroupingRule;
 
 /**
  * @author yole

@@ -24,7 +24,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.ui.popup.util.DetailView;

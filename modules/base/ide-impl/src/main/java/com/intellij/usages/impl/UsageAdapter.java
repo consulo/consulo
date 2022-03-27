@@ -16,8 +16,8 @@
 package com.intellij.usages.impl;
 
 import consulo.fileEditor.FileEditorLocation;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsagePresentation;
+import consulo.usage.Usage;
+import consulo.usage.UsagePresentation;
 import javax.annotation.Nonnull;
 
 public class UsageAdapter implements Usage {

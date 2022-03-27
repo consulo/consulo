@@ -17,11 +17,11 @@ package com.intellij.usages.impl;
 
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageGroup;
-import com.intellij.usages.UsageTarget;
-import com.intellij.usages.rules.UsageFilteringRule;
-import com.intellij.usages.rules.UsageGroupingRule;
+import consulo.usage.Usage;
+import consulo.usage.UsageGroup;
+import consulo.usage.UsageTarget;
+import consulo.usage.rule.UsageFilteringRule;
+import consulo.usage.rule.UsageGroupingRule;
 import com.intellij.util.Consumer;
 import javax.annotation.Nonnull;
 

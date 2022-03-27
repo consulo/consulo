@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.FixedSizeButton;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.JBUI;

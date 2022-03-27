@@ -15,8 +15,8 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.usages.UsageTarget;
-import com.intellij.usages.UsageView;
+import consulo.usage.UsageTarget;
+import consulo.usage.UsageView;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;

@@ -29,7 +29,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.psi.search.searches.ReferencesSearch;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;

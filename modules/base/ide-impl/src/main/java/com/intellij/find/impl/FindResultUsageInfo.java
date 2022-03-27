@@ -27,7 +27,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiFileRange;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import javax.annotation.Nonnull;
 
 public class FindResultUsageInfo extends UsageInfo {

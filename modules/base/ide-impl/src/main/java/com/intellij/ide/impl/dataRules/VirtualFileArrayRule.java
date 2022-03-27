@@ -32,10 +32,10 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.usages.Usage;
+import consulo.usage.Usage;
 import com.intellij.usages.UsageDataUtil;
-import com.intellij.usages.UsageTarget;
-import com.intellij.usages.UsageView;
+import consulo.usage.UsageTarget;
+import consulo.usage.UsageView;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

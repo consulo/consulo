@@ -8,7 +8,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import com.intellij.refactoring.util.MoveRenameUsageInfo;
 import com.intellij.refactoring.util.NonCodeUsageInfo;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import consulo.language.util.IncorrectOperationException;
 
 import java.util.*;

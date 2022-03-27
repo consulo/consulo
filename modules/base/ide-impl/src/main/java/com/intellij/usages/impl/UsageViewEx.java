@@ -2,8 +2,8 @@
 package com.intellij.usages.impl;
 
 import consulo.application.progress.ProgressIndicator;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageView;
+import consulo.usage.Usage;
+import consulo.usage.UsageView;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

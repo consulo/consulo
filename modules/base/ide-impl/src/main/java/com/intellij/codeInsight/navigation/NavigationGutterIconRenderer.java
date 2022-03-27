@@ -17,7 +17,7 @@ package com.intellij.codeInsight.navigation;
 
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.ide.util.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.markup.GutterIconRenderer;

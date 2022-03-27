@@ -15,25 +15,23 @@
  */
 package com.intellij.codeInsight.highlighting;
 
-import consulo.language.editor.CodeInsightBundle;
-import com.intellij.ide.util.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
+import com.intellij.util.ArrayUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.CodeInsightBundle;
 import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.JBList;
-import com.intellij.util.ArrayUtil;
-import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
+import consulo.ui.ex.popup.JBPopupFactory;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 
 public abstract class ChooseOneOrAllRunnable<T extends PsiElement> implements Runnable {
   private final T[] myClasses;
   private final Editor myEditor;
-  private JList myList;
   private final String myTitle;
 
   public ChooseOneOrAllRunnable(final List<T> classes, final Editor editor, final String title, Class<T> type) {
@@ -47,8 +45,6 @@ public abstract class ChooseOneOrAllRunnable<T extends PsiElement> implements Ru
   @Override
   public void run() {
     if (myClasses.length == 1) {
-      //TODO: cdr this place should produce at least warning
-      // selected(myClasses[0]);
       selected((T[])ArrayUtil.toObjectArray(myClasses[0].getClass(), myClasses[0]));
     }
     else if (myClasses.length > 0) {
@@ -60,40 +56,25 @@ public abstract class ChooseOneOrAllRunnable<T extends PsiElement> implements Ru
         selected(myClasses);
         return;
       }
-      Vector<Object> model = new Vector<Object>(Arrays.asList(myClasses));
-      model.insertElementAt(CodeInsightBundle.message("highlight.thrown.exceptions.chooser.all.entry"), 0);
 
-      myList = new JBList(model);
-      myList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      myList.setCellRenderer(renderer);
+      List<Object> model = new ArrayList<>(Arrays.asList(myClasses));
+      String selectAll = CodeInsightBundle.message("highlight.thrown.exceptions.chooser.all.entry");
+      model.add(0, selectAll);
 
-      final PopupChooserBuilder builder = new PopupChooserBuilder(myList);
+
+      IPopupChooserBuilder<Object> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(model).setRenderer(renderer) // exploit PsiElementListCellRenderer ability to render strings too
+              .setSelectionMode(ListSelectionModel.SINGLE_SELECTION).setItemChosenCallback(selectedValue -> {
+                if (selectedValue.equals(selectAll)) {
+                  selected(myClasses);
+                }
+                else {
+                  selected((T[])ArrayUtil.toObjectArray(selectedValue.getClass(), selectedValue));
+                }
+              }).setTitle(myTitle);
       renderer.installSpeedSearch(builder);
 
-      final Runnable callback = new Runnable() {
-        @Override
-        public void run() {
-          int idx = myList.getSelectedIndex();
-          if (idx < 0) return;
-          if (idx > 0) {
-            selected((T[])ArrayUtil.toObjectArray(myClasses[idx-1].getClass(), myClasses[idx-1]));
-          }
-          else {
-            selected(myClasses);
-          }
-        }
-      };
-
-      ApplicationManager.getApplication().invokeLater(new Runnable() {
-        @Override
-        public void run() {
-          JBPopup popup = builder.
-                  setTitle(myTitle).
-                  setItemChoosenCallback(callback).
-                  createPopup();
-
-          myEditor.showPopupInBestPositionFor(popup);
-        }
+      ApplicationManager.getApplication().invokeLater(() -> {
+        myEditor.showPopupInBestPositionFor(builder.createPopup());
       });
     }
   }

@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.SeparatorFactory;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.ui.StateRestoringCheckBox;
-import com.intellij.usageView.UsageViewContentManager;
+import consulo.usage.UsageViewContentManager;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;

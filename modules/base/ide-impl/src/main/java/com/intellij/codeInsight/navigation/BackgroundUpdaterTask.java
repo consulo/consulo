@@ -19,9 +19,9 @@ import consulo.application.ReadAction;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.usageView.UsageInfo;
-import com.intellij.usages.Usage;
-import com.intellij.usages.UsageInfo2UsageAdapter;
+import consulo.usage.UsageInfo;
+import consulo.usage.Usage;
+import consulo.usage.UsageInfo2UsageAdapter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

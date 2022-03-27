@@ -30,7 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.impl.internal.psi.PsiModificationTrackerImpl;
 import consulo.language.inject.Injectable;
 import consulo.language.inject.ReferenceInjector;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.FileContentUtil;

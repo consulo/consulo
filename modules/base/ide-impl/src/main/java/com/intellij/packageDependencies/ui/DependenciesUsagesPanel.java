@@ -27,7 +27,7 @@ import com.intellij.packageDependencies.FindDependencyUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 
 import java.util.HashSet;
 import java.util.List;

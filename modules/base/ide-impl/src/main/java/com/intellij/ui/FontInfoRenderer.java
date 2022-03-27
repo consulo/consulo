@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.util.DesktopAntialiasingTypeUtil;
 import consulo.ui.ex.awt.FontInfo;
 import consulo.ui.ex.SimpleTextAttributes;

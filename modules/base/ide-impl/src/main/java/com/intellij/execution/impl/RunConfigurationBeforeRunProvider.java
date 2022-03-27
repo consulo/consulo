@@ -31,7 +31,7 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBList;

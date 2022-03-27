@@ -26,7 +26,7 @@ import com.intellij.tasks.Task;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.tasks.ui.TaskDialogPanel;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.containers.ContainerUtil;

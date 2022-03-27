@@ -7,6 +7,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.ShortcutSet;
 import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.GraphicsConfig;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;

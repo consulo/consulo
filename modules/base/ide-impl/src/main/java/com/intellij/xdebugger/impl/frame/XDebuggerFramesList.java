@@ -23,7 +23,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiManager;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
-import com.intellij.ui.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.FileColorManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;

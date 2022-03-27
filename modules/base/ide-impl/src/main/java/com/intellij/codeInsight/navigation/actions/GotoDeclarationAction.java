@@ -23,7 +23,7 @@ import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.find.actions.ShowUsagesAction;
 import com.intellij.ide.util.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
-import com.intellij.ide.util.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.EditorGutterComponentEx;
 import com.intellij.openapi.util.Pair;

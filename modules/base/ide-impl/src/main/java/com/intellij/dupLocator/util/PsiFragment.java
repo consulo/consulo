@@ -9,7 +9,7 @@ import consulo.language.impl.internal.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.usageView.UsageInfo;
+import consulo.usage.UsageInfo;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

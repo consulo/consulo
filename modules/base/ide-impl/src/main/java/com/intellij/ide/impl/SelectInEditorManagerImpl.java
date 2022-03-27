@@ -15,32 +15,31 @@
  */
 package com.intellij.ide.impl;
 
-import com.intellij.ide.SelectInEditorManager;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.file.inject.VirtualFileWindow;
-import consulo.disposer.Disposable;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
-import consulo.document.internal.DocumentEx;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.project.Project;
+import consulo.disposer.Disposable;
+import consulo.document.internal.DocumentEx;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.SelectInEditorManager;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -50,13 +49,13 @@ import java.awt.event.FocusListener;
  * Date: Jul 1, 2002
  */
 @Singleton
-public class SelectInEditorManagerImpl extends SelectInEditorManager implements Disposable, FocusListener, CaretListener{
+public class SelectInEditorManagerImpl implements SelectInEditorManager, Disposable, FocusListener, CaretListener {
   private final Project myProject;
   private RangeHighlighter mySegmentHighlighter;
   private Editor myEditor;
 
   @Inject
-  public SelectInEditorManagerImpl(Project project){
+  public SelectInEditorManagerImpl(Project project) {
     myProject = project;
   }
 
@@ -66,7 +65,7 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
   }
 
   @Override
-  public void selectInEditor(VirtualFile file, final int startOffset, final int endOffset, final boolean toSelectLine, final boolean toUseNormalSelection){
+  public void selectInEditor(VirtualFile file, final int startOffset, final int endOffset, final boolean toSelectLine, final boolean toUseNormalSelection) {
     releaseAll();
     final TextRange textRange;
     if (file instanceof VirtualFileWindow) {
@@ -80,7 +79,7 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
     openEditor(file, endOffset);
     final Editor editor = openEditor(file, textRange.getStartOffset());
 
-    SwingUtilities.invokeLater(new Runnable(){ // later to let focus listener chance to handle events
+    SwingUtilities.invokeLater(new Runnable() { // later to let focus listener chance to handle events
       @Override
       public void run() {
         if (editor != null && !editor.isDisposed()) {
@@ -90,14 +89,12 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
     });
   }
 
-  private void doSelect(final boolean toUseNormalSelection, @Nonnull final Editor editor,
-                        final boolean toSelectLine,
-                        final TextRange textRange) {
+  private void doSelect(final boolean toUseNormalSelection, @Nonnull final Editor editor, final boolean toSelectLine, final TextRange textRange) {
     int startOffset = textRange.getStartOffset();
     int endOffset = textRange.getEndOffset();
     if (toUseNormalSelection) {
-      DocumentEx doc = (DocumentEx) editor.getDocument();
-      if (toSelectLine){
+      DocumentEx doc = (DocumentEx)editor.getDocument();
+      if (toSelectLine) {
         int lineNumber = doc.getLineNumber(startOffset);
         if (lineNumber >= 0 && lineNumber < doc.getLineCount()) {
           editor.getSelectionModel().setSelection(doc.getLineStartOffset(lineNumber), doc.getLineEndOffset(lineNumber) + doc.getLineSeparatorLength(lineNumber));
@@ -113,21 +110,17 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
 
     releaseAll();
 
-    if (toSelectLine){
-      DocumentEx doc = (DocumentEx) editor.getDocument();
+    if (toSelectLine) {
+      DocumentEx doc = (DocumentEx)editor.getDocument();
       int lineNumber = doc.getLineNumber(startOffset);
-      if (lineNumber >= 0 && lineNumber < doc.getLineCount()){
-        mySegmentHighlighter = editor.getMarkupModel().addRangeHighlighter(doc.getLineStartOffset(lineNumber),
-                                                                           doc.getLineEndOffset(lineNumber) + doc.getLineSeparatorLength(lineNumber),
-                                                                           HighlighterLayer.LAST + 1,
-                                                                           selectionAttributes, HighlighterTargetArea.EXACT_RANGE);
+      if (lineNumber >= 0 && lineNumber < doc.getLineCount()) {
+        mySegmentHighlighter = editor.getMarkupModel()
+                .addRangeHighlighter(doc.getLineStartOffset(lineNumber), doc.getLineEndOffset(lineNumber) + doc.getLineSeparatorLength(lineNumber), HighlighterLayer.LAST + 1, selectionAttributes,
+                                     HighlighterTargetArea.EXACT_RANGE);
       }
     }
-    else{
-      mySegmentHighlighter = editor.getMarkupModel().addRangeHighlighter(startOffset,
-                                                                         endOffset,
-                                                                         HighlighterLayer.LAST + 1,
-                                                                         selectionAttributes, HighlighterTargetArea.EXACT_RANGE);
+    else {
+      mySegmentHighlighter = editor.getMarkupModel().addRangeHighlighter(startOffset, endOffset, HighlighterLayer.LAST + 1, selectionAttributes, HighlighterTargetArea.EXACT_RANGE);
     }
     myEditor = editor;
     myEditor.getContentComponent().addFocusListener(this);
@@ -157,7 +150,7 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
   }
 
   private void releaseAll() {
-    if (mySegmentHighlighter != null && myEditor != null){
+    if (mySegmentHighlighter != null && myEditor != null) {
       mySegmentHighlighter.dispose();
       myEditor.getContentComponent().removeFocusListener(this);
       myEditor.getCaretModel().removeCaretListener(this);
@@ -167,8 +160,8 @@ public class SelectInEditorManagerImpl extends SelectInEditorManager implements 
   }
 
   @Nullable
-  private Editor openEditor(VirtualFile file, int textOffset){
-    if (file == null || !file.isValid()){
+  private Editor openEditor(VirtualFile file, int textOffset) {
+    if (file == null || !file.isValid()) {
       return null;
     }
     OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, file, textOffset);

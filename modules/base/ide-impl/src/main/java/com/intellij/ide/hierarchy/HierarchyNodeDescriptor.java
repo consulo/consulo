@@ -23,8 +23,8 @@ import consulo.project.Project;
 import com.intellij.openapi.roots.ui.util.CompositeAppearance;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.usageView.UsageTreeColors;
-import com.intellij.usageView.UsageTreeColorsScheme;
+import consulo.usage.UsageTreeColors;
+import consulo.usage.UsageTreeColorsScheme;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
