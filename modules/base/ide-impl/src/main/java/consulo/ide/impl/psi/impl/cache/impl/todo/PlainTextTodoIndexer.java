@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.impl.cache.impl.todo;
 import consulo.language.pattern.StringPattern;
 import consulo.ide.impl.psi.impl.cache.impl.IndexPatternUtil;
 import consulo.ide.impl.psi.impl.cache.impl.OccurrenceConsumer;
-import consulo.ide.impl.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.stub.FileContent;
 import javax.annotation.Nonnull;
 

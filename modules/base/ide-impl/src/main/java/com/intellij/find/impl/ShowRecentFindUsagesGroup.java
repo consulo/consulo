@@ -16,7 +16,7 @@
 
 package com.intellij.find.impl;
 
-import com.intellij.find.FindManager;
+import consulo.find.FindManager;
 import com.intellij.find.findUsages.FindUsagesManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;

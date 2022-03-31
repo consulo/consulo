@@ -17,6 +17,10 @@ package com.intellij.find.impl;
 
 import com.intellij.find.*;
 import com.intellij.ide.IdeEventQueue;
+import consulo.find.FindBundle;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.find.FindSettings;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

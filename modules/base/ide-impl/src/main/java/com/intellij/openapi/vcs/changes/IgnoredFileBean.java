@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.NullVirtualFile;
-import com.intellij.util.PatternUtil;
+import consulo.util.lang.PatternUtil;
 
 import java.io.File;
 import java.util.regex.Matcher;

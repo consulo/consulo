@@ -15,9 +15,9 @@
  */
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.find.FindBundle;
-import com.intellij.find.FindModel;
-import com.intellij.find.FindSettings;
+import consulo.find.FindBundle;
+import consulo.find.FindModel;
+import consulo.find.FindSettings;
 import com.intellij.find.SearchSession;
 import consulo.application.AllIcons;
 import javax.annotation.Nonnull;

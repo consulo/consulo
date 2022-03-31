@@ -17,7 +17,7 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.problems.WolfTheProblemSolver;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import jakarta.inject.Inject;

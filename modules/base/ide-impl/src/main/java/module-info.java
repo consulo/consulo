@@ -70,6 +70,7 @@ open module consulo.ide.impl {
   requires transitive consulo.file.template.api;
   requires transitive consulo.file.template.impl;
   requires transitive consulo.usage.api;
+  requires transitive consulo.virtual.file.status.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -874,7 +875,6 @@ open module consulo.ide.impl {
   exports com.intellij.usages.actions;
   exports com.intellij.usages.impl;
   exports com.intellij.usages.impl.rules;
-  exports com.intellij.usages.rules;
   exports com.intellij.util;
   exports com.intellij.util.concurrency;
   exports com.intellij.util.config;

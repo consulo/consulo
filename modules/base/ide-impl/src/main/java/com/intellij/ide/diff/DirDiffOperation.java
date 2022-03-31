@@ -16,7 +16,7 @@
 package com.intellij.ide.diff;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;
 import consulo.ui.style.ComponentColors;

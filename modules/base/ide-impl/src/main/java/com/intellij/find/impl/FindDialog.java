@@ -2,7 +2,7 @@
 
 package com.intellij.find.impl;
 
-import com.intellij.find.FindModel;
+import consulo.find.FindModel;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

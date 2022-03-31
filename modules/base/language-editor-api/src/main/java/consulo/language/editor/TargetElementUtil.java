@@ -335,6 +335,11 @@ public class TargetElementUtil {
   }
 
   public static boolean acceptImplementationForReference(PsiReference reference, PsiElement element) {
+    for (TargetElementUtilExtender extender : TargetElementUtilExtender.EP.getExtensionList(Application.get())) {
+      if (!extender.acceptImplementationForReference(reference, element)) {
+        return false;
+      }
+    }
     return true;
   }
 

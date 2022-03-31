@@ -24,6 +24,10 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.psi.search.*;
+import consulo.language.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPatternProvider;
+import consulo.language.psi.search.TodoAttributes;
+import consulo.language.psi.search.TodoPattern;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -110,8 +114,8 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
 
     // only trigger index refresh actual index patterns have changed
     if (shouldNotifyIndices && !Arrays.deepEquals(myIndexPatterns, oldIndexPatterns)) {
-      final PropertyChangeEvent event =
-        new PropertyChangeEvent(this, IndexPatternProvider.PROP_INDEX_PATTERNS, oldTodoPatterns, todoPatterns);
+      final kava.beans.PropertyChangeEvent event =
+        new kava.beans.PropertyChangeEvent(this, IndexPatternProvider.PROP_INDEX_PATTERNS, oldTodoPatterns, todoPatterns);
       myMessageBus.syncPublisher(IndexPatternProvider.INDEX_PATTERNS_CHANGED).propertyChange(event);
     }
 

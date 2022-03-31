@@ -17,7 +17,7 @@ package com.intellij.ide.diff;
 
 import consulo.ui.ex.action.AnAction;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.PatternUtil;
+import consulo.util.lang.PatternUtil;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

@@ -26,9 +26,9 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.checkin.StepIntersection;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
+import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.ide.impl.psi.search.TodoAttributesUtil;
-import consulo.ide.impl.psi.search.TodoItem;
+import consulo.language.psi.search.TodoItem;
 import com.intellij.util.containers.Convertor;
 
 import java.util.ArrayList;

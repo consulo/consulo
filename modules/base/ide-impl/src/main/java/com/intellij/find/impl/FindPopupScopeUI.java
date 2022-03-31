@@ -15,8 +15,8 @@
  */
 package com.intellij.find.impl;
 
-import com.intellij.find.FindModel;
-import com.intellij.find.FindSettings;
+import consulo.find.FindModel;
+import consulo.find.FindSettings;
 import consulo.ui.ex.awt.ValidationInfo;
 import com.intellij.openapi.util.Pair;
 import consulo.localize.LocalizeValue;

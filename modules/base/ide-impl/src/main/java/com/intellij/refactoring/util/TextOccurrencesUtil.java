@@ -16,8 +16,8 @@
 
 package com.intellij.refactoring.util;
 
-import com.intellij.find.FindManager;
-import com.intellij.find.findUsages.FindUsagesHandler;
+import consulo.find.FindManager;
+import consulo.find.FindUsagesHandler;
 import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.find.findUsages.FindUsagesUtil;
 import com.intellij.find.impl.FindManagerImpl;
@@ -39,6 +39,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiPolyVariantReference;
 import consulo.language.psi.PsiReference;
+import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfoFactory;
 import com.intellij.util.PairProcessor;

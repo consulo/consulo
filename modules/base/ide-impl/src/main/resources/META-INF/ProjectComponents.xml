@@ -21,8 +21,8 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.vcs.FileStatusManager</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.impl.FileStatusManagerImpl</implementation-class>
+      <interface-class>consulo.virtualFileSystem.status.FileStatusManager</interface-class>
+      <implementation-class>consulo.virtualFileSystem.status.impl.internal.FileStatusManagerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>
 

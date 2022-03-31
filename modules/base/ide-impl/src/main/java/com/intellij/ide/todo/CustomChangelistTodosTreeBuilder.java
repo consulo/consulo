@@ -23,9 +23,9 @@ import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.checkin.TodoCheckinHandlerWorker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
-import consulo.ide.impl.psi.search.TodoItem;
-import consulo.ide.impl.psi.search.TodoPattern;
+import consulo.language.psi.search.PsiTodoSearchHelper;
+import consulo.language.psi.search.TodoItem;
+import consulo.language.psi.search.TodoPattern;
 import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;
 

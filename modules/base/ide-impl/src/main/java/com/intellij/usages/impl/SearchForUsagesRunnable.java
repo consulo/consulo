@@ -15,7 +15,7 @@
  */
 package com.intellij.usages.impl;
 
-import com.intellij.find.FindManager;
+import consulo.find.FindManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
 import com.intellij.openapi.ui.Messages;

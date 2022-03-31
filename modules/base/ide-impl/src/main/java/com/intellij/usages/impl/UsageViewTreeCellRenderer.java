@@ -16,9 +16,9 @@
 package com.intellij.usages.impl;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.language.editor.ui.SpeedSearchUtil;
 import consulo.usage.*;
 import consulo.usage.UsageTreeColorsScheme;
 import consulo.ui.ex.DarculaColors;

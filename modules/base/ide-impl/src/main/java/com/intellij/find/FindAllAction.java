@@ -5,6 +5,8 @@ import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

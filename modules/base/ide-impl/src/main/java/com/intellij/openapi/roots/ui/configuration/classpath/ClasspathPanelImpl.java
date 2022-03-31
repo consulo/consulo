@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.classpath;
 
-import com.intellij.find.FindBundle;
+import consulo.find.FindBundle;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.module.impl.scopes.LibraryScope;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;

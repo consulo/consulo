@@ -25,6 +25,9 @@ import com.intellij.openapi.vcs.checkin.CheckinEnvironment;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ObjectUtils;
 import com.intellij.vcsUtil.VcsUtil;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

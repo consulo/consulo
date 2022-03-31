@@ -2,9 +2,9 @@
 package com.intellij.find.impl.livePreview;
 
 
-import com.intellij.find.FindManager;
-import com.intellij.find.FindModel;
-import com.intellij.find.FindResult;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.find.FindResult;
 import com.intellij.find.FindUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.concurrency.FutureResult;

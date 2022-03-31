@@ -3,6 +3,7 @@
 package com.intellij.util;
 
 import consulo.application.util.Query;
+import consulo.application.util.query.AbstractQuery;
 import consulo.util.concurrent.AsyncFuture;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.function.Processor;

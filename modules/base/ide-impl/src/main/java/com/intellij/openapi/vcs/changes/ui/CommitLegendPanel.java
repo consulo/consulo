@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import com.intellij.openapi.vcs.VcsBundle;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

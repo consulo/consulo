@@ -18,7 +18,7 @@ package com.intellij.refactoring.util;
 
 import consulo.language.psi.*;
 import consulo.logging.Logger;
-import consulo.ide.impl.psi.impl.file.PsiPackageHelper;
+import consulo.language.psi.PsiPackageHelper;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import javax.annotation.Nonnull;

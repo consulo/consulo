@@ -38,7 +38,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.wm.AppIconScheme;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.navigation.Navigatable;
-import com.intellij.problems.WolfTheProblemSolver;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import com.intellij.ui.AppIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.compiler.impl.BuildViewServiceFactory;

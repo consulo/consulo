@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.find.FindManager;
-import com.intellij.find.FindModel;
-import com.intellij.find.FindResult;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.find.FindResult;
 import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;

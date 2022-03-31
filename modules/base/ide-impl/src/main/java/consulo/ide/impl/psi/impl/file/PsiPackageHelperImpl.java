@@ -19,12 +19,12 @@ package consulo.ide.impl.psi.impl.file;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
+import consulo.language.psi.PsiPackageHelper;
 import consulo.language.psi.PsiPackageManager;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 
 /**
  * @author yole

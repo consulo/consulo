@@ -3,6 +3,7 @@ package consulo.ide.impl.psi.search;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.SearchScope;
+import consulo.language.internal.PredefinedSearchScopeProvider;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

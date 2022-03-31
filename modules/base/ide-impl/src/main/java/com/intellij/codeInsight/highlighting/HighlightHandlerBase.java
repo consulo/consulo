@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.highlighting;
 
-import com.intellij.find.FindManager;
-import com.intellij.find.FindModel;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
 import consulo.document.Document;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

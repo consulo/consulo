@@ -16,8 +16,8 @@
 
 package com.intellij.application.options.colors;
 
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.openapi.vcs.FileStatusFactory;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusFactory;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

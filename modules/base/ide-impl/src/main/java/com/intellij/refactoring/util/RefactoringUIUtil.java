@@ -20,13 +20,13 @@ import consulo.language.findUsage.DescriptiveNameUtil;
 import javax.annotation.Nonnull;
 import org.jetbrains.annotations.NonNls;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.ElementDescriptionUtil;
+import consulo.language.psi.ElementDescriptionUtil;
 import consulo.project.Project;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.refactoring.RefactoringBundle;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewUtil;
 
 /**
  * @author yole

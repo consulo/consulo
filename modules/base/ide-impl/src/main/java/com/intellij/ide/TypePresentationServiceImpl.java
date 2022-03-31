@@ -22,6 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
+import consulo.application.util.TypePresentationService;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.ui.image.ImageKey;

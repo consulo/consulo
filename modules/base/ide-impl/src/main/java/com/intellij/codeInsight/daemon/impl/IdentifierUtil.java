@@ -16,15 +16,16 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.openapi.util.Comparing;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.PsiNamedElement;
-import javax.annotation.Nonnull;
 
-import consulo.annotation.access.RequiredReadAction;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class IdentifierUtil {
-  @javax.annotation.Nullable
+  @Nullable
   @RequiredReadAction
   public static PsiElement getNameIdentifier(@Nonnull PsiElement element) {
     if (element instanceof PsiNameIdentifierOwner) {

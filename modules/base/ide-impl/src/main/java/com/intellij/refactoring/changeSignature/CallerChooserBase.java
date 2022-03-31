@@ -36,7 +36,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearch;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.tree.Tree;

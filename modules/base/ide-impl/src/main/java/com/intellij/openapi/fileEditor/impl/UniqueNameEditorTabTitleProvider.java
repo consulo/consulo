@@ -2,7 +2,8 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
+import consulo.fileEditor.UniqueVFilePathBuilder;
+import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.io.FileUtilRt;

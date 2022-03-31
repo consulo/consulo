@@ -50,5 +50,6 @@ module consulo.application.api {
   exports consulo.application.util.concurrent;
   exports consulo.application.util.registry;
   exports consulo.application.util.diff;
+  exports consulo.application.util.query;
   exports consulo.application.util.logging;
 }

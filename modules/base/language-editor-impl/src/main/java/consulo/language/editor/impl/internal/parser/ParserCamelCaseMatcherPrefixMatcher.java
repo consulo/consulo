@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.impl.internal.parser;
 
-import consulo.language.editor.impl.internal.completion.CamelHumpMatcher;
+import consulo.language.editor.internal.matcher.CamelHumpMatcher;
 import consulo.language.impl.parser.GeneratedParserUtilBase;
 import jakarta.inject.Singleton;
 

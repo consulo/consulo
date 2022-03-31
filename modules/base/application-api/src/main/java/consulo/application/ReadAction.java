@@ -16,8 +16,8 @@
 package consulo.application;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.function.ThrowableComputable;
 import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -38,7 +38,7 @@ public final class ReadAction<T>  {
   }
 
   @Deprecated
-  public static <T, E extends Throwable> T compute(@Nonnull ThrowableComputable<T, E> action) throws E {
+  public static <T, E extends Throwable> T compute(@Nonnull ThrowableSupplier<T, E> action) throws E {
     return AccessRule.read(action);
   }
 

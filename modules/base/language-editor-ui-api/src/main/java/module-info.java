@@ -8,6 +8,7 @@ module consulo.language.editor.ui.api {
 
   requires transitive consulo.code.editor.api;
   requires transitive consulo.language.editor.api;
+  requires transitive consulo.usage.api;
   requires transitive consulo.ui.ex.awt.api;
 
   exports consulo.language.editor.ui;

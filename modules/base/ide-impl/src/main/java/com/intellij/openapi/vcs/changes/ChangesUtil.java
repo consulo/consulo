@@ -35,6 +35,8 @@ import consulo.application.AccessRule;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.status.FileStatus;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

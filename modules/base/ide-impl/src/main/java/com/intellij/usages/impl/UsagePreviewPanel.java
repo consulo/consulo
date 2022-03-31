@@ -16,8 +16,8 @@
 
 package com.intellij.usages.impl;
 
-import com.intellij.find.FindManager;
-import com.intellij.find.FindModel;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
 import com.intellij.ide.IdeTooltipManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.inject.InjectedLanguageManager;

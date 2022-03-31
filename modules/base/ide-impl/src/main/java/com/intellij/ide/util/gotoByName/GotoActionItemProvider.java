@@ -19,14 +19,14 @@ import consulo.project.Project;
 import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.editor.impl.internal.completion.NameUtil;
-import consulo.language.editor.impl.internal.completion.WordPrefixMatcher;
+import consulo.language.editor.internal.matcher.NameUtil;
+import consulo.language.editor.internal.matcher.WordPrefixMatcher;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.CollectConsumer;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.JBIterable;
-import consulo.language.editor.impl.internal.completion.Matcher;
+import consulo.language.editor.internal.matcher.Matcher;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 

@@ -17,7 +17,7 @@ package com.intellij.openapi.editor.impl;
 
 import consulo.language.lexer.Lexer;
 import consulo.document.Document;
-import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.project.Project;
@@ -27,7 +27,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
-import consulo.ide.impl.psi.impl.search.LexerEditorHighlighterLexer;
+import consulo.language.editor.highlight.LexerEditorHighlighterLexer;
 import com.intellij.reference.SoftReference;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

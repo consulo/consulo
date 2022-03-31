@@ -27,6 +27,7 @@ import com.intellij.openapi.vcs.history.VcsHistorySession;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
+import consulo.virtualFileSystem.status.FileStatus;
 
 import java.io.File;
 import java.util.List;

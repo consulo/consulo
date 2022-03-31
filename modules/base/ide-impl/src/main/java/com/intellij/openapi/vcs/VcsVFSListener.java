@@ -33,6 +33,8 @@ import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

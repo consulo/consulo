@@ -39,6 +39,9 @@ import com.intellij.openapi.vcs.changes.ui.ChangesListView;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

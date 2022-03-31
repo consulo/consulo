@@ -18,8 +18,8 @@ package com.intellij.openapi.editor.actions;
 
 import com.intellij.execution.impl.ConsoleViewUtil;
 import com.intellij.find.EditorSearchSession;
-import com.intellij.find.FindManager;
-import com.intellij.find.FindModel;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
 import com.intellij.find.FindUtil;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;

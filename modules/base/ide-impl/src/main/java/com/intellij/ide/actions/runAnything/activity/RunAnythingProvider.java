@@ -7,7 +7,7 @@ import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
-import consulo.language.editor.impl.internal.completion.Matcher;
+import consulo.language.editor.internal.matcher.Matcher;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 

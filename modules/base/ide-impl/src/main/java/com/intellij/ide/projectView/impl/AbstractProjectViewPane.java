@@ -43,7 +43,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.navigation.Navigatable;
-import com.intellij.problems.ProblemListener;
+import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.ui.tree.project.ProjectFileNode;

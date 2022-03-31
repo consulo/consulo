@@ -13,6 +13,7 @@ module consulo.project.api {
   exports consulo.project;
   exports consulo.project.event;
   exports consulo.project.startup;
+  exports consulo.project.util.query;
 
   exports consulo.project.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.sand.language.plugin, consulo.application.impl, consulo.component.impl;
 }

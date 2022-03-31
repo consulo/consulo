@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
-import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
+import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SearchTopHitProvider;
@@ -48,8 +48,8 @@ import com.intellij.openapi.util.Pair;
 import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.language.psi.PsiElement;
-import consulo.language.editor.impl.internal.completion.MinusculeMatcher;
-import consulo.language.editor.impl.internal.completion.NameUtil;
+import consulo.language.editor.internal.matcher.MinusculeMatcher;
+import consulo.language.editor.internal.matcher.NameUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.JBList;
@@ -63,7 +63,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.component.messagebus.MessageBusConnection;
-import com.intellij.util.text.MatcherHolder;
+import consulo.language.editor.internal.matcher.MatcherHolder;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
 import javax.annotation.Nonnull;

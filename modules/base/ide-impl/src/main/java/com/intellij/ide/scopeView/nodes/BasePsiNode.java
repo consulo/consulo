@@ -18,7 +18,7 @@ package com.intellij.ide.scopeView.nodes;
 
 import com.intellij.openapi.util.Comparing;
 import consulo.component.util.Iconable;
-import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

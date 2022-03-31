@@ -2,14 +2,12 @@
 
 package consulo.language.editor.ui;
 
-import com.intellij.codeInsight.navigation.BackgroundUpdaterTask;
-import com.intellij.codeInsight.navigation.ListBackgroundUpdaterTask;
 import com.intellij.find.FindUtil;
 import com.intellij.ide.PsiCopyPasteManager;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.usages.UsageView;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.util.EditorUtil;
+import consulo.language.editor.ui.navigation.BackgroundUpdaterTask;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -19,6 +17,7 @@ import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListComponentUpdater;
+import consulo.usage.UsageView;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.ref.Ref;
 
@@ -190,7 +189,7 @@ public class PsiElementListNavigator {
         if (myListUpdaterTask == null || myListUpdaterTask.isFinished()) return null; // there will be no targets.
       }
       if (myTargets.length == 1 && (myListUpdaterTask == null || myListUpdaterTask.isFinished())) {
-        myTargetsConsumer.consume(myTargets);
+        myTargetsConsumer.accept(myTargets);
         return null;
       }
       List<NavigatablePsiElement> initialTargetsList = Arrays.asList(myTargets);

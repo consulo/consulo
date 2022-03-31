@@ -16,7 +16,7 @@
 package com.intellij.ide.diff;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.presentation.VirtualFilePresentation;
+import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.WriteAction;

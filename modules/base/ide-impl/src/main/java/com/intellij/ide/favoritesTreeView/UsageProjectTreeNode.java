@@ -22,7 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageInfo;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewUtil;
 import consulo.usage.TextChunk;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsagePresentation;

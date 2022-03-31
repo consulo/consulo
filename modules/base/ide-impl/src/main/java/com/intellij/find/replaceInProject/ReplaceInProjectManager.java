@@ -2,11 +2,11 @@
 
 package com.intellij.find.replaceInProject;
 
-import com.intellij.find.*;
 import com.intellij.find.actions.FindInPathAction;
 import com.intellij.find.findInProject.FindInProjectManager;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.impl.FindManagerImpl;
+import consulo.find.*;
 import consulo.usage.UsageViewManager;
 import consulo.application.WriteAction;
 import consulo.application.internal.ApplicationEx;

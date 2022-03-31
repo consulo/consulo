@@ -4,7 +4,7 @@ package com.intellij.ide.actions.runAnything.groups;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.awt.CollectionListModel;
-import consulo.language.editor.impl.internal.completion.Matcher;
+import consulo.language.editor.internal.matcher.Matcher;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -32,7 +32,7 @@ import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
-import consulo.ide.impl.psi.search.IndexPatternProvider;
+import consulo.language.psi.search.IndexPatternProvider;
 import consulo.language.ast.TokenSet;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.IntInlineKeyDescriptor;

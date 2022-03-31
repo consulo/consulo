@@ -1,6 +1,6 @@
 package com.intellij.model.search.impl;
 
-import com.intellij.model.search.SearchParameters;
+import consulo.project.util.query.SearchParameters;
 import javax.annotation.Nonnull;
 
 // from kotlin

@@ -16,11 +16,12 @@
 
 package com.intellij.find.findUsages;
 
-import com.intellij.find.FindManager;
+import consulo.find.FindManager;
 import consulo.navigation.NavigationItem;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiElement;
+import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetProvider;
 

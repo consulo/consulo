@@ -16,8 +16,8 @@
 package com.intellij.find.editorHeaderActions;
 
 import com.intellij.find.EditorSearchSession;
-import com.intellij.find.FindManager;
-import com.intellij.find.FindModel;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;

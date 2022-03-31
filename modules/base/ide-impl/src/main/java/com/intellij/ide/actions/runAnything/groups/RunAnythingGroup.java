@@ -4,7 +4,7 @@ package com.intellij.ide.actions.runAnything.groups;
 import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
-import consulo.language.editor.impl.internal.completion.NameUtil;
+import consulo.language.editor.internal.matcher.NameUtil;
 import consulo.ui.ex.awt.CollectionListModel;
 import com.intellij.util.Function;
 import consulo.util.collection.primitive.ints.IntList;

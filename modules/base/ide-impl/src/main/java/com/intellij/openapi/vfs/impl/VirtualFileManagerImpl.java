@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl;
 
-import com.intellij.ide.presentation.VirtualFilePresentation;
+import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.virtualFileSystem.StandardFileSystems;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerEx;

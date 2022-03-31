@@ -35,6 +35,7 @@ import consulo.project.ui.notification.NotificationType;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -19,7 +19,7 @@ import com.intellij.codeInsight.editorActions.SelectWordUtil;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.find.FindBundle;
+import consulo.find.FindBundle;
 import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;

@@ -16,10 +16,10 @@
 
 package com.intellij.refactoring.safeDelete;
 
-import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
+import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
 import com.intellij.lang.LanguageRefactoringSupport;
 import consulo.usage.UsageViewManager;
-import consulo.ide.impl.psi.ElementDescriptionUtil;
+import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.inject.InjectedLanguageManager;
 import com.intellij.lang.refactoring.RefactoringSupportProvider;
 import consulo.application.ApplicationManager;
@@ -31,7 +31,7 @@ import consulo.usage.*;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.BaseRefactoringProcessor;
@@ -45,8 +45,7 @@ import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteUsageInfo;
 import com.intellij.refactoring.util.NonCodeSearchDescriptionLocation;
 import com.intellij.refactoring.util.RefactoringUIUtil;
 import com.intellij.refactoring.util.TextOccurrencesUtil;
-import com.intellij.usageView.UsageViewUtil;
-import com.intellij.usages.*;
+import consulo.usage.UsageViewUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.application.util.function.Processor;

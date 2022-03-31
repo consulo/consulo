@@ -25,7 +25,7 @@ import com.intellij.refactoring.classMembers.MemberInfoModel;
 import com.intellij.refactoring.ui.AbstractMemberSelectionTable;
 import com.intellij.refactoring.ui.MemberSelectionPanelBase;
 import com.intellij.refactoring.ui.RefactoringDialog;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewUtil;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

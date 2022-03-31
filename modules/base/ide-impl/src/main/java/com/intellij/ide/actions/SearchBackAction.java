@@ -16,7 +16,7 @@
 
 package com.intellij.ide.actions;
 
-import com.intellij.find.FindManager;
+import consulo.find.FindManager;
 import com.intellij.find.FindUtil;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;

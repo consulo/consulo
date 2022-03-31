@@ -15,6 +15,8 @@
  */
 package com.intellij.find.findUsages;
 
+import consulo.find.FindUsagesHandler;
+import consulo.find.FindUsagesHandlerFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.internal.LanguageFindUsages;
 import consulo.language.psi.PsiFileSystemItem;

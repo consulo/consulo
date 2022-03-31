@@ -18,8 +18,8 @@ package com.intellij.ide.todo;
 
 import consulo.logging.Logger;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
-import consulo.ide.impl.psi.search.TodoPattern;
+import consulo.language.psi.search.PsiTodoSearchHelper;
+import consulo.language.psi.search.TodoPattern;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.application.PathManagerEx;
-import com.intellij.openapi.fileEditor.UniqueVFilePathBuilder;
+import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;

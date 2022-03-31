@@ -16,7 +16,7 @@
 package com.intellij.refactoring.extractMethod;
 
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.find.FindManager;
+import consulo.find.FindManager;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.undoRedo.CommandProcessor;

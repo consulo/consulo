@@ -31,7 +31,7 @@ import consulo.application.util.registry.Registry;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
-import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.language.editor.ui.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;

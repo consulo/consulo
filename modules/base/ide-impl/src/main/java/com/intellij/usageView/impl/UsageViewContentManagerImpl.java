@@ -2,8 +2,8 @@
 
 package com.intellij.usageView.impl;
 
-import com.intellij.find.FindBundle;
-import com.intellij.find.FindSettings;
+import consulo.find.FindBundle;
+import consulo.find.FindSettings;
 import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.impl.ContentManagerWatcher;

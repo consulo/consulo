@@ -1,6 +1,6 @@
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.find.FindModel;
+import consulo.find.FindModel;
 
 public class ToggleInLiteralsOnlyAction extends EditorHeaderSetSearchContextAction {
   public ToggleInLiteralsOnlyAction() {

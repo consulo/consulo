@@ -20,7 +20,7 @@ import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.completion.lookup.LookupManager;
-import com.intellij.codeInsight.navigation.BackgroundUpdaterTaskBase;
+import consulo.language.editor.ui.navigation.BackgroundUpdaterTaskBase;
 import com.intellij.codeInsight.navigation.ImplementationSearcher;
 import consulo.application.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataManager;

@@ -19,6 +19,7 @@ import consulo.application.AllIcons;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
+import consulo.language.psi.search.TodoAttributes;
 
 import javax.annotation.Nonnull;
 

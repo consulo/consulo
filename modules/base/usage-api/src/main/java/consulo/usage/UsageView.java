@@ -125,4 +125,8 @@ public interface UsageView extends Disposable {
      */
     void fireExcluded(@Nonnull Set<? extends Usage> usages, boolean excluded);
   }
+
+  boolean isDisposed();
+
+  void expandAll();
 }

@@ -12,7 +12,7 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.DocumentUtil;
-import consulo.document.impl.EditorDocumentPriorities;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.impl.IntervalTreeImpl;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.DocumentEx;

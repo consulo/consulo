@@ -43,7 +43,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.JBPopup;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiUtilCore;

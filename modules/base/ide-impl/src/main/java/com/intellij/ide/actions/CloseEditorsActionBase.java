@@ -22,7 +22,7 @@ import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;

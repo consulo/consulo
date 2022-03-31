@@ -23,7 +23,7 @@ import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
+import consulo.language.psi.search.PsiTodoSearchHelper;
 
 import java.util.List;
 

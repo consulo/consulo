@@ -24,10 +24,9 @@ import consulo.language.psi.search.scope.NamedScope;
 import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.problems.WolfTheProblemSolver;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
 import consulo.ide.impl.psi.search.scope.ProjectFilesScope;
-import consulo.ide.impl.psi.search.scope.packageSet.*;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

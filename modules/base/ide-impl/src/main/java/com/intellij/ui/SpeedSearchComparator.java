@@ -17,8 +17,8 @@ package com.intellij.ui;
 
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.editor.impl.internal.completion.MinusculeMatcher;
-import consulo.language.editor.impl.internal.completion.NameUtil;
+import consulo.language.editor.internal.matcher.MinusculeMatcher;
+import consulo.language.editor.internal.matcher.NameUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo.configurable;
 
-import consulo.ide.impl.psi.search.TodoPattern;
+import consulo.language.psi.search.TodoPattern;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.UIUtil;
 

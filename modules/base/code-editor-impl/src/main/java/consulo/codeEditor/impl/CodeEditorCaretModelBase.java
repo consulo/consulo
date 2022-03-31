@@ -14,7 +14,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentEvent;
-import consulo.document.impl.EditorDocumentPriorities;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.impl.RangeMarkerTree;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.proxy.EventDispatcher;

@@ -20,7 +20,7 @@
  */
 package com.intellij.refactoring.ui;
 
-import com.intellij.codeInsight.highlighting.ReadWriteAccessDetector;
+import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;

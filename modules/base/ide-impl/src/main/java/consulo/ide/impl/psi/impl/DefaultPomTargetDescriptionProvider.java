@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.psi.impl;
 
-import com.intellij.ide.TypePresentationService;
+import consulo.application.util.TypePresentationService;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.pom.PomDescriptionProvider;
 import consulo.language.pom.PomNamedTarget;
 import consulo.language.pom.PomTarget;
 import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.PsiElement;
-import com.intellij.usageView.UsageViewNodeTextLocation;
-import com.intellij.usageView.UsageViewTypeLocation;
+import consulo.usage.UsageViewNodeTextLocation;
+import consulo.usage.UsageViewTypeLocation;
 import com.intellij.codeInsight.highlighting.HighlightUsagesDescriptionLocation;
 import javax.annotation.Nonnull;
 

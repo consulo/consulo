@@ -17,10 +17,10 @@ package consulo.application;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.logging.Logger;
 import consulo.util.concurrent.AsyncResult;
+import consulo.util.lang.function.ThrowableRunnable;
+import consulo.util.lang.function.ThrowableSupplier;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,14 +33,14 @@ public final class AccessRule {
   private static final Logger LOG = Logger.getInstance(AccessRule.class);
 
   public static <E extends Throwable> void read(@RequiredReadAction @Nonnull ThrowableRunnable<E> action) throws E {
-    Application.get().runReadAction((ThrowableComputable<Object, E>)() -> {
+    Application.get().runReadAction((ThrowableSupplier<Object, E>)() -> {
       action.run();
       return null;
     });
   }
 
   @Nullable
-  public static <T, E extends Throwable> T read(@RequiredReadAction @Nonnull ThrowableComputable<T, E> action) throws E {
+  public static <T, E extends Throwable> T read(@RequiredReadAction @Nonnull ThrowableSupplier<T, E> action) throws E {
     return Application.get().runReadAction(action);
   }
 
@@ -53,7 +53,7 @@ public final class AccessRule {
   }
 
   @Nonnull
-  public static <T> AsyncResult<T> readAsync(@RequiredReadAction @Nonnull ThrowableComputable<T, Throwable> action) {
+  public static <T> AsyncResult<T> readAsync(@RequiredReadAction @Nonnull ThrowableSupplier<T, Throwable> action) {
     AsyncResult<T> result = AsyncResult.undefined();
     Application application = Application.get();
     application.executeOnPooledThread(() -> {
@@ -78,11 +78,11 @@ public final class AccessRule {
   }
 
   @Nonnull
-  public static <T> AsyncResult<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableComputable<T, Throwable> action) {
+  public static <T> AsyncResult<T> writeAsync(@RequiredWriteAction @Nonnull ThrowableSupplier<T, Throwable> action) {
     AsyncResult<T> result = AsyncResult.undefined();
     AppUIExecutor.onWriteThread().later().execute(() -> {
       try {
-        result.setDone(action.compute());
+        result.setDone(action.get());
       }
       catch (Throwable throwable) {
         LOG.error(throwable);

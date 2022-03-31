@@ -53,7 +53,7 @@ import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.Language;
 import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupManager;

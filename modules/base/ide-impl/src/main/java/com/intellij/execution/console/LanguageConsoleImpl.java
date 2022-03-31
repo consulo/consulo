@@ -6,7 +6,7 @@ import com.intellij.execution.impl.ConsoleViewUtil;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.ui.ex.action.EmptyAction;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

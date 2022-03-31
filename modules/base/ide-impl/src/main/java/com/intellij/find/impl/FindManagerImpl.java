@@ -28,6 +28,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModel;
 import consulo.codeEditor.ScrollType;
+import consulo.find.*;
 import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.Language;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;

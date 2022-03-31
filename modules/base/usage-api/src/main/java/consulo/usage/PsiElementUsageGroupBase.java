@@ -15,9 +15,9 @@
  */
 package consulo.usage;
 
-import com.intellij.navigation.NavigationItemFileStatus;
-import com.intellij.openapi.actionSystem.DataSink;
+import consulo.dataContext.DataSink;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.util.NavigationItemFileStatus;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
@@ -26,6 +26,7 @@ import consulo.navigation.NavigationItem;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.status.FileStatus;
 
 import javax.annotation.Nonnull;
 

@@ -19,7 +19,11 @@ package com.intellij.find;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
+import consulo.find.FindBundle;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.find.FindResult;
+import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import consulo.usage.UsageViewManager;
@@ -63,7 +67,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.usage.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.LightweightHint;
-import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageViewImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
@@ -958,7 +961,7 @@ public class FindUtil {
       @Override
       public void run(@Nonnull ProgressIndicator indicator) {
         for (final SmartPsiElementPointer pointer : pointers) {
-          if (((UsageViewImpl)view).isDisposed()) break;
+          if (view.isDisposed()) break;
           ApplicationManager.getApplication().runReadAction(() -> {
             final PsiElement target = pointer.getElement();
             if (target != null) {

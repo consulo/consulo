@@ -15,6 +15,7 @@
  */
 package com.intellij.codeInsight.navigation;
 
+import consulo.language.editor.ui.navigation.BackgroundUpdaterTask;
 import consulo.project.Project;
 import com.intellij.openapi.ui.JBListUpdater;
 import consulo.ui.ex.popup.JBPopup;

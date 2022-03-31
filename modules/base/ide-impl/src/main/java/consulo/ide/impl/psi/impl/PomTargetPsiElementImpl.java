@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.impl;
 
-import com.intellij.ide.TypePresentationService;
+import consulo.application.util.TypePresentationService;
 import consulo.language.Language;
 import consulo.language.impl.psi.RenameableFakePsiElement;
 import consulo.project.Project;

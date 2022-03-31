@@ -15,7 +15,7 @@
  */
 package com.intellij.find.impl.livePreview;
 
-import com.intellij.find.FindResult;
+import consulo.find.FindResult;
 import com.intellij.find.FindUtil;
 import consulo.document.util.TextRange;
 import consulo.codeEditor.*;

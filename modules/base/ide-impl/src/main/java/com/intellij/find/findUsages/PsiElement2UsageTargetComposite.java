@@ -15,14 +15,17 @@
  */
 package com.intellij.find.findUsages;
 
-import com.intellij.find.FindManager;
-import com.intellij.find.FindSettings;
+import consulo.find.FindManager;
+import consulo.find.FindSettings;
 import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.find.FindUsagesHandler;
+import consulo.find.FindUsagesOptions;
+import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.usages.UsageInfoToUsageConverter;
+import consulo.usage.UsageInfoToUsageConverter;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

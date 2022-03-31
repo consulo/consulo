@@ -19,7 +19,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import com.intellij.openapi.vcs.changes.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.SimpleColoredComponent;

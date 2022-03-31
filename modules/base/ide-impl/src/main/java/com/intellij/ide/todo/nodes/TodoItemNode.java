@@ -18,7 +18,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.search.TodoItem;
+import consulo.language.psi.search.TodoItem;
 import consulo.ui.ex.awt.HighlightedRegion;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.ui.image.Image;

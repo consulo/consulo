@@ -15,20 +15,17 @@
  */
 package com.intellij.find.findUsages;
 
-import com.intellij.find.FindBundle;
-import com.intellij.find.FindSettings;
+import consulo.find.FindBundle;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ui.ex.awt.IdeBorderFactory;
 import com.intellij.ui.SeparatorFactory;
-import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.ui.StateRestoringCheckBox;
-import consulo.usage.UsageViewContentManager;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposer;
+import consulo.find.FindSettings;
+import consulo.find.FindUsagesOptions;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.ui.ex.awt.*;
+import consulo.usage.UsageViewContentManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -78,7 +75,7 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
     if (myFindUsagesOptions instanceof PersistentFindUsagesOptions) {
       ((PersistentFindUsagesOptions)myFindUsagesOptions).setDefaults(myProject);
     }
-    
+
     myUpdateAction = event -> update();
 
     setOKButtonText(FindBundle.message("find.dialog.find.button"));
@@ -247,13 +244,12 @@ public abstract class AbstractFindUsagesDialog extends DialogWrapper {
 
   protected void addUsagesOptions(JPanel optionsPanel) {
     if (mySearchForTextOccurrencesAvailable) {
-      myCbToSearchForTextOccurrences = addCheckboxToPanel(FindBundle.message("find.options.search.for.text.occurrences.checkbox"),
-                                                         myFindUsagesOptions.isSearchForTextOccurrences, optionsPanel, false);
+      myCbToSearchForTextOccurrences = addCheckboxToPanel(FindBundle.message("find.options.search.for.text.occurrences.checkbox"), myFindUsagesOptions.isSearchForTextOccurrences, optionsPanel, false);
     }
 
     if (myIsShowInNewTabVisible) {
-      myCbToSkipResultsWhenOneUsage = addCheckboxToPanel(FindBundle.message("find.options.skip.results.tab.with.one.usage.checkbox"),
-                                                         FindSettings.getInstance().isSkipResultsWithOneUsage(), optionsPanel, false);
+      myCbToSkipResultsWhenOneUsage =
+              addCheckboxToPanel(FindBundle.message("find.options.skip.results.tab.with.one.usage.checkbox"), FindSettings.getInstance().isSkipResultsWithOneUsage(), optionsPanel, false);
     }
   }
 

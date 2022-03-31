@@ -28,7 +28,7 @@ import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.ZipperUpdater;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import com.intellij.openapi.vcs.changes.*;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

@@ -16,6 +16,7 @@
 
 package com.intellij.find;
 
+import consulo.find.FindBundle;
 import consulo.project.Project;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import javax.annotation.Nonnull;

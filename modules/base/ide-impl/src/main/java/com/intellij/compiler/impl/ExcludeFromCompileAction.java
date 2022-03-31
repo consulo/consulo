@@ -27,7 +27,7 @@ import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.setting.ExcludeEntryDescription;
 import consulo.project.Project;
-import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

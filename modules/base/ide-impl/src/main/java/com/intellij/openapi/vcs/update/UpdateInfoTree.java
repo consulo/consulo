@@ -52,6 +52,9 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusListener;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

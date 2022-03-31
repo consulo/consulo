@@ -1,6 +1,6 @@
 package com.intellij.usages.impl.rules;
 
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import consulo.usage.UsageGroup;
 import consulo.ui.image.Image;
 

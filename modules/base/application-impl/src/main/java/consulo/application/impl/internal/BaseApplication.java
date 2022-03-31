@@ -40,7 +40,6 @@ import consulo.application.util.ApplicationUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.concurrent.AppScheduledExecutorService;
 import consulo.application.util.concurrent.PooledThreadExecutor;
-import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
@@ -75,6 +74,7 @@ import consulo.util.io.FileUtil;
 import consulo.util.lang.DeprecatedMethodException;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.StringUtil;
+import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
@@ -92,6 +92,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -522,10 +523,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public <T> T runReadAction(@Nonnull final Computable<T> computation) {
+  public <T> T runReadAction(@Nonnull final Supplier<T> computation) {
     ReadMostlyRWLock.Reader status = myLock.startRead();
     try {
-      return computation.compute();
+      return computation.get();
     }
     finally {
       if (status != null) {
@@ -535,10 +536,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   @Override
-  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
     ReadMostlyRWLock.Reader status = myLock.startRead();
     try {
-      return computation.compute();
+      return computation.get();
     }
     finally {
       if (status != null) {
@@ -717,13 +718,13 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @RequiredUIAccess
   @Override
-  public <T> T runWriteAction(@Nonnull final Computable<T> computation) {
-    return runWriteActionWithClass(computation.getClass(), () -> computation.compute());
+  public <T> T runWriteAction(@Nonnull final Supplier<T> computation) {
+    return runWriteActionWithClass(computation.getClass(), computation::get);
   }
 
   @RequiredUIAccess
   @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
     return runWriteActionWithClass(computation.getClass(), computation);
   }
 
@@ -745,10 +746,10 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
     return myLock.isWriteThread();
   }
 
-  protected <T, E extends Throwable> T runWriteActionWithClass(@Nonnull Class<?> clazz, @Nonnull ThrowableComputable<T, E> computable) throws E {
+  protected <T, E extends Throwable> T runWriteActionWithClass(@Nonnull Class<?> clazz, @Nonnull ThrowableSupplier<T, E> computable) throws E {
     startWrite(clazz);
     try {
-      return computable.compute();
+      return computable.get();
     }
     finally {
       endWrite(clazz);

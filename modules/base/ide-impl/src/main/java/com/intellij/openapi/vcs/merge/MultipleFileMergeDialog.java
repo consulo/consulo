@@ -24,7 +24,7 @@ import com.intellij.diff.merge.MergeRequest;
 import com.intellij.diff.merge.MergeResult;
 import com.intellij.diff.merge.MergeUtil;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.ide.presentation.VirtualFilePresentation;
+import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;

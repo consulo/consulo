@@ -35,7 +35,7 @@ import com.intellij.openapi.ui.Messages;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.impl.file.PsiPackageHelper;
+import consulo.language.psi.PsiPackageHelper;
 
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

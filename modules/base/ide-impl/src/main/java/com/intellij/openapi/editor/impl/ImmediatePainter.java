@@ -8,7 +8,7 @@ import consulo.codeEditor.EditorColors;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.codeEditor.impl.FontLayoutService;
 import consulo.codeEditor.impl.IterationState;
 import consulo.codeEditor.*;

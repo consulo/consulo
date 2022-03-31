@@ -20,8 +20,8 @@ import consulo.disposer.Disposable;
 import consulo.module.Module;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.problems.Problem;
-import com.intellij.problems.WolfTheProblemSolver;
+import consulo.language.editor.wolfAnalyzer.Problem;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

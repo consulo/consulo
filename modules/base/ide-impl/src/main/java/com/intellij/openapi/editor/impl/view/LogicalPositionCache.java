@@ -6,7 +6,7 @@ import consulo.document.Document;
 import consulo.codeEditor.LogicalPosition;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.PrioritizedDocumentListener;
-import consulo.document.impl.EditorDocumentPriorities;
+import consulo.document.internal.EditorDocumentPriorities;
 import com.intellij.util.ArrayUtil;
 import consulo.document.util.DocumentUtil;
 import consulo.disposer.Disposable;

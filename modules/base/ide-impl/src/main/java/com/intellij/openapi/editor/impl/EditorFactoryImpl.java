@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.editor.impl;
 
-import consulo.language.editor.highlight.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import com.intellij.util.EventDispatcher;
 import com.intellij.util.containers.ContainerUtil;
@@ -9,7 +8,6 @@ import com.intellij.util.text.CharArrayCharSequence;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.action.ActionPlan;
 import consulo.codeEditor.action.TypedActionHandler;
@@ -17,6 +15,7 @@ import consulo.codeEditor.action.TypedActionHandlerEx;
 import consulo.codeEditor.event.EditorEventMulticaster;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
+import consulo.codeEditor.internal.InternalEditorFactory;
 import consulo.codeEditor.internal.RealEditor;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.component.extension.ExtensionPointName;
@@ -27,6 +26,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.internal.DocumentEx;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -42,7 +42,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class EditorFactoryImpl extends EditorFactory {
+public abstract class EditorFactoryImpl extends InternalEditorFactory {
   private static final Logger LOG = Logger.getInstance(EditorFactoryImpl.class);
 
   private static final ExtensionPointName<EditorFactoryListener> EP = ExtensionPointName.create("consulo.editorFactoryListener");
@@ -123,6 +123,12 @@ public abstract class EditorFactoryImpl extends EditorFactory {
     DocumentEx document = new DocumentImpl(text);
     myEditorEventMulticaster.registerDocument(document);
     return document;
+  }
+
+  @Nonnull
+  @Override
+  public Document createUnsafeDocument(String text, boolean allowInAWT) {
+    return new DocumentImpl(text, allowInAWT);
   }
 
   @Nonnull

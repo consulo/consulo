@@ -19,7 +19,7 @@ import com.intellij.diff.impl.DiffSettingsHolder;
 import com.intellij.diff.requests.DiffRequest;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.impl.EditorTabTitleProvider;
+import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;

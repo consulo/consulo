@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.psi.impl.search;
 
-import consulo.ide.impl.psi.search.IndexPatternOccurrence;
-import consulo.ide.impl.psi.search.searches.IndexPatternSearch;
-import com.intellij.util.QueryFactory;
+import consulo.language.psi.search.IndexPatternOccurrence;
+import consulo.language.psi.search.IndexPatternSearch;
+import consulo.application.util.query.QueryFactory;
 
 /**
  * @author irengrig

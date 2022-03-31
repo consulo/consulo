@@ -15,9 +15,9 @@
  */
 package com.intellij.find.impl;
 
-import com.intellij.find.FindManager;
-import com.intellij.find.FindModel;
-import com.intellij.find.FindResult;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
+import consulo.find.FindResult;
 import consulo.document.Document;
 import consulo.util.dataholder.Key;
 import consulo.document.util.Segment;

@@ -19,7 +19,7 @@ package com.intellij.packageDependencies.ui;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -51,5 +51,15 @@
       <artifactId>consulo-file-editor-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-virtual-file-status-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-project-ui-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

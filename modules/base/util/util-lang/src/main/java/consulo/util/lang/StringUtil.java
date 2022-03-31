@@ -108,6 +108,37 @@ public class StringUtil {
     return replace(replace(text, "'", "''"), "{", "'{'");
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String capitalizeWords(@Nonnull String text, boolean allWords) {
+    return capitalizeWords(text, " \t\n\r\f", allWords, false);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String capitalizeWords(@Nonnull String text, @Nonnull String tokenizerDelim, boolean allWords, boolean leaveOriginalDelims) {
+    final StringTokenizer tokenizer = new StringTokenizer(text, tokenizerDelim, leaveOriginalDelims);
+    final StringBuilder out = new StringBuilder(text.length());
+    boolean toCapitalize = true;
+    while (tokenizer.hasMoreTokens()) {
+      final String word = tokenizer.nextToken();
+      if (!leaveOriginalDelims && out.length() > 0) {
+        out.append(' ');
+      }
+      out.append(toCapitalize ? capitalize(word) : word);
+      if (!allWords) {
+        toCapitalize = false;
+      }
+    }
+    return out.toString();
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String firstLast(@Nonnull String text, int length) {
+    return text.length() > length ? text.subSequence(0, length / 2) + "\u2026" + text.subSequence(text.length() - length / 2 - 1, text.length()) : text;
+  }
+
   @Contract(pure = true)
   public static boolean containsAnyChar(@Nonnull final String value, @Nonnull final String chars) {
     if (chars.length() > value.length()) {

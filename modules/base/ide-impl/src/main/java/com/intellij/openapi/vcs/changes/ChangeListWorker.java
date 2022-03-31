@@ -31,6 +31,9 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.logging.Logger;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -704,11 +707,11 @@ public class ChangeListWorker implements ChangeListsWriteOperations {
     return null;
   }
 
-  public ThreeState haveChangesUnder(@Nonnull VirtualFile virtualFile) {
+  public consulo.util.lang.ThreeState haveChangesUnder(@Nonnull VirtualFile virtualFile) {
     FilePath dir = VcsUtil.getFilePath(virtualFile);
     FilePath changeCandidate = myIdx.getAffectedPaths().ceiling(dir);
     if (changeCandidate == null) {
-      return ThreeState.NO;
+      return consulo.util.lang.ThreeState.NO;
     }
     return FileUtil.isAncestorThreeState(dir.getPath(), changeCandidate.getPath(), false);
   }

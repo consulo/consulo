@@ -13,7 +13,7 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.document.impl.EditorDocumentPriorities;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.EditReadOnlyListener;
 import consulo.document.internal.PrioritizedInternalDocumentListener;

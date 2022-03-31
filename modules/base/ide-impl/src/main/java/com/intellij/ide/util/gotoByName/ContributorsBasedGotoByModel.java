@@ -2,7 +2,7 @@
 package com.intellij.ide.util.gotoByName;
 
 import consulo.application.internal.concurrency.JobLauncher;
-import com.intellij.ide.util.NavigationItemListCellRenderer;
+import consulo.language.editor.ui.navigation.NavigationItemListCellRenderer;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.ChooseByNameContributorEx;
 import consulo.navigation.NavigationItem;

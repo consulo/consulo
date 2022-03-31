@@ -6,8 +6,8 @@ import consulo.document.util.ProperTextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import com.intellij.refactoring.util.MoveRenameUsageInfo;
-import com.intellij.refactoring.util.NonCodeUsageInfo;
+import consulo.usage.MoveRenameUsageInfo;
+import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfo;
 import consulo.language.util.IncorrectOperationException;
 

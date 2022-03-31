@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.search;
 
-import com.intellij.openapi.application.QueryExecutorBase;
+import consulo.project.util.query.QueryExecutorBase;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
@@ -12,7 +12,7 @@ import consulo.ide.impl.psi.impl.SyntheticFileSystemItem;
 import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearch;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

@@ -22,7 +22,7 @@ import com.intellij.ide.todo.TodoFilter;
 import consulo.application.ui.HelpManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
-import consulo.ide.impl.psi.search.TodoPattern;
+import consulo.language.psi.search.TodoPattern;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.util.ui.Table;

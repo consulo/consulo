@@ -3,7 +3,6 @@
 package consulo.language.editor.impl.internal.completion;
 
 import consulo.application.statistic.FeatureUsageTracker;
-import consulo.application.util.concurrent.ThreadDumper;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.language.Language;
@@ -21,19 +20,14 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.filter.TrueFilter;
-import consulo.logging.attachment.AttachmentFactory;
-import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.keymap.util.KeymapUtil;
-import consulo.util.collection.UnmodifiableIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
 
 public class CompletionUtil {
 
@@ -198,41 +192,7 @@ public class CompletionUtil {
   }
 
   public static Iterable<String> iterateLookupStrings(@Nonnull final LookupElement element) {
-    return new Iterable<String>() {
-      @Nonnull
-      @Override
-      public Iterator<String> iterator() {
-        final Iterator<String> original = element.getAllLookupStrings().iterator();
-        return new UnmodifiableIterator<String>(original) {
-          @Override
-          public boolean hasNext() {
-            try {
-              return super.hasNext();
-            }
-            catch (ConcurrentModificationException e) {
-              throw handleCME(e);
-            }
-          }
-
-          @Override
-          public String next() {
-            try {
-              return super.next();
-            }
-            catch (ConcurrentModificationException e) {
-              throw handleCME(e);
-            }
-          }
-
-          private RuntimeException handleCME(ConcurrentModificationException cme) {
-            RuntimeExceptionWithAttachments ewa = new RuntimeExceptionWithAttachments("Error while traversing lookup strings of " + element + " of " + element.getClass(), (String)null,
-                                                                                      AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString()));
-            ewa.initCause(cme);
-            return ewa;
-          }
-        };
-      }
-    };
+    return CompletionUtilCore.iterateLookupStrings(element);
   }
 
   /**

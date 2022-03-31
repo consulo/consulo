@@ -73,6 +73,8 @@ import consulo.util.lang.ref.Ref;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -1127,8 +1129,8 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
 
   @Nonnull
   @Override
-  public ThreeState haveChangesUnder(@Nonnull final VirtualFile vf) {
-    if (!vf.isValid() || !vf.isDirectory()) return ThreeState.NO;
+  public consulo.util.lang.ThreeState haveChangesUnder(@Nonnull final VirtualFile vf) {
+    if (!vf.isValid() || !vf.isDirectory()) return consulo.util.lang.ThreeState.NO;
     synchronized (myDataLock) {
       return myWorker.haveChangesUnder(vf);
     }

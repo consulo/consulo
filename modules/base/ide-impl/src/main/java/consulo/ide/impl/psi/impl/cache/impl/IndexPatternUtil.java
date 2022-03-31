@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.psi.impl.cache.impl;
 
-import consulo.ide.impl.psi.search.IndexPattern;
-import consulo.ide.impl.psi.search.IndexPatternProvider;
+import consulo.language.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPatternProvider;
 
 public class IndexPatternUtil {
   public static int getIndexPatternCount() {

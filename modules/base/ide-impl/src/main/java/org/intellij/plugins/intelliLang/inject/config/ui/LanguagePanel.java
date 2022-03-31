@@ -32,7 +32,7 @@ import org.intellij.plugins.intelliLang.inject.InjectedLanguage;
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
 import consulo.language.Language;
 import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;

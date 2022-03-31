@@ -15,7 +15,7 @@
  */
 package com.intellij.find.editorHeaderActions;
 
-import com.intellij.find.FindModel;
+import consulo.find.FindModel;
 import com.intellij.find.SearchSession;
 import javax.annotation.Nonnull;
 

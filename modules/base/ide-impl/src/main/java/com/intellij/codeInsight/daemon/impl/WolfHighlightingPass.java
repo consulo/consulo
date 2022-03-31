@@ -24,7 +24,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
-import com.intellij.problems.WolfTheProblemSolver;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
 

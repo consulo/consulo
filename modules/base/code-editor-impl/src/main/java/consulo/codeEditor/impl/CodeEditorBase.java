@@ -28,7 +28,7 @@ import consulo.disposer.util.DisposerUtil;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.impl.DocumentImpl;
-import consulo.document.impl.EditorDocumentPriorities;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.internal.DocumentEx;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.language.psi.PsiDocumentManager;

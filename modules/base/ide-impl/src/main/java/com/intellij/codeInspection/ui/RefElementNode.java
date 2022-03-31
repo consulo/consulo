@@ -20,7 +20,7 @@ import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.ide.IdeBundle;
-import consulo.ide.impl.psi.ElementDescriptionUtil;
+import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.FactoryMap;

@@ -25,6 +25,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
+import consulo.virtualFileSystem.status.FileStatus;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

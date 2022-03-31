@@ -25,7 +25,7 @@ import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewUtil;
 import javax.annotation.Nonnull;
 
 public class MoveMultipleElementsViewDescriptor implements UsageViewDescriptor {

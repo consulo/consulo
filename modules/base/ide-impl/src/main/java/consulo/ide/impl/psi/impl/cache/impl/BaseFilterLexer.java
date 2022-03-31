@@ -19,7 +19,7 @@ package consulo.ide.impl.psi.impl.cache.impl;
 import consulo.language.lexer.DelegateLexer;
 import consulo.language.lexer.Lexer;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
-import consulo.ide.impl.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.UsageSearchContext;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;

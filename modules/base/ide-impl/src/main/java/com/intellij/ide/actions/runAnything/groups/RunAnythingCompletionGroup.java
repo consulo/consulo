@@ -6,7 +6,7 @@ import com.intellij.ide.actions.runAnything.items.RunAnythingItem;
 import consulo.dataContext.DataContext;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.language.editor.impl.internal.completion.Matcher;
+import consulo.language.editor.internal.matcher.Matcher;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

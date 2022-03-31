@@ -16,6 +16,8 @@
 
 package com.intellij.find.findUsages;
 
+import consulo.find.FindUsagesHandler;
+import consulo.find.FindUsagesOptions;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.application.ui.HelpManager;
 import consulo.project.Project;
@@ -25,7 +27,7 @@ import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.PsiSearchHelper;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewUtil;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

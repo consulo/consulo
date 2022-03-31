@@ -41,6 +41,8 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.vcs.api.localize.VcsApiLocalize;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

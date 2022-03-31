@@ -36,6 +36,7 @@ import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.logging.Logger;
+import consulo.virtualFileSystem.status.FileStatus;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

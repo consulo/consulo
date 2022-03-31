@@ -33,6 +33,7 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.virtualFileSystem.status.FileStatus;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 

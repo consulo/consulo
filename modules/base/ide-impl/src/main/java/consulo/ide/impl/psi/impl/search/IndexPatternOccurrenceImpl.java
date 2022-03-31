@@ -4,8 +4,8 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.search.IndexPattern;
-import consulo.ide.impl.psi.search.IndexPatternOccurrence;
+import consulo.language.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPatternOccurrence;
 import javax.annotation.Nonnull;
 
 import java.util.List;

@@ -1,20 +1,17 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.ui;
 
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.problems.WolfTheProblemSolver;
-import com.intellij.ui.ColoredListCellRenderer;
-import com.intellij.ui.speedSearch.SpeedSearchUtil;
-import com.intellij.util.IconUtil;
-import com.intellij.util.text.MatcherHolder;
 import consulo.application.ReadAction;
 import consulo.application.ui.UISettings;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.component.util.Iconable;
-import consulo.language.editor.impl.internal.completion.Matcher;
+import consulo.fileEditor.VfsPresentationUtil;
+import consulo.language.editor.internal.matcher.Matcher;
+import consulo.language.editor.internal.matcher.MatcherHolder;
+import consulo.language.editor.ui.navigation.NavigationItemListCellRenderer;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
@@ -25,6 +22,7 @@ import consulo.project.Project;
 import consulo.ui.ex.ColoredItemPresentation;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
@@ -32,6 +30,8 @@ import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
@@ -41,8 +41,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Comparator;
 import java.util.regex.Pattern;
-
-import static com.intellij.openapi.vfs.newvfs.VfsPresentationUtil.getFileBackgroundColor;
 
 public abstract class PsiElementListCellRenderer<T extends PsiElement> extends JPanel implements ListCellRenderer {
   private static final Logger LOG = Logger.getInstance(PsiElementListCellRenderer.class);
@@ -148,7 +146,7 @@ public abstract class PsiElementListCellRenderer<T extends PsiElement> extends J
         }
       }
       else if (!customizeNonPsiElementLeftRenderer(this, list, value, index, selected, hasFocus)) {
-        setIcon(IconUtil.getEmptyIcon(false));
+        setIcon(Image.empty(Image.DEFAULT_ICON_SIZE));
         append(value == null ? "" : value.toString(), new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, list.getForeground()));
       }
       setBackground(selected ? UIUtil.getListSelectionBackground(true) : bgColor);

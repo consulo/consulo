@@ -15,15 +15,13 @@
  */
 package consulo.test.light.impl;
 
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.impl.BaseComponentManager;
 import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.component.impl.extension.ExtensionsAreaImpl;
@@ -35,12 +33,14 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.function.ThrowableSupplier;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -93,8 +93,8 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   }
 
   @Override
-  public <T> T runReadAction(@Nonnull Computable<T> computation) {
-    return computation.compute();
+  public <T> T runReadAction(@Nonnull Supplier<T> computation) {
+    return computation.get();
   }
 
   @Override
@@ -111,7 +111,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
   @RequiredUIAccess
   @Override
-  public <T> T runWriteAction(@Nonnull Computable<T> computation) {
+  public <T> T runWriteAction(@Nonnull Supplier<T> computation) {
     throw new UnsupportedOperationException();
   }
 
@@ -304,7 +304,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
 
   @RequiredUIAccess
   @Override
-  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
+  public <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
     throw new UnsupportedOperationException();
   }
 
@@ -314,7 +314,7 @@ public class LightApplication extends BaseComponentManager implements Applicatio
   }
 
   @Override
-  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E {
-    return computation.compute();
+  public <T, E extends Throwable> T runReadAction(@Nonnull ThrowableSupplier<T, E> computation) throws E {
+    return computation.get();
   }
 }

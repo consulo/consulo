@@ -10,7 +10,7 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.*;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.speedSearch.SpeedSearch;
-import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.language.editor.ui.SpeedSearchUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;

@@ -5,7 +5,7 @@ package com.intellij.ide.todo;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.search.TodoItem;
+import consulo.language.psi.search.TodoItem;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

@@ -18,7 +18,7 @@ package com.intellij.ide.plugins;
 import com.intellij.ide.IdeBundle;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.SimpleColoredComponent;

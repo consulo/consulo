@@ -21,7 +21,7 @@ import com.intellij.lang.PerFileMappingsBase;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import com.intellij.openapi.fileEditor.impl.EditorTabTitleProvider;
+import consulo.fileEditor.EditorTabTitleProvider;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension;
 import com.intellij.openapi.util.io.FileUtil;

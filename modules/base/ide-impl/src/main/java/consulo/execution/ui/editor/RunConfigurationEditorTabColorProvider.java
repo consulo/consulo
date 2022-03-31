@@ -15,7 +15,7 @@
  */
 package consulo.execution.ui.editor;
 
-import com.intellij.openapi.fileEditor.impl.EditorTabColorProvider;
+import consulo.fileEditor.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

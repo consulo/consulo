@@ -28,7 +28,7 @@ import consulo.codeEditor.ScrollType;
 import com.intellij.openapi.editor.actions.ContentChooser;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.document.event.FileDocumentManagerAdapter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;

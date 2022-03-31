@@ -21,11 +21,11 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
-import consulo.ide.impl.psi.search.IndexPatternOccurrence;
-import consulo.ide.impl.psi.search.PsiTodoSearchHelper;
-import consulo.ide.impl.psi.search.TodoItem;
-import consulo.ide.impl.psi.search.TodoPattern;
-import consulo.ide.impl.psi.search.searches.IndexPatternSearch;
+import consulo.language.psi.search.IndexPatternOccurrence;
+import consulo.language.psi.search.PsiTodoSearchHelper;
+import consulo.language.psi.search.TodoItem;
+import consulo.language.psi.search.TodoPattern;
+import consulo.language.psi.search.IndexPatternSearch;
 
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;

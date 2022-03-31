@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.navigation;
 
-import consulo.ide.impl.psi.ElementDescriptionUtil;
+import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
@@ -54,14 +54,14 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.ide.impl.psi.search.searches.DefinitionsScopedSearch;
+import consulo.language.psi.search.DefinitionsScopedSearch;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.usageView.UsageViewShortNameLocation;
-import com.intellij.usageView.UsageViewTypeLocation;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewShortNameLocation;
+import consulo.usage.UsageViewTypeLocation;
+import consulo.usage.UsageViewUtil;
 import com.intellij.util.Consumer;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ui.ex.awt.JBUI;

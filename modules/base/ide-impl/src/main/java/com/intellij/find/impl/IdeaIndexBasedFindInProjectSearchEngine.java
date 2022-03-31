@@ -2,7 +2,7 @@
 package com.intellij.find.impl;
 
 import com.intellij.find.FindInProjectSearchEngine;
-import com.intellij.find.FindModel;
+import consulo.find.FindModel;
 import com.intellij.find.ngrams.TrigramIndex;
 import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -17,7 +17,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.util.text.TrigramBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.psi.impl.cache.CacheManager;
-import consulo.ide.impl.psi.search.*;
 import consulo.application.util.function.Processors;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.psi.stub.DumbModeAccessType;

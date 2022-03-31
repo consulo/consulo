@@ -31,7 +31,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.ex.util.LexerEditorHighlighter;
+import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.document.FileDocumentManager;

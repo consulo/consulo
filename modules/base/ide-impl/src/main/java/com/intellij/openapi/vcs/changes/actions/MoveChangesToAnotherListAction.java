@@ -19,7 +19,7 @@ import consulo.ui.ex.action.ActionsBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.*;

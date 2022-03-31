@@ -2,7 +2,7 @@
 
 package com.intellij.refactoring;
 
-import com.intellij.find.findUsages.PsiElement2UsageTargetAdapter;
+import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import consulo.usage.UsageViewManager;
@@ -47,7 +47,7 @@ import com.intellij.refactoring.listeners.impl.RefactoringTransaction;
 import com.intellij.refactoring.ui.ConflictsDialog;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewUtil;
 import com.intellij.usages.*;
 import com.intellij.usages.impl.UnknownUsagesInUnloadedModules;
 import com.intellij.usages.impl.UsageViewImpl;

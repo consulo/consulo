@@ -18,7 +18,7 @@ package com.intellij.codeInsight.problems;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import com.intellij.problems.Problem;
+import consulo.language.editor.wolfAnalyzer.Problem;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

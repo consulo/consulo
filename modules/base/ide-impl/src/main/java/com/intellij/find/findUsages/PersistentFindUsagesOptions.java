@@ -2,6 +2,7 @@
 package com.intellij.find.findUsages;
 
 import consulo.dataContext.DataContext;
+import consulo.find.FindUsagesOptions;
 import consulo.project.Project;
 import consulo.content.scope.SearchScope;
 import consulo.annotation.access.RequiredReadAction;

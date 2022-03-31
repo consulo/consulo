@@ -20,7 +20,7 @@ import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.ElementDescriptionLocation;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewUtil;
 import javax.annotation.Nonnull;
 
 /**

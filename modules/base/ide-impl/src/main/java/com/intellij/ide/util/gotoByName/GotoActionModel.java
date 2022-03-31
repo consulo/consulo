@@ -29,14 +29,14 @@ import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.impl.internal.completion.WordPrefixMatcher;
+import consulo.language.editor.internal.matcher.WordPrefixMatcher;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.language.editor.ui.SpeedSearchUtil;
 import com.intellij.util.ArrayUtilRt;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
@@ -396,7 +396,7 @@ public class GotoActionModel implements ChooseByNameModel, Comparator<Object>, D
     return ((MatchedValue)mv).getValueText();
   }
 
-  protected MatchMode actionMatches(@Nonnull String pattern, consulo.language.editor.impl.internal.completion.Matcher matcher, @Nonnull AnAction anAction) {
+  protected MatchMode actionMatches(@Nonnull String pattern, consulo.language.editor.internal.matcher.Matcher matcher, @Nonnull AnAction anAction) {
     Presentation presentation = anAction.getTemplatePresentation();
     String text = presentation.getText();
     String description = presentation.getDescription();

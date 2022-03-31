@@ -3,9 +3,9 @@ package consulo.ide.impl.psi.impl.search;
 
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
-import consulo.ide.impl.psi.search.IndexPattern;
-import consulo.ide.impl.psi.search.IndexPatternProvider;
-import consulo.ide.impl.psi.search.searches.IndexPatternSearch;
+import consulo.language.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPatternProvider;
+import consulo.language.psi.search.IndexPatternSearch;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

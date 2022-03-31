@@ -11,6 +11,7 @@ module consulo.language.editor.api {
   requires transitive consulo.code.editor.api;
   requires transitive consulo.undo.redo.api;
   requires transitive consulo.file.editor.api;
+  requires transitive consulo.virtual.file.status.api;
   requires consulo.util.jdom;
   
   exports consulo.language.editor;
@@ -42,7 +43,9 @@ module consulo.language.editor.api {
   exports consulo.language.editor.surroundWith;
   exports consulo.language.editor.refactoring;
   exports consulo.language.editor.refactoring.rename;
+  exports consulo.language.editor.wolfAnalyzer;
   exports consulo.language.editor.util;
+  exports consulo.language.editor.internal.matcher to consulo.language.editor.ui.api, consulo.language.editor.impl;
 
   opens consulo.language.editor.inspection.scheme to consulo.util.xml.serializer;
   opens consulo.language.editor to consulo.util.xml.serializer;

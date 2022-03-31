@@ -16,7 +16,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.internal.DocumentEx;
 import consulo.document.impl.DocumentImpl;
-import consulo.document.impl.EditorDocumentPriorities;
+import consulo.document.internal.EditorDocumentPriorities;
 import consulo.document.impl.FrozenDocument;
 import consulo.document.internal.PrioritizedInternalDocumentListener;
 import consulo.document.impl.event.RetargetRangeMarkers;

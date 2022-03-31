@@ -18,7 +18,7 @@ package com.intellij.refactoring.rename;
 
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.util.NonCodeUsageInfo;
+import consulo.usage.NonCodeUsageInfo;
 import consulo.usage.UsageInfoFactory;
 import consulo.usage.UsageInfo;
 import javax.annotation.Nonnull;

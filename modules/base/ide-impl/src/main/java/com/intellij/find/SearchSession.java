@@ -15,6 +15,7 @@
  */
 package com.intellij.find;
 
+import consulo.find.FindModel;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;

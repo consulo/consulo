@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBLabel;

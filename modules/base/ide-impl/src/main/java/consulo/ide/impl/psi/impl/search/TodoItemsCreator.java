@@ -4,10 +4,10 @@ package consulo.ide.impl.psi.impl.search;
 import com.intellij.ide.todo.TodoConfiguration;
 import consulo.logging.Logger;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.search.IndexPattern;
-import consulo.ide.impl.psi.search.IndexPatternOccurrence;
-import consulo.ide.impl.psi.search.TodoItem;
-import consulo.ide.impl.psi.search.TodoPattern;
+import consulo.language.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPatternOccurrence;
+import consulo.language.psi.search.TodoItem;
+import consulo.language.psi.search.TodoPattern;
 import javax.annotation.Nonnull;
 
 /**

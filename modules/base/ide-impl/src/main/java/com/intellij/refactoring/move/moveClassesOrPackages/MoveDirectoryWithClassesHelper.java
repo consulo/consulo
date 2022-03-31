@@ -5,7 +5,7 @@ import consulo.component.extension.Extensions;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.document.util.ProperTextRange;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearch;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;

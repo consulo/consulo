@@ -41,7 +41,7 @@ import consulo.ui.ex.DeleteProvider;
 import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
-import consulo.ide.impl.psi.impl.file.PsiPackageHelper;
+import consulo.language.psi.PsiPackageHelper;
 import com.intellij.ui.AutoScrollFromSourceHandler;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.content.event.ContentManagerAdapter;

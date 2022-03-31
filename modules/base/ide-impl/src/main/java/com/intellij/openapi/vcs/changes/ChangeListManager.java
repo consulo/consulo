@@ -16,17 +16,17 @@
 
 package com.intellij.openapi.vcs.changes;
 
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.Project;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FileStatus;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
-import com.intellij.util.ThreeState;
-import javax.annotation.Nonnull;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.project.Project;
+import consulo.util.lang.ThreeState;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;

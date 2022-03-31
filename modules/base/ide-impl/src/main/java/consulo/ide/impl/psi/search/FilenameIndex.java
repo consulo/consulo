@@ -51,7 +51,7 @@ public class FilenameIndex {
   }
 
   @Nonnull
-  public static Collection<VirtualFile> getVirtualFilesByName(final Project project, @Nonnull String name, @Nonnull GlobalSearchScope scope) {
+  public static Collection<VirtualFile> getVirtualFilesByName(final Project project, @Nonnull String name, @Nonnull SearchScope scope) {
     return getService().getVirtualFilesByName(project, name, scope, null);
   }
 

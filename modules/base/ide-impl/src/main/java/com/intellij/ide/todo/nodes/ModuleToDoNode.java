@@ -32,7 +32,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.search.TodoItem;
+import consulo.language.psi.search.TodoItem;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

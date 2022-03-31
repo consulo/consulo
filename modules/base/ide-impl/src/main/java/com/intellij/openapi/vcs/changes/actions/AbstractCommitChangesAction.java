@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.actions.AbstractCommonCheckinAction;
 import com.intellij.openapi.vcs.actions.VcsContext;

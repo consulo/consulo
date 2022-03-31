@@ -15,9 +15,9 @@
  */
 package com.intellij.find.impl;
 
-import com.intellij.find.FindBundle;
+import consulo.find.FindBundle;
 import com.intellij.find.FindInProjectSettings;
-import com.intellij.find.FindModel;
+import consulo.find.FindModel;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.FixedSizeButton;

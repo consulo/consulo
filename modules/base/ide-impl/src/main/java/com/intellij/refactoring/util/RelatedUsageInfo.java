@@ -18,6 +18,7 @@ package com.intellij.refactoring.util;
 
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiElement;
+import consulo.usage.MoveRenameUsageInfo;
 
 /**
  * @author yole

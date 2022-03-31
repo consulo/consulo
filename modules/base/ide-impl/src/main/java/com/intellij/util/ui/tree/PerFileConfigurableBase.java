@@ -40,7 +40,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.util.lang.Trinity;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
-import com.intellij.ui.speedSearch.SpeedSearchUtil;
+import consulo.language.editor.ui.SpeedSearchUtil;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;

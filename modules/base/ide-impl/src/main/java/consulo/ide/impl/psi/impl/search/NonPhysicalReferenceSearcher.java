@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.impl.search;
 
 import com.intellij.ide.scratch.ScratchFileService;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.QueryExecutorBase;
+import consulo.project.util.query.QueryExecutorBase;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -11,7 +11,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
+import consulo.language.psi.search.ReferencesSearch;
 import consulo.application.util.function.Processor;
 import javax.annotation.Nonnull;
 

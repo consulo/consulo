@@ -2,7 +2,7 @@
 package com.intellij.usages.impl;
 
 import com.intellij.concurrency.JobSchedulerImpl;
-import com.intellij.find.FindManager;
+import consulo.find.FindManager;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.exclusion.ExclusionHandler;
 import consulo.dataContext.DataSink;

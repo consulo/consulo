@@ -5,8 +5,8 @@ import consulo.application.ReadAction;
 import consulo.desktop.awt.fileChooser.impl.FileLookup.Finder;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.editor.impl.internal.completion.MinusculeMatcher;
-import consulo.language.editor.impl.internal.completion.NameUtil;
+import consulo.language.editor.internal.matcher.MinusculeMatcher;
+import consulo.language.editor.internal.matcher.NameUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.logging.Logger;
 

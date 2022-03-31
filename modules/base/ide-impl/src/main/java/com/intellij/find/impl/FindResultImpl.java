@@ -16,7 +16,7 @@
 
 package com.intellij.find.impl;
 
-import com.intellij.find.FindResult;
+import consulo.find.FindResult;
 
 public class FindResultImpl extends FindResult {
   private boolean isStringFound = true;

@@ -9,7 +9,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import consulo.ide.impl.psi.search.PredefinedSearchScopeProvider;
+import consulo.language.internal.PredefinedSearchScopeProvider;
 import consulo.content.scope.SearchScope;
 import consulo.ide.impl.psi.search.SearchScopeProvider;
 import consulo.language.psi.search.scope.NamedScope;

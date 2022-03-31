@@ -16,6 +16,7 @@
 package consulo.language.editor.completion;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.concurrent.ThreadDumper;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.editor.completion.internal.OffsetTranslator;
@@ -25,9 +26,14 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.RuntimeExceptionWithAttachments;
+import consulo.util.collection.UnmodifiableIterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 
 /**
  * @author yole
@@ -95,5 +101,43 @@ public class CompletionUtilCore {
     }
 
     return psi;
+  }
+
+  public static Iterable<String> iterateLookupStrings(@Nonnull final LookupElement element) {
+    return new Iterable<String>() {
+      @Nonnull
+      @Override
+      public Iterator<String> iterator() {
+        final Iterator<String> original = element.getAllLookupStrings().iterator();
+        return new UnmodifiableIterator<String>(original) {
+          @Override
+          public boolean hasNext() {
+            try {
+              return super.hasNext();
+            }
+            catch (ConcurrentModificationException e) {
+              throw handleCME(e);
+            }
+          }
+
+          @Override
+          public String next() {
+            try {
+              return super.next();
+            }
+            catch (ConcurrentModificationException e) {
+              throw handleCME(e);
+            }
+          }
+
+          private RuntimeException handleCME(ConcurrentModificationException cme) {
+            RuntimeExceptionWithAttachments ewa = new RuntimeExceptionWithAttachments("Error while traversing lookup strings of " + element + " of " + element.getClass(), (String)null,
+                                                                                      AttachmentFactory.get().create("threadDump.txt", ThreadDumper.dumpThreadsToString()));
+            ewa.initCause(cme);
+            return ewa;
+          }
+        };
+      }
+    };
   }
 }

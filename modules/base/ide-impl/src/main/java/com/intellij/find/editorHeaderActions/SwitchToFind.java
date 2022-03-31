@@ -1,7 +1,7 @@
 package com.intellij.find.editorHeaderActions;
 
 import com.intellij.find.EditorSearchSession;
-import com.intellij.find.FindModel;
+import consulo.find.FindModel;
 import com.intellij.find.FindUtil;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

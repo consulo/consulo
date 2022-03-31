@@ -19,23 +19,23 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.event.ApplicationListener;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.ThrowableComputable;
+import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
+import consulo.util.lang.function.ThrowableSupplier;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 /**
  * Provides access to core application-wide functionality and methods for working with the IDE
@@ -109,7 +109,7 @@ public interface Application extends ComponentManager {
    * @param computation the computation to perform.
    * @return the result returned by the computation.
    */
-  <T> T runReadAction(@Nonnull Computable<T> computation);
+  <T> T runReadAction(@Nonnull Supplier<T> computation);
 
   /**
    * Grab the lock and run the action, in a non-blocking fashion
@@ -127,7 +127,7 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    * @throws E re-frown from ThrowableComputable
    */
-  <T, E extends Throwable> T runReadAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
+  <T, E extends Throwable> T runReadAction(@Nonnull ThrowableSupplier<T, E> computation) throws E;
 
   /**
    * Runs the specified write action. Must be called from the Swing dispatch thread. The action is executed
@@ -147,7 +147,7 @@ public interface Application extends ComponentManager {
    * @return the result returned by the computation.
    */
   @RequiredUIAccess
-  <T> T runWriteAction(@Nonnull Computable<T> computation);
+  <T> T runWriteAction(@Nonnull Supplier<T> computation);
 
   /**
    * Runs the specified computation in a write action. Must be called from the Swing dispatch thread.
@@ -159,7 +159,7 @@ public interface Application extends ComponentManager {
    * @throws E re-frown from ThrowableComputable
    */
   @RequiredUIAccess
-  <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableComputable<T, E> computation) throws E;
+  <T, E extends Throwable> T runWriteAction(@Nonnull ThrowableSupplier<T, E> computation) throws E;
 
   /**
    * Returns {@code true} if there is currently executing write action of the specified class.

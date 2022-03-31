@@ -20,7 +20,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.LeafState;

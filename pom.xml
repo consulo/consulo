@@ -105,6 +105,9 @@
     <module>modules/base/file-template-api</module>
     <module>modules/base/file-template-impl</module>
     <module>modules/base/usage-api</module>
+    <module>modules/base/virtual-file-status-api</module>
+    <module>modules/base/virtual-file-status-impl</module>
+    <module>modules/base/find-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

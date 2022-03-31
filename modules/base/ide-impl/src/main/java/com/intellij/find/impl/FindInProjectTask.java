@@ -1,9 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find.impl;
 
-import com.intellij.find.FindBundle;
+import consulo.find.FindBundle;
 import com.intellij.find.FindInProjectSearchEngine;
-import com.intellij.find.FindModel;
+import consulo.find.FindModel;
 import com.intellij.find.findInProject.FindInProjectManager;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;

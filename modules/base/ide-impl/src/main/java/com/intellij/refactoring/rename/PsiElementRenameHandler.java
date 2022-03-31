@@ -41,7 +41,7 @@ import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.actions.BaseRefactoringAction;
 import com.intellij.refactoring.util.CommonRefactoringUtil;
-import com.intellij.usageView.UsageViewUtil;
+import consulo.usage.UsageViewUtil;
 import consulo.logging.Logger;
 import consulo.util.dataholder.Key;
 

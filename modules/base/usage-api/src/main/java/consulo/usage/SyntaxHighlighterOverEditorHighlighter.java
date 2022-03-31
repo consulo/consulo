@@ -15,21 +15,17 @@
  */
 package consulo.usage;
 
+import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.HighlighterIterator;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.language.ast.IElementType;
+import consulo.language.editor.highlight.*;
 import consulo.language.lexer.LayeredLexer;
 import consulo.language.lexer.Lexer;
-import consulo.colorScheme.TextAttributesKey;
-import com.intellij.openapi.editor.ex.util.LayeredHighlighterIterator;
-import com.intellij.openapi.editor.ex.util.LayeredLexerEditorHighlighter;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.codeEditor.HighlighterIterator;
-import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.plain.PlainTextFileType;
-import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.impl.search.LexerEditorHighlighterLexer;
-import consulo.language.ast.IElementType;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -19,8 +19,8 @@ import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.search.IndexPattern;
-import consulo.ide.impl.psi.search.IndexPatternProvider;
+import consulo.language.psi.search.IndexPattern;
+import consulo.language.psi.search.IndexPatternProvider;
 import javax.annotation.Nonnull;
 
 public abstract class TodoCacheManager {

@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.navigationToolbar;
 
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.openapi.vcs.FileStatusManager;
-import com.intellij.problems.WolfTheProblemSolver;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.colorScheme.TextAttributes;

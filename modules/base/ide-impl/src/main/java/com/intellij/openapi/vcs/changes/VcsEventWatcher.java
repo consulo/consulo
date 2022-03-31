@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootAdapter;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.problems.ProblemListener;
+import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.component.messagebus.MessageBusConnection;
 
 import javax.annotation.Nonnull;

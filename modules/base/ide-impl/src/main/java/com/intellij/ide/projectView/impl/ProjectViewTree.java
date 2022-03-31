@@ -12,7 +12,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.VfsPresentationUtil;
+import consulo.fileEditor.VfsPresentationUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;

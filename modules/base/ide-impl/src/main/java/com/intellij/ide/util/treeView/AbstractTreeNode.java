@@ -2,8 +2,8 @@
 package com.intellij.ide.util.treeView;
 
 import consulo.ui.ex.awt.CopyPasteManager;
-import com.intellij.openapi.vcs.FileStatus;
-import com.intellij.openapi.vcs.FileStatusManager;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.project.Project;
@@ -11,12 +11,13 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.awt.tree.PresentationData;
 import consulo.ui.ex.awt.tree.TreeNode;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatusOwner;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
-public abstract class AbstractTreeNode<T> extends TreeNode<T> {
+public abstract class AbstractTreeNode<T> extends TreeNode<T> implements FileStatusOwner {
   private static final TextAttributesKey FILESTATUS_ERRORS = TextAttributesKey.createTextAttributesKey("FILESTATUS_ERRORS");
 
   protected final Project myProject;
@@ -83,6 +84,7 @@ public abstract class AbstractTreeNode<T> extends TreeNode<T> {
     return null;
   }
 
+  @Override
   public FileStatus getFileStatus() {
     return FileStatus.NOT_CHANGED;
   }

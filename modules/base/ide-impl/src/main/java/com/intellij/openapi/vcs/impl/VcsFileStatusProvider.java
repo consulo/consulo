@@ -16,22 +16,29 @@
 package com.intellij.openapi.vcs.impl;
 
 import com.intellij.ide.scratch.ScratchUtil;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.project.Project;
-import com.intellij.openapi.vcs.*;
+import com.intellij.openapi.vcs.AbstractVcs;
+import com.intellij.openapi.vcs.ProjectLevelVcsManager;
+import com.intellij.openapi.vcs.VcsConfiguration;
+import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import com.intellij.openapi.vcs.readOnlyHandler.ReadonlyStatusHandlerImpl;
 import com.intellij.openapi.vcs.rollback.RollbackEnvironment;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ThreeState;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.ThreeState;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.status.FileStatus;
+import consulo.virtualFileSystem.status.FileStatusManager;
+import consulo.virtualFileSystem.status.FileStatusProvider;
+import consulo.virtualFileSystem.status.impl.internal.FileStatusManagerImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 /**
  * @author yole

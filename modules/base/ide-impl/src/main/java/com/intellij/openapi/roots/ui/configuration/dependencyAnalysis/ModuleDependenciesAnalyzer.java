@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.presentation.VirtualFilePresentation;
+import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.module.Module;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;

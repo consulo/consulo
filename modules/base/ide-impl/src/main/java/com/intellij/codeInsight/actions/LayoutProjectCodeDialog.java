@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.actions;
 
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.find.FindSettings;
+import consulo.find.FindSettings;
 import com.intellij.find.impl.FindDialog;
 import com.intellij.find.impl.FindInProjectUtil;
 import consulo.application.AllIcons;

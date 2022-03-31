@@ -17,18 +17,17 @@ package consulo.usage;
 
 import consulo.application.Application;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.ui.ex.awt.EditorColorsUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+
 @Singleton
-public class UsageTreeColorsScheme {
+public interface UsageTreeColorsScheme {
+  @Nonnull
   public static UsageTreeColorsScheme getInstance() {
     return Application.get().getInstance(UsageTreeColorsScheme.class);
   }
 
-  public EditorColorsScheme getScheme() {
-    return EditorColorsUtil.getColorSchemeForBackground(TargetAWT.from(UIUtil.getTreeTextBackground()));
-  }
+  @Nonnull
+  EditorColorsScheme getScheme();
 }

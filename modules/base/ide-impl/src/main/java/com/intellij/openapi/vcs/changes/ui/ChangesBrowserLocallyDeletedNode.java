@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.AllIcons;
 import com.intellij.openapi.vcs.FilePath;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import com.intellij.openapi.vcs.changes.LocallyDeletedChange;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
 import consulo.ui.ex.SimpleTextAttributes;

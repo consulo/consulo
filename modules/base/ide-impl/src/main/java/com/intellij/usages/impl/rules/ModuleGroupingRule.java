@@ -22,7 +22,7 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.vcs.FileStatus;
+import consulo.virtualFileSystem.status.FileStatus;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.Usage;
 import consulo.usage.UsageGroup;
