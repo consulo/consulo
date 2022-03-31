@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2016 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,32 @@
  * limitations under the License.
  */
 
-package com.intellij.find.findUsages;
+package consulo.find;
 
-import consulo.find.FindUsagesHandler;
-import consulo.language.psi.PsiElement;
+import consulo.ide.ServiceManager;
+import consulo.project.Project;
 import javax.annotation.Nonnull;
 
-public class FindUsagesUtil {
-  private FindUsagesUtil() {
+import java.util.List;
+
+public interface FindInProjectSettings {
+
+  static FindInProjectSettings getInstance(Project project) {
+    return project.getInstance(FindInProjectSettings.class);
   }
 
-  public static boolean isSearchForTextOccurrencesAvailable(@Nonnull PsiElement element, boolean isSingleFile, FindUsagesHandler handler) {
-    return !isSingleFile && handler != null && handler.isSearchForTextOccurrencesAvailable(element, isSingleFile);
-  }
+  void addStringToFind(@Nonnull String s);
+
+  void addStringToReplace(@Nonnull String s);
+
+  void addDirectory(@Nonnull String s);
+
+  @Nonnull
+  String[] getRecentFindStrings();
+
+  @Nonnull
+  String[] getRecentReplaceStrings();
+
+  @Nonnull
+  List<String> getRecentDirectories();
 }

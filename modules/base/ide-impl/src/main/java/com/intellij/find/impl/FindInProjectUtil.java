@@ -655,7 +655,7 @@ public class FindInProjectUtil {
   }
 
   public static String getPresentableName(@Nonnull FindModel.SearchContext searchContext) {
-    @PropertyKey(resourceBundle = "messages.FindBundle") String messageKey = null;
+    @PropertyKey(resourceBundle = "consulo.find.FindBundle") String messageKey = null;
     if (searchContext == FindModel.SearchContext.ANY) {
       messageKey = "find.context.anywhere.scope.label";
     }

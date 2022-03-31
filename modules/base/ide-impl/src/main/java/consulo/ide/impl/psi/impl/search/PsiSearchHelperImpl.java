@@ -16,56 +16,56 @@
 
 package consulo.ide.impl.psi.impl.search;
 
-import consulo.ide.impl.psi.search.UseScopeEnlarger;
-import consulo.language.psi.search.*;
-import consulo.util.concurrent.AsyncFuture;
-import consulo.util.concurrent.AsyncUtil;
-import consulo.application.internal.concurrency.JobLauncher;
-import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
-import consulo.application.event.ApplicationListener;
-import consulo.application.ApplicationManager;
-import consulo.application.util.ReadActionProcessor;
-import consulo.application.internal.ApplicationEx;
-import consulo.application.util.ApplicationUtil;
-import consulo.application.impl.internal.progress.CoreProgressManager;
 import com.intellij.openapi.progress.util.TooManyUsagesStatus;
-import consulo.application.progress.*;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.text.StringSearcher;
+import consulo.application.AccessRule;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.event.ApplicationListener;
+import consulo.application.impl.internal.progress.CoreProgressManager;
+import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.internal.concurrency.JobLauncher;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.ApplicationUtil;
+import consulo.application.util.ReadActionProcessor;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.Processors;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.component.ProcessCanceledException;
-import consulo.util.lang.EmptyRunnable;
-import consulo.util.lang.function.Condition;
+import consulo.content.scope.SearchScope;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.psi.impl.cache.CacheManager;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdIndexEntry;
+import consulo.ide.impl.psi.search.UseScopeEnlarger;
+import consulo.language.content.FileIndexFacade;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.scope.PsiSearchScopeUtil;
-import consulo.content.scope.SearchScope;
+import consulo.language.psi.search.*;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.util.CommentUtilCore;
+import consulo.logging.Logger;
 import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
-import consulo.language.content.FileIndexFacade;
-import com.intellij.openapi.util.*;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.collection.MultiMap;
+import consulo.util.concurrent.AsyncFuture;
+import consulo.util.concurrent.AsyncUtil;
+import consulo.util.lang.EmptyRunnable;
+import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.internal.psi.PsiManagerEx;
-import consulo.ide.impl.psi.impl.cache.CacheManager;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdIndexEntry;
-import consulo.language.psi.PsiUtilCore;
-import consulo.usage.UsageInfo;
-import consulo.usage.UsageInfoFactory;
-import consulo.application.util.function.Processor;
-import consulo.application.util.function.Processors;
-import consulo.language.util.CommentUtilCore;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import consulo.language.psi.stub.FileBasedIndex;
-import com.intellij.util.text.StringSearcher;
-import consulo.application.AccessRule;
-import consulo.application.util.function.Computable;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -1041,29 +1041,5 @@ public class PsiSearchHelperImpl implements PsiSearchHelper {
     }
     if (words.isEmpty()) return Collections.emptyList();
     return ContainerUtil.map2List(words, word -> new IdIndexEntry(word, caseSensitively));
-  }
-
-  public static boolean processTextOccurrences(@Nonnull final PsiElement element,
-                                               @Nonnull String stringToSearch,
-                                               @Nonnull GlobalSearchScope searchScope,
-                                               @Nonnull final Processor<UsageInfo> processor,
-                                               @Nonnull final UsageInfoFactory factory) {
-    ThrowableComputable<PsiSearchHelper, RuntimeException> action1 = () -> SERVICE.getInstance(element.getProject());
-    PsiSearchHelper helper = AccessRule.read(action1);
-
-    return helper.processUsagesInNonJavaFiles(element, stringToSearch, (psiFile, startOffset, endOffset) -> {
-      try {
-        ThrowableComputable<UsageInfo, RuntimeException> action = () -> factory.createUsageInfo(psiFile, startOffset, endOffset);
-        UsageInfo usageInfo = AccessRule.read(action);
-        return usageInfo == null || processor.process(usageInfo);
-      }
-      catch (ProcessCanceledException e) {
-        throw e;
-      }
-      catch (Exception e) {
-        LOG.error(e);
-        return true;
-      }
-    }, searchScope);
   }
 }

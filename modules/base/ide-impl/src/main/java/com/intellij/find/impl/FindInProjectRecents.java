@@ -15,7 +15,7 @@
  */
 package com.intellij.find.impl;
 
-import com.intellij.find.FindInProjectSettings;
+import consulo.find.FindInProjectSettings;
 import consulo.find.FindSettings;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
 import consulo.ui.ex.awt.TitledSeparator;
 

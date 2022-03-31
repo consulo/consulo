@@ -16,18 +16,21 @@
 package consulo.find;
 
 import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
 import consulo.application.util.ReadActionProcessor;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.psi.search.searches.ReferencesSearch;
+import consulo.find.ui.AbstractFindUsagesDialog;
+import consulo.find.ui.CommonFindUsagesDialog;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.util.IncorrectOperationException;
 import consulo.project.Project;
 import consulo.usage.UsageInfo;
@@ -83,7 +86,7 @@ public abstract class FindUsagesHandler {
 
   @Nullable
   protected String getHelpId() {
-    return FindUsagesManager.getHelpID(myPsiElement);
+    return ReadAction.compute(() -> FindUsagesHelper.getHelpID(myPsiElement));
   }
 
   @Nonnull

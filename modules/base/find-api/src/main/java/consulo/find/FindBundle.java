@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 public class FindBundle {
   private static Reference<ResourceBundle> ourBundle;
 
-  public static final String BUNDLE = "messages.FindBundle";
+  public static final String BUNDLE = "consulo.find.FindBundle";
 
   private FindBundle() {
   }

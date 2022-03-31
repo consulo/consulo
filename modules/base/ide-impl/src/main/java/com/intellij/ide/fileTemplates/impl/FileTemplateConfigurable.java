@@ -60,7 +60,7 @@ import consulo.language.ast.TokenSet;
 import consulo.language.file.light.LightVirtualFile;
 import com.intellij.ui.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.SeparatorFactory;
+import consulo.ui.ex.awt.SeparatorFactory;
 import com.intellij.ui.components.panels.HorizontalLayout;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBHtmlEditorKit;

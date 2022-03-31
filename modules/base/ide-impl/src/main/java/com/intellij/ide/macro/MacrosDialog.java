@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.SeparatorFactory;
+import consulo.ui.ex.awt.SeparatorFactory;
 import consulo.ui.ex.awt.JBList;
 
 import javax.annotation.Nonnull;

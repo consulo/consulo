@@ -29,7 +29,7 @@ import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.RefactoringSettings;
 import com.intellij.refactoring.util.TextOccurrencesUtil;
-import com.intellij.ui.StateRestoringCheckBox;
+import consulo.ui.ex.awt.StateRestoringCheckBox;
 import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

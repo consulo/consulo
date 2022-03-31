@@ -14,22 +14,24 @@
  * limitations under the License.
  */
 
-package com.intellij.find.findUsages;
+package consulo.find.ui;
 
-import consulo.find.FindUsagesHandler;
-import consulo.find.FindUsagesOptions;
-import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.application.ui.HelpManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.find.FindUsagesHandler;
+import consulo.find.FindUsagesHelper;
+import consulo.find.FindUsagesOptions;
+import consulo.find.FindUsagesUtil;
+import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.search.PsiSearchHelper;
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.project.Project;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.usage.UsageViewUtil;
-import javax.annotation.Nonnull;
+import consulo.util.lang.StringUtil;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 
 /**
@@ -76,6 +78,6 @@ public class CommonFindUsagesDialog extends AbstractFindUsagesDialog {
 
   @Override
   protected void doHelpAction() {
-    HelpManager.getInstance().invokeHelp(FindUsagesManager.getHelpID(myPsiElement));
+    HelpManager.getInstance().invokeHelp(FindUsagesHelper.getHelpID(myPsiElement));
   }
 }

@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.find.findUsages;
+package consulo.find.ui;
 
-import consulo.find.FindBundle;
 import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
-import com.intellij.ui.SeparatorFactory;
-import com.intellij.ui.StateRestoringCheckBox;
 import consulo.disposer.Disposer;
+import consulo.find.FindBundle;
 import consulo.find.FindSettings;
 import consulo.find.FindUsagesOptions;
+import consulo.find.PersistentFindUsagesOptions;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;

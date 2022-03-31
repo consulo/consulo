@@ -3,6 +3,7 @@ package com.intellij.find;
 
 import com.intellij.find.editorHeaderActions.*;
 import consulo.find.FindBundle;
+import consulo.find.FindInProjectSettings;
 import consulo.ui.ex.internal.ActionButtonComponent;
 import consulo.ui.ex.action.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;

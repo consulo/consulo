@@ -1,11 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.find.findUsages;
+package consulo.find;
 
-import consulo.dataContext.DataContext;
-import consulo.find.FindUsagesOptions;
-import consulo.project.Project;
-import consulo.content.scope.SearchScope;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.content.scope.SearchScope;
+import consulo.dataContext.DataContext;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,5 +27,4 @@ public abstract class PersistentFindUsagesOptions extends FindUsagesOptions {
   public abstract void setDefaults(@Nonnull Project project);
 
   public abstract void storeDefaults(@Nonnull Project project);
-
 }

@@ -1759,7 +1759,7 @@
     <applicationService serviceInterface="consulo.find.FindSettings"
                         serviceImplementation="com.intellij.find.impl.FindSettingsImpl"/>
     <applicationService serviceImplementation="com.intellij.find.impl.FindSettingsImpl$FindRecents"/>
-    <projectService serviceInterface="com.intellij.find.FindInProjectSettings" serviceImplementation="com.intellij.find.impl.FindInProjectRecents"/>
+    <projectService serviceInterface="consulo.find.FindInProjectSettings" serviceImplementation="com.intellij.find.impl.FindInProjectRecents"/>
 
     <applicationService serviceInterface="consulo.language.editor.CodeInsightSettings"
                         serviceImplementation="consulo.language.editor.CodeInsightSettings"/>

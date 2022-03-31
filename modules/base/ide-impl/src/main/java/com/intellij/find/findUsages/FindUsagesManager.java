@@ -21,6 +21,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.find.*;
 import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.find.ui.AbstractFindUsagesDialog;
 import consulo.language.internal.LanguageFindUsages;
 import consulo.ui.ex.action.IdeActions;
 import consulo.fileEditor.FileEditor;
@@ -607,10 +608,6 @@ public class FindUsagesManager {
     HintManagerImpl.getInstanceImpl()
             .showEditorHint(hint, editor, HintManager.UNDER, HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING, 0,
                             false);
-  }
-
-  public static String getHelpID(PsiElement element) {
-    return LanguageFindUsages.INSTANCE.forLanguage(element.getLanguage()).getHelpId(element);
   }
 
   public void rerunAndRecallFromHistory(@Nonnull ConfigurableUsageTarget usageTarget) {

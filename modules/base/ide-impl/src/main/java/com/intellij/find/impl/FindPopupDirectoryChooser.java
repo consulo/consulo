@@ -16,7 +16,7 @@
 package com.intellij.find.impl;
 
 import consulo.find.FindBundle;
-import com.intellij.find.FindInProjectSettings;
+import consulo.find.FindInProjectSettings;
 import consulo.find.FindModel;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ui.ex.awt.ComboBox;

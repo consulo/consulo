@@ -17,7 +17,7 @@
 /*
  * @author Eugene Zhuravlev
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
 import javax.swing.*;
 

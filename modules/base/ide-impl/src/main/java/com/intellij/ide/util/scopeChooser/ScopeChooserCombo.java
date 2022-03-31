@@ -1,30 +1,30 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.util.scopeChooser;
 
-import consulo.dataContext.DataManager;
-import consulo.component.util.WeighedItem;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import consulo.language.internal.PredefinedSearchScopeProvider;
-import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.search.SearchScopeProvider;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.editor.scope.NamedScopeManager;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxWithBrowseButton;
-import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.BitUtil;
-import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.function.Processor;
+import consulo.component.util.WeighedItem;
+import consulo.content.scope.SearchScope;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.util.lang.ObjectUtil;
-import org.intellij.lang.annotations.MagicConstant;
+import consulo.ide.impl.psi.search.SearchScopeProvider;
+import consulo.language.editor.scope.NamedScopeManager;
+import consulo.language.internal.PredefinedSearchScopeProvider;
+import consulo.language.psi.search.scope.NamedScope;
+import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.project.Project;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.JBUIScale;
 import consulo.util.concurrent.Promise;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.function.Condition;
+import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -237,7 +237,7 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
   private static class MyRenderer extends ColoredListCellRenderer<ScopeDescriptor> {
     @Override
     protected void customizeCellRenderer(@Nonnull JList<? extends ScopeDescriptor> list, ScopeDescriptor value, int index, boolean selected, boolean hasFocus) {
-      if(value instanceof ScopeSeparator)  {
+      if (value instanceof ScopeSeparator) {
         setSeparator(value.getDisplayName());
       }
       else {

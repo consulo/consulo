@@ -10,6 +10,7 @@ import consulo.codeEditor.EditorCopyPasteHelper;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.find.FindBundle;
+import consulo.find.FindInProjectSettings;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.application.util.SystemInfo;

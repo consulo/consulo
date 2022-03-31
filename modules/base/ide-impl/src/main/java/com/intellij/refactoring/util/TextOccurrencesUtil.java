@@ -19,7 +19,7 @@ package com.intellij.refactoring.util;
 import consulo.find.FindManager;
 import consulo.find.FindUsagesHandler;
 import com.intellij.find.findUsages.FindUsagesManager;
-import com.intellij.find.findUsages.FindUsagesUtil;
+import consulo.find.FindUsagesUtil;
 import com.intellij.find.impl.FindManagerImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.parser.LanguageParserDefinitions;
