@@ -24,6 +24,8 @@ import consulo.util.dataholder.NotNullLazyKey;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Use ComponentManager#getInstance() method")
 public class ServiceManager {
   private ServiceManager() {
   }
@@ -45,7 +47,7 @@ public class ServiceManager {
 
   @Nonnull
   public static <T> T getService(@Nonnull ComponentManager manager, @Nonnull Class<T> serviceClass) {
-    return manager.getComponent(serviceClass);
+    return manager.getInstance(serviceClass);
   }
 
   /**
