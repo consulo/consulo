@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.attach;
+package consulo.debugger.attach;
 
 import consulo.project.Project;
-import consulo.util.dataholder.UserDataHolder;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.UserDataHolder;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Comparator;
 
 /**

@@ -11,6 +11,8 @@ module consulo.debugger.api {
   requires transitive consulo.language.api;
 
   exports consulo.debugger;
+  exports consulo.debugger.attach;
+  exports consulo.debugger.attach.osHandler;
   exports consulo.debugger.event;
   exports consulo.debugger.breakpoint;
   exports consulo.debugger.breakpoint.ui;

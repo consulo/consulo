@@ -944,10 +944,7 @@ open module consulo.ide.impl {
   exports com.intellij.vcs.log.util;
   exports com.intellij.vcsUtil;
   exports com.intellij.vfs;
-  //exports com.intellij.webcore;
   exports com.intellij.webcore.packaging;
-  exports com.intellij.xdebugger.attach;
-  exports com.intellij.xdebugger.attach.osHandlers;
   exports com.intellij.xdebugger.impl;
   exports com.intellij.xdebugger.impl.actions;
   exports com.intellij.xdebugger.impl.actions.handlers;

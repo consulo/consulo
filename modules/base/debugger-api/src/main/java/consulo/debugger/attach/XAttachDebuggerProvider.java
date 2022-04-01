@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.xdebugger.attach;
+package consulo.debugger.attach;
 
-import com.intellij.util.containers.ContainerUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.process.ProcessInfo;
 import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnull;

@@ -1,14 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.xdebugger.attach;
+package consulo.debugger.attach;
 
+import consulo.debugger.attach.osHandler.AttachOSHandler;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.BaseProcessHandler;
 import consulo.process.local.CapturingProcessRunner;
 import consulo.process.local.ProcessOutput;
-import com.intellij.xdebugger.attach.osHandlers.AttachOSHandler;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;

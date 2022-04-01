@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.attach;
+package consulo.debugger.attach;
 
-import com.intellij.openapi.util.text.StringUtil;
 import consulo.debugger.XDebuggerBundle;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessInfo;
 import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

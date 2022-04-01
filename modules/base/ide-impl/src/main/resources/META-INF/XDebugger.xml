@@ -35,9 +35,9 @@
     <extensionPoint name="xdebugger.lineBreakpointTypeResolver" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="consulo.debugger.breakpoint.XLineBreakpointTypeResolver"/>
     </extensionPoint>
-    <extensionPoint name="xdebugger.localAttachDebuggerProvider" interface="com.intellij.xdebugger.attach.XLocalAttachDebuggerProvider"/>
-    <extensionPoint name="xdebugger.attachDebuggerProvider" interface="com.intellij.xdebugger.attach.XAttachDebuggerProvider"/>
-    <extensionPoint name="xdebugger.attachHostProvider" interface="com.intellij.xdebugger.attach.XAttachHostProvider" />
+    <extensionPoint name="xdebugger.localAttachDebuggerProvider" interface="consulo.debugger.attach.XLocalAttachDebuggerProvider"/>
+    <extensionPoint name="xdebugger.attachDebuggerProvider" interface="consulo.debugger.attach.XAttachDebuggerProvider"/>
+    <extensionPoint name="xdebugger.attachHostProvider" interface="consulo.debugger.attach.XAttachHostProvider" />
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">

@@ -2,8 +2,8 @@
 package com.intellij.xdebugger.impl.actions;
 
 import consulo.debugger.XDebuggerBundle;
-import com.intellij.xdebugger.attach.XAttachDebuggerProvider;
-import com.intellij.xdebugger.attach.XAttachHostProvider;
+import consulo.debugger.attach.XAttachDebuggerProvider;
+import consulo.debugger.attach.XAttachHostProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
 
 public class AttachToProcessAction extends AttachToProcessActionBase {

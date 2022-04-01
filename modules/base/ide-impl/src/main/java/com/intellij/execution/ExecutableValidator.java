@@ -17,7 +17,7 @@ package com.intellij.execution;
 
 import consulo.application.CommonBundle;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.process.CapturingProcessHandler;
+import consulo.process.local.CapturingProcessHandler;
 import consulo.process.local.ProcessOutput;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;

@@ -1,13 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.execution.process;
+package consulo.process.local;
 
+import consulo.application.progress.ProgressIndicator;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.application.progress.ProgressIndicator;
-import consulo.process.local.CapturingProcessAdapter;
-import consulo.process.local.CapturingProcessRunner;
-import consulo.process.local.OSProcessHandler;
-import consulo.process.local.ProcessOutput;
 import consulo.util.lang.DeprecatedMethodException;
 
 import javax.annotation.Nonnull;
@@ -24,7 +20,7 @@ public class CapturingProcessHandler extends OSProcessHandler {
 
   public CapturingProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     super(commandLine);
-    myProcessRunner = new CapturingProcessRunner(this, processOutput -> createProcessAdapter(processOutput));
+    myProcessRunner = new CapturingProcessRunner(this, this::createProcessAdapter);
   }
 
   /**
@@ -42,7 +38,7 @@ public class CapturingProcessHandler extends OSProcessHandler {
    */
   public CapturingProcessHandler(@Nonnull Process process, @Nullable Charset charset, /*@NotNull*/ String commandLine) {
     super(process, commandLine, charset);
-    myProcessRunner = new CapturingProcessRunner(this, processOutput -> createProcessAdapter(processOutput));
+    myProcessRunner = new CapturingProcessRunner(this, this::createProcessAdapter);
   }
 
   protected CapturingProcessAdapter createProcessAdapter(ProcessOutput processOutput) {

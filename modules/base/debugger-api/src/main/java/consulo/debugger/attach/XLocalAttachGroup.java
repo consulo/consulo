@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.attach;
+package consulo.debugger.attach;
 
 import consulo.process.ProcessInfo;
 import consulo.project.Project;
