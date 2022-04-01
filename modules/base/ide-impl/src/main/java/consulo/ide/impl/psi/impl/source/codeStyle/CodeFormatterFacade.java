@@ -223,7 +223,7 @@ public class CodeFormatterFacade {
         i++;
       }
     }
-    final PostprocessReformattingAspectImpl component = file.getProject().getComponent(PostprocessReformattingAspectImpl.class);
+    final PostprocessReformattingAspectImpl component = (PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(file.getProject());
     FormattingProgressTask.FORMATTING_CANCELLED_FLAG.set(false);
     component.doPostponedFormatting(file.getViewProvider());
     i = 0;

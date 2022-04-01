@@ -150,7 +150,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
   @Override
   public void doPostponedOperationsAndUnblockDocument(@Nonnull Document doc) {
     if (doc instanceof DocumentWindow) doc = ((DocumentWindow)doc).getDelegate();
-    final PostprocessReformattingAspectImpl component = myProject.getComponent(PostprocessReformattingAspectImpl.class);
+    final PostprocessReformattingAspectImpl component = (PostprocessReformattingAspectImpl)PostprocessReformattingAspect.getInstance(myProject);
     final FileViewProvider viewProvider = getCachedViewProvider(doc);
     if (viewProvider != null && component != null) component.doPostponedFormatting(viewProvider);
   }
