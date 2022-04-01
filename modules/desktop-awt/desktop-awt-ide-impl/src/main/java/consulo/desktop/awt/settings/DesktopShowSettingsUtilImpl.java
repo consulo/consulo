@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
-import com.intellij.openapi.options.ex.Settings;
+import consulo.ide.setting.Settings;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;

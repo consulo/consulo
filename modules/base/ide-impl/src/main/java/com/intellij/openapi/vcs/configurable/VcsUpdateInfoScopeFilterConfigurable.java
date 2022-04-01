@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.configurable;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.options.ex.Settings;
+import consulo.ide.setting.Settings;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.vcs.VcsBundle;

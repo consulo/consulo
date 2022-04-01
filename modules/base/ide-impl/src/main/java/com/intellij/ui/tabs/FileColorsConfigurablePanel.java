@@ -23,7 +23,7 @@ import com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.options.ex.Settings;
+import consulo.ide.setting.Settings;
 import com.intellij.openapi.ui.MessageType;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ToolbarDecorator;

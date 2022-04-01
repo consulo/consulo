@@ -16,10 +16,10 @@
 
 package com.intellij.codeInspection.ex;
 
-import com.intellij.codeInspection.*;
 import consulo.document.util.TextRange;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.ProblemDescriptor;
+import consulo.language.editor.inspection.ProblemDescriptorBase;
 import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.psi.PsiElement;

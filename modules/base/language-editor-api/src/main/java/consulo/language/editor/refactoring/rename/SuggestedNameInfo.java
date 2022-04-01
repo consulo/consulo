@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.codeStyle;
+package consulo.language.editor.refactoring.rename;
 
+import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
-import com.intellij.util.ArrayUtil;
 
 /**
  * Represents an array of suggested variable names and allows to keep statistics on

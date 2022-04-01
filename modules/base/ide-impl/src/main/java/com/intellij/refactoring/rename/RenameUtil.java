@@ -25,7 +25,7 @@ import consulo.usage.MoveRenameUsageInfo;
 import consulo.usage.NonCodeUsageInfo;
 import consulo.util.lang.function.Condition;
 import consulo.language.Language;
-import com.intellij.lang.LanguageNamesValidation;
+import consulo.language.editor.refactoring.LanguageNamesValidation;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import consulo.undoRedo.UndoableAction;

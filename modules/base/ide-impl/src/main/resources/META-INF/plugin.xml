@@ -478,7 +478,7 @@
 
     <extensionPoint name="lang.namesValidator"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.refactoring.NamesValidator"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.NamesValidator"/>
     </extensionPoint>
 
     <extensionPoint name="lang.findUsagesProvider"
@@ -892,7 +892,7 @@
     <extensionPoint name="updateAddedFileProcessor" interface="consulo.language.psi.UpdateAddedFileProcessor"/>
     <extensionPoint name="moveFileHandler" interface="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler"/>
     <extensionPoint name="automaticRenamerFactory" interface="com.intellij.refactoring.rename.naming.AutomaticRenamerFactory"/>
-    <extensionPoint name="nameSuggestionProvider" interface="com.intellij.refactoring.rename.NameSuggestionProvider"/>
+    <extensionPoint name="nameSuggestionProvider" interface="consulo.language.editor.refactoring.rename.NameSuggestionProvider"/>
     <extensionPoint name="vetoRenameCondition" interface="consulo.util.lang.function.Condition"/>
 
     <extensionPoint name="rename.inplace.resolveSnapshotProvider"

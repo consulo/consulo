@@ -89,7 +89,7 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowEP;
 import consulo.project.ui.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.ui.CheckBoxList;
+import consulo.ui.ex.awt.CheckBoxList;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.content.Content;

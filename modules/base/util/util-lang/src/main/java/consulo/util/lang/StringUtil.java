@@ -102,6 +102,27 @@ public class StringUtil {
 
   private static final String VOWELS = "aeiouy";
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String replaceChar(@Nonnull String buffer, char oldChar, char newChar) {
+    StringBuilder newBuffer = null;
+    for (int i = 0; i < buffer.length(); i++) {
+      char c = buffer.charAt(i);
+      if (c == oldChar) {
+        if (newBuffer == null) {
+          newBuffer = new StringBuilder(buffer.length());
+          newBuffer.append(buffer, 0, i);
+        }
+
+        newBuffer.append(newChar);
+      }
+      else if (newBuffer != null) {
+        newBuffer.append(c);
+      }
+    }
+    return newBuffer == null ? buffer : newBuffer.toString();
+  }
+
   @Contract(pure = true)
   public static String defaultIfEmpty(@Nullable String value, String defaultValue) {
     return isEmpty(value) ? defaultValue : value;

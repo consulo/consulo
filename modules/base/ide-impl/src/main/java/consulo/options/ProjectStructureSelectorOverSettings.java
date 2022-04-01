@@ -20,7 +20,7 @@ import consulo.module.Module;
 import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import com.intellij.openapi.options.ex.Settings;
+import consulo.ide.setting.Settings;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;

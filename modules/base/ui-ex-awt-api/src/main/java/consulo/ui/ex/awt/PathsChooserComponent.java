@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
-import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.IdeaFileChooser;
 import consulo.project.Project;
 import consulo.ui.ex.UIBundle;
-import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author oleg
@@ -68,7 +66,7 @@ public class PathsChooserComponent implements ComponentWithEmptyText {
         dirChooser.setTitle(UIBundle.message("file.chooser.default.title"));
         IdeaFileChooser.chooseFiles(dirChooser, myProject, null, new Consumer<List<VirtualFile>>() {
           @Override
-          public void consume(List<VirtualFile> files) {
+          public void accept(List<VirtualFile> files) {
             for (VirtualFile file : files) {
               // adding to the end
               final String path = file.getPath();

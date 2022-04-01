@@ -36,7 +36,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
-import com.intellij.openapi.options.ex.Settings;
+import consulo.ide.setting.Settings;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;
 import com.intellij.openapi.ui.InputValidator;

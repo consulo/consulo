@@ -18,12 +18,12 @@ package com.intellij.codeInspection.ui;
 
 import consulo.application.CommonBundle;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.inspection.ProblemDescriptorBase;
 import consulo.language.editor.scope.AnalysisScope;
 import com.intellij.analysis.AnalysisUIOptions;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.language.editor.inspection.reference.RefElement;

@@ -18,7 +18,6 @@ package com.intellij.codeInspection.ui;
 
 import consulo.language.editor.FileModificationService;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.*;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.reference.RefElement;

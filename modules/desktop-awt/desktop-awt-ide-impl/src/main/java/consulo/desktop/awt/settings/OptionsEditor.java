@@ -29,7 +29,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.openapi.options.ex.GlassPanel;
-import com.intellij.openapi.options.ex.Settings;
+import consulo.ide.setting.Settings;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;

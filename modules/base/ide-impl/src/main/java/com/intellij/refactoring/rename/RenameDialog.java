@@ -16,6 +16,8 @@
 
 package com.intellij.refactoring.rename;
 
+import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
+import consulo.language.editor.refactoring.rename.PreferrableNameSuggestionProvider;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
@@ -28,7 +30,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.codeStyle.SuggestedNameInfo;
+import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler;
 import com.intellij.refactoring.rename.naming.AutomaticRenamerFactory;

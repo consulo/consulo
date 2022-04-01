@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.intellij.refactoring.rename;
+package consulo.language.editor.refactoring.rename;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.codeStyle.SuggestedNameInfo;
+
 import javax.annotation.Nullable;
 
 import java.util.Set;
@@ -29,6 +29,6 @@ import java.util.Set;
 public interface NameSuggestionProvider {
   ExtensionPointName<NameSuggestionProvider> EP_NAME = ExtensionPointName.create("consulo.nameSuggestionProvider");
 
-  @javax.annotation.Nullable
+  @Nullable
   SuggestedNameInfo getSuggestedNames(PsiElement element, @Nullable PsiElement nameSuggestionContext, Set<String> result);
 }

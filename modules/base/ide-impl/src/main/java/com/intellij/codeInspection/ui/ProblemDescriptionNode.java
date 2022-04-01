@@ -16,15 +16,12 @@
 
 package com.intellij.codeInspection.ui;
 
-import com.intellij.codeInspection.*;
+import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import consulo.application.AllIcons;
 import consulo.virtualFileSystem.status.FileStatus;
-import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.PsiElement;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.ui.image.Image;
@@ -32,8 +29,8 @@ import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.intellij.codeInspection.ProblemDescriptorUtil.APPEND_LINE_NUMBER;
-import static com.intellij.codeInspection.ProblemDescriptorUtil.TRIM_AT_TREE_END;
+import static consulo.language.editor.inspection.ProblemDescriptorUtil.APPEND_LINE_NUMBER;
+import static consulo.language.editor.inspection.ProblemDescriptorUtil.TRIM_AT_TREE_END;
 
 /**
  * @author max

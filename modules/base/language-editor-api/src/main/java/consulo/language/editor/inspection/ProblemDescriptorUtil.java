@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInspection;
+package consulo.language.editor.inspection;
 
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.colorScheme.TextAttributesKey;
-import com.intellij.openapi.util.Couple;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.language.editor.inspection.ProblemHighlightType;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiElement;
+import consulo.util.lang.Couple;
+import consulo.util.lang.StringUtil;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,14 +72,10 @@ public class ProblemDescriptorUtil {
     // noinspection ConstantConditions
     if (message == null) return "";
 
-    if ((flags & APPEND_LINE_NUMBER) != 0 &&
-        descriptor instanceof ProblemDescriptor &&
-        !message.contains("#ref") &&
-        message.contains("#loc")) {
+    if ((flags & APPEND_LINE_NUMBER) != 0 && descriptor instanceof ProblemDescriptor && !message.contains("#ref") && message.contains("#loc")) {
       final int lineNumber = ((ProblemDescriptor)descriptor).getLineNumber();
       if (lineNumber >= 0) {
-        message = StringUtil
-                .replace(message, "#loc", "(" + InspectionsBundle.message("inspection.export.results.at.line") + " " + lineNumber + ")");
+        message = StringUtil.replace(message, "#loc", "(" + InspectionsBundle.message("inspection.export.results.at.line") + " " + lineNumber + ")");
       }
     }
     message = StringUtil.replace(message, "<code>", "'");
@@ -96,8 +88,7 @@ public class ProblemDescriptorUtil {
       message = StringUtil.replace(message, "#ref", ref);
     }
 
-    final int endIndex = (flags & TRIM_AT_END) != 0 ? message.indexOf("#end") :
-                         (flags & TRIM_AT_TREE_END) != 0 ? message.indexOf("#treeend") : -1;
+    final int endIndex = (flags & TRIM_AT_END) != 0 ? message.indexOf("#end") : (flags & TRIM_AT_TREE_END) != 0 ? message.indexOf("#treeend") : -1;
     if (endIndex > 0) {
       message = message.substring(0, endIndex);
     }
@@ -127,7 +118,8 @@ public class ProblemDescriptorUtil {
     for (String string : strings) {
       if (string.contains(XML_CODE_MARKER.second)) {
         builder.append(string.replace(XML_CODE_MARKER.second, ""));
-      } else {
+      }
+      else {
         builder.append(StringUtil.unescapeXml(string));
       }
     }
@@ -140,9 +132,7 @@ public class ProblemDescriptorUtil {
   }
 
   @Nonnull
-  public static HighlightInfoType highlightTypeFromDescriptor(@Nonnull ProblemDescriptor problemDescriptor,
-                                                              @Nonnull HighlightSeverity severity,
-                                                              @Nonnull SeverityRegistrarImpl severityRegistrar) {
+  public static HighlightInfoType highlightTypeFromDescriptor(@Nonnull ProblemDescriptor problemDescriptor, @Nonnull HighlightSeverity severity, @Nonnull SeverityRegistrar severityRegistrar) {
     final ProblemHighlightType highlightType = problemDescriptor.getHighlightType();
     switch (highlightType) {
       case GENERIC_ERROR_OR_WARNING:

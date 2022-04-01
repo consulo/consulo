@@ -13,31 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInspection;
+package consulo.language.editor.inspection;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.colorScheme.TextAttributesKey;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
 import consulo.language.editor.annotation.ProblemGroup;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.editor.inspection.LocalQuickFix;
-import consulo.language.editor.inspection.ProblemDescriptor;
-import consulo.language.editor.inspection.ProblemHighlightType;
 import consulo.language.psi.*;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.navigation.Navigatable;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.logging.Logger;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.access.RequiredReadAction;
 
-public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implements ProblemDescriptor {
+public class ProblemDescriptorBase extends CommonProblemDescriptorBase implements ProblemDescriptor {
   private static final Logger LOG = Logger.getInstance(ProblemDescriptorBase.class);
 
   @Nonnull
   private final SmartPsiElementPointer myStartSmartPointer;
-  @javax.annotation.Nullable
+  @Nullable
   private final SmartPsiElementPointer myEndSmartPointer;
 
   private final ProblemHighlightType myHighlightType;
@@ -89,8 +87,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
 
   protected void assertPhysical(final PsiElement element) {
     if (!element.isPhysical()) {
-      LOG.error("Non-physical PsiElement. Physical element is required to be able to anchor the problem in the source tree: " +
-                element + "; file: " + element.getContainingFile());
+      LOG.error("Non-physical PsiElement. Physical element is required to be able to anchor the problem in the source tree: " + element + "; file: " + element.getContainingFile());
     }
   }
 
@@ -144,7 +141,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
       final int startOffset = textRange.getStartOffset();
       final int textLength = document.getTextLength();
       LOG.assertTrue(startOffset <= textLength, getDescriptionTemplate() + " at " + startOffset + ", " + textLength);
-      myLineNumber =  document.getLineNumber(startOffset) + 1;
+      myLineNumber = document.getLineNumber(startOffset) + 1;
     }
     return myLineNumber;
   }
@@ -187,8 +184,7 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
     if (startElement == endElement) {
       if (isAfterEndOfLine()) return new TextRange(textRange.getEndOffset(), textRange.getEndOffset());
       if (myTextRangeInElement != null) {
-        return new TextRange(textRange.getStartOffset() + myTextRangeInElement.getStartOffset(),
-                             textRange.getStartOffset() + myTextRangeInElement.getEndOffset());
+        return new TextRange(textRange.getStartOffset() + myTextRangeInElement.getStartOffset(), textRange.getStartOffset() + myTextRangeInElement.getEndOffset());
       }
       return textRange;
     }
@@ -204,13 +200,13 @@ public class ProblemDescriptorBase extends CommonProblemDescriptorImpl implement
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public ProblemGroup getProblemGroup() {
     return myProblemGroup;
   }
 
   @Override
-  public void setProblemGroup(@javax.annotation.Nullable ProblemGroup problemGroup) {
+  public void setProblemGroup(@Nullable ProblemGroup problemGroup) {
     myProblemGroup = problemGroup;
   }
 

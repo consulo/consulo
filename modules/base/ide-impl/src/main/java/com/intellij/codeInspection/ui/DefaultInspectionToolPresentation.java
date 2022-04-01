@@ -17,7 +17,7 @@ package com.intellij.codeInspection.ui;
 
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInspection.ActionClassHolder;
-import com.intellij.codeInspection.ProblemDescriptorUtil;
+import consulo.language.editor.inspection.ProblemDescriptorUtil;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.codeInspection.reference.RefUtil;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;

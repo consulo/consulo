@@ -42,7 +42,7 @@ public abstract class InspectionManagerBase extends InspectionManager {
   @Override
   @Nonnull
   public CommonProblemDescriptor createProblemDescriptor(@Nonnull String descriptionTemplate, QuickFix... fixes) {
-    return new CommonProblemDescriptorImpl(fixes, descriptionTemplate);
+    return new CommonProblemDescriptorBase(fixes, descriptionTemplate);
   }
 
   @Override

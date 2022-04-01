@@ -32,7 +32,7 @@ import consulo.language.editor.gutter.LineMarkerSettings;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.CheckBoxList;
+import consulo.ui.ex.awt.CheckBoxList;
 import com.intellij.ui.ListSpeedSearch;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.SeparatorWithText;

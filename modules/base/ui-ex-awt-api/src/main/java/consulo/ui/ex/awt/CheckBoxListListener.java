@@ -1,4 +1,4 @@
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
 /**
  * @author oleg

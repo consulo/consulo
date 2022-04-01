@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.refactoring;
+package consulo.language.editor.refactoring;
 
 import consulo.language.Language;
 import consulo.project.Project;

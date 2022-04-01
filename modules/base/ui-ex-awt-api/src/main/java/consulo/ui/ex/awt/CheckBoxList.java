@@ -13,21 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import com.intellij.util.Function;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.BidirectionalMap;
-import consulo.ui.ex.awt.EmptyIcon;
-import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.util.collection.BidirectionalMap;
+import consulo.util.lang.ObjectUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -38,6 +32,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @author oleg
@@ -115,7 +110,7 @@ public class CheckBoxList<T> extends JBList {
   @Nonnull
   private static Dimension getCheckBoxDimension(@Nonnull JCheckBox checkBox) {
     Icon icon = null;
-    BasicRadioButtonUI ui = ObjectUtils.tryCast(checkBox.getUI(), BasicRadioButtonUI.class);
+    BasicRadioButtonUI ui = ObjectUtil.tryCast(checkBox.getUI(), BasicRadioButtonUI.class);
     if (ui != null) {
       icon = ui.getDefaultIcon();
     }
@@ -209,8 +204,8 @@ public class CheckBoxList<T> extends JBList {
   public void setItems(final List<T> items, @Nullable Function<T, String> converter, Function<T, Boolean> stateFunc) {
     clear();
     for (T item : items) {
-      String text = converter != null ? converter.fun(item) : item.toString();
-      addItem(item, text, stateFunc.fun(item));
+      String text = converter != null ? converter.apply(item) : item.toString();
+      addItem(item, text, stateFunc.apply(item));
     }
   }
 

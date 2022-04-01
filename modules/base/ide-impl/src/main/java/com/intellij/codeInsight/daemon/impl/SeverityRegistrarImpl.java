@@ -104,6 +104,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
     return myMap.remove(severity.getName());
   }
 
+  @Override
   @Nonnull
   public HighlightInfoType.HighlightInfoTypeImpl getHighlightInfoTypeBySeverity(@Nonnull HighlightSeverity severity) {
     HighlightInfoType infoType = STANDARD_SEVERITIES.get(severity.getName());

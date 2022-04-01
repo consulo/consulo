@@ -1,22 +1,21 @@
-package com.intellij.codeInspection;
+package consulo.language.editor.inspection;
 
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.FunctionUtil;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.language.editor.inspection.CommonProblemDescriptor;
-import consulo.language.editor.inspection.QuickFix;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * User: anna
  * Date: 04-Jan-2006
  */
-public class CommonProblemDescriptorImpl implements CommonProblemDescriptor {
+public class CommonProblemDescriptorBase implements CommonProblemDescriptor {
   private final QuickFix[] myFixes;
   private final String myDescriptionTemplate;
 
-  public CommonProblemDescriptorImpl(final QuickFix[] fixes, @Nonnull final String descriptionTemplate) {
+  public CommonProblemDescriptorBase(final QuickFix[] fixes, @Nonnull final String descriptionTemplate) {
     if (fixes == null) {
       myFixes = null;
     }
@@ -25,7 +24,7 @@ public class CommonProblemDescriptorImpl implements CommonProblemDescriptor {
     }
     else {
       // no copy in most cases
-      myFixes = ArrayUtil.contains(null, fixes) ? ContainerUtil.mapNotNull(fixes, FunctionUtil.<QuickFix>id(), QuickFix.EMPTY_ARRAY) : fixes;
+      myFixes = ArrayUtil.contains(null, fixes) ? ContainerUtil.mapNotNull(fixes, Function.identity(), QuickFix.EMPTY_ARRAY) : fixes;
     }
     myDescriptionTemplate = descriptionTemplate;
   }
@@ -37,7 +36,7 @@ public class CommonProblemDescriptorImpl implements CommonProblemDescriptor {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public QuickFix[] getFixes() {
     return myFixes;
   }

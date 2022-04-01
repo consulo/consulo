@@ -17,6 +17,7 @@
 package consulo.util.io;
 
 import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
@@ -33,8 +34,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class FileUtil {
   private static final Logger LOG = LoggerFactory.getLogger(FileUtil.class);
@@ -50,6 +53,27 @@ public class FileUtil {
       return new byte[THREAD_LOCAL_BUFFER_LENGTH];
     }
   };
+
+
+  public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Predicate<File> processor) {
+    return processFilesRecursively(root, processor, null);
+  }
+
+  public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Predicate<File> processor, @Nullable final Predicate<File> directoryFilter) {
+    final LinkedList<File> queue = new LinkedList<>();
+    queue.add(root);
+    while (!queue.isEmpty()) {
+      final File file = queue.removeFirst();
+      if (!processor.test(file)) return false;
+      if (directoryFilter != null && (!file.isDirectory() || !directoryFilter.test(file))) continue;
+
+      final File[] children = file.listFiles();
+      if (children != null) {
+        ContainerUtil.addAll(queue, children);
+      }
+    }
+    return true;
+  }
 
   public static boolean isAbsolute(@Nonnull String path) {
     return new File(path).isAbsolute();

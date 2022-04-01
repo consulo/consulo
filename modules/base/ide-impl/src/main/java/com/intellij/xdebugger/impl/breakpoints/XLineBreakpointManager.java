@@ -52,7 +52,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFileUrlChangeAdapter;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.util.collection.SmartList;
-import com.intellij.util.containers.BidirectionalMap;
+import consulo.util.collection.BidirectionalMap;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
 import consulo.debugger.XDebuggerManager;

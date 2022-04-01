@@ -30,10 +30,10 @@ import consulo.component.extension.Extensions;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import consulo.ide.impl.psi.codeStyle.SuggestedNameInfo;
+import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import com.intellij.refactoring.rename.NameSuggestionProvider;
-import com.intellij.refactoring.rename.PreferrableNameSuggestionProvider;
+import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
+import consulo.language.editor.refactoring.rename.PreferrableNameSuggestionProvider;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;

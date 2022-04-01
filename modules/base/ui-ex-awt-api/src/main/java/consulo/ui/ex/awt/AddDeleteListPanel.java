@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.ui;
-
-import consulo.ui.ex.awt.*;
+package consulo.ui.ex.awt;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

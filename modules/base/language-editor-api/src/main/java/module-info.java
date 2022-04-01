@@ -30,6 +30,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.rawHighlight;
   exports consulo.language.editor.inspection;
   exports consulo.language.editor.inspection.reference;
+  exports consulo.language.editor.inspection.ui;
   exports consulo.language.editor.inspection.scheme;
   exports consulo.language.editor.inspection.scheme.event;
   exports consulo.language.editor.intention;

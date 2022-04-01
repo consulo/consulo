@@ -39,4 +39,7 @@ public interface SeverityRegistrar extends Comparator<HighlightSeverity> {
   HighlightSeverity getSeverity(@Nonnull String name);
 
   boolean isSeverityValid(@Nonnull String severityName);
+
+  @Nonnull
+  HighlightInfoType getHighlightInfoTypeBySeverity(@Nonnull HighlightSeverity severity);
 }

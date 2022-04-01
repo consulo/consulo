@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
-import com.intellij.openapi.util.Pair;
-import consulo.ui.ex.awt.ComponentWithEmptyText;
-import consulo.ui.ex.awt.StatusText;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +27,7 @@ import java.util.List;
  * This component represents a list of checkboxes.
  */
 public abstract class OptionalChooserComponent<T> implements CheckBoxListListener, ComponentWithEmptyText {
-  private JPanel myContentPane;
+  private JComponent myContentPane;
   private CheckBoxList myList;
   private DefaultListModel myListModel;
   private List<Pair<T, Boolean>> myInitialList;
@@ -37,8 +35,12 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
 
   public OptionalChooserComponent(@Nonnull final List<Pair<T, Boolean>> list) {
     setInitialList(list);
-    myWorkingList = new ArrayList<Pair<T, Boolean>>(myInitialList);
+    myWorkingList = new ArrayList<>(myInitialList);
 
+    myList = new CheckBoxList(this);
+    myList.setBorder(JBUI.Borders.empty());
+    myListModel = (DefaultListModel)myList.getModel();
+    myContentPane = ScrollPaneFactory.createScrollPane(myList, true);
     // fill list
     reset();
   }
@@ -49,19 +51,14 @@ public abstract class OptionalChooserComponent<T> implements CheckBoxListListene
     return myList.getEmptyText();
   }
 
-  public JPanel getContentPane() {
+  public JComponent getContentPane() {
     return myContentPane;
   }
 
+  @Override
   public void checkBoxSelectionChanged(int index, boolean value) {
     final Pair<T, Boolean> pair = myWorkingList.remove(index);
     myWorkingList.add(index, Pair.create(pair.first, value));
-  }
-
-  private void createUIComponents() {
-    myList = new CheckBoxList(this);
-    myList.setBorder(null);
-    myListModel = (DefaultListModel)myList.getModel();
   }
 
   public void reset() {
