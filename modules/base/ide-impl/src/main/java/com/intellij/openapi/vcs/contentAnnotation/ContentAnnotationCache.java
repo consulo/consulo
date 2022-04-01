@@ -20,7 +20,7 @@ import com.intellij.openapi.vcs.VcsKey;
 import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 
 /**
  * Created by IntelliJ IDEA.

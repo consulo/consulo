@@ -15,12 +15,12 @@
  */
 package consulo.find.ui;
 
-import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
 import consulo.disposer.Disposer;
 import consulo.find.FindBundle;
 import consulo.find.FindSettings;
 import consulo.find.FindUsagesOptions;
 import consulo.find.PersistentFindUsagesOptions;
+import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.project.Project;
 import consulo.ui.ex.awt.*;

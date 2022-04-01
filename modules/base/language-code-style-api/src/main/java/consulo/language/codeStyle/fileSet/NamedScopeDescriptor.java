@@ -1,8 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle.fileSet;
 
+import consulo.content.scope.*;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.search.scope.*;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.lang.Pair;
@@ -46,7 +46,7 @@ public class NamedScopeDescriptor implements FileSetDescriptor {
     if (resolved != null) {
       PackageSet fileSet = resolved.second.getValue();
       if (fileSet != null) {
-        return fileSet.contains(psiFile, resolved.first);
+        return fileSet.contains(psiFile.getVirtualFile(), psiFile.getProject(), resolved.first);
       }
     }
     return false;

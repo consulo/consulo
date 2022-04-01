@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.components.impl.stores;
+package consulo.component.store.impl.internal;
 
 import consulo.component.macro.PathMacroManager;
-import consulo.component.store.impl.internal.ApplicationDefaultStoreCache;
-import consulo.component.store.impl.internal.ComponentStoreImpl;
-import consulo.component.store.impl.internal.StateStorageException;
-import consulo.component.store.impl.internal.StateStorageManager;
 import consulo.component.store.impl.internal.storage.XmlElementStorage;
+import jakarta.inject.Provider;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Provider;
 import java.io.IOException;
 
-abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
-  @NonNls
+public abstract class BaseFileConfigurableStoreImpl extends ComponentStoreImpl {
   public static final String ATTRIBUTE_NAME = "name";
 
   private StateStorageManager myStateStorageManager;

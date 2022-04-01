@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.platform.DefaultProjectOpenProcessor;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.moduleImport.ui.ModuleImportProcessor;
 import consulo.platform.base.localize.IdeLocalize;

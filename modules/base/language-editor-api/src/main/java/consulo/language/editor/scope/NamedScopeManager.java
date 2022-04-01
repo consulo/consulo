@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.content.scope.NamedScopesHolder;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import jakarta.inject.Inject;

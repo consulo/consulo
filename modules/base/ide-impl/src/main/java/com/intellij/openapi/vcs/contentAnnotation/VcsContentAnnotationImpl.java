@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.diff.DiffMixin;
 import com.intellij.openapi.vcs.history.VcsRevisionDescription;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

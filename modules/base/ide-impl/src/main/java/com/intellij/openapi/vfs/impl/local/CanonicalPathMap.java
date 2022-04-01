@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.impl.local;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.io.FileSystemUtil;
+import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;

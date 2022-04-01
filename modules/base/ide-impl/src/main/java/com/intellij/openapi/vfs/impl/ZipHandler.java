@@ -18,7 +18,7 @@ package com.intellij.openapi.vfs.impl;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.Pair;
 import consulo.util.io.FileAttributes;
-import com.intellij.openapi.util.io.FileSystemUtil;
+import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.FileAccessorCache;

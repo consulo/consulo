@@ -18,6 +18,7 @@ package com.intellij.history.core;
 import com.intellij.history.core.changes.*;
 import consulo.language.editor.internal.matcher.NameUtil;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ChangeCollectingVisitor extends ChangeVisitor {
   private boolean myDoNotAddAnythingElseFromCurrentChangeSet = false;
   private final LinkedHashSet<ChangeSet> myResult = new LinkedHashSet<ChangeSet>();
 
-  public ChangeCollectingVisitor(String path, String projectId, @javax.annotation.Nullable String pattern) {
+  public ChangeCollectingVisitor(String path, String projectId, @Nullable String pattern) {
     myPath = path;
     myProjectId = projectId;
     myPattern = pattern == null ? null : Pattern.compile(NameUtil.buildRegexp(pattern, 0, true, true), Pattern.CASE_INSENSITIVE);

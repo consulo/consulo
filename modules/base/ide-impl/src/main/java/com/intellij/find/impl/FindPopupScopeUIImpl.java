@@ -3,8 +3,8 @@ package com.intellij.find.impl;
 
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
-import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
-import com.intellij.ide.util.scopeChooser.ScopeDescriptor;
+import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
+import consulo.content.scope.ScopeDescriptor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.language.util.ModuleUtilCore;

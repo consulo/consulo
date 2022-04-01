@@ -26,7 +26,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.content.scope.NamedScopesHolder;
 import com.intellij.util.ArrayUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;

@@ -30,7 +30,7 @@ import consulo.language.psi.PsiUtilCore;
 import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.disposer.Disposer;

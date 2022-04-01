@@ -30,7 +30,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.profile.codeInspection.ui.ScopeOrderComparator;
 import com.intellij.profile.codeInspection.ui.ScopesChooser;
 import com.intellij.profile.codeInspection.ui.inspectionsTree.InspectionConfigTreeNode;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.table.JBTable;
 import com.intellij.util.ArrayUtil;

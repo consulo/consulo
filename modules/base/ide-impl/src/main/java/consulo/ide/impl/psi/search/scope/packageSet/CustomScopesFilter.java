@@ -17,7 +17,7 @@
 package consulo.ide.impl.psi.search.scope.packageSet;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 

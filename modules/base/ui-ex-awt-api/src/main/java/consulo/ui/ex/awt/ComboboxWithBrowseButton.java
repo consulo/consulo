@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
+import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.project.Project;
-import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import consulo.ui.ex.awt.TextComponentAccessor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +44,7 @@ public class ComboboxWithBrowseButton extends ComponentWithBrowseButton<JComboBo
     comp.setPreferredSize(size);
   }
 
-  public void addBrowseFolderListener(Project project, FileChooserDescriptor descriptor) {
+  public void addBrowseFolderListener(ComponentManager project, FileChooserDescriptor descriptor) {
     addBrowseFolderListener(null, null, project, descriptor, TextComponentAccessor.STRING_COMBOBOX_WHOLE_TEXT);
   }
 }

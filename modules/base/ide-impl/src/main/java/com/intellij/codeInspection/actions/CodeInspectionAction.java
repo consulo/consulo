@@ -34,7 +34,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.profile.codeInspection.ui.ErrorsConfigurable;
 import com.intellij.profile.codeInspection.ui.IDEInspectionToolsConfigurable;
-import com.intellij.ui.ComboboxWithBrowseButton;
+import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -23,7 +23,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.projectImport.ProjectOpenProcessor;
 import com.intellij.ui.AppIcon;
 import consulo.annotation.DeprecationInfo;
-import consulo.async.ex.PooledAsyncResult;
+import consulo.application.util.concurrent.PooledAsyncResult;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;

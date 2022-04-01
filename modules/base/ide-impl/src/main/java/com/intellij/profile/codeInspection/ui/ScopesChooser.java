@@ -26,8 +26,8 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 

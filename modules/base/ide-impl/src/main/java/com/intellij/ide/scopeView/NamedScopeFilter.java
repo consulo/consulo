@@ -2,18 +2,16 @@
 package com.intellij.ide.scopeView;
 
 import com.intellij.ide.scratch.ScratchesNamedScope;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
+import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSet;
-import consulo.language.psi.search.scope.PackageSetBase;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,12 +53,7 @@ public final class NamedScopeFilter implements VirtualFileFilter {
     if (set == null) return false;
 
     Project project = holder.getProject();
-    if (set instanceof PackageSetBase) {
-      PackageSetBase base = (PackageSetBase)set;
-      return base.contains(file, project, holder);
-    }
-    PsiFile psiFile = PackageSetBase.getPsiFile(file, project);
-    return psiFile != null && set.contains(psiFile, holder);
+    return set.contains(file, project, holder);
   }
 
   static boolean isVisible(@Nonnull NamedScope scope) {

@@ -21,8 +21,8 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSetBase;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSetBase;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 

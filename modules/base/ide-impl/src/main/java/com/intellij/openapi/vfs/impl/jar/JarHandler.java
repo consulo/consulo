@@ -25,7 +25,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.util.lang.ShutDownTracker;
 import consulo.index.io.data.DataInputOutputUtil;
 import consulo.util.io.FileAttributes;
-import com.intellij.openapi.util.io.FileSystemUtil;
+import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.index.io.data.IOUtil;
 import consulo.virtualFileSystem.VfsBundle;

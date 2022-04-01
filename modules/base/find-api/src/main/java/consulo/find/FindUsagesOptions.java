@@ -19,7 +19,7 @@ package consulo.find;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
-import consulo.language.internal.PredefinedSearchScopeProvider;
+import consulo.content.scope.PredefinedSearchScopeProvider;
 import consulo.language.psi.search.SearchRequestCollector;
 import consulo.project.Project;
 import consulo.project.content.scope.ProjectScopes;

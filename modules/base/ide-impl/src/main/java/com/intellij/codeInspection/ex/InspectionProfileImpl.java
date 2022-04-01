@@ -39,7 +39,7 @@ import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

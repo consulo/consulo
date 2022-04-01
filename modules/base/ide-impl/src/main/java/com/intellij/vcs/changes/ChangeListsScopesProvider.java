@@ -9,7 +9,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import consulo.localize.LocalizeValue;
 import javax.annotation.Nonnull;
 

@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSet;
-import consulo.language.psi.search.scope.PackageSetBase;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
+import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -34,8 +34,7 @@ public class UnionPackageSet extends PackageSetBase {
 
   @Override
   public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
-    return (myFirstSet instanceof PackageSetBase ? ((PackageSetBase)myFirstSet).contains(file, project, holder) : myFirstSet.contains(getPsiFile(file, project), holder)) ||
-           (mySecondSet instanceof PackageSetBase ? ((PackageSetBase)mySecondSet).contains(file, project, holder) : mySecondSet.contains(getPsiFile(file, project), holder));
+    return myFirstSet.contains(file, project, holder) || mySecondSet.contains(file, project, holder);
   }
 
   @Override

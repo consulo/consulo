@@ -27,6 +27,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.impl.macro.BasePathMacroManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.*;
+import consulo.component.store.impl.internal.BaseFileConfigurableStoreImpl;
 import consulo.component.store.impl.internal.*;
 import consulo.component.store.impl.internal.storage.StateStorage;
 import consulo.component.store.impl.internal.storage.StateStorage.SaveSession;

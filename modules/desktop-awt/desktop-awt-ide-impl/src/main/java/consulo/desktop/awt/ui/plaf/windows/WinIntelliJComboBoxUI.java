@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.windows;
 
 import consulo.codeEditor.Editor;
-import consulo.ui.ex.ColoredItem;
+import consulo.application.util.ColoredItem;
 import com.intellij.ui.EditorTextField;
 import com.intellij.ui.PopupMenuListenerAdapter;
 import consulo.ui.ex.awt.JBUIScale;

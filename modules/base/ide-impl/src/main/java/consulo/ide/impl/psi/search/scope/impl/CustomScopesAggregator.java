@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.search.scope.impl;
 
 import consulo.project.Project;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import consulo.logging.Logger;
 import consulo.component.util.PluginExceptionUtil;
 import javax.annotation.Nonnull;

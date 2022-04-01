@@ -19,6 +19,7 @@ package com.intellij.ide.scopeView;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.CopyPasteDelegator;
+import consulo.content.scope.*;
 import consulo.ui.ex.DeleteProvider;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.IdeView;
@@ -36,7 +37,6 @@ import com.intellij.ide.util.DirectoryChooserUtil;
 import consulo.language.editor.impl.util.EditorHelper;
 import consulo.ui.ex.awt.tree.TreeState;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.psi.search.scope.*;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.LangDataKeys;
@@ -168,7 +168,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
       if (file != null) {
         final NamedScope currentScope = getCurrentScope();
         final PackageSet value = currentScope.getValue();
-        if (value != null && value.contains(file, NamedScopesHolder.getHolder(myProject, currentScope.getName(), myDependencyValidationManager))) {
+        if (value != null && value.contains(virtualFile, myProject, NamedScopesHolder.getHolder(myProject, currentScope.getName(), myDependencyValidationManager))) {
           if (!myBuilder.hasFileNode(virtualFile)) return;
           final PackageDependenciesNode node = myBuilder.getFileParentNode(virtualFile);
           final PackageDependenciesNode[] nodes = FileTreeModelBuilder.findNodeForPsiElement(node, file);
@@ -347,8 +347,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
     myBuilder = new FileTreeModelBuilder(myProject, new Marker() {
       @Override
       public boolean isMarked(VirtualFile file) {
-        return packageSet != null &&
-               (packageSet instanceof PackageSetBase ? ((PackageSetBase)packageSet).contains(file, myProject, holder) : packageSet.contains(PackageSetBase.getPsiFile(file, myProject), holder));
+        return packageSet != null && packageSet.contains(file, myProject, holder);
       }
     }, settings);
     myTree.setPaintBusy(true);
@@ -670,7 +669,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
               final NamedScope scope = getCurrentScope();
               final PackageSet packageSet = scope.getValue();
               if (packageSet == null) return; //invalid scope selected
-              if (packageSet.contains(file, NamedScopesHolder.getHolder(myProject, scope.getName(), myDependencyValidationManager))) {
+              if (packageSet.contains(file.getVirtualFile(), file.getProject(), NamedScopesHolder.getHolder(myProject, scope.getName(), myDependencyValidationManager))) {
                 reload(myBuilder.getFileParentNode(file.getVirtualFile()));
               }
             }
@@ -750,7 +749,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
       if (!file.isValid() || !file.getViewProvider().isPhysical()) return;
       final PackageSet packageSet = scope.getValue();
       if (packageSet == null) return; //invalid scope selected
-      if (packageSet.contains(file, NamedScopesHolder.getHolder(myProject, scope.getName(), myDependencyValidationManager))) {
+      if (packageSet.contains(file.getVirtualFile(), file.getProject(), NamedScopesHolder.getHolder(myProject, scope.getName(), myDependencyValidationManager))) {
         reload(myBuilder.addFileNode(file));
       }
       else {
@@ -823,7 +822,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         if (virtualFile != null) {
           final ProjectView projectView = ProjectView.getInstance(myProject);
           final NamedScopesHolder holder = NamedScopesHolder.getHolder(myProject, CURRENT_SCOPE_NAME, myDependencyValidationManager);
-          if (packageSet instanceof PackageSetBase && !((PackageSetBase)packageSet).contains(virtualFile, myProject, holder) || psiFile != null && !packageSet.contains(psiFile, holder)) {
+          if (!packageSet.contains(virtualFile, myProject, holder)) {
             projectView.changeView(ProjectViewPane.ID);
           }
           projectView.select(element, virtualFile, false);

@@ -18,7 +18,7 @@ package com.intellij.packageDependencies;
 import consulo.project.Project;
 import consulo.ide.impl.psi.search.scope.TestsScope;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;

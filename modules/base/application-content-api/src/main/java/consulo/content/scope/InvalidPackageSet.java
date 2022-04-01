@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.psi.search.scope;
+package consulo.content.scope;
 
-import consulo.application.Application;
-import org.jetbrains.annotations.NonNls;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
-public abstract class PackageSetFactory {
-  public abstract PackageSet compile(@NonNls String text) throws ParsingException;
+import javax.annotation.Nonnull;
 
-  public static PackageSetFactory getInstance() {
-    return Application.get().getInstance(PackageSetFactory.class);
+/**
+ * User: anna
+ */
+public class InvalidPackageSet extends AbstractPackageSet {
+
+  public InvalidPackageSet(@Nonnull String text) {
+    super(text);
+  }
+
+  @Override
+  public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
+    return false;
   }
 }

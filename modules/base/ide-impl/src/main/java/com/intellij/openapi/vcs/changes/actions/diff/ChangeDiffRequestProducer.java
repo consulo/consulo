@@ -47,7 +47,7 @@ import com.intellij.openapi.vcs.changes.*;
 import com.intellij.openapi.vcs.merge.MergeData;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

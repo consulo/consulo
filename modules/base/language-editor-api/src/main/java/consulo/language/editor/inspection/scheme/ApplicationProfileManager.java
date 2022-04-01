@@ -16,8 +16,8 @@
 package consulo.language.editor.inspection.scheme;
 
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
 import consulo.disposer.Disposable;
 
 /**

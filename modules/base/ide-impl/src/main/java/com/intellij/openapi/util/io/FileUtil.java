@@ -19,7 +19,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairProcessor;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.io.URLUtil;
@@ -33,6 +33,7 @@ import consulo.util.collection.HashingStrategy;
 import consulo.util.io.FileAttributes;
 import consulo.util.io.FileTooBigException;
 import consulo.util.lang.SystemProperties;
+import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.TestOnly;
@@ -134,7 +135,7 @@ public class FileUtil extends FileUtilRt {
    * {@code ThreeState.NO} if ancestor is not a parent of the file at all.
    */
   @Nonnull
-  public static ThreeState isAncestorThreeState(@Nonnull String ancestor, @Nonnull String file, boolean strict) {
+  public static consulo.util.lang.ThreeState isAncestorThreeState(@Nonnull String ancestor, @Nonnull String file, boolean strict) {
     String ancestorPath = toCanonicalPath(ancestor);
     String filePath = toCanonicalPath(file);
     return startsWith(filePath, ancestorPath, strict, SystemInfo.isFileSystemCaseSensitive, true);

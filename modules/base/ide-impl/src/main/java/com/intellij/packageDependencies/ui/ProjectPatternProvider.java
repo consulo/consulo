@@ -33,7 +33,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyUISettings;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;
-import consulo.language.psi.search.scope.PackageSet;
+import consulo.content.scope.PackageSet;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.language.psi.PsiPackageSupportProviders;

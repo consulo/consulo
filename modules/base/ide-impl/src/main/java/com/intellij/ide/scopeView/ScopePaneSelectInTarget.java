@@ -20,14 +20,16 @@ import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInManager;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.ide.impl.ProjectViewSelectInTarget;
-import consulo.language.psi.search.scope.*;
-import consulo.language.editor.scope.NamedScopeManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
+import com.intellij.util.ArrayUtil;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import com.intellij.util.ArrayUtil;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author cdr
@@ -51,7 +53,7 @@ public class ScopePaneSelectInTarget extends ProjectViewSelectInTarget {
     allScopes = ArrayUtil.mergeArrays(allScopes, NamedScopeManager.getInstance(myProject).getScopes());
     for (NamedScope scope : allScopes) {
       PackageSet packageSet = scope.getValue();
-      if (packageSet != null && packageSet.contains(file, scopesHolder)) return true;
+      if (packageSet != null && packageSet.contains(file.getVirtualFile(), myProject, scopesHolder)) return true;
     }
     return false;
   }
@@ -80,9 +82,7 @@ public class ScopePaneSelectInTarget extends ProjectViewSelectInTarget {
     final VirtualFile virtualFile = context.getVirtualFile();
     if (packageSet != null) {
       final NamedScopesHolder holder = NamedScopesHolder.getHolder(myProject, subId, DependencyValidationManager.getInstance(myProject));
-      if (packageSet instanceof PackageSetBase
-          ? ((PackageSetBase)packageSet).contains(virtualFile, myProject, holder)
-          : packageSet.contains(PackageSetBase.getPsiFile(virtualFile, myProject), holder)) {
+      if (packageSet.contains(virtualFile, myProject, holder)) {
         return true;
       }
     }

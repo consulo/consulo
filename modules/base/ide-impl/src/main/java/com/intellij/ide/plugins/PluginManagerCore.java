@@ -187,7 +187,7 @@ public class PluginManagerCore {
   }
 
   public static boolean isIncompatible(final PluginDescriptor descriptor) {
-    return !PluginValidator.VALIDATOR.validateVersion(descriptor);
+    return PluginValidator.isIncompatible(descriptor);
   }
 
   public static void markAsDeletedPlugin(PluginDescriptor descriptor) {

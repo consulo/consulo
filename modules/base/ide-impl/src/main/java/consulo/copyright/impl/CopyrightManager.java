@@ -22,8 +22,8 @@ import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.PackageSet;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.PackageSet;
 import consulo.copyright.impl.config.CopyrightFileConfig;
 import consulo.copyright.impl.config.CopyrightFileConfigManager;
 import consulo.logging.Logger;
@@ -172,7 +172,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
       if (namedScope != null) {
         final PackageSet packageSet = namedScope.getValue();
         if (packageSet != null) {
-          if (packageSet.contains(file, validationManager)) {
+          if (packageSet.contains(file.getVirtualFile(), file.getProject(), validationManager)) {
             final CopyrightProfile profile = myCopyrights.get(myModule2Copyrights.get(scopeName));
             if (profile != null) {
               return profile;

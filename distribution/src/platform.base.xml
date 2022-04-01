@@ -85,6 +85,11 @@
         <include>consulo:consulo-color-scheme-impl</include>
         <include>consulo:consulo-file-template-api</include>
         <include>consulo:consulo-file-template-impl</include>
+        <include>consulo:consulo-find-api</include>
+        <include>consulo:consulo-virtual-file-status-api</include>
+        <include>consulo:consulo-virtual-file-status-impl</include>
+        <include>consulo:consulo-usage-api</include>
+        <include>consulo:consulo-language-editor-ui-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

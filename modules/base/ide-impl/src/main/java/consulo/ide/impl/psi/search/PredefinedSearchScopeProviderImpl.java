@@ -24,7 +24,7 @@ import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.util.Pair;
-import consulo.language.internal.PredefinedSearchScopeProvider;
+import consulo.content.scope.PredefinedSearchScopeProvider;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewManager;

@@ -1,10 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ide.util.scopeChooser;
+package consulo.content.scope;
 
-import consulo.ui.ex.ColoredItem;
-import com.intellij.openapi.util.Comparing;
-import consulo.content.scope.SearchScope;
+import consulo.application.util.ColoredItem;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nullable;
 import java.awt.*;

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.todo;
 
-import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
+import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

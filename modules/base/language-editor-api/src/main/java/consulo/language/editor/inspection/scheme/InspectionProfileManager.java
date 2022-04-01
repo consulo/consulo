@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.util.DisposerUtil;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import consulo.logging.Logger;
 import consulo.util.collection.Lists;
 import org.jdom.JDOMException;

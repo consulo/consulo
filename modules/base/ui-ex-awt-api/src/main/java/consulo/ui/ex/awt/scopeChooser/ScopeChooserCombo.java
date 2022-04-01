@@ -1,28 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ide.util.scopeChooser;
+package consulo.ui.ex.awt.scopeChooser;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.ui.ComboboxWithBrowseButton;
-import com.intellij.util.BitUtil;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.function.Processor;
 import consulo.component.util.WeighedItem;
-import consulo.content.scope.SearchScope;
+import consulo.content.scope.*;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
-import consulo.ide.impl.psi.search.SearchScopeProvider;
-import consulo.language.editor.scope.NamedScopeManager;
-import consulo.language.internal.PredefinedSearchScopeProvider;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.ex.awt.JBUIScale;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.Promise;
+import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.Condition;
 import org.intellij.lang.annotations.MagicConstant;
 
@@ -77,8 +71,10 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
       rebuildModelAndSelectScopeOnSuccess(selectedScope);
     };
     myScopeFilter = scopeFilter;
-    NamedScopeManager.getInstance(project).addScopeListener(scopeListener, this);
-    DependencyValidationManager.getInstance(project).addScopeListener(scopeListener, this);
+    NamedScopesHolder[] holders = NamedScopesHolder.getAllNamedScopeHolders(project);
+    for (NamedScopesHolder holder : holders) {
+      holder.addScopeListener(scopeListener, this);
+    }
     addActionListener(this::handleScopeChooserAction);
 
     ComboBox<ScopeDescriptor> combo = getComboBox();
@@ -124,18 +120,16 @@ public class ScopeChooserCombo extends ComboboxWithBrowseButton implements Dispo
     }
   }
 
-  /**
-   * @noinspection unused
-   */
   private void handleScopeChooserAction(ActionEvent ignore) {
-    String selection = getSelectedScopeName();
-    if (myBrowseListener != null) myBrowseListener.onBeforeBrowseStarted();
-    EditScopesDialog dlg = EditScopesDialog.showDialog(myProject, selection);
-    if (dlg.isOK()) {
-      NamedScope namedScope = dlg.getSelectedScope();
-      rebuildModelAndSelectScopeOnSuccess(namedScope == null ? null : namedScope.getName());
-    }
-    if (myBrowseListener != null) myBrowseListener.onAfterBrowseFinished();
+    // TODO implement opening settings
+    //String selection = getSelectedScopeName();
+    //if (myBrowseListener != null) myBrowseListener.onBeforeBrowseStarted();
+    //EditScopesDialog dlg = EditScopesDialog.showDialog(myProject, selection);
+    //if (dlg.isOK()) {
+    //  NamedScope namedScope = dlg.getSelectedScope();
+    //  rebuildModelAndSelectScopeOnSuccess(namedScope == null ? null : namedScope.getName());
+    //}
+    //if (myBrowseListener != null) myBrowseListener.onAfterBrowseFinished();
   }
 
   public static boolean processScopes(@Nonnull Project project,

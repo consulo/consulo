@@ -18,9 +18,12 @@ package com.intellij.packageDependencies;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.search.scope.ComplementPackageSet;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.PackageSet;
+import consulo.content.scope.ComplementPackageSet;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.PackageSet;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nullable;
 
 public class DependencyRule {
@@ -41,9 +44,9 @@ public class DependencyRule {
     if (fromSet == null || toSet == null) return false;
     DependencyValidationManager holder = DependencyValidationManager.getInstance(from.getProject());
     return (myDenyRule
-            ? fromSet.contains(from, holder)
-            : new ComplementPackageSet(fromSet).contains(from, holder))
-           && toSet.contains(to, holder);
+            ? fromSet.contains(from.getVirtualFile(), from.getProject(), holder)
+            : new ComplementPackageSet(fromSet).contains(from.getVirtualFile(), from.getProject(), holder))
+           && toSet.contains(to.getVirtualFile(), to.getProject(), holder);
   }
 
   public boolean isApplicable(PsiFile file){
@@ -51,10 +54,12 @@ public class DependencyRule {
     final PackageSet fromSet = myFromScope.getValue();
     if (fromSet == null) return false;
 
-    DependencyValidationManager holder = DependencyValidationManager.getInstance(file.getProject());
+    Project project = file.getProject();
+    VirtualFile virtualFile = file.getVirtualFile();
+    DependencyValidationManager holder = DependencyValidationManager.getInstance(project);
     return (myDenyRule
-            ? fromSet.contains(file, holder)
-            : new ComplementPackageSet(fromSet).contains(file, holder));
+            ? fromSet.contains(virtualFile, project, holder)
+            : new ComplementPackageSet(fromSet).contains(virtualFile, project, holder));
   }
 
   public String getDisplayText() {

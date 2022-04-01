@@ -24,7 +24,8 @@ import consulo.language.psi.PsiErrorElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
+
 import javax.annotation.Nonnull;
 
 /**

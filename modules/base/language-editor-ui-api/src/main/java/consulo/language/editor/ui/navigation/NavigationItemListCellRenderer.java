@@ -73,7 +73,7 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
     return this;
   }
 
-  static PsiElement getPsiElement(Object o) {
+  public static PsiElement getPsiElement(Object o) {
     return o instanceof PsiElement ? (PsiElement)o : o instanceof PsiElementNavigationItem ? ((PsiElementNavigationItem)o).getTargetElement() : null;
   }
 
@@ -97,7 +97,10 @@ public class NavigationItemListCellRenderer extends OpaquePanel implements ListC
       else if (value instanceof NavigationItem) {
         NavigationItem item = (NavigationItem)value;
         ItemPresentation presentation = item.getPresentation();
-        assert presentation != null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation(): element " + item.toString() + ", class " + item.getClass().getName();
+        assert presentation != null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation(): element " +
+                                      item.toString() +
+                                      ", class " +
+                                      item.getClass().getName();
         String name = presentation.getPresentableText();
         assert name != null : "PSI elements displayed in choose by name lists must return a non-null value from getPresentation().getPresentableName: element " +
                               item.toString() +

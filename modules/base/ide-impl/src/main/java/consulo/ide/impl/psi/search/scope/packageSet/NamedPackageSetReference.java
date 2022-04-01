@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSet;
-import consulo.language.psi.search.scope.PackageSetBase;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
+import consulo.content.scope.PackageSetBase;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
@@ -36,7 +36,7 @@ public class NamedPackageSetReference extends PackageSetBase {
     if (scope != null) {
       final PackageSet packageSet = scope.getValue();
       if (packageSet != null) {
-        return packageSet instanceof PackageSetBase ? ((PackageSetBase)packageSet).contains(file, project, holder) : packageSet.contains(getPsiFile(file, project), holder);
+        return packageSet.contains(file, project, holder);
       }
     }
     return false;

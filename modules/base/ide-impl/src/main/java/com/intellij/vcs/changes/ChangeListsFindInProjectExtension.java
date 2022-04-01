@@ -25,7 +25,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.search.SearchScopeProvider;
+import consulo.content.scope.SearchScopeProvider;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 

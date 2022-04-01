@@ -22,8 +22,8 @@ package consulo.ide.impl.psi.search.scope.packageSet;
 
 import consulo.language.lexer.Lexer;
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.search.scope.PackageSet;
-import consulo.language.psi.search.scope.ParsingException;
+import consulo.content.scope.PackageSet;
+import consulo.content.scope.ParsingException;
 
 import javax.annotation.Nullable;
 

@@ -20,8 +20,9 @@ import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
-import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.util.lang.ThreeState;
+
 import javax.annotation.Nonnull;
 
 import java.util.*;

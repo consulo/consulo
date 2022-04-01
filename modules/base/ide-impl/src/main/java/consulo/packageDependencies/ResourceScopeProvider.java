@@ -17,7 +17,7 @@ package consulo.packageDependencies;
 
 import consulo.project.Project;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import consulo.psi.search.scope.ResourcesScope;
 
 import javax.annotation.Nonnull;

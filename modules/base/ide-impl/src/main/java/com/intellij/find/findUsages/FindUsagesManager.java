@@ -19,33 +19,19 @@ package com.intellij.find.findUsages;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
-import consulo.find.*;
-import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
-import consulo.find.ui.AbstractFindUsagesDialog;
-import consulo.language.internal.LanguageFindUsages;
-import consulo.ui.ex.action.IdeActions;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorLocation;
-import consulo.fileEditor.TextEditor;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.psi.search.PsiSearchHelper;
-import consulo.language.psi.search.SearchRequestCollector;
-import consulo.language.psi.search.SearchSession;
 import com.intellij.ui.LightweightHint;
-import consulo.usage.*;
-import consulo.usage.UsageViewUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -53,23 +39,35 @@ import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.Editor;
+import consulo.component.ProcessCanceledException;
 import consulo.component.extension.Extensions;
 import consulo.content.scope.SearchScope;
 import consulo.document.Document;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorLocation;
+import consulo.fileEditor.TextEditor;
+import consulo.find.*;
+import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.find.ui.AbstractFindUsagesDialog;
 import consulo.ide.impl.language.psi.IdePsiManagerImpl;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.search.PsiSearchHelper;
+import consulo.language.psi.search.SearchRequestCollector;
+import consulo.language.psi.search.SearchSession;
 import consulo.logging.Logger;
 import consulo.module.content.ProjectFileIndex;
 import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.content.Content;
+import consulo.usage.*;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
@@ -160,7 +158,7 @@ public class FindUsagesManager {
 
     final FindUsagesHandler handler = getFindUsagesHandler(primaryElements[0], false);
     if (handler == null) return false;
-    findUsagesInEditor(primaryElements, secondaryElements, handler, psiFile, direction, myLastSearchInFileData.myOptions, textEditor);
+    findUsagesInEditor(primaryElements, secondaryElements, handler, psiFile, direction, myLastSearchInFileData.getOptions(), textEditor);
     return true;
   }
 
@@ -242,7 +240,7 @@ public class FindUsagesManager {
     startFindUsages(findUsagesOptions, handler, scopeFile, editor);
   }
 
-  void startFindUsages(@Nonnull PsiElement psiElement, @Nonnull FindUsagesOptions findUsagesOptions, PsiFile scopeFile, FileEditor editor) {
+  public void startFindUsages(@Nonnull PsiElement psiElement, @Nonnull FindUsagesOptions findUsagesOptions, PsiFile scopeFile, FileEditor editor) {
     FindUsagesHandler handler = getFindUsagesHandler(psiElement, false);
     if (handler == null) return;
     startFindUsages(findUsagesOptions, handler, scopeFile, editor);

@@ -9,7 +9,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.dumb.IndexNotReadyException;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

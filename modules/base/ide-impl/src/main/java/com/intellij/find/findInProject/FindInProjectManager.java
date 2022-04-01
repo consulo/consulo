@@ -2,24 +2,22 @@
 
 package com.intellij.find.findInProject;
 
-import consulo.find.FindManager;
-import consulo.find.FindModel;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
-import consulo.usage.UsageViewManager;
-import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.application.util.function.Processor;
+import consulo.dataContext.DataContext;
+import consulo.find.FindManager;
+import consulo.find.FindModel;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.usage.*;
-import consulo.application.util.function.Processor;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 
 @Singleton
 public class FindInProjectManager {
@@ -100,7 +98,7 @@ public class FindInProjectManager {
 
       try {
         Processor<UsageInfo> consumer = info -> {
-          Usage usage = UsageInfo2UsageAdapter.CONVERTER.fun(info);
+          Usage usage = UsageInfo2UsageAdapter.CONVERTER.apply(info);
           usage.getPresentation().getIcon(); // cache icon
           return processor.process(usage);
         };

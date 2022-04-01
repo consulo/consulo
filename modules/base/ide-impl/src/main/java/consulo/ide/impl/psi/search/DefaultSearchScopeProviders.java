@@ -9,13 +9,14 @@ import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.content.scope.SearchScope;
 import consulo.language.editor.scope.GlobalSearchScopesCore;
+import consulo.content.scope.SearchScopeProvider;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.ui.ex.ColoredItem;
+import consulo.application.util.ColoredItem;
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
 import com.intellij.ui.FileColorManager;
 import com.intellij.util.TreeItem;
 

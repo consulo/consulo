@@ -12,4 +12,5 @@ module consulo.language.editor.ui.api {
   requires transitive consulo.ui.ex.awt.api;
 
   exports consulo.language.editor.ui;
+  exports consulo.language.editor.ui.navigation;
 }

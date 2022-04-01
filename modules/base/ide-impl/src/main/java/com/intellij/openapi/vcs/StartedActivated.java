@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import consulo.disposer.Disposer;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.ThrowableRunnable;
 
 import java.util.ArrayList;

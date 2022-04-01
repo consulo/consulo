@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.async.ex;
+package consulo.application.util.concurrent;
 
-import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

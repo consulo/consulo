@@ -16,40 +16,41 @@
 
 package com.intellij.ide.scopeView;
 
-import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ShowModulesAction;
-import consulo.language.psi.search.scope.*;
+import com.intellij.packageDependencies.DependencyValidationManager;
+import com.intellij.packageDependencies.ui.PackageDependenciesNode;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AllIcons;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
+import consulo.disposer.Disposer;
 import consulo.language.editor.scope.NamedScopeManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
-import consulo.project.Project;
-import consulo.util.concurrent.ActionCallback;
-import consulo.util.concurrent.AsyncResult;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packageDependencies.DependencyValidationManager;
-import com.intellij.packageDependencies.ui.PackageDependenciesNode;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.psi.PsiManager;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.concurrent.EdtExecutorService;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.util.collection.ArrayUtil;
+import consulo.util.concurrent.ActionCallback;
+import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -247,8 +248,7 @@ public class ScopeViewPane extends AbstractProjectViewPane {
                              final String name,
                              final NamedScopesHolder holder,
                              boolean requestFocus) {
-    if ((packageSet instanceof PackageSetBase && ((PackageSetBase)packageSet).contains(psiFileSystemItem.getVirtualFile(), myProject, holder)) ||
-        (psiFileSystemItem instanceof PsiFile && packageSet.contains((PsiFile)psiFileSystemItem, holder))) {
+    if (packageSet.contains(psiFileSystemItem.getVirtualFile(), myProject, holder)) {
       if (!name.equals(getSubId())) {
         myProjectView.changeView(getId(), name);
       }

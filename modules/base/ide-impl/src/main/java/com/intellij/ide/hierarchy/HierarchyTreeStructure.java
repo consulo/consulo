@@ -28,10 +28,10 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.psi.search.GlobalSearchScopes;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.content.scope.SearchScope;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import consulo.language.editor.scope.NamedScopeManager;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSet;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -183,7 +183,7 @@ public abstract class HierarchyTreeStructure extends AbstractTreeStructure {
         return false;
       }
       final PsiFile psiFile = srcElement.getContainingFile();
-      if (psiFile != null && !namedScopePattern.contains(psiFile, NamedScopesHolder.getHolder(myProject, scopeType, NamedScopeManager.getInstance(myProject)))) {
+      if (psiFile != null && !namedScopePattern.contains(psiFile.getVirtualFile(), psiFile.getProject(), NamedScopesHolder.getHolder(myProject, scopeType, NamedScopeManager.getInstance(myProject)))) {
         return false;
       }
     }

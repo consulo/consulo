@@ -18,7 +18,7 @@ package com.intellij.util.io;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;

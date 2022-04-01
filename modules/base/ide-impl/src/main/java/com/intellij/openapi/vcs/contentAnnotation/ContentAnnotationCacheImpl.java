@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.annotate.FileAnnotation;
 import com.intellij.openapi.vcs.history.HistoryCacheWithRevisionKey;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import consulo.util.collection.SLRUMap;
 import jakarta.inject.Singleton;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.search.scope.packageSet;
+package consulo.content.scope;
 
-import consulo.content.scope.PackageSetBase;
+import consulo.application.Application;
 
-/**
- * User: anna
- * Date: Jul 26, 2010
- */
-public abstract class PatternBasedPackageSet extends PackageSetBase {
-  public abstract String getPattern();
-  public abstract String getModulePattern();
+public abstract class PackageSetFactory {
+  public abstract PackageSet compile(String text) throws ParsingException;
 
-  public abstract boolean isOn(String oldQName);
+  public static PackageSetFactory getInstance() {
+    return Application.get().getInstance(PackageSetFactory.class);
+  }
 }

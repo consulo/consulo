@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.psi.search.scope;
+package consulo.content.scope;
 
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,9 +27,8 @@ public class ComplementPackageSet extends PackageSetBase {
   }
 
   @Override
-  public boolean contains(VirtualFile file, Project project, NamedScopesHolder holder) {
-    return myComplementarySet instanceof PackageSetBase ? !((PackageSetBase)myComplementarySet).contains(file, project, holder)
-                                                        : myComplementarySet.contains(getPsiFile(file, project), holder);
+  public boolean contains(VirtualFile file, @Nonnull Project project, NamedScopesHolder holder) {
+    return !myComplementarySet.contains(file, project, holder);
   }
 
   @Override
@@ -41,7 +40,7 @@ public class ComplementPackageSet extends PackageSetBase {
   @Override
   @Nonnull
   public String getText() {
-    StringBuffer buf = new StringBuffer();
+    StringBuilder buf = new StringBuilder();
     boolean needParen = myComplementarySet.getNodePriority() > getNodePriority();
     buf.append('!');
     if (needParen) buf.append('(');

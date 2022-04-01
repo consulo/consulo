@@ -22,7 +22,7 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.util.lang.Trinity;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.ComboboxSpeedSearch;
-import com.intellij.ui.ComboboxWithBrowseButton;
+import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

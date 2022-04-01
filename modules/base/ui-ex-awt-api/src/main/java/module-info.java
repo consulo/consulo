@@ -7,6 +7,7 @@ module consulo.ui.ex.awt.api {
 
   requires transitive consulo.application.api;
   requires transitive consulo.application.ui.api;
+  requires transitive consulo.application.content.api;
   requires transitive consulo.ui.ex.api;
   requires transitive consulo.color.scheme.api;
   requires transitive consulo.base.localize.library;
@@ -29,6 +30,7 @@ module consulo.ui.ex.awt.api {
   exports consulo.ui.ex.awt.tree.table;
   exports consulo.ui.ex.awt.update;
   exports consulo.ui.ex.awt.util;
+  exports consulo.ui.ex.awt.scopeChooser;
   exports consulo.ui.ex.awt.speedSearch;
   exports consulo.ui.ex.awt.valueEditor;
 

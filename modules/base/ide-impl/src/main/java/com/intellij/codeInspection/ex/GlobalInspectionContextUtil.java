@@ -24,7 +24,7 @@ import consulo.language.inject.InjectedLanguageManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 
@@ -48,7 +48,7 @@ public class GlobalInspectionContextUtil {
     if (tools != null && file != null) {
       for (ScopeToolState state : tools.getTools()) {
         final NamedScope namedScope = state.getScope(file.getProject());
-        if (namedScope == null || namedScope.getValue().contains(file, profileManager.getScopesManager())) {
+        if (namedScope == null || namedScope.getValue().contains(file.getVirtualFile(), file.getProject(), profileManager.getScopesManager())) {
           if (state.isEnabled()) {
             InspectionToolWrapper toolWrapper = state.getTool();
             if (toolWrapper.getTool() == tool) return true;

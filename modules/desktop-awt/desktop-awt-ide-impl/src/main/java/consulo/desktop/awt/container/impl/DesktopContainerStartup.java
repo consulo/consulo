@@ -29,7 +29,7 @@ import consulo.container.boot.ContainerStartup;
 import consulo.container.util.StatCollector;
 import consulo.desktop.container.impl.DesktopContainerPathManager;
 import consulo.logging.Logger;
-import consulo.vfs.impl.mediator.FileSystemMediatorOverride;
+import consulo.virtualFileSystem.impl.internal.mediator.FileSystemMediatorOverride;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;

@@ -18,8 +18,8 @@ package com.intellij.vcs.changes;
 import consulo.project.Project;
 import consulo.ide.impl.psi.search.DefaultSearchScopeProviders;
 import consulo.content.scope.SearchScope;
-import consulo.ide.impl.psi.search.SearchScopeProvider;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.SearchScopeProvider;
+import consulo.content.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

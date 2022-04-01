@@ -4,7 +4,7 @@ package consulo.ui.ex.awt.internal.laf;
 import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.logging.Logger;
-import consulo.ui.ex.ColoredItem;
+import consulo.application.util.ColoredItem;
 import consulo.ui.ex.awt.BackgroundSupplier;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandlerBase;
 import consulo.ui.ex.awt.UIUtil;

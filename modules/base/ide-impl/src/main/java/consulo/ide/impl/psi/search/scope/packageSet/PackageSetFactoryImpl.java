@@ -21,10 +21,10 @@ import consulo.language.lexer.Lexer;
 import consulo.component.extension.Extensions;
 import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopeTokenTypes;
 import consulo.ide.impl.psi.search.scope.packageSet.lexer.ScopesLexer;
-import consulo.language.psi.search.scope.ComplementPackageSet;
-import consulo.language.psi.search.scope.PackageSet;
-import consulo.language.psi.search.scope.PackageSetFactory;
-import consulo.language.psi.search.scope.ParsingException;
+import consulo.content.scope.ComplementPackageSet;
+import consulo.content.scope.PackageSet;
+import consulo.content.scope.PackageSetFactory;
+import consulo.content.scope.ParsingException;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 

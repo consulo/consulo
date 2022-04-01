@@ -16,7 +16,6 @@
 
 package consulo.find;
 
-import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

@@ -17,7 +17,7 @@ package com.intellij.openapi.vfs.impl;
 
 import com.intellij.openapi.util.Pair;
 import consulo.util.io.FileAttributes;
-import com.intellij.openapi.util.io.FileSystemUtil;
+import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ArrayUtil;
 import consulo.util.lang.ByteArrayCharSequence;

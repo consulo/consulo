@@ -17,7 +17,7 @@
 package com.intellij.analysis;
 
 import consulo.find.FindSettings;
-import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
+import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.module.Module;

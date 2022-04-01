@@ -67,7 +67,7 @@ public class TodoAttributes implements Cloneable {
     }
   }
 
-  TodoAttributes(@Nonnull Image icon, @Nonnull TextAttributes textAttributes) {
+  public TodoAttributes(@Nonnull Image icon, @Nonnull TextAttributes textAttributes) {
     myIcon = icon;
     myTextAttributes = textAttributes;
   }

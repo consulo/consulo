@@ -43,7 +43,7 @@ import consulo.application.util.function.Computable;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -227,7 +227,7 @@ public class GlobalInspectionContextBase extends UserDataHolderBase implements G
     if (tools != null && file != null) {
       for (ScopeToolState state : tools.getTools()) {
         final NamedScope namedScope = state.getScope(file.getProject());
-        if (namedScope == null || namedScope.getValue().contains(file, getCurrentProfile().getProfileManager().getScopesManager())) {
+        if (namedScope == null || namedScope.getValue().contains(file.getVirtualFile(), file.getProject(), getCurrentProfile().getProfileManager().getScopesManager())) {
           return state.isEnabled() && state.getTool().getTool() == tool;
         }
       }

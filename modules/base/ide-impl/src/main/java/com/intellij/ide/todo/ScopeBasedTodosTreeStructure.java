@@ -21,7 +21,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.ide.todo.nodes.ToDoRootNode;
-import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
+import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import com.intellij.ide.util.treeView.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

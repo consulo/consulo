@@ -18,8 +18,8 @@ package com.intellij.packageDependencies;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSet;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

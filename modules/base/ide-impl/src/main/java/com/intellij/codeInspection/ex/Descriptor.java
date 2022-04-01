@@ -24,7 +24,7 @@ import consulo.language.editor.inspection.scheme.ScopeToolState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.inspection.scheme;
 
-import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.content.scope.NamedScopesHolder;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

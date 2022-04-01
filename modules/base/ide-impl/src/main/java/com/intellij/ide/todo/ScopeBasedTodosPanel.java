@@ -21,7 +21,7 @@
 package com.intellij.ide.todo;
 
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.ide.util.scopeChooser.ScopeChooserCombo;
+import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.content.Content;

@@ -86,6 +86,7 @@ public class Java9ModuleInitializer {
 
     containerImpl.addExports("consulo.container.impl", applicationImpl);
     containerImpl.addExports("consulo.container.impl", componentImpl);
+    containerImpl.addExports("consulo.container.impl", ideImpl);
 
     containerImpl.addExports("consulo.container.impl.classloader", ideImpl);
     containerImpl.addExports("consulo.container.impl.classloader", applicationImpl);

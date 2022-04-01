@@ -71,6 +71,7 @@ open module consulo.ide.impl {
   requires transitive consulo.file.template.impl;
   requires transitive consulo.usage.api;
   requires transitive consulo.virtual.file.status.api;
+  requires transitive consulo.virtual.file.status.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -501,7 +502,6 @@ open module consulo.ide.impl {
   exports com.intellij.lang.parameterInfo;
   exports com.intellij.lang.pratt;
   exports com.intellij.lang.refactoring;
-  exports com.intellij.model.search;
   exports com.intellij.model.search.impl;
   exports com.intellij.moduleDependencies;
   exports com.intellij.navigation;
@@ -743,7 +743,6 @@ open module consulo.ide.impl {
   exports com.intellij.pom.core.impl;
   exports com.intellij.pom.references;
   exports com.intellij.pom.wrappers;
-  exports com.intellij.problems;
   exports com.intellij.profile;
   exports com.intellij.profile.codeInspection;
   exports com.intellij.profile.codeInspection.ui;
@@ -973,7 +972,6 @@ open module consulo.ide.impl {
   exports consulo.actionSystem.impl;
   exports consulo.application.impl;
   exports consulo.application.options;
-  exports consulo.async.ex;
   exports consulo.builtInServer;
   exports consulo.builtInServer.binary;
   exports consulo.builtInServer.custom;
@@ -1148,7 +1146,6 @@ open module consulo.ide.impl {
   exports consulo.util.ui;
   exports consulo.vcs.changes.ui;
   exports consulo.vfs.impl.archive;
-  exports consulo.vfs.impl.mediator;
   exports consulo.vfs.impl.zip;
   exports consulo.vfs.newvfs;
   exports consulo.vfs.newvfs.persistent;

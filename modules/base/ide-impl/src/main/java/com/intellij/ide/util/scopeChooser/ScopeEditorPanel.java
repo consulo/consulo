@@ -19,10 +19,10 @@ import consulo.application.AllIcons;
 import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.ApplicationManager;
+import consulo.content.scope.*;
 import consulo.execution.ui.awt.RawCommandLineEditor;
 import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
 import consulo.ide.impl.psi.search.scope.packageSet.UnionPackageSet;
-import consulo.language.psi.search.scope.*;
 import consulo.ui.ex.DarculaColors;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;
@@ -121,8 +121,7 @@ public class ScopeEditorPanel {
     myTreeMarker = new Marker() {
       @Override
       public boolean isMarked(VirtualFile file) {
-        return myCurrentScope != null && (myCurrentScope instanceof PackageSetBase ? ((PackageSetBase)myCurrentScope).contains(file, project, myHolder)
-                                                                                   : myCurrentScope.contains(PackageSetBase.getPsiFile(file, myHolder), myHolder));
+        return myCurrentScope != null && myCurrentScope.contains(file, project, myHolder);
       }
     };
 

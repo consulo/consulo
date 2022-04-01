@@ -53,7 +53,7 @@ public class FindInProjectExecutor {
                          @Nonnull Set<VirtualFile> filesToScanInitially,
                          @Nonnull Processor<UsageInfoAdapter> onResult) {
     FindInProjectUtil.findUsages(findModel, project, presentation, filesToScanInitially, info -> {
-      UsageInfoAdapter usage = (UsageInfoAdapter)UsageInfo2UsageAdapter.CONVERTER.fun(info);
+      UsageInfoAdapter usage = (UsageInfoAdapter)UsageInfo2UsageAdapter.CONVERTER.apply(info);
 
       usage.getPresentation().getIcon(); // cache icon
 

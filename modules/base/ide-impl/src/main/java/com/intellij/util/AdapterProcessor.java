@@ -19,18 +19,20 @@
  */
 package com.intellij.util;
 
-import consulo.application.util.function.Processor;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-public class AdapterProcessor<T, S> implements Processor<T> {
-  private final Processor<S> myAdaptee;
+public class AdapterProcessor<T, S> implements Predicate<T> {
+  private final Predicate<S> myAdaptee;
   private final Function<T, S> myConversion;
 
-  public AdapterProcessor(Processor<S> adaptee, Function<T, S> conversion) {
+  public AdapterProcessor(Predicate<S> adaptee, Function<T, S> conversion) {
     myAdaptee = adaptee;
     myConversion = conversion;
   }
 
-  public boolean process(T t) {
-    return myAdaptee.process(myConversion.fun(t));
+  @Override
+  public boolean test(T t) {
+    return myAdaptee.test(myConversion.apply(t));
   }
 }

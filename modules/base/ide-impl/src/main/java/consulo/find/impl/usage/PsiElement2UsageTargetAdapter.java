@@ -280,4 +280,9 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
   public Image getIcon() {
     return myIcon;
   }
+
+  @Nonnull
+  public FindUsagesOptions getOptions() {
+    return myOptions;
+  }
 }

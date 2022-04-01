@@ -24,7 +24,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.impl.include.FileIncludeManager;
-import com.intellij.ui.ComboboxWithBrowseButton;
+import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

@@ -23,8 +23,8 @@ import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.packageDependencies.DependencyValidationManager;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.PackageSet;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.PackageSet;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.annotation.RequiredUIAccess;
 

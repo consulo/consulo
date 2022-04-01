@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.util.lang.function.Condition;
-import com.intellij.ui.ComboboxWithBrowseButton;
+import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import com.intellij.ui.MutableCollectionComboBoxModel;
 import com.intellij.ui.SimpleListCellRenderer;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

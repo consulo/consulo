@@ -13,20 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.psi.search.scope;
+package consulo.content.scope;
 
-import consulo.language.psi.PsiFile;
-
-import javax.annotation.Nonnull;
-
-public interface PackageSet {
-  boolean contains(@Nonnull PsiFile file, NamedScopesHolder holder);
-
-  @Nonnull
-  PackageSet createCopy();
-
-  @Nonnull
-  String getText();
-
-  int getNodePriority();
+public class ParsingException extends Exception {
+  public ParsingException(String message) {
+    super(message);
+  }
 }

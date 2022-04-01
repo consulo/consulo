@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
-import consulo.language.psi.search.scope.AbstractPackageSet;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.content.scope.AbstractPackageSet;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;

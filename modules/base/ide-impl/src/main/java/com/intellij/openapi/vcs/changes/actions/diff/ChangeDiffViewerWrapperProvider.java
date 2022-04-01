@@ -23,7 +23,7 @@ import consulo.util.dataholder.UserDataHolder;
 import com.intellij.diff.chains.DiffRequestProducerException;
 import com.intellij.diff.impl.DiffViewerWrapper;
 import com.intellij.openapi.vcs.changes.Change;
-import com.intellij.util.ThreeState;
+import consulo.util.lang.ThreeState;
 import javax.annotation.Nonnull;
 
 public interface ChangeDiffViewerWrapperProvider {

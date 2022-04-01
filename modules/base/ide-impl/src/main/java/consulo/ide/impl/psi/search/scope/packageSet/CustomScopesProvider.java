@@ -22,7 +22,7 @@ package consulo.ide.impl.psi.search.scope.packageSet;
 
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.language.psi.search.scope.NamedScope;
+import consulo.content.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 

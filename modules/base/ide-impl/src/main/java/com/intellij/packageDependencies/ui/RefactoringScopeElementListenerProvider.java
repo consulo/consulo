@@ -15,16 +15,15 @@
  */
 package com.intellij.packageDependencies.ui;
 
+import consulo.content.scope.*;
 import consulo.ide.impl.psi.search.scope.packageSet.IntersectionPackageSet;
 import consulo.ide.impl.psi.search.scope.packageSet.PatternBasedPackageSet;
 import consulo.ide.impl.psi.search.scope.packageSet.UnionPackageSet;
-import consulo.language.psi.search.scope.*;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiQualifiedNamedElement;
-import consulo.ide.impl.psi.search.scope.packageSet.*;
 import com.intellij.refactoring.listeners.RefactoringElementAdapter;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.listeners.RefactoringElementListenerComposite;
@@ -49,7 +48,7 @@ public class RefactoringScopeElementListenerProvider implements RefactoringEleme
       for (int i = 0; i < scopes.length; i++) {
         final NamedScope scope = scopes[i];
         final PackageSet packageSet = scope.getValue();
-        if (packageSet != null && (containingFile == null || packageSet.contains(containingFile, holder))) {
+        if (packageSet != null && (containingFile == null || packageSet.contains(containingFile.getVirtualFile(), containingFile.getProject(), holder))) {
           composite = traverse(new OldScopeDescriptor(oldName, scope, i, holder), composite, packageSet);
         }
       }

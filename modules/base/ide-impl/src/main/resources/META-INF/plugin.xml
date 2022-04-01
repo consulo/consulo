@@ -298,7 +298,7 @@
     <extensionPoint name="compiler.additionalCompileScopeProvider"
                     interface="com.intellij.compiler.impl.AdditionalCompileScopeProvider"/>
 
-    <extensionPoint name="namedScopesHolderProvider" area="PROJECT" interface="consulo.language.psi.search.scope.NamedScopesHolderProvider"/>
+    <extensionPoint name="namedScopesHolderProvider" area="PROJECT" interface="consulo.content.scope.NamedScopesHolderProvider"/>
 
     <extensionPoint name="compiler.translatingHelper"
                     interface="consulo.compiler.TranslatingCompilerFilesMonitorHelper"/>
@@ -653,7 +653,7 @@
 
     <extensionPoint name="customScopesFilter" interface="consulo.ide.impl.psi.search.scope.packageSet.CustomScopesFilter"/>
 
-    <extensionPoint name="scopeDescriptorProvider" interface="com.intellij.ide.util.scopeChooser.ScopeDescriptorProvider"/>
+    <extensionPoint name="scopeDescriptorProvider" interface="consulo.content.scope.ScopeDescriptorProvider"/>
     <extensionPoint name="patternDialectProvider" interface="com.intellij.packageDependencies.ui.PatternDialectProvider"/>
 
     <extensionPoint name="localInspection"
@@ -1194,7 +1194,7 @@
     <extensionPoint name="runAnything.commandHandler" interface="com.intellij.ide.actions.runAnything.handlers.RunAnythingCommandHandler"/>
     <extensionPoint name="runAnything.commandCustomizer" interface="com.intellij.ide.actions.runAnything.commands.RunAnythingCommandCustomizer"/>
 
-    <extensionPoint name="searchScopesProvider" interface="consulo.ide.impl.psi.search.SearchScopeProvider"/>
+    <extensionPoint name="searchScopesProvider" interface="consulo.content.scope.SearchScopeProvider"/>
     <extensionPoint name="findInProjectExtension" interface="com.intellij.find.impl.FindInProjectExtension"/>
 
     <extensionPoint name="uiDecorator" interface="consulo.ui.ex.UIDecorator"/>
@@ -1441,7 +1441,7 @@
     <applicationService serviceInterface="com.intellij.openapi.options.colors.ColorSettingsPages"
                         serviceImplementation="com.intellij.openapi.options.colors.pages.ColorSettingsPagesImpl"/>
 
-    <applicationService serviceInterface="consulo.language.psi.search.scope.PackageSetFactory"
+    <applicationService serviceInterface="consulo.content.scope.PackageSetFactory"
                         serviceImplementation="consulo.ide.impl.psi.search.scope.packageSet.PackageSetFactoryImpl"/>
 
     <scopeParserExtension implementation="consulo.ide.impl.psi.search.scope.packageSet.FilePackageSetParserExtension"/>
@@ -1793,7 +1793,7 @@
     <applicationService serviceInterface="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"
                         serviceImplementation="consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers.FileInfoManager"/>
 
-    <applicationService serviceInterface="consulo.language.internal.PredefinedSearchScopeProvider"
+    <applicationService serviceInterface="consulo.content.scope.PredefinedSearchScopeProvider"
                         serviceImplementation="consulo.ide.impl.psi.search.PredefinedSearchScopeProviderImpl"/>
 
     <applicationService serviceInterface="consulo.language.psi.PsiReferenceService"
@@ -2802,6 +2802,8 @@
 
     <applicationService serviceInterface="consulo.language.impl.parser.GeneratedParserUtilBase$PrefixMatcher"
                         serviceImplementation="consulo.language.editor.impl.internal.parser.ParserCamelCaseMatcherPrefixMatcher"/>
+
+    <applicationService serviceInterface="consulo.language.editor.ui.PsiElementListNavigator" serviceImplementation="consulo.ide.impl.language.editor.PsiElementListNavigatorImpl"/>
   </extensions>
 
   <applicationListeners>

@@ -15,15 +15,13 @@
  */
 package consulo.language.editor.scope;
 
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSet;
-import consulo.language.psi.search.scope.PackageSetBase;
 import consulo.module.Module;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -95,9 +93,7 @@ public class GlobalSearchScopesCore {
       NamedScopesHolder holder = NamedScopeManager.getInstance(project);
       final PackageSet packageSet = mySet.getValue();
       if (packageSet != null) {
-        if (packageSet instanceof PackageSetBase) return ((PackageSetBase)packageSet).contains(file, project, holder);
-        PsiFile psiFile = myManager.findFile(file);
-        return psiFile != null && packageSet.contains(psiFile, holder);
+        return packageSet.contains(file, project, holder);
       }
       return false;
     }

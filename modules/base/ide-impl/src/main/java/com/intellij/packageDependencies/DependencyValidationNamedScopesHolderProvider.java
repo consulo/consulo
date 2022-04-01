@@ -15,8 +15,8 @@
  */
 package com.intellij.packageDependencies;
 
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.NamedScopesHolderProvider;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.NamedScopesHolderProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nullable;

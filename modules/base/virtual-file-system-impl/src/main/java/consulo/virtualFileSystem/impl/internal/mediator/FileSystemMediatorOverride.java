@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.vfs.impl.mediator;
+package consulo.virtualFileSystem.impl.internal.mediator;
 
-import consulo.virtualFileSystem.impl.internal.mediator.JnaUnixMediatorImpl;
-import consulo.virtualFileSystem.internal.FileSystemMediator;
-import consulo.util.jna.JnaLoader;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.FileSystemUtil;
-import consulo.virtualFileSystem.impl.internal.mediator.IdeaWin32MediatorImpl;
-import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
 import consulo.logging.Logger;
+import consulo.util.jna.JnaLoader;
+import consulo.virtualFileSystem.impl.internal.windows.WindowsFileSystemHelper;
+import consulo.virtualFileSystem.internal.FileSystemMediator;
 
 import javax.annotation.Nullable;
 

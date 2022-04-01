@@ -1,52 +1,53 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find.impl;
 
-import consulo.find.FindBundle;
 import com.intellij.find.FindInProjectSearchEngine;
-import consulo.find.FindModel;
 import com.intellij.find.findInProject.FindInProjectManager;
+import com.intellij.openapi.progress.util.TooManyUsagesStatus;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.vfs.CompactVirtualFileSet;
+import com.intellij.openapi.vfs.VfsUtilCore;
+import com.intellij.usages.UsageLimitUtil;
+import com.intellij.usages.impl.UsageViewManagerImpl;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.ReadAction;
-import consulo.content.ContentIterator;
-import consulo.content.FileIndex;
-import consulo.logging.Logger;
-import consulo.language.file.FileTypeManager;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.application.progress.EmptyProgressIndicator;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.layer.OrderEnumerator;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.impl.internal.progress.CoreProgressManager;
-import com.intellij.openapi.progress.util.TooManyUsagesStatus;
-import consulo.project.Project;
-import consulo.project.ProjectCoreUtil;
-import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.Pair;
+import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
+import consulo.component.ProcessCanceledException;
+import consulo.content.ContentIterator;
+import consulo.content.FileIndex;
+import consulo.content.scope.SearchScope;
+import consulo.find.FindBundle;
+import consulo.find.FindModel;
+import consulo.ide.impl.psi.impl.search.PsiSearchHelperImpl;
+import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
+import consulo.language.file.FileTypeManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.impl.search.PsiSearchHelperImpl;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
-import consulo.language.psi.scope.LocalSearchScope;
-import consulo.content.scope.SearchScope;
 import consulo.language.psi.PsiUtilCore;
-import consulo.usage.UsageInfo;
-import consulo.usage.FindUsagesProcessPresentation;
-import com.intellij.usages.UsageLimitUtil;
-import com.intellij.usages.impl.UsageViewManagerImpl;
-import consulo.application.util.function.Processor;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.LocalSearchScope;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.OrderEnumerator;
+import consulo.project.Project;
+import consulo.project.ProjectCoreUtil;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.usage.FindUsagesProcessPresentation;
+import consulo.usage.UsageInfo;
+import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
@@ -55,12 +56,12 @@ import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -114,7 +115,7 @@ class FindInProjectTask {
     mySearchers = ContainerUtil.mapNotNull(FindInProjectSearchEngine.EP_NAME.getExtensions(), se -> se.createSearcher(findModel, project));
   }
 
-  void findUsages(@Nonnull FindUsagesProcessPresentation processPresentation, @Nonnull Processor<? super UsageInfo> consumer) {
+  void findUsages(@Nonnull FindUsagesProcessPresentation processPresentation, @Nonnull Predicate<? super UsageInfo> consumer) {
     CoreProgressManager.assertUnderProgress(myProgress);
 
     try {
@@ -173,7 +174,7 @@ class FindInProjectTask {
 
   private void searchInFiles(@Nonnull Collection<? extends VirtualFile> virtualFiles,
                              @Nonnull FindUsagesProcessPresentation processPresentation,
-                             @Nonnull final Processor<? super UsageInfo> consumer) {
+                             @Nonnull final Predicate<? super UsageInfo> consumer) {
     AtomicInteger occurrenceCount = new AtomicInteger();
     AtomicInteger processedFileCount = new AtomicInteger();
     Map<VirtualFile, Set<UsageInfo>> usagesBeingProcessed = new ConcurrentHashMap<>();
@@ -215,7 +216,7 @@ class FindInProjectTask {
         if (processedUsages.contains(info)) {
           return true;
         }
-        boolean success = consumer.process(info);
+        boolean success = consumer.test(info);
         processedUsages.add(info);
         return success;
       })) return false;

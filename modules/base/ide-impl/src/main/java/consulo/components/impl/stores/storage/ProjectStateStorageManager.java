@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 
 public class ProjectStateStorageManager extends StateStorageManagerImpl {
-  @NonNls
   protected static final String ROOT_TAG_NAME = "project";
 
   public ProjectStateStorageManager(Project project, TrackingPathMacroSubstitutor macroSubstitutor, PathMacrosService pathMacroManager) {

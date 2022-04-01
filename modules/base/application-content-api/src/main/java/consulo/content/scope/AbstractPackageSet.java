@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.psi.search.scope;
+package consulo.content.scope;
 
 import javax.annotation.Nonnull;
 

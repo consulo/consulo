@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.internal;
+package consulo.content.scope;
 
 import consulo.application.Application;
-import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 

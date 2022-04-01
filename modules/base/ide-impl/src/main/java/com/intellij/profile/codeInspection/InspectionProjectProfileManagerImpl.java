@@ -30,7 +30,7 @@ import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.ProfileEx;
 import consulo.language.editor.scope.NamedScopeManager;
-import consulo.language.psi.search.scope.NamedScopesHolder;
+import consulo.content.scope.NamedScopesHolder;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.util.xml.serializer.InvalidDataException;

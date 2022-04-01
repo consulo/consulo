@@ -71,6 +71,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -227,7 +228,7 @@ public class FindInProjectUtil {
 
   public static void findUsages(@Nonnull FindModel findModel,
                                 @Nonnull final Project project,
-                                @Nonnull final Processor<? super UsageInfo> consumer,
+                                @Nonnull final Predicate<? super UsageInfo> consumer,
                                 @Nonnull FindUsagesProcessPresentation processPresentation) {
     findUsages(findModel, project, processPresentation, Collections.emptySet(), consumer);
   }
@@ -236,7 +237,7 @@ public class FindInProjectUtil {
                                 @Nonnull final Project project,
                                 @Nonnull FindUsagesProcessPresentation processPresentation,
                                 @Nonnull Set<? extends VirtualFile> filesToStart,
-                                @Nonnull final Processor<? super UsageInfo> consumer) {
+                                @Nonnull final Predicate<? super UsageInfo> consumer) {
     new FindInProjectTask(findModel, project, filesToStart).findUsages(processPresentation, consumer);
   }
 

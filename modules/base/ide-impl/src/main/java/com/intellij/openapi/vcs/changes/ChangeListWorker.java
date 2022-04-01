@@ -26,7 +26,6 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ui.PlusMinusModify;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.util.ThreeState;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import com.intellij.vcsUtil.VcsUtil;

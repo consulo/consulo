@@ -61,7 +61,7 @@
                          id="Template Data Languages"
                          parentId="editor"
                          key="template.data.language.configurable"
-                         bundle="messages.LangBundle"/>
+                         bundle="consulo.language.LangBundle"/>
 
     <projectConfigurable displayName="Code Style"
                          parentId="editor"

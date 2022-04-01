@@ -29,9 +29,9 @@ import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.search.scope.NamedScope;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSet;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSet;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,7 +65,7 @@ public class ToolsImpl implements Tools {
     this(toolWrapper, level, enabled, enabled);
   }
 
-  private ToolsImpl(@Nonnull String shortName, @Nonnull ScopeToolState defaultState, @javax.annotation.Nullable List<ScopeToolState> tools, boolean enabled) {
+  private ToolsImpl(@Nonnull String shortName, @Nonnull ScopeToolState defaultState, @Nullable List<ScopeToolState> tools, boolean enabled) {
     myShortName = shortName;
     myDefaultState = defaultState;
     myTools = tools;
@@ -116,7 +117,7 @@ public class ToolsImpl implements Tools {
         if (scope != null) {
           final PackageSet packageSet = scope.getValue();
           if (packageSet != null) {
-            if (containingFile != null && packageSet.contains(containingFile, DependencyValidationManager.getInstance(project))) {
+            if (containingFile != null && packageSet.contains(containingFile.getVirtualFile(), project, DependencyValidationManager.getInstance(project))) {
               return state.getTool();
             }
           }
@@ -323,7 +324,7 @@ public class ToolsImpl implements Tools {
     for (ScopeToolState state : myTools) {
       final NamedScope scope = state.getScope(project);
       final PackageSet set = scope != null ? scope.getValue() : null;
-      if (set != null && set.contains(element.getContainingFile(), manager)) {
+      if (set != null && set.contains(element.getContainingFile().getVirtualFile(), project, manager)) {
         return state.getLevel();
       }
     }
@@ -352,7 +353,7 @@ public class ToolsImpl implements Tools {
       final NamedScope scope = state.getScope(project);
       if (scope != null) {
         final PackageSet set = scope.getValue();
-        if (set != null && set.contains(element.getContainingFile(), manager)) {
+        if (set != null && set.contains(element.getContainingFile().getVirtualFile(), project, manager)) {
           return state.isEnabled();
         }
       }
@@ -361,7 +362,7 @@ public class ToolsImpl implements Tools {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public InspectionToolWrapper getEnabledTool(PsiElement element) {
     if (!myEnabled) return null;
     if (myTools == null || element == null) {
@@ -373,7 +374,7 @@ public class ToolsImpl implements Tools {
       final NamedScope scope = state.getScope(project);
       if (scope != null) {
         final PackageSet set = scope.getValue();
-        if (set != null && set.contains(element.getContainingFile(), manager)) {
+        if (set != null && set.contains(element.getContainingFile().getVirtualFile(), project, manager)) {
           return state.isEnabled() ? state.getTool() : null;
         }
       }
@@ -415,7 +416,7 @@ public class ToolsImpl implements Tools {
         final NamedScope scope = state.getScope(project);
         if (scope != null) {
           final PackageSet packageSet = scope.getValue();
-          if (packageSet != null && packageSet.contains(element.getContainingFile(), validationManager)) {
+          if (packageSet != null && packageSet.contains(element.getContainingFile().getVirtualFile(), element.getProject(), validationManager)) {
             state.setEnabled(false);
             return;
           }
@@ -457,7 +458,7 @@ public class ToolsImpl implements Tools {
 
   }
 
-  public void setLevel(@Nonnull HighlightDisplayLevel level, @javax.annotation.Nullable String scopeName, Project project) {
+  public void setLevel(@Nonnull HighlightDisplayLevel level, @Nullable String scopeName, Project project) {
     if (scopeName == null) {
       myDefaultState.setLevel(level);
     } else {
@@ -499,7 +500,7 @@ public class ToolsImpl implements Tools {
     myDefaultState.setLevel(level);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public List<ScopeToolState> getNonDefaultTools() {
     return myTools;
   }

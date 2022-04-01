@@ -20,13 +20,14 @@ import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.VcsBundle;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.search.scope.NamedScopesHolder;
-import consulo.language.psi.search.scope.PackageSetBase;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.content.scope.PackageSetBase;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -71,7 +72,7 @@ public abstract class AbstractTreeNode extends DefaultMutableTreeNode {
     return myErrorText;
   }
 
-  protected boolean acceptFilter(@javax.annotation.Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
+  protected boolean acceptFilter(@Nullable Pair<PackageSetBase, NamedScopesHolder> filter, boolean showOnlyFilteredItems) {
     boolean apply = false;
     if (children != null && filter != null) {
       for (Iterator it = children.iterator(); it.hasNext(); ) {
