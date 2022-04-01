@@ -2,7 +2,7 @@
 package com.intellij.find;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.codeEditor.Editor;
 import consulo.application.dumb.DumbAware;
 import consulo.find.FindManager;

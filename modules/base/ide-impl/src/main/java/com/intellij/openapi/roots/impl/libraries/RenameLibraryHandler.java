@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.TitledHandler;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.dataContext.DataContext;

@@ -18,6 +18,7 @@ package consulo.debugger.breakpoint;
 
 import consulo.debugger.XSourcePosition;
 import consulo.navigation.Navigatable;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnull;
@@ -86,4 +87,7 @@ public interface XBreakpoint<P extends XBreakpointProperties> extends UserDataHo
   void setConditionExpression(@Nullable XExpression condition);
 
   long getTimeStamp();
+
+  @Nonnull
+  Project getProject();
 }

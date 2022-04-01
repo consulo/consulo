@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.fileType.FileType;

@@ -19,7 +19,7 @@ package com.intellij.ide.hierarchy;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
 import consulo.ui.ex.DeleteProvider;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;

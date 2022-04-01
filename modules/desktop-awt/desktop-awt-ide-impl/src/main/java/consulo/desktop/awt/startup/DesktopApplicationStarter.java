@@ -44,6 +44,7 @@ import consulo.desktop.awt.uiOld.DesktopAppUIUtil;
 import consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl;
 import consulo.desktop.awt.wm.impl.MacTopMenuInitializer;
 import consulo.desktop.awt.wm.impl.TopMenuInitializer;
+import consulo.ide.IdeBundle;
 import consulo.ide.plugins.PluginsConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.logging.Logger;

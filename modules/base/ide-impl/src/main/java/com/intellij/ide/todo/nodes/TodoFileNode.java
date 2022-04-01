@@ -2,7 +2,7 @@
 
 package com.intellij.ide.todo.nodes;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode;

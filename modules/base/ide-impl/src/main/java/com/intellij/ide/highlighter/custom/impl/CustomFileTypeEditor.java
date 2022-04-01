@@ -16,7 +16,7 @@
 package com.intellij.ide.highlighter.custom.impl;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.highlighter.custom.SyntaxTable;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import consulo.configurable.ConfigurationException;

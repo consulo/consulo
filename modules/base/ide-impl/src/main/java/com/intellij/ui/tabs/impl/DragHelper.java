@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.ui.InplaceButton;

@@ -17,7 +17,7 @@ package com.intellij.ide.util;
 
 import consulo.application.CommonBundle;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.ide.ui.LafManager;
 import consulo.ui.ex.action.KeyboardShortcut;

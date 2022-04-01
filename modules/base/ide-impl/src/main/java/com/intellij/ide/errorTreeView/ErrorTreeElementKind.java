@@ -16,7 +16,7 @@
 package com.intellij.ide.errorTreeView;
 
 import com.intellij.util.ui.MessageCategory;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

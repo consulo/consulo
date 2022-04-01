@@ -16,6 +16,7 @@
 package com.intellij.ide;
 
 import consulo.application.ApplicationManager;
+import consulo.ide.IdeBundle;
 import consulo.logging.Logger;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;

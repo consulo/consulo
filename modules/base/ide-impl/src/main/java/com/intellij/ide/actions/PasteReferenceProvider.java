@@ -2,7 +2,7 @@
 package com.intellij.ide.actions;
 
 import consulo.language.editor.FileModificationService;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.PasteProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;

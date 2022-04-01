@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.DeleteProvider;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.TitledHandler;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;

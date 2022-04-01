@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.projectView.BaseProjectTreeBuilder;
 import com.intellij.ide.projectView.impl.AbstractProjectTreeStructure;
 import com.intellij.ide.projectView.impl.ProjectAbstractTreeStructureBase;
@@ -37,7 +37,7 @@ import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
+import consulo.language.psi.util.SymbolPresentationUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.ui.ex.awt.event.DoubleClickListener;

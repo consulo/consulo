@@ -5,7 +5,7 @@ package com.intellij.usageView.impl;
 import consulo.find.FindBundle;
 import consulo.find.FindSettings;
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.impl.ContentManagerWatcher;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;

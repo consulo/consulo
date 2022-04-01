@@ -2,7 +2,7 @@
 package com.intellij.ide.browsers;
 
 import com.intellij.ide.GeneralSettings;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ide.setting.ShowSettingsUtil;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Function;

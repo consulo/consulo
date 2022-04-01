@@ -2,7 +2,7 @@
 package com.intellij.ide.actions;
 
 import consulo.application.statistic.FeatureUsageTracker;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
 import consulo.language.editor.CommonDataKeys;

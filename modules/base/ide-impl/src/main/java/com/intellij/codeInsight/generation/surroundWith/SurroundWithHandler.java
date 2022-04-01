@@ -10,7 +10,7 @@ import consulo.language.editor.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable;
 import com.intellij.codeInsight.template.impl.SurroundWithTemplateHandler;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.language.LangBundle;
 import consulo.dataContext.DataContext;

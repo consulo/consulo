@@ -3,7 +3,7 @@ package com.intellij.ui.popup;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.ide.HelpTooltip;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.WindowAction;
 import com.intellij.ide.ui.PopupLocationTracker;

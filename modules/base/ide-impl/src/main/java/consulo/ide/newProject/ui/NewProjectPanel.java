@@ -17,7 +17,7 @@ package consulo.ide.newProject.ui;
 
 import consulo.application.Application;
 import consulo.application.CommonBundle;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;

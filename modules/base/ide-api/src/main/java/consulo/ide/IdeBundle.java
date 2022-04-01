@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.ide;
+package consulo.ide;
 
 import consulo.component.util.localize.AbstractBundle;
 import consulo.localize.LocalizeValue;
@@ -27,19 +27,19 @@ public class IdeBundle extends AbstractBundle {
   private static final IdeBundle ourInstance = new IdeBundle();
 
   private IdeBundle() {
-    super("messages.IdeBundle");
+    super("consulo.ide.IdeBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.IdeBundle") String key) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.IdeBundle") String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 
   @Deprecated
-  public static LocalizeValue messagePointer(@PropertyKey(resourceBundle = "messages.IdeBundle") String key) {
+  public static LocalizeValue messagePointer(@PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key) {
     return LocalizeValue.of(message(key));
   }
 }

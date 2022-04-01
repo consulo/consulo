@@ -16,7 +16,7 @@
 
 package com.intellij.ide.favoritesTreeView.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.favoritesTreeView.*;
 import com.intellij.ide.util.treeView.AbstractTreeNode;

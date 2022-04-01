@@ -4,7 +4,7 @@ package com.intellij.ide.util;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.ide.CopyPasteDelegator;
 import com.intellij.ide.DefaultTreeExpander;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.TreeExpander;
 import com.intellij.ide.actions.ViewStructureAction;
 import com.intellij.ide.dnd.aware.DnDAwareTree;

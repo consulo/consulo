@@ -15,7 +15,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.OccurenceNavigator;
 import com.intellij.ide.OccurenceNavigatorSupport;
 import com.intellij.ide.actions.EditSourceAction;

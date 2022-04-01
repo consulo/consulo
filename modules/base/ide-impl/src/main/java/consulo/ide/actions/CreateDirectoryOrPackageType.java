@@ -15,7 +15,7 @@
  */
 package consulo.ide.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.DirectoryUtil;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.ProjectFileIndex;

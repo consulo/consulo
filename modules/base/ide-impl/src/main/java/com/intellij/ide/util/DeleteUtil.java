@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;

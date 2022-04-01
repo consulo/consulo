@@ -16,7 +16,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

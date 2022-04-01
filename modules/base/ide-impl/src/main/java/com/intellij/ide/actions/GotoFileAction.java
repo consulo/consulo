@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import consulo.application.statistic.FeatureUsageTracker;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.searcheverywhere.FileSearchEverywhereContributor;
 import com.intellij.ide.util.gotoByName.ChooseByNameFilter;
 import com.intellij.ide.util.gotoByName.ChooseByNamePopup;

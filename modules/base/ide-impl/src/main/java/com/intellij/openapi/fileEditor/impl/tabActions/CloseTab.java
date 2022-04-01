@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileEditor.impl.tabActions;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;

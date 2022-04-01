@@ -16,7 +16,7 @@
 
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.favoritesTreeView.actions.AddToFavoritesAction;
 import com.intellij.ide.projectView.impl.*;
 import com.intellij.ide.projectView.impl.nodes.LibraryGroupElement;

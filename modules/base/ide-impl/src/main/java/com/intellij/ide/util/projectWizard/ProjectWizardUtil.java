@@ -16,7 +16,7 @@
 package com.intellij.ide.util.projectWizard;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VfsUtil;

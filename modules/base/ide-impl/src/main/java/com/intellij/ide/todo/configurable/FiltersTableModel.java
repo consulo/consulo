@@ -17,7 +17,7 @@
 package com.intellij.ide.todo.configurable;
 
 import com.intellij.ide.todo.TodoFilter;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.language.psi.search.TodoPattern;
 import consulo.ui.ex.awt.ItemRemovable;
 

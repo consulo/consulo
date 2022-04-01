@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actionMacro;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.Shortcut;
 import consulo.ui.ex.awt.*;

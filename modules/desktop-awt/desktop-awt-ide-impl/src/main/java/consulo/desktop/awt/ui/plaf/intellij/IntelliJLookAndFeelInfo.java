@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.intellij;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.desktop.awt.ui.plaf.LookAndFeelInfoWithClassLoader;
 import consulo.desktop.awt.ui.plaf.LafWithColorScheme;
 

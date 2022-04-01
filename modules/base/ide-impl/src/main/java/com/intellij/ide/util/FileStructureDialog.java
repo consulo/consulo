@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.commander.CommanderPanel;
 import com.intellij.ide.commander.ProjectListBuilder;
 import com.intellij.ide.structureView.newStructureView.TreeModelWrapper;

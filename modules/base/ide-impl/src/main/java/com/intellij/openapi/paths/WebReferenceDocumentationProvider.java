@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.paths;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.language.editor.documentation.AbstractDocumentationProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.impl.psi.path.WebReference;

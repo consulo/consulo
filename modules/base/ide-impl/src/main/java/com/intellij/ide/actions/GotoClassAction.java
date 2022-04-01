@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import consulo.application.statistic.FeatureUsageTracker;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
 import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewBuilder;

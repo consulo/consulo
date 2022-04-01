@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.safeDelete;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.DeleteUtil;
 import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.ActionManager;

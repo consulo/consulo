@@ -16,7 +16,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

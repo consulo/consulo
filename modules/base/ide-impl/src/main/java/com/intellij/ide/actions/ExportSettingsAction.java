@@ -22,7 +22,7 @@ package com.intellij.ide.actions;
 import consulo.language.editor.CommonDataKeys;
 import consulo.component.util.localize.AbstractBundle;
 import consulo.application.CommonBundle;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.plugins.PluginManagerCore;
 import consulo.ui.ex.action.AnAction;

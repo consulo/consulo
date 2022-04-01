@@ -19,7 +19,7 @@
  */
 package com.intellij.ide.bookmarks.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarkManager;
 import consulo.ui.ex.action.AnActionEvent;

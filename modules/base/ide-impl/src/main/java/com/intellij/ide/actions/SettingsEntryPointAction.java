@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ui.event.UISettingsListener;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.TooltipDescriptionProvider;

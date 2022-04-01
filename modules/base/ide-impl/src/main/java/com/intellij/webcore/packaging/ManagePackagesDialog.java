@@ -3,7 +3,7 @@ package com.intellij.webcore.packaging;
 
 import consulo.process.ExecutionException;
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManagerMain;
 import consulo.language.LangBundle;
 import consulo.ui.ex.JBColor;

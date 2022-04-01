@@ -21,7 +21,7 @@
 package com.intellij.ide.util.scopeChooser;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.ToggleAction;
 import com.intellij.packageDependencies.DependencyUISettings;

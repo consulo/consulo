@@ -16,7 +16,7 @@
 package com.intellij.ide.util;
 
 import com.intellij.ide.ExporterToTextFile;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
 import com.intellij.openapi.ui.Messages;

@@ -7,7 +7,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.configurations.PtyCommandLine;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.runAnything.RunAnythingAction;
 import com.intellij.ide.actions.runAnything.RunAnythingCache;
 import com.intellij.ide.actions.runAnything.commands.RunAnythingCommandCustomizer;

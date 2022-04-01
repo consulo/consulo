@@ -16,7 +16,7 @@
 package com.intellij.openapi.diff.impl.dir;
 
 import com.intellij.diff.DiffRequestFactory;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.diff.*;
 import com.intellij.internal.statistic.UsageTrigger;
 import consulo.application.impl.internal.IdeaModalityState;

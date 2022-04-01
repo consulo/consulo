@@ -16,7 +16,7 @@
 package consulo.desktop.awt.tipOfDay;
 
 import com.intellij.ide.GeneralSettings;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.TipAndTrickBean;
 import com.intellij.ide.util.TipUIUtil;
 import consulo.application.impl.internal.ApplicationNamesInfo;

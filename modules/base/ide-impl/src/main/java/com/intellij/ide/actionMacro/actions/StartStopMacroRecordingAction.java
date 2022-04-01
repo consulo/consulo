@@ -16,7 +16,7 @@
 package com.intellij.ide.actionMacro.actions;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.actionMacro.ActionMacroManager;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;

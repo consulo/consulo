@@ -17,7 +17,7 @@
 package com.intellij.ide.hierarchy;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnActionEvent;
 
 /**

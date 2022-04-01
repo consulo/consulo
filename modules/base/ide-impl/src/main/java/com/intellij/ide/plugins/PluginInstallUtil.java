@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationNamesInfo;

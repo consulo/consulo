@@ -9,7 +9,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.ProgramRunner;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;

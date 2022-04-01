@@ -18,7 +18,7 @@ package com.intellij.ide.util;
 
 import com.intellij.codeInsight.generation.*;
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;

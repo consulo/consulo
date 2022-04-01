@@ -17,7 +17,7 @@
 package com.intellij.ide.todo.configurable;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.todo.TodoFilter;
 import consulo.application.ui.HelpManager;
 import consulo.ui.ex.awt.DialogWrapper;

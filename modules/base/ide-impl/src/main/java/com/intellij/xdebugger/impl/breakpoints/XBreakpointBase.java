@@ -106,6 +106,7 @@ public class XBreakpointBase<Self extends XBreakpoint<P>, P extends XBreakpointP
     myLogExpression = expression != null ? expression.toXExpression() : null;
   }
 
+  @Override
   public final Project getProject() {
     return myBreakpointManager.getProject();
   }

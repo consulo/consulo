@@ -25,6 +25,7 @@ import com.intellij.ide.errorTreeView.impl.ErrorViewTextExporter;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.dataContext.DataContext;

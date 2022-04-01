@@ -18,7 +18,7 @@ package com.intellij.ide.todo.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.todo.TodoTreeStructure;

@@ -4,7 +4,7 @@ package com.intellij.ide.actions.searcheverywhere;
 import com.google.common.collect.Lists;
 import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.SearchTopHitProvider;
 import com.intellij.ide.actions.BigPopupUI;
 import com.intellij.ide.actions.SearchEverywhereClassifier;

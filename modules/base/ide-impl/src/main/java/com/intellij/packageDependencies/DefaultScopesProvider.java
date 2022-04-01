@@ -15,7 +15,7 @@
  */
 package com.intellij.packageDependencies;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.scratch.ScratchesNamedScope;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.ide.impl.psi.search.scope.packageSet.FilePatternPackageSet;

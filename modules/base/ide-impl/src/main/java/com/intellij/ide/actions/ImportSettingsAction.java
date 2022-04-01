@@ -19,7 +19,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
 import consulo.ui.ex.action.AnAction;

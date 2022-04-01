@@ -2,7 +2,7 @@
 package com.intellij.ide.actions.runAnything;
 
 import com.intellij.execution.actions.ChooseRunConfigurationPopup;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import com.intellij.util.containers.ContainerUtil;

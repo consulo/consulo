@@ -20,7 +20,7 @@
 package com.intellij.util.indexing;
 
 import consulo.application.impl.internal.performance.PerformanceWatcher;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.disposer.Disposable;

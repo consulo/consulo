@@ -16,7 +16,7 @@
 
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ViewSettings;

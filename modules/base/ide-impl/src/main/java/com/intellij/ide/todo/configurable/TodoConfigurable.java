@@ -17,7 +17,7 @@
 package com.intellij.ide.todo.configurable;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.todo.TodoConfiguration;
 import com.intellij.ide.todo.TodoFilter;
 import consulo.ui.ex.JBColor;

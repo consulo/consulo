@@ -15,7 +15,7 @@
  */
 package consulo.ide.wizard.newModule;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

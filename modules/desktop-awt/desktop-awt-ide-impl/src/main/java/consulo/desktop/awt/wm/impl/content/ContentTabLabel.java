@@ -3,7 +3,7 @@ package consulo.desktop.awt.wm.impl.content;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeTooltip;
 import com.intellij.ide.IdeTooltipManager;
 import consulo.application.ui.UISettings;

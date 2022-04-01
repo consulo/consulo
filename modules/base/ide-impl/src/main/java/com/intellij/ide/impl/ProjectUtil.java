@@ -16,7 +16,7 @@
 package com.intellij.ide.impl;
 
 import com.intellij.ide.GeneralSettings;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.RecentProjectsManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;

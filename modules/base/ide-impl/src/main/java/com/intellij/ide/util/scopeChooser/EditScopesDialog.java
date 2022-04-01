@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util.scopeChooser;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;

@@ -17,7 +17,7 @@
 package com.intellij.ide.bookmarks;
 
 import consulo.codeEditor.markup.GutterMark;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;

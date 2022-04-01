@@ -16,7 +16,7 @@
 
 package com.intellij.ide.macro;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.codeEditor.Editor;
 
 public final class ColumnNumberMacro extends EditorMacro {

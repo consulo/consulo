@@ -18,7 +18,7 @@ package com.intellij.ide.plugins;
 import consulo.application.CommonBundle;
 import consulo.application.AllIcons;
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.plugins.sorters.SortByStatusAction;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.ui.ex.awt.*;

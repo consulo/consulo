@@ -42,7 +42,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
+import consulo.language.psi.util.SymbolPresentationUtil;
 import com.intellij.util.SequentialModalProgressTask;
 import com.intellij.util.SequentialTask;
 import consulo.ui.image.Image;

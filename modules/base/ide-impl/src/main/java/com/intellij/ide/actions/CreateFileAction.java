@@ -17,7 +17,7 @@
 package com.intellij.ide.actions;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
 import com.intellij.ide.ui.newItemPopup.NewItemSimplePopupPanel;
 import com.intellij.internal.statistic.UsageTrigger;

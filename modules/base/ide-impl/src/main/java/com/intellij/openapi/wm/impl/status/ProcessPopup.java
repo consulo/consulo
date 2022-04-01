@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.wm.impl.status;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.popup.util.MinimizeButton;
 import consulo.project.ui.wm.IdeFrame;

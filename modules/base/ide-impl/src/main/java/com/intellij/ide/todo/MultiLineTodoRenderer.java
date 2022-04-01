@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.todo;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.todo.nodes.TodoItemNode;
 import com.intellij.ui.HighlightableCellRenderer;
 import consulo.ui.ex.awt.HighlightedRegion;

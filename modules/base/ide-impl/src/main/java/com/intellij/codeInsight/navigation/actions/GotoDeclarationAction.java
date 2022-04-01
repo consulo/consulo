@@ -21,7 +21,7 @@ import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.find.actions.ShowUsagesAction;
-import com.intellij.ide.util.DefaultPsiElementCellRenderer;
+import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.editor.inject.EditorWindow;

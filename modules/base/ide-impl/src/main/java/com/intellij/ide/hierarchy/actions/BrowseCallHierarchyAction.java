@@ -16,7 +16,7 @@
 
 package com.intellij.ide.hierarchy.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.hierarchy.LanguageCallHierarchy;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;

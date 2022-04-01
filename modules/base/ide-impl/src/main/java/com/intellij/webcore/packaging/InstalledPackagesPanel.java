@@ -4,7 +4,7 @@ package com.intellij.webcore.packaging;
 import consulo.application.CommonBundle;
 import consulo.process.ExecutionException;
 import consulo.application.impl.internal.performance.ActivityTracker;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;

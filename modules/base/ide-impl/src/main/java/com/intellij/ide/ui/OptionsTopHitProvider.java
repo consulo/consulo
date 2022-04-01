@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.ui;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.SearchTopHitProvider;
 import com.intellij.ide.ui.search.BooleanOptionDescription;
 import consulo.application.ApplicationBundle;

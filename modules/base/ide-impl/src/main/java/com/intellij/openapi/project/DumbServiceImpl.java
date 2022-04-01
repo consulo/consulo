@@ -4,7 +4,7 @@ package com.intellij.openapi.project;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.concurrent.ThreadDumper;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.file.BatchFileChangeListener;
 import consulo.application.internal.ApplicationEx;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

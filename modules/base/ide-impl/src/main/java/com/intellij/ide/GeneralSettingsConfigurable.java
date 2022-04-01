@@ -21,6 +21,7 @@ import com.intellij.openapi.util.NotNullComputable;
 import com.intellij.util.ObjectUtil;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.impl.FileOperateDialogSettings;
+import consulo.ide.IdeBundle;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;
 import consulo.configurable.SimpleConfigurable;

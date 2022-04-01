@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.presentation.java;
+package consulo.language.psi.util;
 
-import consulo.navigation.ItemPresentation;
-import consulo.navigation.NavigationItem;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.NavigationItem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 
 public class SymbolPresentationUtil {
   private SymbolPresentationUtil() {
   }
 
+  @RequiredReadAction
   public static String getSymbolPresentableText(@Nonnull PsiElement element) {
     if (element instanceof NavigationItem) {
       final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
@@ -46,6 +48,7 @@ public class SymbolPresentationUtil {
   }
 
   @Nullable
+  @RequiredReadAction
   public static String getSymbolContainerText(PsiElement element) {
     if (element instanceof NavigationItem) {
       final ItemPresentation presentation = ((NavigationItem)element).getPresentation();
@@ -63,13 +66,14 @@ public class SymbolPresentationUtil {
     return null;
   }
 
+  @RequiredReadAction
   public static String getFilePathPresentation(PsiFile psiFile) {
     ProjectFileIndex index = ProjectRootManager.getInstance(psiFile.getProject()).getFileIndex();
     VirtualFile file = psiFile.getOriginalFile().getVirtualFile();
     VirtualFile rootForFile = file != null ? index.getContentRootForFile(file):null;
 
     if (rootForFile != null) {
-      String relativePath = VfsUtilCore.getRelativePath(file, rootForFile, File.separatorChar);
+      String relativePath = VirtualFileUtil.getRelativePath(file, rootForFile, File.separatorChar);
       if (relativePath != null) return relativePath;
     }
 

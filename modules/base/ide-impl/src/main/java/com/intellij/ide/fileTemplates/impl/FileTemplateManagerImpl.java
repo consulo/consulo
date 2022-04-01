@@ -16,7 +16,7 @@
 
 package com.intellij.ide.fileTemplates.impl;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.openapi.fileTypes.ex.FileTypeManagerEx;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

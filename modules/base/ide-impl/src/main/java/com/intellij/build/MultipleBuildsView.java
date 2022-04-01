@@ -5,7 +5,7 @@ import com.intellij.build.events.*;
 import com.intellij.execution.process.AnsiEscapeDecoder;
 import consulo.process.ProcessOutputTypes;
 import consulo.execution.ui.RunContentDescriptor;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.OccurenceNavigator;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionToolbar;

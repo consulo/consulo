@@ -5,7 +5,7 @@ package com.intellij.ide.util.gotoByName;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.application.util.SystemInfo;
 import consulo.component.util.localize.BundleBase;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.ApplyIntentionAction;
 import consulo.application.ui.UISettings;
 import com.intellij.ide.ui.search.BooleanOptionDescription;

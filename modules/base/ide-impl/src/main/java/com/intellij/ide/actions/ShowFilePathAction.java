@@ -22,7 +22,7 @@ import consulo.process.local.CapturingProcessHandler;
 import com.intellij.execution.util.ExecUtil;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;

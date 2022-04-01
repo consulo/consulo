@@ -16,7 +16,7 @@
 package com.intellij.ide.actionMacro;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.ui.ex.action.*;

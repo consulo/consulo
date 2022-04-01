@@ -19,7 +19,7 @@ package com.intellij.ide.actions;
 import consulo.application.CommonBundle;
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.logging.Logger;

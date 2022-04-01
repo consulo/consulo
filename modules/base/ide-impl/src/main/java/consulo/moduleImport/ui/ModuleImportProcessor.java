@@ -15,7 +15,7 @@
  */
 package consulo.moduleImport.ui;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;

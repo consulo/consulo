@@ -20,6 +20,7 @@ import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.ide.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.DefaultActionGroup;

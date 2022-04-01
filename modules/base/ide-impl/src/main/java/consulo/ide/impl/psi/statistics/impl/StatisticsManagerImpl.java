@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.statistics.impl;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.ui.Messages;
 import consulo.disposer.Disposable;

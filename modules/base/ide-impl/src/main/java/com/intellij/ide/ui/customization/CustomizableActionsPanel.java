@@ -16,7 +16,7 @@
 package com.intellij.ide.ui.customization;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.Application;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

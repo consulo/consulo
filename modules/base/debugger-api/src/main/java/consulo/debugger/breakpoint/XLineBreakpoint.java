@@ -16,7 +16,10 @@
 
 package consulo.debugger.breakpoint;
 
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represent a breakpoint which is set on some line in a file. This interface isn't supposed to be implemented by a plugin. In order to
@@ -32,6 +35,9 @@ public interface XLineBreakpoint<P extends XBreakpointProperties> extends XBreak
   String getFileUrl();
 
   String getPresentableFilePath();
+
+  @Nullable
+  VirtualFile getFile();
 
   @Override
   @Nonnull

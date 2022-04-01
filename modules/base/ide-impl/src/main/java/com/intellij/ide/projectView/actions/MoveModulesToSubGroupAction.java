@@ -19,7 +19,7 @@
  */
 package com.intellij.ide.projectView.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;

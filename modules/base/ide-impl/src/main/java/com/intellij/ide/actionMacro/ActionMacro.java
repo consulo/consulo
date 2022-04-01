@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actionMacro;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionManager;

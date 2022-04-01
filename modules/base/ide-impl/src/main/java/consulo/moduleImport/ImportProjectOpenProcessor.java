@@ -15,7 +15,7 @@
  */
 package consulo.moduleImport;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.impl.util.NewOrImportModuleUtil;
 import consulo.project.Project;

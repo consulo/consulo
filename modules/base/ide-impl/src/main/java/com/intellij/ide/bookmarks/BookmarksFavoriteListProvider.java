@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.bookmarks;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.favoritesTreeView.AbstractFavoritesListProvider;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import consulo.annotation.access.RequiredReadAction;

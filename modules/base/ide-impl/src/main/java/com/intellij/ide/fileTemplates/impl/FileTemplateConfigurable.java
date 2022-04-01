@@ -18,7 +18,7 @@ package com.intellij.ide.fileTemplates.impl;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.intellij.codeInsight.template.impl.TemplateColors;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.impl.internal.UrlUtil;

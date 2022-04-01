@@ -18,7 +18,7 @@ package com.intellij.ide.browsers;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;

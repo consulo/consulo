@@ -17,7 +17,7 @@
 package com.intellij.tasks.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;

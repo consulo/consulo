@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.customFolding;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.language.Language;
 import com.intellij.lang.folding.*;
 import consulo.document.Document;

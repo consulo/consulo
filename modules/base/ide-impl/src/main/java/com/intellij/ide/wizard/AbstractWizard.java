@@ -2,7 +2,7 @@
 package com.intellij.ide.wizard;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.HelpManager;
 import consulo.project.Project;

@@ -3,7 +3,7 @@ package com.intellij.ide.actions.runAnything;
 
 import consulo.execution.executor.Executor;
 import consulo.application.statistic.FeatureUsageTracker;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.ide.actions.runAnything.activity.RunAnythingProvider;

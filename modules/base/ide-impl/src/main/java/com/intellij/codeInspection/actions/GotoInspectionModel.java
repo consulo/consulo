@@ -19,7 +19,7 @@ import com.intellij.codeInspection.ex.InspectionProfileImpl;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.ScopeToolState;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.gotoByName.SimpleChooseByNameModel;
 import consulo.project.Project;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;

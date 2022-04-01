@@ -19,6 +19,7 @@ import consulo.application.impl.internal.JobScheduler;
 import com.intellij.diagnostic.VMOptions;
 import com.intellij.ide.plugins.UninstallPluginAction;
 import consulo.application.ui.RemoteDesktopService;
+import consulo.ide.IdeBundle;
 import consulo.project.ui.notification.*;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.jna.JnaLoader;
@@ -205,7 +206,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
   }
 
   private void showNotification(KeyHyperlinkAdapter adapter, Object... params) {
-    @PropertyKey(resourceBundle = "messages.IdeBundle") String key = adapter.key;
+    @PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key = adapter.key;
     boolean ignored = adapter.isIgnored();
     LOG.info("issue detected: " + key + (ignored ? " (ignored)" : ""));
     if (ignored) return;
@@ -328,7 +329,7 @@ public class SystemHealthMonitor extends PreloadingActivity {
   private class KeyHyperlinkAdapter extends HyperlinkAdapter {
     private final String key;
 
-    private KeyHyperlinkAdapter(@PropertyKey(resourceBundle = "messages.IdeBundle") String key) {
+    private KeyHyperlinkAdapter(@PropertyKey(resourceBundle = "consulo.ide.IdeBundle") String key) {
       this.key = key;
     }
 

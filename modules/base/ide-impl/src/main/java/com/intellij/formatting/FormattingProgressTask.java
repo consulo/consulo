@@ -18,7 +18,7 @@ package com.intellij.formatting;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.undoRedo.UndoManager;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditor;

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.fileTemplates.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.EditFileTemplatesAction;
 import com.intellij.ide.fileTemplates.ui.SelectTemplateDialog;

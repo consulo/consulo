@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.plugins;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;

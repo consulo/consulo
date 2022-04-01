@@ -20,7 +20,7 @@ import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider;
 import consulo.language.editor.inspection.InspectionsBundle;
 import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;

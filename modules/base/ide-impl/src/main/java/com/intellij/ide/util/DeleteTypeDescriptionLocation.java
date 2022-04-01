@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.language.internal.LanguageFindUsages;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.psi.*;

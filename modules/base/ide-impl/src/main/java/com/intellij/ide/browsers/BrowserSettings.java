@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.browsers;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ide.ServiceManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

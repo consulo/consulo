@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.language.Language;
 import consulo.ide.navigation.ChooseByNameContributor;

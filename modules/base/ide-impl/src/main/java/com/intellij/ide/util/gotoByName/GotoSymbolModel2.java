@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.gotoByName;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.language.Language;
 import consulo.ide.navigation.ChooseByNameContributor;
 import consulo.ide.navigation.GotoClassContributor;
@@ -23,7 +23,7 @@ import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
+import consulo.language.psi.util.SymbolPresentationUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

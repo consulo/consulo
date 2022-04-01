@@ -21,7 +21,7 @@ import com.intellij.history.LocalHistoryAction;
 import com.intellij.ide.CopyPasteDelegator;
 import consulo.content.scope.*;
 import consulo.ui.ex.DeleteProvider;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.projectView.ProjectView;

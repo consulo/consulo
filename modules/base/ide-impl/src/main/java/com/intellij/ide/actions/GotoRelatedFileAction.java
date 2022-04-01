@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.util.DefaultPsiElementCellRenderer;
+import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.openapi.actionSystem.*;

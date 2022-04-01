@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.intellij.ide.util;
+package consulo.language.editor.ui;
 
 import consulo.component.util.Iconable;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.presentation.java.SymbolPresentationUtil;
+import consulo.language.psi.util.SymbolPresentationUtil;
 
 public class DefaultPsiElementCellRenderer extends PsiElementListCellRenderer<PsiElement> {
   @Override
@@ -36,5 +35,4 @@ public class DefaultPsiElementCellRenderer extends PsiElementListCellRenderer<Ps
   public String getContainerText(PsiElement element, final String name){
     return SymbolPresentationUtil.getSymbolContainerText(element);
   }
-
 }

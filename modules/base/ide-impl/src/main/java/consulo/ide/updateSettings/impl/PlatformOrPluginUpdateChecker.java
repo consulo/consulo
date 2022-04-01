@@ -15,7 +15,7 @@
  */
 package consulo.ide.updateSettings.impl;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.SettingsEntryPointAction;
 import com.intellij.ide.plugins.PluginManagerMain;
 import com.intellij.ide.plugins.PluginNode;

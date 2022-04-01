@@ -16,7 +16,7 @@
 package com.intellij.ide.plugins;
 
 import com.google.gson.Gson;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.util.lang.SystemProperties;

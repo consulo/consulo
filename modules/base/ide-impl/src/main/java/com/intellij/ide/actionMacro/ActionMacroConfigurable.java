@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actionMacro;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;

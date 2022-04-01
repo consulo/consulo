@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.browsers.firefox;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;

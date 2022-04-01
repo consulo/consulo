@@ -16,7 +16,7 @@
 
 package com.intellij.ide.favoritesTreeView.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

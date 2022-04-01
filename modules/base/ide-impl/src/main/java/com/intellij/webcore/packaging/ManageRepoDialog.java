@@ -15,7 +15,7 @@
  */
 package com.intellij.webcore.packaging;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diagnostic.Logger;

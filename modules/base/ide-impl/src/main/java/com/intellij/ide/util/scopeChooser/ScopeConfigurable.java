@@ -16,7 +16,7 @@
 
 package com.intellij.ide.util.scopeChooser;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.ui.NamedConfigurable;

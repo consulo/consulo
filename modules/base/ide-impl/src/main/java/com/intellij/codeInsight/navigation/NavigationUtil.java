@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.navigation;
 
-import com.intellij.ide.util.DefaultPsiElementCellRenderer;
+import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import com.intellij.navigation.GotoRelatedItem;

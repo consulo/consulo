@@ -20,7 +20,7 @@
 package com.intellij.ide.actions;
 
 import consulo.application.statistic.FeatureUsageTracker;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.IdeActions;

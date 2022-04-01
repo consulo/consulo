@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 
 import consulo.find.FindManager;
 import com.intellij.find.FindUtil;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.openapi.actionSystem.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.CommandProcessor;

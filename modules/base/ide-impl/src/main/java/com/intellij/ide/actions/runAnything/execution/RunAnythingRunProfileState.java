@@ -14,7 +14,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.RunContentDescriptor;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.runAnything.RunAnythingUtil;
 import com.intellij.ide.actions.runAnything.handlers.RunAnythingCommandHandler;
 import consulo.util.dataholder.Key;

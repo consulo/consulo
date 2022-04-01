@@ -16,7 +16,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.OccurenceNavigator;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

@@ -22,7 +22,7 @@ import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.GeneralSettings;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.util.PathUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;

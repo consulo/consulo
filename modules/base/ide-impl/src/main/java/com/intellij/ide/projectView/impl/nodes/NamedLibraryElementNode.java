@@ -18,7 +18,7 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.awt.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ViewSettings;

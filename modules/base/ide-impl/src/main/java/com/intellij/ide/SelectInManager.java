@@ -15,6 +15,7 @@
  */
 package com.intellij.ide;
 
+import consulo.ide.IdeBundle;
 import consulo.ide.ServiceManager;
 import consulo.project.DumbService;
 import consulo.project.Project;

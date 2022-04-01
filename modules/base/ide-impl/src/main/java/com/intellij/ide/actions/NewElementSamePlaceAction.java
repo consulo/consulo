@@ -16,7 +16,7 @@
 
 package com.intellij.ide.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 
 public class NewElementSamePlaceAction extends NewElementAction {
   @Override

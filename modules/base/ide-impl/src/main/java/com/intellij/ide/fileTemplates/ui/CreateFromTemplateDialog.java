@@ -16,7 +16,7 @@
 
 package com.intellij.ide.fileTemplates.ui;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.CreateFileAction;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
 import com.intellij.openapi.ui.Messages;

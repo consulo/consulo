@@ -15,7 +15,7 @@
  */
 package consulo.ide.newProject.ui;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.util.projectWizard.NamePathComponent;
 import com.intellij.ide.util.projectWizard.ProjectWizardUtil;
 import consulo.application.impl.internal.ApplicationInfo;

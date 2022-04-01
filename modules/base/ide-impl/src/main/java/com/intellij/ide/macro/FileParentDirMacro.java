@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.macro;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.dataContext.DataContext;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.search;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
 import com.intellij.ide.hierarchy.HierarchyBrowserBase;
 import com.intellij.ide.projectView.impl.AbstractUrl;

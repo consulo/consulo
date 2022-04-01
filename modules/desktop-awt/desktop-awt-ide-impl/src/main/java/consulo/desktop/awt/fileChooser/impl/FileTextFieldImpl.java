@@ -2,7 +2,7 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.FileTextField;

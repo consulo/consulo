@@ -16,7 +16,7 @@
 package com.intellij.util.io;
 
 import consulo.application.util.Patches;
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;

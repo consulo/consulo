@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import com.intellij.ui.content.ContentManagerUtil;
 import consulo.application.AllIcons;
 import consulo.fileEditor.FileEditorManager;

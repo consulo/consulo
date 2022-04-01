@@ -16,7 +16,7 @@
 
 package com.intellij.unscramble;
 
-import com.intellij.ide.IdeBundle;
+import consulo.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 
