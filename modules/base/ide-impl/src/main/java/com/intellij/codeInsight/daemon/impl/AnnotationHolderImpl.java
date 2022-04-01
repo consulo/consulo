@@ -3,27 +3,28 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.diagnostic.PluginException;
-import consulo.language.ast.ASTNode;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Comparing;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.ReflectionUtil;
+import com.intellij.xml.util.XmlStringUtil;
 import consulo.document.util.TextRange;
-import consulo.language.editor.annotation.AnnotationSession;
+import consulo.language.ast.ASTNode;
 import consulo.language.editor.annotation.*;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.ReflectionUtil;
 import consulo.util.collection.SmartList;
-import com.intellij.xml.util.XmlStringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Use {@link AnnotationHolder} instead. The members of this class can suddenly change or disappear.
@@ -183,6 +184,9 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     return doCreateAnnotation(severity, range, message, tooltip, callerClass, "createAnnotation");
   }
 
+  private static final Set<String> ourWarnList = new ConcurrentSkipListSet<>();
+  private static boolean LOG_AS_ERROR = Boolean.getBoolean("consulo.annotation.log.error");
+
   /**
    * @deprecated this is an old way of creating annotations, via createXXXAnnotation(). please use newAnnotation() instead
    */
@@ -205,7 +209,22 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
                                                                                                     "and thus can cause unexpected behaviour (e.g. annoying blinking), " +
                                                                                                     "is deprecated and will be removed soon. " +
                                                                                                     "Please use `newAnnotation().create()` instead"), callerClass == null ? getClass() : callerClass);
-    LOG.warn(pluginException);
+    if (callerClass != null) {
+      if (ourWarnList.add(callerClass.getName())) {
+        if (LOG_AS_ERROR) {
+          LOG.error(pluginException);
+        }
+        else {
+          LOG.warn(pluginException);
+        }
+      }
+    } else {
+      if (LOG_AS_ERROR) {
+        LOG.error(pluginException);
+      } else {
+        LOG.warn(pluginException);
+      }
+    }
     return annotation;
   }
 

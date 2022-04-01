@@ -2804,6 +2804,8 @@
                         serviceImplementation="consulo.language.editor.impl.internal.parser.ParserCamelCaseMatcherPrefixMatcher"/>
 
     <applicationService serviceInterface="consulo.language.editor.ui.PsiElementListNavigator" serviceImplementation="consulo.ide.impl.language.editor.PsiElementListNavigatorImpl"/>
+    <applicationService serviceInterface="consulo.language.editor.rawHighlight.internal.HighlightInfoFactory"
+                        serviceImplementation="consulo.ide.impl.language.editor.rawHighlight.HighlightInfoFactoryImpl"/>
   </extensions>
 
   <applicationListeners>
