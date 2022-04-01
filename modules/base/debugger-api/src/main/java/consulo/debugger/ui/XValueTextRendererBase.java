@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.impl.ui.tree.nodes;
+package consulo.debugger.ui;
 
-import consulo.language.editor.DefaultLanguageHighlighterColors;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.debugger.frame.presentation.XValuePresentation;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

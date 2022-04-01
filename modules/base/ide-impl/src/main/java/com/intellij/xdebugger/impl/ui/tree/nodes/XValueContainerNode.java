@@ -23,7 +23,7 @@ import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SortedList;
 import consulo.debugger.evaluation.InlineDebuggerHelper;
-import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import consulo.debugger.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.debugger.setting.XDebuggerSettingsManager;
 import consulo.ui.image.Image;

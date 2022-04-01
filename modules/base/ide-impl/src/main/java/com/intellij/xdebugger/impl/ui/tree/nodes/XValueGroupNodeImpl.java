@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import consulo.application.ApplicationManager;
+import consulo.debugger.ui.XValuePresentationUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.debugger.frame.XValueGroup;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;

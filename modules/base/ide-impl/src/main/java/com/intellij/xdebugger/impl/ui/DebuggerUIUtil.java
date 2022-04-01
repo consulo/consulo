@@ -17,6 +17,7 @@ package com.intellij.xdebugger.impl.ui;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.dataContext.DataManager;
+import consulo.debugger.ui.XDebuggerUIConstants;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;

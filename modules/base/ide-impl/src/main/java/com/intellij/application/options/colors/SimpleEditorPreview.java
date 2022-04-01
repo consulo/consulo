@@ -18,7 +18,7 @@ package com.intellij.application.options.colors;
 
 import com.intellij.application.options.colors.highlighting.HighlightData;
 import com.intellij.application.options.colors.highlighting.HighlightsExtractor;
-import consulo.language.editor.DefaultLanguageHighlighterColors;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.rawHighlight.RainbowHighlighter;
 import consulo.language.editor.util.UsedColors;
 import consulo.language.editor.highlight.HighlighterFactory;

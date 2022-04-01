@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.impl.ui;
+package consulo.debugger.ui;
 
 import consulo.application.AllIcons;
+import consulo.debugger.XDebuggerBundle;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.DarculaColors;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.debugger.XDebuggerBundle;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import java.awt.*;
 
@@ -43,10 +44,12 @@ public class XDebuggerUIConstants {
   public static final SimpleTextAttributes EXCEPTION_ATTRIBUTES = get(JBColor.red);
   public static final SimpleTextAttributes VALUE_NAME_ATTRIBUTES = get(new JBColor(new Color(128, 0, 0), DarculaColors.RED.brighter()));
   public static final SimpleTextAttributes ERROR_MESSAGE_ATTRIBUTES = get(JBColor.red);
-  @NonNls public static final String EQ_TEXT = " = ";
+  public static final String EQ_TEXT = " = ";
 
   public static final SimpleTextAttributes TYPE_ATTRIBUTES = SimpleTextAttributes.GRAY_ATTRIBUTES;
   public static final String LAYOUT_VIEW_BREAKPOINT_CONDITION = "breakpoint";
+
+  public static final NotificationGroup NOTIFICATION_GROUP = NotificationGroup.toolWindowGroup("Debugger messages", ToolWindowId.DEBUG, false);
 
   private static SimpleTextAttributes get(JBColor c) {
     return new SimpleTextAttributes(Font.PLAIN, c);

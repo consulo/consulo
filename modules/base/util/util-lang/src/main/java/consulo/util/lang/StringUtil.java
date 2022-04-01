@@ -102,6 +102,11 @@ public class StringUtil {
 
   private static final String VOWELS = "aeiouy";
 
+  @Contract(pure = true)
+  public static String defaultIfEmpty(@Nullable String value, String defaultValue) {
+    return isEmpty(value) ? defaultValue : value;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static String escapePattern(@Nonnull final String text) {

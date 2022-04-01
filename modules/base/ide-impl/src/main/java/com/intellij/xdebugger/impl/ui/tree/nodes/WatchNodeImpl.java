@@ -25,7 +25,7 @@ import consulo.debugger.evaluation.XDebuggerEvaluator;
 import consulo.debugger.evaluation.XInstanceEvaluator;
 import consulo.debugger.frame.presentation.XErrorValuePresentation;
 import consulo.debugger.frame.presentation.XValuePresentation;
-import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import consulo.debugger.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

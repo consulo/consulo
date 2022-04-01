@@ -4,6 +4,7 @@ package com.intellij.xdebugger.impl.ui;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.colorScheme.TextAttributes;
+import consulo.debugger.XSourcePositionWithHighlighter;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -183,8 +184,8 @@ public class ExecutionPointHighlighter {
     EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
     TextAttributes attributes = myNotTopFrame ? scheme.getAttributes(DebuggerColors.NOT_TOP_FRAME_ATTRIBUTES) : scheme.getAttributes(DebuggerColors.EXECUTIONPOINT_ATTRIBUTES);
     MarkupModel markupModel = DocumentMarkupModel.forDocument(document, myProject, true);
-    if (mySourcePosition instanceof HighlighterProvider) {
-      TextRange range = ((HighlighterProvider)mySourcePosition).getHighlightRange();
+    if (mySourcePosition instanceof XSourcePositionWithHighlighter) {
+      TextRange range = ((XSourcePositionWithHighlighter)mySourcePosition).getHighlightRange();
       if (range != null) {
         TextRange lineRange = DocumentUtil.getLineTextRange(document, line);
         if (!range.equals(lineRange)) {
@@ -217,10 +218,5 @@ public class ExecutionPointHighlighter {
         EditorMouseHoverPopupControl.enablePopups(project);
       }
     });
-  }
-
-  public interface HighlighterProvider {
-    @Nullable
-    TextRange getHighlightRange();
   }
 }

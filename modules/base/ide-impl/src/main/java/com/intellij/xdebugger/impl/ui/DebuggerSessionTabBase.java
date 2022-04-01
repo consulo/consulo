@@ -16,6 +16,7 @@
 package com.intellij.xdebugger.impl.ui;
 
 import consulo.debugger.ui.DebuggerContentInfo;
+import consulo.debugger.ui.XDebuggerUIConstants;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;

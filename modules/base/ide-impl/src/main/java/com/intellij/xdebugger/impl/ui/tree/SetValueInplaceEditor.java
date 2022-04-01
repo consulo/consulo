@@ -25,9 +25,9 @@ import consulo.debugger.frame.XValueModifier;
 import consulo.debugger.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
-import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import consulo.debugger.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import com.intellij.xdebugger.impl.ui.tree.nodes.XValuePresentationUtil;
+import consulo.debugger.ui.XValuePresentationUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

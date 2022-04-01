@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.xdebugger.impl.actions;
+package consulo.debugger;
 
-import com.intellij.execution.ui.actions.AbstractFocusOnAction;
-import consulo.debugger.ui.XDebuggerUIConstants;
+import consulo.document.util.TextRange;
 
-public class FocusOnBreakpointAction extends AbstractFocusOnAction {
-  public FocusOnBreakpointAction() {
-    super(XDebuggerUIConstants.LAYOUT_VIEW_BREAKPOINT_CONDITION);
-  }
+import javax.annotation.Nullable;
+
+/**
+ * @author VISTALL
+ * @since 01-Apr-22
+ */
+public interface XSourcePositionWithHighlighter extends XSourcePosition {
+  @Nullable
+  TextRange getHighlightRange();
 }

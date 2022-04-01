@@ -25,7 +25,7 @@ import consulo.document.RangeMarker;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.ast.IElementType;
-import consulo.language.editor.DefaultLanguageHighlighterColors;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;

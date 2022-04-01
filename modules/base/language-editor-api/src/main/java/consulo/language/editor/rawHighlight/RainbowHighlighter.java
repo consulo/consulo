@@ -22,7 +22,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributesScheme;
 import consulo.language.Language;
-import consulo.language.editor.DefaultLanguageHighlighterColors;
+import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.util.ColorGenerator;
 import consulo.language.psi.PsiElement;

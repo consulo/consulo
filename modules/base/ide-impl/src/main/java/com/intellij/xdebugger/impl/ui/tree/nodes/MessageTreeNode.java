@@ -22,7 +22,7 @@ import com.intellij.util.IJSwingUtilities;
 import consulo.util.collection.SmartList;
 import consulo.debugger.XDebuggerBundle;
 import consulo.debugger.frame.XDebuggerTreeNodeHyperlink;
-import com.intellij.xdebugger.impl.ui.XDebuggerUIConstants;
+import consulo.debugger.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ui.image.Image;
 
