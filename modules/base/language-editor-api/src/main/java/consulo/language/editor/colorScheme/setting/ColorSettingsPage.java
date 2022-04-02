@@ -15,15 +15,13 @@
  */
 package consulo.language.editor.colorScheme.setting;
 
-import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.setting.ColorAndFontDescriptorsProvider;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.highlight.SyntaxHighlighter;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.Map;
 
 /**
