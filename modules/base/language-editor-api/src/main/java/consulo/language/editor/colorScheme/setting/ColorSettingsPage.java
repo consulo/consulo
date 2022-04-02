@@ -33,17 +33,6 @@ public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
   ExtensionPointName<ColorSettingsPage> EP_NAME = ExtensionPointName.create("consulo.colorSettingsPage");
 
   /**
-   * Returns the icon for the page, shown in the dialog tab.
-   *
-   * @return the icon for the page, or null if the page does not have a custom icon.
-   */
-  @Nullable
-  @Deprecated
-  default Icon getIcon() {
-    return null;
-  }
-
-  /**
    * Returns the syntax highlighter which is used to highlight the text shown in the preview
    * pane of the page.
    *
@@ -61,7 +50,6 @@ public interface ColorSettingsPage extends ColorAndFontDescriptorsProvider {
    *
    * @return the text to show in the preview pane.
    */
-  @NonNls
   @Nonnull
   String getDemoText();
 
