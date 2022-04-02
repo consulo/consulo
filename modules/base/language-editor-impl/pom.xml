@@ -61,6 +61,7 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-language-inject-impl</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>
