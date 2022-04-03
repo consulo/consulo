@@ -29,7 +29,7 @@ import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.language.codeStyle.CodeStyleSettings;

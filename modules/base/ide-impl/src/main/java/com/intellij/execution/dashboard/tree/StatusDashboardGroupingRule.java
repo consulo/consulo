@@ -18,7 +18,7 @@ package com.intellij.execution.dashboard.tree;
 import consulo.execution.ExecutionBundle;
 import com.intellij.execution.dashboard.*;
 import consulo.application.AllIcons;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.fileEditor.structureView.tree.ActionPresentation;
 import consulo.fileEditor.structureView.tree.ActionPresentationData;
 import org.jetbrains.annotations.NonNls;

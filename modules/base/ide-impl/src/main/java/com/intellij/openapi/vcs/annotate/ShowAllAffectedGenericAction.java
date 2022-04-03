@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.BackgroundFromStartOption;

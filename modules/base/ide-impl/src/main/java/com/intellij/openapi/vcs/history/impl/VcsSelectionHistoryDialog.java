@@ -35,7 +35,7 @@ import com.intellij.openapi.vcs.annotate.ShowAllAffectedGenericAction;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
 import com.intellij.openapi.vcs.history.*;
-import com.intellij.ui.BrowserHyperlinkListener;
+import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.table.TableView;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;

@@ -16,12 +16,12 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.projectView.impl.ProjectViewImpl;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;

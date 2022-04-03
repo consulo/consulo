@@ -2,10 +2,10 @@
 
 package com.intellij.ide.projectView;
 
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
 import com.intellij.ide.favoritesTreeView.FavoritesTreeNodeDescriptor;
-import com.intellij.ide.util.treeView.*;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;

@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.archive.ArchiveFileType;
 import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
 import consulo.document.FileDocumentManager;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.DumbService;

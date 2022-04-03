@@ -17,8 +17,8 @@
 package com.intellij.ide.hierarchy;
 
 import com.intellij.ide.DefaultTreeExpander;
-import com.intellij.ide.actions.CloseTabToolbarAction;
-import com.intellij.ide.actions.ContextHelpAction;
+import consulo.ui.ex.action.CloseTabToolbarAction;
+import consulo.ui.ex.action.ContextHelpAction;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;

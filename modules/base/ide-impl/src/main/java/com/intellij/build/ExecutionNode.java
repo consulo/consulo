@@ -3,8 +3,8 @@ package com.intellij.build;
 
 import com.intellij.build.events.*;
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.tree.PresentationData;
-import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.NullableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;

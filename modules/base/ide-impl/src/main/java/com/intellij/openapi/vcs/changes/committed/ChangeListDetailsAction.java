@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.*;
 import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkHtmlRenderer;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
-import com.intellij.ui.BrowserHyperlinkListener;
+import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.UIUtil;

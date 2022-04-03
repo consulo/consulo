@@ -22,7 +22,7 @@
 package com.intellij.internal.psiView;
 
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import com.intellij.ide.util.treeView.IndexComparator;
+import consulo.ui.ex.tree.IndexComparator;
 import consulo.project.Project;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;

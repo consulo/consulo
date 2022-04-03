@@ -19,7 +19,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import consulo.process.ExecutionException;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

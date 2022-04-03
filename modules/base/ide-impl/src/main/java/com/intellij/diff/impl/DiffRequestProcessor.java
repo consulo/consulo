@@ -37,7 +37,7 @@ import consulo.ui.ex.action.EmptyAction;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;

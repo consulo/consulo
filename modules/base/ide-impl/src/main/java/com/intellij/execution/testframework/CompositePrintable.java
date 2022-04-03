@@ -15,22 +15,21 @@
  */
 package com.intellij.execution.testframework;
 
-import consulo.execution.ui.console.HyperlinkInfo;
 import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
 import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
-import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.application.ApplicationManager;
-import consulo.disposer.Disposable;
-import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.disposer.Disposable;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.index.io.data.IOUtil;
 import consulo.logging.Logger;
+import consulo.util.dataholder.UserDataHolderBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;

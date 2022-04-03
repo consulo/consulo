@@ -18,6 +18,7 @@ package com.intellij.ide.projectView;
 
 import javax.annotation.Nullable;
 import consulo.language.psi.PsiElement;
+import consulo.project.ui.view.tree.TreeStructureProvider;
 
 /**
  * @author yole

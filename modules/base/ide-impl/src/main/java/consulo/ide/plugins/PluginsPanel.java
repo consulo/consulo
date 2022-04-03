@@ -23,7 +23,7 @@ import com.intellij.ide.plugins.PluginManagerMain;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.Wrapper;
 import com.intellij.ui.tabs.TabInfo;

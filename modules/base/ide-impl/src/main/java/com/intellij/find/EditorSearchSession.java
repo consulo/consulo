@@ -17,7 +17,7 @@ import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.ex.DefaultCustomComponentAction;
 import consulo.application.ApplicationBundle;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.application.ApplicationManager;

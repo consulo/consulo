@@ -19,7 +19,7 @@ package com.intellij.tools;
 import consulo.application.CommonBundle;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;

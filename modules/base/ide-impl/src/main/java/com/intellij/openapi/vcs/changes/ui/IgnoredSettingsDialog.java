@@ -22,7 +22,7 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.vcs.VcsBundle;

@@ -23,7 +23,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.action.*;

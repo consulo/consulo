@@ -13,7 +13,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.impl.local.NativeFileWatcherImpl;
 import com.intellij.util.containers.ContainerUtil;

@@ -26,7 +26,7 @@ import consulo.language.editor.template.Variable;
 import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;

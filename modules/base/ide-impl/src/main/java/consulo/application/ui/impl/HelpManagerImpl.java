@@ -15,7 +15,7 @@
  */
 package consulo.application.ui.impl;
 
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.externalService.impl.WebServiceApi;
 import consulo.platform.Platform;
 import consulo.util.lang.StringUtil;

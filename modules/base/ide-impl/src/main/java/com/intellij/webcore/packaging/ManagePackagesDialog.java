@@ -15,7 +15,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.ui.*;

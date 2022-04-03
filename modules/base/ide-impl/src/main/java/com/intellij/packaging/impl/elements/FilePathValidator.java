@@ -15,7 +15,7 @@
  */
 package com.intellij.packaging.impl.elements;
 
-import com.intellij.openapi.ui.InputValidator;
+import consulo.ui.ex.InputValidator;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;

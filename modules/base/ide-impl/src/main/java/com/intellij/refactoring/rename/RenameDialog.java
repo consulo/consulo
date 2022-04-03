@@ -24,7 +24,7 @@ import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.language.plain.PlainTextFileType;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;

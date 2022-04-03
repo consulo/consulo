@@ -29,7 +29,7 @@ import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.container.boot.ContainerPathManager;

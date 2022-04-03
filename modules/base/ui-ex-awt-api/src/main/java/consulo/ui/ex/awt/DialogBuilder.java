@@ -16,7 +16,7 @@
 package consulo.ui.ex.awt;
 
 import consulo.application.CommonBundle;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.component.ComponentManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

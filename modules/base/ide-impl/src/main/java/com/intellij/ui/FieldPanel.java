@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.InsertPathAction;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 

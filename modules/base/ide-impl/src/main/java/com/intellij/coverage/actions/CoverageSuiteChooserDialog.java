@@ -1,7 +1,7 @@
 package com.intellij.coverage.actions;
 
-import com.intellij.coverage.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.coverage.*;
 import consulo.logging.Logger;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;

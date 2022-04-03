@@ -24,7 +24,7 @@ package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.*;
 import consulo.application.AllIcons;
-import com.intellij.ide.impl.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import com.intellij.ide.ui.search.SearchableOptionsRegistrar;
 import consulo.language.Language;
 import consulo.application.Application;

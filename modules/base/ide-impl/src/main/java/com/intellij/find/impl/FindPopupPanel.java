@@ -15,7 +15,7 @@ import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;

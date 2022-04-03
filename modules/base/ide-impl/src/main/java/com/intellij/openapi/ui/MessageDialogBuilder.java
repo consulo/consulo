@@ -17,9 +17,10 @@ package com.intellij.openapi.ui;
 
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.ui.mac.MacMessages;
+import consulo.ui.ex.awt.internal.MacMessages;
 import com.intellij.util.ObjectUtil;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -59,10 +60,10 @@ public abstract class MessageDialogBuilder<T extends MessageDialogBuilder> {
   }
 
   /**
-   * @see {@link com.intellij.openapi.ui.Messages#getInformationIcon()}
-   * @see {@link com.intellij.openapi.ui.Messages#getWarningIcon()}
-   * @see {@link com.intellij.openapi.ui.Messages#getErrorIcon()}
-   * @see {@link com.intellij.openapi.ui.Messages#getQuestionIcon()}
+   * @see {@link Messages#getInformationIcon()}
+   * @see {@link Messages#getWarningIcon()}
+   * @see {@link Messages#getErrorIcon()}
+   * @see {@link Messages#getQuestionIcon()}
    */
   public T icon(@Nullable Image icon) {
     myIcon = icon;

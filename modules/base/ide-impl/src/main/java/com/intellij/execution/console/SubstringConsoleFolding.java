@@ -1,6 +1,6 @@
 package com.intellij.execution.console;
 
-import com.intellij.execution.ConsoleFolding;
+import consulo.execution.ConsoleFolding;
 
 import java.util.List;
 

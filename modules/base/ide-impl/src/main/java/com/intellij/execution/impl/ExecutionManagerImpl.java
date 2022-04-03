@@ -49,7 +49,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.Trinity;
 import com.intellij.openapi.util.text.StringUtil;

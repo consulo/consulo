@@ -24,7 +24,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.CodeSmellDetector;
 import com.intellij.openapi.vcs.VcsBundle;

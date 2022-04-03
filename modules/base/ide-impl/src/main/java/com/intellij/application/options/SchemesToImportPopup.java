@@ -15,7 +15,7 @@
  */
 package com.intellij.application.options;
 
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;

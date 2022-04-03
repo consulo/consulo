@@ -6,6 +6,8 @@ import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.ui.ex.tree.LeafState;
 import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.util.lang.Comparing;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;

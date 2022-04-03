@@ -17,7 +17,7 @@ package com.intellij.internal.validation;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ValidationInfo;
 
 import javax.swing.*;

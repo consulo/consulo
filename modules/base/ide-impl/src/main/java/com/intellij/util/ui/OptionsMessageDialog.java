@@ -16,7 +16,7 @@
 package com.intellij.util.ui;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.MultiLineLabelUI;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.image.Image;
 

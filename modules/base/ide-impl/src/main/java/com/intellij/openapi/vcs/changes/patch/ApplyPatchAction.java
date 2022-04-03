@@ -35,7 +35,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.Getter;

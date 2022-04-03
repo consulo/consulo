@@ -30,7 +30,7 @@ import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

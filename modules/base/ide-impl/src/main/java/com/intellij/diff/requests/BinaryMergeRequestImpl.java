@@ -24,7 +24,7 @@ import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.ThreeSide;
 import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.Consumer;
 import consulo.logging.Logger;

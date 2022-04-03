@@ -11,7 +11,7 @@ import consulo.language.psi.*;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.dnd.DnDAction;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.ui.ex.awt.dnd.DnDNativeTarget;

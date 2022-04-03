@@ -18,8 +18,8 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.ProjectViewNode;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
-import com.intellij.ide.util.treeView.AlphaComparator;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.ex.tree.AlphaComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 
 import java.util.Collection;

@@ -17,12 +17,13 @@ package com.intellij.execution.testframework.ui;
 
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestConsoleProperties;
-import com.intellij.ide.util.treeView.*;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.progress.util.StatusBarProgress;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.AbstractTreeStructure;
+import consulo.ui.ex.tree.AlphaComparator;
+import consulo.ui.ex.tree.IndexComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 
 import javax.annotation.Nonnull;

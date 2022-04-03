@@ -16,8 +16,8 @@
 package consulo.desktop.awt.uiOld.messages;
 
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.ui.mac.MacMessages;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.internal.MacMessages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
 import jakarta.inject.Singleton;

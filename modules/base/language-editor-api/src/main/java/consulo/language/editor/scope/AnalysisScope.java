@@ -29,6 +29,7 @@ import consulo.language.editor.ProblemHighlightFilter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.logging.Logger;
 import consulo.module.Module;

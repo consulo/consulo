@@ -25,7 +25,7 @@ import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.FontPreferences;
 import consulo.colorScheme.ModifiableFontPreferences;
 import consulo.ui.ex.awt.LabeledComponent;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.FontComboBox;

@@ -20,7 +20,7 @@ import com.intellij.diff.merge.*;
 import com.intellij.diff.util.DiffUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffBundle;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;

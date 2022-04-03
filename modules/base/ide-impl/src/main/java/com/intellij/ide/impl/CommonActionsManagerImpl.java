@@ -20,6 +20,7 @@ import com.intellij.ide.*;
 import com.intellij.ide.actions.*;
 import consulo.ui.ex.action.AnAction;
 import consulo.project.Project;
+import consulo.ui.ex.action.ContextHelpAction;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
 
 import jakarta.inject.Singleton;

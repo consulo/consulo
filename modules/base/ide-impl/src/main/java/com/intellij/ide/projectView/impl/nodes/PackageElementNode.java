@@ -17,11 +17,11 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.ProjectViewNodeDecorator;
-import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import consulo.component.extension.Extensions;
 import consulo.ui.ex.awt.CopyPasteManager;

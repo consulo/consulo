@@ -17,10 +17,10 @@
 package com.intellij.ide.todo.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.todo.ToDoSummary;
 import com.intellij.ide.todo.TodoTreeBuilder;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

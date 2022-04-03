@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.language.psi.path.PsiDynaReference;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

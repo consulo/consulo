@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.conflicts;
 
 import consulo.application.AllIcons;
 import consulo.ide.setting.ShowSettingsUtil;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.changes.*;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.EditorNotificationPanel;

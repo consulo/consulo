@@ -16,8 +16,8 @@
 package consulo.virtualFileSystem.fileWatcher.impl;
 
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
-import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.dumb.DumbAware;
 import consulo.virtualFileSystem.fileWatcher.impl.ui.BackgroundTaskPsiFileTreeNode;
 import consulo.language.psi.PsiElement;

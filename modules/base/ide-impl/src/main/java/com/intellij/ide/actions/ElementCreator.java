@@ -24,7 +24,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;

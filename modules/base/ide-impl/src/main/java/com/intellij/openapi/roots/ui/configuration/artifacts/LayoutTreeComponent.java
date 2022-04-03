@@ -24,7 +24,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.ArtifactRootN
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingNodeSource;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingTreeNodeFactory;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.compiler.artifact.Artifact;

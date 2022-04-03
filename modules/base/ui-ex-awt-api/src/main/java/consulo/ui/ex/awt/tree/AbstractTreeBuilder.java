@@ -12,6 +12,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.concurrent.EdtExecutorService;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncPromise;
 import consulo.util.concurrent.Promise;

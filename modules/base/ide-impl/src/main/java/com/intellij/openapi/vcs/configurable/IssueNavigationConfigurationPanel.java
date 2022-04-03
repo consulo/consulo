@@ -20,7 +20,7 @@ import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.IssueNavigationConfiguration;
 import com.intellij.openapi.vcs.IssueNavigationLink;
 import com.intellij.openapi.vcs.VcsBundle;

@@ -16,16 +16,13 @@
 
 package com.intellij.codeInsight.navigation;
 
-import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import com.intellij.ide.util.EditSourceUtil;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
 import com.intellij.ui.SeparatorWithText;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
@@ -44,6 +41,8 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.resolve.PsiElementProcessor;
@@ -54,6 +53,7 @@ import consulo.project.Project;
 import consulo.ui.color.RGBColor;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;

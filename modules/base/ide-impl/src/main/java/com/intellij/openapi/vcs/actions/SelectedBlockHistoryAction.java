@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.actions;
 import consulo.ui.ex.action.Presentation;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.ProjectLevelVcsManager;
 import com.intellij.openapi.vcs.VcsBundle;

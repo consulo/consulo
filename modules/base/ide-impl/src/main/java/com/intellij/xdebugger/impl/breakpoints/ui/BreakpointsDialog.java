@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.Couple;

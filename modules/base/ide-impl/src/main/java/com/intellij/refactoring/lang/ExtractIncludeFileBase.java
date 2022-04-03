@@ -38,7 +38,7 @@ import consulo.language.file.FileTypeManager;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Pair;
 import consulo.language.codeStyle.CodeStyleManager;
 import consulo.language.psi.path.PsiFileSystemItemUtil;

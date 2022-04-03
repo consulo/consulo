@@ -16,8 +16,8 @@
 package com.intellij.ide.favoritesTreeView;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.awt.tree.PresentationData;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 

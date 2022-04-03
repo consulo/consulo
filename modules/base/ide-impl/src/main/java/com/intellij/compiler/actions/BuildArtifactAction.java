@@ -20,7 +20,7 @@ import consulo.ui.ex.action.CommonShortcuts;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;

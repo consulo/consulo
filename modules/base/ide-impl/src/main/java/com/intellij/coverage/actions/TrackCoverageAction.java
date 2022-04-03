@@ -4,14 +4,14 @@
  */
 package com.intellij.coverage.actions;
 
-import com.intellij.coverage.CoverageDataManager;
+import consulo.coverage.CoverageDataManager;
 import com.intellij.coverage.CoverageExecutor;
-import com.intellij.coverage.CoverageSuitesBundle;
+import consulo.coverage.CoverageSuitesBundle;
 import consulo.execution.executor.Executor;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.ModuleBasedConfiguration;
 import consulo.execution.configuration.RunProfile;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
+import consulo.coverage.CoverageEnabledConfiguration;
 import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.TestFrameworkRunningModel;

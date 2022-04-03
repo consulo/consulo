@@ -15,9 +15,9 @@
  */
 package com.intellij.ui.treeStructure;
 
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.status.FileStatus;

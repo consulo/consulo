@@ -14,7 +14,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.text.StringUtil;

@@ -31,6 +31,7 @@ import consulo.project.Project;
 import com.intellij.openapi.ui.*;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.function.Computable;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

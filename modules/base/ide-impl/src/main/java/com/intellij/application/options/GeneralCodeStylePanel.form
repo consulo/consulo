@@ -26,7 +26,7 @@
                 </constraints>
                 <properties>
                   <labelFor value="612e6"/>
-                  <text resource-bundle="messages/ApplicationBundle" key="combobox.line.separator.for.new.files"/>
+                  <text resource-bundle="consulo/application/ApplicationBundle" key="combobox.line.separator.for.new.files"/>
                 </properties>
               </component>
               <component id="612e6" class="javax.swing.JComboBox" binding="myLineSeparatorCombo">

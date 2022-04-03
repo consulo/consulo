@@ -41,7 +41,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.language.psi.*;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.editor.scope.GlobalSearchScopesCore;
+import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.ModuleUtilCore;

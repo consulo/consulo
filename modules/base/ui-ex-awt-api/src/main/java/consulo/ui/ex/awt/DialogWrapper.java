@@ -17,7 +17,7 @@ package consulo.ui.ex.awt;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.application.*;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -45,7 +45,7 @@ import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.internal.InternalPopupUtil;
+import consulo.ui.ex.awt.internal.InternalPopupUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;

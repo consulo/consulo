@@ -5,7 +5,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

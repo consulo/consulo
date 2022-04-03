@@ -29,7 +29,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.ui.ex.awt.*;
 import com.intellij.openapi.ui.ComboBoxTableRenderer;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.packageDependencies.DependenciesBuilder;
 import com.intellij.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetHandler;
 import com.intellij.ui.*;

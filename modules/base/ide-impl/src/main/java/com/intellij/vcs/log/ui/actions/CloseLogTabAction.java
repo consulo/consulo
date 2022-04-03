@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.actions;
 
-import com.intellij.ide.actions.CloseTabToolbarAction;
+import consulo.ui.ex.action.CloseTabToolbarAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;

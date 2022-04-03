@@ -20,7 +20,7 @@ import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
 import com.intellij.ide.todo.TodoFileDirAndModuleComparator;
 import com.intellij.ide.todo.TodoTreeBuilder;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;

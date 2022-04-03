@@ -5,6 +5,7 @@
 package com.intellij.coverage;
 
 import consulo.colorScheme.TextAttributes;
+import consulo.coverage.*;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.history.FileRevisionTimestampComparator;
 import com.intellij.history.LocalHistory;

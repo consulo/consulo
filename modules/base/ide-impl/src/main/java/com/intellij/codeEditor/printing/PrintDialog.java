@@ -16,7 +16,7 @@
 
 package com.intellij.codeEditor.printing;
 
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ColoredListCellRenderer;

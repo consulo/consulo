@@ -16,7 +16,7 @@
 package com.intellij.packaging.impl.ui;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;

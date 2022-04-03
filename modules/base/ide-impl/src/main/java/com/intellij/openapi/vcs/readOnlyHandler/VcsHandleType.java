@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.readOnlyHandler;
 
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.EditFileProvider;
 import com.intellij.openapi.vcs.VcsBundle;

@@ -16,7 +16,7 @@ import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.ui.ex.UIBundle;

@@ -21,7 +21,7 @@ import com.intellij.history.core.revisions.RecentChange;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.LocalHistoryBundle;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.util.text.DateFormatUtil;

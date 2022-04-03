@@ -23,7 +23,7 @@ import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.updateSettings.impl.PluginDownloader;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;

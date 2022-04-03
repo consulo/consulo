@@ -24,7 +24,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.util.Alarm;

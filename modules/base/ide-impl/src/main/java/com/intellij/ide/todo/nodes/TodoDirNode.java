@@ -3,12 +3,12 @@
 package com.intellij.ide.todo.nodes;
 
 import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.tree.PresentationData;
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.todo.TodoTreeStructure;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;

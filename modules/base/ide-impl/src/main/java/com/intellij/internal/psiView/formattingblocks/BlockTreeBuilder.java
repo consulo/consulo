@@ -1,6 +1,6 @@
 package com.intellij.internal.psiView.formattingblocks;
 
-import com.intellij.ide.util.treeView.IndexComparator;
+import consulo.ui.ex.tree.IndexComparator;
 import com.intellij.ui.treeStructure.SimpleTreeBuilder;
 
 import javax.swing.*;

@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import consulo.application.ui.HelpManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.application.HelpManager;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.ui.components.JBTabbedPane;

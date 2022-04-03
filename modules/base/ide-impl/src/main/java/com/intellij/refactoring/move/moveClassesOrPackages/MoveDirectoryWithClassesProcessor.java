@@ -23,7 +23,7 @@ package com.intellij.refactoring.move.moveClassesOrPackages;
 import consulo.application.CommonBundle;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.language.psi.PsiDirectory;

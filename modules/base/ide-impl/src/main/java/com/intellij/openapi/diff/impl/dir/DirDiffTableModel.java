@@ -23,7 +23,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diff.impl.dir.actions.popup.WarnOnDeletion;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.MessageDialogBuilder;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.ui.components.JBLoadingPanel;

@@ -24,7 +24,7 @@ import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.module.impl.ModuleManagerComponent;
 import com.intellij.openapi.module.impl.ModuleManagerImpl;
 import com.intellij.openapi.project.ProjectReloadState;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.ex.VirtualFileManagerAdapter;

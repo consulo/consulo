@@ -28,7 +28,7 @@ import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.refactoring.RefactoringBundle;

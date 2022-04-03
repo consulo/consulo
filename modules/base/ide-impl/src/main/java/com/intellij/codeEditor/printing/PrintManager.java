@@ -31,7 +31,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
 import consulo.language.psi.PsiDirectory;

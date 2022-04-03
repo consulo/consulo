@@ -28,7 +28,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.StreamUtil;
 import consulo.project.ui.wm.IdeFrame;

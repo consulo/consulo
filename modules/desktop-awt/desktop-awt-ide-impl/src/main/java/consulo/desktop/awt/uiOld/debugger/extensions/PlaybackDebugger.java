@@ -25,7 +25,7 @@ import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileElement;
 import com.intellij.openapi.fileChooser.ex.FileChooserKeys;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ide.ServiceManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.Splitter;

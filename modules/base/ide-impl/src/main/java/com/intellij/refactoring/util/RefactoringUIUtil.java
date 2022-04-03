@@ -23,7 +23,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.ElementDescriptionUtil;
 import consulo.project.Project;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.language.util.IncorrectOperationException;
 import com.intellij.refactoring.RefactoringBundle;
 import consulo.usage.UsageViewUtil;

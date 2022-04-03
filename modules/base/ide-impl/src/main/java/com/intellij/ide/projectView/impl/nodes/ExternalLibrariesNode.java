@@ -21,10 +21,10 @@ package com.intellij.ide.projectView.impl.nodes;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
-import com.intellij.ide.projectView.ViewSettings;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;

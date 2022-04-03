@@ -2,7 +2,7 @@ package com.intellij.remoteServer.impl.runtime.ui.tree;
 
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
-import com.intellij.ide.util.treeView.IndexComparator;
+import consulo.ui.ex.tree.IndexComparator;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;

@@ -24,7 +24,7 @@ import consulo.module.Module;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.copyright.impl.CopyrightManager;

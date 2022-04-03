@@ -23,7 +23,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;

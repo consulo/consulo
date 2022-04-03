@@ -17,6 +17,7 @@ package consulo.codeEditor.markup;
 
 import consulo.codeEditor.Editor;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 /**
@@ -38,4 +39,25 @@ public interface LineMarkerRenderer {
    *               and the bottom of the last line).
    */
   void paint(Editor editor, Graphics g, Rectangle r);
+
+  enum Position {
+    LEFT,
+    RIGHT,
+    CUSTOM
+  }
+
+  /**
+   * Determines where in gutter the line marker should be rendered.
+   * <p>
+   * LEFT - to the left of icon area
+   * RIGHT - to the right of icon area
+   * CUSTOM - over whole gutter area
+   * If renderer does not implement LineMarkerRendererEx the RIGHT position will be used.
+   * <p>
+   * Corresponding rectangle will be passed to renderer in {@link #paint(Editor, Graphics, Rectangle)} method.
+   */
+  @Nonnull
+  default Position getPosition() {
+    return Position.RIGHT;
+  }
 }

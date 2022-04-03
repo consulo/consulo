@@ -16,7 +16,7 @@
 
 package consulo.find.ui;
 
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesHelper;
 import consulo.find.FindUsagesOptions;

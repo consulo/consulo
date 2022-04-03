@@ -16,7 +16,7 @@
 package com.intellij.notification;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.actions.ContextHelpAction;
+import consulo.ui.ex.action.ContextHelpAction;
 import com.intellij.notification.impl.NotificationsConfigurable;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
 import com.intellij.openapi.actionSystem.*;

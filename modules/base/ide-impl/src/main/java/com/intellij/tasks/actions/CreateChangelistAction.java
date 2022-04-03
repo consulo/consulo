@@ -18,7 +18,7 @@ package com.intellij.tasks.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;

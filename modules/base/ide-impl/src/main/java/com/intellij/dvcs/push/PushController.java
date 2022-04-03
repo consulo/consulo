@@ -26,7 +26,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.ui.CheckedTreeNode;
@@ -56,7 +56,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.intellij.openapi.ui.Messages.OK;
+import static consulo.ui.ex.awt.Messages.OK;
 
 public class PushController implements Disposable {
 

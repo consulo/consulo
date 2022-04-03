@@ -24,7 +24,7 @@ import consulo.configurable.Configurable;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Factory;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;

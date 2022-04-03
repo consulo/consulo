@@ -40,7 +40,7 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vcs.versionBrowser.CommittedChangeListImpl;
 import com.intellij.openapi.vcs.versionBrowser.VcsRevisionNumberAware;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.BrowserHyperlinkListener;
+import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SeparatorFactory;
 import com.intellij.util.NotNullFunction;

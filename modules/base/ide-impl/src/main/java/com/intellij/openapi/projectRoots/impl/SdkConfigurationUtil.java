@@ -23,7 +23,7 @@ import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkAdditionalData;
 import consulo.content.bundle.SdkTable;
 import consulo.content.bundle.SdkType;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;

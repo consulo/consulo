@@ -16,7 +16,7 @@
 package com.intellij.refactoring.extractSuperclass;
 
 import consulo.undoRedo.CommandProcessor;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
 import com.intellij.openapi.util.text.StringUtil;

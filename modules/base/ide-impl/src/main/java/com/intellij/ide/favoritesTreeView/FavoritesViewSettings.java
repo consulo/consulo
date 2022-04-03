@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.component.PropertyName;
 import consulo.util.dataholder.KeyWithDefaultValue;

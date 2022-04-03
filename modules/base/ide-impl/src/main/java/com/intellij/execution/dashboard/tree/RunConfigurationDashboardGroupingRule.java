@@ -19,7 +19,7 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.dashboard.DashboardGroup;
 import com.intellij.execution.dashboard.DashboardGroupingRule;
 import com.intellij.execution.dashboard.DashboardRunConfigurationNode;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.fileEditor.structureView.tree.ActionPresentation;
 import consulo.fileEditor.structureView.tree.ActionPresentationData;
 

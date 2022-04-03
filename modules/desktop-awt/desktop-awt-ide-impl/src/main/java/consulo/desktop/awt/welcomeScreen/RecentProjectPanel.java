@@ -29,7 +29,7 @@ import consulo.ui.ex.action.CustomShortcutSet;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;

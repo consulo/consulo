@@ -21,7 +21,7 @@ import consulo.application.impl.internal.ApplicationInfo;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.FieldPanel;
 import consulo.ui.ex.awt.UIUtil;

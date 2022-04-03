@@ -26,7 +26,7 @@ import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;

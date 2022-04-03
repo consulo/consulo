@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.util.treeView;
 
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;

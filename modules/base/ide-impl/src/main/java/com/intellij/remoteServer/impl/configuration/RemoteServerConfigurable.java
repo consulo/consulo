@@ -5,7 +5,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.remoteServer.configuration.RemoteServer;
 import com.intellij.remoteServer.configuration.ServerConfiguration;

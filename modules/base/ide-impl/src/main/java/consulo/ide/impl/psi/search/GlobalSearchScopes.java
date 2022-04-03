@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.search;
 
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.editor.scope.GlobalSearchScopesCore;
+import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;

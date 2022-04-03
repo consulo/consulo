@@ -26,7 +26,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.module.Module;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.util.ArrayUtil;
 
 public class MoveModulesToSubGroupAction extends MoveModulesToGroupAction {

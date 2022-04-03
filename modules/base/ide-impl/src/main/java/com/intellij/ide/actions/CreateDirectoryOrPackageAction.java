@@ -31,7 +31,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
-import com.intellij.openapi.ui.InputValidatorEx;
+import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;

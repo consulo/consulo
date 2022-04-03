@@ -19,7 +19,7 @@ import com.intellij.application.options.pathMacros.PathMacroListEditor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.ui.MultiLineLabelUI;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.ui.ex.awt.IdeBorderFactory;
 
 import javax.swing.*;

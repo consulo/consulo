@@ -22,7 +22,7 @@ import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.ui.AppUIUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;

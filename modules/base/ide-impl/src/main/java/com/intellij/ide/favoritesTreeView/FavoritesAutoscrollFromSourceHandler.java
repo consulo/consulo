@@ -21,16 +21,17 @@ import com.intellij.ide.actions.SelectInContextImpl;
 import consulo.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
+import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.AutoScrollFromSourceHandler;
+import consulo.ui.ex.awt.AutoScrollFromSourceHandler;
 import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class FavoritesAutoscrollFromSourceHandler extends AutoScrollFromSourceHandler {
+public class FavoritesAutoscrollFromSourceHandler extends ProjectViewAutoScrollFromSourceHandler {
   private final FavoritesViewSelectInTarget mySelectInTarget = new FavoritesViewSelectInTarget(myProject);
 
   public FavoritesAutoscrollFromSourceHandler(@Nonnull Project project, @Nonnull FavoritesViewTreeBuilder builder) {

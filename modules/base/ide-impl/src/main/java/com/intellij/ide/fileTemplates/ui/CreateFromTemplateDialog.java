@@ -19,7 +19,7 @@ package com.intellij.ide.fileTemplates.ui;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.CreateFileAction;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;

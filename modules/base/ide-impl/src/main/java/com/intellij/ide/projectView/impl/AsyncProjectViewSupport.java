@@ -6,7 +6,7 @@ import com.intellij.ide.bookmarks.Bookmark;
 import com.intellij.ide.bookmarks.BookmarksListener;
 import com.intellij.ide.projectView.ProjectViewPsiTreeChangeListener;
 import com.intellij.ide.projectView.impl.ProjectViewPaneSelectionHelper.SelectionDescriptor;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.*;

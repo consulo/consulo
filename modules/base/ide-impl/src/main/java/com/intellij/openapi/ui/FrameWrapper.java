@@ -43,7 +43,7 @@ import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor;
-import consulo.ui.ex.internal.InternalPopupUtil;
+import consulo.ui.ex.awt.internal.InternalPopupUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;

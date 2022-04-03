@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.MultiLineLabelUI;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.util.ui.OptionsDialog;

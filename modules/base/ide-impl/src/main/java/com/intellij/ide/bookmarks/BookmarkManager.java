@@ -34,7 +34,7 @@ import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;

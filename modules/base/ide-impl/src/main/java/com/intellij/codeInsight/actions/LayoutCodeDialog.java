@@ -19,7 +19,7 @@ package com.intellij.codeInsight.actions;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.lang.LanguageImportStatements;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.psi.PsiFile;

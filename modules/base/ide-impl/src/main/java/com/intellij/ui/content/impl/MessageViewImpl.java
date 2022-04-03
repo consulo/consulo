@@ -17,7 +17,7 @@
 package com.intellij.ui.content.impl;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.impl.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.ui.ex.toolWindow.ToolWindow;

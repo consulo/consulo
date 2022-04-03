@@ -23,7 +23,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.statistic.FeatureUsageTracker;
 import consulo.logging.Logger;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Splitter;

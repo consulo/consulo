@@ -24,7 +24,7 @@ import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
-import com.intellij.ide.actions.ContextHelpAction;
+import consulo.ui.ex.action.ContextHelpAction;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;

@@ -36,7 +36,7 @@ import com.intellij.openapi.options.binding.BindControl;
 import com.intellij.openapi.options.binding.ControlBinder;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ValidationInfo;
 import com.intellij.tasks.CustomTaskState;
 import com.intellij.tasks.Task;

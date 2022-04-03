@@ -16,8 +16,8 @@
 
 package com.intellij.ide.todo;
 
-import com.intellij.ide.projectView.TreeStructureProvider;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.TreeStructureProvider;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;

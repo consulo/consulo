@@ -52,7 +52,7 @@ import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.application.util.LineTokenizer;
 import com.intellij.openapi.util.text.StringUtil;

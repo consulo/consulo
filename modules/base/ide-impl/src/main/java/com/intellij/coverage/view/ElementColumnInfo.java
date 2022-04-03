@@ -1,6 +1,6 @@
 package com.intellij.coverage.view;
 
-import com.intellij.ide.util.treeView.AlphaComparator;
+import consulo.ui.ex.tree.AlphaComparator;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.ColumnInfo;
 

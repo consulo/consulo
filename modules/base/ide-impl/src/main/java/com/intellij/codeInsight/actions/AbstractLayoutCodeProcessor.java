@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.*;
 import consulo.project.content.GeneratedSourcesFilter;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.ex.MessagesEx;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;

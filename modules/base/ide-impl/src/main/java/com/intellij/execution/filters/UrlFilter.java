@@ -3,7 +3,7 @@ package com.intellij.execution.filters;
 
 import consulo.ide.IdeBundle;
 import com.intellij.ide.browsers.OpenUrlHyperlinkInfo;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.util.io.URLUtil;

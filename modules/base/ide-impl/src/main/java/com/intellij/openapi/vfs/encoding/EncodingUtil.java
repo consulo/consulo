@@ -13,7 +13,7 @@ import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.Pair;

@@ -21,7 +21,7 @@ import com.intellij.openapi.roots.impl.ModuleLibraryTable;
 import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.util.ui.FormBuilder;
 import consulo.disposer.Disposer;
 

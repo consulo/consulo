@@ -20,7 +20,7 @@ import com.intellij.ide.BrowserUtil;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import com.intellij.ui.HyperlinkAdapter;
+import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.Wrapper;

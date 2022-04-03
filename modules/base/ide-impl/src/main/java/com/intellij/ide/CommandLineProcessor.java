@@ -21,7 +21,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;

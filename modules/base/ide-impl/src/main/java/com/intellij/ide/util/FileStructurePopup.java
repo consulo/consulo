@@ -13,7 +13,7 @@ import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
 import com.intellij.ide.structureView.newStructureView.TreeActionWrapper;
 import com.intellij.ide.structureView.newStructureView.TreeActionsOwner;
 import com.intellij.ide.structureView.newStructureView.TreeModelWrapper;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.SmartTreeStructure;
 import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
 import com.intellij.ide.util.treeView.smartTree.TreeStructureUtil;

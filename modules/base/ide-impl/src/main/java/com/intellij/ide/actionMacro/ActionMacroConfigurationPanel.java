@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ListUtil;
 import consulo.ui.ex.keymap.Keymap;
 import com.intellij.openapi.keymap.ex.KeymapManagerEx;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Pair;
 
 import java.util.HashSet;

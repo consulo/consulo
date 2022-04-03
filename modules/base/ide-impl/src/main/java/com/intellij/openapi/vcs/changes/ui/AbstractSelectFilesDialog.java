@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.ui;
 import consulo.application.CommonBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.MultiLineLabelUI;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import com.intellij.openapi.vcs.VcsShowConfirmationOption;
 import consulo.ui.ex.action.*;
 

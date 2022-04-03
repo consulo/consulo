@@ -3,13 +3,14 @@
 package com.intellij.ide.util.treeView;
 
 import com.intellij.ide.projectView.ProjectViewNode;
-import com.intellij.ide.projectView.TreeStructureProvider;
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.project.ui.view.tree.TreeStructureProvider;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.util.dataholder.Key;

@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.ui.InputValidator;
+import consulo.ui.ex.InputValidator;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

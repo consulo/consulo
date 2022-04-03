@@ -19,7 +19,7 @@ import consulo.execution.executor.Executor;
 import com.intellij.execution.dashboard.RunDashboardManager;
 import consulo.execution.ui.RunContentManager;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.impl.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.project.Project;

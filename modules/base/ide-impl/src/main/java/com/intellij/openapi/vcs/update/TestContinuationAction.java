@@ -24,7 +24,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.util.continuation.*;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

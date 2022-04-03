@@ -19,7 +19,7 @@ import com.intellij.ide.impl.ProjectUtil;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.util.BitUtil;
 import consulo.module.extension.impl.ModuleExtensionProviderEP;

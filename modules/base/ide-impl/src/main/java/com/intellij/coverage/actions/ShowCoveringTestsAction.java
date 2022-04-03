@@ -6,9 +6,9 @@ package com.intellij.coverage.actions;
 
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
-import com.intellij.coverage.CoverageDataManager;
-import com.intellij.coverage.CoverageSuite;
-import com.intellij.coverage.CoverageSuitesBundle;
+import consulo.coverage.CoverageDataManager;
+import consulo.coverage.CoverageSuite;
+import consulo.coverage.CoverageSuitesBundle;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;

@@ -3,14 +3,14 @@
 package com.intellij.ide.todo.nodes;
 
 import consulo.ide.IdeBundle;
-import consulo.ui.ex.awt.tree.PresentationData;
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
 import com.intellij.ide.todo.SmartTodoItemPointer;
 import com.intellij.ide.todo.SmartTodoItemPointerComparator;
 import com.intellij.ide.todo.TodoFilter;
 import com.intellij.ide.todo.TodoTreeBuilder;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.document.Document;

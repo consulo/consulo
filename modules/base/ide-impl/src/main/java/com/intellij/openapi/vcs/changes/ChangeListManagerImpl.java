@@ -19,7 +19,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import consulo.component.persist.StoragePathMacros;
 import consulo.application.progress.EmptyProgressIndicator;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Factory;
 import com.intellij.openapi.util.Getter;

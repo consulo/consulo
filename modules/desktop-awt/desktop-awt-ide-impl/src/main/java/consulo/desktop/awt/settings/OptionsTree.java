@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.settings;
 
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.configurable.Configurable;

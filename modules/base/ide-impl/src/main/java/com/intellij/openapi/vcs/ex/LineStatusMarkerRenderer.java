@@ -22,7 +22,6 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;
-import com.intellij.openapi.editor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.vcs.VcsBundle;

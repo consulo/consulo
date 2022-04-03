@@ -17,7 +17,7 @@
 package com.intellij.moduleDependencies;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.impl.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;

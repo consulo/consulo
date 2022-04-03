@@ -29,7 +29,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.content.ContentIterator;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiFile;

@@ -3,7 +3,7 @@ package com.intellij.webcore.packaging;
 
 import consulo.ide.IdeBundle;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.ui.HyperlinkAdapter;
+import consulo.ui.ex.awt.HyperlinkAdapter;
 import com.intellij.util.ui.SwingHelper;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

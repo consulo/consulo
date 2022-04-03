@@ -27,7 +27,7 @@ import consulo.language.editor.inspection.scheme.ModifiableModel;
 import consulo.application.AllIcons;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.component.util.Iconable;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiFile;

@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.shelf;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.VcsException;
 import com.intellij.openapi.vcs.ui.VcsBalloonProblemNotifier;

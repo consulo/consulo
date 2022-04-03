@@ -32,7 +32,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.awt.IdeBorderFactory;

@@ -15,6 +15,8 @@
  */
 package com.intellij.openapi.ui;
 
+import consulo.ui.ex.InputValidator;
+
 public class NonEmptyInputValidator implements InputValidator {
   public boolean checkInput(final String inputString) {
     return inputString.length() > 0;

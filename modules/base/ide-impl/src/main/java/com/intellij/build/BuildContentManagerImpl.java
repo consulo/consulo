@@ -6,7 +6,7 @@ import com.intellij.execution.runners.ExecutionUtil;
 import com.intellij.execution.ui.BaseContentCloseListener;
 import com.intellij.execution.ui.RunContentManagerImpl;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.impl.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import com.intellij.ide.startup.StartupManagerEx;
 import consulo.language.LangBundle;
 import consulo.dataContext.DataProvider;

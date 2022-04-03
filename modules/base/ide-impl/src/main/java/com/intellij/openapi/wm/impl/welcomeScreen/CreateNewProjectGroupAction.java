@@ -5,8 +5,8 @@ import com.intellij.ide.ProjectGroup;
 import com.intellij.ide.RecentProjectsManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.awt.Messages;
 import javax.annotation.Nonnull;
 
 /**

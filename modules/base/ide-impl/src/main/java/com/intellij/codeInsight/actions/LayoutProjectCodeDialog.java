@@ -23,7 +23,7 @@ import com.intellij.find.impl.FindInProjectUtil;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.DialogWrapper;

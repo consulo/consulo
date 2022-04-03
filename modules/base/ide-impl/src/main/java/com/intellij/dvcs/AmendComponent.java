@@ -20,7 +20,7 @@ import com.intellij.dvcs.repo.RepositoryManager;
 import com.intellij.dvcs.ui.DvcsBundle;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.FilePath;

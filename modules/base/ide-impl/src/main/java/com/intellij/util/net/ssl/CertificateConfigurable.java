@@ -5,7 +5,7 @@ import consulo.fileChooser.FileTypeDescriptor;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;

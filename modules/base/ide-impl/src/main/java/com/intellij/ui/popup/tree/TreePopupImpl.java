@@ -2,7 +2,7 @@
 package com.intellij.ui.popup.tree;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.util.treeView.AlphaComparator;
+import consulo.ui.ex.tree.AlphaComparator;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;

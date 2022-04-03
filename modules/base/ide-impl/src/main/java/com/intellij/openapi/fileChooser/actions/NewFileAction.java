@@ -23,7 +23,7 @@ import com.intellij.openapi.fileChooser.FileSystemTree;
 import com.intellij.openapi.fileChooser.ex.FileChooserKeys;
 import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.image.ImageEffects;

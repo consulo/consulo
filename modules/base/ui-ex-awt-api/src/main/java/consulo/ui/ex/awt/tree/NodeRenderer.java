@@ -26,6 +26,8 @@ import consulo.ui.ex.ColoredItemPresentation;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.util.lang.StringUtil;
 

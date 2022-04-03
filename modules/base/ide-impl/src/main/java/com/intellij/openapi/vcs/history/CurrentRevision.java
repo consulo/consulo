@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.history;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
 import com.intellij.openapi.vcs.RepositoryLocation;
 import com.intellij.openapi.vcs.VcsBundle;

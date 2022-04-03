@@ -19,7 +19,7 @@ import com.intellij.ide.ExporterToTextFile;
 import consulo.ide.IdeBundle;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import com.intellij.openapi.editor.impl.EditorFactoryImpl;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;

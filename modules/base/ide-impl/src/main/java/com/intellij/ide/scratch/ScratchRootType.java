@@ -22,7 +22,7 @@ import consulo.application.RunResult;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.UIBundle;

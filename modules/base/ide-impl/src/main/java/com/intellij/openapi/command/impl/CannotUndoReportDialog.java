@@ -20,7 +20,7 @@ import consulo.application.CommonBundle;
 import consulo.document.DocumentReference;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.Nls;

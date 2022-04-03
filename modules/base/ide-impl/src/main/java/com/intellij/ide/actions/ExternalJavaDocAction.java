@@ -30,7 +30,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;

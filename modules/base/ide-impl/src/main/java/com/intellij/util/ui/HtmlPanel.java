@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.ui.BrowserHyperlinkListener;
+import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.StringHtmlUtil;
 

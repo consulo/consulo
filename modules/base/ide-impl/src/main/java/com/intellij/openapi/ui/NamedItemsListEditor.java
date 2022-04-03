@@ -20,10 +20,12 @@
 package com.intellij.openapi.ui;
 
 import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.CustomShortcutSet;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
 import consulo.component.util.Iconable;
 import consulo.configurable.ConfigurationException;

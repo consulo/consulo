@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -22,7 +22,7 @@ import com.intellij.designer.model.PropertyContext;
 import com.intellij.designer.propertyTable.renderers.LabelPropertyRenderer;
 import com.intellij.ide.ui.search.SearchUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;

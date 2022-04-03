@@ -1,6 +1,9 @@
 package com.intellij.coverage;
 
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.coverage.CoverageAnnotator;
+import consulo.coverage.CoverageDataManager;
+import consulo.coverage.CoverageSuitesBundle;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.ProjectViewNode;
 import com.intellij.packageDependencies.ui.PackageDependenciesNode;
 import consulo.language.psi.PsiDirectory;

@@ -32,7 +32,7 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import consulo.project.internal.ProjectManagerEx;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

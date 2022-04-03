@@ -22,7 +22,7 @@ package com.intellij.application.options;
 import consulo.application.CommonBundle;
 import consulo.application.ApplicationBundle;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;

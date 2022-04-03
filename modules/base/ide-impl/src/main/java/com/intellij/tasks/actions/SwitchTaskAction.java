@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.playback.commands.ActionCommand;
 import com.intellij.openapi.ui.popup.*;
 import consulo.ui.ex.action.*;

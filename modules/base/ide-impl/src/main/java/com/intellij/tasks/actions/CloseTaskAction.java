@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.tasks.CustomTaskState;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskManager;

@@ -33,7 +33,7 @@ import com.intellij.codeInspection.ui.actions.InspectionsOptionsToolbarAction;
 import com.intellij.codeInspection.ui.actions.InvokeQuickFixAction;
 import consulo.application.AllIcons;
 import com.intellij.ide.*;
-import com.intellij.ide.actions.ContextHelpAction;
+import consulo.ui.ex.action.ContextHelpAction;
 import consulo.language.editor.inspection.CommonProblemDescriptor;
 import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.editor.inspection.scheme.*;

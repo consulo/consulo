@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.ide.actions.CloseTabToolbarAction;
+import consulo.ui.ex.action.CloseTabToolbarAction;
 import com.intellij.ide.errorTreeView.ErrorTreeElementKind;
 import com.intellij.ide.errorTreeView.HotfixData;
 import com.intellij.ide.errorTreeView.SimpleErrorData;
@@ -42,7 +42,7 @@ import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
@@ -101,7 +101,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.*;
 
-import static com.intellij.openapi.ui.Messages.getQuestionIcon;
+import static consulo.ui.ex.awt.Messages.getQuestionIcon;
 import static com.intellij.util.ui.ConfirmationDialog.requestForConfirmation;
 import static java.text.MessageFormat.format;
 

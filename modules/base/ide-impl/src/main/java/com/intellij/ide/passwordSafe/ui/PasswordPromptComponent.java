@@ -16,7 +16,7 @@
 package com.intellij.ide.passwordSafe.ui;
 
 import com.intellij.ide.passwordSafe.config.PasswordSafeSettings;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awt.UIUtil;

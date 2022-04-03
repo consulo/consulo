@@ -24,7 +24,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ref.Ref;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

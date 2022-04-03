@@ -16,7 +16,7 @@
 package consulo.desktop.awt.uiOld.messages;
 
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.Gray;

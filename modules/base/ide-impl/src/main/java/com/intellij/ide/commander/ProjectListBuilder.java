@@ -18,7 +18,8 @@ package com.intellij.ide.commander;
 
 import com.intellij.ide.CopyPasteUtil;
 import com.intellij.ide.projectView.ProjectViewNode;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.commander.AbstractListBuilder;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;

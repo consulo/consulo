@@ -1,7 +1,7 @@
 package com.intellij.coverage.actions;
 
-import com.intellij.coverage.CoverageDataManager;
-import com.intellij.coverage.CoverageSuitesBundle;
+import consulo.coverage.CoverageDataManager;
+import consulo.coverage.CoverageSuitesBundle;
 import consulo.application.AllIcons;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;

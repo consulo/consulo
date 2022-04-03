@@ -16,8 +16,8 @@
 package com.intellij.openapi.projectRoots.ui;
 
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.ui.InputValidator;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 

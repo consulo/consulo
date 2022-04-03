@@ -20,7 +20,7 @@ import consulo.ui.ex.action.ActionsBundle;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsDataKeys;
 import com.intellij.openapi.vcs.changes.ChangeList;

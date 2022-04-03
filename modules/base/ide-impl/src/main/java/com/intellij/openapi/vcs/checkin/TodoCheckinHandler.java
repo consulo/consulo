@@ -30,7 +30,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
@@ -56,7 +56,7 @@ import java.awt.*;
 import java.util.Collection;
 
 import static consulo.application.CommonBundle.getCancelButtonText;
-import static com.intellij.openapi.ui.Messages.*;
+import static consulo.ui.ex.awt.Messages.*;
 import static consulo.ui.ex.awt.UIUtil.getWarningIcon;
 
 /**

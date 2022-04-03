@@ -2074,11 +2074,8 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
   }
 
   @Nonnull
-  static LineMarkerRendererEx.Position getLineMarkerPosition(@Nonnull LineMarkerRenderer renderer) {
-    if (renderer instanceof LineMarkerRendererEx) {
-      return ((LineMarkerRendererEx)renderer).getPosition();
-    }
-    return LineMarkerRendererEx.Position.RIGHT;
+  static LineMarkerRenderer.Position getLineMarkerPosition(@Nonnull LineMarkerRenderer renderer) {
+    return renderer.getPosition();
   }
 
   int convertX(int x) {

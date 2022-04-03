@@ -35,7 +35,7 @@ import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.internal.ApplicationEx;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import com.intellij.ui.components.panels.HorizontalLayout;

@@ -16,7 +16,7 @@
 
 package com.intellij.ide.projectView.impl;
 
-import com.intellij.ide.projectView.TreeStructureProvider;
+import consulo.project.ui.view.tree.TreeStructureProvider;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;

@@ -1,6 +1,6 @@
 package com.intellij.coverage.view;
 
-import com.intellij.coverage.*;
+import consulo.coverage.*;
 import consulo.project.Project;
 
 /**
@@ -35,7 +35,7 @@ public class CoverageViewSuiteListener implements CoverageSuiteListener {
   private static boolean shouldActivate(CoverageSuitesBundle suitesBundle) {
     final CoverageSuite[] suites = suitesBundle.getSuites();
     for (CoverageSuite suite : suites) {
-      if (!(suite.getCoverageDataFileProvider() instanceof DefaultCoverageFileProvider)) return false; 
+      if (!(suite.getCoverageDataFileProvider() instanceof DefaultCoverageFileProvider)) return false;
     }
     return true;
   }

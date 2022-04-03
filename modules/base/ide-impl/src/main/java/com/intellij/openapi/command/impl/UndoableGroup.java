@@ -26,7 +26,7 @@ import consulo.undoRedo.UnexpectedUndoException;
 import consulo.document.internal.DocumentEx;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;

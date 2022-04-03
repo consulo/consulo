@@ -20,7 +20,7 @@ import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModifiableRootModel;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

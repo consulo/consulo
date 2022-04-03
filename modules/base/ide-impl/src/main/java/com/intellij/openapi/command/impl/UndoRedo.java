@@ -25,7 +25,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtil;

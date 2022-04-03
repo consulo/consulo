@@ -35,7 +35,7 @@ import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import consulo.application.util.logging.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.updateSettings.impl.CheckForUpdateAction;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;

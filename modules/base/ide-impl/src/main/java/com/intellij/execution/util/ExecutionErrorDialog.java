@@ -21,7 +21,7 @@ import com.intellij.execution.RunCanceledByUserException;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogBuilder;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;

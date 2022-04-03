@@ -17,7 +17,7 @@ package com.intellij.ui.tabs.impl;
 
 import consulo.ide.IdeBundle;
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.MouseDragHelper;
 import consulo.ui.ex.awt.util.ScreenUtil;

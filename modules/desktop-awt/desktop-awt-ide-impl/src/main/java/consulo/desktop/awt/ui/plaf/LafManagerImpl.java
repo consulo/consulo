@@ -37,7 +37,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBPopupMenu;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;

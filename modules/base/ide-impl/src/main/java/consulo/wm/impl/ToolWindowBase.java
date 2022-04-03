@@ -17,7 +17,7 @@ package consulo.wm.impl;
 
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
-import com.intellij.ide.impl.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.application.impl.internal.IdeaModalityState;

@@ -28,7 +28,7 @@ import consulo.document.event.DocumentListener;
 import consulo.language.file.LanguageFileType;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.*;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.ex.awt.util.TableUtil;

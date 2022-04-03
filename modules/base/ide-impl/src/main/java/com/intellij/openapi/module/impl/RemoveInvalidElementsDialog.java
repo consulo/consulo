@@ -21,7 +21,7 @@ import com.intellij.openapi.module.ConfigurationErrorType;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import com.intellij.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

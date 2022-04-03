@@ -25,7 +25,7 @@ package com.intellij.openapi.vcs.changes.shelf;
 import consulo.application.CommonBundle;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.changes.*;
 import com.intellij.util.WaitForProgressToShow;

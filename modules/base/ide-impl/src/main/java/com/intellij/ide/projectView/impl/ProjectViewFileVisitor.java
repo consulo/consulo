@@ -2,7 +2,7 @@
 package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.ProjectViewNode;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

@@ -58,7 +58,7 @@ import consulo.language.psi.PsiFileFactory;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.file.light.LightVirtualFile;
-import com.intellij.ui.BrowserHyperlinkListener;
+import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SeparatorFactory;
 import com.intellij.ui.components.panels.HorizontalLayout;

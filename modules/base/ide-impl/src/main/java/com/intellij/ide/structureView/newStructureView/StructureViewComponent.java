@@ -11,7 +11,7 @@ import com.intellij.ide.structureView.impl.StructureViewFactoryImpl;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
 import com.intellij.ide.ui.customization.CustomizationUtil;
 import com.intellij.ide.util.FileStructurePopup;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.GroupWrapper;
 import com.intellij.ide.util.treeView.smartTree.SmartTreeStructure;
 import com.intellij.ide.util.treeView.smartTree.TreeElementWrapper;
@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.AutoScrollFromSourceHandler;
+import consulo.ui.ex.awt.AutoScrollFromSourceHandler;
 import com.intellij.ui.TreeSpeedSearch;
 import com.intellij.ui.tree.StructureTreeModel;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
@@ -576,10 +576,6 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
 
     private MyAutoScrollFromSourceHandler(Project project, Disposable parentDisposable) {
       super(project, getTree(), parentDisposable);
-    }
-
-    @Override
-    protected void selectElementFromEditor(@Nonnull FileEditor editor) {
     }
 
     @Override

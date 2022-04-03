@@ -221,7 +221,7 @@
     <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="com.intellij.openapi.wm.impl.FocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
     <applicationService serviceInterface="consulo.ui.ex.awt.internal.DialogWrapperPeerFactory" serviceImplementation="consulo.desktop.awt.ui.dialog.DialogWrapperPeerFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.ui.mac.MacMessages" serviceImplementation="consulo.desktop.awt.uiOld.messages.JBMacMessages"/>
+    <applicationService serviceInterface="consulo.ui.ex.awt.internal.MacMessages" serviceImplementation="consulo.desktop.awt.uiOld.messages.JBMacMessages"/>
     <applicationService serviceInterface="consulo.ui.popup.JWindowPopupFactory" serviceImplementation="consulo.desktop.awt.ui.popup.impl.JWindowPopupFactoryImpl"/>
     <applicationService serviceInterface="com.intellij.openapi.fileChooser.FileSystemTreeFactory" serviceImplementation="consulo.desktop.awt.fileChooser.impl.DesktopFileSystemTreeFactoryImpl"/>
     <projectService serviceInterface="consulo.fileEditor.FileEditorManager" serviceImplementation="consulo.desktop.awt.fileEditor.impl.DesktopPsiAwareFileEditorManagerImpl" lazy="false"/>

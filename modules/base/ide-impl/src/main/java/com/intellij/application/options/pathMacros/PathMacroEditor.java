@@ -16,7 +16,7 @@
 package com.intellij.application.options.pathMacros;
 
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.TextComponentAccessor;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;

@@ -24,7 +24,7 @@ import consulo.application.util.HtmlBuilder;
 import consulo.application.util.HtmlChunk;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.BrowserHyperlinkListener;
+import consulo.ui.ex.awt.BrowserHyperlinkListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.components.JBLoadingPanel;
 import consulo.application.util.concurrent.AppExecutorUtil;

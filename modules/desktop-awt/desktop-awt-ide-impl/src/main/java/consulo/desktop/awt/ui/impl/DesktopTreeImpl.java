@@ -16,11 +16,11 @@
 package consulo.desktop.awt.ui.impl;
 
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.NodeRenderer;
-import consulo.ui.ex.awt.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import com.intellij.ui.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreeUtil;

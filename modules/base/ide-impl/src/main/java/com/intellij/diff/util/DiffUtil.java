@@ -50,7 +50,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.ui.HyperlinkAdapter;
+import consulo.ui.ex.awt.HyperlinkAdapter;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;

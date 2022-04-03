@@ -32,7 +32,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;

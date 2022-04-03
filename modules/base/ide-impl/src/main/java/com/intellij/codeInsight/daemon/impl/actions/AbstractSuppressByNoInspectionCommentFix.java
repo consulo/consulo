@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl.actions;
 
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.language.Language;

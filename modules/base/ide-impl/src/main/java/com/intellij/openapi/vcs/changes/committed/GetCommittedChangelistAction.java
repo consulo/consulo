@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.committed;
 
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.actions.VcsContext;

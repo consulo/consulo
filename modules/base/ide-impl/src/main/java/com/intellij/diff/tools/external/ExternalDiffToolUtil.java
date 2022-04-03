@@ -21,7 +21,7 @@ import com.intellij.diff.merge.ThreesideMergeRequest;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.Side;
 import com.intellij.diff.util.ThreeSide;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;

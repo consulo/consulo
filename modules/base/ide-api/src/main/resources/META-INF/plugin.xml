@@ -2781,7 +2781,7 @@
 
     <projectService serviceInterface="com.intellij.codeInsight.folding.CodeFoldingManager" serviceImplementation="com.intellij.codeInsight.folding.impl.CodeFoldingManagerImpl"/>
 
-    <applicationService serviceInterface="consulo.application.ui.HelpManager" serviceImplementation="consulo.application.ui.impl.HelpManagerImpl"/>
+    <applicationService serviceInterface="consulo.application.HelpManager" serviceImplementation="consulo.application.ui.impl.HelpManagerImpl"/>
 
     <applicationService serviceInterface="consulo.process.DefaultCharsetProvider" serviceImplementation="consulo.process.impl.DefaultCharsetProviderImpl"/>
     <applicationService serviceInterface="consulo.project.ui.notification.internal.NotificationActionInvoker"

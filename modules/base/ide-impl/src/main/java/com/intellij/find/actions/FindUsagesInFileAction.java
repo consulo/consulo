@@ -28,7 +28,7 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.internal.PsiUtilBase;

@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.impl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import com.intellij.openapi.project.ModuleAdapter;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vcs.AbstractVcs;

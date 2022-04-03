@@ -16,9 +16,9 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.projectView.impl.ModuleGroup;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;

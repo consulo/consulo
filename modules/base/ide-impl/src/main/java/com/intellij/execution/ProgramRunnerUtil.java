@@ -15,26 +15,28 @@
  */
 package com.intellij.execution;
 
-import consulo.execution.*;
+import com.intellij.execution.impl.RunDialog;
+import com.intellij.execution.impl.RunManagerImpl;
+import com.intellij.execution.runners.ExecutionUtil;
+import com.intellij.internal.statistic.UsageTrigger;
+import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.AllIcons;
+import consulo.execution.ExecutionTargetManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.RunnerRegistry;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
-import com.intellij.execution.impl.RunDialog;
-import com.intellij.execution.impl.RunManagerImpl;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import com.intellij.execution.runners.ExecutionUtil;
 import consulo.execution.runner.ProgramRunner;
-import consulo.application.AllIcons;
-import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.internal.statistic.beans.ConvertUsagesUtil;
 import consulo.logging.Logger;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 

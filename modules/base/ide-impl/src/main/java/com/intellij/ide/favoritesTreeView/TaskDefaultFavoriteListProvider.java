@@ -16,7 +16,7 @@
 package com.intellij.ide.favoritesTreeView;
 
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.util.Consumer;

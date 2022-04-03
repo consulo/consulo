@@ -29,7 +29,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.LocalFileSystem;

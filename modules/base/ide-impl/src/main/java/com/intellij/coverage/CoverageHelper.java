@@ -1,8 +1,9 @@
 package com.intellij.coverage;
 
+import consulo.coverage.CoverageDataManager;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
+import consulo.coverage.CoverageEnabledConfiguration;
 import consulo.process.ProcessHandler;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;

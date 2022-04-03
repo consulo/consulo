@@ -35,7 +35,7 @@ import consulo.ide.setting.module.event.LibraryEditorListener;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ui.ex.awt.MasterDetailsStateService;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.awt.tree.TreeUtil;

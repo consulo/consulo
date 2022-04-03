@@ -1,6 +1,6 @@
 package com.intellij.remoteServer.impl.runtime.ui;
 
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

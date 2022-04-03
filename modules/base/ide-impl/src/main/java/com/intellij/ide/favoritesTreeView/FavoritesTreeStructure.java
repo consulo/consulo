@@ -18,10 +18,10 @@ package com.intellij.ide.favoritesTreeView;
 
 import consulo.ide.IdeBundle;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.awt.tree.PresentationData;
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectTreeStructure;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;

@@ -24,7 +24,7 @@ import com.intellij.diff.merge.ThreesideMergeRequest;
 import consulo.process.ExecutionException;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

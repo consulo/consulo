@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.MethodSignatureComponent;
 import com.intellij.refactoring.util.SimpleParameterTablePanel;

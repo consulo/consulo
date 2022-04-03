@@ -15,10 +15,10 @@
  */
 package com.intellij.refactoring.util;
 
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.MultiLineLabelUI;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

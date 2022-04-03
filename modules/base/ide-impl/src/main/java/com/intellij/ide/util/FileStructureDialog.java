@@ -20,7 +20,7 @@ import consulo.ide.IdeBundle;
 import com.intellij.ide.commander.CommanderPanel;
 import com.intellij.ide.commander.ProjectListBuilder;
 import com.intellij.ide.structureView.newStructureView.TreeModelWrapper;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import com.intellij.ide.util.treeView.smartTree.SmartTreeStructure;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.ui.ex.action.IdeActions;

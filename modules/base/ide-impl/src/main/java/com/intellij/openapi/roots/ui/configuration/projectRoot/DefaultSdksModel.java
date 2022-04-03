@@ -30,7 +30,7 @@ import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
 import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import consulo.ide.setting.ui.MasterDetailsComponent;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;

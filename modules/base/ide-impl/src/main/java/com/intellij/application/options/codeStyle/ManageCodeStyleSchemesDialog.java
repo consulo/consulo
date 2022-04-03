@@ -29,7 +29,7 @@ import com.intellij.openapi.options.SchemeImporterEP;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;

@@ -17,14 +17,14 @@ package com.intellij.ide.todo.nodes;
 
 import consulo.ide.IdeBundle;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.awt.tree.PresentationData;
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PackageElementNode;
 import com.intellij.ide.todo.HighlightedRegionProvider;
 import com.intellij.ide.todo.TodoFileDirAndModuleComparator;
 import com.intellij.ide.todo.TodoTreeBuilder;
 import com.intellij.ide.todo.TodoTreeStructure;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.awt.CopyPasteManager;

@@ -25,7 +25,7 @@ import consulo.application.WriteAction;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

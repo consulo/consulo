@@ -25,7 +25,7 @@ import com.intellij.execution.ui.RunContentManagerImpl;
 import com.intellij.ide.GeneralSettings;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.util.ArrayUtil;
 
 import java.util.ArrayList;

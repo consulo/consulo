@@ -21,6 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import consulo.project.Project;
+import consulo.ui.ex.awt.TextComponentUndoProvider;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowManager;

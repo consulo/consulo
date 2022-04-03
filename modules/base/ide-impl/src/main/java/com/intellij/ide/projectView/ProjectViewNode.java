@@ -15,10 +15,12 @@
  */
 package com.intellij.ide.projectView;
 
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
+import consulo.project.ui.view.tree.TreeStructureProvider;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.vfs.VfsUtil;

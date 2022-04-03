@@ -32,7 +32,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.dataContext.DataManager;

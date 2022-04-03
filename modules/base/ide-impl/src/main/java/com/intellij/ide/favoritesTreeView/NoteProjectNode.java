@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.favoritesTreeView;
 
-import consulo.ui.ex.awt.tree.PresentationData;
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.Project;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.VirtualFile;

@@ -20,7 +20,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.ThrowableRunnable;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

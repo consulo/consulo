@@ -19,7 +19,7 @@ package com.intellij.ide.favoritesTreeView.actions;
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.favoritesTreeView.FavoritesManager;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;

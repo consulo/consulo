@@ -3,6 +3,7 @@ package com.intellij.coverage;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.coverage.CoverageOptionsProvider;
 import consulo.project.Project;
 import com.intellij.openapi.util.NotNullComputable;
 import consulo.disposer.Disposable;

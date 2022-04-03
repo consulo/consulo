@@ -35,7 +35,7 @@ import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.internal.ProjectEx;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.util.lang.StringHash;

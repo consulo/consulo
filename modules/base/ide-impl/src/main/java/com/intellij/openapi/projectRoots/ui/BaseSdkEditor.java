@@ -25,7 +25,7 @@ import com.intellij.openapi.projectRoots.impl.SdkImpl;
 import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
 import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;

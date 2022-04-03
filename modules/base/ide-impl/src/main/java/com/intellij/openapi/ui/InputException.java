@@ -17,6 +17,7 @@ package com.intellij.openapi.ui;
 
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.UIBundle;
+import consulo.ui.ex.awt.Messages;
 
 import javax.swing.*;
 

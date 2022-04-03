@@ -26,7 +26,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diagnostic.Attachment;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;

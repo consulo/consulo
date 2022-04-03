@@ -19,7 +19,7 @@ import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
 import consulo.ui.ex.awt.event.DocumentAdapter;

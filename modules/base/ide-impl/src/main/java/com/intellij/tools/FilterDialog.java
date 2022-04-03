@@ -23,7 +23,7 @@ import com.intellij.execution.filters.InvalidExpressionException;
 import com.intellij.execution.filters.RegexpFilter;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBPopupMenu;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.application.CommonBundle;

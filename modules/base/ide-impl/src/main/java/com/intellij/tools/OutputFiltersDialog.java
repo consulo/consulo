@@ -19,7 +19,7 @@
  */
 package com.intellij.tools;
 
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.ui.ex.awt.*;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.SimpleTextAttributes;

@@ -20,7 +20,7 @@ import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;

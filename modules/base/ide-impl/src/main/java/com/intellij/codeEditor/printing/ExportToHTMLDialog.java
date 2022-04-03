@@ -20,7 +20,7 @@ import consulo.component.extension.Extensions;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.FileTextField;
-import consulo.application.ui.HelpManager;
+import consulo.application.HelpManager;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.project.Project;

@@ -23,7 +23,7 @@ import com.intellij.codeInspection.ex.QuickFixAction;
 import com.intellij.codeInspection.ui.InspectionResultsView;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.ListPopup;

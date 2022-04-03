@@ -32,7 +32,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
@@ -53,8 +53,8 @@ import javax.annotation.Nonnull;
 
 import java.util.*;
 
-import static com.intellij.openapi.ui.Messages.getQuestionIcon;
-import static com.intellij.openapi.ui.Messages.showYesNoDialog;
+import static consulo.ui.ex.awt.Messages.getQuestionIcon;
+import static consulo.ui.ex.awt.Messages.showYesNoDialog;
 import static com.intellij.util.containers.UtilKt.notNullize;
 
 public class RollbackAction extends AnAction implements DumbAware {

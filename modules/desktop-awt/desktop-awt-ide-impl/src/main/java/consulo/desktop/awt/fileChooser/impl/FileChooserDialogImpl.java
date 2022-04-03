@@ -30,7 +30,7 @@ import com.intellij.openapi.fileChooser.ex.PathField;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.JBColor;
 import consulo.component.util.Iconable;

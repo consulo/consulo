@@ -33,7 +33,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.awt.util.ColorUtil;
-import com.intellij.ui.HyperlinkAdapter;
+import consulo.ui.ex.awt.HyperlinkAdapter;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightweightHint;
 import javax.annotation.Nonnull;

@@ -47,7 +47,7 @@ import consulo.application.progress.Task;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.PanelWithActionsAndCloseButton;
 import com.intellij.openapi.util.Clock;
 import com.intellij.openapi.util.Comparing;

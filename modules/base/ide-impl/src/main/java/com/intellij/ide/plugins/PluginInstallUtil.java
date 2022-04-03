@@ -20,7 +20,7 @@ import com.intellij.ide.startup.StartupActionScriptManager;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.internal.ApplicationEx;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.util.containers.ArrayListSet;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;

@@ -24,7 +24,7 @@ import consulo.content.library.Library;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import com.intellij.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;

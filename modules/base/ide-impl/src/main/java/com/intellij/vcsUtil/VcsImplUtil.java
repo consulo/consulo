@@ -16,7 +16,7 @@
 package com.intellij.vcsUtil;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.WaitForProgressToShow;

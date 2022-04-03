@@ -17,7 +17,7 @@ package com.intellij.openapi.project.impl;
 
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.table.JBTable;

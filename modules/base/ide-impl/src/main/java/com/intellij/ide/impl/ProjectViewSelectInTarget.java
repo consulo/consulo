@@ -20,7 +20,7 @@ import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.projectView.ProjectView;
 import com.intellij.ide.projectView.SelectableTreeStructureProvider;
-import com.intellij.ide.projectView.TreeStructureProvider;
+import consulo.project.ui.view.tree.TreeStructureProvider;
 import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
 import consulo.application.ApplicationManager;

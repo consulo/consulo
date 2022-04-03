@@ -32,7 +32,7 @@ import com.intellij.openapi.projectRoots.impl.UnknownSdkType;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.ide.setting.ui.MasterDetailsComponent;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.NonEmptyInputValidator;
 import consulo.util.lang.function.Condition;
 import com.intellij.util.Consumer;

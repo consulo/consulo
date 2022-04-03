@@ -15,26 +15,8 @@
  */
 package com.intellij.openapi.editor.markup;
 
-import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.LineMarkerRenderer;
 
-import javax.annotation.Nonnull;
-
-import java.awt.*;
-
+@Deprecated
 public interface LineMarkerRendererEx extends LineMarkerRenderer {
-  enum Position {LEFT, RIGHT, CUSTOM}
-
-  /**
-   * Determines where in gutter the line marker should be rendered.
-   *
-   * LEFT - to the left of icon area
-   * RIGHT - to the right of icon area
-   * CUSTOM - over whole gutter area
-   * If renderer does not implement LineMarkerRendererEx the RIGHT position will be used.
-   *
-   * Corresponding rectangle will be passed to renderer in {@link #paint(Editor, Graphics, Rectangle)} method.
-   */
-  @Nonnull
-  Position getPosition();
 }

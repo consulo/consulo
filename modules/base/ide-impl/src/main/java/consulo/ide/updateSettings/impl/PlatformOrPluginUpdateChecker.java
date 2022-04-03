@@ -22,7 +22,7 @@ import com.intellij.ide.plugins.PluginNode;
 import com.intellij.ide.plugins.RepositoryHelper;
 import com.intellij.notification.NotificationAction;
 import consulo.application.impl.internal.ApplicationInfo;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;

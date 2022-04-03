@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.dashboard;
 
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.fileEditor.structureView.tree.TreeAction;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nullable;

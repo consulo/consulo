@@ -17,7 +17,7 @@ package com.intellij.packaging.impl.elements;
 
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElementType;

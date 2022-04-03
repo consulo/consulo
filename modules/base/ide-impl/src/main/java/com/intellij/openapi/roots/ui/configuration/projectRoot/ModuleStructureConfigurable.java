@@ -39,7 +39,7 @@ import com.intellij.openapi.roots.ui.configuration.ModulesConfiguratorImpl;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ui.ex.awt.MasterDetailsStateService;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.NamedConfigurable;
 import com.intellij.openapi.util.Comparing;
 import consulo.project.ui.wm.WindowManager;

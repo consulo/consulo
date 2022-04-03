@@ -22,7 +22,7 @@ package com.intellij.ide.todo;
 
 import com.intellij.ide.todo.nodes.ToDoRootNode;
 import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;

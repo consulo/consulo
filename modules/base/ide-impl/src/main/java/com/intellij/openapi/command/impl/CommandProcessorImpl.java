@@ -3,7 +3,7 @@ package com.intellij.openapi.command.impl;
 
 import com.intellij.openapi.command.CommandToken;
 import consulo.undoRedo.UndoManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.util.ExceptionUtil;
 import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ProjectUndoManager;

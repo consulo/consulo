@@ -38,7 +38,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.TaskRepository;
 import com.intellij.tasks.impl.BaseRepository;

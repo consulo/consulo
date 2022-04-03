@@ -28,7 +28,7 @@ import consulo.component.persist.Storage;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.playback.PlaybackContext;
 import com.intellij.openapi.ui.playback.PlaybackRunner;
 import consulo.ui.ex.popup.Balloon;

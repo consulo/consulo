@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ex.DecodeDefaultsUtil;
 import consulo.component.persist.RoamingType;
 import consulo.ide.ServiceManager;
 import consulo.component.extension.AbstractExtensionPointBean;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.xml.serializer.InvalidDataException;
 import com.intellij.openapi.util.JDOMUtil;

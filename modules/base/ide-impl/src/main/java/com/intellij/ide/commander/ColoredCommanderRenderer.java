@@ -16,8 +16,8 @@
 
 package com.intellij.ide.commander;
 
-import consulo.ui.ex.awt.tree.PresentationData;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.ui.ex.tree.PresentationData;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.language.editor.ui.SpeedSearchUtil;

@@ -2,7 +2,7 @@
 package com.intellij.openapi.vfs.encoding;
 
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;

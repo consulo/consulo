@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.ui.configuration.artifacts.nodes;
 
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactEditorImpl;
 import com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactProblemDescription;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemType;

@@ -16,6 +16,7 @@
 package com.intellij.openapi.actionSystem;
 
 import com.intellij.ide.*;
+import consulo.application.HelpManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
@@ -58,7 +59,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
   /**
    * Returns help id (String)
    */
-  Key<String> HELP_ID = Key.create("helpId");
+  Key<String> HELP_ID = HelpManager.HELP_ID;
 
   /**
    * Returns project if project node is selected (in project view)

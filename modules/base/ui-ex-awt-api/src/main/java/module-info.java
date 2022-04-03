@@ -12,6 +12,8 @@ module consulo.ui.ex.awt.api {
   requires transitive consulo.color.scheme.api;
   requires transitive consulo.base.localize.library;
   requires transitive consulo.file.chooser.api;
+  requires transitive consulo.project.ui.api;
+  requires consulo.process.api;
 
   requires consulo.desktop.awt.hacking;
 

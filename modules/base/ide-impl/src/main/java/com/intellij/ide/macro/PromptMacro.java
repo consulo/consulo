@@ -18,7 +18,7 @@ package com.intellij.ide.macro;
 
 import consulo.ide.IdeBundle;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import javax.annotation.Nullable;
 
 public final class PromptMacro extends PromptingMacro implements SecondQueueExpandMacro {

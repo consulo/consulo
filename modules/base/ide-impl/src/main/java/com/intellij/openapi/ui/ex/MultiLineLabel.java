@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.ui.ex;
 
-import com.intellij.openapi.ui.MultiLineLabelUI;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 
 import javax.swing.*;
 import java.awt.*;

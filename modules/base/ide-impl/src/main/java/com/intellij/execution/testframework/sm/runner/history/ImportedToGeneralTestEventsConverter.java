@@ -20,7 +20,7 @@ import com.intellij.execution.testframework.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.GeneralTestEventsProcessor;
 import com.intellij.execution.testframework.sm.runner.OutputToGeneralTestEventsConverter;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.io.CharsetToolkit;
 import javax.annotation.Nonnull;
 import org.xml.sax.InputSource;

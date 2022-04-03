@@ -28,7 +28,7 @@ import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.ui.InputValidatorEx;
+import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtilRt;

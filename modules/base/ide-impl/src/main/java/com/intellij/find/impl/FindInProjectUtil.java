@@ -10,7 +10,7 @@ import consulo.dataContext.DataSink;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.find.*;
 import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.scope.GlobalSearchScopesCore;
+import consulo.language.psi.scope.GlobalSearchScopesCore;
 import consulo.navigation.ItemPresentation;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;

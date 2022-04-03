@@ -293,4 +293,6 @@ public abstract class RunManager {
 
   @Nonnull
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
+
+  public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable final String name);
 }

@@ -18,12 +18,12 @@ package com.intellij.ide.todo.nodes;
 
 import consulo.ide.IdeBundle;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.awt.tree.PresentationData;
+import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.todo.CurrentFileTodosTreeBuilder;
 import com.intellij.ide.todo.ToDoSummary;
 import com.intellij.ide.todo.TodoFileDirAndModuleComparator;
 import com.intellij.ide.todo.TodoTreeBuilder;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.ReadAction;
 import consulo.module.Module;
 import consulo.project.DumbService;

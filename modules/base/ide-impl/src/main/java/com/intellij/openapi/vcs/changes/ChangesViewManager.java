@@ -21,7 +21,7 @@ import com.intellij.diff.util.DiffUtil;
 import consulo.application.AllIcons;
 import com.intellij.ide.CommonActionsManager;
 import com.intellij.ide.TreeExpander;
-import com.intellij.ide.actions.ContextHelpAction;
+import consulo.ui.ex.action.ContextHelpAction;
 import consulo.ui.ex.awt.dnd.DnDEvent;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;

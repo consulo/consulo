@@ -26,14 +26,14 @@ public class ActionsBundle extends AbstractBundle{
   private static final ActionsBundle ourInstance = new ActionsBundle();
 
   private ActionsBundle() {
-    super("messages.ActionsBundle");
+    super("consulo.ui.ex.action.ActionsBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.ActionsBundle") String key) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.ui.ex.action.ActionsBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "messages.ActionsBundle") String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.ui.ex.action.ActionsBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 

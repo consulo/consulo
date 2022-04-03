@@ -15,7 +15,7 @@ import com.intellij.ide.actions.runAnything.execution.RunAnythingRunProfile;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.process.cmd.ParametersListUtil;

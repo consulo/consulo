@@ -1,9 +1,13 @@
 package com.intellij.coverage.view;
 
-import com.intellij.coverage.CoverageAnnotator;
-import com.intellij.coverage.CoverageSuitesBundle;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.coverage.CoverageAnnotator;
+import consulo.coverage.CoverageSuitesBundle;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.ApplicationManager;
+import consulo.coverage.CoverageViewExtension;
+import consulo.coverage.CoverageViewManager;
+import consulo.coverage.view.CoverageListNode;
+import consulo.coverage.view.CoverageListRootNode;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;

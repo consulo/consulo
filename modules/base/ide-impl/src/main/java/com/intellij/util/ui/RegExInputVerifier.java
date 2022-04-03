@@ -15,7 +15,7 @@
  */
 package com.intellij.util.ui;
 
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 
 import javax.swing.*;
 import java.text.ParseException;

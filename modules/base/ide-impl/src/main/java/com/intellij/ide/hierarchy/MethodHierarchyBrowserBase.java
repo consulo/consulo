@@ -20,7 +20,7 @@ import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.MultiLineLabelUI;
+import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.action.*;

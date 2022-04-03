@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.ide.projectView.ViewSettings;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;

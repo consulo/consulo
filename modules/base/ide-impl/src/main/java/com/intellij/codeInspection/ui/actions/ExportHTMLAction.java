@@ -30,7 +30,7 @@ import com.intellij.codeInspection.ui.InspectionTreeNode;
 import com.intellij.codeInspection.util.RefEntityAlphabeticalComparator;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;

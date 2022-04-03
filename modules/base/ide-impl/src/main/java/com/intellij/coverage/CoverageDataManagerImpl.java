@@ -1,12 +1,12 @@
 package com.intellij.coverage;
 
 import consulo.application.CommonBundle;
+import consulo.coverage.*;
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.coverage.view.CoverageViewManager;
+import consulo.coverage.CoverageViewManager;
 import com.intellij.coverage.view.CoverageViewSuiteListener;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;

@@ -18,7 +18,10 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.history.LocalHistory;
 import com.intellij.history.LocalHistoryAction;
-import com.intellij.ide.*;
+import com.intellij.ide.CopyPasteDelegator;
+import com.intellij.ide.IdeView;
+import com.intellij.ide.SelectInContext;
+import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.impl.ProjectViewSelectInTarget;
 import com.intellij.ide.projectView.HelpID;
 import com.intellij.ide.projectView.ProjectViewNode;
@@ -26,26 +29,15 @@ import com.intellij.ide.projectView.impl.nodes.*;
 import com.intellij.ide.scopeView.ScopeViewPane;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.DirectoryChooserUtil;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.impl.util.EditorHelper;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
-import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.DeleteProvider;
-import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
-import consulo.language.psi.PsiPackageHelper;
-import com.intellij.ui.AutoScrollFromSourceHandler;
-import consulo.ui.ex.awt.internal.GuiUtils;
-import consulo.ui.ex.content.event.ContentManagerAdapter;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.IJSwingUtilities;
@@ -69,8 +61,11 @@ import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
+import consulo.ide.IdeBundle;
 import consulo.ide.projectView.ProjectViewEx;
 import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.impl.util.EditorHelper;
 import consulo.language.psi.*;
 import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
@@ -85,21 +80,26 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
+import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.tree.TreeVisitor;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
+import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.concurrent.ActionCallback;
@@ -107,6 +107,7 @@ import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.wm.impl.ToolWindowContentUI;
 import jakarta.inject.Inject;
@@ -1755,7 +1756,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     }
   }
 
-  private class MyAutoScrollFromSourceHandler extends AutoScrollFromSourceHandler {
+  private class MyAutoScrollFromSourceHandler extends ProjectViewAutoScrollFromSourceHandler {
     private MyAutoScrollFromSourceHandler() {
       super(ProjectViewImpl.this.myProject, myViewContentPanel, ProjectViewImpl.this);
     }

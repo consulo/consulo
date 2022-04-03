@@ -19,7 +19,7 @@ import com.intellij.diagnostic.VMOptions.MemoryKind;
 import consulo.ide.IdeBundle;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.util.MemoryDumpHelper;

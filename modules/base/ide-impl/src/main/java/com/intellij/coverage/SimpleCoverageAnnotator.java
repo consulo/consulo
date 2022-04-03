@@ -1,5 +1,8 @@
 package com.intellij.coverage;
 
+import consulo.coverage.CoverageDataManager;
+import consulo.coverage.CoverageEngine;
+import consulo.coverage.CoverageSuitesBundle;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;

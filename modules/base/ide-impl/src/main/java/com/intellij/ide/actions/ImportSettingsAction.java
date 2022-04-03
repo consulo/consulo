@@ -30,7 +30,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.dumb.DumbAware;
-import com.intellij.openapi.ui.Messages;
+import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.util.collection.MultiMap;

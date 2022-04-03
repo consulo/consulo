@@ -1,8 +1,9 @@
 package com.intellij.coverage.view;
 
-import com.intellij.coverage.CoverageEngine;
-import com.intellij.coverage.CoverageSuitesBundle;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
+import consulo.coverage.CoverageEngine;
+import consulo.coverage.CoverageSuitesBundle;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.coverage.CoverageViewManager;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
