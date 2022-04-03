@@ -2,7 +2,7 @@
  * @author VISTALL
  * @since 12-Feb-22
  */
-module consulo.debugger.api {
+module consulo.execution.debug.api {
   // todo temp dependency
   requires java.desktop;
 
@@ -10,16 +10,16 @@ module consulo.debugger.api {
   requires transitive consulo.navigation.api;
   requires transitive consulo.language.api;
 
-  exports consulo.debugger;
-  exports consulo.debugger.attach;
-  exports consulo.debugger.attach.osHandler;
-  exports consulo.debugger.event;
-  exports consulo.debugger.breakpoint;
-  exports consulo.debugger.breakpoint.ui;
-  exports consulo.debugger.evaluation;
-  exports consulo.debugger.frame;
-  exports consulo.debugger.step;
-  exports consulo.debugger.setting;
-  exports consulo.debugger.ui;
-  exports consulo.debugger.frame.presentation;
+  exports consulo.execution.debug;
+  exports consulo.execution.debug.attach;
+  exports consulo.execution.debug.attach.osHandler;
+  exports consulo.execution.debug.event;
+  exports consulo.execution.debug.breakpoint;
+  exports consulo.execution.debug.breakpoint.ui;
+  exports consulo.execution.debug.evaluation;
+  exports consulo.execution.debug.frame;
+  exports consulo.execution.debug.step;
+  exports consulo.execution.debug.setting;
+  exports consulo.execution.debug.ui;
+  exports consulo.execution.debug.frame.presentation;
 }

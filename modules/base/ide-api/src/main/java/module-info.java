@@ -39,7 +39,8 @@ module consulo.ide.api {
   requires transitive consulo.navigation.api;
   requires transitive consulo.process.api;
   requires transitive consulo.execution.api;
-  requires transitive consulo.debugger.api;
+  requires transitive consulo.execution.debug.api;
+  requires transitive consulo.execution.coverage.api;
   requires transitive consulo.compiler.api;
   requires transitive consulo.language.editor.api;
   requires transitive consulo.undo.redo.api;
@@ -47,7 +48,6 @@ module consulo.ide.api {
   requires transitive consulo.file.template.api;
   requires transitive consulo.find.api;
   requires transitive consulo.project.ui.view.api;
-  requires transitive consulo.coverage.api;
 
   exports consulo.ide;
   exports consulo.ide.navigation;

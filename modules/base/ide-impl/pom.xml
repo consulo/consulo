@@ -221,7 +221,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-debugger-api</artifactId>
+      <artifactId>consulo-execution-debug-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

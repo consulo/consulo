@@ -50,7 +50,7 @@ open module consulo.ide.impl {
   requires transitive consulo.code.editor.api;
   requires transitive consulo.process.api;
   requires transitive consulo.execution.api;
-  requires transitive consulo.debugger.api;
+  requires transitive consulo.execution.coverage.api;
   requires transitive consulo.compiler.api;
   requires transitive consulo.language.editor.api;
   requires transitive consulo.document.impl;
@@ -316,7 +316,6 @@ open module consulo.ide.impl {
   exports com.intellij.execution.compound;
   exports com.intellij.execution.configuration;
   exports com.intellij.execution.configurations;
-  exports com.intellij.execution.configurations.coverage;
   exports com.intellij.execution.console;
   exports com.intellij.execution.dashboard;
   exports com.intellij.execution.dashboard.tree;
