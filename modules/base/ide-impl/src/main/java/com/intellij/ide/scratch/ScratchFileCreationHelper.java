@@ -14,6 +14,7 @@ import consulo.application.util.function.Computable;
 import consulo.container.plugin.PluginIds;
 import consulo.language.Language;
 import consulo.language.LanguageExtension;
+import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.file.LanguageFileType;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;

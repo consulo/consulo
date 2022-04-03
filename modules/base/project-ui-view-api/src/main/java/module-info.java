@@ -12,6 +12,7 @@ module consulo.project.ui.view.api {
   requires transitive consulo.language.api;
   requires transitive consulo.file.editor.api;
 
+  exports consulo.project.ui.view;
   exports consulo.project.ui.view.tree;
   exports consulo.project.ui.view.commander;
 }

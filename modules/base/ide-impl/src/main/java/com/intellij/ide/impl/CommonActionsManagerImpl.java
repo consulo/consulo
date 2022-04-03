@@ -15,15 +15,20 @@
  */
 package com.intellij.ide.impl;
 
-import consulo.application.AllIcons;
-import com.intellij.ide.*;
+import consulo.ui.ex.action.AutoScrollToSourceOptionProvider;
+import com.intellij.ide.DefaultTreeExpander;
+import consulo.ui.ex.action.ExporterToTextFile;
 import com.intellij.ide.actions.*;
+import consulo.application.AllIcons;
+import consulo.component.ComponentManager;
+import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.AnAction;
-import consulo.project.Project;
+import consulo.ui.ex.action.CommonActionsManager;
 import consulo.ui.ex.action.ContextHelpAction;
 import consulo.ui.ex.awt.AutoScrollToSourceHandler;
-
 import jakarta.inject.Singleton;
+
 import javax.swing.*;
 
 /**
@@ -31,18 +36,22 @@ import javax.swing.*;
  */
 @Singleton
 public class CommonActionsManagerImpl extends CommonActionsManager {
+  @Override
   public AnAction createPrevOccurenceAction(OccurenceNavigator navigator) {
     return new PreviousOccurenceToolbarAction(navigator);
   }
 
+  @Override
   public AnAction createNextOccurenceAction(OccurenceNavigator navigator) {
     return new NextOccurenceToolbarAction(navigator);
   }
 
+  @Override
   public AnAction createExpandAllAction(TreeExpander expander) {
     return new ExpandAllToolbarAction(expander);
   }
 
+  @Override
   public AnAction createExpandAllAction(TreeExpander expander, JComponent component) {
     final ExpandAllToolbarAction expandAllToolbarAction = new ExpandAllToolbarAction(expander);
     expandAllToolbarAction.registerCustomShortcutSet(expandAllToolbarAction.getShortcutSet(), component);
@@ -56,10 +65,12 @@ public class CommonActionsManagerImpl extends CommonActionsManager {
     return action;
   }
 
+  @Override
   public AnAction createCollapseAllAction(TreeExpander expander) {
     return new CollapseAllToolbarAction(expander);
   }
 
+  @Override
   public AnAction createCollapseAllAction(TreeExpander expander, JComponent component) {
     final CollapseAllToolbarAction collapseAllToolbarAction = new CollapseAllToolbarAction(expander);
     collapseAllToolbarAction.registerCustomShortcutSet(collapseAllToolbarAction.getShortcutSet(), component);
@@ -73,16 +84,19 @@ public class CommonActionsManagerImpl extends CommonActionsManager {
     return action;
   }
 
+  @Override
   public AnAction createHelpAction(String helpId) {
     return new ContextHelpAction(helpId);
   }
 
-  public AnAction installAutoscrollToSourceHandler(Project project, JTree tree, final AutoScrollToSourceOptionProvider optionProvider) {
+  public AnAction installAutoscrollToSourceHandler(ComponentManager project, JTree tree, final AutoScrollToSourceOptionProvider optionProvider) {
     AutoScrollToSourceHandler handler = new AutoScrollToSourceHandler() {
+      @Override
       public boolean isAutoScrollMode() {
         return optionProvider.isAutoScrollMode();
       }
 
+      @Override
       public void setAutoScrollMode(boolean state) {
         optionProvider.setAutoScrollMode(state);
       }

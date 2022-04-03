@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.ExporterToTextFile;
+import consulo.ui.ex.action.ExporterToTextFile;
 import com.intellij.ide.util.ExportToFileUtil;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;

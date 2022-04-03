@@ -45,6 +45,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.refactoring;
   exports consulo.language.editor.refactoring.rename;
   exports consulo.language.editor.wolfAnalyzer;
+  exports consulo.language.editor.scratch;
   exports consulo.language.editor.util;
   exports consulo.language.editor.internal.matcher to consulo.language.editor.ui.api, consulo.language.editor.impl, consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.language.editor.rawHighlight.internal to consulo.ide.impl, consulo.injecting.pico.impl;

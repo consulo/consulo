@@ -2446,7 +2446,7 @@
     <refactoring.copyHandler implementation="com.intellij.refactoring.copy.CopyFilesOrDirectoriesHandler"/>
     <refactoring.moveHandler implementation="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesHandler"
                              id="moveFileOrDir"/>
-    <programRunner implementation="com.intellij.execution.runners.BasicProgramRunner" order="last"/>
+    <programRunner implementation="consulo.execution.runner.BasicProgramRunner" order="last"/>
 
     <projectConfigurable instance="com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable"
                          id="project.scopes" parentId="general"

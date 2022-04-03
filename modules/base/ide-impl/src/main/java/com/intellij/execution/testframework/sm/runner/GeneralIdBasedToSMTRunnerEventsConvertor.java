@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.testframework.Printer;
+import consulo.execution.test.Printer;
 import com.intellij.execution.testframework.sm.runner.events.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

@@ -3,11 +3,12 @@ package com.intellij.ide.scratch;
 
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.language.LangBundle;
+import consulo.language.editor.scratch.ScratchUtil;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
-import com.intellij.lang.PerFileMappings;
+import consulo.virtualFileSystem.util.PerFileMappings;
 import consulo.language.editor.WriteCommandAction;
 import com.intellij.openapi.command.undo.BasicUndoableAction;
 import consulo.undoRedo.UnexpectedUndoException;

@@ -16,29 +16,14 @@
 package com.intellij.ide.scratch;
 
 import com.intellij.ide.navigationToolbar.AbstractNavBarModelExtension;
-import com.intellij.lang.PerFileMappings;
 import com.intellij.lang.PerFileMappingsBase;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.event.FileEditorManagerAdapter;
-import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.fileEditor.EditorTabTitleProvider;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.file.FileTypeManager;
-import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighterFactory;
-import consulo.language.editor.highlight.SyntaxHighlighterProvider;
-import consulo.language.plain.PlainTextLanguage;
-import consulo.language.psi.LanguageSubstitutors;
-import consulo.ide.impl.psi.search.UseScopeEnlarger;
-import consulo.usage.UsageType;
 import com.intellij.usages.impl.rules.UsageTypeProvider;
 import com.intellij.util.PathUtil;
-import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.indexing.IndexableSetContributor;
 import com.intellij.util.indexing.LightDirectoryIndex;
@@ -46,30 +31,45 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.container.boot.ContainerPathManager;
+import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
+import consulo.fileEditor.EditorTabTitleProvider;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerAdapter;
+import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.psi.search.UseScopeEnlarger;
+import consulo.language.Language;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.language.editor.highlight.SyntaxHighlighterProvider;
+import consulo.language.editor.scratch.RootType;
+import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.editor.scratch.ScratchUtil;
+import consulo.language.file.FileTypeManager;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
-import consulo.language.Language;
-import consulo.language.psi.LanguageSubstitutor;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiUtilCore;
+import consulo.language.plain.PlainTextLanguage;
+import consulo.language.psi.*;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.content.scope.SearchScope;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.project.event.ProjectManagerAdapter;
+import consulo.project.event.ProjectManagerListener;
+import consulo.ui.UIAccess;
+import consulo.usage.UsageType;
+import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.util.PerFileMappings;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -146,9 +146,9 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
         return FileDocumentManager.getInstance().getDocument(file) != null;
       }
     };
-    ProjectManagerAdapter projectListener = new ProjectManagerAdapter() {
+    ProjectManagerListener projectListener = new ProjectManagerListener() {
       @Override
-      public void projectOpened(Project project) {
+      public void projectOpened(Project project, @Nonnull UIAccess uiAccess) {
         project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, editorListener);
         FileEditorManager editorManager = FileEditorManager.getInstance(project);
         for (VirtualFile virtualFile : editorManager.getOpenFiles()) {
@@ -157,7 +157,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
       }
     };
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-      projectListener.projectOpened(project);
+      projectListener.projectOpened(project, project.getApplication().getLastUIAccess());
     }
     messageBus.connect().subscribe(ProjectManager.TOPIC, projectListener);
   }
@@ -170,7 +170,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   @Nonnull
   @Override
   public PerFileMappings<Language> getScratchesMapping() {
-    return new PerFileMappings<Language>() {
+    return new PerFileMappings<>() {
       @Override
       public void setMapping(@Nullable VirtualFile file, @Nullable Language value) {
         myScratchMapping.setMapping(file, value == null ? null : value.getID());

@@ -16,8 +16,8 @@
 package com.intellij.execution.testframework.sm.runner.states;
 
 
-import com.intellij.execution.testframework.Printer;
-import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
+import consulo.execution.test.Printer;
+import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.disposer.Disposer;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

@@ -30,7 +30,7 @@ import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
-import com.intellij.execution.runners.ExecutionUtil;
+import consulo.execution.ExecutionUtil;
 import com.intellij.execution.ui.layout.impl.DockableGridContainerFactory;
 import com.intellij.ide.GeneralSettings;
 import consulo.application.Application;
@@ -191,7 +191,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
     content.setExecutionId(executionId);
     content.setComponent(descriptor.getComponent());
     content.setPreferredFocusedComponent(descriptor.getPreferredFocusComputable());
-    content.putUserData(RunContentDescriptor.DESCRIPTOR_KEY, descriptor);
+    content.putUserData(RunContentDescriptor.KEY, descriptor);
     content.putUserData(EXECUTOR_KEY, executor);
     content.setDisplayName(descriptor.getDisplayName());
     descriptor.setAttachedContent(content);
@@ -392,7 +392,7 @@ public class RunContentManagerImpl implements RunContentManager, Disposable {
 
   @Nullable
   public static RunContentDescriptor getRunContentDescriptorByContent(@Nonnull Content content) {
-    return content.getUserData(RunContentDescriptor.DESCRIPTOR_KEY);
+    return content.getUserData(RunContentDescriptor.KEY);
   }
 
   @Nullable

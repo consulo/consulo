@@ -25,7 +25,7 @@ import com.intellij.execution.console.ProcessBackedConsoleExecuteActionHandler;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.actions.CloseAction;
-import com.intellij.ide.CommonActionsManager;
+import consulo.ui.ex.action.CommonActionsManager;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;

@@ -1,30 +1,28 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions;
 
-import consulo.ide.IdeBundle;
 import com.intellij.ide.dnd.FileCopyPasteUtil;
-import consulo.language.LangBundle;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
 import consulo.document.FileDocumentManager;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.IdeBundle;
+import consulo.language.LangBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.CopyPasteManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.util.Collections;
@@ -99,7 +97,7 @@ public class CopyReferenceAction extends DumbAwareAction {
       Document document = editor.getDocument();
       PsiFile file = PsiDocumentManager.getInstance(project).getCachedPsiFile(document);
       if (file != null) {
-        String toCopy = getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
+        String toCopy = QualifiedNameProviderUtil.getFileFqn(file) + ":" + (editor.getCaretModel().getLogicalPosition().line + 1);
         CopyPasteManager.getInstance().setContents(new StringSelection(toCopy));
         setStatusBarText(project, LangBundle.message("status.bar.text.reference.has.been.copied", toCopy));
       }
@@ -130,13 +128,4 @@ public class CopyReferenceAction extends DumbAwareAction {
     return CopyReferenceUtil.elementToFqn(element, null);
   }
 
-  public interface VirtualFileQualifiedNameProvider {
-    ExtensionPointName<VirtualFileQualifiedNameProvider> EP_NAME = ExtensionPointName.create("consulo.virtualFileQualifiedNameProvider");
-
-    /**
-     * @return {@code virtualFile} fqn (relative path for example) or null if not handled by this provider
-     */
-    @Nullable
-    String getQualifiedName(@Nonnull Project project, @Nonnull VirtualFile virtualFile);
-  }
 }

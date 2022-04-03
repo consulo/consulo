@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.scratch;
 
+import consulo.language.editor.scratch.ScratchUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.ResolveScopeEnlarger;

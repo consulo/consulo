@@ -20,7 +20,7 @@ import com.intellij.internal.statistic.UsageTrigger;
 import com.intellij.openapi.wm.ToolWindowEP;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import consulo.project.ui.wm.ToolWindowManagerListener;
 import com.intellij.openapi.wm.impl.ToolWindowActiveStack;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.openapi.wm.impl.ToolWindowSideStack;

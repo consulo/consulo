@@ -18,7 +18,7 @@ package com.intellij.util.config;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationPropertiesComponent;
-import consulo.ui.ex.util.Storage;
+import consulo.component.util.config.Storage;
 import org.jetbrains.annotations.NonNls;
 
 /**

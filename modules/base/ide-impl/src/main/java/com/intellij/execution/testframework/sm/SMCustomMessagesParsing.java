@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm;
 
-import com.intellij.execution.testframework.TestConsoleProperties;
+import consulo.execution.test.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.OutputToGeneralTestEventsConverter;
 import javax.annotation.Nonnull;
 

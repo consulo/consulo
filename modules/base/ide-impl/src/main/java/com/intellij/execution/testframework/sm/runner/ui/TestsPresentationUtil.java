@@ -15,16 +15,16 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import com.intellij.execution.process.AnsiEscapeDecoder;
+import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.testframework.PoolOfTestIcons;
-import com.intellij.execution.testframework.Printer;
-import com.intellij.execution.testframework.TestConsoleProperties;
-import com.intellij.execution.testframework.TestsUIUtil;
+import consulo.execution.test.PoolOfTestIcons;
+import consulo.execution.test.Printer;
+import consulo.execution.test.TestConsoleProperties;
+import consulo.execution.test.TestsUIUtil;
 import com.intellij.execution.testframework.sm.SMTestsRunnerBundle;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.execution.testframework.sm.runner.states.TestStateInfo;
-import com.intellij.execution.testframework.ui.TestsProgressAnimator;
+import consulo.execution.test.TestStateInfo;
+import consulo.execution.test.ui.TestsProgressAnimator;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.AllIcons;
 import consulo.util.dataholder.Key;

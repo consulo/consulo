@@ -10,7 +10,7 @@ import com.intellij.ide.projectView.BaseProjectTreeBuilder;
 import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode;
-import com.intellij.ide.scratch.ScratchUtil;
+import consulo.language.editor.scratch.ScratchUtil;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;

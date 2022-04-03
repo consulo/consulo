@@ -17,7 +17,7 @@ package com.intellij.execution.filters.impl;
 
 import consulo.execution.ExecutionBundle;
 import com.intellij.execution.filters.FileHyperlinkInfo;
-import com.intellij.execution.filters.HyperlinkInfoBase;
+import consulo.execution.ui.console.HyperlinkInfoBase;
 import com.intellij.execution.filters.HyperlinkInfoFactory;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.util.gotoByName.GotoFileCellRenderer;

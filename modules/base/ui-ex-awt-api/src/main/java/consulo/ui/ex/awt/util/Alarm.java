@@ -152,7 +152,7 @@ public class Alarm implements Disposable {
     if (myThreadToUse != ThreadToUse.SWING_THREAD) return null;
     Application application = ApplicationManager.getApplication();
     if (application == null) return null;
-    return (ModalityState)application.getDefaultModalityState();
+    return application.getDefaultModalityState();
   }
 
   public void addRequest(@Nonnull Runnable request, long delayMillis) {

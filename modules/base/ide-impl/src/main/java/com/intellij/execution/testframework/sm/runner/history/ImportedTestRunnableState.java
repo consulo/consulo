@@ -23,12 +23,12 @@ import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.RunProfileState;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ProgramRunner;
-import com.intellij.execution.testframework.TestFrameworkRunningModel;
+import consulo.execution.test.TestFrameworkRunningModel;
 import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
 import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
-import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
+import consulo.execution.test.ui.BaseTestsOutputConsoleView;
 import com.intellij.openapi.util.Getter;
 import javax.annotation.Nonnull;
 

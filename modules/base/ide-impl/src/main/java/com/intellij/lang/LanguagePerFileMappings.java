@@ -16,6 +16,8 @@
 package com.intellij.lang;
 
 import consulo.project.Project;
+import consulo.virtualFileSystem.util.PerFileMappings;
+
 import javax.annotation.Nonnull;
 
 import java.util.Objects;

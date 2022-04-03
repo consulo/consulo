@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import com.intellij.execution.testframework.AbstractTestProxy;
-import com.intellij.execution.testframework.TestConsoleProperties;
+import consulo.execution.test.AbstractTestProxy;
+import consulo.execution.test.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.ProxyFilters;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 

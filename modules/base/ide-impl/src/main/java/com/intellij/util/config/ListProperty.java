@@ -16,6 +16,7 @@
 
 package com.intellij.util.config;
 
+import consulo.component.util.config.AbstractProperty;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.ArrayList;

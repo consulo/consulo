@@ -18,7 +18,7 @@ package com.intellij.ide.hierarchy;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import com.intellij.ide.OccurenceNavigator;
+import consulo.ui.ex.OccurenceNavigator;
 import com.intellij.ide.OccurenceNavigatorSupport;
 import com.intellij.ide.PsiCopyPasteManager;
 import com.intellij.ide.dnd.*;

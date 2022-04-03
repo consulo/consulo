@@ -17,7 +17,7 @@
 package com.intellij.ide.actions;
 
 import consulo.ide.IdeBundle;
-import com.intellij.ide.OccurenceNavigator;
+import consulo.ui.ex.OccurenceNavigator;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;

@@ -22,7 +22,6 @@ import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import com.intellij.util.*;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import com.intellij.util.io.URLUtil;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.language.file.FileTypeManager;
@@ -46,15 +45,13 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.*;
 
 public class VfsUtil extends VfsUtilCore {
   private static final Logger LOG = Logger.getInstance(VfsUtil.class);
 
   public static void saveText(@Nonnull VirtualFile file, @Nonnull String text) throws IOException {
-    Charset charset = file.getCharset();
-    file.setBinaryContent(text.getBytes(charset.name()));
+    VirtualFileUtil.saveText(file, text);
   }
 
   /**
@@ -218,12 +215,7 @@ public class VfsUtil extends VfsUtilCore {
 
   @Nullable
   public static VirtualFile findFileByIoFile(@Nonnull File file, boolean refreshIfNeeded) {
-    LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-    VirtualFile virtualFile = fileSystem.findFileByIoFile(file);
-    if (refreshIfNeeded && (virtualFile == null || !virtualFile.isValid())) {
-      virtualFile = fileSystem.refreshAndFindFileByIoFile(file);
-    }
-    return virtualFile;
+    return VirtualFileUtil.findFileByIoFile(file, refreshIfNeeded);
   }
 
   public static VirtualFile copyFileRelative(Object requestor, @Nonnull VirtualFile file, @Nonnull VirtualFile toDir, @Nonnull String relativePath) throws IOException {
@@ -255,23 +247,7 @@ public class VfsUtil extends VfsUtilCore {
    */
   @Nonnull
   public static URI toUri(@Nonnull VirtualFile file) {
-    String path = file.getPath();
-    try {
-      String protocol = file.getFileSystem().getProtocol();
-      if (file.isInLocalFileSystem()) {
-        if (SystemInfo.isWindows && path.charAt(0) != '/') {
-          path = '/' + path;
-        }
-        return new URI(protocol, "", path, null, null);
-      }
-      if (URLUtil.HTTP_PROTOCOL.equals(protocol)) {
-        return new URI(URLUtil.HTTP_PROTOCOL + URLUtil.SCHEME_SEPARATOR + path);
-      }
-      return new URI(protocol, path, null);
-    }
-    catch (URISyntaxException e) {
-      throw new IllegalArgumentException(e);
-    }
+    return VirtualFileUtil.toUri(file);
   }
 
   /**

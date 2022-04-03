@@ -20,7 +20,7 @@ import com.intellij.execution.*;
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
 import com.intellij.execution.impl.ExecutionManagerImpl;
-import com.intellij.execution.runners.ExecutionUtil;
+import consulo.execution.ExecutionUtil;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;

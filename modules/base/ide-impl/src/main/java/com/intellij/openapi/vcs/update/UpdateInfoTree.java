@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.update;
 import com.intellij.history.Label;
 import consulo.application.AllIcons;
 import com.intellij.ide.DefaultTreeExpander;
-import com.intellij.ide.TreeExpander;
+import consulo.ui.ex.TreeExpander;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;

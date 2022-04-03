@@ -21,31 +21,33 @@ import com.intellij.diff.impl.DiffRequestProcessor;
 import com.intellij.diff.impl.DiffWindowBase;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.execution.testframework.AbstractTestProxy;
-import com.intellij.execution.testframework.TestFrameworkRunningModel;
-import com.intellij.execution.testframework.TestTreeView;
-import com.intellij.execution.testframework.TestTreeViewAction;
-import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.dataContext.DataContext;
+import consulo.execution.test.AbstractTestProxy;
+import consulo.execution.test.TestFrameworkRunningModel;
+import consulo.execution.test.action.TestTreeViewAction;
+import consulo.execution.test.stacktrace.DiffHyperlink;
+import consulo.execution.test.ui.TestTreeView;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeViewAction {
-  @NonNls public static final String ACTION_ID = "openAssertEqualsDiff";
+  @NonNls
+  public static final String ACTION_ID = "openAssertEqualsDiff";
 
+  @Override
   public void actionPerformed(final AnActionEvent e) {
     if (!openDiff(e.getDataContext(), null)) {
       final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
@@ -87,6 +89,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
     return providers;
   }
 
+  @Override
   public void update(final AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
     final boolean enabled;

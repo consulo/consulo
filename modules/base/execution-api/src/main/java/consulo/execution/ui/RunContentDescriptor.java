@@ -34,8 +34,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 
 public class RunContentDescriptor implements Disposable {
-  // Should be used in com.intellij.ui.content.Content
-  public static final Key<RunContentDescriptor> DESCRIPTOR_KEY = Key.create("Descriptor");
+  public static final Key<RunContentDescriptor> KEY = Key.create("Descriptor");
 
   private ExecutionConsole myExecutionConsole;
   private ProcessHandler myProcessHandler;

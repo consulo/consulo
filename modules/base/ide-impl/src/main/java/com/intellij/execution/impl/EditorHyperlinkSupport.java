@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.impl;
 
-import com.intellij.execution.filters.HyperlinkInfoBase;
-import com.intellij.ide.OccurenceNavigator;
+import consulo.execution.ui.console.HyperlinkInfoBase;
+import consulo.ui.ex.OccurenceNavigator;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.markup.RangeHighlighterEx;

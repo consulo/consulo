@@ -96,6 +96,22 @@ public class EditorModificationUtil {
     editor.getCaretModel().runForEachCaret(caret -> caret.moveToOffset(caret.getOffset() + caretShift));
   }
 
+  public static void insertStringAtCaret(Editor editor, @Nonnull String s) {
+    insertStringAtCaret(editor, s, false, true);
+  }
+
+  public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode) {
+    return insertStringAtCaret(editor, s, toProcessOverwriteMode, s.length());
+  }
+
+  public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret) {
+    return insertStringAtCaret(editor, s, toProcessOverwriteMode, toMoveCaret, s.length());
+  }
+
+  public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, int caretShift) {
+    return insertStringAtCaret(editor, s, toProcessOverwriteMode, true, caretShift);
+  }
+
   public static int insertStringAtCaret(Editor editor, @Nonnull String s, boolean toProcessOverwriteMode, boolean toMoveCaret, int caretShift) {
     int result = insertStringAtCaretNoScrolling(editor, s, toProcessOverwriteMode, toMoveCaret, caretShift);
     if (toMoveCaret) {

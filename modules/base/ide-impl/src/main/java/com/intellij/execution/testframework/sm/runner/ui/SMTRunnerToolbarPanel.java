@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import com.intellij.execution.testframework.TestConsoleProperties;
-import com.intellij.execution.testframework.TestFrameworkRunningModel;
-import com.intellij.execution.testframework.ToolbarPanel;
+import consulo.execution.test.TestConsoleProperties;
+import consulo.execution.test.TestFrameworkRunningModel;
+import consulo.execution.test.ui.ToolbarPanel;
 
 import javax.swing.*;
 

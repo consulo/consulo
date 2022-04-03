@@ -18,8 +18,8 @@ package com.intellij.packageDependencies.ui;
 
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.ide.CommonActionsManager;
-import com.intellij.ide.ExporterToTextFile;
+import consulo.ui.ex.action.CommonActionsManager;
+import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ui.ex.action.ContextHelpAction;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

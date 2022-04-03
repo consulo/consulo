@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.application.AllIcons;
-import com.intellij.ide.CommonActionsManager;
+import consulo.ui.ex.action.CommonActionsManager;
 import consulo.compiler.artifact.element.*;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.DefaultTreeExpander;

@@ -17,7 +17,7 @@ import consulo.application.util.SystemInfo;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBLabel;
 import com.intellij.ui.speedSearch.SpeedSearch;

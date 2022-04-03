@@ -15,24 +15,26 @@
  */
 package com.intellij.ide.scratch;
 
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.util.ObjectUtil;
 import consulo.application.AllIcons;
-import consulo.language.Language;
 import consulo.application.Result;
 import consulo.application.RunResult;
-import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.language.Language;
 import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.scratch.RootType;
+import consulo.language.editor.scratch.ScratchFileService;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.UIBundle;
-import com.intellij.util.ObjectUtil;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 
 /**
  * @author gregsh
@@ -66,35 +68,29 @@ public final class ScratchRootType extends RootType {
   }
 
   @Nullable
-  public VirtualFile createScratchFile(Project project,
-                                       final String fileName,
-                                       final Language language,
-                                       final String text,
-                                       final ScratchFileService.Option option) {
-    RunResult<VirtualFile> result =
-            new WriteCommandAction<VirtualFile>(project, UIBundle.message("file.chooser.create.new.file.command.name")) {
-              @Override
-              protected boolean isGlobalUndoAction() {
-                return true;
-              }
+  public VirtualFile createScratchFile(Project project, final String fileName, final Language language, final String text, final ScratchFileService.Option option) {
+    RunResult<VirtualFile> result = new WriteCommandAction<VirtualFile>(project, UIBundle.message("file.chooser.create.new.file.command.name")) {
+      @Override
+      protected boolean isGlobalUndoAction() {
+        return true;
+      }
 
-              @Override
-              protected UndoConfirmationPolicy getUndoConfirmationPolicy() {
-                return UndoConfirmationPolicy.REQUEST_CONFIRMATION;
-              }
+      @Override
+      protected UndoConfirmationPolicy getUndoConfirmationPolicy() {
+        return UndoConfirmationPolicy.REQUEST_CONFIRMATION;
+      }
 
-              @Override
-              protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
-                ScratchFileService fileService = ScratchFileService.getInstance();
-                VirtualFile file = fileService.findFile(ScratchRootType.this, fileName, option);
-                fileService.getScratchesMapping().setMapping(file, language);
-                VfsUtil.saveText(file, text);
-                result.setResult(file);
-              }
-            }.execute();
+      @Override
+      protected void run(@Nonnull Result<VirtualFile> result) throws Throwable {
+        ScratchFileService fileService = ScratchFileService.getInstance();
+        VirtualFile file = fileService.findFile(ScratchRootType.this, fileName, option);
+        fileService.getScratchesMapping().setMapping(file, language);
+        VfsUtil.saveText(file, text);
+        result.setResult(file);
+      }
+    }.execute();
     if (result.hasException()) {
-      Messages.showMessageDialog(UIBundle.message("create.new.file.could.not.create.file.error.message", fileName),
-                                 UIBundle.message("error.dialog.title"), Messages.getErrorIcon());
+      Messages.showMessageDialog(UIBundle.message("create.new.file.could.not.create.file.error.message", fileName), UIBundle.message("error.dialog.title"), Messages.getErrorIcon());
       return null;
     }
     return result.getResultObject();

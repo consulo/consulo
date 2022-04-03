@@ -16,7 +16,7 @@
 
 package com.intellij.ide.projectView;
 
-import com.intellij.ide.scratch.ScratchUtil;
+import consulo.language.editor.scratch.ScratchUtil;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.*;

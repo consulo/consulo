@@ -15,12 +15,13 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui.statistics;
 
-import com.intellij.execution.testframework.AbstractTestProxy;
 import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerTestTreeView;
 import com.intellij.execution.testframework.sm.runner.ui.TestResultsViewer;
+import consulo.execution.test.AbstractTestProxy;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+
 import javax.annotation.Nullable;
 
 /**

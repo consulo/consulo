@@ -2065,6 +2065,54 @@ public class StringUtil {
     return s1.substring(0, commonPrefixLength(s1, s2));
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String formatDuration(long duration) {
+    return formatDuration(duration, null);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String formatDuration(long duration, final String spaceBeforeUnits) {
+    return formatValue(duration, " ", new String[]{"ms", "s", "m", "h", "d", "w", "mo", "yr", "c", "ml", "ep"}, new long[]{1000, 60, 60, 24, 7, 4, 12, 100, 10, 10000}, spaceBeforeUnits);
+  }
+
+  @Nonnull
+  private static String formatValue(long value, String partSeparator, String[] units, long[] multipliers, final String spaceBeforeUnits) {
+    StringBuilder sb = new StringBuilder();
+    long count = value;
+    long remainder = 0;
+    int i = 0;
+    for (; i < units.length; i++) {
+      long multiplier = i < multipliers.length ? multipliers[i] : -1;
+      if (multiplier == -1 || count < multiplier) break;
+      remainder = count % multiplier;
+      count /= multiplier;
+      if (partSeparator != null && (remainder != 0 || sb.length() > 0)) {
+        sb.insert(0, units[i]);
+        if (spaceBeforeUnits != null) {
+          sb.insert(0, spaceBeforeUnits);
+        }
+        sb.insert(0, remainder).insert(0, partSeparator);
+      }
+    }
+    if (partSeparator != null || remainder == 0) {
+      sb.insert(0, units[i]);
+      if (spaceBeforeUnits != null) {
+        sb.insert(0, spaceBeforeUnits);
+      }
+      sb.insert(0, count);
+    }
+    else if (remainder > 0) {
+      sb.append(String.format(Locale.US, "%.2f", count + (double)remainder / multipliers[i - 1]));
+      if (spaceBeforeUnits != null) {
+        sb.append(spaceBeforeUnits);
+      }
+      sb.append(units[i]);
+    }
+    return sb.toString();
+  }
+
   @Contract(pure = true)
   public static int commonPrefixLength(@Nonnull CharSequence s1, @Nonnull CharSequence s2) {
     int i;

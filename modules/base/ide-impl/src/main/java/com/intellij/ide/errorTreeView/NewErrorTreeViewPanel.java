@@ -27,6 +27,8 @@ import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.CopyProvider;
+import consulo.ui.ex.OccurenceNavigator;
+import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;

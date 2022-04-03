@@ -23,7 +23,7 @@ import com.intellij.execution.filters.CompositeFilter;
 import com.intellij.execution.filters.FileHyperlinkInfo;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
-import com.intellij.execution.testframework.TestConsoleProperties;
+import consulo.execution.test.TestConsoleProperties;
 import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
 import com.intellij.execution.testframework.sm.SMStacktraceParserEx;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
@@ -42,7 +42,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
-import consulo.ui.ex.util.Storage;
+import consulo.component.util.config.Storage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -90,7 +90,7 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
 
   @Nullable
   @Override
-  protected AnAction createImportAction() {
+  public AnAction createImportAction() {
     return new ImportTestsGroup(this);
   }
 

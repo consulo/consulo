@@ -29,7 +29,7 @@ import com.intellij.openapi.fileEditor.impl.tabActions.CloseTab;
 import com.intellij.openapi.fileEditor.impl.text.FileDropHandler;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import consulo.project.ui.wm.ToolWindowManagerListener;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.docking.DockContainer;
 import com.intellij.ui.docking.DockManager;

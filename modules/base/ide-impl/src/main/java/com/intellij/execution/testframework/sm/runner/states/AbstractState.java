@@ -15,8 +15,9 @@
  */
 package com.intellij.execution.testframework.sm.runner.states;
 
-import com.intellij.execution.testframework.Printable;
-import com.intellij.execution.testframework.Printer;
+import consulo.execution.test.Printable;
+import consulo.execution.test.Printer;
+import consulo.execution.test.TestStateInfo;
 
 /**
  * @author Roman Chernyatchik

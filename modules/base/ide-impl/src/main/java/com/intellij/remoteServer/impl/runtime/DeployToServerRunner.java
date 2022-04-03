@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.runtime;
 
 import consulo.execution.configuration.RunProfile;
-import com.intellij.execution.executors.DefaultDebugExecutor;
+import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.DefaultProgramRunner;
 import com.intellij.remoteServer.impl.configuration.deployment.DeployToServerRunConfiguration;

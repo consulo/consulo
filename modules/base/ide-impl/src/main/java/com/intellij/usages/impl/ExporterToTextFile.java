@@ -16,7 +16,7 @@ import java.util.Enumeration;
 /**
  * @author max
  */
-public class ExporterToTextFile implements com.intellij.ide.ExporterToTextFile {
+public class ExporterToTextFile implements consulo.ui.ex.action.ExporterToTextFile {
   private final UsageViewImpl myUsageView;
   @Nonnull
   private final UsageViewSettings myUsageViewSettings;

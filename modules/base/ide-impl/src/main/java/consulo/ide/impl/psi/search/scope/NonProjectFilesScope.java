@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.search.scope;
 
-import com.intellij.ide.scratch.ScratchUtil;
+import consulo.language.editor.scratch.ScratchUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;

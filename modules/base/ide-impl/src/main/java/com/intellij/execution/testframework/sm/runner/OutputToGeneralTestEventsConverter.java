@@ -3,7 +3,7 @@ package com.intellij.execution.testframework.sm.runner;
 
 import consulo.execution.internal.ConsoleBuffer;
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.testframework.TestConsoleProperties;
+import consulo.execution.test.TestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.events.*;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;

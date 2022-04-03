@@ -17,6 +17,8 @@ package com.intellij.util.config;
 
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Factory;
+import consulo.component.util.config.AbstractProperty;
+import consulo.component.util.config.BooleanProperty;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.util.collection.SmartList;

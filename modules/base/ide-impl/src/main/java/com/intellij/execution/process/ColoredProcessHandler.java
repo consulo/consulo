@@ -15,6 +15,7 @@
  */
 package com.intellij.execution.process;
 
+import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.util.dataholder.Key;
@@ -88,7 +89,7 @@ public class ColoredProcessHandler extends KillableProcessHandler implements Ans
 
   /**
    * @deprecated Inheritors should override coloredTextAvailable method
-   * or implement {@link com.intellij.execution.process.AnsiEscapeDecoder.ColoredChunksAcceptor}
+   * or implement {@link AnsiEscapeDecoder.ColoredChunksAcceptor}
    * and override method coloredChunksAvailable to process colored chunks.
    * To be removed in IDEA 14.
    */

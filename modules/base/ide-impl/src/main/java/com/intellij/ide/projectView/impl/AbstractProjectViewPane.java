@@ -5,7 +5,7 @@ package com.intellij.ide.projectView.impl;
 import com.intellij.ide.DefaultTreeExpander;
 import com.intellij.ide.PsiCopyPasteManager;
 import com.intellij.ide.SelectInTarget;
-import com.intellij.ide.TreeExpander;
+import consulo.ui.ex.TreeExpander;
 import com.intellij.ide.dnd.DnDEventImpl;
 import com.intellij.ide.dnd.TransferableWrapper;
 import com.intellij.ide.dnd.aware.DnDAwareTree;

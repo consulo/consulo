@@ -5,7 +5,7 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.ide.CopyPasteDelegator;
 import com.intellij.ide.DefaultTreeExpander;
 import consulo.ide.IdeBundle;
-import com.intellij.ide.TreeExpander;
+import consulo.ui.ex.TreeExpander;
 import com.intellij.ide.actions.ViewStructureAction;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;

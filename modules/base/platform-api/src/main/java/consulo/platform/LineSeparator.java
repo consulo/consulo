@@ -64,4 +64,16 @@ public enum LineSeparator {
   public static boolean knownAndDifferent(@Nullable LineSeparator separator1, @Nullable LineSeparator separator2) {
     return separator1 != null && separator2 != null && !separator1.equals(separator2);
   }
+
+  @Nullable
+  public static LineSeparator getLineSeparatorAt(@Nonnull CharSequence text, int index) {
+    if (index < 0 || index >= text.length()) {
+      return null;
+    }
+    char ch = text.charAt(index);
+    if (ch == '\r') {
+      return index + 1 < text.length() && text.charAt(index + 1) == '\n' ? LineSeparator.CRLF : LineSeparator.CR;
+    }
+    return ch == '\n' ? LineSeparator.LF : null;
+  }
 }

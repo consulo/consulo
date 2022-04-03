@@ -7,7 +7,7 @@ import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfileState;
-import com.intellij.execution.executors.DefaultDebugExecutor;
+import consulo.execution.debug.DefaultDebugExecutor;
 import com.intellij.execution.filters.TextConsoleBuilderImpl;
 import consulo.execution.ExecutionResult;
 import consulo.execution.executor.Executor;

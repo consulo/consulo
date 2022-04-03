@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.keymap.impl.ui;
 
-import com.intellij.ide.CommonActionsManager;
-import com.intellij.ide.TreeExpander;
+import consulo.ui.ex.action.CommonActionsManager;
+import consulo.ui.ex.TreeExpander;
 import com.intellij.openapi.actionSystem.AbbreviationManager;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import com.intellij.openapi.actionSystem.ex.QuickListsManager;

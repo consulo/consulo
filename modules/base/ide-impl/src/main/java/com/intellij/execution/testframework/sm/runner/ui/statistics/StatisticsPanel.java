@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui.statistics;
 
-import com.intellij.execution.testframework.TestFrameworkRunningModel;
-import com.intellij.execution.testframework.TestsUIUtil;
+import consulo.execution.test.TestFrameworkRunningModel;
+import consulo.execution.test.TestsUIUtil;
 import com.intellij.execution.testframework.sm.SMRunnerUtil;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsAdapter;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerEventsListener;
@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.table.BaseTableView;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.util.TableUtil;
-import consulo.ui.ex.util.Storage;
+import consulo.component.util.config.Storage;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 

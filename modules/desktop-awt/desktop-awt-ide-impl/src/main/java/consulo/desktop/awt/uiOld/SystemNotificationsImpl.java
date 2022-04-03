@@ -20,7 +20,7 @@ import consulo.application.Application;
 import com.intellij.openapi.util.AtomicNullableLazyValue;
 import com.intellij.openapi.util.NullableLazyValue;
 import consulo.application.util.SystemInfo;
-import com.intellij.ui.SystemNotifications;
+import consulo.ui.ex.SystemNotifications;
 import consulo.util.lang.SystemProperties;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;

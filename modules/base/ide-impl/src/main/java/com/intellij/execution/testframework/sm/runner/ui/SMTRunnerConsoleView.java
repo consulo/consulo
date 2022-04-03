@@ -15,14 +15,14 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
+import consulo.execution.test.*;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
-import com.intellij.execution.testframework.*;
 import com.intellij.execution.testframework.sm.SMRunnerUtil;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
-import com.intellij.execution.testframework.ui.TestResultsPanel;
+import consulo.execution.test.ui.BaseTestsOutputConsoleView;
+import consulo.execution.test.ui.TestResultsPanel;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.util.containers.ContainerUtil;

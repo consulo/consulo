@@ -20,7 +20,7 @@ import consulo.execution.action.Location;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.ui.console.Filter;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.testframework.TestConsoleProperties;
+import consulo.execution.test.TestConsoleProperties;
 import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
 import com.intellij.execution.testframework.sm.SMCustomMessagesParsing;
 import com.intellij.execution.testframework.sm.runner.OutputToGeneralTestEventsConverter;

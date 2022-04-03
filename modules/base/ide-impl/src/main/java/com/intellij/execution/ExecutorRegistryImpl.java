@@ -26,7 +26,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import com.intellij.execution.runners.ExecutionUtil;
+import consulo.execution.ExecutionUtil;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.application.AllIcons;

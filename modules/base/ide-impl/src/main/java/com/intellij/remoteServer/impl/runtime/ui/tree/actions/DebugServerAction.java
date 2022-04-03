@@ -1,7 +1,7 @@
 package com.intellij.remoteServer.impl.runtime.ui.tree.actions;
 
 import consulo.execution.executor.Executor;
-import com.intellij.execution.executors.DefaultDebugExecutor;
+import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.application.AllIcons;
 
 /**

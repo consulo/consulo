@@ -1216,6 +1216,20 @@ public class ContainerUtil {
   }
 
   @Nonnull
+  public static <K, V> Map<K, V> newMapFromValues(@Nonnull Iterator<V> values, @Nonnull Function<V, K> keyConvertor) {
+    Map<K, V> map = new HashMap<K, V>();
+    fillMapWithValues(map, values, keyConvertor);
+    return map;
+  }
+
+  public static <K, V> void fillMapWithValues(@Nonnull Map<K, V> map, @Nonnull Iterator<V> values, @Nonnull Function<V, K> keyConvertor) {
+    while (values.hasNext()) {
+      V value = values.next();
+      map.put(keyConvertor.apply(value), value);
+    }
+  }
+
+  @Nonnull
   public static <K, V> Map<K, Set<V>> classify(@Nonnull Iterator<V> iterator, @Nonnull Function<V, K> keyConvertor) {
     Map<K, Set<V>> hashMap = new LinkedHashMap<K, Set<V>>();
     while (iterator.hasNext()) {

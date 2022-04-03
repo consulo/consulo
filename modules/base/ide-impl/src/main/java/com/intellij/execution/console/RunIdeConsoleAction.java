@@ -24,7 +24,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.RunContentDescriptor;
 import com.intellij.execution.ui.actions.CloseAction;
-import com.intellij.ide.scratch.ScratchFileService;
+import consulo.language.editor.scratch.ScratchFileService;
 import com.intellij.ide.script.IdeScriptBindings;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;

@@ -6,6 +6,7 @@ import consulo.dataContext.DataManager;
 import com.intellij.ide.actions.SearchEverywherePsiRenderer;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.gotoByName.*;
+import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.language.editor.CommonDataKeys;
@@ -326,7 +327,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     }
 
     if (SearchEverywhereDataKeys.ITEM_STRING_DESCRIPTION == dataId && element instanceof PsiElement) {
-      return com.intellij.ide.actions.QualifiedNameProviderUtil.getQualifiedName((PsiElement)element);
+      return QualifiedNameProviderUtil.getQualifiedName((PsiElement)element);
     }
 
     return null;

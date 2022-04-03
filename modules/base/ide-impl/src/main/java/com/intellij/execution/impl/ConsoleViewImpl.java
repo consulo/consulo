@@ -11,9 +11,9 @@ import com.intellij.execution.actions.ConsoleActionsPostProcessor;
 import com.intellij.execution.actions.EOFAction;
 import com.intellij.execution.filters.*;
 import consulo.execution.internal.ConsoleBuffer;
-import consulo.execution.ui.console.ObservableConsoleView;
-import com.intellij.ide.CommonActionsManager;
-import com.intellij.ide.OccurenceNavigator;
+import consulo.execution.ui.console.*;
+import consulo.ui.ex.action.CommonActionsManager;
+import consulo.ui.ex.OccurenceNavigator;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -66,11 +66,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.markup.*;
 import consulo.execution.ExecutionBundle;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.Filter.ResultItem;
-import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
@@ -173,13 +169,13 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     this(project, searchScope, viewer, new ConsoleState.NotStartedStated() {
       @Nonnull
       @Override
-      public ConsoleState attachTo(@Nonnull ConsoleViewImpl console, ProcessHandler processHandler) {
+      public ConsoleState attachTo(@Nonnull ConsoleView console, ProcessHandler processHandler) {
         return new ConsoleViewRunningState(console, processHandler, this, true, true);
       }
     }, usePredefinedMessageFilter);
   }
 
-  protected ConsoleViewImpl(@Nonnull final Project project, @Nonnull SearchScope searchScope, boolean viewer, @Nonnull final ConsoleState initialState, boolean usePredefinedMessageFilter) {
+  public ConsoleViewImpl(@Nonnull final Project project, @Nonnull SearchScope searchScope, boolean viewer, @Nonnull final ConsoleState initialState, boolean usePredefinedMessageFilter) {
     super(new BorderLayout());
     initTypedHandler();
     myIsViewer = viewer;

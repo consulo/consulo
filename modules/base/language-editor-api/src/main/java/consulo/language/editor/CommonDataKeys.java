@@ -15,6 +15,7 @@
  */
 package consulo.language.editor;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorKeys;
@@ -27,6 +28,8 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
+@Deprecated
+@DeprecationInfo("Use #KEY fields")
 public interface CommonDataKeys {
   Key<Project> PROJECT = Project.KEY;
   Key<Module> MODULE = Module.KEY;

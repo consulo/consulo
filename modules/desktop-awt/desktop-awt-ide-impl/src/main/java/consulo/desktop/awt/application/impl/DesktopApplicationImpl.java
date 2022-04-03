@@ -247,7 +247,7 @@ public class DesktopApplicationImpl extends BaseApplication {
   @Override
   public void invokeLater(@Nonnull final Runnable runnable, @Nonnull final consulo.ui.ModalityState state, @Nonnull final BooleanSupplier expired) {
     Runnable r = transactionGuard().wrapLaterInvocation(runnable, (IdeaModalityState)state);
-    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), (IdeaModalityState)state, expired, null, true);
+    LaterInvocator.invokeLaterWithCallback(() -> runIntendedWriteActionOnCurrentThread(r), state, expired, null, true);
   }
 
   @RequiredUIAccess

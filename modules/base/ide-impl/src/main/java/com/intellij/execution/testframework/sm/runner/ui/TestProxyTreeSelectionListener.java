@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner.ui;
 
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
-import com.intellij.execution.testframework.TestFrameworkRunningModel;
+import consulo.execution.test.TestFrameworkRunningModel;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

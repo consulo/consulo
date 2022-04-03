@@ -16,7 +16,7 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.ide.OccurenceNavigator;
+import consulo.ui.ex.OccurenceNavigator;
 
 public class NextOccurenceAction extends OccurenceNavigatorActionBase {
   protected String getDescription(OccurenceNavigator navigator) {

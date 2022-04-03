@@ -16,9 +16,9 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import consulo.execution.ui.console.Filter;
-import com.intellij.execution.testframework.Printer;
-import com.intellij.execution.testframework.ui.BaseTestsOutputConsoleView;
-import com.intellij.execution.testframework.ui.TestsOutputConsolePrinter;
+import consulo.execution.test.Printer;
+import consulo.execution.test.ui.BaseTestsOutputConsoleView;
+import consulo.execution.test.ui.TestsOutputConsolePrinter;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;

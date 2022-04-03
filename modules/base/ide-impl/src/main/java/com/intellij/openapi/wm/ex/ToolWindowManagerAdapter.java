@@ -19,10 +19,12 @@
  */
 package com.intellij.openapi.wm.ex;
 
+import consulo.project.ui.wm.ToolWindowManagerListener;
+
 import javax.annotation.Nonnull;
 
 @Deprecated
-public abstract class ToolWindowManagerAdapter implements ToolWindowManagerListener{
+public abstract class ToolWindowManagerAdapter implements ToolWindowManagerListener {
   @Override
   public void toolWindowRegistered(@Nonnull final String id){}
 

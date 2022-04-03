@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.errorTreeView.impl;
 
-import com.intellij.ide.ExporterToTextFile;
+import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorViewStructure;

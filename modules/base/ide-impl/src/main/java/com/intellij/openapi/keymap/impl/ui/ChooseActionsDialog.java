@@ -20,8 +20,8 @@
 package com.intellij.openapi.keymap.impl.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.CommonActionsManager;
-import com.intellij.ide.TreeExpander;
+import consulo.ui.ex.action.CommonActionsManager;
+import consulo.ui.ex.TreeExpander;
 import com.intellij.openapi.actionSystem.ex.QuickList;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ui.ex.keymap.Keymap;

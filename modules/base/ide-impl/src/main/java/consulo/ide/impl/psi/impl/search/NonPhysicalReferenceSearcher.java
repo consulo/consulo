@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.search;
 
-import com.intellij.ide.scratch.ScratchFileService;
+import consulo.language.editor.scratch.ScratchFileService;
 import consulo.application.ApplicationManager;
 import consulo.project.util.query.QueryExecutorBase;
 import consulo.fileEditor.FileEditorManager;

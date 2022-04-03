@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import com.intellij.execution.testframework.TestConsoleProperties;
-import com.intellij.execution.testframework.TestTreeView;
+import consulo.execution.test.TestConsoleProperties;
+import consulo.execution.test.ui.TestTreeView;
 import com.intellij.execution.testframework.sm.runner.SMTRunnerNodeDescriptor;
 import com.intellij.execution.testframework.sm.runner.SMTestProxy;
 import consulo.util.dataholder.Key;

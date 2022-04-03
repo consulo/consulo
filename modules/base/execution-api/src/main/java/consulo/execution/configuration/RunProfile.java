@@ -20,6 +20,7 @@ import consulo.execution.runner.ExecutionEnvironment;
 import consulo.process.ExecutionException;
 import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,10 +33,12 @@ import javax.annotation.Nullable;
  * @see ConfigurationFactory#createTemplateConfiguration(Project)
  */
 public interface RunProfile {
+  Key<RunProfile> KEY = Key.create(RunProfile.class);
+
   /**
    * Prepares for executing a specific instance of the run configuration.
    *
-   * @param executor the execution mode selected by the user (run, debug, profile etc.)
+   * @param executor    the execution mode selected by the user (run, debug, profile etc.)
    * @param environment the environment object containing additional settings for executing the configuration.
    * @return the RunProfileState describing the process which is about to be started, or null if it's impossible to start the process.
    */

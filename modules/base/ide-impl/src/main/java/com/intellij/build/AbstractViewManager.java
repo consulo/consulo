@@ -15,7 +15,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.AtomicClearableLazyValue;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import com.intellij.ui.SystemNotifications;
+import consulo.ui.ex.SystemNotifications;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;

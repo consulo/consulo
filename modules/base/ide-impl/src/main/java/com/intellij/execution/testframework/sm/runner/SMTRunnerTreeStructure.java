@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.execution.testframework.AbstractTestProxy;
-import com.intellij.execution.testframework.TestTreeViewStructure;
+import consulo.execution.test.AbstractTestProxy;
+import consulo.execution.test.TestTreeViewStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

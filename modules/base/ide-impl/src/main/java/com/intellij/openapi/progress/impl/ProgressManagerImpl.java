@@ -14,7 +14,7 @@ import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.ui.SystemNotifications;
+import consulo.ui.ex.SystemNotifications;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;

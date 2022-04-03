@@ -17,7 +17,7 @@
 package com.intellij.util.ui.tree;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.CommonActionsManager;
+import consulo.ui.ex.action.CommonActionsManager;
 import com.intellij.ide.DefaultTreeExpander;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;

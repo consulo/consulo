@@ -17,7 +17,7 @@ package com.intellij.openapi.externalSystem.util;
 
 import consulo.execution.*;
 import consulo.execution.configuration.ConfigurationType;
-import com.intellij.execution.executors.DefaultDebugExecutor;
+import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.Executor;

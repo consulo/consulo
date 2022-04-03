@@ -16,7 +16,7 @@
 package com.intellij.execution.testframework.sm.runner.history;
 
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.testframework.export.TestResultsXmlFormatter;
+import consulo.execution.test.export.TestResultsXmlFormatter;
 import com.intellij.execution.testframework.sm.runner.GeneralTestEventsProcessor;
 import com.intellij.execution.testframework.sm.runner.events.*;
 import com.intellij.openapi.util.Comparing;

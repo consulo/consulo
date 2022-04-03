@@ -5,7 +5,7 @@ import com.intellij.find.*;
 import com.intellij.find.actions.ShowUsagesAction;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.scratch.ScratchUtil;
+import consulo.language.editor.scratch.ScratchUtil;
 import consulo.find.*;
 import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.ui.ex.internal.ActionButtonComponent;

@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl;
 
-import com.intellij.execution.executors.DefaultDebugExecutor;
+import consulo.execution.debug.DefaultDebugExecutor;
 import com.intellij.execution.filters.OpenFileHyperlinkInfo;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.AppUIUtil;
@@ -34,7 +34,6 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.dataContext.DataManager;
-import consulo.debugger.*;
 import consulo.debugger.breakpoint.*;
 import consulo.debugger.event.XBreakpointListener;
 import consulo.debugger.event.XDebugSessionListener;

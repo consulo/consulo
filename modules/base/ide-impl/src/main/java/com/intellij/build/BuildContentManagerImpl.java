@@ -2,7 +2,7 @@
 package com.intellij.build;
 
 import com.intellij.build.process.BuildProcessHandler;
-import com.intellij.execution.runners.ExecutionUtil;
+import consulo.execution.ExecutionUtil;
 import com.intellij.execution.ui.BaseContentCloseListener;
 import com.intellij.execution.ui.RunContentManagerImpl;
 import consulo.dataContext.DataManager;

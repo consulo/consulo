@@ -18,10 +18,9 @@ package com.intellij.execution.filters;
 
 import com.intellij.execution.impl.ConsoleViewImpl;
 import consulo.content.scope.SearchScope;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.execution.ui.console.Filter;
-import consulo.execution.ui.console.TextConsoleBuilder;
+import consulo.execution.ui.console.*;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.process.ProcessHandler;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -34,7 +33,16 @@ import java.util.List;
 public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   private final Project myProject;
   private final SearchScope myScope;
-  private final ArrayList<Filter> myFilters = new ArrayList<>();
+  private final List<Filter> myFilters = new ArrayList<>();
+
+  private ConsoleState myState = new ConsoleState.NotStartedStated() {
+    @Nonnull
+    @Override
+    public ConsoleState attachTo(@Nonnull ConsoleView console, ProcessHandler processHandler) {
+      return new ConsoleViewRunningState(console, processHandler, this, true, true);
+    }
+  };
+  
   private boolean myViewer;
   private boolean myUsePredefinedMessageFilter = true;
 
@@ -57,7 +65,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
   }
 
   protected ConsoleView createConsole() {
-    return new ConsoleViewImpl(myProject, myScope, myViewer, myUsePredefinedMessageFilter);
+    return new ConsoleViewImpl(myProject, myScope, myViewer, myState, myUsePredefinedMessageFilter);
   }
 
   @Override
@@ -76,6 +84,11 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
     myViewer = isViewer;
   }
 
+  @Override
+  public void setState(@Nonnull ConsoleState state) {
+    myState = state;
+  }
+
   protected Project getProject() {
     return myProject;
   }
@@ -84,7 +97,7 @@ public class TextConsoleBuilderImpl extends TextConsoleBuilder {
     return myScope;
   }
 
-  protected ArrayList<Filter> getFilters() {
+  protected List<Filter> getFilters() {
     return myFilters;
   }
 

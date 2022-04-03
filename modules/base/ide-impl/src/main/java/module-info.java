@@ -319,7 +319,6 @@ open module consulo.ide.impl {
   exports com.intellij.execution.console;
   exports com.intellij.execution.dashboard;
   exports com.intellij.execution.dashboard.tree;
-  exports com.intellij.execution.executors;
   exports com.intellij.execution.filters;
   exports com.intellij.execution.filters.impl;
   exports com.intellij.execution.impl;
@@ -329,9 +328,7 @@ open module consulo.ide.impl {
   exports com.intellij.execution.process.impl;
   exports com.intellij.execution.rmi;
   exports com.intellij.execution.runners;
-  exports com.intellij.execution.testframework;
   exports com.intellij.execution.testframework.actions;
-  exports com.intellij.execution.testframework.autotest;
   exports com.intellij.execution.testframework.export;
   exports com.intellij.execution.testframework.sm;
   exports com.intellij.execution.testframework.sm.runner;
@@ -341,8 +338,6 @@ open module consulo.ide.impl {
   exports com.intellij.execution.testframework.sm.runner.states;
   exports com.intellij.execution.testframework.sm.runner.ui;
   exports com.intellij.execution.testframework.sm.runner.ui.statistics;
-  exports com.intellij.execution.testframework.stacktrace;
-  exports com.intellij.execution.testframework.ui;
   exports com.intellij.execution.ui;
   exports com.intellij.execution.ui.actions;
   exports com.intellij.execution.ui.layout;

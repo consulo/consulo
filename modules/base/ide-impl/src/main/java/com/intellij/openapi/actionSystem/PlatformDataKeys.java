@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.actionSystem;
 
-import com.intellij.ide.*;
 import consulo.application.HelpManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.annotation.DeprecationInfo;
@@ -24,11 +23,9 @@ import consulo.fileEditor.FileEditor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.CutProvider;
-import consulo.ui.ex.DeleteProvider;
-import consulo.ui.ex.PasteProvider;
+import consulo.ui.ex.*;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.toolWindow.ToolWindow;

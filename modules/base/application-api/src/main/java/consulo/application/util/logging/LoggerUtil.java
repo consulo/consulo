@@ -18,7 +18,6 @@ package consulo.application.util.logging;
 import consulo.logging.Logger;
 import consulo.logging.attachment.Attachment;
 import consulo.logging.attachment.AttachmentFactory;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +26,7 @@ import javax.annotation.Nonnull;
  * @since 20-Mar-22
  */
 public class LoggerUtil {
-  public static void error(@Nonnull Logger logger, @NonNls @Nonnull String message, @Nonnull String... attachmentText) {
+  public static void error(@Nonnull Logger logger, @Nonnull String message, @Nonnull String... attachmentText) {
     error(logger, message, new Throwable(), attachmentText);
   }
 

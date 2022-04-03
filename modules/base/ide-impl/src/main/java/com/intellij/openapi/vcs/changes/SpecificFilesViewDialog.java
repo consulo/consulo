@@ -16,9 +16,9 @@
 package com.intellij.openapi.vcs.changes;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.CommonActionsManager;
+import consulo.ui.ex.action.CommonActionsManager;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.TreeExpander;
+import consulo.ui.ex.TreeExpander;
 import consulo.dataContext.DataSink;
 import consulo.ui.ex.awt.tree.TreeState;
 import consulo.application.ApplicationManager;

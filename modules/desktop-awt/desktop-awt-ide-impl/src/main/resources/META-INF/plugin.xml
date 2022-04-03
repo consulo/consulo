@@ -194,7 +194,7 @@
     <applicationService serviceInterface="consulo.dataContext.DataManager"
                         serviceImplementation="consulo.desktop.awt.data.impl.DesktopDataManagerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ui.SystemNotifications"
+    <applicationService serviceInterface="consulo.ui.ex.SystemNotifications"
                         serviceImplementation="consulo.desktop.awt.uiOld.SystemNotificationsImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.ui.FrameWrapperPeerFactory" serviceImplementation="consulo.desktop.awt.wm.impl.FrameWrapperPeerFactoryImpl"/>

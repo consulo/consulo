@@ -34,6 +34,7 @@ module consulo.component.api {
   exports consulo.component.util.pointer;
   exports consulo.component.util.text;
   exports consulo.component.util.graph;
+  exports consulo.component.util.config;
 
   exports consulo.component.extension.internal to consulo.application.api, consulo.virtual.file.system.api;
 }

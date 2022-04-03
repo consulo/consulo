@@ -20,7 +20,7 @@ import consulo.debugger.ui.XDebuggerUIConstants;
 import consulo.execution.ExecutionManager;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;
-import com.intellij.execution.executors.DefaultDebugExecutor;
+import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.runner.RunContentBuilder;
 import consulo.execution.runner.RunTab;
 import consulo.execution.ui.console.ConsoleViewContentType;

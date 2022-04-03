@@ -14,7 +14,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.ide.IdeBundle;
-import com.intellij.ide.OccurenceNavigator;
+import consulo.ui.ex.OccurenceNavigator;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.Application;

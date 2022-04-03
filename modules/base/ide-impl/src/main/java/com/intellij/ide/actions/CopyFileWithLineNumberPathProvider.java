@@ -16,6 +16,7 @@
 package com.intellij.ide.actions;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -31,7 +32,7 @@ public class CopyFileWithLineNumberPathProvider extends DumbAwareCopyPathProvide
     }
     else if (editor != null) {
       int line = editor.getCaretModel().getLogicalPosition().line + 1;
-      return CopyReferenceUtil.getVirtualFileFqn(virtualFile, project) + ":" + line;
+      return QualifiedNameProviderUtil.getVirtualFileFqn(virtualFile, project) + ":" + line;
     }
     return null;
   }

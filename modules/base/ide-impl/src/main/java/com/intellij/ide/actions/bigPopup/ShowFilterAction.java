@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions.bigPopup;
 
-import com.intellij.execution.runners.ExecutionUtil;
+import consulo.execution.ExecutionUtil;
 import consulo.application.AllIcons;
 import com.intellij.ide.util.ElementsChooser;
 import consulo.ui.ex.action.AnActionEvent;

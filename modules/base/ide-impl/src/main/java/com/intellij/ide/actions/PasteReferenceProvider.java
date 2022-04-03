@@ -3,6 +3,8 @@ package com.intellij.ide.actions;
 
 import consulo.language.editor.FileModificationService;
 import consulo.ide.IdeBundle;
+import consulo.language.editor.QualifiedNameProvider;
+import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.ui.ex.PasteProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;

@@ -17,7 +17,7 @@
 package com.intellij.execution.util;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.RunCanceledByUserException;
+import consulo.execution.RunCanceledByUserException;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogBuilder;

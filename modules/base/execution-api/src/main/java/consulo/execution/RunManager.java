@@ -295,4 +295,18 @@ public abstract class RunManager {
   public abstract <T extends BeforeRunTask> List<T> getBeforeRunTasks(Key<T> taskProviderID);
 
   public abstract RunnerAndConfigurationSettings findConfigurationByName(@Nullable final String name);
+
+  @Nonnull
+  public abstract Collection<RunnerAndConfigurationSettings> getSortedConfigurations();
+
+  @Nullable
+  public RunnerAndConfigurationSettings findConfigurationByTypeAndName(@Nonnull String typeId, @Nonnull String name) {
+    for (RunnerAndConfigurationSettings settings : getSortedConfigurations()) {
+      ConfigurationType t = settings.getType();
+      if (t != null && typeId.equals(t.getId()) && name.equals(settings.getName())) {
+        return settings;
+      }
+    }
+    return null;
+  }
 }

@@ -1,6 +1,6 @@
 package com.intellij.openapi.options.colors.pages;
 
-import com.intellij.execution.process.ConsoleHighlighter;
+import consulo.execution.process.ConsoleHighlighter;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.highlight.DefaultSyntaxHighlighter;

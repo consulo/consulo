@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.console;
 
-import com.intellij.ide.scratch.RootType;
+import consulo.language.editor.scratch.RootType;
 import consulo.util.lang.StringHash;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

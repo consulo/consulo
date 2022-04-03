@@ -5,7 +5,7 @@ import com.intellij.build.events.*;
 import consulo.execution.ui.console.Filter;
 import com.intellij.execution.filters.LazyFileHyperlinkInfo;
 import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.process.AnsiEscapeDecoder;
+import consulo.execution.process.AnsiEscapeDecoder;
 import consulo.process.ProcessOutputTypes;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.project.Project;

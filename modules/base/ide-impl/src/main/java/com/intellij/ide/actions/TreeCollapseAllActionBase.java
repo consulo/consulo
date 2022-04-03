@@ -16,7 +16,7 @@
 package com.intellij.ide.actions;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.TreeExpander;
+import consulo.ui.ex.TreeExpander;
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;

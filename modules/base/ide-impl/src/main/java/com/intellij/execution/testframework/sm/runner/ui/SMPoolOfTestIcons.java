@@ -15,8 +15,8 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import com.intellij.execution.testframework.PoolOfTestIcons;
-import com.intellij.execution.testframework.ui.TestsProgressAnimator;
+import consulo.execution.test.PoolOfTestIcons;
+import consulo.execution.test.ui.TestsProgressAnimator;
 import consulo.application.AllIcons;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.actions;
 
-import com.intellij.ide.actions.QualifiedNameProvider;
+import consulo.language.editor.QualifiedNameProvider;
 import consulo.project.Project;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;

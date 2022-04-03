@@ -16,8 +16,8 @@
 package com.intellij.execution.testframework.sm.runner.states;
 
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.testframework.CompositePrintable;
-import com.intellij.execution.testframework.Printer;
+import consulo.execution.test.CompositePrintable;
+import consulo.execution.test.Printer;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;

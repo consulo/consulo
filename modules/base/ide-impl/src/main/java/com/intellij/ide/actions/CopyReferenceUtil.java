@@ -3,34 +3,25 @@ package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.daemon.impl.IdentifierUtil;
 import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.ide.scratch.RootType;
-import com.intellij.ide.scratch.ScratchFileService;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.LangDataKeys;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.ex.StatusBarEx;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.language.psi.*;
-import consulo.module.Module;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectFileIndex;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.WindowManager;
-import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.language.editor.TargetElementUtil;
+import consulo.language.psi.*;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -108,8 +99,7 @@ public final class CopyReferenceUtil {
 
   @Nullable
   static String getQualifiedNameFromProviders(@Nullable PsiElement element) {
-    if (element == null) return null;
-    return DumbService.getInstance(element.getProject()).computeWithAlternativeResolveEnabled(() -> QualifiedNameProviderUtil.getQualifiedName(element));
+    return QualifiedNameProviderUtil.getQualifiedNameDumbAware(element);
   }
 
   static String doCopy(List<? extends PsiElement> elements, @Nullable Editor editor) {
@@ -128,72 +118,6 @@ public final class CopyReferenceUtil {
 
   @Nullable
   static String elementToFqn(@Nullable final PsiElement element, @Nullable Editor editor) {
-    String result = getQualifiedNameFromProviders(element);
-    if (result != null) return result;
-
-    if (editor != null) { //IDEA-70346
-      PsiReference reference = TargetElementUtil.findReference(editor, editor.getCaretModel().getOffset());
-      if (reference != null) {
-        result = getQualifiedNameFromProviders(reference.resolve());
-        if (result != null) return result;
-      }
-    }
-
-    if (element instanceof PsiFile) {
-      return FileUtil.toSystemIndependentName(getFileFqn((PsiFile)element));
-    }
-    if (element instanceof PsiDirectory) {
-      return FileUtil.toSystemIndependentName(getVirtualFileFqn(((PsiDirectory)element).getVirtualFile(), element.getProject()));
-    }
-
-    return null;
-  }
-
-  @Nonnull
-  static String getFileFqn(final PsiFile file) {
-    final VirtualFile virtualFile = file.getVirtualFile();
-    return virtualFile == null ? file.getName() : getVirtualFileFqn(virtualFile, file.getProject());
-  }
-
-  @Nonnull
-  public static String getVirtualFileFqn(@Nonnull VirtualFile virtualFile, @Nonnull Project project) {
-    for (CopyReferenceAction.VirtualFileQualifiedNameProvider provider : CopyReferenceAction.VirtualFileQualifiedNameProvider.EP_NAME.getExtensionList()) {
-      String qualifiedName = provider.getQualifiedName(project, virtualFile);
-      if (qualifiedName != null) {
-        return qualifiedName;
-      }
-    }
-
-    Module module = ProjectFileIndex.getInstance(project).getModuleForFile(virtualFile, false);
-    if (module != null) {
-      for (VirtualFile root : ModuleRootManager.getInstance(module).getContentRoots()) {
-        String relativePath = VfsUtilCore.getRelativePath(virtualFile, root);
-        if (relativePath != null) {
-          return relativePath;
-        }
-      }
-    }
-
-    VirtualFile dir = project.getBaseDir();
-    if (dir == null) {
-      return virtualFile.getPath();
-    }
-    String relativePath = VfsUtilCore.getRelativePath(virtualFile, dir);
-    if (relativePath != null) {
-      return relativePath;
-    }
-
-    RootType rootType = RootType.forFile(virtualFile);
-    if (rootType != null) {
-      VirtualFile scratchRootVirtualFile = VfsUtil.findFileByIoFile(new File(ScratchFileService.getInstance().getRootPath(rootType)), false);
-      if (scratchRootVirtualFile != null) {
-        String scratchRelativePath = VfsUtilCore.getRelativePath(virtualFile, scratchRootVirtualFile);
-        if (scratchRelativePath != null) {
-          return scratchRelativePath;
-        }
-      }
-    }
-
-    return virtualFile.getPath();
+    return QualifiedNameProviderUtil.elementToFqn(element, editor);
   }
 }

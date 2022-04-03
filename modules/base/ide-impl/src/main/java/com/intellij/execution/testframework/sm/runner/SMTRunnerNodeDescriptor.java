@@ -15,7 +15,7 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.execution.testframework.ui.BaseTestProxyNodeDescriptor;
+import consulo.execution.test.ui.BaseTestProxyNodeDescriptor;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 

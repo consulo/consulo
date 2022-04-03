@@ -15,6 +15,7 @@
  */
 package consulo.execution.ui.console;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -26,6 +27,10 @@ public abstract class TextConsoleBuilder {
   public abstract void addFilter(Filter filter);
 
   public abstract void setViewer(boolean isViewer);
+
+  public abstract void setState(@Nonnull ConsoleState state);
+
+  public abstract void setUsePredefinedMessageFilter(boolean usePredefinedMessageFilter);
 
   public TextConsoleBuilder filters(Filter... filters) {
     for (Filter filter : filters) {

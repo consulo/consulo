@@ -19,7 +19,7 @@ import consulo.ide.impl.AppTopics;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionManager;
 import consulo.execution.executor.Executor;
-import com.intellij.execution.executors.DefaultDebugExecutor;
+import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.ExecutionConsole;

@@ -16,15 +16,15 @@
 package com.intellij.execution.testframework.sm.runner;
 
 import consulo.execution.action.Location;
+import consulo.execution.test.*;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
-import com.intellij.execution.testframework.*;
 import com.intellij.execution.testframework.sm.SMStacktraceParser;
 import com.intellij.execution.testframework.sm.SMStacktraceParserEx;
 import com.intellij.execution.testframework.sm.runner.events.TestFailedEvent;
 import com.intellij.execution.testframework.sm.runner.states.*;
 import com.intellij.execution.testframework.sm.runner.ui.TestsPresentationUtil;
-import com.intellij.execution.testframework.stacktrace.DiffHyperlink;
+import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import com.intellij.ide.util.EditSourceUtil;
 import consulo.application.ApplicationManager;

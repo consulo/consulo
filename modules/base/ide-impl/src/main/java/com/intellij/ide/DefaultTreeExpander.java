@@ -16,6 +16,7 @@
 
 package com.intellij.ide;
 
+import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.annotation.Nonnull;

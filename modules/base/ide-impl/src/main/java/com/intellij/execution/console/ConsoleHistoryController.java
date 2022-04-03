@@ -17,7 +17,7 @@ package com.intellij.execution.console;
 
 import consulo.ide.impl.AppTopics;
 import consulo.language.editor.completion.lookup.LookupManager;
-import com.intellij.ide.scratch.ScratchFileService;
+import consulo.language.editor.scratch.ScratchFileService;
 import com.intellij.openapi.actionSystem.*;
 import consulo.language.editor.WriteCommandAction;
 import consulo.undoRedo.util.UndoConstants;

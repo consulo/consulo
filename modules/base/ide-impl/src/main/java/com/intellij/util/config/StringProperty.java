@@ -17,6 +17,7 @@
 package com.intellij.util.config;
 
 import com.intellij.openapi.util.Comparing;
+import consulo.component.util.config.ValueProperty;
 import org.jetbrains.annotations.NonNls;
 
 public class StringProperty extends ValueProperty<String> {

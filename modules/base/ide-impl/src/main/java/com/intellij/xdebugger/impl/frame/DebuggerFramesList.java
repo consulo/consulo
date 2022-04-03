@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import com.intellij.ide.OccurenceNavigator;
+import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.awt.JBList;
 import consulo.debugger.XDebuggerBundle;
 

@@ -4,9 +4,9 @@
  */
 package com.intellij.coverage.actions;
 
-import com.intellij.execution.testframework.ToggleModelActionProvider;
-import com.intellij.execution.testframework.ToggleModelAction;
-import com.intellij.execution.testframework.TestConsoleProperties;
+import consulo.execution.test.action.ToggleModelActionProvider;
+import consulo.execution.test.action.ToggleModelAction;
+import consulo.execution.test.TestConsoleProperties;
 
 public class TrackCoverageActionProvider implements ToggleModelActionProvider{
   public ToggleModelAction createToggleModelAction(TestConsoleProperties properties) {

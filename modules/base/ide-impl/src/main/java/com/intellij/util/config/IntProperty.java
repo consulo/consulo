@@ -16,6 +16,7 @@
 
 package com.intellij.util.config;
 
+import consulo.component.util.config.ValueProperty;
 import org.jetbrains.annotations.NonNls;
 
 public class IntProperty extends ValueProperty<Integer> {

@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.testframework.sm.runner;
 
-import com.intellij.execution.testframework.AbstractTestProxy;
-import com.intellij.execution.testframework.Filter;
-import com.intellij.execution.testframework.sm.runner.states.TestStateInfo;
+import consulo.execution.test.AbstractTestProxy;
+import consulo.execution.test.Filter;
+import consulo.execution.test.TestStateInfo;
 
 /**
  * @author Roman Chernyatchik

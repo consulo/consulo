@@ -16,7 +16,7 @@
 
 package com.intellij.ide.impl;
 
-import com.intellij.ide.CommonActionsManager;
+import consulo.ui.ex.action.CommonActionsManager;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;

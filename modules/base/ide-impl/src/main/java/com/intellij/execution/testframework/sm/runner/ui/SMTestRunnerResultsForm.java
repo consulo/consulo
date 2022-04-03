@@ -15,22 +15,24 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
+import consulo.execution.test.*;
+import consulo.execution.test.ui.TestTreeView;
+import consulo.execution.test.ui.ToolbarPanel;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.execution.TestStateStorage;
-import com.intellij.execution.testframework.*;
-import com.intellij.execution.testframework.actions.ScrollToTestSourceAction;
-import com.intellij.execution.testframework.export.TestResultsXmlFormatter;
+import consulo.execution.test.action.ScrollToTestSourceAction;
+import consulo.execution.test.export.TestResultsXmlFormatter;
 import com.intellij.execution.testframework.sm.SMRunnerUtil;
 import com.intellij.execution.testframework.sm.TestHistoryConfiguration;
 import com.intellij.execution.testframework.sm.runner.*;
 import com.intellij.execution.testframework.sm.runner.history.ImportedTestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
-import com.intellij.execution.testframework.ui.TestResultsPanel;
-import com.intellij.execution.testframework.ui.TestsProgressAnimator;
+import consulo.execution.test.ui.TestResultsPanel;
+import consulo.execution.test.ui.TestsProgressAnimator;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
-import com.intellij.openapi.progress.util.ColorProgressBar;
+import consulo.ui.ex.awt.ColorProgressBar;
 import com.intellij.openapi.util.Pass;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;

@@ -16,7 +16,7 @@
 package consulo.ui.ex.awt.table;
 
 import consulo.logging.Logger;
-import consulo.ui.ex.util.Storage;
+import consulo.component.util.config.Storage;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;
