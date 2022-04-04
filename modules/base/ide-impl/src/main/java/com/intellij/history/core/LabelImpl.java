@@ -15,7 +15,7 @@
  */
 package com.intellij.history.core;
 
-import com.intellij.history.ByteContent;
+import consulo.localHistory.ByteContent;
 import com.intellij.history.core.tree.RootEntry;
 
 public interface LabelImpl {

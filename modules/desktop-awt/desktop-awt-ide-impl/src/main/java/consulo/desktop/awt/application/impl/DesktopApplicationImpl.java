@@ -24,7 +24,7 @@ import com.intellij.openapi.project.impl.ProjectManagerImpl;
 import com.intellij.openapi.ui.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.AppIcon;
+import consulo.ui.ex.AppIcon;
 import com.intellij.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.*;
@@ -132,7 +132,7 @@ public class DesktopApplicationImpl extends BaseApplication {
         CommandLineProcessor.processExternalCommandLine(commandLineArgs, null).doWhenDone(project -> {
           final IdeFrame frame = WindowManager.getInstance().getIdeFrame(project);
 
-          if (frame != null) AppIcon.getInstance().requestFocus(frame);
+          if (frame != null) AppIcon.getInstance().requestFocus(frame.getWindow());
         });
       });
 

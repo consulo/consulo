@@ -16,11 +16,15 @@
 package com.intellij.diff.tools.external;
 
 import com.intellij.diff.contents.*;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.content.EmptyContent;
+import consulo.diff.content.FileContent;
 import consulo.diff.merge.MergeResult;
 import com.intellij.diff.merge.ThreesideMergeRequest;
 import com.intellij.diff.util.DiffUserDataKeysEx;
-import com.intellij.diff.util.Side;
-import com.intellij.diff.util.ThreeSide;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

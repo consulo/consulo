@@ -16,6 +16,7 @@
 package com.intellij.util.textCompletion;
 
 import com.intellij.codeInsight.lookup.CharFilter;
+import consulo.application.util.matcher.PlainPrefixMatcher;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.InsertHandler;
 import consulo.language.editor.completion.lookup.InsertionContext;

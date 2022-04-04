@@ -16,7 +16,7 @@
 package com.intellij.ide.diff;
 
 import consulo.diff.chain.DiffRequestProducerException;
-import com.intellij.diff.contents.DiffContent;
+import consulo.diff.content.DiffContent;
 import consulo.application.AllIcons;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

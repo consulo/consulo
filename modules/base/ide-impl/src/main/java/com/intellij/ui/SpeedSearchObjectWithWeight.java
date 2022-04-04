@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;

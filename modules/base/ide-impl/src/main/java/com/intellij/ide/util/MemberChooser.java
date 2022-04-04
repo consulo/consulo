@@ -25,6 +25,8 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;

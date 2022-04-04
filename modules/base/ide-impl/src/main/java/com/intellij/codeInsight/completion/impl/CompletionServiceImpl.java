@@ -4,6 +4,7 @@ package com.intellij.codeInsight.completion.impl;
 import com.intellij.codeInsight.completion.*;
 import com.intellij.codeInsight.lookup.*;
 import consulo.application.ApplicationManager;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.Classifier;
 import consulo.language.editor.completion.lookup.LookupElement;

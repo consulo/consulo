@@ -143,6 +143,11 @@ public class DummyWindow implements Window {
 
   }
 
+  @Override
+  public boolean isActive() {
+    return false;
+  }
+
   @Nullable
   @Override
   public <T> T getUserData(@Nonnull Key<T> key) {

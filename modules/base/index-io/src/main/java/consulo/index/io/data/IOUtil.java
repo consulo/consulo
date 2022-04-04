@@ -2,6 +2,7 @@
 package consulo.index.io.data;
 
 import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreadLocalCachedValue;
 import consulo.util.lang.function.ThrowableSupplier;
 
@@ -144,18 +145,15 @@ public class IOUtil {
   }
 
   public static boolean isAscii(@Nonnull String str) {
-    return isAscii((CharSequence)str);
+    return StringUtil.isAscii(str);
   }
 
   public static boolean isAscii(@Nonnull CharSequence str) {
-    for (int i = 0, length = str.length(); i < length; ++i) {
-      if (str.charAt(i) >= 128) return false;
-    }
-    return true;
+    return StringUtil.isAscii(str);
   }
 
   public static boolean isAscii(char c) {
-    return c < 128;
+    return StringUtil.isAscii(c);
   }
 
   public static boolean deleteAllFilesStartingWith(@Nonnull File file) {

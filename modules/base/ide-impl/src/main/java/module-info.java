@@ -329,7 +329,6 @@ open module consulo.ide.impl {
   exports com.intellij.execution.rmi;
   exports com.intellij.execution.runners;
   exports com.intellij.execution.testframework.actions;
-  exports com.intellij.execution.testframework.export;
   exports com.intellij.execution.testframework.sm;
   exports com.intellij.execution.testframework.sm.runner;
   exports com.intellij.execution.testframework.sm.runner.events;
@@ -363,9 +362,7 @@ open module consulo.ide.impl {
   exports com.intellij.formatting.blocks;
   exports com.intellij.formatting.engine;
   exports com.intellij.formatting.templateLanguages;
-  //exports com.intellij.framework;
   exports com.intellij.framework.detection;
-  exports com.intellij.history;
   exports com.intellij.history.core;
   exports com.intellij.history.core.changes;
   exports com.intellij.history.core.revisions;
@@ -373,7 +370,6 @@ open module consulo.ide.impl {
   exports com.intellij.history.integration;
   exports com.intellij.history.integration.patches;
   exports com.intellij.history.integration.revertion;
-  //exports com.intellij.history.integration.ui;
   exports com.intellij.history.integration.ui.actions;
   exports com.intellij.history.integration.ui.models;
   exports com.intellij.history.integration.ui.views;

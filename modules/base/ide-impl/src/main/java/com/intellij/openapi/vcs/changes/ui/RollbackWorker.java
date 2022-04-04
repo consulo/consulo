@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.changes.ui;
 
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.*;

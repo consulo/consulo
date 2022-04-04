@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.diff.impl.dir;
 
-import com.intellij.diff.DiffContentFactory;
+import consulo.diff.DiffContentFactory;
 import consulo.diff.chain.DiffRequestProducerException;
-import com.intellij.diff.contents.DiffContent;
+import consulo.diff.content.DiffContent;
 import com.intellij.diff.impl.CacheDiffRequestProcessor;
 import consulo.diff.request.DiffRequest;
-import com.intellij.diff.requests.SimpleDiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.tools.util.PrevNextDifferenceIterable;
-import com.intellij.diff.util.DiffPlaces;
+import consulo.diff.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.ide.diff.DiffElement;
 import com.intellij.ide.util.PropertiesComponent;

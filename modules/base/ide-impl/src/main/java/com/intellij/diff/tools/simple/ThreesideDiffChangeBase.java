@@ -18,6 +18,8 @@ package com.intellij.diff.tools.simple;
 import com.intellij.diff.util.*;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -16,7 +16,7 @@
 
 package com.intellij.history.core;
 
-import com.intellij.history.ByteContent;
+import consulo.localHistory.ByteContent;
 import com.intellij.history.core.changes.*;
 import com.intellij.history.core.revisions.ChangeRevision;
 import com.intellij.history.core.revisions.RecentChange;

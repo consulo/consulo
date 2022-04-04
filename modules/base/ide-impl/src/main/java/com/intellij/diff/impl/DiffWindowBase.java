@@ -16,7 +16,7 @@
 package com.intellij.diff.impl;
 
 import consulo.diff.DiffDialogHints;
-import com.intellij.diff.util.DiffUserDataKeys;
+import consulo.diff.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;

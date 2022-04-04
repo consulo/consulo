@@ -15,17 +15,17 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.diff.DiffContentFactory;
+import consulo.diff.DiffContentFactory;
 import com.intellij.diff.DiffContentFactoryEx;
 import consulo.diff.DiffManager;
 import com.intellij.diff.DiffRequestFactory;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.DocumentContent;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
 import consulo.diff.request.DiffRequest;
-import com.intellij.diff.requests.SimpleDiffRequest;
-import com.intellij.diff.util.DiffUserDataKeys;
+import consulo.diff.request.SimpleDiffRequest;
+import consulo.diff.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx;
-import com.intellij.diff.util.Side;
+import consulo.diff.util.Side;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.component.ProcessCanceledException;

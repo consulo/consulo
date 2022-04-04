@@ -3,7 +3,7 @@ package com.intellij.codeInsight.template.postfix.completion;
 
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
-import consulo.language.editor.completion.PrefixMatcher;
+import consulo.application.util.matcher.PrefixMatcher;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.codeInsight.template.impl.LiveTemplateCompletionContributor;
 import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;

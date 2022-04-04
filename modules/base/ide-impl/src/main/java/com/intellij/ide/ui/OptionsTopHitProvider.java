@@ -22,8 +22,8 @@ import consulo.application.ApplicationBundle;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.editor.internal.matcher.MinusculeMatcher;
-import consulo.language.editor.internal.matcher.NameUtil;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

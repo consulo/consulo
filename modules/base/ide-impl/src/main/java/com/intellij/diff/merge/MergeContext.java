@@ -15,6 +15,7 @@
  */
 package com.intellij.diff.merge;
 
+import consulo.diff.DiffUserDataKeys;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.project.Project;
@@ -42,7 +43,7 @@ public abstract class MergeContext implements UserDataHolder {
   public abstract void finishMerge(@Nonnull MergeResult result);
 
   /**
-   * @see com.intellij.diff.util.DiffUserDataKeys
+   * @see DiffUserDataKeys
    */
   @Nullable
   @Override

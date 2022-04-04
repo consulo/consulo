@@ -1,6 +1,6 @@
 package com.intellij.xdebugger.impl.ui.tree;
 
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;

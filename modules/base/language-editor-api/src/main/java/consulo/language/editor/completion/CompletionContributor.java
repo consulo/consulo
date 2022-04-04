@@ -20,6 +20,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.extension.KeyedExtensionCollector;
 import consulo.application.util.function.Computable;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.codeEditor.Editor;
 import consulo.container.plugin.PluginIds;
 import consulo.language.Language;

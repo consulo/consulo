@@ -17,12 +17,12 @@ package com.intellij.diff.merge;
 
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.content.DiffContent;
+import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.request.DiffRequest;
-import com.intellij.diff.requests.SimpleDiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
 import com.intellij.diff.tools.binary.ThreesideBinaryDiffViewer;
 import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.openapi.util.BooleanGetter;

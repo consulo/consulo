@@ -19,7 +19,7 @@ import consulo.ui.ex.popup.ListPopupStep;
 import consulo.ui.ex.popup.ListSeparator;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.speedSearch.ElementFilter;
-import com.intellij.ui.speedSearch.SpeedSearch;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

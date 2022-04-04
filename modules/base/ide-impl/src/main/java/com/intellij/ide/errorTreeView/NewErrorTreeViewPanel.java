@@ -47,7 +47,7 @@ import consulo.ui.ex.content.Content;
 import com.intellij.ui.content.MessageView;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import com.intellij.util.ui.MutableErrorTreeView;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;

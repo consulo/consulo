@@ -56,7 +56,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import com.intellij.util.NullableFunction;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;

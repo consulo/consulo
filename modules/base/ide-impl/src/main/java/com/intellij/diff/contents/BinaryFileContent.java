@@ -15,6 +15,7 @@
  */
 package com.intellij.diff.contents;
 
+import consulo.diff.content.FileContent;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 

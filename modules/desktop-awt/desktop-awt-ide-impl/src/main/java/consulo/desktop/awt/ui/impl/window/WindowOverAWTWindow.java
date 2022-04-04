@@ -68,6 +68,11 @@ public abstract class WindowOverAWTWindow implements Window, ToSwingWindowWrappe
     return myWindow;
   }
 
+  @Override
+  public boolean isActive() {
+    return myWindow.isActive();
+  }
+
   @RequiredUIAccess
   @Override
   public void show() {

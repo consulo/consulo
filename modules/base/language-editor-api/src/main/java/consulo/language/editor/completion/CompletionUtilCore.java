@@ -17,6 +17,7 @@ package consulo.language.editor.completion;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.util.concurrent.ThreadDumper;
+import consulo.application.util.matcher.CompositeStringHolder;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.editor.completion.internal.OffsetTranslator;
@@ -103,13 +104,13 @@ public class CompletionUtilCore {
     return psi;
   }
 
-  public static Iterable<String> iterateLookupStrings(@Nonnull final LookupElement element) {
+  public static Iterable<String> iterateLookupStrings(@Nonnull final CompositeStringHolder element) {
     return new Iterable<String>() {
       @Nonnull
       @Override
       public Iterator<String> iterator() {
-        final Iterator<String> original = element.getAllLookupStrings().iterator();
-        return new UnmodifiableIterator<String>(original) {
+        final Iterator<String> original = element.getAllStrings().iterator();
+        return new UnmodifiableIterator<>(original) {
           @Override
           public boolean hasNext() {
             try {

@@ -41,7 +41,7 @@ import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.FileModificationService;
-import consulo.language.editor.completion.PrefixMatcher;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;

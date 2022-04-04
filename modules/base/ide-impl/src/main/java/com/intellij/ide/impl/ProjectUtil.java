@@ -21,7 +21,8 @@ import com.intellij.ide.RecentProjectsManager;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.projectImport.ProjectOpenProcessor;
-import com.intellij.ui.AppIcon;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.ex.AppIcon;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.concurrent.PooledAsyncResult;
 import consulo.components.impl.stores.IProjectStore;
@@ -144,7 +145,10 @@ public class ProjectUtil {
     JFrame f = WindowManager.getInstance().getFrame(p);
     if (f != null) {
       if (executeIfAppInactive) {
-        AppIcon.getInstance().requestFocus(WindowManager.getInstance().getIdeFrame(p));
+        IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(p);
+        if (ideFrame != null) {
+          AppIcon.getInstance().requestFocus(ideFrame.getWindow());
+        }
         f.toFront();
       }
       else {

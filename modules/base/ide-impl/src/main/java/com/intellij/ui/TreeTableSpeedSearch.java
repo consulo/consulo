@@ -17,6 +17,8 @@
 package com.intellij.ui;
 
 import com.intellij.util.containers.Convertor;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.util.TableUtil;
 

@@ -15,10 +15,11 @@
  */
 package com.intellij.diff.tools.fragmented;
 
-import com.intellij.diff.fragments.LineFragment;
+import consulo.diff.fragment.LineFragment;
 import com.intellij.diff.util.*;
 import com.intellij.diff.util.DiffUtil.UpdatedLineRange;
 import consulo.application.AllIcons;
+import consulo.diff.util.Side;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.document.Document;

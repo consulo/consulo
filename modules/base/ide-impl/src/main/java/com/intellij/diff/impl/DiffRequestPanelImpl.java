@@ -17,8 +17,8 @@ package com.intellij.diff.impl;
 
 import consulo.diff.DiffRequestPanel;
 import consulo.diff.request.DiffRequest;
-import com.intellij.diff.requests.NoDiffRequest;
-import com.intellij.diff.util.DiffUserDataKeys;
+import consulo.diff.request.NoDiffRequest;
+import consulo.diff.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
@@ -27,6 +27,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
@@ -36,7 +37,7 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
   @Nonnull
   private final MyDiffRequestProcessor myProcessor;
 
-  public DiffRequestPanelImpl(@javax.annotation.Nullable Project project, @javax.annotation.Nullable Window window) {
+  public DiffRequestPanelImpl(@Nullable Project project, @Nullable Window window) {
     myProcessor = new MyDiffRequestProcessor(project, window);
     myProcessor.putContextUserData(DiffUserDataKeys.DO_NOT_CHANGE_WINDOW_TITLE, true);
 
@@ -51,17 +52,18 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
   }
 
   @Override
-  public void setRequest(@javax.annotation.Nullable DiffRequest request) {
+  public void setRequest(@Nullable DiffRequest request) {
     setRequest(request, null);
   }
 
   @Override
-  public void setRequest(@javax.annotation.Nullable DiffRequest request, @javax.annotation.Nullable Object identity) {
+  public void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
     myProcessor.setRequest(request, identity);
   }
 
+  @RequiredUIAccess
   @Override
-  public <T> void putContextHints(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public <T> void putContextHints(@Nonnull Key<T> key, @Nullable T value) {
     myProcessor.putContextUserData(key, value);
   }
 
@@ -71,7 +73,7 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
     return myPanel;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public JComponent getPreferredFocusedComponent() {
     return myProcessor.getPreferredFocusedComponent();
@@ -83,20 +85,20 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
   }
 
   private static class MyDiffRequestProcessor extends DiffRequestProcessor {
-    @javax.annotation.Nullable
+    @Nullable
     private final Window myWindow;
 
     @Nonnull
     private DiffRequest myRequest = NoDiffRequest.INSTANCE;
-    @javax.annotation.Nullable
+    @Nullable
     private Object myRequestIdentity = null;
 
-    public MyDiffRequestProcessor(@javax.annotation.Nullable Project project, @javax.annotation.Nullable Window window) {
+    public MyDiffRequestProcessor(@Nullable Project project, @Nullable Window window) {
       super(project);
       myWindow = window;
     }
 
-    public synchronized void setRequest(@javax.annotation.Nullable DiffRequest request, @javax.annotation.Nullable Object identity) {
+    public synchronized void setRequest(@Nullable DiffRequest request, @Nullable Object identity) {
       if (myRequestIdentity != null && identity != null && myRequestIdentity.equals(identity)) return;
 
       myRequest = request != null ? request : NoDiffRequest.INSTANCE;
@@ -107,7 +109,7 @@ public class DiffRequestPanelImpl implements DiffRequestPanel {
 
     @Override
     @RequiredUIAccess
-    public synchronized void updateRequest(boolean force, @javax.annotation.Nullable DiffUserDataKeysEx.ScrollToPolicy scrollToChangePolicy) {
+    public synchronized void updateRequest(boolean force, @Nullable DiffUserDataKeysEx.ScrollToPolicy scrollToChangePolicy) {
       applyRequest(myRequest, force, scrollToChangePolicy);
     }
 

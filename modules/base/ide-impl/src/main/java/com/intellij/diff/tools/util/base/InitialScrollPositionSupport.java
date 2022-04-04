@@ -15,12 +15,15 @@
  */
 package com.intellij.diff.tools.util.base;
 
+import consulo.diff.DiffUserDataKeys;
 import consulo.diff.request.DiffRequest;
 import com.intellij.diff.util.*;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.openapi.diff.DiffNavigationContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.Pair;
 import consulo.ui.annotation.RequiredUIAccess;

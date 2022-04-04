@@ -15,22 +15,22 @@
  */
 package com.intellij.openapi.vcs.changes.actions.diff;
 
-import com.intellij.diff.DiffContentFactory;
+import consulo.diff.DiffContentFactory;
 import com.intellij.diff.DiffContentFactoryEx;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.DiffRequestFactoryImpl;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
-import com.intellij.diff.contents.DiffContent;
+import consulo.diff.content.DiffContent;
 import com.intellij.diff.impl.DiffViewerWrapper;
 import com.intellij.diff.merge.MergeUtil;
 import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.ErrorDiffRequest;
-import com.intellij.diff.requests.SimpleDiffRequest;
-import com.intellij.diff.util.DiffUserDataKeys;
+import consulo.diff.request.SimpleDiffRequest;
+import consulo.diff.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.diff.util.Side;
+import consulo.diff.util.Side;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

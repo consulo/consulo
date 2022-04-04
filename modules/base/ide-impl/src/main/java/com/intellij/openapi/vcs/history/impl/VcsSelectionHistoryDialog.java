@@ -16,14 +16,14 @@
 package com.intellij.openapi.vcs.history.impl;
 
 import com.intellij.diff.Block;
-import com.intellij.diff.DiffContentFactory;
+import consulo.diff.DiffContentFactory;
 import consulo.diff.DiffManager;
 import consulo.diff.DiffRequestPanel;
-import com.intellij.diff.contents.DiffContent;
+import consulo.diff.content.DiffContent;
 import com.intellij.diff.requests.LoadingDiffRequest;
-import com.intellij.diff.requests.MessageDiffRequest;
-import com.intellij.diff.requests.NoDiffRequest;
-import com.intellij.diff.requests.SimpleDiffRequest;
+import consulo.diff.request.MessageDiffRequest;
+import consulo.diff.request.NoDiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
 import com.intellij.diff.util.IntPair;
 import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

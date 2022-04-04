@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.history;
 
 import consulo.diff.DiffManager;
-import com.intellij.diff.requests.MessageDiffRequest;
+import consulo.diff.request.MessageDiffRequest;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogBuilder;
 import com.intellij.openapi.vcs.FilePath;

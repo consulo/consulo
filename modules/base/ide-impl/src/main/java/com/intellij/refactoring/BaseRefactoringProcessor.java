@@ -3,8 +3,8 @@
 package com.intellij.refactoring;
 
 import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.usage.UsageViewManager;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.dataContext.DataManager;

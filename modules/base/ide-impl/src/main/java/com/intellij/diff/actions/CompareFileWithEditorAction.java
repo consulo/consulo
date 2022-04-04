@@ -16,12 +16,12 @@
 package com.intellij.diff.actions;
 
 import com.intellij.diff.DiffRequestFactory;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
-import com.intellij.diff.util.DiffUserDataKeys;
-import com.intellij.diff.util.Side;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.util.Side;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Editor;

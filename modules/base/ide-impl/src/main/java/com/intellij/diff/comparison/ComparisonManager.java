@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.comparison;
 
-import com.intellij.diff.fragments.DiffFragment;
-import com.intellij.diff.fragments.LineFragment;
+import consulo.diff.fragment.DiffFragment;
+import consulo.diff.fragment.LineFragment;
 import com.intellij.diff.fragments.MergeLineFragment;
 import consulo.ide.ServiceManager;
 import consulo.application.progress.ProgressIndicator;

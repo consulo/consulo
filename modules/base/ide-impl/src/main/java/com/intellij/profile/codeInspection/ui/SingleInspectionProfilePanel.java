@@ -61,6 +61,7 @@ import com.intellij.profile.codeInspection.ui.table.ScopesAndSeveritiesTable;
 import consulo.content.scope.NamedScope;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.internal.GuiUtils;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Function;
 import com.intellij.util.config.StorageAccessors;

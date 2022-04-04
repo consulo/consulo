@@ -20,6 +20,8 @@ import com.intellij.diff.tools.simple.MergeInnerDifferences;
 import com.intellij.diff.tools.simple.ThreesideDiffChangeBase;
 import com.intellij.diff.util.*;
 import consulo.application.AllIcons;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.ui.ex.action.AnActionEvent;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.document.Document;

@@ -17,42 +17,26 @@ package com.intellij.diff.util;
 
 import com.intellij.codeStyle.CodeStyleFacade;
 import com.intellij.diff.DiffContext;
-import consulo.diff.DiffDialogHints;
 import com.intellij.diff.DiffTool;
 import com.intellij.diff.SuppressiveDiffTool;
 import com.intellij.diff.comparison.ByWord;
 import com.intellij.diff.comparison.ComparisonManager;
 import com.intellij.diff.comparison.ComparisonPolicy;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.contents.EmptyContent;
-import com.intellij.diff.contents.FileContent;
-import com.intellij.diff.fragments.DiffFragment;
-import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.fragments.MergeLineFragment;
 import com.intellij.diff.impl.DiffSettingsHolder;
 import com.intellij.diff.impl.DiffSettingsHolder.DiffSettings;
-import com.intellij.diff.requests.ContentDiffRequest;
-import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.simple.MergeInnerDifferences;
 import com.intellij.diff.tools.util.base.HighlightPolicy;
 import com.intellij.diff.tools.util.base.IgnorePolicy;
 import com.intellij.diff.tools.util.base.TextDiffViewerUtil;
-import consulo.document.DocumentReference;
-import consulo.document.DocumentReferenceManager;
-import consulo.undoRedo.UndoManager;
 import com.intellij.openapi.diff.DiffBundle;
 import com.intellij.openapi.diff.impl.GenericDataProvider;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.ui.MessageType;
-import consulo.ui.ex.awt.WindowWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import consulo.ui.ex.awt.HyperlinkAdapter;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.LineSeparator;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -62,13 +46,25 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.undoRedo.ApplicationUndoManager;
-import consulo.undoRedo.ProjectUndoManager;
 import consulo.component.persist.StoragePathMacros;
 import consulo.dataContext.DataProvider;
+import consulo.diff.DiffDialogHints;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.content.EmptyContent;
+import consulo.diff.content.FileContent;
+import consulo.diff.fragment.DiffFragment;
+import consulo.diff.fragment.LineFragment;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.request.DiffRequest;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.document.DocumentReference;
+import consulo.document.DocumentReferenceManager;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.util.DocumentUtil;
@@ -98,12 +94,12 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.image.Image;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.*;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
@@ -156,7 +152,7 @@ public class DiffUtil {
   private static EditorHighlighter createEditorHighlighter(@Nullable Project project, @Nonnull DocumentContent content) {
     FileType type = content.getContentType();
     VirtualFile file = content.getHighlightFile();
-    Language language = content.getUserData(DiffUserDataKeys.LANGUAGE);
+    Language language = content.getUserData(Language.KEY);
 
     EditorHighlighterFactory highlighterFactory = EditorHighlighterFactory.getInstance();
     if (language != null) {
@@ -472,7 +468,7 @@ public class DiffUtil {
     if (content instanceof EmptyContent) return null;
 
     Charset charset = equalCharsets ? null : ((DocumentContent)content).getCharset();
-    LineSeparator separator = equalSeparators ? null : ((DocumentContent)content).getLineSeparator();
+    consulo.platform.LineSeparator separator = equalSeparators ? null : ((DocumentContent)content).getLineSeparator();
     boolean isReadOnly = editor == null || editor.isViewer() || !canMakeWritable(editor.getDocument());
 
     return createTitle(title, charset, separator, isReadOnly);
@@ -486,7 +482,7 @@ public class DiffUtil {
   @Nonnull
   public static JComponent createTitle(@Nonnull String title,
                                        @Nullable Charset charset,
-                                       @Nullable LineSeparator separator,
+                                       @Nullable consulo.platform.LineSeparator separator,
                                        boolean readOnly) {
     if (readOnly) title += " " + DiffBundle.message("diff.content.read.only.content.title.suffix");
 
@@ -527,16 +523,16 @@ public class DiffUtil {
   }
 
   @Nonnull
-  private static JComponent createSeparatorPanel(@Nonnull LineSeparator separator) {
+  private static JComponent createSeparatorPanel(@Nonnull consulo.platform.LineSeparator separator) {
     JLabel label = new JLabel(separator.name());
     Color color;
-    if (separator == LineSeparator.CRLF) {
+    if (separator == consulo.platform.LineSeparator.CRLF) {
       color = JBColor.RED;
     }
-    else if (separator == LineSeparator.LF) {
+    else if (separator == consulo.platform.LineSeparator.LF) {
       color = JBColor.BLUE;
     }
-    else if (separator == LineSeparator.CR) {
+    else if (separator == consulo.platform.LineSeparator.CR) {
       color = JBColor.MAGENTA;
     }
     else {

@@ -34,7 +34,7 @@ import consulo.ui.ex.JBColor;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.editor.internal.matcher.NameUtil;
+import consulo.application.util.matcher.NameUtil;
 import consulo.ui.ex.awt.JBList;
 import consulo.language.editor.ui.SpeedSearchUtil;
 import com.intellij.util.containers.ContainerUtil;

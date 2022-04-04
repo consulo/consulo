@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.ui.treeStructure.treetable.ListTreeTableModelOnColumns;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
-import com.intellij.util.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.component.util.config.Storage;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.ListTableModel;

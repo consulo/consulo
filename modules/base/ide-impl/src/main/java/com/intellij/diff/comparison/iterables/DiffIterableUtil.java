@@ -17,7 +17,7 @@ package com.intellij.diff.comparison.iterables;
 
 import com.intellij.diff.comparison.DiffTooBigException;
 import com.intellij.diff.comparison.TrimUtil;
-import com.intellij.diff.fragments.DiffFragment;
+import consulo.diff.fragment.DiffFragment;
 import com.intellij.diff.util.Range;
 import consulo.application.progress.ProgressIndicator;
 import com.intellij.openapi.util.Comparing;

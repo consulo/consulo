@@ -16,9 +16,9 @@
 package com.intellij.diff.tools.holders;
 
 import com.intellij.diff.DiffContext;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.contents.FileContent;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.content.FileContent;
 import com.intellij.diff.util.DiffUtil;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

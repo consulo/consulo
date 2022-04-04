@@ -27,10 +27,12 @@ import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.io.FileUtil;
+import consulo.virtualFileSystem.RawFileLoader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -158,7 +160,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
         final File inputFile = new File(myFrameworkOutputFile);
         if (inputFile.exists()) {
           try {
-            final String fileText = FileUtil.loadFile(inputFile);
+            final String fileText = RawFileLoader.getInstance().loadFileText(inputFile, StandardCharsets.UTF_8);
             console.print(fileText, ConsoleViewContentType.NORMAL_OUTPUT);
           }
           catch (IOException e) {
@@ -184,7 +186,7 @@ public class CompositePrintable extends UserDataHolderBase implements Printable,
     private synchronized File getFile() {
       if (myFile == null) {
         try {
-          final File tempFile = FileUtil.createTempFile("idea_test_", ".out");
+          final File tempFile = FileUtil.createTempFile("consulo_test_", ".out");
           if (tempFile.exists()) {
             myFile = tempFile;
             return myFile;

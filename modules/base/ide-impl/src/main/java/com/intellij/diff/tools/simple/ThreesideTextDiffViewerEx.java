@@ -17,7 +17,7 @@ package com.intellij.diff.tools.simple;
 
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.fragments.MergeLineFragment;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.request.ContentDiffRequest;
 import com.intellij.diff.tools.util.*;
 import com.intellij.diff.tools.util.base.TextDiffViewerUtil;
 import com.intellij.diff.tools.util.side.ThreesideTextDiffViewer;
@@ -26,6 +26,8 @@ import com.intellij.diff.util.DiffDividerDrawUtil.DividerPaintable;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.codeEditor.Editor;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.document.event.DocumentEvent;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.util.text.StringUtil;

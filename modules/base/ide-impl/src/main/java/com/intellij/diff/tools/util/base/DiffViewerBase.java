@@ -18,7 +18,7 @@ package com.intellij.diff.tools.util.base;
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
 import com.intellij.diff.FrameDiffTool.DiffViewer;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.request.ContentDiffRequest;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.util.DiffTaskQueue;
 import consulo.application.ApplicationManager;

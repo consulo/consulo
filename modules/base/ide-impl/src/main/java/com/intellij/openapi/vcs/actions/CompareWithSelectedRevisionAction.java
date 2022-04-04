@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.impl.VcsBackgroundableActions;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.SpeedSearchBase;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.util.TableUtil;
 import com.intellij.ui.dualView.TreeTableView;
 import consulo.ui.ex.awt.table.TableView;

@@ -17,7 +17,7 @@
 package consulo.language.editor.completion.lookup;
 
 import consulo.codeEditor.Editor;
-import consulo.language.editor.completion.PrefixMatcher;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

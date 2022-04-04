@@ -16,7 +16,7 @@
 
 package com.intellij.history.core;
 
-import com.intellij.history.FileRevisionTimestampComparator;
+import consulo.localHistory.FileRevisionTimestampComparator;
 import com.intellij.history.core.changes.Change;
 import com.intellij.history.core.changes.ChangeSet;
 import com.intellij.history.core.changes.ChangeVisitor;

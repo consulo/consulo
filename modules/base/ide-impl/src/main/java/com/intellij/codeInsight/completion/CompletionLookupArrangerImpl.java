@@ -15,7 +15,7 @@ import consulo.application.util.registry.Registry;
 import consulo.language.editor.completion.CompletionLocation;
 import consulo.language.editor.completion.CompletionResult;
 import consulo.language.editor.completion.CompletionSorter;
-import consulo.language.editor.completion.PrefixMatcher;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.pattern.StandardPatterns;
 import consulo.language.util.ProcessingContext;

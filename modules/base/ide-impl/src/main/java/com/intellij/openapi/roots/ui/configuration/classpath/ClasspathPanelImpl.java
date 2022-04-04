@@ -42,6 +42,7 @@ import consulo.content.library.LibraryTable;
 import consulo.dataContext.DataManager;
 import consulo.ide.setting.ProjectStructureSelector;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.psi.PsiFile;

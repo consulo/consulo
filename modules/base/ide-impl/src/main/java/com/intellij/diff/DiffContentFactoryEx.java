@@ -15,8 +15,9 @@
  */
 package com.intellij.diff;
 
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.DocumentContent;
+import consulo.diff.DiffContentFactory;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
 import consulo.project.Project;
 import com.intellij.openapi.vcs.FilePath;
 import consulo.virtualFileSystem.VirtualFile;

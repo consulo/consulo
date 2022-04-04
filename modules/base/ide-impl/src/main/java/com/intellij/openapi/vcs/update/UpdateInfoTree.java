@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import com.intellij.history.Label;
+import consulo.localHistory.Label;
 import consulo.application.AllIcons;
 import com.intellij.ide.DefaultTreeExpander;
 import consulo.ui.ex.TreeExpander;
@@ -37,6 +37,7 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.content.scope.NamedScope;
@@ -46,7 +47,7 @@ import consulo.content.scope.PackageSetBase;
 import com.intellij.ui.*;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.awt.tree.Tree;
-import com.intellij.util.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import com.intellij.vcsUtil.VcsUtil;

@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.dnd.DnDManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.treeStructure.SimpleNode;
 import com.intellij.util.containers.ContainerUtil;

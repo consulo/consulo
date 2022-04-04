@@ -22,6 +22,7 @@ import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.util.PairFunction;
 import com.intellij.util.containers.Convertor;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;

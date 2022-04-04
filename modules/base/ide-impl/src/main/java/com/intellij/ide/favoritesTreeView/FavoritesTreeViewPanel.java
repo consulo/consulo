@@ -16,8 +16,8 @@
 
 package com.intellij.ide.favoritesTreeView;
 
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.application.AllIcons;
 import com.intellij.ide.*;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
@@ -27,6 +27,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.tree.PresentationData;
 import com.intellij.ide.projectView.impl.ModuleGroup;
@@ -57,7 +58,6 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.RelativeRectangle;
 import com.intellij.ui.docking.DockContainer;
@@ -65,7 +65,7 @@ import com.intellij.ui.docking.DockManager;
 import com.intellij.ui.docking.DockableContent;
 import com.intellij.ui.treeStructure.actions.CollapseAllAction;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.disposer.Disposable;

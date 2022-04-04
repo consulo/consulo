@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.util;
 
-import com.intellij.diff.util.Side;
+import consulo.diff.util.Side;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;
 

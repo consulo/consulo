@@ -35,7 +35,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.dataContext.DataProvider;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.ui.AppIcon;
+import consulo.ui.ex.AppIcon;
 import com.intellij.ui.AppUIUtil;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.content.Content;

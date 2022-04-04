@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.holders;
 
 import com.intellij.diff.DiffContext;
-import com.intellij.diff.contents.DiffContent;
+import consulo.diff.content.DiffContent;
 import javax.annotation.Nonnull;
 
 public abstract class EditorHolderFactory<T extends EditorHolder> {

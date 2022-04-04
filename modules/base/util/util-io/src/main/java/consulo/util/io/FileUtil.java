@@ -33,9 +33,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -54,6 +52,136 @@ public class FileUtil {
     }
   };
 
+  @Nonnull
+  public static File createTempFile(@Nonnull String prefix, @Nullable String suffix) throws IOException {
+    return createTempFile(prefix, suffix, false); //false until TeamCity fixes its plugin
+  }
+
+  @Nonnull
+  public static File createTempFile(@Nonnull String prefix, @Nullable String suffix, boolean deleteOnExit) throws IOException {
+    final File dir = new File(getTempDirectory());
+    return createTempFile(dir, prefix, suffix, true, deleteOnExit);
+  }
+
+  @Nonnull
+  public static File createTempFile(File dir, @Nonnull String prefix, @Nullable String suffix) throws IOException {
+    return createTempFile(dir, prefix, suffix, true, true);
+  }
+
+  @Nonnull
+  public static File createTempFile(File dir, @Nonnull String prefix, @Nullable String suffix, boolean create) throws IOException {
+    return createTempFile(dir, prefix, suffix, create, true);
+  }
+
+  @Nonnull
+  public static File createTempFile(File dir, @Nonnull String prefix, @Nullable String suffix, boolean create, boolean deleteOnExit) throws IOException {
+    File file = doCreateTempFile(dir, prefix, suffix, false);
+    if (deleteOnExit) {
+      //noinspection SSBasedInspection
+      file.deleteOnExit();
+    }
+    if (!create) {
+      if (!file.delete() && file.exists()) {
+        throw new IOException("Cannot delete a file: " + file);
+      }
+    }
+    return file;
+  }
+
+  private static final Random RANDOM = new Random();
+
+  private static String ourCanonicalTempPathCache;
+
+  @Nonnull
+  public static String getTempDirectory() {
+    if (ourCanonicalTempPathCache == null) {
+      ourCanonicalTempPathCache = calcCanonicalTempPath();
+    }
+    return ourCanonicalTempPathCache;
+  }
+
+  @Nonnull
+  private static String calcCanonicalTempPath() {
+    final File file = new File(System.getProperty("java.io.tmpdir"));
+    try {
+      final String canonical = file.getCanonicalPath();
+      if (!OSInfo.isWindows || !canonical.contains(" ")) {
+        return canonical;
+      }
+    }
+    catch (IOException ignore) {
+    }
+    return file.getAbsolutePath();
+  }
+
+  @Nonnull
+  private static File doCreateTempFile(@Nonnull File dir, @Nonnull String prefix, @Nullable String suffix, boolean isDirectory) throws IOException {
+    //noinspection ResultOfMethodCallIgnored
+    dir.mkdirs();
+
+    if (prefix.length() < 3) {
+      prefix = (prefix + "___").substring(0, 3);
+    }
+    if (suffix == null) {
+      suffix = "";
+    }
+    // normalize and use only the file name from the prefix
+    prefix = new File(prefix).getName();
+
+    int attempts = 0;
+    int i = 0;
+    int maxFileNumber = 10;
+    IOException exception = null;
+    while (true) {
+      File f = null;
+      try {
+        f = calcName(dir, prefix, suffix, i);
+
+        boolean success = isDirectory ? f.mkdir() : f.createNewFile();
+        if (success) {
+          return normalizeFile(f);
+        }
+      }
+      catch (IOException e) { // Win32 createFileExclusively access denied
+        exception = e;
+      }
+      attempts++;
+      int MAX_ATTEMPTS = 100;
+      if (attempts > maxFileNumber / 2 || attempts > MAX_ATTEMPTS) {
+        String[] children = dir.list();
+        int size = children == null ? 0 : children.length;
+        maxFileNumber = Math.max(10, size * 10); // if too many files are in tmp dir, we need a bigger random range than meager 10
+        if (attempts > MAX_ATTEMPTS) {
+          throw exception != null ? exception : new IOException("Unable to create a temporary file " + f + "\nDirectory '" + dir + "' list (" + size + " children): " + Arrays.toString(children));
+        }
+      }
+
+      i++; // for some reason the file1 can't be created (previous file1 was deleted but got locked by anti-virus?). Try file2.
+      if (i > 2) {
+        i = 2 + RANDOM.nextInt(maxFileNumber); // generate random suffix if too many failures
+      }
+    }
+  }
+
+  @Nonnull
+  private static File calcName(@Nonnull File dir, @Nonnull String prefix, @Nonnull String suffix, int i) throws IOException {
+    prefix = i == 0 ? prefix : prefix + i;
+    if (prefix.endsWith(".") && suffix.startsWith(".")) {
+      prefix = prefix.substring(0, prefix.length() - 1);
+    }
+    String name = prefix + suffix;
+    File f = new File(dir, name);
+    if (!name.equals(f.getName())) {
+      throw new IOException("A generated name is malformed: '" + name + "' (" + f + ")");
+    }
+    return f;
+  }
+
+  @Nonnull
+  private static File normalizeFile(@Nonnull File temp) throws IOException {
+    final File canonical = temp.getCanonicalFile();
+    return OSInfo.isWindows && canonical.getAbsolutePath().contains(" ") ? temp.getAbsoluteFile() : canonical;
+  }
 
   public static boolean processFilesRecursively(@Nonnull File root, @Nonnull Predicate<File> processor) {
     return processFilesRecursively(root, processor, null);

@@ -33,8 +33,8 @@ import consulo.application.ui.WindowStateService;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.AppIcon;
-import com.intellij.ui.SpeedSearchBase;
+import consulo.ui.ex.AppIcon;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ui.OwnerOptional;
@@ -768,7 +768,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       // Workaround for switching workspaces on dialog show
       if (SystemInfo.isMac && myProject != null && Registry.is("ide.mac.fix.dialog.showing") && !dialogWrapper.isModalProgress()) {
         final IdeFrame frame = WindowManager.getInstance().getIdeFrame(myProject.get());
-        AppIcon.getInstance().requestFocus(frame);
+        AppIcon.getInstance().requestFocus(frame.getWindow());
       }
 
       setBackground(UIUtil.getPanelBackground());

@@ -18,10 +18,10 @@ package com.intellij.diff.tools.util;
 import com.intellij.diff.DiffContext;
 import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.holders.EditorHolder;
-import com.intellij.diff.util.DiffUserDataKeys;
+import consulo.diff.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.diff.util.Side;
-import com.intellij.diff.util.ThreeSide;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import javax.annotation.Nonnull;
 
 import java.awt.event.FocusAdapter;

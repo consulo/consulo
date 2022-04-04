@@ -15,6 +15,9 @@
  */
 package com.intellij.diff.util;
 
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
+
 import javax.annotation.Nonnull;
 
 public class MergeConflictType {

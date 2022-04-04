@@ -16,8 +16,8 @@
 
 package com.intellij.ide.projectView.impl;
 
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import com.intellij.ide.CopyPasteDelegator;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.SelectInContext;

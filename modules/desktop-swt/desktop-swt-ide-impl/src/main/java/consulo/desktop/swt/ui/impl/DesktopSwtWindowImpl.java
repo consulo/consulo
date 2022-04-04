@@ -117,4 +117,9 @@ public class DesktopSwtWindowImpl extends SWTComponentDelegate<Shell> implements
   public void close() {
     myComponent.close();
   }
+
+  @Override
+  public boolean isActive() {
+    return true;
+  }
 }

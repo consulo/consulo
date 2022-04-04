@@ -71,4 +71,6 @@ public interface Window extends Component {
    */
   @RequiredUIAccess
   void close();
+
+  boolean isActive();
 }

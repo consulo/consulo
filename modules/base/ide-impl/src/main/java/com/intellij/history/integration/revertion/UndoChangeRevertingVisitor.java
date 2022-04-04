@@ -16,7 +16,7 @@
 
 package com.intellij.history.integration.revertion;
 
-import com.intellij.history.LocalHistory;
+import consulo.localHistory.LocalHistory;
 import com.intellij.history.core.Content;
 import com.intellij.history.core.Paths;
 import com.intellij.history.core.changes.*;

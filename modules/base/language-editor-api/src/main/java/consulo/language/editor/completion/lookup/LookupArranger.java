@@ -3,7 +3,7 @@
 package consulo.language.editor.completion.lookup;
 
 import consulo.language.editor.completion.CompletionService;
-import consulo.language.editor.completion.PrefixMatcher;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.WeighingContext;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;

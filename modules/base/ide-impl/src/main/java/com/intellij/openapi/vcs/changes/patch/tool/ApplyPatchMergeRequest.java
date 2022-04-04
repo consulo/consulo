@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.patch.tool;
 
-import com.intellij.diff.contents.DocumentContent;
+import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.application.ApplicationManager;

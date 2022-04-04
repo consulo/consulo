@@ -15,6 +15,9 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+
 import java.awt.event.KeyEvent;
 
 /**

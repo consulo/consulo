@@ -22,6 +22,7 @@ import consulo.language.version.LanguageVersionDefines;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.MultiMap;
+import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -43,6 +44,8 @@ import java.util.function.Supplier;
  */
 public abstract class Language extends UserDataHolderBase {
   private static final Logger LOG = Logger.getInstance(Language.class);
+
+  public static final Key<Language> KEY = Key.create(Language.class);
 
   // this fields must be before ANY field due registration
   private static final Map<Class<? extends Language>, Language> ourRegisteredLanguages = new ConcurrentHashMap<>();

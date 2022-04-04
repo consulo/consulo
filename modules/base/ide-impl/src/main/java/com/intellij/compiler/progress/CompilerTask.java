@@ -35,11 +35,11 @@ import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBas
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.AppIconScheme;
+import consulo.ui.ex.AppIconScheme;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.navigation.Navigatable;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
-import com.intellij.ui.AppIcon;
+import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.compiler.impl.BuildViewServiceFactory;
 import consulo.compiler.impl.CompilerManagerImpl;

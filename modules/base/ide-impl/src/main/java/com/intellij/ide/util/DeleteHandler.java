@@ -17,8 +17,8 @@
 package com.intellij.ide.util;
 
 import consulo.application.CommonBundle;
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;

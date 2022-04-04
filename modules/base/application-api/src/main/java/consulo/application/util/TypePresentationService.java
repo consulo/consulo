@@ -16,6 +16,7 @@
 package consulo.application.util;
 
 import consulo.application.Application;
+import consulo.application.util.matcher.NameUtilCore;
 import consulo.ui.image.Image;
 import consulo.util.lang.StringUtil;
 

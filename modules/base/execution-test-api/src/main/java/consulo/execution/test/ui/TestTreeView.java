@@ -35,6 +35,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
@@ -176,14 +177,12 @@ public abstract class TestTreeView extends Tree implements DataProvider, CopyPro
     return true;
   }
 
-  protected void installHandlers() {
+  protected void installHandlers() {                                                
     EditSourceOnDoubleClickHandler.install(this);
-    new TreeSpeedSearch(this, new Convertor<TreePath, String>() {
-      public String convert(final TreePath path) {
-        final AbstractTestProxy testProxy = getSelectedTest(path);
-        if (testProxy == null) return null;
-        return testProxy.getName();
-      }
+    new TreeSpeedSearch(this, path -> {
+      final AbstractTestProxy testProxy = getSelectedTest(path);
+      if (testProxy == null) return null;
+      return testProxy.getName();
     });
     TreeUtil.installActions(this);
     PopupHandler.installPopupHandler(this, IdeActions.GROUP_TESTTREE_POPUP, ActionPlaces.TESTTREE_VIEW_POPUP);

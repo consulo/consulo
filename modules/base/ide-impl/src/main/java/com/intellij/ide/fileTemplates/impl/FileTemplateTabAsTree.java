@@ -19,7 +19,7 @@ package com.intellij.ide.fileTemplates.impl;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateDescriptor;
 import consulo.fileTemplate.FileTemplateGroupDescriptor;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.fileTemplate.impl.internal.FileTemplateBase;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ContainerUtil;

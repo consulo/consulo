@@ -17,9 +17,9 @@
 package com.intellij.history.integration.ui.views;
 
 import consulo.application.CommonBundle;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.requests.ContentDiffRequest;
-import com.intellij.diff.requests.SimpleDiffRequest;
+import consulo.diff.content.DiffContent;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
 import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.LocalHistoryBundle;

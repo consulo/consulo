@@ -478,6 +478,25 @@ public class ContainerUtil {
 
   @Nonnull
   @Contract(pure = true)
+  public static <T, V> List<V> findAll(@Nonnull T[] collection, @Nonnull Class<V> instanceOf) {
+    return findAll(Arrays.asList(collection), instanceOf);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, V> List<V> findAll(@Nonnull Collection<? extends T> collection, @Nonnull Class<V> instanceOf) {
+    final List<V> result = new SmartList<V>();
+    for (final T t : collection) {
+      if (instanceOf.isInstance(t)) {
+        @SuppressWarnings("unchecked") V v = (V)t;
+        result.add(v);
+      }
+    }
+    return result;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static <T> List<T> findAll(@Nonnull Collection<? extends T> collection, @Nonnull Predicate<? super T> condition) {
     if (collection.isEmpty()) return List.of();
     final List<T> result = new ArrayList<>();

@@ -17,8 +17,8 @@ package com.intellij.diff.tools.simple;
 
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.actions.AllLinesIterator;
-import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.tools.util.base.HighlightPolicy;

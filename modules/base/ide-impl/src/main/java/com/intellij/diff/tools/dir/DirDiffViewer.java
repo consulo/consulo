@@ -17,11 +17,11 @@ package com.intellij.diff.tools.dir;
 
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
-import com.intellij.diff.contents.DiffContent;
+import consulo.diff.content.DiffContent;
 import com.intellij.diff.contents.DirectoryContent;
-import com.intellij.diff.contents.EmptyContent;
-import com.intellij.diff.contents.FileContent;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.content.EmptyContent;
+import consulo.diff.content.FileContent;
+import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.diff.ArchiveFileDiffElement;

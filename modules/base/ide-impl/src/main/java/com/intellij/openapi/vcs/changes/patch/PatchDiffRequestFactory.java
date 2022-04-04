@@ -15,15 +15,15 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.diff.DiffContentFactory;
+import consulo.diff.DiffContentFactory;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.InvalidDiffRequestException;
 import consulo.diff.chain.DiffRequestProducerException;
-import com.intellij.diff.contents.DocumentContent;
+import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import consulo.diff.request.DiffRequest;
-import com.intellij.diff.requests.SimpleDiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
 import com.intellij.diff.util.DiffUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.TextFilePatch;

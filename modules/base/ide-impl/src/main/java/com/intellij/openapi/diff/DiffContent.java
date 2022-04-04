@@ -32,7 +32,7 @@ import java.util.List;
  * Represents some data that probably can be compared with some other.
  *
  * @see DiffRequest
- * @deprecated use {@link com.intellij.diff.contents.DiffContent} instead
+ * @deprecated use {@link consulo.diff.content.DiffContent} instead
  */
 @Deprecated
 public abstract class DiffContent {

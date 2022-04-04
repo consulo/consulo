@@ -15,6 +15,7 @@ import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.ComponentWithEmptyText;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;

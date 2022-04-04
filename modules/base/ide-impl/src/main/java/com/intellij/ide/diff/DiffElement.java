@@ -15,10 +15,10 @@
  */
 package com.intellij.ide.diff;
 
-import com.intellij.diff.DiffContentFactory;
+import consulo.diff.DiffContentFactory;
 import consulo.diff.chain.DiffRequestProducer;
 import consulo.diff.chain.DiffRequestProducerException;
-import com.intellij.diff.contents.DiffContent;
+import consulo.diff.content.DiffContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.component.ProcessCanceledException;

@@ -30,7 +30,7 @@ import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.popup.WizardPopup;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
-import com.intellij.ui.speedSearch.SpeedSearch;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;

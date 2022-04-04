@@ -16,6 +16,7 @@
 package com.intellij.codeInsight.completion;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.matcher.PlainPrefixMatcher;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.*;
 import consulo.document.Document;

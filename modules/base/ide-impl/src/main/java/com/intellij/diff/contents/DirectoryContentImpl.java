@@ -16,6 +16,7 @@
 package com.intellij.diff.contents;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.diff.content.DiffContentBase;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

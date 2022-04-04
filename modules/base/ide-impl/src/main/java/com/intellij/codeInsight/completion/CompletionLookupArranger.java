@@ -3,7 +3,7 @@ package com.intellij.codeInsight.completion;
 
 import consulo.language.editor.completion.CompletionResult;
 import consulo.language.editor.completion.CompletionSorter;
-import consulo.language.editor.completion.PrefixMatcher;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.WeighingContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementPresentation;

@@ -31,5 +31,5 @@ module consulo.execution.api {
   exports consulo.execution.ui.console;
   exports consulo.execution.ui.event;
   exports consulo.execution.ui.layout;
-  exports consulo.execution.internal to consulo.ide.impl;
+  exports consulo.execution.internal to consulo.ide.impl, consulo.execution.test.api;
 }

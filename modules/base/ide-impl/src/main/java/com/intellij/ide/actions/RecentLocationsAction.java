@@ -36,7 +36,7 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.ui.speedSearch.ListWithFilter;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
-import com.intellij.ui.speedSearch.SpeedSearch;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;

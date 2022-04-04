@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.merge;
 
-import com.intellij.diff.contents.FileContent;
+import consulo.diff.content.FileContent;
 import javax.annotation.Nonnull;
 
 import java.util.List;

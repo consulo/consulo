@@ -36,7 +36,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.language.editor.CodeInsightBundle;
-import consulo.language.editor.completion.PlainPrefixMatcher;
+import consulo.application.util.matcher.PlainPrefixMatcher;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupArranger;
 import consulo.language.editor.completion.lookup.LookupElement;

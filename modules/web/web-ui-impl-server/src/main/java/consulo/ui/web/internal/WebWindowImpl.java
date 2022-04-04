@@ -106,6 +106,11 @@ public class WebWindowImpl extends VaadinComponentDelegate<WebWindowImpl.Vaadin>
     myRootPanel.setMenuBar(menuBar);
   }
 
+  @Override
+  public boolean isActive() {
+    return true;
+  }
+
   @Nullable
   @Override
   public Window getParent() {

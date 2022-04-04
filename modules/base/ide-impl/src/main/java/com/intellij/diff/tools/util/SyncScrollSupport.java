@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.tools.util;
 
-import com.intellij.diff.util.Side;
-import com.intellij.diff.util.ThreeSide;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollingModel;

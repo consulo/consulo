@@ -15,7 +15,7 @@ import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.tree.TreePopupImpl;
 import com.intellij.ui.popup.util.MnemonicsSearch;
 import com.intellij.ui.speedSearch.ElementFilter;
-import com.intellij.ui.speedSearch.SpeedSearch;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;

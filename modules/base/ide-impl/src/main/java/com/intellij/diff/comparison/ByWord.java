@@ -19,7 +19,7 @@ import com.intellij.diff.comparison.LineFragmentSplitter.WordBlock;
 import com.intellij.diff.comparison.iterables.DiffIterable;
 import com.intellij.diff.comparison.iterables.DiffIterableUtil.*;
 import com.intellij.diff.comparison.iterables.FairDiffIterable;
-import com.intellij.diff.fragments.DiffFragment;
+import consulo.diff.fragment.DiffFragment;
 import com.intellij.diff.fragments.MergeWordFragment;
 import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.Range;

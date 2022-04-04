@@ -18,7 +18,7 @@ package com.intellij.diff;
 import consulo.diff.merge.MergeRequest;
 import consulo.diff.merge.MergeResult;
 import com.intellij.diff.merge.TextMergeRequest;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.request.ContentDiffRequest;
 import consulo.ide.ServiceManager;
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;

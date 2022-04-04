@@ -16,9 +16,9 @@
 package com.intellij.diff.tools.util.side;
 
 import com.intellij.diff.DiffContext;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.EmptyContent;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.EmptyContent;
+import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.holders.EditorHolder;
 import com.intellij.diff.tools.holders.EditorHolderFactory;
@@ -26,7 +26,7 @@ import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.tools.util.SimpleDiffPanel;
 import com.intellij.diff.tools.util.base.ListenerDiffViewerBase;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.diff.util.Side;
+import consulo.diff.util.Side;
 import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.Navigatable;
 import consulo.disposer.Disposer;

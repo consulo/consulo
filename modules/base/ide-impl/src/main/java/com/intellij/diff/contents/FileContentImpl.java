@@ -18,6 +18,8 @@ package com.intellij.diff.contents;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.ide.GeneralSettings;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.diff.content.DiffContentBase;
+import consulo.diff.content.FileContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

@@ -5,6 +5,7 @@ import consulo.language.editor.internal.matcher.CamelHumpMatcher;
 import com.intellij.codeInsight.template.CustomLiveTemplate;
 import com.intellij.codeInsight.template.CustomLiveTemplateBase;
 import com.intellij.codeInsight.template.CustomTemplateCallback;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressManager;

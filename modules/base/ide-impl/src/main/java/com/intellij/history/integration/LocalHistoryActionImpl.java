@@ -16,7 +16,7 @@
 
 package com.intellij.history.integration;
 
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistoryAction;
 
 public class LocalHistoryActionImpl implements LocalHistoryAction {
   private final String myName;

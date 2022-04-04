@@ -16,8 +16,8 @@
 
 package com.intellij.ide.hierarchy;
 
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.util.DeleteHandler;

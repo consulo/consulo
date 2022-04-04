@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.keymap.util;
 
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 import consulo.platform.Platform;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.action.util.MacKeymapUtil;
@@ -24,6 +26,8 @@ import consulo.util.collection.ContainerUtil;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
@@ -131,6 +135,22 @@ public class KeymapUtil {
     return modifiers;
   }
 
+  @Nonnull
+  public static ShortcutSet getActiveKeymapShortcuts(@Nullable String actionId) {
+    Application application = ApplicationManager.getApplication();
+    KeymapManager keymapManager = application == null ? null : application.getComponent(KeymapManager.class);
+    if (keymapManager == null || actionId == null) {
+      return new CustomShortcutSet(Shortcut.EMPTY_ARRAY);
+    }
+    return new CustomShortcutSet(keymapManager.getActiveKeymap().getShortcuts(actionId));
+  }
+
+  public static boolean isEventForAction(@Nonnull KeyEvent keyEvent, @Nonnull String actionId) {
+    for (KeyboardShortcut shortcut : ContainerUtil.findAll(getActiveKeymapShortcuts(actionId).getShortcuts(), KeyboardShortcut.class)) {
+      if (AWTKeyStroke.getAWTKeyStrokeForEvent(keyEvent) == shortcut.getFirstKeyStroke()) return true;
+    }
+    return false;
+  }
 
   private static String getModifiersText(@JdkConstants.InputEventMask int modifiers) {
     if (Platform.current().os().isMac()) {

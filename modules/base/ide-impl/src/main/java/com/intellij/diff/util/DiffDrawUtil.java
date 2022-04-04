@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.util;
 
-import com.intellij.diff.fragments.DiffFragment;
+import consulo.diff.fragment.DiffFragment;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

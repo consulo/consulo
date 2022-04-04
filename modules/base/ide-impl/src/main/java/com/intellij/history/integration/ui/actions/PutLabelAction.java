@@ -16,7 +16,7 @@
 
 package com.intellij.history.integration.ui.actions;
 
-import com.intellij.history.LocalHistory;
+import consulo.localHistory.LocalHistory;
 import com.intellij.history.integration.IdeaGateway;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;

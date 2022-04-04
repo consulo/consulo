@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.util;
 
 import com.intellij.diff.comparison.ComparisonPolicy;
-import com.intellij.diff.fragments.LineFragment;
+import consulo.diff.fragment.LineFragment;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

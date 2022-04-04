@@ -4,7 +4,7 @@ package com.intellij.util.indexing;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.impl.AppTopics;
-import com.intellij.history.LocalHistory;
+import consulo.localHistory.LocalHistory;
 import com.intellij.ide.plugins.PluginManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.util.function.*;

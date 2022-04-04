@@ -30,7 +30,7 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStr
 import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.ex.awt.MasterDetailsState;
 import consulo.compiler.artifact.Artifact;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.ContainerUtil;

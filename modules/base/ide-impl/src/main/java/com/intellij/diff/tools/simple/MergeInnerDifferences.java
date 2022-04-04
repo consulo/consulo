@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.simple;
 
-import com.intellij.diff.util.ThreeSide;
+import consulo.diff.util.ThreeSide;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

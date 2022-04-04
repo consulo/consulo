@@ -15,10 +15,11 @@
  */
 package consulo.language.editor.ui;
 
+import consulo.application.util.matcher.Matcher;
+import consulo.application.util.matcher.MatcherTextRange;
+import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.registry.Registry;
 import consulo.document.util.TextRange;
-import consulo.language.editor.internal.matcher.Matcher;
-import consulo.language.editor.internal.matcher.MinusculeMatcher;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
@@ -27,6 +28,8 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User: spLeaner
@@ -59,13 +62,13 @@ public final class SpeedSearchUtil {
       return;
     }
 
-    final Iterable<TextRange> iterable = ((MinusculeMatcher)matcher).matchingFragments(text);
+    final List<MatcherTextRange> iterable = ((MinusculeMatcher)matcher).matchingFragments(text);
     if (iterable != null) {
       final Color fg = attributes.getFgColor();
       final int style = attributes.getStyle();
       final SimpleTextAttributes plain = new SimpleTextAttributes(style, fg);
       final SimpleTextAttributes highlighted = new SimpleTextAttributes(selectedBg, fg, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH);
-      appendColoredFragments(component, text, iterable, plain, highlighted);
+      appendColoredFragments(component, text, iterable.stream().map(it -> new TextRange(it.getStartOffset(), it.getEndOffset())).collect(Collectors.toList()), plain, highlighted);
     }
     else {
       component.append(text, attributes);

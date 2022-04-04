@@ -16,8 +16,8 @@
 
 package com.intellij.ide.scopeView;
 
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import com.intellij.ide.CopyPasteDelegator;
 import consulo.content.scope.*;
 import consulo.ui.ex.DeleteProvider;
@@ -54,9 +54,9 @@ import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.UIBundle;
-import com.intellij.util.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import com.intellij.util.Function;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;

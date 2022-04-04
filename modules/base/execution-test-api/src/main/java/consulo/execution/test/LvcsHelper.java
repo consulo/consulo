@@ -21,9 +21,7 @@
 package consulo.execution.test;
 
 import consulo.execution.ExecutionBundle;
-import com.intellij.history.LocalHistory;
-import consulo.execution.test.TestConsoleProperties;
-import consulo.execution.test.TestFrameworkRunningModel;
+import consulo.localHistory.LocalHistory;
 import consulo.project.Project;
 import consulo.ui.ex.JBColor;
 

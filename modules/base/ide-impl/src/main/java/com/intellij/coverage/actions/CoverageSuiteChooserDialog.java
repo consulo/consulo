@@ -11,6 +11,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.*;
 import com.intellij.util.IconUtil;

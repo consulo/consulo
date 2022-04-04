@@ -16,12 +16,12 @@
 package com.intellij.diff.requests;
 
 import consulo.application.CommonBundle;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.FileContent;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.FileContent;
 import com.intellij.diff.merge.BinaryMergeRequest;
 import consulo.diff.merge.MergeResult;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.diff.util.ThreeSide;
+import consulo.diff.util.ThreeSide;
 import consulo.language.editor.WriteCommandAction;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;

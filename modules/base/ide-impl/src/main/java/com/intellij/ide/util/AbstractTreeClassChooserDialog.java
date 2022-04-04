@@ -43,7 +43,7 @@ import consulo.language.editor.internal.PsiUtilBase;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import com.intellij.ui.TabbedPaneWrapper;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.Processor;

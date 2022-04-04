@@ -41,7 +41,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.containers.ComparatorUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;

@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.merge;
 
-import com.intellij.diff.util.DiffUserDataKeys;
+import consulo.diff.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUtil;
 import consulo.diff.merge.MergeRequest;
 import consulo.project.Project;

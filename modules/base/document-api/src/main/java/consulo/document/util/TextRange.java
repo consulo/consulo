@@ -130,7 +130,7 @@ public class TextRange implements Segment, Serializable {
     return new TextRange(myStartOffset + subRange.getStartOffset(), Math.min(myEndOffset, myStartOffset + subRange.getEndOffset()));
   }
 
-  @Nonnull
+
   public TextRange shiftRight(int delta) {
     if (delta == 0) return this;
     return new TextRange(myStartOffset + delta, myEndOffset + delta);
@@ -156,6 +156,7 @@ public class TextRange implements Segment, Serializable {
   public static TextRange create(int startOffset, int endOffset) {
     return new TextRange(startOffset, endOffset);
   }
+
   @Nonnull
   public static TextRange create(@Nonnull Segment segment) {
     return create(segment.getStartOffset(), segment.getEndOffset());

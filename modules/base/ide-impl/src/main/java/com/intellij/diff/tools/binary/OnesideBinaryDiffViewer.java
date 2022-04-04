@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.binary;
 
 import com.intellij.diff.DiffContext;
-import com.intellij.diff.requests.ContentDiffRequest;
+import consulo.diff.request.ContentDiffRequest;
 import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import com.intellij.diff.tools.util.DiffNotifications;

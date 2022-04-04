@@ -38,7 +38,7 @@ import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.ex.awt.MasterDetailsStateService;
 import consulo.ui.ex.awt.Splitter;
 import consulo.util.lang.function.Conditions;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import com.intellij.util.IconUtil;
 import com.intellij.util.containers.Convertor;
 import consulo.ide.setting.ProjectStructureSettingsUtil;

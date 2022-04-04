@@ -16,8 +16,8 @@
 package com.intellij.openapi.vcs.history;
 
 import consulo.application.CommonBundle;
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.application.AllIcons;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CopyProvider;
@@ -28,6 +28,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.undoRedo.CommandProcessor;
 import consulo.language.editor.WriteCommandAction;
 import consulo.ui.ex.action.DefaultActionGroup;

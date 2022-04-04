@@ -16,8 +16,8 @@
 package com.intellij.ide.actions;
 
 import consulo.application.CommonBundle;
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;

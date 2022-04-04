@@ -16,7 +16,7 @@
 package com.intellij.diff.fragments;
 
 import com.intellij.diff.util.MergeRange;
-import com.intellij.diff.util.ThreeSide;
+import consulo.diff.util.ThreeSide;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

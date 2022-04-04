@@ -102,6 +102,21 @@ public class StringUtil {
 
   private static final String VOWELS = "aeiouy";
 
+  public static boolean isAscii(@Nonnull String str) {
+    return isAscii((CharSequence)str);
+  }
+
+  public static boolean isAscii(@Nonnull CharSequence str) {
+    for (int i = 0, length = str.length(); i < length; ++i) {
+      if (str.charAt(i) >= 128) return false;
+    }
+    return true;
+  }
+
+  public static boolean isAscii(char c) {
+    return c < 128;
+  }
+
   @Nonnull
   @Contract(pure = true)
   public static String replaceChar(@Nonnull String buffer, char oldChar, char newChar) {

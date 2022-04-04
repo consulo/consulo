@@ -16,10 +16,10 @@
 
 package com.intellij.history.integration.ui.models;
 
-import com.intellij.diff.DiffContentFactory;
+import consulo.diff.DiffContentFactory;
 import com.intellij.diff.actions.DocumentFragmentContent;
-import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.contents.DocumentContent;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
 import com.intellij.history.core.revisions.Revision;
 import com.intellij.history.core.tree.Entry;
 import com.intellij.history.integration.IdeaGateway;

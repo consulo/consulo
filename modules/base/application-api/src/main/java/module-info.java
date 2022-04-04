@@ -38,7 +38,9 @@ module consulo.application.api {
           consulo.document.impl,
           consulo.language.impl,
           consulo.application.impl,
-          consulo.test.impl;
+          consulo.test.impl,
+          consulo.ui.ex.api;
+
   exports consulo.application.internal.concurrency to
           consulo.ide.impl,
           consulo.test.impl;
@@ -52,4 +54,5 @@ module consulo.application.api {
   exports consulo.application.util.diff;
   exports consulo.application.util.query;
   exports consulo.application.util.logging;
+  exports consulo.application.util.matcher;
 }

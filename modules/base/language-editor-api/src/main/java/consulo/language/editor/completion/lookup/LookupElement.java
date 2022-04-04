@@ -1,7 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.completion.lookup;
 
-import consulo.language.editor.completion.*;
+import consulo.application.util.matcher.CompositeStringHolder;
+import consulo.language.editor.completion.AutoCompletionPolicy;
+import consulo.language.editor.completion.ClassConditionKey;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementNavigationItem;
 import consulo.language.psi.ResolveResult;
@@ -19,9 +21,9 @@ import java.util.Set;
  * or other advanced logic.
  *
  * @author peter
- * @see com.intellij.codeInsight.completion.PrioritizedLookupElement
+ * @see PrioritizedLookupElement
  */
-public abstract class LookupElement extends UserDataHolderBase {
+public abstract class LookupElement extends UserDataHolderBase implements CompositeStringHolder {
   public static final LookupElement[] EMPTY_ARRAY = new LookupElement[0];
 
   @Nonnull
@@ -29,6 +31,12 @@ public abstract class LookupElement extends UserDataHolderBase {
 
   public Set<String> getAllLookupStrings() {
     return Collections.singleton(getLookupString());
+  }
+
+  @Nonnull
+  @Override
+  public final Set<String> getAllStrings() {
+    return getAllLookupStrings();
   }
 
   @Nonnull

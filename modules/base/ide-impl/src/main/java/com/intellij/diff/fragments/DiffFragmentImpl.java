@@ -15,6 +15,8 @@
  */
 package com.intellij.diff.fragments;
 
+import consulo.diff.fragment.DiffFragment;
+
 public class DiffFragmentImpl implements DiffFragment {
   private final int myStartOffset1;
   private final int myEndOffset1;

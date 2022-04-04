@@ -27,12 +27,14 @@ import com.intellij.diff.tools.ErrorDiffTool;
 import com.intellij.diff.tools.external.ExternalDiffTool;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.tools.util.PrevNextDifferenceIterable;
-import com.intellij.diff.util.DiffUserDataKeys;
+import consulo.diff.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineRange;
 import consulo.diff.request.DiffRequest;
+import consulo.diff.request.MessageDiffRequest;
+import consulo.diff.request.NoDiffRequest;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.EmptyAction;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
@@ -82,7 +84,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
   private boolean myDisposed;
 
-  @javax.annotation.Nullable
+  @Nullable
   private final Project myProject;
   @Nonnull
   private final DiffContext myContext;
@@ -117,7 +119,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   @Nonnull
   private ViewerState myState;
 
-  public DiffRequestProcessor(@javax.annotation.Nullable Project project) {
+  public DiffRequestProcessor(@Nullable Project project) {
     this(project, new UserDataHolderBase());
   }
 
@@ -125,7 +127,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     this(project, DiffUtil.createUserDataHolder(DiffUserDataKeys.PLACE, place));
   }
 
-  public DiffRequestProcessor(@javax.annotation.Nullable Project project, @Nonnull UserDataHolder context) {
+  public DiffRequestProcessor(@Nullable Project project, @Nonnull UserDataHolder context) {
     myProject = project;
 
     myContext = new MyDiffContext(context);
@@ -266,7 +268,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   // Abstract
   //
 
-  @javax.annotation.Nullable
+  @Nullable
   private ApplyData myQueuedApplyRequest;
 
   @RequiredUIAccess
@@ -288,7 +290,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   @RequiredUIAccess
-  private void doApplyRequest(@Nonnull DiffRequest request, boolean force, @javax.annotation.Nullable ScrollToPolicy scrollToChangePolicy) {
+  private void doApplyRequest(@Nonnull DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
     if (!force && request == myActiveRequest) return;
 
     request.putUserData(DiffUserDataKeysEx.SCROLL_TO_CHANGE, scrollToChangePolicy);
@@ -328,12 +330,12 @@ public abstract class DiffRequestProcessor implements Disposable {
   protected void onDispose() {
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public <T> T getContextUserData(@Nonnull Key<T> key) {
     return myContext.getUserData(key);
   }
 
-  public <T> void putContextUserData(@Nonnull Key<T> key, @javax.annotation.Nullable T value) {
+  public <T> void putContextUserData(@Nonnull Key<T> key, @Nullable T value) {
     myContext.putUserData(key, value);
   }
 
@@ -424,7 +426,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   @Nonnull
-  protected DefaultActionGroup collectToolbarActions(@javax.annotation.Nullable List<AnAction> viewerActions) {
+  protected DefaultActionGroup collectToolbarActions(@Nullable List<AnAction> viewerActions) {
     DefaultActionGroup group = new DefaultActionGroup();
 
     List<AnAction> navigationActions = new ArrayList<AnAction>();
@@ -450,7 +452,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   @Nonnull
-  protected DefaultActionGroup collectPopupActions(@javax.annotation.Nullable List<AnAction> viewerActions) {
+  protected DefaultActionGroup collectPopupActions(@Nullable List<AnAction> viewerActions) {
     DefaultActionGroup group = new DefaultActionGroup();
 
     List<AnAction> selectToolActions = new ArrayList<AnAction>();
@@ -485,7 +487,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     myPopupActionGroup = collectPopupActions(viewerActions);
   }
 
-  private void setTitle(@javax.annotation.Nullable String title) {
+  private void setTitle(@Nullable String title) {
     if (getContextUserData(DiffUserDataKeys.DO_NOT_CHANGE_WINDOW_TITLE) == Boolean.TRUE) return;
     if (title == null) title = "Diff";
     setWindowTitle(title);
@@ -887,7 +889,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       return new Dimension(Math.max(windowSize.width, size.width), Math.max(windowSize.height, size.height));
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public Object getData(@Nonnull @NonNls Key<?> dataId) {
       Object data;
@@ -997,7 +999,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       }
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public Project getProject() {
       return DiffRequestProcessor.this.getProject();
@@ -1018,7 +1020,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       DiffRequestProcessor.this.requestFocusInternal();
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public <T> T getUserData(@Nonnull Key<T> key) {
       return myContext.getUserData(key);
@@ -1034,7 +1036,7 @@ public abstract class DiffRequestProcessor implements Disposable {
     @Nonnull
     private final DiffRequest request;
     private final boolean force;
-    @javax.annotation.Nullable
+    @Nullable
     private final ScrollToPolicy scrollToChangePolicy;
 
     public ApplyData(@Nonnull DiffRequest request, boolean force, @Nullable ScrollToPolicy scrollToChangePolicy) {
@@ -1055,10 +1057,10 @@ public abstract class DiffRequestProcessor implements Disposable {
     @RequiredUIAccess
     void destroy();
 
-    @javax.annotation.Nullable
+    @Nullable
     JComponent getPreferredFocusedComponent();
 
-    @javax.annotation.Nullable
+    @Nullable
     Object getData(@NonNls Key<?> dataId);
 
     @Nonnull
@@ -1084,7 +1086,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       return null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public Object getData(@NonNls Key<?> dataId) {
       return null;
@@ -1098,7 +1100,7 @@ public abstract class DiffRequestProcessor implements Disposable {
   }
 
   private class ErrorState implements ViewerState {
-    @javax.annotation.Nullable
+    @Nullable
     private final DiffTool myDiffTool;
     @Nonnull
     private final MessageDiffRequest myRequest;
@@ -1110,7 +1112,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       this(request, null);
     }
 
-    public ErrorState(@Nonnull MessageDiffRequest request, @javax.annotation.Nullable DiffTool diffTool) {
+    public ErrorState(@Nonnull MessageDiffRequest request, @Nullable DiffTool diffTool) {
       myDiffTool = diffTool;
       myRequest = request;
 
@@ -1138,7 +1140,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       return null;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public Object getData(@NonNls Key<?> dataId) {
       return null;
@@ -1182,7 +1184,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       Disposer.dispose(myViewer);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public JComponent getPreferredFocusedComponent() {
       return myViewer.getPreferredFocusedComponent();
@@ -1194,7 +1196,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       return myTool;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public Object getData(@NonNls Key<?> dataId) {
       if (DiffDataKeys.DIFF_VIEWER == dataId) {
@@ -1256,7 +1258,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       Disposer.dispose(myWrapperViewer);
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public JComponent getPreferredFocusedComponent() {
       return myWrapperViewer.getPreferredFocusedComponent();
@@ -1268,7 +1270,7 @@ public abstract class DiffRequestProcessor implements Disposable {
       return myTool;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public Object getData(@NonNls Key<?> dataId) {
       if (DiffDataKeys.WRAPPING_DIFF_VIEWER == dataId) {

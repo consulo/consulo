@@ -18,7 +18,7 @@ package com.intellij.diff.comparison;
 import com.intellij.diff.comparison.iterables.FairDiffIterable;
 import com.intellij.diff.util.MergeRange;
 import com.intellij.diff.util.Range;
-import com.intellij.diff.util.Side;
+import consulo.diff.util.Side;
 import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

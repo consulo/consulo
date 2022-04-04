@@ -86,12 +86,7 @@ public class KeymapUtil {
 
   @Nonnull
   public static ShortcutSet getActiveKeymapShortcuts(@Nullable String actionId) {
-    Application application = ApplicationManager.getApplication();
-    KeymapManager keymapManager = application == null ? null : application.getComponent(KeymapManager.class);
-    if (keymapManager == null || actionId == null) {
-      return new CustomShortcutSet(Shortcut.EMPTY_ARRAY);
-    }
-    return new CustomShortcutSet(keymapManager.getActiveKeymap().getShortcuts(actionId));
+    return consulo.ui.ex.keymap.util.KeymapUtil.getActiveKeymapShortcuts(actionId);
   }
 
   /**
@@ -154,10 +149,7 @@ public class KeymapUtil {
 
 
   public static boolean isEventForAction(@Nonnull KeyEvent keyEvent, @Nonnull String actionId) {
-    for (KeyboardShortcut shortcut : ContainerUtil.findAll(getActiveKeymapShortcuts(actionId).getShortcuts(), KeyboardShortcut.class)) {
-      if (AWTKeyStroke.getAWTKeyStrokeForEvent(keyEvent) == shortcut.getFirstKeyStroke()) return true;
-    }
-    return false;
+    return consulo.ui.ex.keymap.util.KeymapUtil.isEventForAction(keyEvent, actionId);
   }
 
   public static String getShortcutsText(Shortcut[] shortcuts) {

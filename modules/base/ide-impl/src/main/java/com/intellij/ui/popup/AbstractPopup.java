@@ -19,7 +19,7 @@ import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.ui.*;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
-import com.intellij.ui.speedSearch.SpeedSearch;
+import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import com.intellij.util.FunctionUtil;
 import com.intellij.util.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;

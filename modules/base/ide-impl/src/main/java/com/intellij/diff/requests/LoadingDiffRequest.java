@@ -15,6 +15,8 @@
  */
 package com.intellij.diff.requests;
 
+import consulo.diff.request.MessageDiffRequest;
+
 import javax.annotation.Nullable;
 
 public class LoadingDiffRequest extends MessageDiffRequest {

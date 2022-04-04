@@ -17,7 +17,7 @@ package com.intellij.openapi.vcs.changes.ui;
 
 import consulo.ui.ex.awt.*;
 import consulo.component.util.localize.BundleBase;
-import com.intellij.diff.util.DiffPlaces;
+import consulo.diff.DiffPlaces;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.dataContext.DataSink;

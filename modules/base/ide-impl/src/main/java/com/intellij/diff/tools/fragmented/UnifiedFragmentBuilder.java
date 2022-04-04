@@ -15,9 +15,9 @@
  */
 package com.intellij.diff.tools.fragmented;
 
-import com.intellij.diff.fragments.LineFragment;
+import consulo.diff.fragment.LineFragment;
 import com.intellij.diff.util.LineRange;
-import com.intellij.diff.util.Side;
+import consulo.diff.util.Side;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import javax.annotation.Nonnull;

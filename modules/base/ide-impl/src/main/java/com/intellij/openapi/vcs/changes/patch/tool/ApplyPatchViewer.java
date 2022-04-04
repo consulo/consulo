@@ -15,16 +15,17 @@
  */
 package com.intellij.openapi.vcs.changes.patch.tool;
 
-import com.intellij.diff.DiffContentFactory;
+import consulo.diff.DiffContentFactory;
 import com.intellij.diff.DiffContext;
 import consulo.diff.DiffDialogHints;
 import consulo.diff.DiffManager;
 import com.intellij.diff.actions.ProxyUndoRedoAction;
 import com.intellij.diff.actions.impl.FocusOppositePaneAction;
 import com.intellij.diff.actions.impl.SetEditorSettingsAction;
-import com.intellij.diff.contents.DocumentContent;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.content.DocumentContent;
 import com.intellij.diff.merge.MergeModelBase;
-import com.intellij.diff.requests.SimpleDiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
 import com.intellij.diff.tools.fragmented.LineNumberConvertor;
 import com.intellij.diff.tools.holders.TextEditorHolder;
 import com.intellij.diff.tools.util.*;
@@ -35,6 +36,7 @@ import com.intellij.diff.util.*;
 import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.diff.util.Side;
 import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.diff.DiffBundle;

@@ -15,35 +15,34 @@
  */
 package com.intellij.history.integration;
 
-import com.intellij.history.*;
 import com.intellij.history.core.*;
 import com.intellij.history.integration.ui.models.DirectoryHistoryDialogModel;
 import com.intellij.history.integration.ui.models.EntireFileHistoryDialogModel;
 import com.intellij.history.integration.ui.models.HistoryDialogModel;
 import com.intellij.history.utils.LocalHistoryLog;
-import consulo.disposer.Disposable;
+import com.intellij.openapi.util.io.FileUtil;
+import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.project.Project;
-import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
+import consulo.localHistory.*;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.ShutDownTracker;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.AccessRule;
-import consulo.container.boot.ContainerPathManager;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;

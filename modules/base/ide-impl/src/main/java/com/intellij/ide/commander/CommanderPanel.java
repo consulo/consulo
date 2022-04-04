@@ -16,8 +16,8 @@
 
 package com.intellij.ide.commander;
 
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import com.intellij.ide.CopyPasteDelegator;
 import consulo.project.ui.view.commander.AbstractListBuilder;
 import consulo.project.ui.view.commander.TopLevelNode;

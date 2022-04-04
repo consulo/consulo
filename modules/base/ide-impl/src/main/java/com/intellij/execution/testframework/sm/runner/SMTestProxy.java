@@ -84,15 +84,15 @@ public class SMTestProxy extends AbstractTestProxy {
   //false:: printables appear as soon as they are discovered in the output; true :: predefined test structure
   private boolean myTreeBuildBeforeStart = false;
 
-  public SMTestProxy(String testName, boolean isSuite, @javax.annotation.Nullable String locationUrl) {
+  public SMTestProxy(String testName, boolean isSuite, @Nullable String locationUrl) {
     this(testName, isSuite, locationUrl, false);
   }
 
-  public SMTestProxy(String testName, boolean isSuite, @javax.annotation.Nullable String locationUrl, boolean preservePresentableName) {
+  public SMTestProxy(String testName, boolean isSuite, @Nullable String locationUrl, boolean preservePresentableName) {
     this(testName, isSuite, locationUrl, null, preservePresentableName);
   }
 
-  public SMTestProxy(String testName, boolean isSuite, @javax.annotation.Nullable String locationUrl, @javax.annotation.Nullable String metainfo, boolean preservePresentableName) {
+  public SMTestProxy(String testName, boolean isSuite, @Nullable String locationUrl, @Nullable String metainfo, boolean preservePresentableName) {
     myName = testName;
     myIsSuite = isSuite;
     myLocationUrl = locationUrl;
@@ -149,7 +149,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return myState.isFinal();
   }
 
-  private void setStacktraceIfNotSet(@javax.annotation.Nullable String stacktrace) {
+  private void setStacktraceIfNotSet(@Nullable String stacktrace) {
     if (myStacktrace == null) myStacktrace = stacktrace;
   }
 
@@ -228,7 +228,7 @@ public class SMTestProxy extends AbstractTestProxy {
     }
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   private Printer getRightPrinter(@Nullable Printer printer) {
     if (myPreferredPrinter != null && printer != null) {
       return myPreferredPrinter;
@@ -272,8 +272,8 @@ public class SMTestProxy extends AbstractTestProxy {
     return null;
   }
 
-  @javax.annotation.Nullable
-  public Navigatable getDescriptor(@javax.annotation.Nullable Location location, @Nonnull TestConsoleProperties properties) {
+  @Nullable
+  public Navigatable getDescriptor(@Nullable Location location, @Nonnull TestConsoleProperties properties) {
     // by location gets navigatable element.
     // It can be file or place in file (e.g. when OPEN_FAILURE_LINE is enabled)
     if (location == null) return null;
@@ -331,7 +331,7 @@ public class SMTestProxy extends AbstractTestProxy {
    *
    * @return null if duration is unknown, otherwise duration value in milliseconds;
    */
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Long getDuration() {
     // Returns duration value for tests
@@ -351,7 +351,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return myDuration;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public String getDurationString(TestConsoleProperties consoleProperties) {
     switch (getMagnitudeInfo()) {
@@ -449,14 +449,14 @@ public class SMTestProxy extends AbstractTestProxy {
   }
 
   public void setTestComparisonFailed(@Nonnull final String localizedMessage,
-                                      @javax.annotation.Nullable final String stackTrace,
+                                      @Nullable final String stackTrace,
                                       @Nonnull final String actualText,
                                       @Nonnull final String expectedText) {
     setTestComparisonFailed(localizedMessage, stackTrace, actualText, expectedText, null, null);
   }
 
   public void setTestComparisonFailed(@Nonnull final String localizedMessage,
-                                      @javax.annotation.Nullable final String stackTrace,
+                                      @Nullable final String stackTrace,
                                       @Nonnull final String actualText,
                                       @Nonnull final String expectedText,
                                       @Nonnull final TestFailedEvent event) {
@@ -467,7 +467,7 @@ public class SMTestProxy extends AbstractTestProxy {
   }
 
   public TestComparisionFailedState setTestComparisonFailed(@Nonnull final String localizedMessage,
-                                                            @javax.annotation.Nullable final String stackTrace,
+                                                            @Nullable final String stackTrace,
                                                             @Nonnull final String actualText,
                                                             @Nonnull final String expectedText,
                                                             @Nullable final String expectedFilePath,
@@ -499,13 +499,13 @@ public class SMTestProxy extends AbstractTestProxy {
     super.dispose();
   }
 
-  public void setTestIgnored(@javax.annotation.Nullable String ignoreComment, @javax.annotation.Nullable String stackTrace) {
+  public void setTestIgnored(@Nullable String ignoreComment, @Nullable String stackTrace) {
     setStacktraceIfNotSet(stackTrace);
     myState = new TestIgnoredState(ignoreComment, stackTrace);
     fireOnNewPrintable(myState);
   }
 
-  public void setParent(@javax.annotation.Nullable final SMTestProxy parent) {
+  public void setParent(@Nullable final SMTestProxy parent) {
     myParent = parent;
   }
 
@@ -527,7 +527,7 @@ public class SMTestProxy extends AbstractTestProxy {
     return result;
   }
 
-  public List<? extends SMTestProxy> getChildren(@javax.annotation.Nullable Filter<? super SMTestProxy> filter) {
+  public List<? extends SMTestProxy> getChildren(@Nullable Filter<? super SMTestProxy> filter) {
     return filterChildren(filter, getChildren());
   }
 
@@ -665,7 +665,7 @@ public class SMTestProxy extends AbstractTestProxy {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public DiffHyperlink getDiffViewerProvider() {
     if (myState instanceof TestComparisionFailedState) {
       return ((TestComparisionFailedState)myState).getHyperlink();
@@ -720,12 +720,12 @@ public class SMTestProxy extends AbstractTestProxy {
     return myState.wasTerminated();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getLocationUrl() {
     return myLocationUrl;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public String getMetainfo() {
     return myMetainfo;
   }
@@ -828,7 +828,7 @@ public class SMTestProxy extends AbstractTestProxy {
   }
 
 
-  @javax.annotation.Nullable
+  @Nullable
   private Long calcSuiteDuration() {
     long partialDuration = 0;
     boolean durationOfChildrenIsUnknown = true;
@@ -940,7 +940,7 @@ public class SMTestProxy extends AbstractTestProxy {
       myHandler = handler;
     }
 
-    @javax.annotation.Nullable
+    @Nullable
     @Override
     public Location getLocation(@Nonnull Project project, @Nonnull GlobalSearchScope searchScope) {
       return myRootLocationUrl != null ? super.getLocation(project, searchScope, myRootLocationUrl)

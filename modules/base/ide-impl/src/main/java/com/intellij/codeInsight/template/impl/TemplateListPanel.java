@@ -32,6 +32,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.dnd.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.ObjectUtil;

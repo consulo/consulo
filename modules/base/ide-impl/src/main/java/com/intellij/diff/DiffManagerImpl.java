@@ -16,7 +16,7 @@
 package com.intellij.diff;
 
 import consulo.diff.chain.DiffRequestChain;
-import com.intellij.diff.chains.SimpleDiffRequestChain;
+import consulo.diff.chain.SimpleDiffRequestChain;
 import com.intellij.diff.editor.ChainDiffVirtualFile;
 import com.intellij.diff.editor.DiffEditorTabFilesManager;
 import com.intellij.diff.impl.DiffRequestPanelImpl;

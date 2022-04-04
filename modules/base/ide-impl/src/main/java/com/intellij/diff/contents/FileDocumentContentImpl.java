@@ -16,7 +16,8 @@
 package com.intellij.diff.contents;
 
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.diff.util.LineCol;
+import consulo.diff.content.FileContent;
+import consulo.diff.util.LineCol;
 import com.intellij.ide.GeneralSettings;
 import consulo.document.Document;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
@@ -24,7 +25,7 @@ import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.util.LineSeparator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -47,11 +48,11 @@ public class FileDocumentContentImpl extends DocumentContentImpl implements File
     return new OpenFileDescriptorImpl(project, myFile, position.line, position.column);
   }
 
-  @javax.annotation.Nullable
-  private static LineSeparator getSeparator(@Nonnull VirtualFile file) {
+  @Nullable
+  private static consulo.platform.LineSeparator getSeparator(@Nonnull VirtualFile file) {
     String s = LoadTextUtil.detectLineSeparator(file, true);
     if (s == null) return null;
-    return LineSeparator.fromString(s);
+    return consulo.platform.LineSeparator.fromString(s);
   }
 
   @Nonnull

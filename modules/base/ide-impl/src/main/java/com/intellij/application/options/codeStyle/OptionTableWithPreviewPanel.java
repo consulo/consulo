@@ -19,7 +19,7 @@ import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
-import com.intellij.ui.SpeedSearchComparator;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import com.intellij.ui.TreeTableSpeedSearch;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.ex.awt.JBScrollPane;

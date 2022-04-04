@@ -24,7 +24,7 @@ import com.intellij.usages.UsageDataUtil;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageViewSettings;
 import com.intellij.util.Consumer;
-import com.intellij.util.EditSourceOnDoubleClickHandler;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;

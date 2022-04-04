@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.vcs.update;
 
-import com.intellij.history.Label;
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryAction;
+import consulo.localHistory.Label;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import com.intellij.ide.errorTreeView.HotfixData;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;

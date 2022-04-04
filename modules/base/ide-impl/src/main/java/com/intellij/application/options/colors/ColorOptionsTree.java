@@ -16,7 +16,7 @@
 package com.intellij.application.options.colors;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.Tree;
 
 import javax.annotation.Nonnull;

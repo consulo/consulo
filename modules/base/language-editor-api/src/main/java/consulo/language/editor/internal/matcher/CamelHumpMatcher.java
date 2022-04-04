@@ -1,14 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.internal.matcher;
 
+import consulo.application.util.matcher.*;
 import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.document.util.TextRange;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.completion.CompletionUtilCore;
-import consulo.language.editor.completion.PrefixMatcher;
-import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.util.collection.FList;
 import consulo.util.lang.CharArrayUtil;
 import consulo.util.lang.StringUtil;
@@ -50,9 +48,9 @@ public class CamelHumpMatcher extends PrefixMatcher {
   }
 
   @Override
-  public boolean isStartMatch(LookupElement element) {
+  public boolean isStartMatch(CompositeStringHolder element) {
     for (String s : CompletionUtilCore.iterateLookupStrings(element)) {
-      FList<TextRange> ranges = myCaseInsensitiveMatcher.matchingFragments(s);
+      FList<MatcherTextRange> ranges = myCaseInsensitiveMatcher.matchingFragments(s);
       if (ranges == null) continue;
       if (ranges.isEmpty() || skipUnderscores(s) >= ranges.get(0).getStartOffset()) {
         return true;
@@ -90,12 +88,12 @@ public class CamelHumpMatcher extends PrefixMatcher {
   }
 
   @Override
-  public boolean prefixMatches(@Nonnull final LookupElement element) {
+  public boolean prefixMatches(@Nonnull final CompositeStringHolder element) {
     return prefixMatchersInternal(element, !element.isCaseSensitive());
   }
 
-  private boolean prefixMatchersInternal(final LookupElement element, final boolean itemCaseInsensitive) {
-    for (final String name : element.getAllLookupStrings()) {
+  private boolean prefixMatchersInternal(final CompositeStringHolder element, final boolean itemCaseInsensitive) {
+    for (final String name : element.getAllStrings()) {
       if (itemCaseInsensitive && StringUtil.startsWithIgnoreCase(name, myPrefix) || prefixMatches(name)) {
         return true;
       }
@@ -173,14 +171,14 @@ public class CamelHumpMatcher extends PrefixMatcher {
   }
 
   @Nullable
-  public FList<TextRange> matchingFragments(String string) {
+  public FList<MatcherTextRange> matchingFragments(String string) {
     return myMatcher.matchingFragments(string);
   }
 
-  public int matchingDegree(String string, @Nullable FList<? extends TextRange> fragments) {
+  public int matchingDegree(String string, @Nullable FList<? extends MatcherTextRange> fragments) {
     int underscoreEnd = skipUnderscores(string);
     if (underscoreEnd > 0) {
-      FList<TextRange> ciRanges = myCaseInsensitiveMatcher.matchingFragments(string);
+      FList<MatcherTextRange> ciRanges = myCaseInsensitiveMatcher.matchingFragments(string);
       if (ciRanges != null && !ciRanges.isEmpty()) {
         int matchStart = ciRanges.get(0).getStartOffset();
         if (matchStart > 0 && matchStart <= underscoreEnd) {

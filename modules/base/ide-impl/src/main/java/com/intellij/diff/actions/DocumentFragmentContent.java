@@ -15,9 +15,10 @@
  */
 package com.intellij.diff.actions;
 
-import com.intellij.diff.contents.DiffContentBase;
-import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.util.LineCol;
+import consulo.diff.content.DiffContentBase;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.util.LineCol;
+import consulo.platform.LineSeparator;
 import consulo.undoRedo.UndoManager;
 import consulo.document.Document;
 import consulo.codeEditor.EditorFactory;
@@ -28,7 +29,7 @@ import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
-import com.intellij.util.LineSeparator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -96,13 +97,13 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     return myOriginal.getNavigatable(originalPosition);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public LineSeparator getLineSeparator() {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Charset getCharset() {
     return null;
@@ -114,7 +115,7 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     return myOriginal.getContentType();
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Navigatable getNavigatable() {
     return getNavigatable(new LineCol(0));
@@ -137,7 +138,7 @@ public class DocumentFragmentContent extends DiffContentBase implements Document
     @Nonnull
     private final RangeMarker myRangeMarker;
 
-    public MyDocumentsSynchronizer(@javax.annotation.Nullable Project project,
+    public MyDocumentsSynchronizer(@Nullable Project project,
                                    @Nonnull RangeMarker range,
                                    @Nonnull Document document1,
                                    @Nonnull Document document2) {

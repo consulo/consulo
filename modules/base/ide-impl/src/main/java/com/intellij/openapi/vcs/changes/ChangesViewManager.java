@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.diff.util.DiffPlaces;
+import consulo.diff.DiffPlaces;
 import com.intellij.diff.util.DiffUtil;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.CommonActionsManager;

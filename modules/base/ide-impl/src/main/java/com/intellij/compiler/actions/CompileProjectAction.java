@@ -15,7 +15,7 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.history.LocalHistory;
+import consulo.localHistory.LocalHistory;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompileStatusNotification;
 import consulo.compiler.CompilerBundle;

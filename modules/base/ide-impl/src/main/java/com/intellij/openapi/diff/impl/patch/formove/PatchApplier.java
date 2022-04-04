@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.diff.impl.patch.formove;
 
-import com.intellij.history.Label;
-import com.intellij.history.LocalHistory;
-import com.intellij.history.LocalHistoryException;
+import consulo.localHistory.Label;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryException;
 import consulo.undoRedo.CommandProcessor;
 import com.intellij.openapi.diff.impl.patch.ApplyPatchContext;
 import com.intellij.openapi.diff.impl.patch.ApplyPatchStatus;

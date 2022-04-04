@@ -16,7 +16,7 @@
 package com.intellij.history.core;
 
 import com.intellij.history.core.changes.*;
-import consulo.language.editor.internal.matcher.NameUtil;
+import consulo.application.util.matcher.NameUtil;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

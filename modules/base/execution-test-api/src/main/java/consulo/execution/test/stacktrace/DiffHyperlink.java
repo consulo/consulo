@@ -47,24 +47,18 @@ public class DiffHyperlink implements Printable {
   protected final String myActualFilePath;
   private boolean myPrintOneLine;
   private final HyperlinkInfo myDiffHyperlink = new DiffHyperlinkInfo();
+  private String myTestProxyName;
 
 
   public DiffHyperlink(final String expected, final String actual, final String filePath) {
     this(expected, actual, filePath, true);
   }
 
-  public DiffHyperlink(final String expected,
-                       final String actual,
-                       final String filePath,
-                       boolean printOneLine) {
+  public DiffHyperlink(final String expected, final String actual, final String filePath, boolean printOneLine) {
     this(expected, actual, filePath, null, printOneLine);
   }
 
-  public DiffHyperlink(final String expected,
-                       final String actual,
-                       final String expectedFilePath,
-                       final String actualFilePath,
-                       boolean printOneLine) {
+  public DiffHyperlink(final String expected, final String actual, final String expectedFilePath, final String actualFilePath, boolean printOneLine) {
     myExpected = expected;
     myActual = actual;
     myFilePath = normalizeSeparators(expectedFilePath);
@@ -72,8 +66,17 @@ public class DiffHyperlink implements Printable {
     myPrintOneLine = printOneLine;
   }
 
+  public void setTestProxyName(String name) {
+    myTestProxyName = name;
+  }
+
   private static String normalizeSeparators(String filePath) {
     return filePath == null ? null : filePath.replace(File.separatorChar, '/');
+  }
+
+  @Nullable
+  public String getTestName() {
+    return myTestProxyName;
   }
 
   protected String getTitle() {
@@ -145,8 +148,7 @@ public class DiffHyperlink implements Printable {
     @Override
     public void navigate(@Nonnull Project project, @Nullable RelativePoint hyperlinkLocationPoint) {
       final DataManager dataManager = DataManager.getInstance();
-      final DataContext dataContext = hyperlinkLocationPoint != null ?
-                                      dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent()) : dataManager.getDataContext();
+      final DataContext dataContext = hyperlinkLocationPoint != null ? dataManager.getDataContext(hyperlinkLocationPoint.getOriginalComponent()) : dataManager.getDataContext();
       ViewAssertEqualsDiffAction.openDiff(dataContext, DiffHyperlink.this);
     }
 

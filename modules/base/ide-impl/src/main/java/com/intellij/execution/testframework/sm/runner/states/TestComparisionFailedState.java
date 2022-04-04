@@ -39,7 +39,7 @@ public class TestComparisionFailedState extends TestFailedState {
 
 
   public TestComparisionFailedState(@Nullable final String localizedMessage,
-                                    @javax.annotation.Nullable final String stackTrace,
+                                    @Nullable final String stackTrace,
                                     @Nonnull final String actualText,
                                     @Nonnull final String expectedText) {
     this(localizedMessage, stackTrace, actualText, expectedText, null);
@@ -49,12 +49,12 @@ public class TestComparisionFailedState extends TestFailedState {
                                     @Nullable final String stackTrace,
                                     @Nonnull final String actualText,
                                     @Nonnull final String expectedText,
-                                    @javax.annotation.Nullable final String filePath) {
+                                    @Nullable final String filePath) {
     this(localizedMessage, stackTrace, actualText, expectedText, filePath, null);
   }
 
-  public TestComparisionFailedState(@javax.annotation.Nullable final String localizedMessage,
-                                    @javax.annotation.Nullable final String stackTrace,
+  public TestComparisionFailedState(@Nullable final String localizedMessage,
+                                    @Nullable final String stackTrace,
                                     @Nonnull final String actualText,
                                     @Nonnull final String expectedText,
                                     @Nullable final String expectedFilePath,

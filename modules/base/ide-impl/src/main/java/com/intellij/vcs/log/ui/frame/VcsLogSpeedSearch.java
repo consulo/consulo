@@ -15,7 +15,7 @@
  */
 package com.intellij.vcs.log.ui.frame;
 
-import com.intellij.ui.SpeedSearchBase;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

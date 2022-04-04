@@ -15,11 +15,11 @@
  */
 package com.intellij.diff.requests;
 
-import com.intellij.diff.contents.DocumentContent;
+import consulo.diff.content.DocumentContent;
 import consulo.diff.merge.MergeResult;
 import com.intellij.diff.merge.TextMergeRequest;
 import com.intellij.diff.util.DiffUtil;
-import com.intellij.diff.util.ThreeSide;
+import consulo.diff.util.ThreeSide;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;

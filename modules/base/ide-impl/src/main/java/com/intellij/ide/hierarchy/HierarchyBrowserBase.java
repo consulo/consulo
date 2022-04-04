@@ -22,7 +22,7 @@ import consulo.ui.ex.action.ContextHelpAction;
 import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
-import com.intellij.ui.TreeSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.application.progress.ProgressIndicator;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;

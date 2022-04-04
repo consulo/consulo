@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.comparison.iterables;
 
-import com.intellij.diff.fragments.DiffFragment;
+import consulo.diff.fragment.DiffFragment;
 import javax.annotation.Nonnull;
 
 import java.util.List;

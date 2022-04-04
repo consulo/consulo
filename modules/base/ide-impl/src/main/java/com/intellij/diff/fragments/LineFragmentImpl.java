@@ -15,6 +15,9 @@
  */
 package com.intellij.diff.fragments;
 
+import consulo.diff.fragment.DiffFragment;
+import consulo.diff.fragment.LineFragment;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.*;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.language.editor.completion.lookup.PrioritizedLookupElement;

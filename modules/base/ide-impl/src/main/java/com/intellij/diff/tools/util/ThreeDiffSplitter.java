@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.util;
 
 import com.intellij.diff.tools.util.DiffSplitter.Painter;
-import com.intellij.diff.util.Side;
+import consulo.diff.util.Side;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
