@@ -11,10 +11,11 @@ import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.project.ui.ProjectWindowStateService;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -80,7 +81,7 @@ public class RunAnythingManager {
     });
 
     if (myRunAnythingUI.getViewType() == RunAnythingPopupUI.ViewType.SHORT) {
-      myBalloonFullSize = WindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY);
+      myBalloonFullSize = ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY);
       Dimension prefSize = myRunAnythingUI.getPreferredSize();
       myBalloon.setSize(prefSize);
     }
@@ -107,7 +108,7 @@ public class RunAnythingManager {
   }
 
   private void calcPositionAndShow(Project project, JBPopup balloon) {
-    Point savedLocation = WindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
+    Point savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
 
     if (project != null) {
       balloon.showCenteredInCurrentWindow(project);
@@ -172,7 +173,7 @@ public class RunAnythingManager {
 
   private void saveSize() {
     if (myRunAnythingUI.getViewType() == RunAnythingPopupUI.ViewType.SHORT) {
-      WindowStateService.getInstance(myProject).putSize(LOCATION_SETTINGS_KEY, myBalloonFullSize);
+      ProjectWindowStateService.getInstance(myProject).putSize(LOCATION_SETTINGS_KEY, myBalloonFullSize);
     }
   }
 }

@@ -16,10 +16,10 @@
 package com.intellij.openapi.diff.impl.dir;
 
 import com.intellij.diff.DiffContentFactory;
-import com.intellij.diff.chains.DiffRequestProducerException;
+import consulo.diff.chain.DiffRequestProducerException;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.impl.CacheDiffRequestProcessor;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.tools.util.DiffDataKeys;
 import com.intellij.diff.tools.util.PrevNextDifferenceIterable;

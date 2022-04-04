@@ -2,10 +2,10 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import com.intellij.diff.DiffContentFactory;
-import com.intellij.diff.DiffManager;
-import com.intellij.diff.DiffRequestPanel;
+import consulo.diff.DiffManager;
+import consulo.diff.DiffRequestPanel;
 import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.util.DiffUserDataKeys;
 import consulo.application.ApplicationManager;

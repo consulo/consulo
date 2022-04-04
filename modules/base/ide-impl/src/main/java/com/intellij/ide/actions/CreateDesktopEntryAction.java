@@ -41,6 +41,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.internal.AppIconUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -132,7 +133,7 @@ public class CreateDesktopEntryAction extends DumbAwareAction {
     File distributionDirectory = ContainerPathManager.get().getAppHomeDirectory();
     String name = ApplicationNamesInfo.getInstance().getFullProductName();
 
-    final String iconPath = AppUIUtil.findIcon(distributionDirectory.getPath());
+    final String iconPath = AppIconUtil.findIcon(distributionDirectory.getPath());
     if (iconPath == null) {
       throw new RuntimeException(ApplicationBundle.message("desktop.entry.icon.missing", distributionDirectory.getPath()));
     }

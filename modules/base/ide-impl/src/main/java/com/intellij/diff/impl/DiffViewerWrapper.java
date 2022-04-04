@@ -17,7 +17,7 @@ package com.intellij.diff.impl;
 
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool.DiffViewer;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 

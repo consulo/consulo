@@ -15,9 +15,9 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.diff.chains.DiffRequestProducer;
-import com.intellij.diff.chains.DiffRequestProducerException;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.chain.DiffRequestProducer;
+import consulo.diff.chain.DiffRequestProducerException;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.UnknownFileTypeDiffRequest;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.impl.patch.FilePatch;

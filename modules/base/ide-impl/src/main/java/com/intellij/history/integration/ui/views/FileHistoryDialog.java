@@ -16,8 +16,8 @@
 
 package com.intellij.history.integration.ui.views;
 
-import com.intellij.diff.DiffManager;
-import com.intellij.diff.DiffRequestPanel;
+import consulo.diff.DiffManager;
+import consulo.diff.DiffRequestPanel;
 import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.integration.IdeaGateway;
 import com.intellij.history.integration.ui.models.EntireFileHistoryDialogModel;

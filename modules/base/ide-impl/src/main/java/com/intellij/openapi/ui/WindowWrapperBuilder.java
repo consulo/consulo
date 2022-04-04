@@ -1,10 +1,12 @@
 package com.intellij.openapi.ui;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.WindowWrapper.Mode;
+import consulo.ui.ex.awt.WindowWrapper;
+import consulo.ui.ex.awt.WindowWrapper.Mode;
 import consulo.disposer.Disposer;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.FrameWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

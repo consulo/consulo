@@ -6,7 +6,6 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.EmptyAction;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import com.intellij.openapi.util.WindowStateService;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.ui.FlatSpeedSearchPopup;
 import com.intellij.openapi.vcs.ui.PopupListElementRendererWithIcon;
@@ -33,6 +32,7 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.function.Condition;
 import com.intellij.dvcs.DvcsImplIcons;
@@ -79,7 +79,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     DataManager.registerDataProvider(getList(), dataId -> POPUP_MODEL == dataId ? getListModel() : null);
     myKey = dimensionKey;
     if (myKey != null) {
-      Dimension storedSize = WindowStateService.getInstance(myProject).getSizeFor(myProject, myKey);
+      Dimension storedSize = ProjectWindowStateService.getInstance(myProject).getSizeFor(myProject, myKey);
       if (storedSize != null) {
         //set forced size before component is shown
         setSize(storedSize);
@@ -102,7 +102,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     AnAction restoreSizeButton = new AnAction(DvcsBundle.message("action.BranchActionGroupPopup.Anonymous.text.restore.size"), null, AllIcons.General.CollapseComponent) {
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
-        WindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, null);
+        ProjectWindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, null);
         myInternalSizeChanged = true;
         pack(true, true);
       }
@@ -166,7 +166,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
       public void onClosed(@Nonnull LightweightWindowEvent event) {
         popupWindow.removeComponentListener(windowListener);
         if (dimensionKey != null && myUserSizeChanged) {
-          WindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, myPrevSize);
+          ProjectWindowStateService.getInstance(myProject).putSizeFor(myProject, dimensionKey, myPrevSize);
         }
       }
     });

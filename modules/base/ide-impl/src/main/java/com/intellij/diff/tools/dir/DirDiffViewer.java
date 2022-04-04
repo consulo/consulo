@@ -22,7 +22,7 @@ import com.intellij.diff.contents.DirectoryContent;
 import com.intellij.diff.contents.EmptyContent;
 import com.intellij.diff.contents.FileContent;
 import com.intellij.diff.requests.ContentDiffRequest;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.diff.ArchiveFileDiffElement;
 import com.intellij.ide.diff.DiffElement;

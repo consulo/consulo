@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.util;
 
+import consulo.application.ui.WindowStateService;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -18,6 +19,8 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 import jakarta.inject.Singleton;
@@ -81,7 +84,7 @@ public class DimensionService extends SimpleModificationTracker implements Persi
 
   @Nullable
   public synchronized Point getLocation(@Nonnull String key, Project project) {
-    Point point = project == null ? null : WindowStateService.getInstance(project).getLocation(key);
+    Point point = project == null ? null : ProjectWindowStateService.getInstance(project).getLocation(key);
     if (point != null) return point;
 
     Pair<String, Float> pair = keyPair(key, project);
@@ -137,7 +140,7 @@ public class DimensionService extends SimpleModificationTracker implements Persi
 
   @Nullable
   public synchronized Dimension getSize(@Nonnull @NonNls String key, Project project) {
-    Dimension size = project == null ? null : WindowStateService.getInstance(project).getSize(key);
+    Dimension size = project == null ? null : ProjectWindowStateService.getInstance(project).getSize(key);
     if (size != null) return size;
 
     Pair<String, Float> pair = keyPair(key, project);
@@ -309,6 +312,6 @@ public class DimensionService extends SimpleModificationTracker implements Persi
 
   @Nonnull
   private static WindowStateService getWindowStateService(@Nullable Project project) {
-    return project == null ? WindowStateService.getInstance() : WindowStateService.getInstance(project);
+    return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
   }
 }

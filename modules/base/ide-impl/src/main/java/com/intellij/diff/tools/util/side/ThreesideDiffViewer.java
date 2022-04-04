@@ -16,11 +16,11 @@
 package com.intellij.diff.tools.util.side;
 
 import com.intellij.diff.DiffContext;
-import com.intellij.diff.DiffDialogHints;
-import com.intellij.diff.DiffManager;
+import consulo.diff.DiffDialogHints;
+import consulo.diff.DiffManager;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.requests.ContentDiffRequest;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.tools.holders.EditorHolder;
 import com.intellij.diff.tools.holders.EditorHolderFactory;

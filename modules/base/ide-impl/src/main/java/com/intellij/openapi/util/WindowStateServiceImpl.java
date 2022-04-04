@@ -1,18 +1,20 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.util;
 
-import consulo.application.ui.UISettings;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtilRt;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.WindowState;
+import consulo.application.ui.WindowStateService;
+import consulo.component.ComponentManager;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.util.ModificationTracker;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.Map;
@@ -22,20 +24,15 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 abstract class WindowStateServiceImpl implements WindowStateService, ModificationTracker, PersistentStateComponent<Element> {
-  @NonNls
   private static final String KEY = "key";
-  @NonNls
   private static final String STATE = "state";
-  @NonNls
   private static final String MAXIMIZED = "maximized";
-  @NonNls
   private static final String FULL_SCREEN = "full-screen";
-  @NonNls
   private static final String TIMESTAMP = "timestamp";
-  @NonNls
   private static final String SCREEN = "screen";
 
   private static final Logger LOG = Logger.getInstance(WindowStateService.class);
+
   private final AtomicLong myModificationCount = new AtomicLong();
   private final Map<String, Runnable> myRunnableMap = new TreeMap<>();
   private final Map<String, CachedState> myStateMap = new TreeMap<>();
@@ -124,7 +121,7 @@ abstract class WindowStateServiceImpl implements WindowStateService, Modificatio
   }
 
   @Override
-  public WindowState getStateFor(@Nullable Project project, @Nonnull String key, @Nonnull Window window) {
+  public WindowState getStateFor(@Nullable ComponentManager project, @Nonnull String key, @Nonnull Window window) {
     synchronized (myRunnableMap) {
       WindowStateBean state = WindowStateAdapter.getState(window);
       Runnable runnable = myRunnableMap.put(key, new Runnable() {
@@ -193,11 +190,16 @@ abstract class WindowStateServiceImpl implements WindowStateService, Modificatio
     }
   }
 
-  private void putFor(Object object, @Nonnull String key,
-                      Point location, boolean locationSet,
-                      Dimension size, boolean sizeSet,
-                      boolean maximized, boolean maximizedSet,
-                      boolean fullScreen, boolean fullScreenSet) {
+  private void putFor(Object object,
+                      @Nonnull String key,
+                      Point location,
+                      boolean locationSet,
+                      Dimension size,
+                      boolean sizeSet,
+                      boolean maximized,
+                      boolean maximizedSet,
+                      boolean fullScreen,
+                      boolean fullScreenSet) {
     if (GraphicsEnvironment.getLocalGraphicsEnvironment().isHeadlessInstance()) return;
     if (UISettings.getInstance().getPresentationMode()) key += ".inPresentationMode"; // separate key for the presentation mode
     GraphicsConfiguration configuration = getConfiguration(object);
@@ -212,10 +214,14 @@ abstract class WindowStateServiceImpl implements WindowStateService, Modificatio
 
   @Nullable
   private CachedState put(@Nonnull String key,
-                          @Nullable Point location, boolean locationSet,
-                          @Nullable Dimension size, boolean sizeSet,
-                          boolean maximized, boolean maximizedSet,
-                          boolean fullScreen, boolean fullScreenSet) {
+                          @Nullable Point location,
+                          boolean locationSet,
+                          @Nullable Dimension size,
+                          boolean sizeSet,
+                          boolean maximized,
+                          boolean maximizedSet,
+                          boolean fullScreen,
+                          boolean fullScreenSet) {
     CachedState state = myStateMap.get(key);
     if (state == null) {
       state = new CachedState();

@@ -15,6 +15,8 @@
  */
 package com.intellij.diff.merge;
 
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.merge.MergeResult;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.BooleanGetter;

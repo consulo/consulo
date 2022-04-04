@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2017 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.diff.chains;
+package consulo.ui.ex.awt.internal;
 
-import com.intellij.diff.requests.DiffRequest;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.util.dataholder.UserDataHolder;
+import consulo.application.eap.EarlyAccessProgramDescriptor;
+import consulo.application.eap.EarlyAccessProgramManager;
 import javax.annotation.Nonnull;
 
-public interface DiffRequestProducer {
-  @Nonnull
-  String getName();
+/**
+ * @author VISTALL
+ * @since 01-Nov-17
+ */
+public class ModalityPerProjectEAPDescriptor extends EarlyAccessProgramDescriptor {
+  public static boolean is() {
+    return EarlyAccessProgramManager.is(ModalityPerProjectEAPDescriptor.class);
+  }
 
   @Nonnull
-  DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
-          throws DiffRequestProducerException, ProcessCanceledException;
+  @Override
+  public String getName() {
+    return "Modality per project";
+  }
+
+  @Override
+  public boolean isRestartRequired() {
+    return true;
+  }
 }

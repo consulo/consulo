@@ -17,7 +17,7 @@ package com.intellij.diff.tools.fragmented;
 
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.FrameDiffTool;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.simple.SimpleOnesideDiffViewer;
 import javax.annotation.Nonnull;
 

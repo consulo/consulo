@@ -20,7 +20,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import com.intellij.diff.chains.DiffRequestProducerException;
+import consulo.diff.chain.DiffRequestProducerException;
 import com.intellij.diff.impl.DiffViewerWrapper;
 import com.intellij.openapi.vcs.changes.Change;
 import consulo.util.lang.ThreeState;

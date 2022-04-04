@@ -197,7 +197,7 @@
     <applicationService serviceInterface="consulo.ui.ex.SystemNotifications"
                         serviceImplementation="consulo.desktop.awt.uiOld.SystemNotificationsImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.ui.FrameWrapperPeerFactory" serviceImplementation="consulo.desktop.awt.wm.impl.FrameWrapperPeerFactoryImpl"/>
+    <applicationService serviceInterface="consulo.ui.ex.awt.internal.FrameWrapperPeerFactory" serviceImplementation="consulo.desktop.awt.wm.impl.FrameWrapperPeerFactoryImpl"/>
     <applicationService serviceInterface="consulo.ide.actions.AboutManager" serviceImplementation="consulo.desktop.awt.action.DesktopAboutManager"/>
     <applicationService serviceInterface="consulo.ide.tipOfDay.TipOfDayManager" serviceImplementation="consulo.desktop.awt.tipOfDay.DesktopTipOfDayManager"/>
 

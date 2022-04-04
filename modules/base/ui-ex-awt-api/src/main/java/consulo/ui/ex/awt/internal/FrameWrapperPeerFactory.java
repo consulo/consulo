@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2015 JetBrains s.r.o.
+ * Copyright 2013-2019 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.diff.chains;
+package consulo.ui.ex.awt.internal;
 
-import consulo.util.dataholder.UserDataHolder;
-import javax.annotation.Nonnull;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.ui.ex.awt.FrameWrapper;
 
-import java.util.List;
+import javax.swing.*;
 
-public interface DiffRequestChain extends UserDataHolder {
-  @Nonnull
-  List<? extends DiffRequestProducer> getRequests();
+/**
+* @author VISTALL
+* @since 2019-02-15
+ *
+ * Hack for extract desktop dep to desktop module
+ * TODO [VISTALL] drop this class when FrameWrapper removed
+*/
+public interface FrameWrapperPeerFactory {
+  JFrame createJFrame(FrameWrapper owner, IdeFrame parent);
 
-  int getIndex();
-
-  void setIndex(int index);
+  JDialog createJDialog(FrameWrapper owner, IdeFrame parent);
 }

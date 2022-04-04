@@ -4,8 +4,8 @@ package consulo.desktop.awt.uiOld;
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.ui.AppUIUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ final class JTrayNotificationImpl implements SystemNotificationsImpl.Notifier {
 
   private JTrayNotificationImpl() throws AWTException {
     String tooltip = Application.get().getName().getValue();
-    myTrayIcon = new TrayIcon(AppUIUtil.loadWindowIcon(false), tooltip);
+    myTrayIcon = new TrayIcon(AppIconUtil.loadWindowIcon(false), tooltip);
     myTrayIcon.setImageAutoSize(true);
     myTrayIcon.addActionListener(e -> {
       IdeFrame frame = (IdeFrame)IdeFocusManager.getGlobalInstance().getLastFocusedFrame();

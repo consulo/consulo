@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2019 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.ui;
+package consulo.application.ui;
 
-import consulo.project.ui.wm.IdeFrame;
+import consulo.application.Application;
 
-import javax.swing.*;
+import javax.annotation.Nonnull;
 
 /**
-* @author VISTALL
-* @since 2019-02-15
- *
- * Hack for extract desktop dep to desktop module
- * TODO [VISTALL] drop this class when FrameWrapper removed
-*/
-public interface FrameWrapperPeerFactory {
-  JFrame createJFrame(FrameWrapper owner, IdeFrame parent);
-
-  JDialog createJDialog(FrameWrapper owner, IdeFrame parent);
+ * @author VISTALL
+ * @since 2018-08-24
+ */
+public interface ApplicationWindowStateService extends WindowStateService {
+  @Nonnull
+  static ApplicationWindowStateService getInstance() {
+    return Application.get().getInstance(ApplicationWindowStateService.class);
+  }
 }

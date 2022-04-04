@@ -20,10 +20,12 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.WindowStateService;
+import consulo.application.ui.WindowStateService;
 import consulo.ui.ex.awt.JBSplitter;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.project.ui.ProjectWindowStateService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -127,7 +129,7 @@ public abstract class WholeWestDialogWrapper extends DialogWrapper {
     String dimensionKey = getDimensionKey();
     if (dimensionKey != null) {
       final Project projectGuess = DataManager.getInstance().getDataContext(rightComponent).getData(CommonDataKeys.PROJECT);
-      WindowStateService stateService = projectGuess == null ? WindowStateService.getInstance() : WindowStateService.getInstance(projectGuess);
+      WindowStateService stateService = projectGuess == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(projectGuess);
       Dimension size = stateService.getSize(dimensionKey);
       if (size == null) {
         stateService.putSize(dimensionKey, getDefaultSize());

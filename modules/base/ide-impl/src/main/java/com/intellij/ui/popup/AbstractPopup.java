@@ -13,7 +13,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.util.WindowStateService;
+import consulo.application.ui.WindowStateService;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
@@ -63,6 +63,8 @@ import consulo.ui.ex.popup.*;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.collection.WeakList;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.dataholder.Key;
@@ -2074,6 +2076,6 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
 
   @Nonnull
   private static WindowStateService getWindowStateService(@Nullable Project project) {
-    return project == null ? WindowStateService.getInstance() : WindowStateService.getInstance(project);
+    return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
   }
 }

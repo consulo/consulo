@@ -183,20 +183,4 @@ public class ApplicationInfo {
       return getName();
     }
   }
-
-  @Deprecated
-  @DeprecationInfo("Do not use this method. Use SandboxUtil.getAppIcon()")
-  public String getIconUrl() {
-    return getUrl("/icon32");
-  }
-
-  @Deprecated
-  @DeprecationInfo("Do not use this method. Use SandboxUtil.getAppIcon()")
-  public String getSmallIconUrl() {
-    return getUrl("/icon16");
-  }
-
-  private static String getUrl(String prefix) {
-    return (ApplicationProperties.isInSandbox() ? prefix + "-sandbox" : prefix) + ".png";
-  }
 }

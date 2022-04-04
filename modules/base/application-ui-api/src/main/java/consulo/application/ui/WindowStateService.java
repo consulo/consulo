@@ -13,14 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
+package consulo.application.ui;
 
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.util.ApplicationWindowStateService;
-import consulo.util.ProjectWindowStateService;
+import consulo.component.ComponentManager;
+
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.awt.*;
 
@@ -28,20 +25,6 @@ import java.awt.*;
  * @author Sergey.Malenkov
  */
 public interface WindowStateService {
-  /**
-   * @return an instance of the service for the application
-   */
-  public static WindowStateService getInstance() {
-    return ServiceManager.getService(ApplicationWindowStateService.class);
-  }
-
-  /**
-   * @param project the project to use by the service
-   * @return an instance of the service for the specified project
-   */
-  public static WindowStateService getInstance(@Nonnull Project project) {
-    return ServiceManager.getService(project, ProjectWindowStateService.class);
-  }
 
   /**
    * Returns a window state by the specified key.
@@ -64,7 +47,7 @@ public interface WindowStateService {
    * @param window  a window state which should be watched for
    * @return a corresponding window state
    */
-  public abstract WindowState getStateFor(@Nullable Project project, @Nonnull String key, @Nonnull Window window);
+  public abstract WindowState getStateFor(@Nullable ComponentManager project, @Nonnull String key, @Nonnull Window window);
 
   /**
    * Returns a location that corresponds to the specified key or {@code null}
@@ -196,7 +179,7 @@ public interface WindowStateService {
   public abstract void putBoundsFor(Object object, @Nonnull String key, Rectangle bounds);
 
   @Nullable
-  default Project getProject() {
+  default ComponentManager getProject() {
     return null;
   }
 }

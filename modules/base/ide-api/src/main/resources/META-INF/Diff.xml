@@ -65,5 +65,7 @@
 
     <colorAndFontPanelFactory implementation="com.intellij.openapi.diff.impl.settings.DiffColorsPageFactory"/>
     <colorAndFontDescriptorProvider implementation="com.intellij.openapi.diff.impl.settings.DiffColorsPageFactory"/>
+
+    <diff.DiffExtension implementation="com.intellij.openapi.vcs.actions.AnnotateDiffViewerAction$MyDiffExtension"/>
   </extensions>
 </consulo-plugin>

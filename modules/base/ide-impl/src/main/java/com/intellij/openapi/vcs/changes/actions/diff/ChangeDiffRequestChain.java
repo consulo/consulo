@@ -3,7 +3,7 @@ package com.intellij.openapi.vcs.changes.actions.diff;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.diff.actions.impl.GoToChangePopupBuilder;
-import com.intellij.diff.chains.DiffRequestChain;
+import consulo.diff.chain.DiffRequestChain;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;

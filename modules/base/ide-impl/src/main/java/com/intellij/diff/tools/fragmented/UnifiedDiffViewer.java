@@ -24,7 +24,7 @@ import com.intellij.diff.comparison.DiffTooBigException;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.requests.ContentDiffRequest;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.util.*;
 import com.intellij.diff.tools.util.base.*;
 import com.intellij.diff.tools.util.side.TwosideTextDiffViewer;

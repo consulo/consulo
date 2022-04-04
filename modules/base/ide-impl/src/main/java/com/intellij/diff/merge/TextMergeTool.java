@@ -15,6 +15,7 @@
  */
 package com.intellij.diff.merge;
 
+import consulo.diff.merge.MergeRequest;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 

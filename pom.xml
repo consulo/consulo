@@ -111,6 +111,7 @@
     <module>modules/base/virtual-file-status-impl</module>
     <module>modules/base/find-api</module>
     <module>modules/base/project-ui-view-api</module>
+    <module>modules/base/diff-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

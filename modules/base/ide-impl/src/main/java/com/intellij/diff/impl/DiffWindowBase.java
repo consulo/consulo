@@ -15,14 +15,14 @@
  */
 package com.intellij.diff.impl;
 
-import com.intellij.diff.DiffDialogHints;
+import consulo.diff.DiffDialogHints;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.ui.WindowWrapper;
+import consulo.ui.ex.awt.WindowWrapper;
 import com.intellij.openapi.ui.WindowWrapperBuilder;
 import consulo.ui.ex.awt.internal.ImageLoader;
 import consulo.disposer.Disposer;

@@ -18,12 +18,12 @@ package consulo.desktop.awt.uiOld;
 import com.intellij.ide.AppLifecycleListener;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.ui.AppUIUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import consulo.container.boot.ContainerPathManager;
+import consulo.ui.ex.awt.internal.AppIconUtil;
 
 import javax.annotation.Nonnull;
 
@@ -61,7 +61,7 @@ class LibNotifyWrapper implements SystemNotificationsImpl.Notifier {
       throw new IllegalStateException("notify_init failed");
     }
 
-    String icon = AppUIUtil.findIcon(ContainerPathManager.get().getAppHomeDirectory().getPath());
+    String icon = AppIconUtil.findIcon(ContainerPathManager.get().getAppHomeDirectory().getPath());
     myIcon = icon != null ? icon : "dialog-information";
 
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();

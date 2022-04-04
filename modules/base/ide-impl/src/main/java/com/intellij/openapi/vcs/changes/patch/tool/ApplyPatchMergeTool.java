@@ -20,6 +20,8 @@ import com.intellij.diff.merge.*;
 import com.intellij.diff.util.DiffUtil;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.diff.DiffBundle;
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.merge.MergeResult;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.containers.ContainerUtil;

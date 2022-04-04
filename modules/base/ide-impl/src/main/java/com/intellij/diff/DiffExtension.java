@@ -15,7 +15,7 @@
  */
 package com.intellij.diff;
 
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;
 import consulo.ui.annotation.RequiredUIAccess;

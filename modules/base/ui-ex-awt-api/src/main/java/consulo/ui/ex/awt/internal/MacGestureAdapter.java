@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.actionSystem.impl;
+package consulo.ui.ex.awt.internal;
 
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -25,6 +25,7 @@ import consulo.eawt.wrapper.event.GestureAdapterWrapper;
 import consulo.eawt.wrapper.event.GesturePhaseEventWrapper;
 import consulo.eawt.wrapper.event.MagnificationEventWrapper;
 import consulo.eawt.wrapper.event.SwipeEventWrapper;
+import consulo.ui.ex.awt.internal.MouseGestureManager;
 
 import javax.swing.*;
 import java.awt.*;

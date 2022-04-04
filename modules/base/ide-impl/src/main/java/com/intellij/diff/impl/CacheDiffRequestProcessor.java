@@ -15,13 +15,14 @@
  */
 package com.intellij.diff.impl;
 
-import com.intellij.diff.chains.DiffRequestProducerException;
+import consulo.diff.chain.DiffRequestProducerException;
 import com.intellij.diff.requests.*;
 import com.intellij.diff.tools.util.SoftHardCacheMap;
 import com.intellij.diff.util.DiffTaskQueue;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import consulo.application.AllIcons;
+import consulo.diff.request.DiffRequest;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;

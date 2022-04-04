@@ -15,10 +15,12 @@
  */
 package com.intellij.diff;
 
-import com.intellij.diff.chains.DiffRequestChain;
-import com.intellij.diff.merge.MergeRequest;
+import consulo.diff.chain.DiffRequestChain;
+import consulo.diff.merge.MergeRequest;
 import com.intellij.diff.merge.MergeTool;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.DiffDialogHints;
+import consulo.diff.request.DiffRequest;
+import consulo.diff.DiffManager;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

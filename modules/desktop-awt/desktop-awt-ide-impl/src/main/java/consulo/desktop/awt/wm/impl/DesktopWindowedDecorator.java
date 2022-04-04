@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.project.Project;
-import com.intellij.openapi.ui.FrameWrapper;
+import consulo.ui.ex.awt.FrameWrapper;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import consulo.ui.ex.toolWindow.ToolWindowWindowedDecorator;
 import javax.annotation.Nonnull;

@@ -56,7 +56,7 @@ public class TestsUIUtil {
     final TestConsoleProperties properties = model.getProperties();
     final Project project = properties.getProject();
     if (testProxy == null) return null;
-    if (AbstractTestProxy.DATA_KEY == dataId) return (T)testProxy;
+    if (AbstractTestProxy.KEY == dataId) return (T)testProxy;
     if (CommonDataKeys.NAVIGATABLE == dataId) return (T)getOpenFileDescriptor(testProxy, model);
     if (CommonDataKeys.PSI_ELEMENT == dataId) {
       final Location location = testProxy.getLocation(project, properties.getScope());

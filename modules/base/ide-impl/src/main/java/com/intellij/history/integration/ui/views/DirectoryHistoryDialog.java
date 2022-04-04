@@ -16,7 +16,7 @@
 
 package com.intellij.history.integration.ui.views;
 
-import com.intellij.diff.DiffDialogHints;
+import consulo.diff.DiffDialogHints;
 import com.intellij.history.core.LocalHistoryFacade;
 import com.intellij.history.core.revisions.Difference;
 import com.intellij.history.integration.IdeaGateway;

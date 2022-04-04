@@ -20,7 +20,7 @@
 
   <extensions defaultExtensionNs="consulo">
     <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport"/>
-    <eapDescriptor implementation="consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor"/>
+    <eapDescriptor implementation="consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor"/>
     <eapDescriptor implementation="consulo.ide.eap.plugins.ExperimentalPluginsDescriptor"/>
     <eapDescriptor implementation="consulo.application.impl.internal.start.PluginPermissionEarlyAccessProgramDescriptor"/>
 

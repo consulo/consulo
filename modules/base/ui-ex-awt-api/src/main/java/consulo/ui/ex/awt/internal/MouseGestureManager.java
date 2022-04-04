@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.actionSystem.impl;
+package consulo.ui.ex.awt.internal;
 
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.logging.Logger;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
@@ -29,7 +29,7 @@ import java.util.Map;
 @Singleton
 public class MouseGestureManager {
   public static MouseGestureManager getInstance() {
-    return ServiceManager.getService(MouseGestureManager.class);
+    return Application.get().getInstance(MouseGestureManager.class);
   }
 
   private static final Logger LOG = Logger.getInstance(MouseGestureManager.class);

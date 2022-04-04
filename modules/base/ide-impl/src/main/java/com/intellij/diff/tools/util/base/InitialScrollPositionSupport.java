@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.tools.util.base;
 
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.util.*;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.openapi.diff.DiffNavigationContext;

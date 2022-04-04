@@ -20,7 +20,7 @@ import com.intellij.openapi.fileEditor.impl.DesktopDockableEditorTabbedContainer
 import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
 import com.intellij.openapi.fileEditor.impl.EditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.openapi.ui.FrameWrapper;
+import consulo.ui.ex.awt.FrameWrapper;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.awt.RelativeRectangle;
 import com.intellij.ui.components.panels.VerticalBox;

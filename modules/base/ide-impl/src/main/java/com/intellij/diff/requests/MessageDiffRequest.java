@@ -17,6 +17,8 @@ package com.intellij.diff.requests;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import consulo.diff.request.DiffRequest;
 import consulo.ui.annotation.RequiredUIAccess;
 
 public class MessageDiffRequest extends DiffRequest {

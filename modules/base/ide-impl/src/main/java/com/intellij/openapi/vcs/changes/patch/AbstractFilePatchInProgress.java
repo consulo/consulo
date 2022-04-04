@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.diff.chains.DiffRequestProducer;
+import consulo.diff.chain.DiffRequestProducer;
 import com.intellij.openapi.diff.impl.patch.FilePatch;
 import com.intellij.openapi.diff.impl.patch.PatchReader;
 import com.intellij.openapi.diff.impl.patch.formove.PathMerger;

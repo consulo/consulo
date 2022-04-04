@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.diff;
+package consulo.diff;
 
-import com.intellij.diff.chains.DiffRequestChain;
-import com.intellij.diff.merge.MergeRequest;
-import com.intellij.diff.requests.DiffRequest;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
+import consulo.application.Application;
+import consulo.diff.chain.DiffRequestChain;
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.request.DiffRequest;
 import consulo.disposer.Disposable;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import java.awt.*;
 public abstract class DiffManager {
   @Nonnull
   public static DiffManager getInstance() {
-    return ServiceManager.getService(DiffManager.class);
+    return Application.get().getInstance(DiffManager.class);
   }
 
   //

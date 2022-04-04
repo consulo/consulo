@@ -15,76 +15,24 @@
  */
 package com.intellij.ui;
 
+import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.Application;
-import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
-import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.project.Project;
-import consulo.ui.ex.awt.TextComponentUndoProvider;
-import consulo.ui.ex.popup.Balloon;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ui.ex.awt.internal.ImageLoader;
-import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.awt.hacking.AWTAccessorHacking;
-import consulo.ui.style.StyleManager;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.popup.Balloon;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BaseMultiResolutionImage;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
  * @author yole
  */
 public class AppUIUtil {
-  public static void updateWindowIcon(@Nonnull Window window) {
-    updateWindowIcon(window, StyleManager.get().getCurrentStyle().isDark());
-  }
-
-  @SuppressWarnings("deprecation")
-  public static void updateWindowIcon(@Nonnull Window window, boolean isDark) {
-    ApplicationInfo appInfo = ApplicationInfoImpl.getInstance();
-    List<Image> images = ContainerUtil.newArrayListWithCapacity(2);
-
-    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), AppUIUtil.class, isDark));
-    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl(), AppUIUtil.class, isDark));
-
-    for (int i = 0; i < images.size(); i++) {
-      Image image = images.get(i);
-      if (image instanceof JBHiDPIScaledImage) {
-        images.set(i, ((JBHiDPIScaledImage)image).getDelegate());
-      }
-    }
-
-    window.setIconImages(images);
-  }
-
-  @SuppressWarnings("deprecation")
-  @Nonnull
-  public static Image loadWindowIcon(boolean isDark) {
-    ApplicationInfo appInfo = ApplicationInfoImpl.getInstance();
-    List<Image> images = new ArrayList<>();
-
-    images.add(ImageLoader.loadFromResource(appInfo.getIconUrl(), AppUIUtil.class, isDark));
-    images.add(ImageLoader.loadFromResource(appInfo.getSmallIconUrl(), AppUIUtil.class, isDark));
-
-    for (int i = 0; i < images.size(); i++) {
-      Image image = images.get(i);
-      if (image instanceof JBHiDPIScaledImage) {
-        images.set(i, ((JBHiDPIScaledImage)image).getDelegate());
-      }
-    }
-
-    return new BaseMultiResolutionImage(images.toArray(Image[]::new));
-  }
 
   public static void invokeLaterIfProjectAlive(@Nonnull final Project project, @Nonnull final Runnable runnable) {
     final Application application = ApplicationManager.getApplication();
@@ -123,51 +71,12 @@ public class AppUIUtil {
   }
 
   public static void hideToolWindowBalloon(@Nonnull final String id, @Nonnull final Project project) {
-    invokeLaterIfProjectAlive(project, new Runnable() {
-      @Override
-      public void run() {
-        Balloon balloon = ToolWindowManager.getInstance(project).getToolWindowBalloon(id);
-        if (balloon != null) {
-          balloon.hide();
-        }
+    invokeLaterIfProjectAlive(project, () -> {
+      Balloon balloon = ToolWindowManager.getInstance(project).getToolWindowBalloon(id);
+      if (balloon != null) {
+        balloon.hide();
       }
     });
-  }
-
-  public static JTextField createUndoableTextField() {
-    JTextField field = new JTextField();
-    new TextComponentUndoProvider(field);
-    return field;
-  }
-
-  private static final int MIN_ICON_SIZE = 32;
-
-  @Nullable
-  public static String findIcon(final String iconsPath) {
-    final File iconsDir = new File(iconsPath);
-
-    // 1. look for .svg icon
-    for (String child : iconsDir.list()) {
-      if (child.endsWith(".svg")) {
-        return iconsPath + '/' + child;
-      }
-    }
-
-    // 2. look for .png icon of max size
-    int max = 0;
-    String iconPath = null;
-    for (String child : iconsDir.list()) {
-      if (!child.endsWith(".png")) continue;
-      final String path = iconsPath + '/' + child;
-      final Icon icon = new ImageIcon(path);
-      final int size = icon.getIconHeight();
-      if (size >= MIN_ICON_SIZE && size > max && size == icon.getIconWidth()) {
-        max = size;
-        iconPath = path;
-      }
-    }
-
-    return iconPath;
   }
 
   /**

@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.contents;
 
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.util.dataholder.UserDataHolder;

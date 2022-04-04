@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.vcs.changes.actions.diff;
 
-import com.intellij.diff.DiffManager;
-import com.intellij.diff.chains.DiffRequestChain;
+import consulo.diff.DiffManager;
+import consulo.diff.chain.DiffRequestChain;
 import com.intellij.diff.util.DiffUserDataKeys;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.ActionPlaces;

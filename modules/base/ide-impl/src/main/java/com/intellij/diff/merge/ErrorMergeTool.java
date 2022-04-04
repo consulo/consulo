@@ -16,6 +16,9 @@
 package com.intellij.diff.merge;
 
 import com.intellij.diff.util.DiffUtil;
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.merge.MergeResult;
+
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

@@ -27,6 +27,8 @@ import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.dataContext.DataProvider;
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.merge.MergeResult;
 import consulo.disposer.Disposable;
 import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;

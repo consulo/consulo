@@ -17,10 +17,10 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
+import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.project.Project;
-import com.intellij.openapi.ui.FrameWrapper;
-import com.intellij.openapi.ui.FrameWrapperPeerFactory;
+import consulo.ui.ex.awt.FrameWrapper;
+import consulo.ui.ex.awt.internal.FrameWrapperPeerFactory;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.util.dataholder.Key;

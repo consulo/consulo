@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package com.intellij.execution.testframework.actions;
+package consulo.execution.test.action;
 
-import com.intellij.diff.DiffDialogHints;
-import com.intellij.diff.impl.DiffRequestProcessor;
-import com.intellij.diff.impl.DiffWindowBase;
-import com.intellij.diff.util.DiffUserDataKeys;
-import com.intellij.diff.util.DiffUtil;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.dataContext.DataContext;
+import consulo.diff.DiffDialogHints;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.TestFrameworkRunningModel;
-import consulo.execution.test.action.TestTreeViewAction;
 import consulo.execution.test.stacktrace.DiffHyperlink;
 import consulo.execution.test.ui.TestTreeView;
 import consulo.language.editor.CommonDataKeys;
@@ -34,6 +28,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -50,13 +45,13 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
   @Override
   public void actionPerformed(final AnActionEvent e) {
     if (!openDiff(e.getDataContext(), null)) {
-      final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       Messages.showInfoMessage(component, "Comparison error was not found", "No Comparison Data Found");
     }
   }
 
-  public static boolean openDiff(DataContext context, @javax.annotation.Nullable DiffHyperlink currentHyperlink) {
-    final AbstractTestProxy testProxy = context.getData(AbstractTestProxy.DATA_KEY);
+  public static boolean openDiff(DataContext context, @Nullable DiffHyperlink currentHyperlink) {
+    final AbstractTestProxy testProxy = context.getData(AbstractTestProxy.KEY);
     final Project project = context.getData(CommonDataKeys.PROJECT);
     if (testProxy != null) {
       DiffHyperlink diffViewerProvider = testProxy.getDiffViewerProvider();
@@ -98,7 +93,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
       enabled = false;
     }
     else {
-      final AbstractTestProxy test = dataContext.getData(AbstractTestProxy.DATA_KEY);
+      final AbstractTestProxy test = dataContext.getData(AbstractTestProxy.KEY);
       if (test != null) {
         if (test.isLeaf()) {
           enabled = test.getDiffViewerProvider() != null;
@@ -127,7 +122,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
       this(project, Collections.singletonList(request), 0);
     }
 
-    public MyDiffWindow(@javax.annotation.Nullable Project project, @Nonnull List<DiffHyperlink> requests, int index) {
+    public MyDiffWindow(@Nullable Project project, @Nonnull List<DiffHyperlink> requests, int index) {
       super(project, DiffDialogHints.DEFAULT);
       myRequests = requests;
       myIndex = index;
@@ -140,7 +135,7 @@ public class ViewAssertEqualsDiffAction extends AnAction implements TestTreeView
     }
 
     private class MyTestDiffRequestProcessor extends TestDiffRequestProcessor {
-      public MyTestDiffRequestProcessor(@javax.annotation.Nullable Project project, @Nonnull List<DiffHyperlink> requests, int index) {
+      public MyTestDiffRequestProcessor(@Nullable Project project, @Nonnull List<DiffHyperlink> requests, int index) {
         super(project, requests, index);
         putContextUserData(DiffUserDataKeys.DIALOG_GROUP_KEY, "#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog");
       }

@@ -24,6 +24,7 @@ import com.intellij.diff.requests.*;
 import com.intellij.diff.util.DiffUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.diff.request.DiffRequest;
 import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
 import consulo.virtualFileSystem.VirtualFile;

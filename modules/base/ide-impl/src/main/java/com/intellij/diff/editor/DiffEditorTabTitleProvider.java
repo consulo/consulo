@@ -16,7 +16,7 @@
 package com.intellij.diff.editor;
 
 import com.intellij.diff.impl.DiffSettingsHolder;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.EditorTabTitleProvider;

@@ -15,7 +15,7 @@
  */
 package com.intellij.diff;
 
-import com.intellij.diff.chains.DiffRequestChain;
+import consulo.diff.chain.DiffRequestChain;
 import com.intellij.diff.chains.SimpleDiffRequestChain;
 import com.intellij.diff.editor.ChainDiffVirtualFile;
 import com.intellij.diff.editor.DiffEditorTabFilesManager;
@@ -23,7 +23,10 @@ import com.intellij.diff.impl.DiffRequestPanelImpl;
 import com.intellij.diff.impl.DiffSettingsHolder;
 import com.intellij.diff.impl.DiffWindow;
 import com.intellij.diff.merge.*;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.DiffDialogHints;
+import consulo.diff.DiffRequestPanel;
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.binary.BinaryDiffTool;
 import com.intellij.diff.tools.dir.DirDiffTool;
 import com.intellij.diff.tools.external.ExternalDiffTool;
@@ -33,7 +36,7 @@ import com.intellij.diff.tools.simple.SimpleDiffTool;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.openapi.diff.DiffBundle;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.ui.WindowWrapper;
+import consulo.ui.ex.awt.WindowWrapper;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.project.Project;

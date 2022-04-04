@@ -778,7 +778,7 @@
     <extensionPoint name="consoleInputFilterProvider" interface="com.intellij.execution.filters.ConsoleInputFilterProvider"/>
     <extensionPoint name="consoleActionsPostProcessor" interface="com.intellij.execution.actions.ConsoleActionsPostProcessor"/>
 
-    <extensionPoint name="console.folding" interface="com.intellij.execution.ConsoleFolding"/>
+    <extensionPoint name="console.folding" interface="consulo.execution.ConsoleFolding"/>
 
     <extensionPoint name="configurationProducer"
                     interface="consulo.execution.action.RuntimeConfigurationProducer"/>
@@ -937,9 +937,9 @@
     <extensionPoint name="referenceImporter" interface="com.intellij.codeInsight.daemon.ReferenceImporter"/>
     <extensionPoint name="elementLookupRenderer" interface="consulo.language.editor.completion.lookup.ElementLookupRenderer"/>
 
-    <extensionPoint name="qualifiedNameProvider" interface="com.intellij.ide.actions.QualifiedNameProvider"/>
+    <extensionPoint name="qualifiedNameProvider" interface="consulo.language.editor.QualifiedNameProvider"/>
 
-    <extensionPoint name="virtualFileQualifiedNameProvider" interface="com.intellij.ide.actions.CopyReferenceAction$VirtualFileQualifiedNameProvider"/>
+    <extensionPoint name="virtualFileQualifiedNameProvider" interface="consulo.language.editor.VirtualFileQualifiedNameProvider"/>
 
     <extensionPoint name="completionData"
                     beanClass="consulo.language.editor.impl.internal.completion.CompletionDataEP"/>
@@ -960,7 +960,7 @@
     <extensionPoint name="usageViewElementsListener" interface="com.intellij.usages.impl.UsageViewElementsListener"/>
 
     <extensionPoint name="treeStructureProvider"
-                    interface="com.intellij.ide.projectView.TreeStructureProvider"
+                    interface="consulo.project.ui.view.tree.TreeStructureProvider"
                     area="PROJECT"/>
 
     <extensionPoint name="defaultLiveTemplatesProvider"
@@ -1014,7 +1014,7 @@
     <extensionPoint name="testSrcLocator"
                     interface="com.intellij.testIntegration.TestLocationProvider"/>
     <extensionPoint name="testStatusListener"
-                    interface="com.intellij.execution.testframework.TestStatusListener"/>
+                    interface="consulo.execution.test.TestStatusListener"/>
 
     <extensionPoint name="testCreator"
                     beanClass="consulo.language.LanguageExtensionPoint">
@@ -1093,7 +1093,7 @@
 
     <extensionPoint name="previewHintProvider" interface="com.intellij.codeInsight.preview.PreviewHintProvider"/>
     <extensionPoint name="elementPreviewProvider" interface="com.intellij.codeInsight.preview.ElementPreviewProvider"/>
-    <extensionPoint name="testActionProvider" interface="com.intellij.execution.testframework.ToggleModelActionProvider"/>
+    <extensionPoint name="testActionProvider" interface="consulo.execution.test.action.ToggleModelActionProvider"/>
 
     <extensionPoint name="psiViewerExtension" interface="com.intellij.internal.psiView.PsiViewerExtension"/>
 
@@ -1258,7 +1258,7 @@
     <applicationService serviceInterface="consulo.undoRedo.CommandProcessor"
                         serviceImplementation="com.intellij.openapi.command.impl.CommandProcessorImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ide.CommonActionsManager"
+    <applicationService serviceInterface="consulo.ui.ex.action.CommonActionsManager"
                         serviceImplementation="com.intellij.ide.impl.CommonActionsManagerImpl"/>
 
     <applicationService serviceInterface="consulo.ui.ex.awt.CopyPasteManager"
@@ -1328,8 +1328,8 @@
                         serviceImplementation="com.intellij.ide.passwordSafe.config.PasswordSafeSettings"/>
     <applicationService serviceInterface="com.intellij.ide.passwordSafe.PasswordSafe"
                         serviceImplementation="com.intellij.ide.passwordSafe.impl.PasswordSafeImpl"/>
-    <applicationService serviceInterface="com.intellij.execution.process.ColoredOutputTypeRegistry"
-                        serviceImplementation="com.intellij.execution.process.ColoredOutputTypeRegistry"/>
+    <applicationService serviceInterface="consulo.execution.process.ColoredOutputTypeRegistry"
+                        serviceImplementation="consulo.execution.process.ColoredOutputTypeRegistry"/>
     <applicationService serviceInterface="consulo.process.local.internal.OSProcessManager"
                         serviceImplementation="com.intellij.execution.process.impl.OSProcessManagerImpl"/>
 
@@ -1407,11 +1407,9 @@
     <projectService serviceInterface="com.intellij.openapi.vcs.changes.RemoteRevisionsCache"
                     serviceImplementation="com.intellij.openapi.vcs.changes.RemoteRevisionsCache"/>
 
-    <projectService serviceInterface="com.intellij.execution.testframework.export.ExportTestResultsConfiguration"
-                    serviceImplementation="com.intellij.execution.testframework.export.ExportTestResultsConfiguration"/>
+    <projectService serviceImplementation="consulo.execution.test.export.ExportTestResultsConfiguration"/>
 
-    <projectService serviceInterface="com.intellij.execution.testframework.autotest.AutoTestManager"
-                    serviceImplementation="com.intellij.execution.testframework.autotest.AutoTestManager"/>
+    <projectService serviceImplementation="consulo.execution.test.autotest.AutoTestManager"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.VcsFileListenerContextHelper"
                     serviceImplementation="com.intellij.openapi.vcs.VcsFileListenerContextHelper"/>

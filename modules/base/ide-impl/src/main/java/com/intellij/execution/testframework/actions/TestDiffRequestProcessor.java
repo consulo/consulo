@@ -18,7 +18,7 @@ package com.intellij.execution.testframework.actions;
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.impl.DiffRequestProcessor;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.ErrorDiffRequest;
 import com.intellij.diff.requests.NoDiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;

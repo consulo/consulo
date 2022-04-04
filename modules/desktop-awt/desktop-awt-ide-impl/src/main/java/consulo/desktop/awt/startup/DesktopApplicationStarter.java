@@ -58,6 +58,7 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.ref.SimpleReference;
 
@@ -125,7 +126,7 @@ public class DesktopApplicationStarter extends ApplicationStarter {
       IdeEventQueue.initialize(); // replace system event queue
     });
 
-    stat.markWith("awt.update.window.icon", () -> AppUIUtil.updateWindowIcon(JOptionPane.getRootFrame(), false));
+    stat.markWith("awt.update.window.icon", () -> AppIconUtil.updateWindowIcon(JOptionPane.getRootFrame(), false));
 
     // execute it in parallel
     ForkJoinPool.commonPool().execute(DesktopAppUIUtil::registerBundledFonts);

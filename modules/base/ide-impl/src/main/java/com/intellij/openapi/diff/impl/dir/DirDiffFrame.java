@@ -19,10 +19,10 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.ui.FrameWrapper;
+import consulo.ui.ex.awt.FrameWrapper;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.WindowState;
+import consulo.application.ui.WindowState;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

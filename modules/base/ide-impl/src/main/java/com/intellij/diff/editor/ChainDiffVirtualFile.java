@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.editor;
 
-import com.intellij.diff.chains.DiffRequestChain;
+import consulo.diff.chain.DiffRequestChain;
 import com.intellij.diff.impl.CacheDiffRequestChainProcessor;
 import com.intellij.diff.impl.DiffRequestProcessor;
 import consulo.project.Project;

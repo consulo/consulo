@@ -21,7 +21,7 @@ import com.intellij.diff.actions.BufferedLineIterator;
 import com.intellij.diff.comparison.DiffTooBigException;
 import com.intellij.diff.fragments.LineFragment;
 import com.intellij.diff.requests.ContentDiffRequest;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.util.*;
 import com.intellij.diff.tools.util.base.HighlightPolicy;
 import com.intellij.diff.tools.util.base.TextDiffViewerUtil;

@@ -16,10 +16,10 @@
 
 package com.intellij.openapi.vcs.changes.patch;
 
-import com.intellij.diff.DiffManager;
+import consulo.diff.DiffManager;
 import com.intellij.diff.InvalidDiffRequestException;
-import com.intellij.diff.merge.MergeRequest;
-import com.intellij.diff.merge.MergeResult;
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.merge.MergeResult;
 import com.intellij.diff.merge.MergeTool;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import consulo.ui.ex.action.ActionPlaces;

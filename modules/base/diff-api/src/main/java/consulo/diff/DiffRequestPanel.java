@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.diff;
+package consulo.diff;
 
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 
+import javax.annotation.Nullable;
 import javax.swing.*;
 
 public interface DiffRequestPanel extends Disposable {
-  void setRequest(@javax.annotation.Nullable DiffRequest request);
+  void setRequest(@Nullable DiffRequest request);
 
   /*
    * Sets request to show.
    * Will not override current request, if their keys are not null and equal.
    */
-  void setRequest(@javax.annotation.Nullable DiffRequest request, @javax.annotation.Nullable Object identity);
+  void setRequest(@Nullable DiffRequest request, @Nullable Object identity);
 
   @Nonnull
   JComponent getComponent();
 
-  @javax.annotation.Nullable
+  @Nullable
   JComponent getPreferredFocusedComponent();
 
   @RequiredUIAccess
-  <T> void putContextHints(@Nonnull Key<T> key, @javax.annotation.Nullable T value);
+  <T> void putContextHints(@Nonnull Key<T> key, @Nullable T value);
 }

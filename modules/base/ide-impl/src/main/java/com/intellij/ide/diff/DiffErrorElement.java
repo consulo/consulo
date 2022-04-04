@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.diff;
 
-import com.intellij.diff.chains.DiffRequestProducerException;
+import consulo.diff.chain.DiffRequestProducerException;
 import com.intellij.diff.contents.DiffContent;
 import consulo.application.AllIcons;
 import consulo.component.ProcessCanceledException;

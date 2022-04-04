@@ -17,11 +17,11 @@ package com.intellij.openapi.vcs.actions;
 
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffContentFactoryEx;
-import com.intellij.diff.DiffManager;
+import consulo.diff.DiffManager;
 import com.intellij.diff.DiffRequestFactory;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx;

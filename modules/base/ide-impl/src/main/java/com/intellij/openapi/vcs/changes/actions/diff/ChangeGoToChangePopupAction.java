@@ -1,8 +1,8 @@
 package com.intellij.openapi.vcs.changes.actions.diff;
 
 import com.intellij.diff.actions.impl.GoToChangePopupBuilder;
-import com.intellij.diff.chains.DiffRequestChain;
-import com.intellij.diff.chains.DiffRequestProducer;
+import consulo.diff.chain.DiffRequestChain;
+import consulo.diff.chain.DiffRequestProducer;
 import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.vcs.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;

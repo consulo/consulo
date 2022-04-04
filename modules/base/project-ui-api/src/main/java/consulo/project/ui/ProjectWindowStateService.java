@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2017 consulo.io
+ * Copyright 2013-2018 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ui.ex.impl;
+package consulo.project.ui;
 
-import consulo.application.eap.EarlyAccessProgramDescriptor;
-import consulo.application.eap.EarlyAccessProgramManager;
+import consulo.application.ui.WindowStateService;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 01-Nov-17
+ * @since 2018-08-24
  */
-public class ModalityPerProjectEAPDescriptor extends EarlyAccessProgramDescriptor {
-  public static boolean is() {
-    return EarlyAccessProgramManager.is(ModalityPerProjectEAPDescriptor.class);
-  }
-
-  @Nonnull
-  @Override
-  public String getName() {
-    return "Modality per project";
-  }
-
-  @Override
-  public boolean isRestartRequired() {
-    return true;
+public interface ProjectWindowStateService extends WindowStateService {
+  /**
+   * @param project the project to use by the service
+   * @return an instance of the service for the specified project
+   */
+  public static WindowStateService getInstance(@Nonnull Project project) {
+    return project.getInstance(ProjectWindowStateService.class);
   }
 }

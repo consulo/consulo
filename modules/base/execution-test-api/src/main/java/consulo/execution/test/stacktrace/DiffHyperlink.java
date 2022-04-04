@@ -25,6 +25,7 @@ import consulo.dataContext.DataManager;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.test.Printable;
 import consulo.execution.test.Printer;
+import consulo.execution.test.action.ViewAssertEqualsDiffAction;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.HyperlinkInfoBase;

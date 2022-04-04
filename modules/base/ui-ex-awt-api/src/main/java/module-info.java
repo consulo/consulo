@@ -15,6 +15,8 @@ module consulo.ui.ex.awt.api {
   requires transitive consulo.project.ui.api;
   requires consulo.process.api;
 
+  requires static consulo.desktop.awt.eawt.wrapper;
+
   requires consulo.desktop.awt.hacking;
 
   requires imgscalr.lib;

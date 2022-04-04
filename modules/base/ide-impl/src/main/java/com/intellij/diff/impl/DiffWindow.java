@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.impl;
 
-import com.intellij.diff.DiffDialogHints;
-import com.intellij.diff.chains.DiffRequestChain;
+import consulo.diff.DiffDialogHints;
+import consulo.diff.chain.DiffRequestChain;
 import com.intellij.diff.util.DiffUtil;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

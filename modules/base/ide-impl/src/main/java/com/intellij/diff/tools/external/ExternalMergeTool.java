@@ -19,7 +19,7 @@ import com.intellij.diff.DiffManagerEx;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.DocumentContent;
 import com.intellij.diff.contents.FileContent;
-import com.intellij.diff.merge.MergeRequest;
+import consulo.diff.merge.MergeRequest;
 import com.intellij.diff.merge.ThreesideMergeRequest;
 import consulo.process.ExecutionException;
 import consulo.component.ProcessCanceledException;

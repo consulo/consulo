@@ -15,7 +15,7 @@
  */
 package com.intellij.diff.requests;
 
-import com.intellij.diff.chains.DiffRequestProducer;
+import consulo.diff.chain.DiffRequestProducer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

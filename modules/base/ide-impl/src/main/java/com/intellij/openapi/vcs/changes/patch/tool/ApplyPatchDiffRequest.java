@@ -16,7 +16,7 @@
 package com.intellij.openapi.vcs.changes.patch.tool;
 
 import com.intellij.diff.contents.DocumentContent;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import javax.annotation.Nonnull;
 

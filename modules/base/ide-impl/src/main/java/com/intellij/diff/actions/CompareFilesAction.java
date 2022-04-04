@@ -16,7 +16,7 @@
 package com.intellij.diff.actions;
 
 import com.intellij.diff.DiffRequestFactory;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;

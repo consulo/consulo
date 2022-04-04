@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.actions.impl;
 
-import com.intellij.diff.chains.DiffRequestChain;
-import com.intellij.diff.chains.DiffRequestProducer;
+import consulo.diff.chain.DiffRequestChain;
+import consulo.diff.chain.DiffRequestProducer;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;

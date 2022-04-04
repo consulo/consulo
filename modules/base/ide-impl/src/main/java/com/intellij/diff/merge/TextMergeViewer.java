@@ -40,6 +40,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
+import consulo.diff.merge.MergeResult;
 import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.UndoConfirmationPolicy;
 import com.intellij.openapi.diff.DiffBundle;

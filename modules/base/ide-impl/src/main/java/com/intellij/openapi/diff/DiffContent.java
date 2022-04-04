@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.diff;
 
+import consulo.diff.request.DiffRequest;
 import consulo.document.Document;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * Represents some data that probably can be compared with some other.
  *
- * @see com.intellij.diff.requests.DiffRequest
+ * @see DiffRequest
  * @deprecated use {@link com.intellij.diff.contents.DiffContent} instead
  */
 @Deprecated

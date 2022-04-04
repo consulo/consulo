@@ -19,7 +19,7 @@ import consulo.application.CommonBundle;
 import com.intellij.diff.contents.DiffContent;
 import com.intellij.diff.contents.FileContent;
 import com.intellij.diff.merge.BinaryMergeRequest;
-import com.intellij.diff.merge.MergeResult;
+import consulo.diff.merge.MergeResult;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.ThreeSide;
 import consulo.language.editor.WriteCommandAction;

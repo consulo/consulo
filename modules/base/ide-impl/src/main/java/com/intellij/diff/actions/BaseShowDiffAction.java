@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.actions;
 
-import com.intellij.diff.DiffManager;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.DiffManager;
+import consulo.diff.request.DiffRequest;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;

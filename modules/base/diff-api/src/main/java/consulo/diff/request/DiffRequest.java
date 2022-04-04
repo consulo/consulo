@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.diff.requests;
+package consulo.diff.request;
 
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ui.annotation.RequiredUIAccess;
 
 public abstract class DiffRequest implements UserDataHolder {
   protected final UserDataHolderBase myUserDataHolder = new UserDataHolderBase();
@@ -41,7 +42,7 @@ public abstract class DiffRequest implements UserDataHolder {
   public void onAssigned(boolean isAssigned) {
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public <T> T getUserData(@Nonnull Key<T> key) {
     return myUserDataHolder.getUserData(key);

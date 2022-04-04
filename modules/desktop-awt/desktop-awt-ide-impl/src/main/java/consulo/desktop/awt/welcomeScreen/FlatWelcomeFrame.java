@@ -17,15 +17,14 @@ package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.ui.ex.awt.internal.AppIconUtil;
 import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.util.WindowStateService;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import com.intellij.ui.AppUIUtil;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -40,6 +39,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.desktop.awt.ui.impl.window.JFrameAsUIWindow;
 import consulo.ui.Rectangle2D;
+import consulo.application.ui.ApplicationWindowStateService;
 
 import javax.accessibility.AccessibleContext;
 import javax.annotation.Nullable;
@@ -69,11 +69,11 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
     //setUndecorated(true);
     setContentPane(screen);
     setDefaultTitle();
-    AppUIUtil.updateWindowIcon(this);
+    AppIconUtil.updateWindowIcon(this);
     SwingUIDecorator.apply(SwingUIDecorator::decorateWindowTitle, rootPane);
     setSize(TargetAWT.to(WelcomeFrameManager.getDefaultWindowSize()));
     setResizable(false);
-    Point location = WindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY);
+    Point location = ApplicationWindowStateService.getInstance().getLocation(WelcomeFrameManager.DIMENSION_KEY);
     Rectangle screenBounds = ScreenUtil.getScreenRectangle(location != null ? location : new Point(0, 0));
     setLocation(new Point(screenBounds.x + (screenBounds.width - getWidth()) / 2, screenBounds.y + (screenBounds.height - getHeight()) / 3));
 
@@ -102,7 +102,7 @@ public class FlatWelcomeFrame extends JFrameAsUIWindow implements Disposable, Ac
 
   public static void saveLocation(Rectangle location) {
     Point middle = new Point(location.x + location.width / 2, location.y = location.height / 2);
-    WindowStateService.getInstance().putLocation(WelcomeFrameManager.DIMENSION_KEY, middle);
+    ApplicationWindowStateService.getInstance().putLocation(WelcomeFrameManager.DIMENSION_KEY, middle);
   }
 
   public void setDefaultTitle() {

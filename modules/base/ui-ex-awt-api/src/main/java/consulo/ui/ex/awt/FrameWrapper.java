@@ -13,37 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.ui;
+package consulo.ui.ex.awt;
 
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import com.intellij.openapi.actionSystem.impl.MouseGestureManager;
-import com.intellij.openapi.util.WindowState;
-import com.intellij.openapi.util.WindowStateService;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.ui.AppUIUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.application.ui.WindowState;
+import consulo.application.ui.WindowStateService;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.ProjectWindowStateService;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.CommonShortcuts;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.ImageUtil;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
+import consulo.ui.ex.action.util.ActionUtil;
+import consulo.ui.ex.awt.internal.*;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor;
-import consulo.ui.ex.awt.internal.InternalPopupUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
@@ -54,6 +48,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +61,7 @@ public class FrameWrapper implements Disposable, DataProvider {
   private List<Image> myImages = null;
   private boolean myCloseOnEsc = false;
   private Window myFrame;
-  private final Map<Key<?>, Object> myDataMap = ContainerUtil.newHashMap();
+  private final Map<Key<?>, Object> myDataMap = new HashMap<>();
   private Project myProject;
   private final ProjectManagerListener myProjectListener = new MyProjectManagerListener();
   private FocusWatcher myFocusWatcher;
@@ -104,7 +99,7 @@ public class FrameWrapper implements Disposable, DataProvider {
 
   public void setProject(@Nonnull final Project project) {
     myProject = project;
-    setData(CommonDataKeys.PROJECT, project);
+    setData(Project.KEY, project);
     ProjectManager.getInstance().addProjectManagerListener(project, myProjectListener);
     Disposer.register(this, () -> ProjectManager.getInstance().removeProjectManagerListener(project, myProjectListener));
   }
@@ -172,7 +167,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       frame.setIconImages(ContainerUtil.map(myImages, ImageUtil::toBufferedImage));
     }
     else {
-      AppUIUtil.updateWindowIcon(myFrame);
+      AppIconUtil.updateWindowIcon(myFrame);
     }
 
     WindowState state = myDimensionKey == null ? null : getWindowStateService(myProject).getState(myDimensionKey, frame);
@@ -269,12 +264,12 @@ public class FrameWrapper implements Disposable, DataProvider {
   }
 
   protected JFrame createJFrame(IdeFrame parent) {
-    FrameWrapperPeerFactory service = ServiceManager.getService(FrameWrapperPeerFactory.class);
+    FrameWrapperPeerFactory service = Application.get().getInstance(FrameWrapperPeerFactory.class);
     return service.createJFrame(this, parent);
   }
 
   protected JDialog createJDialog(IdeFrame parent) {
-    FrameWrapperPeerFactory service = ServiceManager.getService(FrameWrapperPeerFactory.class);
+    FrameWrapperPeerFactory service = Application.get().getInstance(FrameWrapperPeerFactory.class);
     return service.createJDialog(this, parent);
   }
 
@@ -284,7 +279,7 @@ public class FrameWrapper implements Disposable, DataProvider {
 
   @Override
   public Object getData(@Nonnull @NonNls Key<?> dataId) {
-    if (CommonDataKeys.PROJECT == dataId) {
+    if (Project.KEY == dataId) {
       return myProject;
     }
     return null;
@@ -326,7 +321,7 @@ public class FrameWrapper implements Disposable, DataProvider {
       state.applyTo(frame);
     }
     else {
-      final IdeFrame ideFrame = WindowManagerEx.getInstanceEx().getIdeFrame(myProject);
+      final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
       if (ideFrame != null) {
         frame.setBounds(TargetAWT.to(ideFrame.suggestChildFrameBounds()));
       }
@@ -359,7 +354,7 @@ public class FrameWrapper implements Disposable, DataProvider {
 
   @Nonnull
   private static WindowStateService getWindowStateService(@Nullable Project project) {
-    return project == null ? WindowStateService.getInstance() : WindowStateService.getInstance(project);
+    return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
   }
 
   private class MyProjectManagerListener implements ProjectManagerListener {

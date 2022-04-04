@@ -13,6 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.diff.merge;
+package consulo.diff.chain;
 
-public enum MergeResult {CANCEL, LEFT, RIGHT, RESOLVED}
+import consulo.util.dataholder.UserDataHolder;
+import javax.annotation.Nonnull;
+
+import java.util.List;
+
+public interface DiffRequestChain extends UserDataHolder {
+  @Nonnull
+  List<? extends DiffRequestProducer> getRequests();
+
+  int getIndex();
+
+  void setIndex(int index);
+}

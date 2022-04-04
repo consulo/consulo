@@ -1,4 +1,4 @@
-package com.intellij.openapi.ui;
+package consulo.ui.ex.awt;
 
 import consulo.project.Project;
 import consulo.disposer.Disposable;

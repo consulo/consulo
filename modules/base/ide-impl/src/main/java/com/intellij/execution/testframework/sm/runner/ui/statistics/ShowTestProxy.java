@@ -45,6 +45,6 @@ public class ShowTestProxy extends AnAction {
 
   @javax.annotation.Nullable
   private static Object getSelectedTestProxy(final AnActionEvent e) {
-    return e.getData(AbstractTestProxy.DATA_KEY);
+    return e.getData(AbstractTestProxy.KEY);
   }
 }

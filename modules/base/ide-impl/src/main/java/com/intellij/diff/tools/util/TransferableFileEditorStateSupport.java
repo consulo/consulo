@@ -17,7 +17,7 @@ package com.intellij.diff.tools.util;
 
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.impl.DiffSettingsHolder;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.tools.holders.BinaryEditorHolder;
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;

@@ -16,15 +16,15 @@
 package com.intellij.openapi.vcs.update;
 
 import com.intellij.diff.DiffContentFactoryEx;
-import com.intellij.diff.DiffDialogHints;
-import com.intellij.diff.DiffManager;
+import consulo.diff.DiffDialogHints;
+import consulo.diff.DiffManager;
 import com.intellij.diff.DiffRequestFactoryImpl;
 import com.intellij.diff.actions.impl.GoToChangePopupBuilder;
-import com.intellij.diff.chains.DiffRequestChain;
-import com.intellij.diff.chains.DiffRequestProducer;
-import com.intellij.diff.chains.DiffRequestProducerException;
+import consulo.diff.chain.DiffRequestChain;
+import consulo.diff.chain.DiffRequestProducer;
+import consulo.diff.chain.DiffRequestProducerException;
 import com.intellij.diff.contents.DiffContent;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.SimpleDiffRequest;
 import com.intellij.history.ByteContent;
 import com.intellij.history.Label;

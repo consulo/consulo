@@ -15,6 +15,8 @@
  */
 package com.intellij.diff.merge;
 
+import consulo.diff.merge.MergeRequest;
+import consulo.diff.merge.MergeResult;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;

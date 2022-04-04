@@ -15,8 +15,8 @@
  */
 package com.intellij.diff.impl;
 
-import com.intellij.diff.DiffRequestPanel;
-import com.intellij.diff.requests.DiffRequest;
+import consulo.diff.DiffRequestPanel;
+import consulo.diff.request.DiffRequest;
 import com.intellij.diff.requests.NoDiffRequest;
 import com.intellij.diff.util.DiffUserDataKeys;
 import com.intellij.diff.util.DiffUserDataKeysEx;

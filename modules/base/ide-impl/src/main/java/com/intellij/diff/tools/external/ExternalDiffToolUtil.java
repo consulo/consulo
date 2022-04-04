@@ -16,7 +16,7 @@
 package com.intellij.diff.tools.external;
 
 import com.intellij.diff.contents.*;
-import com.intellij.diff.merge.MergeResult;
+import consulo.diff.merge.MergeResult;
 import com.intellij.diff.merge.ThreesideMergeRequest;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.Side;

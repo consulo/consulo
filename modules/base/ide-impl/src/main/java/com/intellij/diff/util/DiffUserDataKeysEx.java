@@ -17,7 +17,7 @@ package com.intellij.diff.util;
 
 import com.intellij.diff.comparison.ComparisonPolicy;
 import com.intellij.diff.fragments.LineFragment;
-import com.intellij.diff.merge.MergeResult;
+import consulo.diff.merge.MergeResult;
 import com.intellij.diff.merge.MergeTool;
 import com.intellij.openapi.diff.DiffNavigationContext;
 import consulo.codeEditor.LogicalPosition;

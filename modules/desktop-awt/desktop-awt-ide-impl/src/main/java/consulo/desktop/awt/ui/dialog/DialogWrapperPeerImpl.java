@@ -25,17 +25,15 @@ import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.command.CommandProcessorEx;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.internal.DialogWrapperDialog;
-import consulo.ui.ex.awt.internal.DialogWrapperPeer;
+import consulo.ui.ex.awt.internal.*;
 import com.intellij.openapi.ui.impl.AbstractDialog;
 import com.intellij.openapi.ui.impl.HeadlessDialog;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
-import com.intellij.openapi.util.WindowStateService;
+import consulo.application.ui.WindowStateService;
 import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.AppIcon;
-import com.intellij.ui.AppUIUtil;
 import com.intellij.ui.SpeedSearchBase;
 import com.intellij.ui.components.JBLayeredPane;
 import com.intellij.util.IJSwingUtilities;
@@ -61,7 +59,6 @@ import consulo.project.ui.wm.IdeFrameUtil;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
-import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
@@ -72,8 +69,9 @@ import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.impl.ModalityPerProjectEAPDescriptor;
 import consulo.undoRedo.CommandProcessor;
+import consulo.application.ui.ApplicationWindowStateService;
+import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
@@ -364,7 +362,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
   @Override
   public void setAppIcons() {
-    AppUIUtil.updateWindowIcon(getWindow());
+    AppIconUtil.updateWindowIcon(getWindow());
   }
 
   @Override
@@ -1032,7 +1030,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
 
     @Nonnull
     private static WindowStateService getWindowStateService(@Nullable Project project) {
-      return project == null ? WindowStateService.getInstance() : WindowStateService.getInstance(project);
+      return project == null ? ApplicationWindowStateService.getInstance() : ProjectWindowStateService.getInstance(project);
     }
   }
 

@@ -16,8 +16,8 @@
 package com.intellij.ide.diff;
 
 import com.intellij.diff.DiffContentFactory;
-import com.intellij.diff.chains.DiffRequestProducer;
-import com.intellij.diff.chains.DiffRequestProducerException;
+import consulo.diff.chain.DiffRequestProducer;
+import consulo.diff.chain.DiffRequestProducerException;
 import com.intellij.diff.contents.DiffContent;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;

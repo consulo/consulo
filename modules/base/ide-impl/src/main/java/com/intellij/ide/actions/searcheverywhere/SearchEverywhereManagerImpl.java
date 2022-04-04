@@ -11,7 +11,6 @@ import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.util.WindowStateService;
 import consulo.application.util.registry.Registry;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.util.ScreenUtil;
@@ -21,6 +20,7 @@ import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.TextBox;
+import consulo.project.ui.ProjectWindowStateService;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -117,7 +117,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     });
 
     if (mySearchEverywhereUI.getViewType() == SearchEverywhereUI.ViewType.SHORT) {
-      myBalloonFullSize = WindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY);
+      myBalloonFullSize = ProjectWindowStateService.getInstance(myProject).getSize(LOCATION_SETTINGS_KEY);
       Dimension prefSize = mySearchEverywhereUI.getPreferredSize();
       myBalloon.setSize(prefSize);
     }
@@ -125,7 +125,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
   }
 
   private void calcPositionAndShow(Project project, JBPopup balloon) {
-    Point savedLocation = WindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
+    Point savedLocation = ProjectWindowStateService.getInstance(myProject).getLocation(LOCATION_SETTINGS_KEY);
 
     //for first show and short mode popup should be shifted to the top screen half
     if (savedLocation == null && mySearchEverywhereUI.getViewType() == SearchEverywhereUI.ViewType.SHORT) {
@@ -267,7 +267,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
 
   private void saveSize() {
     if (mySearchEverywhereUI.getViewType() == SearchEverywhereUI.ViewType.SHORT) {
-      WindowStateService.getInstance(myProject).putSize(LOCATION_SETTINGS_KEY, myBalloonFullSize);
+      ProjectWindowStateService.getInstance(myProject).putSize(LOCATION_SETTINGS_KEY, myBalloonFullSize);
     }
   }
 

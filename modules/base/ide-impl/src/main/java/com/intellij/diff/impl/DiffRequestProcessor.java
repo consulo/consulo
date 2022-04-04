@@ -32,6 +32,7 @@ import com.intellij.diff.util.DiffUserDataKeysEx;
 import com.intellij.diff.util.DiffUserDataKeysEx.ScrollToPolicy;
 import com.intellij.diff.util.DiffUtil;
 import com.intellij.diff.util.LineRange;
+import consulo.diff.request.DiffRequest;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.EmptyAction;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;

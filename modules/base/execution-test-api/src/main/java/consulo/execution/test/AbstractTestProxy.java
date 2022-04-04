@@ -33,8 +33,8 @@ import java.util.List;
  * @since 23-May-2007
  */
 public abstract class AbstractTestProxy extends CompositePrintable {
-  public static final Key<AbstractTestProxy> DATA_KEY = Key.create("testProxy");
-  public static final Key<AbstractTestProxy[]> DATA_KEYS = Key.create("testProxies");
+  public static final Key<AbstractTestProxy> KEY = Key.create("testProxy");
+  public static final Key<AbstractTestProxy[]> KEY_OF_ARRAY = Key.create("testProxies");
 
   protected Printer myPrinter = null;
 

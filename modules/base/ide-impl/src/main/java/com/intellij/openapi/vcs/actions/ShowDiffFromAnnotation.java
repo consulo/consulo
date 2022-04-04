@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.actions;
 
-import com.intellij.diff.DiffDialogHints;
+import consulo.diff.DiffDialogHints;
 import com.intellij.diff.util.DiffUserDataKeysEx;
 import consulo.ui.ex.action.ActionsBundle;
 import com.intellij.openapi.diff.DiffNavigationContext;

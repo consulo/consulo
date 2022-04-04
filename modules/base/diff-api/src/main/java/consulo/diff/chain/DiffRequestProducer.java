@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.diff.chains;
+package consulo.diff.chain;
 
-public class DiffRequestProducerException extends Exception {
-  public DiffRequestProducerException(Throwable cause) {
-    super(cause);
-  }
+import consulo.diff.request.DiffRequest;
+import consulo.component.ProcessCanceledException;
+import consulo.application.progress.ProgressIndicator;
+import consulo.util.dataholder.UserDataHolder;
+import javax.annotation.Nonnull;
 
-  public DiffRequestProducerException(String message, Throwable cause) {
-    super(message, cause);
-  }
+public interface DiffRequestProducer {
+  @Nonnull
+  String getName();
 
-  public DiffRequestProducerException(String message) {
-    super(message);
-  }
-
-  public DiffRequestProducerException() {
-  }
+  @Nonnull
+  DiffRequest process(@Nonnull UserDataHolder context, @Nonnull ProgressIndicator indicator)
+          throws DiffRequestProducerException, ProcessCanceledException;
 }

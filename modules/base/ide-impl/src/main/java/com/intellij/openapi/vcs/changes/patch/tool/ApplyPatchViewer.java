@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs.changes.patch.tool;
 
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffContext;
-import com.intellij.diff.DiffDialogHints;
-import com.intellij.diff.DiffManager;
+import consulo.diff.DiffDialogHints;
+import consulo.diff.DiffManager;
 import com.intellij.diff.actions.ProxyUndoRedoAction;
 import com.intellij.diff.actions.impl.FocusOppositePaneAction;
 import com.intellij.diff.actions.impl.SetEditorSettingsAction;

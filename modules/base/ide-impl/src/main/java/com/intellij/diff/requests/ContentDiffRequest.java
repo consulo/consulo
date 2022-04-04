@@ -16,6 +16,8 @@
 package com.intellij.diff.requests;
 
 import com.intellij.diff.contents.DiffContent;
+import consulo.diff.request.DiffRequest;
+
 import javax.annotation.Nonnull;
 
 import java.util.List;
