@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.debugger.frame.XValue;
+import consulo.execution.debug.frame.XValue;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.XInspectDialog;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;

@@ -5,7 +5,7 @@ import com.intellij.ide.actions.runAnything.groups.RunAnythingGroup;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ObjectUtils;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

@@ -2807,6 +2807,9 @@
 
     <applicationService serviceInterface="consulo.ui.ex.AppIcon" serviceImplementation="consulo.ide.impl.AppIconImpl"/>
     <applicationService serviceInterface="consulo.execution.test.internal.TestStatusBarProgressFactory" serviceImplementation="consulo.ide.impl.TestStatusBarProgressFactoryImpl"/>
+
+    <projectService serviceInterface="consulo.fileEditor.EditorHistoryManager" serviceImplementation="com.intellij.openapi.fileEditor.impl.EditorHistoryManagerImpl"/>
+    <projectService serviceInterface="consulo.execution.RunConfigurationEditor" serviceImplementation="consulo.ide.impl.execution.RunConfigurationEditorImpl"/>
   </extensions>
 
   <applicationListeners>

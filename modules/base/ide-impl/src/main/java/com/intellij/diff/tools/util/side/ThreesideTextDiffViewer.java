@@ -18,11 +18,6 @@ package com.intellij.diff.tools.util.side;
 import com.intellij.diff.DiffContext;
 import com.intellij.diff.actions.impl.OpenInEditorWithMouseAction;
 import com.intellij.diff.actions.impl.SetEditorSettingsAction;
-import consulo.diff.DiffUserDataKeys;
-import consulo.diff.content.DocumentContent;
-import consulo.diff.request.ContentDiffRequest;
-import consulo.diff.request.DiffRequest;
-import consulo.diff.request.SimpleDiffRequest;
 import com.intellij.diff.tools.holders.EditorHolderFactory;
 import com.intellij.diff.tools.holders.TextEditorHolder;
 import com.intellij.diff.tools.util.DiffDataKeys;
@@ -31,23 +26,28 @@ import com.intellij.diff.tools.util.SyncScrollSupport.ThreesideSyncScrollSupport
 import com.intellij.diff.tools.util.base.InitialScrollPositionSupport;
 import com.intellij.diff.tools.util.base.TextDiffSettingsHolder;
 import com.intellij.diff.tools.util.base.TextDiffViewerUtil;
-import com.intellij.diff.util.*;
+import com.intellij.diff.util.DiffUserDataKeysEx;
+import com.intellij.diff.util.DiffUtil;
+import com.intellij.openapi.editor.ex.EditorMarkupModel;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.LogicalPosition;
+import consulo.codeEditor.event.VisibleAreaEvent;
+import consulo.codeEditor.event.VisibleAreaListener;
+import consulo.diff.DiffUserDataKeys;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.request.ContentDiffRequest;
+import consulo.diff.request.DiffRequest;
+import consulo.diff.request.SimpleDiffRequest;
 import consulo.diff.util.LineCol;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
-import consulo.ui.ex.action.AnAction;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.LogicalPosition;
 import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.event.VisibleAreaEvent;
-import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.codeEditor.EditorEx;
-import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Pair;
 import consulo.navigation.Navigatable;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -390,10 +390,10 @@ public abstract class ThreesideTextDiffViewer extends ThreesideDiffViewer<TextEd
       // we won't use DiffUserDataKeysEx.EDITORS_CARET_POSITION to avoid desync scroll position (as they can point to different places)
       // TODO: pass EditorsVisiblePositions in case if view was scrolled without changing caret position ?
       if (currentSide == mySide1) {
-        request.putUserData(DiffUserDataKeys.SCROLL_TO_LINE, Pair.create(Side.LEFT, currentPosition.line));
+        request.putUserData(DiffUserDataKeys.SCROLL_TO_LINE, consulo.util.lang.Pair.create(Side.LEFT, currentPosition.line));
       }
       else if (currentSide == mySide2) {
-        request.putUserData(DiffUserDataKeys.SCROLL_TO_LINE, Pair.create(Side.RIGHT, currentPosition.line));
+        request.putUserData(DiffUserDataKeys.SCROLL_TO_LINE, consulo.util.lang.Pair.create(Side.RIGHT, currentPosition.line));
       }
       else {
         LogicalPosition position1 = transferPosition(currentSide, mySide1, currentPosition);

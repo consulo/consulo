@@ -1,13 +1,13 @@
 package com.intellij.xdebugger.impl.settings;
 
-import consulo.configurable.Configurable;
-import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.debugger.setting.DebuggerSettingsCategory;
-import consulo.debugger.setting.XDebuggerSettings;
+import consulo.configurable.Configurable;
 import consulo.debugger.impl.setting.XDebuggerGeneralConfigurable;
-import javax.annotation.Nonnull;
+import consulo.execution.debug.setting.DebuggerSettingsCategory;
+import consulo.execution.debug.setting.XDebuggerSettings;
+import consulo.util.collection.SmartList;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 

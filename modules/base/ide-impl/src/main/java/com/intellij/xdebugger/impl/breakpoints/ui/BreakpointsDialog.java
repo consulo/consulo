@@ -33,10 +33,10 @@ import java.util.HashSet;
 
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.JBUI;
-import consulo.debugger.XDebuggerManager;
-import consulo.debugger.breakpoint.XBreakpoint;
-import consulo.debugger.breakpoint.XBreakpointType;
-import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.execution.debug.breakpoint.XBreakpointType;
+import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;

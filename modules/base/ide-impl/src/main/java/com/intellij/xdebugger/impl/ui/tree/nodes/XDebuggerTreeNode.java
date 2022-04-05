@@ -19,7 +19,7 @@ import consulo.ui.ex.ColoredTextContainer;
 import com.intellij.ui.SimpleColoredText;
 import com.intellij.util.ArrayUtilRt;
 import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.debugger.frame.XDebuggerTreeNodeHyperlink;
+import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ui.image.Image;
 

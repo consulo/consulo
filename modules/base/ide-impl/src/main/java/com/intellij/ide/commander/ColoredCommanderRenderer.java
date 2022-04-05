@@ -20,7 +20,7 @@ import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.colorScheme.EditorColorsManager;

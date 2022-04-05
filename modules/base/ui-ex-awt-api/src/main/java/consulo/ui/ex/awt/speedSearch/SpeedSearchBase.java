@@ -11,7 +11,6 @@ import consulo.application.util.matcher.NameUtilCore;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.document.util.TextRange;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -38,10 +37,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSearchSupply {
   private static final Logger LOG = Logger.getInstance(SpeedSearchBase.class);
@@ -141,13 +138,12 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
   }
 
   @Override
-  public Iterable<TextRange> matchingFragments(@Nonnull String text) {
+  public Iterable<MatcherTextRange> matchingFragments(@Nonnull String text) {
     if (!isPopupActive()) return null;
     final SpeedSearchComparator comparator = getComparator();
     final String recentSearchText = comparator.getRecentSearchText();
     if (StringUtil.isNotEmpty(recentSearchText)) {
-      List<MatcherTextRange> list = comparator.matchingFragments(recentSearchText, text);
-      return list == null ? null : list.stream().map(it -> new TextRange(it.getStartOffset(), it.getEndOffset())).collect(Collectors.toList());
+      return comparator.matchingFragments(recentSearchText, text);
     }
     else {
       return null;

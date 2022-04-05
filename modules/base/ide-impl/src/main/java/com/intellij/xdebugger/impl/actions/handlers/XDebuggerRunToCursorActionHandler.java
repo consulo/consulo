@@ -17,8 +17,8 @@ package com.intellij.xdebugger.impl.actions.handlers;
 
 import com.intellij.xdebugger.impl.actions.XDebuggerSuspendedActionHandler;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
-import consulo.debugger.XDebugSession;
-import consulo.debugger.XSourcePosition;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XSourcePosition;
 import consulo.dataContext.DataContext;
 import javax.annotation.Nonnull;
 

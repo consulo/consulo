@@ -2,7 +2,7 @@
 package com.intellij.xdebugger.impl.actions;
 
 import consulo.execution.ExecutionUtil;
-import consulo.debugger.attach.*;
+import consulo.execution.debug.attach.*;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
@@ -17,7 +17,7 @@ import com.intellij.ui.popup.async.AsyncPopupStep;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.StatusText;
-import consulo.debugger.XDebuggerBundle;
+import consulo.execution.debug.XDebuggerBundle;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.ProgressIndicator;

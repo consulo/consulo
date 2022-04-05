@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.actions;
 
 import com.intellij.execution.ui.actions.AbstractFocusOnAction;
-import consulo.debugger.ui.XDebuggerUIConstants;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
 
 public class FocusOnBreakpointAction extends AbstractFocusOnAction {
   public FocusOnBreakpointAction() {

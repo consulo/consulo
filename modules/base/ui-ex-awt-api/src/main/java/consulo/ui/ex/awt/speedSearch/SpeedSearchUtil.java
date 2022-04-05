@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.ui;
+package consulo.ui.ex.awt.speedSearch;
 
 import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.registry.Registry;
-import consulo.document.util.TextRange;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.SpeedSearchUtilBase;
@@ -28,8 +27,6 @@ import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: spLeaner
@@ -62,13 +59,13 @@ public final class SpeedSearchUtil {
       return;
     }
 
-    final List<MatcherTextRange> iterable = ((MinusculeMatcher)matcher).matchingFragments(text);
+    final Iterable<MatcherTextRange> iterable = ((MinusculeMatcher)matcher).matchingFragments(text);
     if (iterable != null) {
       final Color fg = attributes.getFgColor();
       final int style = attributes.getStyle();
       final SimpleTextAttributes plain = new SimpleTextAttributes(style, fg);
       final SimpleTextAttributes highlighted = new SimpleTextAttributes(selectedBg, fg, null, style | SimpleTextAttributes.STYLE_SEARCH_MATCH);
-      appendColoredFragments(component, text, iterable.stream().map(it -> new TextRange(it.getStartOffset(), it.getEndOffset())).collect(Collectors.toList()), plain, highlighted);
+      appendColoredFragments(component, text, iterable, plain, highlighted);
     }
     else {
       component.append(text, attributes);
@@ -77,7 +74,7 @@ public final class SpeedSearchUtil {
 
   public static void appendColoredFragments(final SimpleColoredComponent simpleColoredComponent,
                                             final String text,
-                                            Iterable<TextRange> colored,
+                                            Iterable<MatcherTextRange> colored,
                                             final SimpleTextAttributes plain,
                                             final SimpleTextAttributes highlighted) {
     SpeedSearchUtilBase.appendColoredFragments(simpleColoredComponent, text, colored, plain, highlighted);

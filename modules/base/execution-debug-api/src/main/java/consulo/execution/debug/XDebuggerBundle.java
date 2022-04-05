@@ -26,14 +26,14 @@ public class XDebuggerBundle extends AbstractBundle {
   private static final XDebuggerBundle ourInstance = new XDebuggerBundle();
 
   private XDebuggerBundle() {
-    super("consulo.debugger.XDebuggerBundle");
+    super("consulo.execution.debug.XDebuggerBundle");
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.debugger.XDebuggerBundle") String key) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.execution.debug.XDebuggerBundle") String key) {
     return ourInstance.getMessage(key);
   }
 
-  public static String message(@PropertyKey(resourceBundle = "consulo.debugger.XDebuggerBundle") String key, Object... params) {
+  public static String message(@PropertyKey(resourceBundle = "consulo.execution.debug.XDebuggerBundle") String key, Object... params) {
     return ourInstance.getMessage(key, params);
   }
 }

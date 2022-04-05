@@ -1,6 +1,6 @@
 package com.intellij.coverage.view;
 
-import consulo.coverage.*;
+import consulo.execution.coverage.*;
 import consulo.project.Project;
 
 /**

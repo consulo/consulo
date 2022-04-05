@@ -15,6 +15,8 @@
  */
 package consulo.platform;
 
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
@@ -63,6 +65,16 @@ public enum LineSeparator {
 
   public static boolean knownAndDifferent(@Nullable LineSeparator separator1, @Nullable LineSeparator separator2) {
     return separator1 != null && separator2 != null && !separator1.equals(separator2);
+  }
+
+  @Nullable
+  public static LineSeparator detectSeparators(@Nonnull CharSequence text) {
+    int index = StringUtil.indexOfAny(text, "\n\r");
+    if (index == -1) return null;
+    if (StringUtil.startsWith(text, index, "\r\n")) return LineSeparator.CRLF;
+    if (text.charAt(index) == '\r') return LineSeparator.CR;
+    if (text.charAt(index) == '\n') return LineSeparator.LF;
+    throw new IllegalStateException();
   }
 
   @Nullable

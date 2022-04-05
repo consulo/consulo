@@ -24,8 +24,8 @@ import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
-import consulo.debugger.setting.XDebuggerSettings;
-import consulo.debugger.setting.XDebuggerSettingsManager;
+import consulo.execution.debug.setting.XDebuggerSettings;
+import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 

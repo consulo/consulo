@@ -45,7 +45,7 @@
 
     <action id="EditorIndentSelection" class="com.intellij.openapi.editor.actions.LangIndentSelectionAction"/>
 
-    <action id="ContextHelp" class="com.intellij.ide.actions.ContextHelpAction"/>
+    <action id="ContextHelp" class="consulo.ui.ex.action.ContextHelpAction"/>
     <action id="RunGc" class="com.intellij.ide.actions.RunGcAction"/>
     <action id="ShowPopupMenu" class="com.intellij.ide.actions.ShowPopupMenuAction"/>
     <action id="ShowColorPicker" class="com.intellij.ui.ShowColorPickerAction" text="Show Color Picker"/>
@@ -721,7 +721,7 @@
             use-shortcut-of="ResizeToolWindowDown"/>
     <action id="DecrementWindowHeight" class="com.intellij.ide.actions.WindowAction$DecrementHeight" use-shortcut-of="ResizeToolWindowUp"/>
 
-    <action id="ExportTestResults" class="com.intellij.execution.testframework.export.ExportTestResultsAction"
+    <action id="ExportTestResults" class="consulo.execution.test.export.ExportTestResultsAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
 
     <action id="SaveDocument" class="com.intellij.ide.actions.SaveDocumentAction"/>
@@ -1897,7 +1897,7 @@
     </group>
 
     <group>
-      <action class="com.intellij.execution.testframework.actions.ViewAssertEqualsDiffAction" text="View assertEquals Difference"
+      <action class="consulo.execution.test.action.ViewAssertEqualsDiffAction" text="View assertEquals Difference"
               id="openAssertEqualsDiff"/>
       <separator/>
       <add-to-group anchor="first" group-id="TestTreePopupMenu"/>

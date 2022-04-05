@@ -29,7 +29,7 @@ import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.debugger.ui.DebuggerColors;
+import consulo.execution.debug.ui.DebuggerColors;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 

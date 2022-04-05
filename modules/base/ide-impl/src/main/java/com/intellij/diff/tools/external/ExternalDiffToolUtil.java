@@ -15,21 +15,12 @@
  */
 package com.intellij.diff.tools.external;
 
-import com.intellij.diff.contents.*;
-import consulo.diff.content.DiffContent;
-import consulo.diff.content.DocumentContent;
-import consulo.diff.content.EmptyContent;
-import consulo.diff.content.FileContent;
-import consulo.diff.merge.MergeResult;
+import com.intellij.diff.contents.DirectoryContent;
 import com.intellij.diff.merge.ThreesideMergeRequest;
 import com.intellij.diff.util.DiffUserDataKeysEx;
-import consulo.diff.util.Side;
-import consulo.diff.util.ThreeSide;
-import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.LineSeparator;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
@@ -38,12 +29,22 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.util.function.ThrowableComputable;
+import consulo.diff.content.DiffContent;
+import consulo.diff.content.DocumentContent;
+import consulo.diff.content.EmptyContent;
+import consulo.diff.content.FileContent;
+import consulo.diff.merge.MergeResult;
+import consulo.diff.util.Side;
+import consulo.diff.util.ThreeSide;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.platform.LineSeparator;
+import consulo.platform.Platform;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.project.Project;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.io.CharsetToolkit;
 import consulo.util.lang.TimeoutUtil;
 import consulo.util.lang.ref.Ref;
@@ -118,7 +119,7 @@ public class ExternalDiffToolUtil {
     FileDocumentManager.getInstance().saveDocument(content.getDocument());
 
     LineSeparator separator = content.getLineSeparator();
-    if (separator == null) separator = LineSeparator.getSystemLineSeparator();
+    if (separator == null) separator = Platform.current().os().lineSeparator();
 
     Charset charset = content.getCharset();
     if (charset == null) charset = Charset.defaultCharset();
@@ -476,15 +477,15 @@ public class ExternalDiffToolUtil {
     }
 
     @Nonnull
-    public static FileNameInfo createMergeResult(@Nonnull DiffContent content, @javax.annotation.Nullable String windowTitle) {
+    public static FileNameInfo createMergeResult(@Nonnull DiffContent content, @Nullable String windowTitle) {
       String name = getFileName(content, null, windowTitle);
       return new FileNameInfo("merge_result", name);
     }
 
     @Nonnull
     private static String getFileName(@Nonnull DiffContent content,
-                                      @javax.annotation.Nullable String title,
-                                      @javax.annotation.Nullable String windowTitle) {
+                                      @Nullable String title,
+                                      @Nullable String windowTitle) {
       if (content instanceof EmptyContent) {
         return "no_content.tmp";
       }

@@ -14,13 +14,6 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <project-components>
-    <component>
-      <interface-class>consulo.debugger.XDebuggerManager</interface-class>
-      <implementation-class>com.intellij.xdebugger.impl.XDebuggerManagerImpl</implementation-class>
-    </component>
-  </project-components>
-
   <actions>
     <group id="XDebugger.AttachGroup">
       <action id="XDebugger.AttachToProcess" class="com.intellij.xdebugger.impl.actions.AttachToProcessAction"/>
@@ -29,29 +22,32 @@
   </actions>
 
   <extensionPoints>
-    <extensionPoint name="xdebugger.settings" interface="consulo.debugger.setting.XDebuggerSettings"/>
-    <extensionPoint name="xdebugger.breakpointType" interface="consulo.debugger.breakpoint.XBreakpointType"/>
+    <extensionPoint name="xdebugger.settings" interface="consulo.execution.debug.setting.XDebuggerSettings"/>
+    <extensionPoint name="xdebugger.breakpointType" interface="consulo.execution.debug.breakpoint.XBreakpointType"/>
     <extensionPoint name="xdebugger.debuggerSupport" interface="com.intellij.xdebugger.impl.DebuggerSupport"/>
     <extensionPoint name="xdebugger.lineBreakpointTypeResolver" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.debugger.breakpoint.XLineBreakpointTypeResolver"/>
+      <with attribute="implementationClass" implements="consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver"/>
     </extensionPoint>
-    <extensionPoint name="xdebugger.localAttachDebuggerProvider" interface="consulo.debugger.attach.XLocalAttachDebuggerProvider"/>
-    <extensionPoint name="xdebugger.attachDebuggerProvider" interface="consulo.debugger.attach.XAttachDebuggerProvider"/>
-    <extensionPoint name="xdebugger.attachHostProvider" interface="consulo.debugger.attach.XAttachHostProvider" />
+    <extensionPoint name="xdebugger.localAttachDebuggerProvider" interface="consulo.execution.debug.attach.XLocalAttachDebuggerProvider"/>
+    <extensionPoint name="xdebugger.attachDebuggerProvider" interface="consulo.execution.debug.attach.XAttachDebuggerProvider"/>
+    <extensionPoint name="xdebugger.attachHostProvider" interface="consulo.execution.debug.attach.XAttachHostProvider"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
+    <projectService serviceInterface="consulo.execution.debug.XDebuggerManager" serviceImplementation="com.intellij.xdebugger.impl.XDebuggerManagerImpl" lazy="false"/>
+    
     <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
+
     <favoritesListProvider implementation="com.intellij.xdebugger.impl.breakpoints.BreakpointsFavoriteListProvider"/>
 
-    <executor implementation="com.intellij.execution.executors.DefaultDebugExecutor" order="first,after run"/>
+    <executor implementation="consulo.execution.debug.DefaultDebugExecutor" order="first,after run"/>
 
     <colorSettingsPage implementation="com.intellij.xdebugger.impl.ui.DebuggerColorsPage"/>
 
-    <applicationService serviceInterface="consulo.debugger.setting.XDebuggerSettingsManager"
+    <applicationService serviceInterface="consulo.execution.debug.setting.XDebuggerSettingsManager"
                         serviceImplementation="com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl"/>
 
-    <applicationService serviceInterface="consulo.debugger.XDebuggerUtil"
+    <applicationService serviceInterface="consulo.execution.debug.XDebuggerUtil"
                         serviceImplementation="com.intellij.xdebugger.impl.XDebuggerUtilImpl"/>
 
     <projectService serviceImplementation="com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager"/>
@@ -66,7 +62,7 @@
 
     <xdebugger.debuggerSupport implementation="com.intellij.xdebugger.impl.XDebuggerSupport" order="first"/>
 
-    <editor.linePainter implementation="com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter" />
+    <editor.linePainter implementation="com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter"/>
 
     <copyPastePreProcessor implementation="com.intellij.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
   </extensions>

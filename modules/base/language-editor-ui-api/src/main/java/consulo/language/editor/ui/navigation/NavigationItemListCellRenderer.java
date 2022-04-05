@@ -7,7 +7,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.MatcherHolder;
 import consulo.language.editor.ui.PsiElementModuleRenderer;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.language.editor.util.NavigationItemFileStatus;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiElement;

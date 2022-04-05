@@ -1,21 +1,21 @@
 package com.intellij.coverage.view;
 
-import consulo.coverage.CoverageAnnotator;
-import consulo.coverage.CoverageSuitesBundle;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.ApplicationManager;
-import consulo.coverage.CoverageViewExtension;
-import consulo.coverage.CoverageViewManager;
-import consulo.coverage.view.CoverageListNode;
-import consulo.coverage.view.CoverageListRootNode;
-import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.execution.coverage.CoverageAnnotator;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.CoverageViewExtension;
+import consulo.execution.coverage.CoverageViewManager;
+import consulo.execution.coverage.view.CoverageListNode;
+import consulo.execution.coverage.view.CoverageListRootNode;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.ColumnInfo;
+import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -22,11 +22,13 @@ import com.intellij.designer.model.PropertyContext;
 import com.intellij.designer.propertyTable.renderers.LabelPropertyRenderer;
 import com.intellij.ide.ui.search.SearchUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.ui.ex.Cell;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.virtualFileSystem.status.FileStatus;
 import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
 import com.intellij.ui.*;
@@ -68,18 +70,8 @@ import java.util.*;
  */
 public abstract class PropertyTable extends JBTable {
   private static final Logger LOG = Logger.getInstance(PropertyTable.class);
-  private static final Comparator<String> GROUP_COMPARATOR = new Comparator<String>() {
-    @Override
-    public int compare(String o1, String o2) {
-      return StringUtil.compare(o1, o2, true);
-    }
-  };
-  private static final Comparator<Property> PROPERTY_COMPARATOR = new Comparator<Property>() {
-    @Override
-    public int compare(Property o1, Property o2) {
-      return StringUtil.compare(o1.getName(), o2.getName(), true);
-    }
-  };
+  private static final Comparator<String> GROUP_COMPARATOR = (o1, o2) -> StringUtil.compare(o1, o2, true);
+  private static final Comparator<Property> PROPERTY_COMPARATOR = (o1, o2) -> StringUtil.compare(o1.getName(), o2.getName(), true);
 
   private boolean mySorted;
   private boolean myShowGroups;

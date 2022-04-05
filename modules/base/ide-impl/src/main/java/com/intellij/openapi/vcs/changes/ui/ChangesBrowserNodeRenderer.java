@@ -21,7 +21,7 @@ import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

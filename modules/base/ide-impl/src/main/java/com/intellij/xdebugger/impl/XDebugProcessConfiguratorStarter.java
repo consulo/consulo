@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl;
 
 import com.intellij.xdebugger.impl.ui.XDebugSessionData;
-import consulo.debugger.XDebugProcessStarter;
+import consulo.execution.debug.XDebugProcessStarter;
 
 /**
  * @author avu

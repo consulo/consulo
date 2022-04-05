@@ -18,8 +18,8 @@ package com.intellij.xdebugger.impl.breakpoints;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.collection.SmartList;
 import com.intellij.util.EventDispatcher;
-import consulo.debugger.breakpoint.XBreakpoint;
-import consulo.debugger.event.XBreakpointAdapter;
+import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.execution.debug.event.XBreakpointAdapter;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

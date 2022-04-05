@@ -25,8 +25,8 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.diff.util.Side;
 import consulo.diff.util.ThreeSide;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Pair;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

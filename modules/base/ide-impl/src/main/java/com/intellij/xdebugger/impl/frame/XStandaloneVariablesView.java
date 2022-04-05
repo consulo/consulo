@@ -15,11 +15,12 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import consulo.project.Project;
 import com.intellij.ui.AppUIUtil;
-import consulo.debugger.XDebugSession;
-import consulo.debugger.evaluation.XDebuggerEditorsProvider;
-import consulo.debugger.frame.XStackFrame;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 
 /**

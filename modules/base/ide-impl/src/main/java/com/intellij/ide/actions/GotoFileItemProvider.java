@@ -3,38 +3,37 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.actions.searcheverywhere.FoundItemDescriptor;
 import com.intellij.ide.util.gotoByName.*;
-import consulo.ide.navigation.ChooseByNameContributor;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFileSystemItem;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Processor;
 import consulo.application.util.matcher.FixingLayoutMatcher;
+import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.ide.impl.psi.search.FilenameIndex;
-import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.ide.navigation.ChooseByNameContributor;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiUtilCore;
-import consulo.application.util.function.Processor;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.FList;
-import consulo.util.collection.JBIterable;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.FindSymbolParameters;
 import consulo.logging.Logger;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.util.collection.FList;
+import consulo.util.collection.JBIterable;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -173,7 +172,7 @@ public class GotoFileItemProvider extends DefaultChooseByNameItemProvider {
     for (PsiFileSystemItem item : iterable) {
       ProgressManager.checkCanceled();
       String qualifier = Objects.requireNonNull(getParentPath(item));
-      FList<TextRange> fragments = qualifierMatcher.matchingFragments(qualifier);
+      FList<MatcherTextRange> fragments = qualifierMatcher.matchingFragments(qualifier);
       if (fragments != null) {
         int gapPenalty = fragments.isEmpty() ? 0 : qualifier.length() - fragments.get(fragments.size() - 1).getEndOffset();
         int degree = qualifierMatcher.matchingDegree(qualifier, false, fragments) - gapPenalty;

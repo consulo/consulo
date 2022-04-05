@@ -20,7 +20,6 @@ import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.SeparatorWithText;
@@ -37,17 +36,18 @@ import consulo.colorScheme.TextAttributes;
 import consulo.component.extension.Extensions;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
+import consulo.fileEditor.EditorHistoryManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
+import consulo.language.editor.util.LanguageEditorNavigationUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.navigation.Navigatable;
-import consulo.navigation.NavigationItem;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.color.RGBColor;
@@ -63,8 +63,6 @@ import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.fileType.INativeFileType;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -157,74 +155,15 @@ public final class NavigationUtil {
   }
 
   public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt) {
-    return activateFileWithPsiElement(elt, true);
+    return LanguageEditorNavigationUtil.activateFileWithPsiElement(elt);
   }
 
   public static boolean activateFileWithPsiElement(@Nonnull PsiElement elt, boolean searchForOpen) {
-    return openFileWithPsiElement(elt, searchForOpen, true);
+    return LanguageEditorNavigationUtil.activateFileWithPsiElement(elt, searchForOpen);
   }
 
   public static boolean openFileWithPsiElement(PsiElement element, boolean searchForOpen, boolean requestFocus) {
-    boolean openAsNative = false;
-    if (element instanceof PsiFile) {
-      VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
-      if (virtualFile != null) {
-        openAsNative = virtualFile.getFileType() instanceof INativeFileType || virtualFile.getFileType() == UnknownFileType.INSTANCE;
-      }
-    }
-
-    if (searchForOpen) {
-      element.putUserData(FileEditorManager.USE_CURRENT_WINDOW, null);
-    }
-    else {
-      element.putUserData(FileEditorManager.USE_CURRENT_WINDOW, true);
-    }
-
-    if (openAsNative || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
-      final NavigationItem navigationItem = (NavigationItem)element;
-      if (!navigationItem.canNavigate()) return false;
-      navigationItem.navigate(requestFocus);
-      return true;
-    }
-
-    element.putUserData(FileEditorManager.USE_CURRENT_WINDOW, null);
-    return false;
-  }
-
-  private static boolean activatePsiElementIfOpen(@Nonnull PsiElement elt, boolean searchForOpen, boolean requestFocus) {
-    if (!elt.isValid()) return false;
-    elt = elt.getNavigationElement();
-    final PsiFile file = elt.getContainingFile();
-    if (file == null || !file.isValid()) return false;
-
-    VirtualFile vFile = file.getVirtualFile();
-    if (vFile == null) return false;
-
-    if (!EditorHistoryManager.getInstance(elt.getProject()).hasBeenOpen(vFile)) return false;
-
-    final FileEditorManager fem = FileEditorManager.getInstance(elt.getProject());
-    if (!fem.isFileOpen(vFile)) {
-      fem.openFile(vFile, requestFocus, searchForOpen);
-    }
-
-    final TextRange range = elt.getTextRange();
-    if (range == null) return false;
-
-    final FileEditor[] editors = fem.getEditors(vFile);
-    for (FileEditor editor : editors) {
-      if (editor instanceof TextEditor) {
-        final Editor text = ((TextEditor)editor).getEditor();
-        final int offset = text.getCaretModel().getOffset();
-
-        if (range.containsOffset(offset)) {
-          // select the file
-          fem.openFile(vFile, requestFocus, searchForOpen);
-          return true;
-        }
-      }
-    }
-
-    return false;
+    return LanguageEditorNavigationUtil.openFileWithPsiElement(element, searchForOpen, requestFocus);
   }
 
   /**

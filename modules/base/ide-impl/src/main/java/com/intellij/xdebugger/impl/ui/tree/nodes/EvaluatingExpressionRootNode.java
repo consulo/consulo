@@ -16,11 +16,11 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import consulo.ui.ex.awt.UIUtil;
-import consulo.debugger.XDebuggerBundle;
-import consulo.debugger.frame.XCompositeNode;
-import consulo.debugger.frame.XValue;
-import consulo.debugger.frame.XValueChildrenList;
-import consulo.debugger.frame.XValueContainer;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XValue;
+import consulo.execution.debug.frame.XValueChildrenList;
+import consulo.execution.debug.frame.XValueContainer;
 import com.intellij.xdebugger.impl.evaluate.XDebuggerEvaluationDialog;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import javax.annotation.Nonnull;

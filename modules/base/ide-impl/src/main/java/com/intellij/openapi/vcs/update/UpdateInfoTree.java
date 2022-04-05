@@ -202,7 +202,7 @@ public class UpdateInfoTree extends PanelWithActionsAndCloseButton {
       if (last instanceof AbstractTreeNode) {
         return ((AbstractTreeNode)last).getText();
       }
-      return TreeSpeedSearch.NODE_DESCRIPTOR_TOSTRING.convert(path);
+      return TreeSpeedSearch.NODE_DESCRIPTOR_TOSTRING.apply(path);
     }, true);
 
     myTree.addMouseListener(new PopupHandler() {

@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import consulo.debugger.evaluation.XDebuggerEvaluator;
+import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 
 /**
  * @author nik

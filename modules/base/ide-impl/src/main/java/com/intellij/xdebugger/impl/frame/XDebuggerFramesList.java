@@ -29,9 +29,9 @@ import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
 import com.intellij.util.ui.TextTransferable;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.debugger.XDebuggerBundle;
-import consulo.debugger.XSourcePosition;
-import consulo.debugger.frame.XStackFrame;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.frame.XStackFrame;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 

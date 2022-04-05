@@ -16,9 +16,9 @@
 package com.intellij.xdebugger.impl.breakpoints;
 
 import consulo.language.editor.CommonDataKeys;
-import consulo.debugger.XBreakpointManager;
-import consulo.debugger.breakpoint.*;
-import consulo.debugger.event.XBreakpointListener;
+import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.breakpoint.*;
+import consulo.execution.debug.event.XBreakpointListener;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -30,9 +30,9 @@ import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.debugger.XDebuggerManager;
-import consulo.debugger.XDebuggerUtil;
-import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import com.intellij.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import com.intellij.xdebugger.impl.breakpoints.ui.grouping.XBreakpointCustomGroupingRule;

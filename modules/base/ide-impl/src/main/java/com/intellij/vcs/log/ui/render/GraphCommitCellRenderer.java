@@ -5,7 +5,7 @@ import com.intellij.openapi.vcs.changes.issueLinks.IssueLinkRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.ui.SimpleColoredRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ObjectUtils;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

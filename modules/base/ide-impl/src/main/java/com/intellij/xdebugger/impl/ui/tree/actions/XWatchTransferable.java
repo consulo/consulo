@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
 import com.intellij.util.ArrayUtil;
-import consulo.debugger.breakpoint.XExpression;
+import consulo.execution.debug.breakpoint.XExpression;
 
 import java.awt.datatransfer.*;
 import java.io.IOException;

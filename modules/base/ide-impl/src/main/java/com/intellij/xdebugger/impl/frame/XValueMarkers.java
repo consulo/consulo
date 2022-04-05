@@ -15,12 +15,12 @@
  */
 package com.intellij.xdebugger.impl.frame;
 
-import consulo.debugger.frame.XValue;
-import consulo.debugger.frame.XValueMarkerProvider;
 import com.intellij.xdebugger.impl.ui.tree.ValueMarkup;
+import consulo.execution.debug.frame.XValue;
+import consulo.execution.debug.frame.XValueMarkerProvider;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

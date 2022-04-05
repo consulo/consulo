@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.debugger.frame.XNavigatable;
-import consulo.debugger.frame.XValue;
+import consulo.execution.debug.frame.XNavigatable;
+import consulo.execution.debug.frame.XValue;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import javax.annotation.Nonnull;
 

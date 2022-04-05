@@ -15,23 +15,21 @@
  */
 package com.intellij.codeInsight.lookup.impl;
 
-import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.completion.lookup.LookupElementPresentation;
-import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import consulo.colorScheme.TextAttributes;
-import consulo.disposer.Disposer;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.ui.ex.JBColor;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.FList;
+import consulo.application.util.matcher.MatcherTextRange;
+import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
+import consulo.colorScheme.EditorFontType;
+import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposer;
+import consulo.language.editor.completion.lookup.LookupElement;
+import consulo.language.editor.completion.lookup.LookupElementPresentation;
+import consulo.ui.ex.JBColor;
+import consulo.util.collection.FList;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
@@ -83,9 +81,9 @@ class LookupPreview {
         return itemText;
       }
 
-      FList<TextRange> fragments = LookupCellRenderer.getMatchingFragments(prefix, itemText);
+      FList<MatcherTextRange> fragments = LookupCellRenderer.getMatchingFragments(prefix, itemText);
       if (fragments != null && !fragments.isEmpty()) {
-        List<TextRange> list = ContainerUtil.newArrayList(fragments);
+        List<MatcherTextRange> list = new ArrayList<>(fragments);
         return itemText.substring(list.get(list.size() - 1).getEndOffset(), itemText.length());
       }
     }

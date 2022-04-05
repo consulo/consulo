@@ -1,13 +1,14 @@
 package com.intellij.coverage;
 
-import consulo.coverage.CoverageDataManager;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
-import consulo.coverage.CoverageEnabledConfiguration;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageEnabledConfiguration;
 import consulo.process.ProcessHandler;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 
 /**

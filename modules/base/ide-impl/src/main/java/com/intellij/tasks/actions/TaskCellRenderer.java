@@ -8,7 +8,7 @@ import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.doc.TaskPsiElement;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.application.util.matcher.Matcher;
 import consulo.application.util.matcher.MatcherHolder;
 import consulo.ui.ex.awt.UIUtil;

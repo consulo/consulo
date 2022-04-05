@@ -5,6 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.CoverageViewManager;
+import consulo.language.editor.util.LanguageEditorNavigationUtil;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.*;
 import consulo.navigation.NavigationItem;
@@ -103,7 +104,7 @@ public class CoverageListNode extends AbstractTreeNode {
     if (canNavigate()) {
       final PsiNamedElement value = (PsiNamedElement)getValue();
       if (requestFocus) {
-        NavigationUtil.activateFileWithPsiElement(value, true);
+        LanguageEditorNavigationUtil.activateFileWithPsiElement(value, true);
       }
       else if (value instanceof NavigationItem) {
         ((NavigationItem)value).navigate(requestFocus);

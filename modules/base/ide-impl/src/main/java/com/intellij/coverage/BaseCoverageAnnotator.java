@@ -1,13 +1,13 @@
 package com.intellij.coverage;
 
-import consulo.coverage.view.CoverageView;
-import consulo.coverage.CoverageViewManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.coverage.CoverageAnnotator;
-import consulo.coverage.CoverageDataManager;
-import consulo.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.CoverageAnnotator;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.CoverageViewManager;
+import consulo.execution.coverage.view.CoverageView;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 

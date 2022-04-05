@@ -16,7 +16,6 @@
 package consulo.ui.ex.awt.speedSearch;
 
 import consulo.application.util.matcher.*;
-import consulo.document.util.TextRange;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.keymap.util.KeymapUtil;
 import kava.beans.PropertyChangeListener;
@@ -26,7 +25,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.stream.Collectors;
 
 public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
   public static final String PUNCTUATION_MARKS = "*_-\"'/.#$>: ,;?!@%^&";
@@ -156,9 +154,9 @@ public class SpeedSearch extends SpeedSearchSupply implements KeyListener {
 
   @Nullable
   @Override
-  public Iterable<TextRange> matchingFragments(@Nonnull String text) {
+  public Iterable<MatcherTextRange> matchingFragments(@Nonnull String text) {
     if (myMatcher instanceof MinusculeMatcher) {
-      return ((MinusculeMatcher)myMatcher).matchingFragments(text).stream().map(it -> new TextRange(it.getStartOffset(), it.getEndOffset())).collect(Collectors.toList());
+      return ((MinusculeMatcher)myMatcher).matchingFragments(text);
     }
     return null;
   }

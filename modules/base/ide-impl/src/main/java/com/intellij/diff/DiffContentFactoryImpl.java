@@ -70,7 +70,6 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
     return new EmptyContent();
   }
 
-
   @Nonnull
   @Override
   public DocumentContent create(@Nonnull String text) {
@@ -345,7 +344,7 @@ public class DiffContentFactoryImpl extends DiffContentFactoryEx {
     if (UnknownFileType.INSTANCE == fileType) fileType = PlainTextFileType.INSTANCE;
 
     // TODO: detect invalid (different across the file) separators ?
-    LineSeparator separator = respectLineSeparators ? StringUtil.detectSeparators(text) : null;
+    consulo.platform.LineSeparator separator = respectLineSeparators ? consulo.platform.LineSeparator.detectSeparators(text) : null;
     String correctedContent = StringUtil.convertLineSeparators(text);
 
     Document document = createDocument(project, correctedContent, fileType, fileName, readOnly);

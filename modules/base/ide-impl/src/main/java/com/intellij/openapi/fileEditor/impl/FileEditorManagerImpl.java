@@ -863,7 +863,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       // Restore selected editor
       final FileEditorProvider selectedProvider;
       if (entry == null) {
-        selectedProvider = ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance()).getSelectedFileEditorProvider(EditorHistoryManager.getInstance(myProject), file, providers);
+        selectedProvider = ((FileEditorProviderManagerImpl)FileEditorProviderManager.getInstance()).getSelectedFileEditorProvider(EditorHistoryManagerImpl.getInstance(myProject), file, providers);
       }
       else {
         selectedProvider = entry.getSelectedProvider();
@@ -959,7 +959,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       // We have to try to get state from the history only in case
       // if editor is not opened. Otherwise history entry might have a state
       // out of sync with the current editor state.
-      state = EditorHistoryManager.getInstance(myProject).getState(file, provider);
+      state = EditorHistoryManagerImpl.getInstance(myProject).getState(file, provider);
     }
     if (state != null) {
       if (!isDumbAware(editor)) {
@@ -1036,7 +1036,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     }
 
     final FileEditorWithProviderComposite newComposite = createEditorWithProviderComposite(file, editors, providers, this);
-    final EditorHistoryManager editorHistoryManager = EditorHistoryManager.getInstance(myProject);
+    final EditorHistoryManagerImpl editorHistoryManager = EditorHistoryManagerImpl.getInstance(myProject);
     for (int i = 0; i < editors.length; i++) {
       final FileEditor editor = editors[i];
 

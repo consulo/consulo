@@ -17,8 +17,8 @@ package com.intellij.xdebugger.impl.breakpoints;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.debugger.XDebuggerBundle;
-import consulo.debugger.XDebuggerUtil;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.XDebuggerUtil;
 
 class RemoveBreakpointGutterIconAction extends AnAction {
   private XBreakpointBase<?,?,?> myBreakpoint;

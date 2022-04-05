@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.breakpoints.ui.grouping;
 
 import com.intellij.util.containers.ContainerUtil;
-import consulo.debugger.breakpoint.XBreakpointType;
-import consulo.debugger.breakpoint.ui.XBreakpointGroup;
+import consulo.execution.debug.breakpoint.XBreakpointType;
+import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointUtil;
 import consulo.ui.image.Image;
 

@@ -140,7 +140,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
   }
 
   @Nullable
-  FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManager editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
+  FileEditorProvider getSelectedFileEditorProvider(EditorHistoryManagerImpl editorHistoryManager, VirtualFile file, FileEditorProvider[] providers) {
     FileEditorProvider provider = editorHistoryManager.getSelectedProvider(file);
     if (provider != null || providers.length < 2) {
       return provider;

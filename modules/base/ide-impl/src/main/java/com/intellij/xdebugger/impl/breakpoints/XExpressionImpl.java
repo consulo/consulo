@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.breakpoints;
 
 import consulo.language.Language;
-import consulo.debugger.breakpoint.XExpression;
-import consulo.debugger.evaluation.EvaluationMode;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.evaluation.EvaluationMode;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

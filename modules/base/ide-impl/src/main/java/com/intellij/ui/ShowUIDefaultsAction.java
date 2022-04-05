@@ -15,6 +15,8 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.Cell;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -152,7 +154,7 @@ public class ShowUIDefaultsAction extends AnAction implements DumbAware {
           }
         });
         final JBScrollPane pane = new JBScrollPane(table);
-        new TableSpeedSearch(table, new PairFunction<Object, Cell, String>() {
+        new TableSpeedSearch(table, new PairFunction<>() {
           @Nullable
           @Override
           public String fun(Object o, Cell cell) {

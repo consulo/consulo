@@ -11,7 +11,7 @@ import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
+import com.intellij.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.fileEditor.EditorTabPresentationUtil;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
@@ -22,6 +22,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchObjectWithWeight;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
@@ -29,7 +30,7 @@ import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import com.intellij.ui.*;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.ObjectUtils;
@@ -760,7 +761,7 @@ public class Switcher extends AnAction implements DumbAware {
 
     @Nonnull
     private static List<VirtualFile> getRecentFiles(@Nonnull Project project) {
-      List<VirtualFile> recentFiles = EditorHistoryManager.getInstance(project).getFileList();
+      List<VirtualFile> recentFiles = EditorHistoryManagerImpl.getInstance(project).getFileList();
       VirtualFile[] openFiles = FileEditorManager.getInstance(project).getOpenFiles();
 
       Set<VirtualFile> recentFilesSet = new HashSet<>(recentFiles);
@@ -909,7 +910,7 @@ public class Switcher extends AnAction implements DumbAware {
             jList.setSize(jList.getPreferredSize());
           }
           if (isPinnedMode()) {
-            EditorHistoryManager.getInstance(project).removeFile(virtualFile);
+            EditorHistoryManagerImpl.getInstance(project).removeFile(virtualFile);
           }
         }
         else if (value instanceof ToolWindow) {

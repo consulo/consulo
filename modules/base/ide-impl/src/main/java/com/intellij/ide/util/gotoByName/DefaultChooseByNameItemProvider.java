@@ -4,29 +4,29 @@ package com.intellij.ide.util.gotoByName;
 import com.intellij.ide.actions.searcheverywhere.FoundItemDescriptor;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.application.util.matcher.MinusculeMatcher;
-import consulo.application.util.matcher.NameUtil;
-import consulo.ide.impl.psi.util.proximity.PsiProximityComparator;
 import com.intellij.util.CollectConsumer;
 import com.intellij.util.Consumer;
 import com.intellij.util.SynchronizedCollectConsumer;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.FList;
-import consulo.language.psi.search.FindSymbolParameters;
 import consulo.application.internal.concurrency.JobLauncher;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.progress.ProgressManager;
 import consulo.application.util.function.Processor;
-import consulo.document.util.TextRange;
+import consulo.application.util.matcher.MatcherTextRange;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
+import consulo.component.ProcessCanceledException;
+import consulo.ide.impl.psi.util.proximity.PsiProximityComparator;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
+import consulo.language.psi.search.FindSymbolParameters;
 import consulo.language.psi.stub.IdFilter;
 import consulo.logging.Logger;
 import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.util.collection.FList;
 import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
@@ -391,7 +391,7 @@ public class DefaultChooseByNameItemProvider implements ChooseByNameInScopeItemP
 
   @Nullable
   private static MatchResult matchName(@Nonnull MinusculeMatcher matcher, @Nonnull String name) {
-    FList<TextRange> fragments = matcher.matchingFragments(name);
+    FList<MatcherTextRange> fragments = matcher.matchingFragments(name);
     return fragments != null ? new MatchResult(name, matcher.matchingDegree(name, false, fragments), MinusculeMatcher.isStartMatch(fragments)) : null;
   }
 

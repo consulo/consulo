@@ -22,17 +22,15 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.function.Function;
 
 /**
  * @author Roman.Chernyatchik
- *         <p/>
- *         Coverage engine provide coverage support for different languages or coverage runner classes.
- *         E.g. engine for JVM languages, Ruby, Python
- *         <p/>
- *         Each coverage engine may work with several coverage runner. E.g. Java coverage engine supports IDEA/EMMA/Cobertura,
- *         Ruby engine works with RCov
+ * <p/>
+ * Coverage engine provide coverage support for different languages or coverage runner classes.
+ * E.g. engine for JVM languages, Ruby, Python
+ * <p/>
+ * Each coverage engine may work with several coverage runner. E.g. Java coverage engine supports IDEA/EMMA/Cobertura,
+ * Ruby engine works with RCov
  */
 public abstract class CoverageEngine {
   public static final ExtensionPointName<CoverageEngine> EP_NAME = ExtensionPointName.create("consulo.coverageEngine");
@@ -81,13 +79,11 @@ public abstract class CoverageEngine {
                                            final boolean coverageByTestEnabled,
                                            final boolean tracingEnabled,
                                            final boolean trackTestFolders) {
-    return createCoverageSuite(covRunner, name, coverageDataFileProvider, filters, lastCoverageTimeStamp, suiteToMerge,
-                               coverageByTestEnabled, tracingEnabled, trackTestFolders, null);
+    return createCoverageSuite(covRunner, name, coverageDataFileProvider, filters, lastCoverageTimeStamp, suiteToMerge, coverageByTestEnabled, tracingEnabled, trackTestFolders, null);
   }
 
   /**
    * Coverage suite is coverage settings & coverage data gather by coverage runner (for suites provided by TeamCity server)
-   *
    *
    * @param covRunner                Coverage Runner
    * @param name                     Suite name
@@ -110,7 +106,8 @@ public abstract class CoverageEngine {
                                                     @Nullable final String suiteToMerge,
                                                     final boolean coverageByTestEnabled,
                                                     final boolean tracingEnabled,
-                                                    final boolean trackTestFolders, Project project);
+                                                    final boolean trackTestFolders,
+                                                    Project project);
 
   /**
    * Coverage suite is coverage settings & coverage data gather by coverage runner
@@ -160,15 +157,12 @@ public abstract class CoverageEngine {
   /**
    * E.g. all *.class files for java source file with several classes
    *
-   *
    * @param srcFile
    * @param module
    * @return files
    */
   @Nonnull
-  public Set<File> getCorrespondingOutputFiles(@Nonnull final PsiFile srcFile,
-                                                        @Nullable final Module module,
-                                                        @Nonnull final CoverageSuitesBundle suite) {
+  public Set<File> getCorrespondingOutputFiles(@Nonnull final PsiFile srcFile, @Nullable final Module module, @Nonnull final CoverageSuitesBundle suite) {
     final VirtualFile virtualFile = srcFile.getVirtualFile();
     return virtualFile == null ? Collections.<File>emptySet() : Collections.singleton(VirtualFileUtil.virtualToIoFile(virtualFile));
   }
@@ -179,8 +173,7 @@ public abstract class CoverageEngine {
    * @param module
    * @param chooseSuiteAction @return True if should stop and wait compilation (e.g. for Java). False if we can ignore output (e.g. for Ruby)
    */
-  public abstract boolean recompileProjectAndRerunAction(@Nonnull final Module module, @Nonnull final CoverageSuitesBundle suite,
-                                                         @Nonnull final Runnable chooseSuiteAction);
+  public abstract boolean recompileProjectAndRerunAction(@Nonnull final Module module, @Nonnull final CoverageSuitesBundle suite, @Nonnull final Runnable chooseSuiteAction);
 
   /**
    * Qualified name same as in coverage raw project data
@@ -191,8 +184,7 @@ public abstract class CoverageEngine {
    * @return
    */
   @Nullable
-  public String getQualifiedName(@Nonnull final File outputFile,
-                                 @Nonnull final PsiFile sourceFile) {
+  public String getQualifiedName(@Nonnull final File outputFile, @Nonnull final PsiFile sourceFile) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(outputFile);
     if (virtualFile != null) {
       return getQualifiedName(virtualFile, sourceFile);
@@ -202,8 +194,7 @@ public abstract class CoverageEngine {
 
   @Deprecated
   @Nullable
-  public String getQualifiedName(@Nonnull final VirtualFile outputFile,
-                                 @Nonnull final PsiFile sourceFile) {
+  public String getQualifiedName(@Nonnull final VirtualFile outputFile, @Nonnull final PsiFile sourceFile) {
     return null;
   }
 
@@ -220,17 +211,14 @@ public abstract class CoverageEngine {
    * @param suite
    * @return
    */
-  public boolean includeUntouchedFileInCoverage(@Nonnull final String qualifiedName,
-                                                @Nonnull final File outputFile,
-                                                @Nonnull final PsiFile sourceFile,
-                                                @Nonnull final CoverageSuitesBundle suite) {
+  public boolean includeUntouchedFileInCoverage(@Nonnull final String qualifiedName, @Nonnull final File outputFile, @Nonnull final PsiFile sourceFile, @Nonnull final CoverageSuitesBundle suite) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(outputFile);
     if (virtualFile != null) {
       return includeUntouchedFileInCoverage(qualifiedName, virtualFile, sourceFile, suite);
     }
     return false;
   }
-  
+
   @Deprecated
   public boolean includeUntouchedFileInCoverage(@Nonnull final String qualifiedName,
                                                 @Nonnull final VirtualFile outputFile,
@@ -246,19 +234,17 @@ public abstract class CoverageEngine {
    * @return List (probably empty) of code lines or null if all lines should be marked as uncovered
    */
   @Nullable
-  public List<Integer> collectSrcLinesForUntouchedFile(@Nonnull final File classFile,
-                                                       @Nonnull final CoverageSuitesBundle suite) {
+  public List<Integer> collectSrcLinesForUntouchedFile(@Nonnull final File classFile, @Nonnull final CoverageSuitesBundle suite) {
     final VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByIoFile(classFile);
     if (virtualFile != null) {
       return collectSrcLinesForUntouchedFile(virtualFile, suite);
     }
     return null;
   }
-  
+
   @Deprecated
   @Nullable
-  public List<Integer> collectSrcLinesForUntouchedFile(@Nonnull final VirtualFile classFile,
-                                                       @Nonnull final CoverageSuitesBundle suite) {
+  public List<Integer> collectSrcLinesForUntouchedFile(@Nonnull final VirtualFile classFile, @Nonnull final CoverageSuitesBundle suite) {
     return null;
   }
 
@@ -273,12 +259,7 @@ public abstract class CoverageEngine {
    * @param lineData
    * @return
    */
-  public String generateBriefReport(@Nonnull Editor editor,
-                                    @Nonnull PsiFile psiFile,
-                                    int lineNumber,
-                                    int startOffset,
-                                    int endOffset,
-                                    @Nullable LineData lineData) {
+  public String generateBriefReport(@Nonnull Editor editor, @Nonnull PsiFile psiFile, int lineNumber, int startOffset, int endOffset, @Nullable LineData lineData) {
     final int hits = lineData == null ? 0 : lineData.getHits();
     return "Hits: " + hits;
   }
@@ -291,25 +272,11 @@ public abstract class CoverageEngine {
   /**
    * @return true to enable 'Generate Coverage Report...' action
    */
-  public boolean isReportGenerationAvailable(@Nonnull Project project,
-                                             @Nonnull DataContext dataContext,
-                                             @Nonnull CoverageSuitesBundle currentSuite) {
+  public boolean isReportGenerationAvailable(@Nonnull Project project, @Nonnull DataContext dataContext, @Nonnull CoverageSuitesBundle currentSuite) {
     return false;
   }
 
-  public void generateReport(@Nonnull final Project project,
-                             @Nonnull final DataContext dataContext,
-                             @Nonnull final CoverageSuitesBundle currentSuite) {
-  }
-
-  @Nonnull
-  public ExportToHTMLDialog createGenerateReportDialog(@Nonnull final Project project,
-                                                       @Nonnull final DataContext dataContext,
-                                                       @Nonnull final CoverageSuitesBundle currentSuite) {
-    final ExportToHTMLDialog dialog = new ExportToHTMLDialog(project, true);
-    dialog.setTitle("Generate Coverage Report for: \'" + currentSuite.getPresentableName() + "\'");
-
-    return dialog;
+  public void generateReport(@Nonnull final Project project, @Nonnull final DataContext dataContext, @Nonnull final CoverageSuitesBundle currentSuite) {
   }
 
   public abstract String getPresentableText();
@@ -322,18 +289,6 @@ public abstract class CoverageEngine {
     return lines;
   }
 
-  public CoverageLineMarkerRenderer getLineMarkerRenderer(int lineNumber,
-                                                          @Nullable final String className,
-                                                          final TreeMap<Integer, LineData> lines,
-                                                          final boolean coverageByTestApplicable,
-                                                          @Nonnull final CoverageSuitesBundle coverageSuite,
-                                                          final Function<Integer, Integer> newToOldConverter,
-                                                          final Function<Integer, Integer> oldToNewConverter, boolean subCoverageActive) {
-    return CoverageLineMarkerRenderer
-      .getRenderer(lineNumber, className, lines, coverageByTestApplicable, coverageSuite, newToOldConverter, oldToNewConverter,
-                   subCoverageActive);
-  }
-
   public boolean shouldHighlightFullLines() {
     return false;
   }
@@ -342,9 +297,7 @@ public abstract class CoverageEngine {
     return "Code Coverage";
   }
 
-  public CoverageViewExtension createCoverageViewExtension(Project project,
-                                                           CoverageSuitesBundle suiteBundle,
-                                                           CoverageViewManager.StateBean stateBean) {
+  public CoverageViewExtension createCoverageViewExtension(Project project, CoverageSuitesBundle suiteBundle, CoverageViewManager.StateBean stateBean) {
     return null;
   }
 

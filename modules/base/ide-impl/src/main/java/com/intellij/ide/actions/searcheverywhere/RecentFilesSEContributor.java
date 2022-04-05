@@ -3,7 +3,7 @@ package com.intellij.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
 import consulo.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
+import com.intellij.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.project.Project;
@@ -62,7 +62,7 @@ public class RecentFilesSEContributor extends FileSearchEverywhereContributor {
     String searchString = filterControlSymbols(pattern);
     MinusculeMatcher matcher = NameUtil.buildMatcher("*" + searchString).build();
     List<VirtualFile> opened = Arrays.asList(FileEditorManager.getInstance(myProject).getSelectedFiles());
-    List<VirtualFile> history = Lists.reverse(EditorHistoryManager.getInstance(myProject).getFileList());
+    List<VirtualFile> history = Lists.reverse(EditorHistoryManagerImpl.getInstance(myProject).getFileList());
 
     List<FoundItemDescriptor<Object>> res = new ArrayList<>();
     ProgressIndicatorUtils.yieldToPendingWriteActions();

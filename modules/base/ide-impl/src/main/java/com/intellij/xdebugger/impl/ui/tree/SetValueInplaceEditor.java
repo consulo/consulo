@@ -21,13 +21,13 @@ import consulo.ui.ex.awt.Messages;
 import com.intellij.ui.AppUIUtil;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.JBUI;
-import consulo.debugger.frame.XValueModifier;
-import consulo.debugger.frame.presentation.XValuePresentation;
+import consulo.execution.debug.frame.XValueModifier;
+import consulo.execution.debug.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
-import consulo.debugger.ui.XDebuggerUIConstants;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
-import consulo.debugger.ui.XValuePresentationUtil;
+import consulo.execution.debug.ui.XValuePresentationUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

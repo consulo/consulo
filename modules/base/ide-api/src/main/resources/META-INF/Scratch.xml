@@ -15,7 +15,7 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="scratch.rootType" interface="com.intellij.ide.scratch.RootType"/>
+    <extensionPoint name="scratch.rootType" interface="consulo.language.editor.scratch.RootType"/>
 
     <extensionPoint name="scratch.creationHelper" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.ide.scratch.ScratchFileCreationHelper"/>
@@ -26,7 +26,7 @@
     <applicationService serviceInterface="consulo.ide.impl.script.IdeScriptEngineManager"
                         serviceImplementation="consulo.ide.impl.script.Jsr223IdeScriptEngineManagerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ide.scratch.ScratchFileService"
+    <applicationService serviceInterface="consulo.language.editor.scratch.ScratchFileService"
                         serviceImplementation="com.intellij.ide.scratch.ScratchFileServiceImpl"/>
 
     <navbar implementation="com.intellij.ide.scratch.ScratchFileServiceImpl$NavBarExtension"/>

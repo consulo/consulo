@@ -20,9 +20,9 @@ import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.IJSwingUtilities;
 import consulo.util.collection.SmartList;
-import consulo.debugger.XDebuggerBundle;
-import consulo.debugger.frame.XDebuggerTreeNodeHyperlink;
-import consulo.debugger.ui.XDebuggerUIConstants;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import consulo.ui.image.Image;
 

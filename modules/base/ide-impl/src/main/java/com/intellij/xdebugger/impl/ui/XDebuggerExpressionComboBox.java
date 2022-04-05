@@ -26,10 +26,10 @@ import com.intellij.ui.EditorComboBoxRenderer;
 import com.intellij.ui.EditorTextField;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.debugger.breakpoint.XExpression;
-import consulo.debugger.XSourcePosition;
-import consulo.debugger.evaluation.EvaluationMode;
-import consulo.debugger.evaluation.XDebuggerEditorsProvider;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.evaluation.EvaluationMode;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 

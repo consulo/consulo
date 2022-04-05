@@ -12,9 +12,9 @@ import consulo.codeEditor.EditorEx;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.debugger.XDebugSession;
-import consulo.debugger.evaluation.ExpressionInfo;
-import consulo.debugger.evaluation.XDebuggerEvaluator;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.evaluation.ExpressionInfo;
+import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

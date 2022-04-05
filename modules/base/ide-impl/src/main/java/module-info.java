@@ -275,7 +275,6 @@ open module consulo.ide.impl {
   exports com.intellij.diff;
   exports com.intellij.diff.actions;
   exports com.intellij.diff.actions.impl;
-  exports com.intellij.diff.chains;
   exports com.intellij.diff.comparison;
   exports com.intellij.diff.comparison.iterables;
   exports com.intellij.diff.contents;

@@ -58,13 +58,13 @@ import java.util.List;
 
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
-public final class EditorHistoryManager implements PersistentStateComponentWithUIState<Element, HistoryEntry[]>, Disposable {
-  private static final Logger LOG = Logger.getInstance(EditorHistoryManager.class);
+public final class EditorHistoryManagerImpl implements PersistentStateComponentWithUIState<Element, HistoryEntry[]>, Disposable, EditorHistoryManager {
+  private static final Logger LOG = Logger.getInstance(EditorHistoryManagerImpl.class);
 
   private final Project myProject;
 
-  public static EditorHistoryManager getInstance(@Nonnull Project project) {
-    return project.getComponent(EditorHistoryManager.class);
+  public static EditorHistoryManagerImpl getInstance(@Nonnull Project project) {
+    return (EditorHistoryManagerImpl) project.getComponent(EditorHistoryManager.class);
   }
 
   /**
@@ -73,7 +73,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
   private final List<HistoryEntry> myEntriesList = new ArrayList<>();
 
   @Inject
-  EditorHistoryManager(@Nonnull Project project) {
+  EditorHistoryManagerImpl(@Nonnull Project project) {
     myProject = project;
 
     MessageBusConnection connection = project.getMessageBus().connect();
@@ -258,6 +258,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
     return result;
   }
 
+  @Override
   public synchronized boolean hasBeenOpen(@Nonnull VirtualFile f) {
     for (HistoryEntry each : myEntriesList) {
       if (Comparing.equal(each.getFile(), f)) return true;
@@ -279,6 +280,7 @@ public final class EditorHistoryManager implements PersistentStateComponentWithU
     }
   }
 
+  @Override
   public FileEditorState getState(@Nonnull VirtualFile file, final FileEditorProvider provider) {
     final HistoryEntry entry = getEntry(file);
     return entry != null ? entry.getState(provider) : null;

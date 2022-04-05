@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
-
-import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
+package consulo.ui.ex.awt.speedSearch;
 
 import java.util.ArrayList;
 import java.util.List;

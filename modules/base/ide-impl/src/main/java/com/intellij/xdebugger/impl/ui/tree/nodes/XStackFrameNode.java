@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import consulo.debugger.frame.XStackFrame;
+import consulo.execution.debug.frame.XStackFrame;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import javax.annotation.Nonnull;
 

@@ -31,7 +31,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
-import com.intellij.ui.SpeedSearchObjectWithWeight;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchObjectWithWeight;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.popup.AbstractPopup;

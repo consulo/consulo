@@ -19,7 +19,7 @@ import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.project.Project;
-import consulo.debugger.breakpoint.ui.XBreakpointGroupingRule;
+import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

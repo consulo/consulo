@@ -29,6 +29,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.undoRedo.CommandProcessor;
 import consulo.language.editor.WriteCommandAction;
 import consulo.ui.ex.action.DefaultActionGroup;

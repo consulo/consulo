@@ -15,8 +15,8 @@
  */
 package consulo.ui.ex.awt.speedSearch;
 
+import consulo.application.util.matcher.MatcherTextRange;
 import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;
@@ -53,7 +53,7 @@ public abstract class SpeedSearchSupply {
   }
 
   @Nullable
-  public abstract Iterable<TextRange> matchingFragments(@Nonnull final String text);
+  public abstract Iterable<MatcherTextRange> matchingFragments(@Nonnull final String text);
 
   /**
    * Selects element according to search criteria changes

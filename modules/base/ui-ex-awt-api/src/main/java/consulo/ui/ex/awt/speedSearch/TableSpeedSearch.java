@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.intellij.ui;
+package consulo.ui.ex.awt.speedSearch;
 
+import consulo.ui.ex.Cell;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.util.PairFunction;
-import com.intellij.util.containers.Convertor;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
+import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
@@ -31,22 +29,24 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.ListIterator;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
 
 public class TableSpeedSearch extends SpeedSearchBase<JTable> {
-  private static final PairFunction<Object, Cell, String> TO_STRING = (o, cell) -> o == null || o instanceof Boolean ? "" : o.toString();
-  private final PairFunction<Object, ? super Cell, String> myToStringConvertor;
+  private static final BiFunction<Object, Cell, String> TO_STRING = (o, cell) -> o == null || o instanceof Boolean ? "" : o.toString();
+  private final BiFunction<Object, ? super Cell, String> myToStringConvertor;
 
   public TableSpeedSearch(JTable table) {
     this(table, TO_STRING);
   }
 
-  public TableSpeedSearch(JTable table, final Convertor<Object, String> toStringConvertor) {
-    this(table, (o, c) -> toStringConvertor.convert(o));
+  public TableSpeedSearch(JTable table, final Function<Object, String> toStringConvertor) {
+    this(table, (o, c) -> toStringConvertor.apply(o));
   }
 
-  public TableSpeedSearch(JTable table, final PairFunction<Object, ? super Cell, String> toStringConvertor) {
+  public TableSpeedSearch(JTable table, final BiFunction<Object, ? super Cell, String> toStringConvertor) {
     super(table);
 
     myToStringConvertor = toStringConvertor;
@@ -109,7 +109,7 @@ public class TableSpeedSearch extends SpeedSearchBase<JTable> {
     int row = index / myComponent.getColumnCount();
     int col = index % myComponent.getColumnCount();
     Object value = myComponent.getValueAt(row, col);
-    return myToStringConvertor.fun(value, new Cell(row, col));
+    return myToStringConvertor.apply(value, new Cell(row, col));
   }
 
   private class MyListIterator implements ListIterator<Object> {

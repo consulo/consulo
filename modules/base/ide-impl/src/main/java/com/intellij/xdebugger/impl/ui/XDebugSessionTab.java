@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui;
 
-import consulo.debugger.ui.DebuggerContentInfo;
+import consulo.execution.debug.ui.DebuggerContentInfo;
 import consulo.execution.ExecutionManager;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.RunContentBuilder;
@@ -44,13 +44,13 @@ import consulo.ui.ex.content.event.ContentManagerEvent;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.debugger.XDebugSession;
-import consulo.debugger.XDebuggerBundle;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerBundle;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import com.intellij.xdebugger.impl.frame.*;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import consulo.debugger.ui.XDebugTabLayouter;
+import consulo.execution.debug.ui.XDebugTabLayouter;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;

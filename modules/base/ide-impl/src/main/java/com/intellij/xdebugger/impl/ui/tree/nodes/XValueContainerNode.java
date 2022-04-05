@@ -18,14 +18,14 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.ObjectUtils;
-import consulo.debugger.frame.*;
+import consulo.execution.debug.frame.*;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.SortedList;
-import consulo.debugger.evaluation.InlineDebuggerHelper;
-import consulo.debugger.ui.XDebuggerUIConstants;
+import consulo.execution.debug.evaluation.InlineDebuggerHelper;
+import consulo.execution.debug.ui.XDebuggerUIConstants;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
-import consulo.debugger.setting.XDebuggerSettingsManager;
+import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

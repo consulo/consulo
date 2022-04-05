@@ -2,6 +2,7 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
+import consulo.application.util.matcher.MatcherTextRange;
 import consulo.codeEditor.impl.EditorActionUtil;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
@@ -10,7 +11,7 @@ import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.*;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
@@ -113,7 +114,7 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
 
   @Nonnull
   private static JComponent setupEditorComponent(@Nonnull EditorEx editor, @Nonnull String text, @Nonnull SpeedSearch speedSearch, @Nonnull EditorColorsScheme colorsScheme, boolean selected) {
-    Iterable<TextRange> ranges = speedSearch.matchingFragments(text);
+    Iterable<MatcherTextRange> ranges = speedSearch.matchingFragments(text);
     if (ranges != null) {
       selectSearchResultsInEditor(editor, ranges.iterator());
     }
@@ -225,13 +226,13 @@ class RecentLocationsRenderer extends ColoredListCellRenderer<RecentLocationItem
   protected void customizeCellRenderer(@Nonnull JList<? extends RecentLocationItem> list, RecentLocationItem value, int index, boolean selected, boolean hasFocus) {
   }
 
-  private static void selectSearchResultsInEditor(@Nonnull Editor editor, @Nonnull Iterator<? extends TextRange> resultIterator) {
+  private static void selectSearchResultsInEditor(@Nonnull Editor editor, @Nonnull Iterator<? extends MatcherTextRange> resultIterator) {
     if (!editor.getCaretModel().supportsMultipleCarets()) {
       return;
     }
     ArrayList<CaretState> caretStates = new ArrayList<>();
     while (resultIterator.hasNext()) {
-      TextRange findResult = resultIterator.next();
+      MatcherTextRange findResult = resultIterator.next();
 
       int caretOffset = findResult.getEndOffset();
 

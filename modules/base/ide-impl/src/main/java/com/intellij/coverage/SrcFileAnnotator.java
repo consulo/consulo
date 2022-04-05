@@ -4,55 +4,59 @@
 
 package com.intellij.coverage;
 
-import consulo.colorScheme.TextAttributes;
-import consulo.coverage.*;
-import consulo.language.editor.CodeInsightBundle;
-import consulo.localHistory.FileRevisionTimestampComparator;
-import consulo.localHistory.LocalHistory;
-import consulo.application.AllIcons;
-import consulo.codeEditor.markup.*;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.document.event.DocumentListener;
-import consulo.codeEditor.impl.DocumentMarkupModel;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
-import consulo.language.impl.internal.psi.LoadTextUtil;
-import consulo.module.Module;
 import com.intellij.openapi.module.ModuleUtil;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.application.util.function.Computable;
-import consulo.util.dataholder.Key;
-import consulo.util.lang.ref.Ref;
-import consulo.document.util.TextRange;
-import consulo.application.util.LineTokenizer;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
 import com.intellij.reference.SoftReference;
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.ui.EditorNotificationPanel;
-import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Function;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.util.LineTokenizer;
 import consulo.application.util.diff.Diff;
 import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.function.Computable;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.DocumentMarkupModel;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
+import consulo.document.util.TextRange;
+import consulo.execution.coverage.*;
+import consulo.execution.coverage.impl.CoverageLineMarkerRenderer;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.language.psi.PsiFile;
+import consulo.localHistory.FileRevisionTimestampComparator;
+import consulo.localHistory.LocalHistory;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 import gnu.trove.TIntIntHashMap;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.*;
 
@@ -468,8 +472,7 @@ public class SrcFileAnnotator implements Disposable {
         return newLineMapping != null ? newLineMapping.get(newLine.intValue()) : newLine.intValue();
       }
     };
-    final CoverageLineMarkerRenderer markerRenderer = coverageSuite.getCoverageEngine()
-      .getLineMarkerRenderer(line, className, executableLines, coverageByTestApplicable, coverageSuite, newToOldConverter,
+    final CoverageLineMarkerRenderer markerRenderer = CoverageLineMarkerRenderer.getRenderer(line, className, executableLines, coverageByTestApplicable, coverageSuite, newToOldConverter,
                              oldToNewConverter, CoverageDataManager.getInstance(myProject).isSubCoverageActive());
     highlighter.setLineMarkerRenderer(markerRenderer);
 

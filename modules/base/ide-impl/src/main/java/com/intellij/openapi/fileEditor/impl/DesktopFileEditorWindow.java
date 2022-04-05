@@ -280,7 +280,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     UISettings uiSettings = UISettings.getInstance();
     if (uiSettings.getActiveMruEditorOnClose()) {
       // try to open last visited file
-      final VirtualFile[] histFiles = EditorHistoryManager.getInstance(getManager().getProject()).getFiles();
+      final VirtualFile[] histFiles = EditorHistoryManagerImpl.getInstance(getManager().getProject()).getFiles();
       for (int idx = histFiles.length - 1; idx >= 0; idx--) {
         final VirtualFile histFile = histFiles[idx];
         if (histFile.equals(fileBeingClosed)) {
@@ -813,7 +813,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
 
   private LinkedHashSet<VirtualFile> getTabClosingOrder(boolean closeNonModifiedFilesFirst) {
     final VirtualFile[] allFiles = getFiles();
-    final Set<VirtualFile> histFiles = EditorHistoryManager.getInstance(getManager().getProject()).getFileSet();
+    final Set<VirtualFile> histFiles = EditorHistoryManagerImpl.getInstance(getManager().getProject()).getFileSet();
 
     LinkedHashSet<VirtualFile> closingOrder = ContainerUtil.newLinkedHashSet();
 

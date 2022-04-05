@@ -22,7 +22,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.AppUIUtil;
 import consulo.util.collection.SmartList;
 import com.intellij.util.containers.IntIntHashMap;
-import consulo.debugger.frame.XFullValueEvaluator;
+import consulo.execution.debug.frame.XFullValueEvaluator;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
 import com.intellij.xdebugger.impl.ui.tree.XDebuggerTree;
 import com.intellij.xdebugger.impl.ui.tree.nodes.HeadlessValueEvaluationCallback;

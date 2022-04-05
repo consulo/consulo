@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.breakpoints.ui;
 
 import consulo.project.Project;
-import consulo.debugger.XBreakpointManager;
-import consulo.debugger.breakpoint.XBreakpointType;
+import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.breakpoint.XBreakpointType;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import javax.annotation.Nonnull;
 

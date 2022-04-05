@@ -94,7 +94,7 @@ public class CoverageViewManager implements PersistentStateComponent<CoverageVie
     }
   }
 
-  void closeView(String displayName) {
+  public void closeView(String displayName) {
     final CoverageView oldView = myViews.get(displayName);
     if (oldView != null) {
       final Content content = myContentManager.getContent(oldView);

@@ -1,13 +1,13 @@
 package com.intellij.coverage.view;
 
-import consulo.coverage.CoverageEngine;
-import consulo.coverage.CoverageSuitesBundle;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.coverage.CoverageViewManager;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
+import consulo.execution.coverage.CoverageEngine;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.CoverageViewManager;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.ColumnInfo;
+import consulo.ui.ex.tree.NodeDescriptor;
 
 import java.util.Comparator;
 

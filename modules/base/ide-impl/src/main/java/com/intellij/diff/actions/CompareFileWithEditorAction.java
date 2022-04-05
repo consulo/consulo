@@ -28,7 +28,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

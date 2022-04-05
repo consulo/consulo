@@ -16,8 +16,8 @@
 package com.intellij.xdebugger.impl.ui.tree;
 
 import com.intellij.openapi.util.Comparing;
-import consulo.debugger.ui.XNamedTreeNode;
-import consulo.debugger.frame.presentation.XValuePresentation;
+import consulo.execution.debug.ui.XNamedTreeNode;
+import consulo.execution.debug.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.RestorableStateNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XDebuggerTreeNode;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueContainerNode;

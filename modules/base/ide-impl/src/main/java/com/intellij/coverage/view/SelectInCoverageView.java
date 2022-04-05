@@ -1,12 +1,12 @@
 package com.intellij.coverage.view;
 
-import consulo.coverage.CoverageDataManager;
-import consulo.coverage.CoverageSuitesBundle;
 import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInTarget;
 import com.intellij.ide.StandardTargetWeights;
-import consulo.coverage.CoverageViewManager;
-import consulo.coverage.view.CoverageView;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.CoverageViewManager;
+import consulo.execution.coverage.view.CoverageView;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 

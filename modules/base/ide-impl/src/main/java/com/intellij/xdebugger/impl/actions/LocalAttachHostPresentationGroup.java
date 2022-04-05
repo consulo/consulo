@@ -17,8 +17,8 @@ package com.intellij.xdebugger.impl.actions;
 
 import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
-import consulo.debugger.attach.XAttachHost;
-import consulo.debugger.attach.XAttachPresentationGroup;
+import consulo.execution.debug.attach.XAttachHost;
+import consulo.execution.debug.attach.XAttachPresentationGroup;
 import consulo.ui.image.Image;
 import javax.annotation.Nonnull;
 

@@ -4,14 +4,15 @@ import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
 import consulo.application.HelpManager;
 import consulo.application.util.SystemInfo;
-import consulo.execution.coverage.CoverageDataManager;
-import consulo.execution.coverage.CoverageSuitesBundle;
-import consulo.execution.coverage.CoverageViewManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
+import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.CoverageViewManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
@@ -27,6 +28,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.tree.NodeDescriptor;
@@ -75,7 +77,7 @@ public class CoverageView extends JPanel implements DataProvider, Disposable {
           final String configurationName = configuration.getName();
           final RunnerAndConfigurationSettings configurationSettings = RunManager.getInstance(project).findConfigurationByName(configurationName);
           if (configurationSettings != null) {
-            RunDialog.editConfiguration(project, configurationSettings, "Edit Run Configuration");
+            RunConfigurationEditor.getInstance(project).editConfiguration(project, configurationSettings, "Edit Run Configuration");
           } else {
             Messages.showErrorDialog(project, "Configuration \'" + configurationName + "\' was not found", CommonBundle.getErrorTitle());
           }

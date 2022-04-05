@@ -1,4 +1,4 @@
-package com.intellij.coverage;
+package consulo.execution.coverage;
 
 import consulo.execution.executor.Executor;
 import consulo.application.AllIcons;

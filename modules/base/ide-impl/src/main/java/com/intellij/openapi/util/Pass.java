@@ -15,8 +15,13 @@
  */
 package com.intellij.openapi.util;
 
-public abstract class Pass<T> {
+import java.util.function.Consumer;
 
+public abstract class Pass<T> implements Consumer<T> {
   public abstract void pass(T t);
 
+  @Override
+  public void accept(T t) {
+    pass(t);
+  }
 }

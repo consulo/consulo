@@ -181,7 +181,7 @@ public class CoverageSuitesBundle {
       }, false);
     }
     return myCachedValue.getValue();
-    
+
   }
 
   private GlobalSearchScope getSearchScopeInner(Project project) {

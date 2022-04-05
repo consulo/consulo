@@ -17,6 +17,7 @@
 package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.codeInsight.lookup.*;
+import consulo.application.util.matcher.MatcherTextRange;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorFontType;
@@ -31,12 +32,11 @@ import consulo.language.editor.completion.lookup.LookupFocusDegree;
 import consulo.language.editor.completion.lookup.LookupValueWithUIHint;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.util.matcher.NameUtil;
 import consulo.ui.ex.awt.JBList;
-import consulo.language.editor.ui.SpeedSearchUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.util.collection.FList;
 import consulo.ui.ex.awt.JBUI;
@@ -375,7 +375,7 @@ public class LookupCellRenderer implements ListCellRenderer {
 
     final String prefix = item instanceof EmptyLookupItem ? "" : myLookup.itemPattern(item);
     if (prefix.length() > 0) {
-      Iterable<TextRange> ranges = getMatchingFragments(prefix, name);
+      Iterable<MatcherTextRange> ranges = getMatchingFragments(prefix, name);
       if (ranges != null) {
         SimpleTextAttributes highlighted = new SimpleTextAttributes(style, selected ? SELECTED_PREFIX_FOREGROUND_COLOR : PREFIX_FOREGROUND_COLOR);
         SpeedSearchUtil.appendColoredFragments(nameComponent, name, ranges, base, highlighted);
@@ -385,7 +385,7 @@ public class LookupCellRenderer implements ListCellRenderer {
     nameComponent.append(name, base);
   }
 
-  public static FList<TextRange> getMatchingFragments(String prefix, String name) {
+  public static FList<MatcherTextRange> getMatchingFragments(String prefix, String name) {
     return NameUtil.buildMatcher("*" + prefix).build().matchingFragments(name);
   }
 

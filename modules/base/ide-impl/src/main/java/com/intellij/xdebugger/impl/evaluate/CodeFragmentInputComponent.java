@@ -17,10 +17,10 @@ package com.intellij.xdebugger.impl.evaluate;
 
 import consulo.project.Project;
 import consulo.ui.ex.awt.JBSplitter;
-import consulo.debugger.XDebuggerBundle;
-import consulo.debugger.breakpoint.XExpression;
-import consulo.debugger.XSourcePosition;
-import consulo.debugger.evaluation.XDebuggerEditorsProvider;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.breakpoint.XExpression;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.ui.XDebuggerEditorBase;
 import com.intellij.xdebugger.impl.ui.XDebuggerExpressionEditor;

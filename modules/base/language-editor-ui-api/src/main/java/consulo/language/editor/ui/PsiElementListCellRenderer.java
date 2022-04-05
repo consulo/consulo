@@ -24,6 +24,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.util.TextAttributesUtil;

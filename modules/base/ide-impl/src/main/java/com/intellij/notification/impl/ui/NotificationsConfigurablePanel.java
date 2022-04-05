@@ -29,7 +29,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SystemNotifications;
-import com.intellij.ui.TableSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;

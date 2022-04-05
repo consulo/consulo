@@ -15,13 +15,14 @@
  */
 package com.intellij.codeInsight.completion.impl;
 
+import consulo.application.util.matcher.MatcherTextRange;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.PrefixMatcher;
 import consulo.language.editor.completion.CompletionResult;
 import consulo.language.editor.completion.CompletionResultSet;
-import consulo.application.util.matcher.PrefixMatcher;
-import consulo.document.util.TextRange;
-import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.language.editor.internal.matcher.CamelHumpMatcher;
 import consulo.util.collection.FList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -69,7 +70,7 @@ public class BetterPrefixMatcher extends PrefixMatcher {
   }
 
   private MatchingOutcome matchOptimized(String name, CamelHumpMatcher matcher) {
-    FList<TextRange> fragments = matcher.matchingFragments(name);
+    FList<MatcherTextRange> fragments = matcher.matchingFragments(name);
     if (fragments == null) return MatchingOutcome.NON_MATCH;
     if (!MinusculeMatcher.isStartMatch(fragments)) return MatchingOutcome.WORSE_MATCH;
     return matcher.matchingDegree(name, fragments) >= myMinMatchingDegree ? MatchingOutcome.BETTER_MATCH : MatchingOutcome.WORSE_MATCH;

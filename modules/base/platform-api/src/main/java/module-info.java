@@ -6,6 +6,7 @@ module consulo.platform.api {
   requires consulo.ui.api;
   requires consulo.annotation;
   requires consulo.container.api;
+  requires consulo.util.lang;
 
   uses consulo.platform.internal.PlatformInternal;
   

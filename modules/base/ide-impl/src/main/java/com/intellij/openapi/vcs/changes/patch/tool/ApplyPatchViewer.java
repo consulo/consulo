@@ -52,7 +52,6 @@ import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.ScrollType;
 import consulo.project.Project;
 import com.intellij.openapi.util.BooleanGetter;
-import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.CalledInAwt;
 import com.intellij.openapi.vcs.changes.patch.AppliedTextPatch;
 import com.intellij.util.containers.ContainerUtil;
@@ -66,6 +65,7 @@ import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.*;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

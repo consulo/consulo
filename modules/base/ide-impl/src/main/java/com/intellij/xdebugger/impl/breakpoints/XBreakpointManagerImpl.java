@@ -15,9 +15,9 @@
  */
 package com.intellij.xdebugger.impl.breakpoints;
 
-import consulo.debugger.XBreakpointManager;
-import consulo.debugger.breakpoint.*;
-import consulo.debugger.event.XBreakpointListener;
+import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.breakpoint.*;
+import consulo.execution.debug.event.XBreakpointListener;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
@@ -35,8 +35,8 @@ import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
-import consulo.debugger.XDebuggerUtil;
-import consulo.debugger.XSourcePosition;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
 import com.intellij.xdebugger.impl.XDebuggerManagerImpl;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;

@@ -15,8 +15,8 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import consulo.debugger.ui.XValuePresentationUtil;
-import consulo.debugger.ui.XValueTextRendererBase;
+import consulo.execution.debug.ui.XValuePresentationUtil;
+import consulo.execution.debug.ui.XValueTextRendererBase;
 import consulo.codeEditor.DefaultLanguageHighlighterColors;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.colorScheme.EditorColorsManager;

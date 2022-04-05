@@ -5,10 +5,10 @@
 package com.intellij.coverage.actions;
 
 import com.intellij.codeInspection.export.ExportToHTMLDialog;
-import consulo.coverage.CoverageDataManager;
-import consulo.coverage.CoverageEngine;
-import consulo.coverage.CoverageSuitesBundle;
 import consulo.dataContext.DataContext;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageEngine;
+import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
@@ -17,6 +17,7 @@ import consulo.ui.ex.action.Presentation;
 
 public class GenerateCoverageReportAction extends AnAction {
 
+  @Override
   public void actionPerformed(final AnActionEvent e) {
     final DataContext dataContext = e.getDataContext();
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
@@ -26,7 +27,8 @@ public class GenerateCoverageReportAction extends AnAction {
 
 
     final CoverageEngine coverageEngine = currentSuite.getCoverageEngine();
-    final ExportToHTMLDialog dialog = coverageEngine.createGenerateReportDialog(project, dataContext, currentSuite);
+    final ExportToHTMLDialog dialog = new ExportToHTMLDialog(project, true);
+    dialog.setTitle("Generate Coverage Report for: \'" + currentSuite.getPresentableName() + "\'");
     dialog.reset();
     dialog.show();
     if (!dialog.isOK()) return;

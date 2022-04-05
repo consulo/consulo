@@ -4,29 +4,28 @@
  */
 package com.intellij.coverage.actions;
 
-import consulo.coverage.CoverageDataManager;
-import com.intellij.coverage.CoverageExecutor;
-import consulo.coverage.CoverageSuitesBundle;
-import consulo.execution.executor.Executor;
+import consulo.execution.coverage.CoverageExecutor;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.ModuleBasedConfiguration;
 import consulo.execution.configuration.RunProfile;
-import consulo.coverage.CoverageEnabledConfiguration;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.executor.Executor;
 import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
 import consulo.execution.test.action.ToggleModelAction;
-import consulo.application.AllIcons;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.ApplicationManager;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.disposer.Disposer;
 
 import javax.annotation.Nullable;
-
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import java.util.ArrayList;

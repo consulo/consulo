@@ -1,30 +1,30 @@
 package com.intellij.coverage;
 
-import consulo.coverage.CoverageDataManager;
-import consulo.coverage.CoverageEngine;
-import consulo.coverage.CoverageSuitesBundle;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.project.content.TestSourcesFilter;
-import consulo.application.util.function.Computable;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiFile;
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
 import com.intellij.util.containers.ContainerUtil;
-import java.util.HashMap;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.function.Computable;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageEngine;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiFile;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.content.TestSourcesFilter;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 

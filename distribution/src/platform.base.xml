@@ -61,6 +61,8 @@
         <include>consulo:consulo-process-api</include>
         <include>consulo:consulo-execution-api</include>
         <include>consulo:consulo-execution-debug-api</include>
+        <include>consulo:consulo-execution-coverage-api</include>
+        <include>consulo:consulo-execution-test-api</include>
         <include>consulo:consulo-virtual-file-watcher-api</include>
         <include>consulo:consulo-virtual-file-watcher-impl</include>
         <include>consulo:consulo-compiler-api</include>
@@ -90,6 +92,9 @@
         <include>consulo:consulo-virtual-file-status-impl</include>
         <include>consulo:consulo-usage-api</include>
         <include>consulo:consulo-language-editor-ui-api</include>
+        <include>consulo:consulo-diff-api</include>
+        <include>consulo:consulo-local-history-api</include>
+        <include>consulo:consulo-project-ui-view-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

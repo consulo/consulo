@@ -14,10 +14,21 @@
  * limitations under the License.
  */
 
-package consulo.execution.coverage;
+package consulo.execution.coverage.impl;
 
+import com.intellij.application.options.colors.ColorAndFontOptions;
+import com.intellij.application.options.colors.ColorAndFontPanelFactory;
+import com.intellij.application.options.colors.NewColorAndFontPanel;
+import com.intellij.application.options.colors.SimpleEditorPreview;
+import com.intellij.codeInsight.hint.EditorFragmentComponent;
+import com.intellij.codeInsight.hint.HintManagerImpl;
+import com.intellij.coverage.actions.ShowCoveringTestsAction;
+import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
+import com.intellij.ui.ColoredSideBorder;
+import com.intellij.ui.HintHint;
+import com.intellij.ui.LightweightHint;
 import consulo.application.AllIcons;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.ActiveGutterRenderer;
@@ -27,6 +38,9 @@ import consulo.colorScheme.TextAttributesKey;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.document.Document;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.action.HideCoverageInfoAction;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
@@ -250,7 +264,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
 
   @Nullable
   public LineData getLineData(int lineNumber) {
-    return myLines != null ? myLines.get(myNewToOldConverter != null ? myNewToOldConverter.fun(lineNumber).intValue() : lineNumber) : null;
+    return myLines != null ? myLines.get(myNewToOldConverter != null ? myNewToOldConverter.apply(lineNumber).intValue() : lineNumber) : null;
   }
 
   public ColorValue getErrorStripeColor(final Editor editor) {
@@ -339,7 +353,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
       Collections.sort(list);
       final LineData data = getLineData(myLineNumber);
       final int currentStatus = data != null ? data.getStatus() : LineCoverage.NONE;
-      int idx = list.indexOf(myNewToOldConverter != null ? myNewToOldConverter.fun(myLineNumber).intValue() : myLineNumber);
+      int idx = list.indexOf(myNewToOldConverter != null ? myNewToOldConverter.apply(myLineNumber).intValue() : myLineNumber);
       while (hasNext(idx, list)) {
         final int index = next(idx);
         final LineData lineData = myLines.get(list.get(index));
@@ -347,7 +361,7 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
         if (lineData != null && lineData.getStatus() != currentStatus) {
           final Integer line = list.get(idx);
           if (myOldToNewConverter != null) {
-            final int newLine = myOldToNewConverter.fun(line).intValue();
+            final int newLine = myOldToNewConverter.apply(line).intValue();
             if (newLine != 0) return newLine;
           } else {
             return line;

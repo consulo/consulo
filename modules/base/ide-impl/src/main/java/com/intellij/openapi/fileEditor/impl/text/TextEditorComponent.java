@@ -15,10 +15,9 @@
  */
 package com.intellij.openapi.fileEditor.impl.text;
 
-import consulo.codeEditor.internal.RealEditor;
 import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
-import com.intellij.openapi.fileEditor.impl.EditorHistoryManager;
+import com.intellij.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.language.file.FileTypeManager;
@@ -125,7 +124,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
   @Override
   public void dispose() {
     if (!myProject.isDefault()) { // There's no EditorHistoryManager for default project (which is used in diff command-line application)
-      EditorHistoryManager.getInstance(myProject).updateHistoryEntry(myFile, false);
+      EditorHistoryManagerImpl.getInstance(myProject).updateHistoryEntry(myFile, false);
     }
     disposeEditor();
 

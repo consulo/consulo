@@ -43,6 +43,10 @@ public class MatcherTextRange {
     myEndOffset = endOffset;
   }
 
+  public boolean intersectsStrict(int startOffset, int endOffset) {
+    return Math.max(myStartOffset, startOffset) < Math.min(myEndOffset, endOffset);
+  }
+
   public int getStartOffset() {
     return myStartOffset;
   }

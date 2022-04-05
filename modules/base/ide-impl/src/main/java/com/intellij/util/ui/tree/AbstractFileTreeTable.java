@@ -29,7 +29,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
 import consulo.ui.ex.awt.util.TableUtil;
-import com.intellij.ui.TreeTableSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeTableSpeedSearch;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableCellRenderer;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;

@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.frame.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.debugger.breakpoint.XExpression;
+import consulo.execution.debug.breakpoint.XExpression;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import com.intellij.xdebugger.impl.frame.XWatchesView;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;

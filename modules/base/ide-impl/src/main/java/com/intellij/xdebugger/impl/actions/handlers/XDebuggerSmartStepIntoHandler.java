@@ -24,12 +24,12 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import consulo.debugger.XDebugSession;
-import consulo.debugger.XSourcePosition;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XSourcePosition;
 import com.intellij.xdebugger.impl.actions.XDebuggerSuspendedActionHandler;
 import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
-import consulo.debugger.step.XSmartStepIntoHandler;
-import consulo.debugger.step.XSmartStepIntoVariant;
+import consulo.execution.debug.step.XSmartStepIntoHandler;
+import consulo.execution.debug.step.XSmartStepIntoVariant;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

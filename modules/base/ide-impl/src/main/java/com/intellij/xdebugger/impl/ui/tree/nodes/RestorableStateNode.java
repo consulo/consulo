@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
-import consulo.debugger.ui.XNamedTreeNode;
+import consulo.execution.debug.ui.XNamedTreeNode;
 import javax.annotation.Nullable;
 
 import javax.swing.tree.TreePath;

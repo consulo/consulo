@@ -22,8 +22,8 @@ import consulo.configurable.OptionsBundle;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import consulo.debugger.XDebuggerBundle;
-import consulo.debugger.ui.DebuggerColors;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.ui.DebuggerColors;
 import consulo.configurable.internal.ConfigurableWeight;
 
 import javax.annotation.Nonnull;

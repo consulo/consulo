@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.ToggleAction;
 import consulo.application.dumb.DumbAware;
-import consulo.debugger.XDebugSession;
+import consulo.execution.debug.XDebugSession;
 import com.intellij.xdebugger.impl.XDebuggerUtilImpl;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import javax.annotation.Nonnull;

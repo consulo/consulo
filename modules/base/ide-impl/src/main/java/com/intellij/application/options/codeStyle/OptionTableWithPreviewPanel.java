@@ -20,7 +20,7 @@ import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.CustomCodeStyleSettings;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
-import com.intellij.ui.TreeTableSpeedSearch;
+import consulo.ui.ex.awt.speedSearch.TreeTableSpeedSearch;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.ui.components.editors.JBComboBoxTableCellEditorComponent;

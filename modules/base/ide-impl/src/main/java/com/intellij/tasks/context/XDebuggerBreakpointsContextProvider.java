@@ -23,7 +23,7 @@ import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.Accessor;
 import consulo.util.xml.serializer.SerializationFilter;
 import consulo.util.xml.serializer.XmlSerializer;
-import consulo.debugger.XDebuggerManager;
+import consulo.execution.debug.XDebuggerManager;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointBase;
 import com.intellij.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
 import org.jdom.Element;

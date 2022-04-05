@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.evaluate;
 
-import consulo.debugger.frame.presentation.XValuePresentation;
+import consulo.execution.debug.frame.presentation.XValuePresentation;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
