@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.module.impl;
+package consulo.module.impl.internal;
 
-import com.intellij.openapi.project.ModuleAdapter;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.component.impl.util.NamedPointerImpl;
+import consulo.component.impl.util.NamedPointerManagerImpl;
 import consulo.disposer.Disposer;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.ModulePointerManager;
+import consulo.module.event.ModuleAdapter;
 import consulo.module.event.ModuleListener;
 import consulo.project.Project;
-import consulo.util.pointers.NamedPointerImpl;
-import consulo.util.pointers.NamedPointerManagerImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

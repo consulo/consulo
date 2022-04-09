@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.pointers;
+package consulo.component.impl.util;
 
 import consulo.component.util.pointer.Named;
 import consulo.component.util.pointer.NamedPointer;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * @since 17:22/15.06.13
  */
 public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
-  public static final Logger LOGGER = Logger.getInstance(NamedPointerImpl.class);
+  private static final Logger LOG = Logger.getInstance(NamedPointerImpl.class);
 
   private T myValue;
   @Nonnull
@@ -43,14 +43,14 @@ public class NamedPointerImpl<T extends Named> implements NamedPointer<T> {
   }
 
   public void setValue(@Nonnull T value) {
-    LOGGER.assertTrue(myValue == null);
-    LOGGER.assertTrue(myName.equals(value.getName()));
+    LOG.assertTrue(myValue == null);
+    LOG.assertTrue(myName.equals(value.getName()));
     myName = value.getName();
     myValue = value;
   }
 
   public void dropValue(@Nonnull T value) {
-    LOGGER.assertTrue(myValue == value);
+    LOG.assertTrue(myValue == value);
     myName = myValue.getName();
     myValue = null;
   }

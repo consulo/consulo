@@ -1066,7 +1066,6 @@ open module consulo.ide.impl {
   exports consulo.ide.wizard.newModule;
   exports consulo.internal.actions;
   exports consulo.internal.statistic;
-  exports consulo.module.bundle;
   exports consulo.moduleImport;
   exports consulo.moduleImport.ui;
   exports consulo.net.util;

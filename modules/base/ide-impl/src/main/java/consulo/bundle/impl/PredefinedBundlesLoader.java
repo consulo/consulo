@@ -28,7 +28,7 @@ import consulo.util.lang.SystemProperties;
 import consulo.content.bundle.PredefinedBundlesProvider;
 import consulo.content.bundle.SdkPointerManager;
 import consulo.logging.Logger;
-import consulo.module.bundle.SdkPointerManagerImpl;
+import consulo.content.impl.internal.bundle.SdkPointerManagerImpl;
 
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;

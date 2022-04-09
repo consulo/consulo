@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.module.bundle;
+package consulo.content.impl.internal.bundle;
 
 import consulo.application.Application;
+import consulo.component.impl.util.NamedPointerManagerImpl;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkPointerManager;
 import consulo.content.bundle.SdkTable;
 import consulo.content.bundle.event.SdkTableListener;
-import consulo.util.pointers.NamedPointerManagerImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

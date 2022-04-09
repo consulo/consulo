@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.pointers;
+package consulo.component.impl.util;
 
 import consulo.component.util.pointer.Named;
 import consulo.component.util.pointer.NamedPointer;

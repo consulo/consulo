@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.project;
+package consulo.module.event;
 
 import consulo.module.Module;
-import consulo.module.event.ModuleListener;
 import consulo.project.Project;
 
 import java.util.List;

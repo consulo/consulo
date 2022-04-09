@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.artifacts;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactModel;
 import consulo.compiler.artifact.ArtifactPointer;
-import consulo.util.pointers.NamedPointerImpl;
+import consulo.component.impl.util.NamedPointerImpl;
 import javax.annotation.Nonnull;
 
 /**

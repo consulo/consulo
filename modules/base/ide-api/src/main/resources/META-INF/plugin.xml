@@ -1829,8 +1829,7 @@
     <applicationService serviceImplementation="consulo.ide.impl.psi.codeStyle.arrangement.engine.ArrangementEngine"/>
     <applicationService serviceImplementation="consulo.language.codeStyle.impl.arrangement.MemberOrderService"/>
 
-    <applicationService serviceInterface="consulo.content.bundle.SdkPointerManager"
-                        serviceImplementation="consulo.module.bundle.SdkPointerManagerImpl"/>
+    <applicationService serviceInterface="consulo.content.bundle.SdkPointerManager" serviceImplementation="consulo.content.impl.internal.bundle.SdkPointerManagerImpl"/>
     <rearranger.ui implementation="com.intellij.application.options.codeStyle.arrangement.component.DefaultArrangementUiComponentFactory"/>
 
     <projectService serviceInterface="com.intellij.ui.EditorTextFieldProvider"
@@ -2391,7 +2390,7 @@
                               implementationClass="com.intellij.navigation.DirectoryPresentationProvider"/>
 
     <projectService serviceInterface="consulo.module.ModulePointerManager"
-                    serviceImplementation="com.intellij.openapi.module.impl.ModulePointerManagerImpl"/>
+                    serviceImplementation="consulo.module.impl.internal.ModulePointerManagerImpl"/>
 
     <customFoldingProvider implementation="com.intellij.lang.customFolding.NetBeansCustomFoldingProvider"/>
     <customFoldingProvider implementation="com.intellij.lang.customFolding.VisualStudioCustomFoldingProvider"/>
