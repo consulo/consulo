@@ -18,7 +18,7 @@ package com.intellij.packaging.impl.artifacts;
 import consulo.project.Project;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import consulo.content.library.LibraryTablesRegistrar;
 import com.intellij.openapi.roots.ui.configuration.DefaultModulesProvider;
 import consulo.module.content.layer.ModulesProvider;
 import consulo.compiler.artifact.ArtifactManager;

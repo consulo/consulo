@@ -16,8 +16,8 @@
 
 package com.intellij.openapi.module.impl;
 
-import com.intellij.openapi.module.ConfigurationErrorDescription;
-import com.intellij.openapi.module.ConfigurationErrorType;
+import consulo.module.ConfigurationErrorDescription;
+import consulo.module.ConfigurationErrorType;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.ui.ex.awt.DialogWrapper;

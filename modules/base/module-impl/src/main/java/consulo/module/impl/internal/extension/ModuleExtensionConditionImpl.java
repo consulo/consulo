@@ -15,14 +15,14 @@
  */
 package consulo.module.impl.internal.extension;
 
+import consulo.component.extension.ListOfElementsEP;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.project.Project;
-import consulo.module.content.ModuleRootManager;
-import com.intellij.util.ArrayUtil;
-import consulo.module.extension.ModuleExtension;
-import consulo.extensions.ListOfElementsEP;
+import consulo.util.collection.ArrayUtil;
 
 /**
  * @author VISTALL

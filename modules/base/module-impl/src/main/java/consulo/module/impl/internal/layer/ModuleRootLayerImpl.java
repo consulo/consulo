@@ -15,7 +15,6 @@
  */
 package consulo.module.impl.internal.layer;
 
-import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Processor;
@@ -42,8 +41,10 @@ import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.module.impl.internal.extension.ModuleExtensionIndexCache;
 import consulo.module.impl.internal.extension.ModuleExtensionProviders;
+import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
 import consulo.module.impl.internal.layer.orderEntry.*;
 import consulo.project.Project;
+import consulo.project.UnknownFeaturesCollector;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;
@@ -534,7 +535,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
         result.add(file);
       }
     }
-    return VfsUtilCore.toVirtualFileArray(result);
+    return VirtualFileUtil.toVirtualFileArray(result);
   }
 
   @Nonnull

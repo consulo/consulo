@@ -16,8 +16,8 @@
 package com.intellij.packaging.impl.elements;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
-import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
+import consulo.content.impl.internal.library.LibraryImpl;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
@@ -218,7 +218,7 @@ public class PackagingElementFactoryImpl extends PackagingElementFactory {
       return Collections.singletonList(createLibraryFiles(libraryName, table.getTableLevel(), null));
     }
     if (libraryName != null) {
-      final Module module = ((LibraryImpl)library).getModule();
+      final Module module = (Module)((LibraryImpl)library).getModule();
       if (module != null) {
         return Collections.singletonList(createLibraryFiles(libraryName, LibraryTableImplUtil.MODULE_LEVEL, module.getName()));
       }

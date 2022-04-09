@@ -17,6 +17,7 @@
 package com.intellij.openapi.projectRoots.impl;
 
 import consulo.application.ApplicationManager;
+import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;

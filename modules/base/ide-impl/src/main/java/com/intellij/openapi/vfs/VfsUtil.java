@@ -504,11 +504,7 @@ public class VfsUtil extends VfsUtilCore {
    */
   @Nullable
   public static String extractFileName(@Nullable final String urlOrPath) {
-    if (urlOrPath == null) {
-      return null;
-    }
-    final int index = urlOrPath.lastIndexOf(VfsUtilCore.VFS_SEPARATOR_CHAR);
-    return index < 0 ? null : urlOrPath.substring(index + 1);
+    return VirtualFileUtil.extractFileName(urlOrPath);
   }
 
   @Nonnull

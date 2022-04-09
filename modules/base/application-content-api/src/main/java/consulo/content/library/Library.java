@@ -15,23 +15,23 @@
  */
 package consulo.content.library;
 
-import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.disposer.Disposable;
+import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.virtualFileSystem.VirtualFile;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- *  @author dsl
+ * @author dsl
  */
 public interface Library extends JDOMExternalizable, Disposable {
   Library[] EMPTY_ARRAY = new Library[0];
 
-  @Nullable String getName();
+  @Nullable
+  String getName();
 
   @Nonnull
   String[] getUrls(@Nonnull OrderRootType rootType);
@@ -64,7 +64,7 @@ public interface Library extends JDOMExternalizable, Disposable {
 
     String getName();
 
-    void addRoot(@NonNls @Nonnull String url, @Nonnull OrderRootType rootType);
+    void addRoot(@Nonnull String url, @Nonnull OrderRootType rootType);
 
     void addJarDirectory(@Nonnull String url, boolean recursive);
 

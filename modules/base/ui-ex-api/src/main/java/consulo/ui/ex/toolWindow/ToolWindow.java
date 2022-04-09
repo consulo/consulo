@@ -161,7 +161,7 @@ public interface ToolWindow extends BusyObject {
   @Deprecated
   @DeprecationInfo("Use 'displayName' attribute")
   default void setStripeTitle(@Nonnull String title) {
-    throw new UnsupportedOperationException("Use #setDispayName");
+    throw new UnsupportedOperationException("Use #setDisplayName");
   }
 
   /**

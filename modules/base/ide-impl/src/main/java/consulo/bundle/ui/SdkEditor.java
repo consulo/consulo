@@ -16,7 +16,7 @@
 package consulo.bundle.ui;
 
 import consulo.content.bundle.SdkModel;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import consulo.content.impl.internal.bundle.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import consulo.content.OrderRootType;

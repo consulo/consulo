@@ -27,7 +27,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.BaseStructureConfigurable;

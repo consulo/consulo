@@ -16,7 +16,6 @@
 
 package consulo.module.impl.internal;
 
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
@@ -28,7 +27,6 @@ import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
@@ -36,13 +34,14 @@ import consulo.module.ModuleManager;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.internal.ProjectRootManagerEx;
+import consulo.module.content.internal.RootConfigurationAccessor;
 import consulo.module.content.layer.*;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.impl.internal.layer.BaseModuleRootLayerChild;
 import consulo.module.impl.internal.layer.ModifiableModelCommitter;
-import consulo.module.content.internal.RootConfigurationAccessor;
 import consulo.module.impl.internal.layer.RootModelImpl;
 import consulo.module.impl.internal.layer.orderEntry.ModuleOrderEnumerator;
 import consulo.module.impl.internal.layer.orderEntry.OrderRootsCache;
@@ -143,7 +142,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
     return model;
   }
 
-  void makeRootsChange(@Nonnull Runnable runnable) {
+  public void makeRootsChange(@Nonnull Runnable runnable) {
     ProjectRootManagerEx projectRootManagerEx = (ProjectRootManagerEx)ProjectRootManager.getInstance(myModule.getProject());
     // IMPORTANT: should be the first listener!
     projectRootManagerEx.makeRootsChange(runnable, false, isModuleAdded);

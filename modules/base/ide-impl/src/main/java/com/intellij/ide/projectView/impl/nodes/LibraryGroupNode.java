@@ -31,7 +31,7 @@ import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryType;
 import consulo.content.library.PersistentLibraryKind;

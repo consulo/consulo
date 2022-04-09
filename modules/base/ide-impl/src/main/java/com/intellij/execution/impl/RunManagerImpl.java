@@ -35,7 +35,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
+import consulo.project.UnknownFeaturesCollector;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizableStringList;
 import com.intellij.openapi.util.Pair;

@@ -17,7 +17,7 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.module.Module;
 import consulo.project.ProjectBundle;
-import consulo.module.impl.internal.layer.ModuleLibraryTable;
+import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
 import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ui.ex.awt.DialogWrapper;

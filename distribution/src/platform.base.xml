@@ -95,6 +95,8 @@
         <include>consulo:consulo-diff-api</include>
         <include>consulo:consulo-local-history-api</include>
         <include>consulo:consulo-project-ui-view-api</include>
+        <include>consulo:consulo-application-content-impl</include>
+        <include>consulo:consulo-module-impl</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

@@ -19,10 +19,11 @@ package com.intellij.openapi.roots.impl.libraries;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.content.impl.internal.library.LibraryTableBase;
 import consulo.ide.ServiceManager;
 import consulo.project.ProjectBundle;
 import consulo.content.library.LibraryTablePresentation;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import consulo.content.library.LibraryTablesRegistrar;
 
 import jakarta.inject.Singleton;
 

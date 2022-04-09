@@ -17,10 +17,10 @@ package com.intellij.util.ui.classpath;
 
 import consulo.application.Application;
 import consulo.project.Project;
-import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import consulo.content.library.LibraryTablesRegistrar;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

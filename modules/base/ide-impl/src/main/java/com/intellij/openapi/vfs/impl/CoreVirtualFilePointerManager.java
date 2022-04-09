@@ -18,6 +18,7 @@ package com.intellij.openapi.vfs.impl;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.impl.internal.VirtualFilePointerContainerImpl;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;

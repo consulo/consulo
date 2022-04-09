@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.localize.LocalizeValue;
-import consulo.extensions.LocalizeValueConverter;
+import consulo.application.extension.LocalizeValueConverter;
 import consulo.logging.Logger;
 import consulo.module.impl.internal.extension.ExtensionPointBeanWithModuleExtensionCondition;
 import consulo.project.ui.wm.ToolWindowFactory;
@@ -67,7 +67,7 @@ public class ToolWindowEP extends ExtensionPointBeanWithModuleExtensionCondition
   @Attribute("canCloseContents")
   public boolean canCloseContents;
 
-  @Attribute(value = "dispayName", converter = LocalizeValueConverter.class)
+  @Attribute(value = "displayName", converter = LocalizeValueConverter.class)
   public LocalizeValue displayName;
 
   private Class<? extends ToolWindowFactory> myFactoryClass;

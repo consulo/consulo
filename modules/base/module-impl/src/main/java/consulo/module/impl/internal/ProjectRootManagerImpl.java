@@ -74,7 +74,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
       myFileTypes = fileTypes;
     }
 
-    protected void levelUp() {
+    public void levelUp() {
       if (myBatchLevel == 0) {
         myChanged = false;
       }
@@ -82,7 +82,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @RequiredWriteAction
-    protected void levelDown() {
+    public void levelDown() {
       myBatchLevel -= 1;
       if (myChanged && myBatchLevel == 0) {
         try {
@@ -100,7 +100,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @RequiredWriteAction
-    protected void beforeRootsChanged() {
+    public void beforeRootsChanged() {
       if (myBatchLevel == 0 || !myChanged) {
         if (fireBeforeRootsChanged(myFileTypes)) {
           myChanged = true;
@@ -109,7 +109,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
 
     @RequiredWriteAction
-    protected void rootsChanged() {
+    public void rootsChanged() {
       if (myBatchLevel == 0) {
         if (fireChange()) {
           myChanged = false;
@@ -242,7 +242,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
   @Override
   public void clearScopesCachesForModules() {
     myRootsCache.clearCache();
-    if(!myProject.isModulesReady()) {
+    if (!myProject.isModulesReady()) {
       return;
     }
     Module[] modules = ModuleManager.getInstance(myProject).getModules();
@@ -376,7 +376,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     }
   }
 
-  void addListenerForTable(LibraryTable.Listener libraryListener, final LibraryTable libraryTable) {
+  public void addListenerForTable(LibraryTable.Listener libraryListener, final LibraryTable libraryTable) {
     LibraryTableMultilistener multilistener = myLibraryTableMultilisteners.get(libraryTable);
     if (multilistener == null) {
       multilistener = new LibraryTableMultilistener(libraryTable);
@@ -394,7 +394,7 @@ public class ProjectRootManagerImpl extends ProjectRootManagerEx {
     myModuleExtensionWithSdkOrderEntries.remove(orderEntry);
   }
 
-  void removeListenerForTable(LibraryTable.Listener libraryListener, final LibraryTable libraryTable) {
+  public void removeListenerForTable(LibraryTable.Listener libraryListener, final LibraryTable libraryTable) {
     LibraryTableMultilistener multilistener = myLibraryTableMultilisteners.get(libraryTable);
     if (multilistener == null) {
       multilistener = new LibraryTableMultilistener(libraryTable);

@@ -20,7 +20,7 @@ import consulo.compiler.CompilerBundle;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.library.Library;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import consulo.content.library.LibraryTablesRegistrar;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
 import consulo.compiler.artifact.element.CompositePackagingElement;

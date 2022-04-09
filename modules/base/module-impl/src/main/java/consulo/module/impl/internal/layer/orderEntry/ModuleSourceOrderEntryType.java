@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
 public class ModuleSourceOrderEntryType implements OrderEntryType<ModuleSourceOrderEntryImpl> {
   @Nonnull
   public static ModuleSourceOrderEntryType getInstance() {
-    return EP_NAME.findExtension(ModuleSourceOrderEntryType.class);
+    return EP_NAME.findExtensionOrFail(ModuleSourceOrderEntryType.class);
   }
 
   @Nonnull

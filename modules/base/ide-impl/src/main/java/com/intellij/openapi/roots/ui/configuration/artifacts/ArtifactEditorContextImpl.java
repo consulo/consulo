@@ -23,7 +23,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
-import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
+import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import com.intellij.openapi.roots.ui.configuration.ChooseModulesDialog;
@@ -124,7 +124,7 @@ public class ArtifactEditorContextImpl implements ArtifactEditorContext {
       });
     }
     else {
-      final Module module = ((LibraryImpl)library).getModule();
+      final Module module = (Module)((LibraryImpl)library).getModule();
       if (module != null) {
         final ModuleRootModel rootModel = myParent.getModulesProvider().getRootModel(module);
         final String libraryName = library.getName();

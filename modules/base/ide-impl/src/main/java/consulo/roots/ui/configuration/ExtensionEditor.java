@@ -221,7 +221,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     if (extension instanceof ModuleExtensionWithSdk) {
       // we using module layer, dont use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
       // ill call this method again
-      ModifiableModuleRootLayer moduleRootLayer = ((ModuleExtensionBase) extension).getModuleRootLayer();
+      ModifiableModuleRootLayer moduleRootLayer = (ModifiableModuleRootLayer)((ModuleExtensionBase) extension).getModuleRootLayer();
 
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
       if (!extension.isEnabled() && sdkOrderEntry != null) {

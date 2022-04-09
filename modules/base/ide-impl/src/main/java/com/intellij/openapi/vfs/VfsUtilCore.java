@@ -25,6 +25,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.content.ContentIterator;
 import consulo.logging.Logger;
+import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
@@ -70,30 +71,14 @@ public class VfsUtilCore {
    * @return {@code true} if {@code file} is located under one of {@code roots} or equal to one of them
    */
   public static boolean isUnder(@Nonnull VirtualFile file, @Nullable Set<VirtualFile> roots) {
-    if (roots == null || roots.isEmpty()) return false;
-
-    VirtualFile parent = file;
-    while (parent != null) {
-      if (roots.contains(parent)) {
-        return true;
-      }
-      parent = parent.getParent();
-    }
-    return false;
+    return VirtualFileUtil.isUnder(file, roots);
   }
 
   /**
    * @return {@code true} if {@code url} is located under one of {@code rootUrls} or equal to one of them
    */
   public static boolean isUnder(@Nonnull String url, @Nullable Collection<String> rootUrls) {
-    if (rootUrls == null || rootUrls.isEmpty()) return false;
-
-    for (String excludesUrl : rootUrls) {
-      if (isEqualOrAncestor(excludesUrl, url)) {
-        return true;
-      }
-    }
-    return false;
+    return VirtualFileUtil.isUnder(url, rootUrls);
   }
 
   public static boolean isEqualOrAncestor(@Nonnull String ancestorUrl, @Nonnull String fileUrl) {

@@ -4,7 +4,7 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.LibraryProperties;
 import consulo.content.library.LibraryType;
 import com.intellij.openapi.vfs.VfsUtilCore;

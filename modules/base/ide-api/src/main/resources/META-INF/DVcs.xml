@@ -77,7 +77,7 @@
                 icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowchanges"
                 anchor="bottom"
                 canCloseContents="true"
-                dispayName="Version Control"
+                displayName="Version Control"
                 factoryClass="consulo.vcs.changes.ui.VcsToolWindowFactory"/>
   </extensions>
 </consulo-plugin>

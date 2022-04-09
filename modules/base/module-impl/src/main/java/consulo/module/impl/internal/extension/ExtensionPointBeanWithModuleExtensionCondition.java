@@ -16,12 +16,12 @@
 package consulo.module.impl.internal.extension;
 
 import consulo.component.extension.AbstractExtensionPointBean;
-import com.intellij.openapi.util.NotNullLazyValue;
-import consulo.module.impl.internal.extension.ModuleExtensionConditionImpl;
-import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.module.extension.condition.ModuleExtensionCondition;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.util.xml.serializer.annotation.Attribute;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * @author VISTALL
@@ -31,17 +31,12 @@ public class ExtensionPointBeanWithModuleExtensionCondition extends AbstractExte
   @Attribute("requireModuleExtensions")
   public String requireModuleExtensions;
 
-  private NotNullLazyValue<ModuleExtensionCondition> myModuleExtensionCondition = new NotNullLazyValue<ModuleExtensionCondition>() {
-    @Nonnull
-    @Override
-    protected ModuleExtensionCondition compute() {
-      return ModuleExtensionConditionImpl.create(requireModuleExtensions);
-    }
-  };
-
+  private Supplier<ModuleExtensionCondition> myModuleExtensionCondition = LazyValue.notNull(() -> {
+    return ModuleExtensionConditionImpl.create(requireModuleExtensions);
+  });
 
   @Nonnull
   public ModuleExtensionCondition getModuleExtensionCondition() {
-    return myModuleExtensionCondition.getValue();
+    return myModuleExtensionCondition.get();
   }
 }

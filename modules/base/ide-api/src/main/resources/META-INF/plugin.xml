@@ -44,8 +44,8 @@
   <import path="/META-INF/Task.xml"/>
 
   <extensionPoints>
-    <extensionPoint name="listOfElements" beanClass="consulo.extensions.ListOfElementsEP"/>
-    <extensionPoint name="addTo.listOfElements" beanClass="consulo.extensions.AddToElementEP"/>
+    <extensionPoint name="listOfElements" beanClass="consulo.component.extension.ListOfElementsEP"/>
+    <extensionPoint name="addTo.listOfElements" beanClass="consulo.component.extension.AddToElementEP"/>
     <extensionPoint name="search.topHitProvider" interface="com.intellij.ide.SearchTopHitProvider"/>
     <extensionPoint name="search.optionContributor" interface="com.intellij.ide.ui.search.SearchableOptionContributor"/>
     <extensionPoint name="referenceInjector" interface="consulo.language.inject.ReferenceInjector"/>
@@ -617,18 +617,18 @@
 
     <extensionPoint name="roots.watchedRootsProvider" interface="consulo.project.content.WatchedRootsProvider" area="PROJECT"/>
 
-    <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.extension.impl.ModuleExtensionProviderEP">
+    <extensionPoint name="moduleExtensionProvider" beanClass="consulo.module.impl.internal.layer.ModuleExtensionProviderEP">
       <with attribute="immutableClass" implements="consulo.module.extension.ModuleExtension"/>
       <with attribute="mutableClass" implements="consulo.module.extension.MutableModuleExtension"/>
     </extensionPoint>
 
-    <extensionPoint name="moduleRootsProcessor" interface="consulo.roots.impl.ModuleRootsProcessor"/>
+    <extensionPoint name="moduleRootsProcessor" interface="consulo.module.impl.internal.layer.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
     <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType"/>
     <extensionPoint name="orderEntryTypeEditor" beanClass="consulo.component.extension.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="consulo.roots.orderEntry.OrderEntryTypeEditor"/>
     </extensionPoint>
-    <extensionPoint name="orderEnumerationHandlerFactory" interface="com.intellij.openapi.roots.OrderEnumerationHandler$Factory"/>
+    <extensionPoint name="orderEnumerationHandlerFactory" interface="consulo.module.impl.internal.layer.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.content.layer.DirectoryIndexExcludePolicy"
                     area="PROJECT"/>
 
@@ -1154,7 +1154,7 @@
 
     <extensionPoint name="unusedDeclarationFixProvider"
                     interface="com.intellij.codeInspection.reference.UnusedDeclarationFixProvider"/>
-    <extensionPoint name="library.dependencyScopeSuggester" interface="com.intellij.openapi.roots.LibraryDependencyScopeSuggester"/>
+    <extensionPoint name="library.dependencyScopeSuggester" interface="consulo.module.content.layer.orderEntry.LibraryDependencyScopeSuggester"/>
 
     <extensionPoint name="eventLogCategory" interface="com.intellij.notification.EventLogCategory"/>
 
@@ -1248,7 +1248,7 @@
                         serviceImplementation="com.intellij.openapi.project.impl.DefaultProjectFactoryImpl" lazy="false"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.editor.richcopy.settings.RichCopySettings"/>
-    <applicationService serviceImplementation="com.intellij.openapi.actionSystem.impl.MouseGestureManager"/>
+    <applicationService serviceImplementation="consulo.ui.ex.awt.internal.MouseGestureManager"/>
 
     <applicationService serviceInterface="consulo.execution.RunnerRegistry" serviceImplementation="com.intellij.execution.impl.RunnerRegistryImpl"/>
 
@@ -1773,10 +1773,10 @@
 
     <schemeOwner serviceInterface="consulo.language.codeStyle.CodeStyleSchemes"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.roots.libraries.LibraryTablesRegistrar"
+    <applicationService serviceInterface="consulo.content.library.LibraryTablesRegistrar"
                         serviceImplementation="com.intellij.openapi.roots.impl.libraries.LibraryTablesRegistrarImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.roots.libraries.LibraryDetectionManager"
+    <applicationService serviceInterface="consulo.content.library.LibraryDetectionManager"
                         serviceImplementation="com.intellij.openapi.roots.impl.libraries.LibraryDetectionManagerImpl"/>
 
     <applicationService serviceInterface="com.intellij.openapi.roots.libraries.LibraryTypeService"
@@ -1870,7 +1870,7 @@
     <projectService serviceInterface="consulo.project.content.scope.ProjectScopeProvider"
                     serviceImplementation="consulo.ide.impl.psi.search.ProjectScopeProviderImpl"/>
 
-    <projectService serviceInterface="com.intellij.openapi.module.ProjectLoadingErrorsNotifier"
+    <projectService serviceInterface="consulo.module.ProjectLoadingErrorsNotifier"
                     serviceImplementation="com.intellij.openapi.module.impl.ProjectLoadingErrorsNotifierImpl"/>
 
     <projectService serviceInterface="consulo.codeStyle.ProjectCodeStyleFacade"
@@ -1947,7 +1947,7 @@
     <moduleService serviceInterface="consulo.module.content.ModuleFileIndex"
                    serviceImplementation="com.intellij.openapi.roots.impl.ModuleFileIndexImpl"/>
     <moduleService serviceInterface="consulo.module.content.ModuleRootManager"
-                   serviceImplementation="com.intellij.openapi.roots.impl.ModuleRootManagerImpl"/>
+                   serviceImplementation="consulo.module.impl.internal.ModuleRootManagerImpl"/>
     <moduleService serviceInterface="consulo.module.content.scope.ModuleScopeProvider"
                    serviceImplementation="com.intellij.openapi.module.impl.scopes.ModuleScopeProviderImpl"/>
     <projectService serviceInterface="consulo.project.content.ProjectRootModificationTracker"
@@ -1960,9 +1960,9 @@
                     serviceImplementation="com.intellij.openapi.roots.impl.LibraryScopeCache"/>
 
     <applicationService serviceImplementation="com.intellij.openapi.util.DimensionService"/>
-    <applicationService serviceInterface="consulo.util.ApplicationWindowStateService"
+    <applicationService serviceInterface="consulo.application.ui.ApplicationWindowStateService"
                         serviceImplementation="com.intellij.openapi.util.WindowStateApplicationService"/>
-    <projectService serviceInterface="consulo.util.ProjectWindowStateService"
+    <projectService serviceInterface="consulo.project.ui.ProjectWindowStateService"
                     serviceImplementation="com.intellij.openapi.util.WindowStateProjectService"/>
 
     <colorSettingsPage implementation="com.intellij.openapi.options.colors.pages.GeneralColorsPage" id="general"/>
@@ -2295,7 +2295,7 @@
     <toolWindow id="Project"
                 anchor="left"
                 icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowproject"
-                dispayName="consulo.platform.base.IdeLocalize@title.project"
+                displayName="consulo.platform.base.IdeLocalize@title.project"
                 factoryClass="com.intellij.ide.projectView.impl.ProjectViewToolWindowFactory"/>
     <toolWindow id="TODO" anchor="bottom" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowtodo"
                 factoryClass="com.intellij.ide.todo.TodoToolWindowFactory" canCloseContents="true"/>
@@ -2423,7 +2423,7 @@
     <applicationService serviceInterface="com.intellij.packageDependencies.DependenciesVisitorFactory"
                         serviceImplementation="com.intellij.packageDependencies.DependenciesVisitorFactory"/>
     <applicationService serviceInterface="consulo.content.bundle.SdkTable"
-                        serviceImplementation="com.intellij.openapi.projectRoots.impl.SdkTableImpl"/>
+                        serviceImplementation="consulo.content.impl.internal.bundle.SdkTableImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.DefaultVcsRootPolicy"
                     serviceImplementation="com.intellij.openapi.vcs.impl.ModuleDefaultVcsRootPolicy"/>
@@ -2490,7 +2490,7 @@
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager"
                     serviceImplementation="com.intellij.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile"/>
 
-    <projectService serviceImplementation="com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector"/>
+    <projectService serviceImplementation="consulo.project.UnknownFeaturesCollector"/>
     <backgroundPostStartupActivity implementation="com.intellij.ide.plugins.pluginsAdvertisement.PluginsAdvertiser"/>
     <backgroundPostStartupActivity implementation="consulo.project.impl.ReopenProjectToolWindowActivity"/>
 
@@ -2502,7 +2502,7 @@
     <pathMacroExpendableProtocol protocol="zip"/>
 
     <projectService serviceInterface="consulo.module.extension.ModuleExtensionHelper"
-                    serviceImplementation="consulo.module.extension.impl.ModuleExtensionHelperImpl"/>
+                    serviceImplementation="consulo.module.impl.internal.extension.ModuleExtensionHelperImpl"/>
 
     <contentFolderTypeProvider implementation="consulo.language.content.ProductionContentFolderTypeProvider"/>
     <contentFolderTypeProvider implementation="consulo.language.content.ProductionResourceContentFolderTypeProvider"/>
@@ -2543,7 +2543,7 @@
 
     <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
 
-    <moduleRootsProcessor implementation="consulo.roots.impl.NullModuleDirModuleRootsProcessor" order="last"/>
+    <moduleRootsProcessor implementation="consulo.module.impl.internal.layer.NullModuleDirModuleRootsProcessor" order="last"/>
 
     <targetElementUtilEx implementation="consulo.codeInsight.DefaultTargetElementUtilExtender" order="last"/>
 
@@ -2556,11 +2556,11 @@
     <getDataRule implementation="com.intellij.openapi.vcs.history.VcsRevisionNumberArrayRule"/>
     <getDataRule implementation="com.intellij.openapi.vcs.changes.VcsChangesSelectionRule"/>
 
-    <orderEntryType implementation="consulo.roots.orderEntry.LibraryOrderEntryType"/>
-    <orderEntryType implementation="consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryType"/>
-    <orderEntryType implementation="consulo.roots.orderEntry.ModuleLibraryOrderEntryType"/>
-    <orderEntryType implementation="consulo.roots.orderEntry.ModuleOrderEntryType"/>
-    <orderEntryType implementation="consulo.roots.orderEntry.ModuleSourceOrderEntryType"/>
+    <orderEntryType implementation="consulo.module.impl.internal.layer.orderEntry.LibraryOrderEntryType"/>
+    <orderEntryType implementation="consulo.module.impl.internal.layer.orderEntry.ModuleExtensionWithSdkOrderEntryType"/>
+    <orderEntryType implementation="consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryType"/>
+    <orderEntryType implementation="consulo.module.impl.internal.layer.orderEntry.ModuleOrderEntryType"/>
+    <orderEntryType implementation="consulo.module.impl.internal.layer.orderEntry.ModuleSourceOrderEntryType"/>
 
     <orderEntryTypeEditor key="library" implementationClass="consulo.roots.orderEntry.LibraryOrderEntryTypeEditor"/>
     <orderEntryTypeEditor key="module-extension-sdk" implementationClass="consulo.roots.orderEntry.ModuleExtensionWithSdkOrderEntryTypeEditor"/>
@@ -2665,7 +2665,7 @@
     <editorFactoryDocumentListener implementation="com.intellij.openapi.command.impl.DocumentUndoProvider"/>
 
     <vfs.asyncListener implementation="consulo.compiler.impl.TranslationCompilerFilesMonitorVfsListener"/>
-    <vfs.asyncListener implementation="consulo.roots.impl.ContentEntryFileListener"/>
+    <vfs.asyncListener implementation="consulo.module.impl.internal.ContentEntryFileListener"/>
 
     <applicationService serviceInterface="consulo.compiler.impl.TranslatingCompilerFilesMonitor" serviceImplementation="com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl"/>
     <projectService serviceImplementation="consulo.compiler.impl.TranslationCompilerProjectMonitor"/>
@@ -2810,6 +2810,8 @@
 
     <projectService serviceInterface="consulo.fileEditor.EditorHistoryManager" serviceImplementation="com.intellij.openapi.fileEditor.impl.EditorHistoryManagerImpl"/>
     <projectService serviceInterface="consulo.execution.RunConfigurationEditor" serviceImplementation="consulo.ide.impl.execution.RunConfigurationEditorImpl"/>
+
+    <applicationService serviceInterface="consulo.content.impl.internal.GlobalLibraryRootListenerProvider" serviceImplementation="consulo.module.impl.internal.GlobalLibraryRootListenerProviderImpl"/>
   </extensions>
 
   <applicationListeners>
@@ -2819,6 +2821,6 @@
 
   <projectListeners>
     <listener class="com.intellij.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="consulo.language.psi.PsiModificationTracker$Listener"/>
-    <listener class="consulo.roots.ExtensionListenerByLayerListenerInvoker" topic="consulo.module.content.layer.event.ModuleRootLayerListener"/>
+    <listener class="consulo.module.impl.internal.ExtensionListenerByLayerListenerInvoker" topic="consulo.module.content.layer.event.ModuleRootLayerListener"/>
   </projectListeners>
 </consulo-plugin>

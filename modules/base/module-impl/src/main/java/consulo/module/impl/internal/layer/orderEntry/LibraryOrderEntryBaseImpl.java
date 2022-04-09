@@ -18,6 +18,7 @@ package consulo.module.impl.internal.layer.orderEntry;
 
 import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
+import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
 import consulo.logging.Logger;
 import consulo.module.Module;

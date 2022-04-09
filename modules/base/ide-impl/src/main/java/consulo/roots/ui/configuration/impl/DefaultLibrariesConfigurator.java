@@ -17,10 +17,10 @@ package consulo.roots.ui.configuration.impl;
 
 import consulo.project.Project;
 import consulo.content.OrderRootType;
-import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
+import consulo.content.library.LibraryTablesRegistrar;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.setting.module.event.LibraryEditorListener;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;

@@ -16,9 +16,6 @@
 
 package consulo.module.impl.internal;
 
-import com.intellij.openapi.components.impl.ModulePathMacroManager;
-import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.AccessRule;
@@ -40,6 +37,7 @@ import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.*;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.event.ModuleListener;
 import consulo.module.impl.internal.layer.ModifiableModelCommitter;
@@ -597,8 +595,8 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
     return module;
   }
 
-  class ModuleModelImpl implements ModifiableModuleModel {
-    protected Set<Module> myModules = new LinkedHashSet<>();
+  public class ModuleModelImpl implements ModifiableModuleModel {
+    public Set<Module> myModules = new LinkedHashSet<>();
     private Module[] myModulesCache;
 
     private final List<Module> myModulesToDispose = new ArrayList<>();

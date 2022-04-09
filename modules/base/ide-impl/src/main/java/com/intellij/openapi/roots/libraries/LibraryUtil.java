@@ -19,13 +19,14 @@
  */
 package com.intellij.openapi.roots.libraries;
 
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import consulo.content.impl.internal.library.LibraryEx;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.PathUtil;
 import com.intellij.util.text.StringTokenizer;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
+import consulo.content.library.LibraryTablesRegistrar;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.layer.OrderEnumerator;

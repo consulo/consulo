@@ -36,6 +36,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Collection;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -44,6 +45,59 @@ import java.util.function.Predicate;
 public final class VirtualFileUtil {
   private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
   public static final char VFS_SEPARATOR_CHAR = '/';
+
+  /**
+   * @return {@code true} if {@code file} is located under one of {@code roots} or equal to one of them
+   */
+  public static boolean isUnder(@Nonnull VirtualFile file, @Nullable Set<VirtualFile> roots) {
+    if (roots == null || roots.isEmpty()) return false;
+
+    VirtualFile parent = file;
+    while (parent != null) {
+      if (roots.contains(parent)) {
+        return true;
+      }
+      parent = parent.getParent();
+    }
+    return false;
+  }
+
+  /**
+   * @return {@code true} if {@code url} is located under one of {@code rootUrls} or equal to one of them
+   */
+  public static boolean isUnder(@Nonnull String url, @Nullable Collection<String> rootUrls) {
+    if (rootUrls == null || rootUrls.isEmpty()) return false;
+
+    for (String excludesUrl : rootUrls) {
+      if (isEqualOrAncestor(excludesUrl, url)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static boolean isEqualOrAncestor(@Nonnull String ancestorUrl, @Nonnull String fileUrl) {
+    if (ancestorUrl.equals(fileUrl)) return true;
+    if (StringUtil.endsWithChar(ancestorUrl, '/')) {
+      return fileUrl.startsWith(ancestorUrl);
+    }
+    else {
+      return StringUtil.startsWithConcatenation(fileUrl, ancestorUrl, "/");
+    }
+  }
+
+  /**
+   * @param urlOrPath Url for virtual file
+   * @return file name
+   */
+  @Nullable
+  public static String extractFileName(@Nullable final String urlOrPath) {
+    if (urlOrPath == null) {
+      return null;
+    }
+    final int index = urlOrPath.lastIndexOf(VirtualFileUtil.VFS_SEPARATOR_CHAR);
+    return index < 0 ? null : urlOrPath.substring(index + 1);
+  }
 
   @Nonnull
   public static String urlToPath(@Nullable String url) {

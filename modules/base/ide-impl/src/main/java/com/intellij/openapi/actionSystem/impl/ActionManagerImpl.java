@@ -50,7 +50,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.container.util.StatCollector;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.extensions.ListOfElementsEP;
+import consulo.component.extension.ListOfElementsEP;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.actionSystem.impl.LastActionTracker;

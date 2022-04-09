@@ -16,11 +16,10 @@
 package consulo.module.impl.internal.extension;
 
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.AtomicNotNullLazyValue;
-import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
+import consulo.util.lang.lazy.LazyValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,7 +35,7 @@ import java.util.function.Supplier;
 public class ModuleExtensionProviders {
   private static final ExtensionPointName<ModuleExtensionProviderEP> EP_NAME = ExtensionPointName.create("consulo.moduleExtensionProvider");
 
-  private static final Supplier<List<ModuleExtensionProviderEP>> ourExtensions = AtomicNotNullLazyValue.createValue(() -> {
+  private static final Supplier<List<ModuleExtensionProviderEP>> ourExtensions = LazyValue.atomicNotNull(() -> {
     List<ModuleExtensionProviderEP> extensions = EP_NAME.getExtensionList();
     Map<Class<?>, int[]> map = new HashMap<>();
     for (ModuleExtensionProviderEP extension : extensions) {
@@ -54,7 +53,7 @@ public class ModuleExtensionProviders {
     return extensions;
   });
 
-  private static Supplier<Map<String, ModuleExtensionProviderEP>> ourAllExtensionsValue = NotNullLazyValue.createValue(() -> {
+  private static Supplier<Map<String, ModuleExtensionProviderEP>> ourAllExtensionsValue = LazyValue.notNull(() -> {
     Map<String, ModuleExtensionProviderEP> map = new HashMap<>();
     for (ModuleExtensionProviderEP ep : getProviders()) {
       map.put(ep.key, ep);

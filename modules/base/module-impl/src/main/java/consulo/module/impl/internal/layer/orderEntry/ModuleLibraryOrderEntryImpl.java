@@ -16,11 +16,10 @@
 
 package consulo.module.impl.internal.layer.orderEntry;
 
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
-import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
-import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import consulo.content.RootProvider;
 import consulo.content.base.BinariesOrderRootType;
+import consulo.content.impl.internal.library.LibraryEx;
+import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.disposer.Disposer;
@@ -31,6 +30,8 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.module.impl.internal.layer.library.ModuleRootLayerLibraryOwner;
 import consulo.project.ProjectBundle;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 
@@ -58,7 +59,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
     }
   }
 
-  ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
+  public ModuleLibraryOrderEntryImpl(String name, final PersistentLibraryKind kind, ModuleRootLayerImpl moduleRootLayer) {
     super(ModuleLibraryOrderEntryType.getInstance(), moduleRootLayer, ProjectRootManagerImpl.getInstanceImpl(moduleRootLayer.getProject()));
     myLibrary = LibraryTableImplUtil.createModuleLevelLibrary(name, kind, moduleRootLayer);
     Disposer.register(this, myLibrary);
@@ -130,7 +131,7 @@ public class ModuleLibraryOrderEntryImpl extends LibraryOrderEntryBaseImpl imple
 
   @Override
   public OrderEntry cloneEntry(ModuleRootLayerImpl rootModel) {
-    return new ModuleLibraryOrderEntryImpl(((LibraryImpl)myLibrary).cloneLibrary(rootModel), rootModel, myExported, myScope, true);
+    return new ModuleLibraryOrderEntryImpl(((LibraryImpl)myLibrary).cloneLibrary(new ModuleRootLayerLibraryOwner(rootModel)), rootModel, myExported, myScope, true);
   }
 
   @Override

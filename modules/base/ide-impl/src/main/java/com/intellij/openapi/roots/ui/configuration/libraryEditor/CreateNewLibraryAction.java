@@ -22,7 +22,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.WriteAction;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryType;
 import com.intellij.openapi.roots.libraries.LibraryTypeService;

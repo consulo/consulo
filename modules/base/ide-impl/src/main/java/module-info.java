@@ -72,6 +72,8 @@ open module consulo.ide.impl {
   requires transitive consulo.usage.api;
   requires transitive consulo.virtual.file.status.api;
   requires transitive consulo.virtual.file.status.impl;
+  requires transitive consulo.application.content.impl;
+  requires transitive consulo.module.impl;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -617,7 +619,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.projectRoots.impl;
   exports com.intellij.openapi.projectRoots.ui;
   exports com.intellij.openapi.roots;
-  exports com.intellij.openapi.roots.ex;
   exports com.intellij.openapi.roots.impl;
   exports com.intellij.openapi.roots.impl.libraries;
   exports com.intellij.openapi.roots.libraries;
@@ -651,7 +652,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.ui.popup.util;
   //exports com.intellij.openapi.updateSettings;
   exports com.intellij.openapi.updateSettings.impl;
-  exports com.intellij.openapi.updateSettings.impl.pluginsAdvertisement;
   exports com.intellij.openapi.util;
   exports com.intellij.openapi.util.io;
   exports com.intellij.openapi.util.process;
@@ -1015,8 +1015,6 @@ open module consulo.ide.impl {
   exports consulo.execution.testframework.thrift.runner;
   exports consulo.execution.ui.editor;
   exports consulo.execution.ui.impl;
-  exports consulo.extensions;
-  //exports consulo.external;
   exports consulo.external.api;
   exports consulo.externalService;
   exports consulo.externalService.impl;

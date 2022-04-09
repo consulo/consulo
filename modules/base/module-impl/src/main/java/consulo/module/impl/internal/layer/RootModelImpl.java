@@ -52,7 +52,7 @@ import java.util.*;
  * @author dsl
  */
 public class RootModelImpl extends RootModelBase implements ModifiableRootModel {
-  public static final Logger LOGGER = Logger.getInstance(RootModelImpl.class);
+  private static final Logger LOG = Logger.getInstance(RootModelImpl.class);
 
   public final ModuleRootManagerImpl myModuleRootManager;
   private boolean myWritable;
@@ -74,7 +74,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   @RequiredReadAction
-  RootModelImpl(@Nonnull Element element, @Nullable ProgressIndicator progressIndicator, @Nonnull ModuleRootManagerImpl moduleRootManager, boolean writable) {
+  public RootModelImpl(@Nonnull Element element, @Nullable ProgressIndicator progressIndicator, @Nonnull ModuleRootManagerImpl moduleRootManager, boolean writable) {
     myModuleRootManager = moduleRootManager;
 
     myConfigurationAccessor = new RootConfigurationAccessor();
@@ -367,7 +367,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   }
 
   public void assertWritable() {
-    LOGGER.assertTrue(myWritable);
+    LOG.assertTrue(myWritable);
   }
 
   public boolean isDependsOn(final Module module) {
@@ -445,7 +445,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
       return myCachedCurrentLayer;
     }
     ModuleRootLayerImpl moduleRootLayer = myLayers.get(myCurrentLayerName);
-    LOGGER.assertTrue(moduleRootLayer != null);
+    LOG.assertTrue(moduleRootLayer != null);
     return myCachedCurrentLayer = moduleRootLayer;
   }
 
@@ -528,7 +528,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   @Nonnull
   @Override
   public String getCurrentLayerName() {
-    LOGGER.assertTrue(myCurrentLayerName != null);
+    LOG.assertTrue(myCurrentLayerName != null);
     return myCurrentLayerName;
   }
 

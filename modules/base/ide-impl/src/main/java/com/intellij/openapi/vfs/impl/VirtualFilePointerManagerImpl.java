@@ -2,44 +2,44 @@
 package com.intellij.openapi.vfs.impl;
 
 import com.intellij.concurrency.ConcurrentCollectionFactory;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
-import consulo.virtualFileSystem.*;
-import consulo.virtualFileSystem.event.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
-import consulo.application.progress.ProgressManager;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import consulo.component.util.SimpleModificationTracker;
-import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.*;
-import consulo.virtualFileSystem.event.AsyncFileListener.ChangeApplier;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
 import com.intellij.openapi.vfs.newvfs.impl.FileNameCache;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
+import com.intellij.util.ConcurrencyUtil;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.ContainerUtil;
+import com.intellij.util.io.URLUtil;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.SystemInfo;
+import consulo.component.util.SimpleModificationTracker;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.language.file.FileTypeManager;
+import consulo.logging.Logger;
+import consulo.util.collection.Maps;
+import consulo.util.collection.MultiMap;
+import consulo.util.collection.Sets;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.*;
+import consulo.virtualFileSystem.archive.ArchiveFileType;
+import consulo.virtualFileSystem.event.*;
+import consulo.virtualFileSystem.event.AsyncFileListener.ChangeApplier;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.impl.internal.VirtualFilePointerContainerImpl;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerContainer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.ObjectUtils;
-import consulo.util.collection.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
-import com.intellij.util.io.URLUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.logging.Logger;
-import consulo.util.collection.Maps;
-import consulo.util.collection.Sets;
 import gnu.trove.TObjectHashingStrategy;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.inject.Singleton;
@@ -170,19 +170,15 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
   }
 
   /**
-   *
-   * @param file null means the pointer will be created from the (not null) url
-   * @param url null means url has to be computed from the (not-null) file path
+   * @param file             null means the pointer will be created from the (not null) url
+   * @param url              null means url has to be computed from the (not-null) file path
    * @param parentDisposable
    * @param listener
    * @param recursive
    * @return
    */
   @Nonnull
-  private VirtualFilePointer create(@Nullable VirtualFile file,
-                                    @Nullable String url,
-                                    @Nonnull Disposable parentDisposable,
-                                    @Nullable VirtualFilePointerListener listener, boolean recursive) {
+  private VirtualFilePointer create(@Nullable VirtualFile file, @Nullable String url, @Nonnull Disposable parentDisposable, @Nullable VirtualFilePointerListener listener, boolean recursive) {
     VirtualFileSystem fileSystem;
     String protocol;
     String path;
@@ -643,7 +639,8 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
             FilePointerPartNode root = node.remove();
 
             String path = trimTrailingSeparators(VfsUtilCore.urlToPath(urlAfter));
-            FilePointerPartNode newNode = fileAfter == null ? FilePointerPartNode.findOrCreateNodeByPath(root, path, (NewVirtualFileSystem)fs) : root.findOrCreateNodeByFile(fileAfter, (NewVirtualFileSystem)fs);
+            FilePointerPartNode newNode =
+                    fileAfter == null ? FilePointerPartNode.findOrCreateNodeByPath(root, path, (NewVirtualFileSystem)fs) : root.findOrCreateNodeByFile(fileAfter, (NewVirtualFileSystem)fs);
             newNode.addAllPointersTo(myPointers);
             int pointersDelta = myPointers.size() - newNode.pointersUnder;
             Object newMyPointers = myPointers.size() == 1 ? myPointers.get(0) : myPointers.toArray(new VirtualFilePointerImpl[0]);
@@ -675,9 +672,22 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
       synchronized (this) {
         totalPointers = myRoots.values().stream().flatMapToInt(myPointers -> myPointers.values().stream().mapToInt(root -> root.pointersUnder)).sum();
       }
-      LOG.warn("VirtualFilePointerManagerImpl.prepareChange(" + eventsSize + " events): " + prepareElapsedMs + "ms." +
-               " after(toFireEvents: " + toFireEvents.size() + ", toUpdateUrl: " + toUpdateUrls + ", eventList: " + eventList + "): " + afterElapsedMs + "ms." +
-               " total pointers: " + totalPointers);
+      LOG.warn("VirtualFilePointerManagerImpl.prepareChange(" +
+               eventsSize +
+               " events): " +
+               prepareElapsedMs +
+               "ms." +
+               " after(toFireEvents: " +
+               toFireEvents.size() +
+               ", toUpdateUrl: " +
+               toUpdateUrls +
+               ", eventList: " +
+               eventList +
+               "): " +
+               afterElapsedMs +
+               "ms." +
+               " total pointers: " +
+               totalPointers);
     }
   }
 

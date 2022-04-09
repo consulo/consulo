@@ -19,8 +19,8 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.module.Module;
 import consulo.project.ProjectBundle;
-import consulo.module.impl.internal.layer.ModuleLibraryTable;
-import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
+import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
+import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
@@ -96,7 +96,7 @@ public class LibraryElementPresentation extends PackagingElementPresentation {
       displayName = libraryTable.getPresentation().getDisplayName(false);
     }
     else {
-      Module module = ((LibraryImpl)library).getModule();
+      Module module = (Module)((LibraryImpl)library).getModule();
       String tableName = getLibraryTableDisplayName(library);
       displayName = module != null ? "'" + module.getName() + "' " + tableName : tableName;
     }

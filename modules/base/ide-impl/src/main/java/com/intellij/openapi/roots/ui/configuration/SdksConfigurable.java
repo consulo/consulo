@@ -31,7 +31,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import consulo.content.impl.internal.bundle.SdkImpl;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkConfigurable;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable;
 import consulo.ide.setting.ui.MasterDetailsComponent;

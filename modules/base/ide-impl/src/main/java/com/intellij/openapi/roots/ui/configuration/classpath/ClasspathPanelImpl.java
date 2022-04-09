@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.classpath;
 import consulo.find.FindBundle;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.module.impl.scopes.LibraryScope;
-import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState;

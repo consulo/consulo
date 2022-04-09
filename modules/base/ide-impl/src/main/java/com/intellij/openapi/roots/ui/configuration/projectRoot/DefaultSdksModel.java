@@ -28,7 +28,7 @@ import consulo.application.progress.Task;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.ProjectBundle;
 import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;

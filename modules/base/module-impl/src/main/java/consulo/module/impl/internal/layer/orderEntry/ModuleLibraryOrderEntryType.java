@@ -15,17 +15,18 @@
  */
 package consulo.module.impl.internal.layer.orderEntry;
 
-import consulo.module.content.layer.orderEntry.DependencyScope;
-import com.intellij.openapi.roots.impl.libraries.LibraryTableImplUtil;
 import consulo.content.library.Library;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.logging.Logger;
 import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -37,10 +38,9 @@ public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibrary
 
   @Nonnull
   public static ModuleLibraryOrderEntryType getInstance() {
-    return EP_NAME.findExtension(ModuleLibraryOrderEntryType.class);
+    return EP_NAME.findExtensionOrFail(ModuleLibraryOrderEntryType.class);
   }
 
-  @NonNls
   public static final String EXPORTED_ATTR = "exported";
 
   @Nonnull

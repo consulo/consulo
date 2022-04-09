@@ -21,7 +21,7 @@ import consulo.project.ProjectBundle;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkType;
-import com.intellij.openapi.projectRoots.impl.SdkImpl;
+import consulo.content.impl.internal.bundle.SdkImpl;
 import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;

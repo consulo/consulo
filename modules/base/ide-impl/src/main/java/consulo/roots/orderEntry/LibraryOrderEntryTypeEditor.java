@@ -17,8 +17,8 @@ package consulo.roots.orderEntry;
 
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
-import com.intellij.openapi.roots.impl.LibraryOrderEntryImpl;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import consulo.module.impl.internal.layer.orderEntry.LibraryOrderEntryImpl;
+import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.FileAppearanceService;

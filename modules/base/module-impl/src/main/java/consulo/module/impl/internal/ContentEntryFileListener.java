@@ -15,27 +15,28 @@
  */
 package consulo.module.impl.internal;
 
+import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
-import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
-import com.intellij.openapi.project.ProjectUtil;
-import consulo.module.content.layer.ContentEntry;
-import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
-import consulo.virtualFileSystem.event.AsyncFileListener;
+import consulo.module.content.layer.ContentEntry;
+import consulo.module.content.layer.ModifiableModuleRootLayer;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.ModuleRootLayer;
+import consulo.project.Project;
+import consulo.project.ProjectLocator;
+import consulo.util.collection.SmartHashSet;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.util.collection.SmartHashSet;
-import consulo.module.content.layer.ModifiableModuleRootLayer;
-import consulo.module.content.layer.ModuleRootLayer;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,15 @@ import java.util.Set;
  */
 @Singleton
 public class ContentEntryFileListener implements AsyncFileListener {
+  private final Application myApplication;
+  private final ProjectLocator myProjectLocator;
+
+  @Inject
+  public ContentEntryFileListener(Application application, ProjectLocator projectLocator) {
+    myApplication = application;
+    myProjectLocator = projectLocator;
+  }
+
   @Nullable
   @Override
   public ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
@@ -55,7 +65,7 @@ public class ContentEntryFileListener implements AsyncFileListener {
     for (VFileEvent event : events) {
       if (event instanceof VFileDeleteEvent) {
         VirtualFile fileToDelete = event.getFile();
-        Project project = fileToDelete == null ? null : ProjectUtil.guessProjectForFile(fileToDelete);
+        Project project = fileToDelete == null ? null : myProjectLocator.guessProjectForFile(fileToDelete);
         if (project == null) {
           continue;
         }
@@ -118,7 +128,7 @@ public class ContentEntryFileListener implements AsyncFileListener {
               }
             }
 
-            SwingUtilities.invokeLater(() -> WriteAction.run(modifiableModel::commit));
+            myApplication.invokeLater(() -> WriteAction.run(modifiableModel::commit), myApplication.getAnyModalityState());
           }
         }
       }

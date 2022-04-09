@@ -16,25 +16,25 @@
 
 package com.intellij.openapi.module.impl;
 
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.CommonBundle;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
-import com.intellij.openapi.module.ConfigurationErrorDescription;
-import com.intellij.openapi.module.ConfigurationErrorType;
-import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
+import consulo.module.ConfigurationErrorDescription;
+import consulo.module.ConfigurationErrorType;
+import consulo.module.ProjectLoadingErrorsNotifier;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.startup.StartupManager;
-import consulo.util.lang.function.Condition;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.collection.MultiMap;
-
-import javax.annotation.Nonnull;
+import consulo.util.lang.function.Condition;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 import javax.swing.event.HyperlinkEvent;
 import java.util.Collection;
 import java.util.Collections;

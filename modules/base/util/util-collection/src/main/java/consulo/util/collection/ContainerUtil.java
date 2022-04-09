@@ -16,6 +16,7 @@
 package consulo.util.collection;
 
 import consulo.util.collection.impl.map.*;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;
@@ -34,6 +35,23 @@ import java.util.function.Predicate;
  */
 public class ContainerUtil {
   private static final int INSERTION_SORT_THRESHOLD = 10;
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull T[] collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
+    return map2Map(Arrays.asList(collection), mapper);
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static <T, KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
+    final Map<KEY, VALUE> set = new HashMap<KEY, VALUE>(collection.size());
+    for (T t : collection) {
+      Pair<KEY, VALUE> pair = mapper.apply(t);
+      set.put(pair.first, pair.second);
+    }
+    return set;
+  }
 
   @Contract(pure = true)
   public static <T> boolean intersects(@Nonnull Collection<? extends T> collection1, @Nonnull Collection<? extends T> collection2) {
@@ -769,6 +787,13 @@ public class ContainerUtil {
   @Contract(pure = true)
   public static <K> Set<K> newIdentityTroveSet(int initialCapacity) {
     return Sets.newHashSet(initialCapacity, HashingStrategy.<K>identity());
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  @Deprecated
+  public static <K> Set<K> newIdentityTroveSet(@Nonnull Collection<K> collection) {
+    return Sets.newHashSet(collection, HashingStrategy.<K>identity());
   }
 
   public static <T> void weightSort(List<T> list, final Function<T, Integer> weighterFunc) {
