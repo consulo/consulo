@@ -113,6 +113,8 @@
     <module>modules/base/project-ui-view-api</module>
     <module>modules/base/diff-api</module>
     <module>modules/base/local-history-api</module>
+    <module>modules/base/module-impl</module>
+    <module>modules/base/project-impl</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

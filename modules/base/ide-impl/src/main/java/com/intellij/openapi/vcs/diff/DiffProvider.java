@@ -24,18 +24,18 @@ import javax.annotation.Nullable;
 
 public interface DiffProvider extends VcsProviderMarker {
 
-  @javax.annotation.Nullable
+  @Nullable
   VcsRevisionNumber getCurrentRevision(VirtualFile file);
 
   @Nullable
   ItemLatestState getLastRevision(VirtualFile virtualFile);
 
-  @javax.annotation.Nullable
+  @Nullable
   ItemLatestState getLastRevision(final FilePath filePath);
 
-  @javax.annotation.Nullable
+  @Nullable
   ContentRevision createFileContent(VcsRevisionNumber revisionNumber, VirtualFile selectedFile);
 
-  @javax.annotation.Nullable
+  @Nullable
   VcsRevisionNumber getLatestCommittedRevision(VirtualFile vcsRoot);
 }

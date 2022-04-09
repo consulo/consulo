@@ -19,7 +19,7 @@ package com.intellij.compiler.impl;
 import com.intellij.build.BuildContentManager;
 import com.intellij.compiler.make.CacheUtils;
 import com.intellij.compiler.progress.CompilerTask;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.io.FileUtil;

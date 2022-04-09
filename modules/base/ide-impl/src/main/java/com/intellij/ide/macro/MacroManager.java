@@ -27,7 +27,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.ConvertingIterator;
+import consulo.util.collection.ConvertingIterator;
 import com.intellij.util.containers.Convertor;
 import consulo.ide.macro.ModuleProductionOutputDirPathMacro;
 import consulo.ide.macro.ModuleProfileNameMacro;

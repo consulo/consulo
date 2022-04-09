@@ -16,18 +16,25 @@
 package consulo.module.content.util;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.content.bundle.Sdk;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +43,55 @@ import java.util.Set;
  * @since 13-Feb-22
  */
 public class ModuleContentUtil {
+  @Nullable
+  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Module module, @Nonnull Class<E> extensionClass) {
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+    return moduleRootManager.getExtension(extensionClass);
+  }
+
+  @Nullable
+  public static ModuleExtension<?> getExtension(@Nonnull Module module, @Nonnull String key) {
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+    return moduleRootManager.getExtension(key);
+  }
+
+  @Nullable
+  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull Class<E> extensionClass) {
+    Module moduleForFile = findModuleForFile(virtualFile, project);
+    if (moduleForFile == null) {
+      return null;
+    }
+    return getExtension(moduleForFile, extensionClass);
+  }
+
+  @Nullable
+  public static Sdk getSdk(@Nonnull Module module, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
+    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+
+    final ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
+    if (extension == null) {
+      return null;
+    }
+    else {
+      return extension.getSdk();
+    }
+  }
+
+  @RequiredReadAction
+  @Nonnull
+  public static List<ContentFolder> getContentFolders(@Nonnull Project project) {
+    ModuleManager moduleManager = ModuleManager.getInstance(project);
+    final List<ContentFolder> contentFolders = new ArrayList<>();
+    for (Module module : moduleManager.getModules()) {
+      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
+      moduleRootManager.iterateContentEntries(contentEntry -> {
+        Collections.addAll(contentFolders, contentEntry.getFolders(ContentFolderTypeProvider.allExceptExcluded()));
+        return false;
+      });
+    }
+    return contentFolders;
+  }
+
   @Nullable
   public static Module findModuleForFile(@Nonnull VirtualFile file, @Nonnull Project project) {
     final ProjectFileIndex fileIndex = ProjectRootManager.getInstance(project).getFileIndex();

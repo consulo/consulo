@@ -1065,17 +1065,12 @@ open module consulo.ide.impl {
   exports consulo.ide.updateSettings.impl;
   exports consulo.ide.util;
   exports consulo.ide.welcomeScreen;
-  //exports consulo.ide.wizard;
   exports consulo.ide.wizard.newModule;
-  //exports consulo.internal;
   exports consulo.internal.actions;
   exports consulo.internal.statistic;
-  //exports consulo.language;
   exports consulo.module.bundle;
-  exports consulo.module.extension.impl;
   exports consulo.moduleImport;
   exports consulo.moduleImport.ui;
-  //exports consulo.net;
   exports consulo.net.util;
   exports consulo.options;
   exports consulo.packageDependencies;

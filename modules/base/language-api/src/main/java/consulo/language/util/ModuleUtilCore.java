@@ -20,7 +20,6 @@ import consulo.application.AccessRule;
 import consulo.application.util.function.Processor;
 import consulo.component.util.graph.Graph;
 import consulo.component.util.pointer.NamedPointer;
-import consulo.content.ContentFolderTypeProvider;
 import consulo.content.bundle.Sdk;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -215,28 +214,17 @@ public class ModuleUtilCore {
   @RequiredReadAction
   @Nonnull
   public static List<ContentFolder> getContentFolders(@Nonnull Project project) {
-    ModuleManager moduleManager = ModuleManager.getInstance(project);
-    final List<ContentFolder> contentFolders = new ArrayList<ContentFolder>();
-    for (Module module : moduleManager.getModules()) {
-      ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-      moduleRootManager.iterateContentEntries(contentEntry -> {
-        Collections.addAll(contentFolders, contentEntry.getFolders(ContentFolderTypeProvider.allExceptExcluded()));
-        return false;
-      });
-    }
-    return contentFolders;
+    return ModuleContentUtil.getContentFolders(project);
   }
 
   @Nullable
   public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Module module, @Nonnull Class<E> extensionClass) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    return moduleRootManager.getExtension(extensionClass);
+    return ModuleContentUtil.getExtension(module, extensionClass);
   }
 
   @Nullable
   public static ModuleExtension<?> getExtension(@Nonnull Module module, @Nonnull String key) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    return moduleRootManager.getExtension(key);
+    return ModuleContentUtil.getExtension(module, key);
   }
 
   @Nullable
@@ -251,24 +239,12 @@ public class ModuleUtilCore {
 
   @Nullable
   public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull Class<E> extensionClass) {
-    Module moduleForFile = findModuleForFile(virtualFile, project);
-    if (moduleForFile == null) {
-      return null;
-    }
-    return getExtension(moduleForFile, extensionClass);
+    return ModuleContentUtil.getExtension(project, virtualFile, extensionClass);
   }
 
   @Nullable
   public static Sdk getSdk(@Nonnull Module module, @Nonnull Class<? extends ModuleExtensionWithSdk> extensionClass) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-
-    final ModuleExtensionWithSdk<?> extension = moduleRootManager.getExtension(extensionClass);
-    if (extension == null) {
-      return null;
-    }
-    else {
-      return extension.getSdk();
-    }
+    return ModuleContentUtil.getSdk(module, extensionClass);
   }
 
   @Nullable

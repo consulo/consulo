@@ -10,7 +10,7 @@ import com.intellij.openapi.projectRoots.*;
 import consulo.content.OrderRootType;
 import consulo.module.content.ProjectRootManager;
 import consulo.content.RootProvider;
-import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
+import consulo.module.impl.internal.ProjectRootManagerImpl;
 import com.intellij.openapi.roots.impl.RootProviderBaseImpl;
 import consulo.disposer.Disposer;
 import consulo.util.xml.serializer.InvalidDataException;

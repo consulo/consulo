@@ -18,7 +18,7 @@ import com.intellij.openapi.externalSystem.service.execution.ProgressExecutionMo
 import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

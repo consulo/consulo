@@ -20,7 +20,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModel;
-import com.intellij.openapi.roots.impl.RootConfigurationAccessor;
+import consulo.module.content.internal.RootConfigurationAccessor;
 import consulo.content.library.Library;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.ide.setting.ProjectStructureSettingsUtil;

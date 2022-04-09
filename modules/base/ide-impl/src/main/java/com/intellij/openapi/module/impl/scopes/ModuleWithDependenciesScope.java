@@ -32,7 +32,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.NotNullFunction;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.roots.impl.ModuleRootsProcessor;
+import consulo.module.impl.internal.layer.ModuleRootsProcessor;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
 import consulo.util.collection.primitive.objects.ObjectIntMap;

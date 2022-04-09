@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.module.extension;
 
-import consulo.module.extension.impl.ModuleExtensionImpl;
+import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.ModuleRootLayer;
 import javax.annotation.Nonnull;
 
@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 30.08.14
  */
-public class Sand2ModuleExtension extends ModuleExtensionImpl<Sand2ModuleExtension> {
+public class Sand2ModuleExtension extends ModuleExtensionBase<Sand2ModuleExtension> {
   public Sand2ModuleExtension(@Nonnull String id, @Nonnull ModuleRootLayer moduleRootLayer) {
     super(id, moduleRootLayer);
   }

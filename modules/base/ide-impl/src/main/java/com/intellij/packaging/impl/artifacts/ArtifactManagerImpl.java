@@ -25,7 +25,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import com.intellij.openapi.module.ProjectLoadingErrorsNotifier;
 import consulo.project.Project;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import consulo.module.content.internal.ProjectRootManagerEx;
 import com.intellij.openapi.updateSettings.impl.pluginsAdvertisement.UnknownFeaturesCollector;
 import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.Pair;

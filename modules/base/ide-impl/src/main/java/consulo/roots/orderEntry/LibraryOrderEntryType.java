@@ -19,7 +19,7 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.ModuleRootLayer;
 import com.intellij.openapi.roots.impl.LibraryOrderEntryImpl;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;

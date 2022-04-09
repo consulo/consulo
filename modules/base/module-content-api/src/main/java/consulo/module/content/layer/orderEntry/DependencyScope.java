@@ -44,6 +44,7 @@ public enum DependencyScope {
   TEST("Test", false, false, true, true),
   RUNTIME("Runtime", false, true, false, true),
   PROVIDED("Provided", true, false, true, true);
+
   private final String myDisplayName;
   private final boolean myForProductionCompile;
   private final boolean myForProductionRuntime;

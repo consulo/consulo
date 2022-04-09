@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.module.Module;
 import consulo.project.ProjectBundle;
-import com.intellij.openapi.roots.impl.ModuleLibraryTable;
+import consulo.module.impl.internal.layer.ModuleLibraryTable;
 import com.intellij.openapi.roots.impl.libraries.LibraryImpl;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

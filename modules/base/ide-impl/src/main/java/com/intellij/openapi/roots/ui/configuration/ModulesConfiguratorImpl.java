@@ -30,7 +30,7 @@ import consulo.project.ProjectBundle;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
-import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
+import consulo.module.impl.internal.layer.ModifiableModelCommitter;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.Comparing;

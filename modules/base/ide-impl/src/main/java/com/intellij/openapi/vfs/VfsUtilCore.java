@@ -15,19 +15,17 @@
  */
 package com.intellij.openapi.vfs;
 
-import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.containers.DistinctRootsCollection;
 import com.intellij.util.io.URLUtil;
-import com.intellij.util.text.StringFactory;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.content.ContentIterator;
 import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
 import consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl;
@@ -240,12 +238,8 @@ public class VfsUtilCore {
 
   @Nonnull
   public static String loadText(@Nonnull VirtualFile file, int length) throws IOException {
-    InputStreamReader reader = new InputStreamReader(file.getInputStream(), file.getCharset());
-    try {
-      return StringFactory.createShared(FileUtil.loadText(reader, length));
-    }
-    finally {
-      reader.close();
+    try (InputStreamReader reader = new InputStreamReader(file.getInputStream(), file.getCharset())) {
+      return new String(FileUtil.loadText(reader, length));
     }
   }
 
@@ -261,8 +255,7 @@ public class VfsUtilCore {
 
   @Nonnull
   public static String urlToPath(@Nullable String url) {
-    if (url == null) return "";
-    return VirtualFileManager.extractPath(url);
+    return VirtualFileUtil.urlToPath(url);
   }
 
   @Nonnull

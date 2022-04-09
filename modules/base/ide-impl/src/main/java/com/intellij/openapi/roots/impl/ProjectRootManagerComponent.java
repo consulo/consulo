@@ -18,6 +18,7 @@ package com.intellij.openapi.roots.impl;
 import consulo.module.content.ProjectTopics;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
+import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.project.ProjectComponent;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;

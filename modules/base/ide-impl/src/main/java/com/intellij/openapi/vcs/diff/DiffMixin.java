@@ -18,6 +18,8 @@ package com.intellij.openapi.vcs.diff;
 import com.intellij.openapi.vcs.history.VcsRevisionDescription;
 import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Irina.Chernushina
@@ -26,6 +28,6 @@ import consulo.virtualFileSystem.VirtualFile;
  * To change this template use File | Settings | File Templates.
  */
 public interface DiffMixin {
-  @javax.annotation.Nullable
+  @Nullable
   VcsRevisionDescription getCurrentRevisionDescription(final VirtualFile file);
 }

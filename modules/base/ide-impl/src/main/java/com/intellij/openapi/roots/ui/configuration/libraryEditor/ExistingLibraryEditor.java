@@ -17,16 +17,12 @@ package com.intellij.openapi.roots.ui.configuration.libraryEditor;
 
 import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
-import com.intellij.openapi.roots.libraries.*;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryKind;
-import consulo.content.library.LibraryProperties;
-import consulo.content.library.LibraryType;
+import consulo.content.library.*;
 import consulo.disposer.Disposable;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.disposer.Disposer;
-import com.intellij.openapi.util.Pair;
 import consulo.ide.setting.module.event.LibraryEditorListener;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

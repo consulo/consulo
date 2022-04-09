@@ -32,7 +32,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
+import consulo.module.impl.internal.layer.ModifiableModelCommitter;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ArrayUtilRt;

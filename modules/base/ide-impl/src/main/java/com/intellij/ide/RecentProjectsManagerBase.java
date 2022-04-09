@@ -42,8 +42,8 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.components.impl.stores.ProjectStoreImpl;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.impl.ModuleExtensionProviderEP;
-import consulo.module.extension.impl.ModuleExtensionProviders;
+import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
+import consulo.module.impl.internal.extension.ModuleExtensionProviders;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;

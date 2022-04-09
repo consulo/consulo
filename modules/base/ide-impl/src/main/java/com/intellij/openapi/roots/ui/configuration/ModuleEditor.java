@@ -26,7 +26,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.impl.ModuleRootManagerImpl;
+import consulo.module.impl.internal.ModuleRootManagerImpl;
 import com.intellij.openapi.roots.impl.libraries.LibraryEx;
 import com.intellij.openapi.roots.impl.libraries.LibraryTableBase;
 import consulo.content.library.Library;

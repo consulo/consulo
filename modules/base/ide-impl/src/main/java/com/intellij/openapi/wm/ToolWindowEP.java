@@ -24,7 +24,7 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.localize.LocalizeValue;
 import consulo.extensions.LocalizeValueConverter;
 import consulo.logging.Logger;
-import consulo.module.extension.condition.impl.ExtensionPointBeanWithModuleExtensionCondition;
+import consulo.module.impl.internal.extension.ExtensionPointBeanWithModuleExtensionCondition;
 import consulo.project.ui.wm.ToolWindowFactory;
 
 import javax.annotation.Nullable;

@@ -16,22 +16,22 @@
 
 package com.intellij.openapi.roots.impl.libraries;
 
+import com.intellij.openapi.util.Comparing;
+import com.intellij.util.EventDispatcher;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ApplicationManager;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.content.library.PersistentLibraryKind;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.logging.Logger;
 import consulo.util.lang.function.Condition;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
-import consulo.content.library.PersistentLibraryKind;
-import com.intellij.openapi.util.*;
-import com.intellij.util.EventDispatcher;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.content.base.BinariesOrderRootType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
@@ -113,14 +113,14 @@ public abstract class LibraryTableBase implements PersistentStateComponent<Eleme
     myDispatcher.removeListener(listener);
   }
 
-  private void fireLibraryAdded (Library library) {
+  private void fireLibraryAdded(Library library) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("fireLibraryAdded: " + library);
     }
     myDispatcher.getMulticaster().afterLibraryAdded(library);
   }
 
-  private void fireBeforeLibraryRemoved (Library library) {
+  private void fireBeforeLibraryRemoved(Library library) {
     if (LOG.isDebugEnabled()) {
       LOG.debug("fireBeforeLibraryRemoved: " + library);
     }

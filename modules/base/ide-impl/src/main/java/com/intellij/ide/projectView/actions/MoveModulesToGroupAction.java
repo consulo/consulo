@@ -27,7 +27,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
-import com.intellij.openapi.module.impl.ModuleManagerImpl;
+import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.ide.setting.Settings;
 import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable;

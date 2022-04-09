@@ -22,7 +22,7 @@ import consulo.project.ProjectComponent;
 import consulo.component.impl.extension.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.component.impl.extension.ExtensionAreaId;
-import com.intellij.openapi.module.impl.ModuleManagerImpl;
+import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.dumb.DumbAwareRunnable;

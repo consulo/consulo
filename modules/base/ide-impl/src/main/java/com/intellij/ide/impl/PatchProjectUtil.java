@@ -28,7 +28,7 @@ import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.project.Project;
-import com.intellij.openapi.roots.impl.ModifiableModelCommitter;
+import consulo.module.impl.internal.layer.ModifiableModelCommitter;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;

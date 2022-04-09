@@ -19,6 +19,8 @@ package com.intellij.openapi.vcs.diff;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nullable;
+
 /**
  * Interface for selecting a version number valid for a specified file placed under
  * version control.
@@ -34,6 +36,6 @@ public interface RevisionSelector {
    * @param file the file for which the version number is requested.
    * @return the version number or null.
    */
-  @javax.annotation.Nullable
+  @Nullable
   VcsRevisionNumber selectNumber(VirtualFile file);
 }

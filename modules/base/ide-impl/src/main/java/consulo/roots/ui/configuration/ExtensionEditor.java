@@ -33,7 +33,7 @@ import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleExtension;
-import consulo.module.extension.impl.ModuleExtensionImpl;
+import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.extension.swing.SwingMutableModuleExtension;
 import consulo.language.psi.PsiPackageManager;
 import consulo.language.psi.PsiPackageSupportProvider;
@@ -221,7 +221,7 @@ public class ExtensionEditor extends ModuleElementsEditor {
     if (extension instanceof ModuleExtensionWithSdk) {
       // we using module layer, dont use modifiable model - it ill proxy, and methods 'addModuleExtensionSdkEntry' && 'removeOrderEntry'
       // ill call this method again
-      ModifiableModuleRootLayer moduleRootLayer = ((ModuleExtensionImpl) extension).getModuleRootLayer();
+      ModifiableModuleRootLayer moduleRootLayer = ((ModuleExtensionBase) extension).getModuleRootLayer();
 
       final ModuleExtensionWithSdkOrderEntry sdkOrderEntry = moduleRootLayer.findModuleExtensionSdkEntry(extension);
       if (!extension.isEnabled() && sdkOrderEntry != null) {

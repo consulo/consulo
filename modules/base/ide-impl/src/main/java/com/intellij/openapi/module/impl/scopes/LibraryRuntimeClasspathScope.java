@@ -31,7 +31,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.content.LanguageContentFolderScopes;
-import consulo.roots.impl.ModuleRootsProcessor;
+import consulo.module.impl.internal.layer.ModuleRootsProcessor;
 import consulo.content.base.BinariesOrderRootType;
 import org.jetbrains.annotations.TestOnly;
 

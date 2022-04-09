@@ -17,7 +17,7 @@ package consulo.roots.ui.configuration.classpath;
 
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.orderEntry.DependencyScope;
-import com.intellij.openapi.roots.LibraryDependencyScopeSuggester;
+import consulo.module.content.layer.orderEntry.LibraryDependencyScopeSuggester;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;

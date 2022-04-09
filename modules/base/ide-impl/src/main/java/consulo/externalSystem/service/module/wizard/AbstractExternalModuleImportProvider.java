@@ -39,7 +39,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.openapi.roots.ex.ProjectRootManagerEx;
+import consulo.module.content.internal.ProjectRootManagerEx;
 import com.intellij.openapi.roots.impl.libraries.ProjectLibraryTable;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;

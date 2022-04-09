@@ -15,19 +15,15 @@
  */
 package com.intellij.openapi.roots.impl.libraries;
 
-import com.intellij.openapi.roots.libraries.*;
-import com.intellij.openapi.util.Pair;
-import consulo.content.library.LibraryKind;
-import consulo.content.library.LibraryPresentationProvider;
-import consulo.content.library.LibraryProperties;
-import consulo.content.library.LibraryType;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.util.collection.SmartList;
 import com.intellij.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.content.library.*;
+import consulo.util.collection.SmartList;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

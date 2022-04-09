@@ -22,7 +22,7 @@ import com.intellij.ide.impl.ProjectUtil;
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.ide.startup.impl.StartupManagerImpl;
 import com.intellij.openapi.module.impl.ModuleManagerComponent;
-import com.intellij.openapi.module.impl.ModuleManagerImpl;
+import consulo.module.impl.internal.ModuleManagerImpl;
 import com.intellij.openapi.project.ProjectReloadState;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;

@@ -27,7 +27,10 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
-import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.module.impl.internal.ProjectRootManagerImpl;
+import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
+import consulo.module.impl.internal.layer.orderEntry.ClonableOrderEntry;
+import consulo.module.impl.internal.layer.orderEntry.LibraryOrderEntryBaseImpl;
 import consulo.roots.orderEntry.LibraryOrderEntryType;
 
 import javax.annotation.Nonnull;

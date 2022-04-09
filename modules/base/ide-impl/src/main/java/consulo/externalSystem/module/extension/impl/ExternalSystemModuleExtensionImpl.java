@@ -17,7 +17,7 @@ package consulo.externalSystem.module.extension.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
-import consulo.module.extension.impl.ModuleExtensionImpl;
+import consulo.module.content.layer.extension.ModuleExtensionBase;
 import consulo.module.content.layer.ModuleRootLayer;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
@@ -30,7 +30,7 @@ import java.util.Map;
  * @author VISTALL
  * @since 03-Jun-17
  */
-public class ExternalSystemModuleExtensionImpl extends ModuleExtensionImpl<ExternalSystemModuleExtensionImpl>
+public class ExternalSystemModuleExtensionImpl extends ModuleExtensionBase<ExternalSystemModuleExtensionImpl>
         implements ExternalSystemModuleExtension<ExternalSystemModuleExtensionImpl> {
   protected final Map<String, String> myOptions = new LinkedHashMap<>();
 

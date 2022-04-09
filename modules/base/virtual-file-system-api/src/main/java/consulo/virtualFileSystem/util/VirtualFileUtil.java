@@ -45,6 +45,12 @@ public final class VirtualFileUtil {
   private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
   public static final char VFS_SEPARATOR_CHAR = '/';
 
+  @Nonnull
+  public static String urlToPath(@Nullable String url) {
+    if (url == null) return "";
+    return VirtualFileManager.extractPath(url);
+  }
+
   public static void saveText(@Nonnull VirtualFile file, @Nonnull String text) throws IOException {
     Charset charset = file.getCharset();
     file.setBinaryContent(text.getBytes(charset));

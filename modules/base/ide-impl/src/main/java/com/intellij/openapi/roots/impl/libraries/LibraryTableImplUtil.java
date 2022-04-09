@@ -16,7 +16,7 @@
 
 package com.intellij.openapi.roots.impl.libraries;
 
-import consulo.roots.impl.ModuleRootLayerImpl;
+import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.content.library.Library;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.util.xml.serializer.InvalidDataException;

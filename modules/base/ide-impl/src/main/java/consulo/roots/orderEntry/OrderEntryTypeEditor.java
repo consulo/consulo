@@ -20,6 +20,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
+import consulo.module.impl.internal.layer.orderEntry.UnknownOrderEntryType;
 import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;

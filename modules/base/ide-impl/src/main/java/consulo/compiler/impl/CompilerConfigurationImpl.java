@@ -21,7 +21,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.project.content.WatchedRootsProvider;
-import com.intellij.openapi.roots.impl.ProjectRootManagerImpl;
+import consulo.module.impl.internal.ProjectRootManagerImpl;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
