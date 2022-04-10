@@ -2811,6 +2811,7 @@
     <projectService serviceInterface="consulo.execution.RunConfigurationEditor" serviceImplementation="consulo.ide.impl.execution.RunConfigurationEditorImpl"/>
 
     <applicationService serviceInterface="consulo.content.impl.internal.GlobalLibraryRootListenerProvider" serviceImplementation="consulo.module.impl.internal.GlobalLibraryRootListenerProviderImpl"/>
+    <applicationService serviceInterface="consulo.codeEditor.EditorPopupHelper" serviceImplementation="consulo.ide.impl.codeEditor.EditorPopupHelperImpl"/>
   </extensions>
 
   <applicationListeners>
