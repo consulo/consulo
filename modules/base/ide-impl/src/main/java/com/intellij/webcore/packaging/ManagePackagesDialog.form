@@ -46,7 +46,7 @@
                 <clientProperties>
                   <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithoutIndentWithoutInsets"/>
                 </clientProperties>
-                <border type="none" title-resource-bundle="messages/IdeBundle" title-key="editbox.plugin.description">
+                <border type="none" title-resource-bundle="consulo/ide/IdeBundle" title-key="editbox.plugin.description">
                   <size top="0" left="0" bottom="0" right="0"/>
                 </border>
                 <children>

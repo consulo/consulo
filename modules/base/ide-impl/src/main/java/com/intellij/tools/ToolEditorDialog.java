@@ -16,30 +16,26 @@
 
 package com.intellij.tools;
 
-import consulo.execution.ExecutionBundle;
-import consulo.dataContext.DataManager;
-import com.intellij.ide.macro.MacroManager;
 import com.intellij.ide.macro.MacrosDialog;
-import consulo.language.editor.CommonDataKeys;
+import com.intellij.util.Consumer;
+import consulo.application.HelpManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.execution.ExecutionBundle;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.fileChooser.FileChooserFactory;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.application.HelpManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.pathMacro.MacroManager;
 import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.FixedSizeButton;
-import consulo.ui.ex.awt.TextFieldWithBrowseButton;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.util.Consumer;
+import consulo.virtualFileSystem.VirtualFile;
 import net.miginfocom.swing.MigLayout;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;

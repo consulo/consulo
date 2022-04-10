@@ -20,7 +20,7 @@
         <clientProperties>
           <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
-        <border type="etched" title-resource-bundle="messages/IdeBundle" title-key="file.encoding.option.properties.files"/>
+        <border type="etched" title-resource-bundle="consulo/ide/IdeBundle" title-key="file.encoding.option.properties.files"/>
         <children>
           <grid id="9ed8f" binding="myPropertiesFilesEncodingCombo" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
@@ -35,7 +35,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="messages/IdeBundle" key="editbox.default.encoding.for.properties.files"/>
+              <text resource-bundle="consulo/ide/IdeBundle" key="editbox.default.encoding.for.properties.files"/>
             </properties>
           </component>
           <component id="9d083" class="javax.swing.JCheckBox" binding="myTransparentNativeToAsciiCheckBox" default-binding="true">
@@ -43,7 +43,7 @@
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="messages/IdeBundle" key="checkbox.transparent.native.to.ascii.conversion"/>
+              <text resource-bundle="consulo/ide/IdeBundle" key="checkbox.transparent.native.to.ascii.conversion"/>
             </properties>
           </component>
           <hspacer id="6003d">
@@ -73,14 +73,14 @@
         <clientProperties>
           <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
-        <border type="etched" title-resource-bundle="messages/IdeBundle" title-key="file.encoding.option.BOM"/>
+        <border type="etched" title-resource-bundle="consulo/ide/IdeBundle" title-key="file.encoding.option.BOM"/>
         <children>
           <component id="6b989" class="javax.swing.JLabel">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="messages/IdeBundle" key="file.encoding.option.create.utf8.files"/>
+              <text resource-bundle="consulo/ide/IdeBundle" key="file.encoding.option.create.utf8.files"/>
             </properties>
           </component>
           <component id="5d51c" class="consulo.ui.ex.awt.ComboBox" binding="myBOMForUTF8Combo">

@@ -16,14 +16,14 @@
 package consulo.sandboxPlugin.ui;
 
 import consulo.disposer.Disposable;
-import consulo.ide.ui.impl.FileChooserTextBoxBuilder;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.cursor.StandardCursors;
-import consulo.ui.dialog.DialogDescriptor;
-import consulo.ui.dialog.DialogService;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.ui.font.Font;
 import consulo.ui.image.Image;
 import consulo.ui.layout.*;

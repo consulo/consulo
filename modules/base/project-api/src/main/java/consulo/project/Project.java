@@ -32,6 +32,7 @@ public interface Project extends ComponentManager {
   String DIRECTORY_STORE_FOLDER = ".consulo";
 
   Key<Project> KEY = Key.create(Project.class);
+  Key<VirtualFile> PROJECT_FILE_DIRECTORY = Key.create("context.ProjectFileDirectory");
 
   /**
    * @return project annotation

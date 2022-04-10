@@ -21,6 +21,7 @@ import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.content.bundle.Sdk;
+import consulo.pathMacro.Macro;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import javax.annotation.Nonnull;

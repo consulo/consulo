@@ -27,7 +27,7 @@
         </constraints>
         <properties>
           <selected value="false"/>
-          <text resource-bundle="messages/ApplicationBundle" key="checkbox.right.margin"/>
+          <text resource-bundle="consulo/application/ApplicationBundle" key="checkbox.right.margin"/>
         </properties>
       </component>
       <component id="6a414" class="javax.swing.JCheckBox" binding="myCbShowLineNumbers">
@@ -35,7 +35,7 @@
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text resource-bundle="messages/ApplicationBundle" key="checkbox.show.line.numbers"/>
+          <text resource-bundle="consulo/application/ApplicationBundle" key="checkbox.show.line.numbers"/>
         </properties>
       </component>
       <component id="2ee6" class="javax.swing.JCheckBox" binding="myCbShowWhitespaces">
@@ -43,7 +43,7 @@
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text resource-bundle="messages/ApplicationBundle" key="checkbox.show.whitespaces"/>
+          <text resource-bundle="consulo/application/ApplicationBundle" key="checkbox.show.whitespaces"/>
         </properties>
       </component>
       <component id="d097a" class="javax.swing.JCheckBox" binding="myShowVerticalIndentGuidesCheckBox" default-binding="true">
@@ -67,7 +67,7 @@
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text resource-bundle="messages/ApplicationBundle" key="checkbox.show.method.separators"/>
+          <text resource-bundle="consulo/application/ApplicationBundle" key="checkbox.show.method.separators"/>
         </properties>
       </component>
       <grid id="47613" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -84,7 +84,7 @@
             </constraints>
             <properties>
               <selected value="true"/>
-              <text resource-bundle="messages/ApplicationBundle" key="checkbox.caret.blinking.ms"/>
+              <text resource-bundle="consulo/application/ApplicationBundle" key="checkbox.caret.blinking.ms"/>
             </properties>
           </component>
           <component id="5e319" class="javax.swing.JTextField" binding="myBlinkIntervalField">
@@ -113,7 +113,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="messages/ApplicationBundle" key="checkbox.show.parameter.name.hints"/>
+              <text resource-bundle="consulo/application/ApplicationBundle" key="checkbox.show.parameter.name.hints"/>
             </properties>
           </component>
           <hspacer id="b0450">

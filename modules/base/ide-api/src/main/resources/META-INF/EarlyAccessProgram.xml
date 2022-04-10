@@ -26,7 +26,7 @@
 
     <applicationConfigurable parentId="platformAndPlugins"
                              id="eap"
-                             bundle="messages.IdeBundle"
+                             bundle="consulo.ide.IdeBundle"
                              key="eap.configurable.name"
                              instance="consulo.ide.eap.EarlyAccessProgramConfigurable"/>
     <applicationService serviceImplementation="consulo.application.eap.EarlyAccessProgramManager"/>

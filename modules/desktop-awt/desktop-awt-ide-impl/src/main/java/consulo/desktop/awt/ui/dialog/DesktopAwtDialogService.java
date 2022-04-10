@@ -29,9 +29,9 @@ import consulo.platform.Platform;
 import consulo.ui.Component;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.dialog.Dialog;
-import consulo.ui.dialog.DialogDescriptor;
-import consulo.ui.dialog.DialogService;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
 import consulo.util.concurrent.AsyncResult;
 import jakarta.inject.Singleton;
 

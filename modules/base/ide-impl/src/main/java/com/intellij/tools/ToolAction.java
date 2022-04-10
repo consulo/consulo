@@ -16,14 +16,14 @@
 
 package com.intellij.tools;
 
+import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.pathMacro.MacroManager;
 import consulo.process.event.ProcessListener;
-import com.intellij.ide.macro.MacroManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**

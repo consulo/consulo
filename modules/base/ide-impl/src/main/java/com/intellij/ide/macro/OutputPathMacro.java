@@ -21,6 +21,7 @@ import consulo.dataContext.DataContext;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
+import consulo.pathMacro.Macro;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;

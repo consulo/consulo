@@ -15,6 +15,7 @@ module consulo.execution.api {
   requires transitive consulo.code.editor.api;
   requires transitive consulo.file.editor.api;
   requires transitive consulo.language.api;
+  requires transitive consulo.path.macro.api;
 
   exports consulo.execution;
   exports consulo.execution.action;

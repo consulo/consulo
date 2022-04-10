@@ -15,7 +15,7 @@
  */
 package consulo.dataContext;
 
-import consulo.application.Application;
+import consulo.component.extension.internal.RootComponentHolder;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 public abstract class DataManager {
   @Nonnull
   public static DataManager getInstance() {
-    return Application.get().getComponent(DataManager.class);
+    return RootComponentHolder.getRootComponent().getInstance(DataManager.class);
   }
 
   /**

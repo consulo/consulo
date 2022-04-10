@@ -747,7 +747,7 @@
       <with attribute="implementationClass" implements="consulo.fileEditor.structureView.StructureViewBuilder"/>
     </extensionPoint>
 
-    <extensionPoint name="macro" interface="com.intellij.ide.macro.Macro"/>
+    <extensionPoint name="macro" interface="consulo.pathMacro.Macro"/>
     <extensionPoint name="printOption" interface="com.intellij.codeEditor.printing.PrintOption"/>
 
     <extensionPoint name="indexPatternBuilder" interface="consulo.ide.impl.psi.impl.search.IndexPatternBuilder"/>
@@ -2067,7 +2067,7 @@
     <lang.elementManipulator forClass="consulo.language.psi.PsiComment"
                              implementationClass="consulo.ide.impl.psi.impl.source.resolve.reference.impl.manipulators.PsiCommentManipulator"/>
 
-    <applicationService serviceInterface="com.intellij.ide.macro.MacroManager" serviceImplementation="com.intellij.ide.macro.MacroManager"/>
+    <applicationService serviceInterface="consulo.pathMacro.MacroManager" serviceImplementation="consulo.pathMacro.impl.internal.MacroManagerImpl"/>
     <hectorComponentProvider implementation="com.intellij.codeInsight.daemon.impl.FileIncludeContextHectorProvider"/>
 
     <programRunner implementation="com.intellij.tools.ToolProgramRunner"/>
@@ -2447,7 +2447,7 @@
 
     <projectConfigurable instance="com.intellij.ide.util.scopeChooser.ScopeChooserConfigurable"
                          id="project.scopes" parentId="general"
-                         key="scopes.display.name" bundle="messages.IdeBundle"/>
+                         key="scopes.display.name" bundle="consulo.ide.IdeBundle"/>
 
 
     <weigher key="proximity" implementationClass="consulo.ide.impl.psi.util.proximity.SameDirectoryWeigher" id="sameDirectory"

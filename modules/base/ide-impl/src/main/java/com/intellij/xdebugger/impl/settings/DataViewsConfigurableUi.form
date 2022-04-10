@@ -18,7 +18,7 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text resource-bundle="consulo/debugger/XDebuggerBundle" key="setting.enable.auto.expressions.label"/>
+          <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="setting.enable.auto.expressions.label"/>
         </properties>
       </component>
       <component id="a57b4" class="javax.swing.JCheckBox" binding="sortAlphabeticallyCheckBox" default-binding="true">
@@ -26,7 +26,7 @@
           <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text resource-bundle="consulo/debugger/XDebuggerBundle" key="setting.sort.alphabetically.label"/>
+          <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="setting.sort.alphabetically.label"/>
         </properties>
       </component>
       <grid id="a4cab" binding="myEditorSettingsPanel" custom-create="true" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -42,7 +42,7 @@
               <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/debugger/XDebuggerBundle" key="settings.show.values.inline"/>
+              <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="settings.show.values.inline"/>
             </properties>
           </component>
           <component id="83498" class="javax.swing.JCheckBox" binding="myShowValueTooltipCheckBox" default-binding="true">
@@ -50,7 +50,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/debugger/XDebuggerBundle" key="settings.show.value.tooltip"/>
+              <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="settings.show.value.tooltip"/>
             </properties>
           </component>
           <component id="be332" class="javax.swing.JCheckBox" binding="myShowValueTooltipOnCheckBox" default-binding="true">
@@ -58,7 +58,7 @@
               <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/debugger/XDebuggerBundle" key="settings.show.tooltip.on.selection"/>
+              <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="settings.show.tooltip.on.selection"/>
             </properties>
           </component>
           <component id="e6be7" class="javax.swing.JFormattedTextField" binding="valueTooltipDelayTextField">
@@ -74,7 +74,7 @@
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/debugger/XDebuggerBundle" key="setting.value.tooltip.delay.label"/>
+              <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="setting.value.tooltip.delay.label"/>
             </properties>
           </component>
           <component id="e0c23" class="consulo.ui.ex.awt.JBLabel" binding="myTooltipLabel">
@@ -84,7 +84,7 @@
             <properties>
               <componentStyle value="REGULAR"/>
               <enabled value="false"/>
-              <text resource-bundle="consulo/debugger/XDebuggerBundle" key="settings.tooltip.label"/>
+              <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="settings.tooltip.label"/>
             </properties>
           </component>
         </children>

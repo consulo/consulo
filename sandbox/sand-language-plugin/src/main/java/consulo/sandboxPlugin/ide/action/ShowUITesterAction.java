@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.sandboxPlugin.ui.UITester;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.dialog.DialogService;
+import consulo.ui.ex.dialog.DialogService;
 
 import javax.annotation.Nonnull;
 

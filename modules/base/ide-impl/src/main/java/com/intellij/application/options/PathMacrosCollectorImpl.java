@@ -15,12 +15,12 @@
  */
 package com.intellij.application.options;
 
-import com.intellij.ide.macro.Macro;
-import com.intellij.ide.macro.MacroManager;
-import consulo.component.macro.PathMacroFilter;
 import consulo.application.macro.PathMacros;
+import consulo.component.macro.PathMacroFilter;
 import consulo.component.macro.PathMacroMap;
 import consulo.component.store.impl.internal.PathMacrosService;
+import consulo.pathMacro.Macro;
+import consulo.pathMacro.MacroManager;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

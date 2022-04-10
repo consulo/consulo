@@ -32,7 +32,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.compiler.CompilerConfiguration;
 import consulo.disposer.Disposable;
 import consulo.ide.setting.ProjectStructureSettingsUtil;
-import consulo.ide.ui.impl.FileChooserTextBoxBuilder;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ProjectLocalize;
 import consulo.configurable.internal.ConfigurableWeight;

@@ -27,10 +27,10 @@ import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.project.Project;
-import consulo.execution.impl.CommonProgramParametersLayout;
+import consulo.execution.ui.CommonProgramParametersLayout;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.dialog.DialogService;
+import consulo.ui.ex.dialog.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

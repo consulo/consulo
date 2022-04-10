@@ -243,11 +243,12 @@
 
     <eapDescriptor implementation="consulo.desktop.awt.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor"/>
 
-    <applicationService serviceInterface="consulo.ui.dialog.DialogService" serviceImplementation="consulo.desktop.awt.ui.dialog.DesktopAwtDialogService"/>
+    <applicationService serviceInterface="consulo.ui.ex.dialog.DialogService" serviceImplementation="consulo.desktop.awt.ui.dialog.DesktopAwtDialogService"/>
 
     <applicationService serviceInterface="consulo.application.ui.UISettings" serviceImplementation="consulo.desktop.awt.application.ui.impl.DesktopAWTUISettings"/>
     <applicationService serviceInterface="consulo.application.ui.UIFontManager" serviceImplementation="consulo.desktop.awt.application.ui.impl.UIFontManagerImpl"/>
 
     <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.ide.impl.progress.DesktopProgressActivityFactory"/>
+    <applicationService serviceInterface="consulo.pathMacro.MacroSelector" serviceImplementation="consulo.desktop.awt.pathMacro.DesktopAwtMacroSelectorImpl"/>
   </extensions>
 </consulo-plugin>

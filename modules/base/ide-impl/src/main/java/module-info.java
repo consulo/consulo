@@ -1043,7 +1043,6 @@ open module consulo.ide.impl {
   exports consulo.ide.eap;
   exports consulo.ide.eap.plugins;
   exports consulo.ide.impl;
-  exports consulo.ide.macro;
   exports consulo.ide.newProject;
   exports consulo.ide.newProject.actions;
   exports consulo.ide.newProject.node;
@@ -1108,8 +1107,6 @@ open module consulo.ide.impl {
   exports consulo.tasks.impl;
   exports consulo.ui.app;
   exports consulo.ui.app.impl.settings;
-  exports consulo.ui.dialog;
-  exports consulo.ui.dialog.action;
   exports consulo.ui.dialog.impl;
   exports consulo.ui.docking;
   exports consulo.ui.docking.impl;

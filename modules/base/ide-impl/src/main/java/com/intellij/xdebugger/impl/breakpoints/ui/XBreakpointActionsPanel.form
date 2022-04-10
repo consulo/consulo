@@ -17,14 +17,14 @@
         <clientProperties>
           <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithIndent"/>
         </clientProperties>
-        <border type="etched" title-resource-bundle="consulo/debugger/XDebuggerBundle" title-key="xbreakpoints.properties.actions.group.title"/>
+        <border type="etched" title-resource-bundle="consulo/execution/debug/XDebuggerBundle" title-key="xbreakpoints.properties.actions.group.title"/>
         <children>
           <component id="26324" class="javax.swing.JCheckBox" binding="myLogMessageCheckBox">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text resource-bundle="consulo/debugger/XDebuggerBundle" key="xbreakpoints.log.message.checkbox"/>
+              <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="xbreakpoints.log.message.checkbox"/>
             </properties>
           </component>
           <grid id="43359" binding="myExpressionPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -41,7 +41,7 @@
                 </constraints>
                 <properties>
                   <enabled value="true"/>
-                  <text resource-bundle="consulo/debugger/XDebuggerBundle" key="xbreakpoints.log.expression.checkbox"/>
+                  <text resource-bundle="consulo/execution/debug/XDebuggerBundle" key="xbreakpoints.log.expression.checkbox"/>
                 </properties>
               </component>
               <grid id="16042" binding="myLogExpressionPanel" layout-manager="BorderLayout" hgap="0" vgap="0">

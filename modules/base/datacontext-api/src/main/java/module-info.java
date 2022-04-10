@@ -6,7 +6,7 @@ module consulo.datacontext.api {
   // todo obsolete dependency
   requires java.desktop;
 
-  requires transitive consulo.application.api;
+  requires transitive consulo.component.api;
   requires transitive consulo.util.dataholder;
 
   exports consulo.dataContext;

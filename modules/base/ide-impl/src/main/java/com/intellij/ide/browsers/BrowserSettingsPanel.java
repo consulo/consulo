@@ -18,7 +18,7 @@ import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ide.actions.webSearch.WebSearchEngine;
 import consulo.ide.actions.webSearch.WebSearchOptions;
-import consulo.ide.ui.impl.FileChooserTextBoxBuilder;
+import consulo.ui.ex.FileChooserTextBoxBuilder;
 import consulo.localize.LocalizeValue;
 import consulo.ui.CheckBox;
 import consulo.ui.ComboBox;

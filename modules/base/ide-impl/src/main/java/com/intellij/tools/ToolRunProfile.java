@@ -15,34 +15,34 @@
  */
 package com.intellij.tools;
 
-import consulo.execution.process.ProcessTerminatedListener;
-import consulo.process.ExecutionException;
+import com.intellij.execution.filters.RegexpFilter;
+import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.dataContext.DataContext;
 import consulo.execution.ExecutionManager;
 import consulo.execution.ExecutionResult;
-import consulo.execution.executor.Executor;
 import consulo.execution.configuration.CommandLineState;
-import consulo.process.cmd.GeneralCommandLine;
 import consulo.execution.configuration.ModuleRunProfile;
 import consulo.execution.configuration.RunProfileState;
-import com.intellij.execution.filters.RegexpFilter;
-import consulo.execution.ui.console.TextConsoleBuilder;
-import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import com.intellij.execution.process.*;
+import consulo.execution.executor.Executor;
+import consulo.execution.process.ProcessTerminatedListener;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
-import com.intellij.ide.macro.Macro;
-import com.intellij.ide.macro.MacroManager;
-import consulo.dataContext.DataContext;
+import consulo.execution.ui.console.TextConsoleBuilder;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.logging.Logger;
 import consulo.module.Module;
+import consulo.pathMacro.Macro;
+import consulo.pathMacro.MacroManager;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;
-import consulo.process.ProcessHandler;
 import consulo.process.local.OSProcessHandler;
 import consulo.project.Project;
-import consulo.util.dataholder.Key;
 import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 

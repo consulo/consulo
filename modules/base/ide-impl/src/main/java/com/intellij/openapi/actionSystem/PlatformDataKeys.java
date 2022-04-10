@@ -39,7 +39,8 @@ import java.util.Comparator;
  * @author yole
  */
 public interface PlatformDataKeys extends CommonDataKeys {
-  Key<FileEditor> FILE_EDITOR = Key.create("fileEditor");
+  @Deprecated
+  Key<FileEditor> FILE_EDITOR = FileEditor.KEY;
 
   /**
    * Returns the text of currently selected file/file revision
@@ -90,7 +91,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
   Key<StatusBar> STATUS_BAR = Key.create("STATUS_BAR");
   Key<TreeExpander> TREE_EXPANDER = Key.create("treeExpander");
   Key<ExporterToTextFile> EXPORTER_TO_TEXT_FILE = Key.create("exporterToTextFile");
-  Key<VirtualFile> PROJECT_FILE_DIRECTORY = Key.create("context.ProjectFileDirectory");
+  Key<VirtualFile> PROJECT_FILE_DIRECTORY = Project.PROJECT_FILE_DIRECTORY;
   Key<Disposable> UI_DISPOSABLE = Key.create("ui.disposable");
 
   Key<ContentManager> NONEMPTY_CONTENT_MANAGER = Key.create("nonemptyContentManager");

@@ -16,9 +16,9 @@
 package consulo.ui.dialog.impl;
 
 import consulo.ui.Component;
-import consulo.ui.dialog.Dialog;
-import consulo.ui.dialog.DialogDescriptor;
-import consulo.ui.dialog.DialogService;
+import consulo.ui.ex.dialog.Dialog;
+import consulo.ui.ex.dialog.DialogDescriptor;
+import consulo.ui.ex.dialog.DialogService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

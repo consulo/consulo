@@ -20,6 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.ui.Component;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import kava.beans.PropertyChangeListener;
@@ -33,6 +34,8 @@ import javax.annotation.Nullable;
  * @see com.intellij.openapi.fileEditor.TextEditor
  */
 public interface FileEditor extends UserDataHolder, Disposable {
+  Key<FileEditor> KEY = Key.create(FileEditor.class);
+
   /**
    * @see #isModified()
    */

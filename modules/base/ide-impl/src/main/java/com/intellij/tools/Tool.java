@@ -16,28 +16,28 @@
 
 package com.intellij.tools;
 
-import consulo.process.ExecutionException;
+import com.intellij.execution.util.ExecutionErrorDialog;
+import com.intellij.openapi.options.SchemeElement;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.dataContext.DataContext;
+import consulo.document.FileDocumentManager;
 import consulo.execution.RunnerRegistry;
-import consulo.process.cmd.GeneralCommandLine;
 import consulo.execution.executor.DefaultRunExecutor;
-import consulo.process.local.OSProcessHandler;
-import consulo.process.ProcessHandler;
-import consulo.process.event.ProcessListener;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.RunContentDescriptor;
-import com.intellij.execution.util.ExecutionErrorDialog;
-import com.intellij.ide.macro.Macro;
-import com.intellij.ide.macro.MacroManager;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.document.FileDocumentManager;
-import com.intellij.openapi.options.SchemeElement;
+import consulo.pathMacro.Macro;
+import consulo.pathMacro.MacroManager;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.event.ProcessListener;
+import consulo.process.local.OSProcessHandler;
 import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ui.ex.action.AnActionEvent;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -330,7 +330,7 @@ public class Tool implements SchemeElement {
       String exePath = MacroManager.getInstance().expandMacrosInString(getProgram(), true, dataContext);
 
       commandLine.getParametersList().addParametersString(
-        MacroManager.getInstance().expandMacrosInString(paramString, false, dataContext));
+              MacroManager.getInstance().expandMacrosInString(paramString, false, dataContext));
       final String workDirExpanded = MacroManager.getInstance().expandMacrosInString(workingDir, false, dataContext);
       if (!StringUtil.isEmpty(workDirExpanded)) {
         commandLine.setWorkDirectory(workDirExpanded);
