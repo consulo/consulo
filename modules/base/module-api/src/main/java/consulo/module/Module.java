@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.util.pointer.Named;
 import consulo.disposer.Disposable;
+import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.util.collection.ArrayFactory;
 import consulo.util.dataholder.Key;
@@ -92,4 +93,10 @@ public interface Module extends ComponentManager, Disposable, Named {
    */
   @Override
   boolean isDisposed();
+
+  @Nullable
+  <T extends ModuleExtension<T>> T getExtension(@Nonnull Class<T> clazz);
+
+  @Nullable
+  <T extends ModuleExtension<T>> T getExtension(@Nonnull String key);
 }

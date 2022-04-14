@@ -118,6 +118,7 @@
     <module>modules/base/application-content-impl</module>
     <module>modules/base/path-macro-api</module>
     <module>modules/base/path-macro-impl</module>
+    <module>modules/base/module-ui-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

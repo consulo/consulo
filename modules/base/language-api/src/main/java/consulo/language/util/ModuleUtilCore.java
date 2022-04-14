@@ -219,12 +219,12 @@ public class ModuleUtilCore {
 
   @Nullable
   public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Module module, @Nonnull Class<E> extensionClass) {
-    return ModuleContentUtil.getExtension(module, extensionClass);
+    return module.getExtension(extensionClass);
   }
 
   @Nullable
   public static ModuleExtension<?> getExtension(@Nonnull Module module, @Nonnull String key) {
-    return ModuleContentUtil.getExtension(module, key);
+    return module.getExtension(key);
   }
 
   @Nullable

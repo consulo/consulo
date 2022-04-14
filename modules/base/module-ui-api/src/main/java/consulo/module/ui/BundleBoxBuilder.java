@@ -13,17 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.bundle.ui;
+package consulo.module.ui;
 
-import com.google.common.base.Predicates;
+import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
-import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkModel;
-import consulo.content.bundle.SdkType;
-import consulo.content.bundle.SdkTypeId;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.ui.ComboBox;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -65,7 +59,7 @@ public final class BundleBoxBuilder {
 
   private Image myNoneItemImage;
 
-  private Predicate<SdkTypeId> mySdkFilter = Predicates.alwaysTrue();
+  private Predicate<SdkTypeId> mySdkFilter = sdkTypeId -> true;
 
   private BundleBoxBuilder(@Nullable SdkModel sdkModel, @Nullable Disposable uiDisposable) {
     mySdkModel = sdkModel;
@@ -125,9 +119,7 @@ public final class BundleBoxBuilder {
   @Nonnull
   private static SdkModel effectiveModel(@Nullable SdkModel sdkModel) {
     if (sdkModel == null) {
-      ProjectStructureSettingsUtil sdksSettingsUtil = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
-
-      return sdksSettingsUtil.getSdksModel();
+      return SdkModelFactory.getInstance().getOrCreateModel();
     }
     else {
       return sdkModel;

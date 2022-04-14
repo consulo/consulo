@@ -13,56 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.roots.ui.configuration;
+package consulo.module.ui.awt;
 
-import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
-import consulo.dataContext.DataContext;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.language.util.ModuleUtilCore;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkModel;
-import consulo.content.bundle.SdkTypeId;
-import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
-import consulo.ui.ex.awt.ComboBoxWithWidePopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.application.util.function.Computable;
-import consulo.ui.ex.action.*;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.util.Consumer;
-import com.intellij.util.NullableFunction;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.content.bundle.BundleHolder;
-import consulo.content.bundle.SdkUtil;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.application.AllIcons;
+import consulo.content.bundle.*;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.ComboBoxWithWidePopup;
+import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ObjectUtil;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+
+;
 
 /**
  * @author Eugene Zhuravlev
@@ -182,83 +166,83 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     return minSize;
   }
 
-  @Deprecated
-  @DeprecationInfo(value = "Use #setSetupButton() without 'moduleJdkSetup' parameter")
-  public void setSetupButton(final JButton setUpButton,
-                             @Nullable final Project project,
-                             final SdkModel sdksModel,
-                             final SdkComboBoxItem firstItem,
-                             @Nullable final Condition<Sdk> additionalSetup,
-                             final boolean moduleJdkSetup) {
-    setSetupButton(setUpButton, project, sdksModel, firstItem, additionalSetup);
-  }
+  //@Deprecated
+  //@DeprecationInfo(value = "Use #setSetupButton() without 'moduleJdkSetup' parameter")
+  //public void setSetupButton(final JButton setUpButton,
+  //                           @Nullable final Project project,
+  //                           final SdkModel sdksModel,
+  //                           final SdkComboBoxItem firstItem,
+  //                           @Nullable final Condition<Sdk> additionalSetup,
+  //                           final boolean moduleJdkSetup) {
+  //  setSetupButton(setUpButton, project, sdksModel, firstItem, additionalSetup);
+  //}
 
-  @Deprecated
-  @DeprecationInfo(value = "Use #setSetupButton() without 'actionGroupTitle' parameter")
-  public void setSetupButton(final JButton setUpButton,
-                             @Nullable final Project project,
-                             final SdkModel sdksModel,
-                             final SdkComboBoxItem firstItem,
-                             @Nullable final Condition<Sdk> additionalSetup,
-                             final String actionGroupTitle) {
-    setSetupButton(setUpButton, project, sdksModel, firstItem, additionalSetup);
-  }
-
-  public void setSetupButton(@Nonnull final JButton setUpButton,
-                             @Nullable final Project project,
-                             @Nonnull final SdkModel sdksModel,
-                             @Nullable final SdkComboBoxItem firstItem,
-                             @Nullable final Condition<Sdk> additionalSetup) {
-    setUpButton.addActionListener(new ActionListener() {
-      @Override
-      @RequiredUIAccess
-      public void actionPerformed(ActionEvent e) {
-        DefaultActionGroup group = new DefaultActionGroup();
-        ((DefaultSdksModel)sdksModel).createAddActions(group, SdkComboBox.this, new Consumer<Sdk>() {
-          @Override
-          public void consume(final Sdk sdk) {
-            //if (project != null) {
-            //  final SdkListConfigurable configurable = SdkListConfigurable.getInstance(project);
-            //  configurable.addSdkNode(sdk, false);
-            //}
-            reloadModel(new SdkComboBoxItem(sdk), project);
-            setSelectedSdk(sdk); //restore selection
-            if (additionalSetup != null) {
-              if (additionalSetup.value(sdk)) { //leave old selection
-                setSelectedSdk(firstItem.getSdk());
-              }
-            }
-          }
-        }, myCreationFilter);
-        final DataContext dataContext = DataManager.getInstance().getDataContext(SdkComboBox.this);
-        if (group.getChildrenCount() > 1) {
-          JBPopupFactory.getInstance().createActionGroupPopup(ProjectBundle.message("set.up.jdk.title"), group, dataContext,
-                                                              JBPopupFactory.ActionSelectionAid.MNEMONICS, false)
-                  .showUnderneathOf(setUpButton);
-        }
-        else {
-          final AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, new Presentation(""),
-                                                        ActionManager.getInstance(), 0);
-          group.getChildren(event)[0].actionPerformed(event);
-        }
-      }
-    });
-  }
-
-  public void setEditButton(final JButton editButton, final Project project, @Nonnull final Computable<Sdk> retrieveSdk) {
-    editButton.addActionListener(e -> {
-      final Sdk sdk = retrieveSdk.compute();
-      if (sdk != null) {
-        ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> projectStructureSelector.select(sdk, true));
-      }
-    });
-    addActionListener(e -> {
-      final SdkComboBoxItem selectedItem = getSelectedItem();
-      editButton.setEnabled(!(selectedItem instanceof InvalidSdkComboBoxItem) &&
-                            selectedItem != null &&
-                            selectedItem.getSdk() != null);
-    });
-  }
+  //@Deprecated
+  //@DeprecationInfo(value = "Use #setSetupButton() without 'actionGroupTitle' parameter")
+  //public void setSetupButton(final JButton setUpButton,
+  //                           @Nullable final Project project,
+  //                           final SdkModel sdksModel,
+  //                           final SdkComboBoxItem firstItem,
+  //                           @Nullable final Condition<Sdk> additionalSetup,
+  //                           final String actionGroupTitle) {
+  //  setSetupButton(setUpButton, project, sdksModel, firstItem, additionalSetup);
+  //}
+  //
+  //public void setSetupButton(@Nonnull final JButton setUpButton,
+  //                           @Nullable final Project project,
+  //                           @Nonnull final SdkModel sdksModel,
+  //                           @Nullable final SdkComboBoxItem firstItem,
+  //                           @Nullable final Condition<Sdk> additionalSetup) {
+  //  setUpButton.addActionListener(new ActionListener() {
+  //    @Override
+  //    @RequiredUIAccess
+  //    public void actionPerformed(ActionEvent e) {
+  //      DefaultActionGroup group = new DefaultActionGroup();
+  //      ((DefaultSdksModel)sdksModel).createAddActions(group, SdkComboBox.this, new Consumer<Sdk>() {
+  //        @Override
+  //        public void consume(final Sdk sdk) {
+  //          //if (project != null) {
+  //          //  final SdkListConfigurable configurable = SdkListConfigurable.getInstance(project);
+  //          //  configurable.addSdkNode(sdk, false);
+  //          //}
+  //          reloadModel(new SdkComboBoxItem(sdk), project);
+  //          setSelectedSdk(sdk); //restore selection
+  //          if (additionalSetup != null) {
+  //            if (additionalSetup.value(sdk)) { //leave old selection
+  //              setSelectedSdk(firstItem.getSdk());
+  //            }
+  //          }
+  //        }
+  //      }, myCreationFilter);
+  //      final DataContext dataContext = DataManager.getInstance().getDataContext(SdkComboBox.this);
+  //      if (group.getChildrenCount() > 1) {
+  //        JBPopupFactory.getInstance().createActionGroupPopup(ProjectBundle.message("set.up.jdk.title"), group, dataContext,
+  //                                                            JBPopupFactory.ActionSelectionAid.MNEMONICS, false)
+  //                .showUnderneathOf(setUpButton);
+  //      }
+  //      else {
+  //        final AnActionEvent event = new AnActionEvent(null, dataContext, ActionPlaces.UNKNOWN, new Presentation(""),
+  //                                                      ActionManager.getInstance(), 0);
+  //        group.getChildren(event)[0].actionPerformed(event);
+  //      }
+  //    }
+  //  });
+  //}
+  //
+  //public void setEditButton(final JButton editButton, final Project project, @Nonnull final Computable<Sdk> retrieveSdk) {
+  //  editButton.addActionListener(e -> {
+  //    final Sdk sdk = retrieveSdk.compute();
+  //    if (sdk != null) {
+  //      ShowSettingsUtil.getInstance().showProjectStructureDialog(project, projectStructureSelector -> projectStructureSelector.select(sdk, true));
+  //    }
+  //  });
+  //  addActionListener(e -> {
+  //    final SdkComboBoxItem selectedItem = getSelectedItem();
+  //    editButton.setEnabled(!(selectedItem instanceof InvalidSdkComboBoxItem) &&
+  //                          selectedItem != null &&
+  //                          selectedItem.getSdk() != null);
+  //  });
+  //}
 
   @Override
   public SdkComboBoxItem getSelectedItem() {
@@ -289,7 +273,7 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
   @RequiredReadAction
   @SuppressWarnings("unchecked")
   public <T extends MutableModuleExtension<?>> void insertModuleItems(@Nonnull T moduleExtension,
-                                                                      @Nonnull NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction) {
+                                                                      @Nonnull Function<T, MutableModuleInheritableNamedPointer<Sdk>> sdkPointerFunction) {
 
     for (Module module : ModuleManager.getInstance(moduleExtension.getModule().getProject()).getModules()) {
       // dont add self module
@@ -297,11 +281,11 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
         continue;
       }
 
-      ModuleExtension extension = ModuleUtilCore.getExtension(module, moduleExtension.getId());
+      ModuleExtension extension = module.getExtension(moduleExtension.getId());
       if (extension == null) {
         continue;
       }
-      MutableModuleInheritableNamedPointer<Sdk> sdkPointer = sdkPointerFunction.fun((T)extension);
+      MutableModuleInheritableNamedPointer<Sdk> sdkPointer = sdkPointerFunction.apply((T)extension);
       if (sdkPointer != null) {
         // recursive depend
         if (sdkPointer.getModule() == moduleExtension.getModule()) {
@@ -455,8 +439,8 @@ public class SdkComboBox extends ComboBoxWithWidePopup {
     }
     model.removeAllElements();
     model.addElement(firstItem);
-    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
-    final SdkModel projectSdksModel = util.getSdksModel();
+    SdkModelFactory util = SdkModelFactory.getInstance();
+    final SdkModel projectSdksModel = util.getOrCreateModel();
     List<Sdk> sdks = new ArrayList<>(List.of(projectSdksModel.getSdks()));
     if (myFilter != null) {
       sdks = ContainerUtil.filter(sdks, getSdkFilter(myFilter));

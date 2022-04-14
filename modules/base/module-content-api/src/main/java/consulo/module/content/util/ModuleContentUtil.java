@@ -44,24 +44,12 @@ import java.util.Set;
  */
 public class ModuleContentUtil {
   @Nullable
-  public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Module module, @Nonnull Class<E> extensionClass) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    return moduleRootManager.getExtension(extensionClass);
-  }
-
-  @Nullable
-  public static ModuleExtension<?> getExtension(@Nonnull Module module, @Nonnull String key) {
-    ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-    return moduleRootManager.getExtension(key);
-  }
-
-  @Nullable
   public static <E extends ModuleExtension<E>> E getExtension(@Nonnull Project project, @Nonnull VirtualFile virtualFile, @Nonnull Class<E> extensionClass) {
     Module moduleForFile = findModuleForFile(virtualFile, project);
     if (moduleForFile == null) {
       return null;
     }
-    return getExtension(moduleForFile, extensionClass);
+    return moduleForFile.getExtension(extensionClass);
   }
 
   @Nullable

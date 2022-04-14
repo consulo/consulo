@@ -39,7 +39,7 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
 
   @Override
   public String getItemNameFromModule(@Nonnull Module module) {
-    final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)ModuleContentUtil.getExtension(module, myExtensionId);
+    final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)module.getExtension(myExtensionId);
     if (extension != null) {
       return extension.getInheritableSdk().getName();
     }
@@ -48,7 +48,7 @@ public class SdkModuleInheritableNamedPointerImpl extends ModuleInheritableNamed
 
   @Override
   public Sdk getItemFromModule(@Nonnull Module module) {
-    final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)ModuleContentUtil.getExtension(module, myExtensionId);
+    final ModuleExtensionWithSdk<?> extension = (ModuleExtensionWithSdk)module.getExtension(myExtensionId);
     if (extension != null) {
       return extension.getInheritableSdk().get();
     }

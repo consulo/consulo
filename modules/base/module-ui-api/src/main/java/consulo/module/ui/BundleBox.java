@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.bundle.ui;
+package consulo.module.ui;
 
+import consulo.annotation.UsedInPlugin;
 import consulo.application.AllIcons;
+import consulo.content.bundle.*;
 import consulo.disposer.Disposable;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkModel;
-import consulo.content.bundle.SdkTypeId;
-import com.intellij.util.ObjectUtil;
-import consulo.annotation.UsedInPlugin;
-import consulo.content.bundle.BundleHolder;
-import consulo.content.bundle.SdkUtil;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.project.ProjectBundle;
 import consulo.ui.ComboBox;
 import consulo.ui.PseudoComponent;
 import consulo.ui.TextAttribute;
@@ -38,6 +32,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.model.ListModel;
 import consulo.ui.model.MutableListModel;
+import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -363,7 +358,7 @@ public class BundleBox implements PseudoComponent {
         continue;
       }
 
-      ModuleExtension extension = ModuleUtilCore.getExtension(module, moduleExtension.getId());
+      ModuleExtension extension = module.getExtension(moduleExtension.getId());
       if (extension == null) {
         continue;
       }

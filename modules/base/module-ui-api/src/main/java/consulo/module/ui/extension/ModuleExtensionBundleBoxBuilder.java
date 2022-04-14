@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.module.extension.ui;
+package consulo.module.ui.extension;
 
-import consulo.module.Module;
-import consulo.project.ProjectBundle;
+import consulo.annotation.UsedInPlugin;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkTypeId;
-import consulo.annotation.UsedInPlugin;
-import consulo.bundle.ui.BundleBox;
-import consulo.bundle.ui.BundleBoxBuilder;
 import consulo.disposer.Disposable;
+import consulo.module.Module;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
+import consulo.module.ui.BundleBox;
+import consulo.module.ui.BundleBoxBuilder;
+import consulo.project.ProjectBundle;
 import consulo.ui.Component;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;

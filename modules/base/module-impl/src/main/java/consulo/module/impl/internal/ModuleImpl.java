@@ -26,6 +26,7 @@ import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
+import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -107,6 +108,20 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Nonnull
   public String getName() {
     return myName;
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension<T>> T getExtension(@Nonnull String key) {
+    ModuleRootManagerImpl manager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(this);
+    return manager.getExtension(key);
+  }
+
+  @Nullable
+  @Override
+  public <T extends ModuleExtension<T>> T getExtension(@Nonnull Class<T> clazz) {
+    ModuleRootManagerImpl manager = (ModuleRootManagerImpl)ModuleRootManager.getInstance(this);
+    return manager.getExtension(clazz);
   }
 
   @Override

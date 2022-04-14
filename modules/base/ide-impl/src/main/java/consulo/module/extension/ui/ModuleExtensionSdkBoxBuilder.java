@@ -33,7 +33,7 @@ import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
-import consulo.roots.ui.configuration.SdkComboBox;
+import consulo.module.ui.awt.SdkComboBox;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

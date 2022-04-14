@@ -132,5 +132,10 @@
       <artifactId>consulo-path-macro-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-module-ui-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>
