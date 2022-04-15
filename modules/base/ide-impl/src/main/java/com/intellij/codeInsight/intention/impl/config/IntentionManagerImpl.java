@@ -16,6 +16,7 @@
 
 package com.intellij.codeInsight.intention.impl.config;
 
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInsight.daemon.impl.CleanupOnScopeIntention;
 import com.intellij.codeInsight.daemon.impl.EditCleanupProfileIntentionAction;

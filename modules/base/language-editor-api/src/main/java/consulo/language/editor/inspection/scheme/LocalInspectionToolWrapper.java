@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInspection.ex;
+package consulo.language.editor.inspection.scheme;
 
 import consulo.language.editor.inspection.GlobalInspectionContext;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import com.intellij.codeInspection.LocalInspectionEP;
 import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.JobDescriptor;
-import consulo.project.Project;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.util.lang.lazy.LazyValue;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * @author max
  */
 public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspectionTool, LocalInspectionEP> {
-  /** This should be used in tests primarily */
+  /**
+   * This should be used in tests primarily
+   */
   @TestOnly
   public LocalInspectionToolWrapper(@Nonnull LocalInspectionTool tool) {
-    super(tool, ourEPMap.getValue().get(tool.getShortName()));
+    super(tool, ourEPMap.get().get(tool.getShortName()));
   }
 
   public LocalInspectionToolWrapper(@Nonnull LocalInspectionEP ep) {
@@ -81,30 +79,22 @@ public class LocalInspectionToolWrapper extends InspectionToolWrapper<LocalInspe
     return myEP == null ? getTool().runForWholeFile() : myEP.runForWholeFile;
   }
 
-  private static final NotNullLazyValue<Map<String, LocalInspectionEP>> ourEPMap = new NotNullLazyValue<Map<String, LocalInspectionEP>>() {
-    @Nonnull
-    @Override
-    protected Map<String, LocalInspectionEP> compute() {
-      HashMap<String, LocalInspectionEP> map = new HashMap<>();
-      for (LocalInspectionEP ep : LocalInspectionEP.LOCAL_INSPECTION.getExtensionList()) {
-        map.put(ep.getShortName(), ep);
-      }
-      return map;
+  private static final Supplier<Map<String, LocalInspectionEP>> ourEPMap = LazyValue.notNull(() -> {
+    Map<String, LocalInspectionEP> map = new HashMap<>();
+    for (LocalInspectionEP ep : LocalInspectionEP.LOCAL_INSPECTION.getExtensionList()) {
+      map.put(ep.getShortName(), ep);
     }
-  };
+    return map;
+  });
 
   public static InspectionToolWrapper findTool2RunInBatch(@Nonnull Project project, @Nullable PsiElement element, @Nonnull String name) {
     final InspectionProfile inspectionProfile = InspectionProjectProfileManager.getInstance(project).getInspectionProfile();
-    final InspectionToolWrapper toolWrapper = element == null
-                                              ? inspectionProfile.getInspectionTool(name, project)
-                                              : inspectionProfile.getInspectionTool(name, element);
+    final InspectionToolWrapper toolWrapper = element == null ? inspectionProfile.getInspectionTool(name, project) : inspectionProfile.getInspectionTool(name, element);
     if (toolWrapper instanceof LocalInspectionToolWrapper && ((LocalInspectionToolWrapper)toolWrapper).isUnfair()) {
       final LocalInspectionTool inspectionTool = ((LocalInspectionToolWrapper)toolWrapper).getTool();
       if (inspectionTool instanceof PairedUnfairLocalInspectionTool) {
         final String oppositeShortName = ((PairedUnfairLocalInspectionTool)inspectionTool).getInspectionForBatchShortName();
-        return element == null
-               ? inspectionProfile.getInspectionTool(oppositeShortName, project)
-               : inspectionProfile.getInspectionTool(oppositeShortName, element);
+        return element == null ? inspectionProfile.getInspectionTool(oppositeShortName, project) : inspectionProfile.getInspectionTool(oppositeShortName, element);
       }
       return null;
     }

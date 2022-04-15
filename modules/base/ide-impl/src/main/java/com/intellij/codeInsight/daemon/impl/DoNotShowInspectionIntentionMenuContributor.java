@@ -13,7 +13,7 @@ import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInspection.*;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import com.intellij.codeInspection.ex.QuickFixWrapper;
 import consulo.application.internal.concurrency.JobLauncher;
 import consulo.language.editor.annotation.HighlightSeverity;

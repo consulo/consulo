@@ -15,6 +15,7 @@
  */
 package consulo.codeEditor.internal;
 
+import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.dataContext.DataContext;
@@ -23,7 +24,6 @@ import consulo.document.Document;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -35,8 +35,8 @@ import java.util.Objects;
  * @since 18-Mar-22
  */
 @Singleton
-public class EditorInternalHelper {
-  protected static class CaretDataContext extends DataContextWrapper {
+public interface EditorInternalHelper {
+  public static class CaretDataContext extends DataContextWrapper {
     protected final Caret myCaret;
 
     public CaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
@@ -53,38 +53,31 @@ public class EditorInternalHelper {
     }
   }
 
-  public static EditorInternalHelper getInstance(@Nonnull Project project) {
-    return project.getInstance(EditorInternalHelper.class);
-  }
-
-  protected final Project myProject;
-
-  @Inject
-  public EditorInternalHelper(Project project) {
-    myProject = project;
+  public static EditorInternalHelper getInstance() {
+    return Application.get().getInstance(EditorInternalHelper.class);
   }
 
   @Nonnull
-  public CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
+  default CaretDataContext createCaretDataContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
     return new CaretDataContext(delegate, caret);
   }
 
-  public boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
+  default boolean ensureInjectionUpToDate(@Nonnull Caret hostCaret) {
     return false;
   }
 
   @Nullable
-  public String getProperIndent(Document document, int offset) {
+  default String getProperIndent(Project project, Document document, int offset) {
     return null;
   }
 
-  public boolean isLexemeBoundary(@Nullable Object leftTokenType, @Nullable Object rightTokenType) {
+  default boolean isLexemeBoundary(@Nullable Object leftTokenType, @Nullable Object rightTokenType) {
     return !Objects.equals(leftTokenType, rightTokenType);
   }
 
-  public void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull final EditorHighlighter highlighter) {
+  default void rememberEditorHighlighterForCachesOptimization(Document document, @Nonnull final EditorHighlighter highlighter) {
   }
 
-  public void updateNotifications(VirtualFile file) {
+  default void updateNotifications(Project project, VirtualFile file) {
   }
 }

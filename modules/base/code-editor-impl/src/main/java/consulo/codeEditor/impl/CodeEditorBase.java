@@ -1130,7 +1130,7 @@ public abstract class CodeEditorBase extends UserDataHolderBase implements RealE
     Disposer.register(myDisposable, myHighlighterDisposable);
     highlighter.setEditor(this);
     highlighter.setText(document.getImmutableCharSequence());
-    EditorInternalHelper.getInstance(myProject).rememberEditorHighlighterForCachesOptimization(document, highlighter);
+    EditorInternalHelper.getInstance().rememberEditorHighlighterForCachesOptimization(document, highlighter);
     myHighlighter = highlighter;
   }
 

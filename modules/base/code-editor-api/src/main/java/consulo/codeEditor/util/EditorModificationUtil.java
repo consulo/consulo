@@ -280,7 +280,7 @@ public class EditorModificationUtil {
     boolean atLineStart = caretOffset >= doc.getTextLength() || doc.getLineStartOffset(doc.getLineNumber(caretOffset)) == caretOffset;
     if (atLineStart && project != null) {
       int offset = editor.getCaretModel().getOffset();
-      String properIndent = EditorInternalHelper.getInstance(project).getProperIndent(doc, offset);
+      String properIndent = EditorInternalHelper.getInstance().getProperIndent(project, doc, offset);
       if (properIndent != null) {
         int tabSize = editor.getSettings().getTabSize(project);
         for (int i = 0; i < properIndent.length(); i++) {

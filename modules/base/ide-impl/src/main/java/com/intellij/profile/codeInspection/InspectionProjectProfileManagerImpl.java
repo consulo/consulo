@@ -16,7 +16,7 @@
 package com.intellij.profile.codeInspection;
 
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import com.intellij.codeInspection.ex.InspectionProfileWrapper;
+import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
 import com.intellij.packageDependencies.DependencyValidationManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

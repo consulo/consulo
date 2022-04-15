@@ -15,9 +15,9 @@
  */
 package com.intellij.codeInspection.ex;
 
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.component.extension.ExtensionPointName;
 import com.intellij.openapi.util.JDOMUtil;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 
@@ -29,7 +29,8 @@ import java.util.*;
 public abstract class InspectionElementsMerger {
   public static final ExtensionPointName<InspectionElementsMerger> EP_NAME = ExtensionPointName.create("consulo.inspectionElementsMerger");
 
-  protected abstract String   getMergedToolName();
+  protected abstract String getMergedToolName();
+
   protected abstract String[] getSourceToolNames();
 
   /**
@@ -91,7 +92,8 @@ public abstract class InspectionElementsMerger {
           try {
             sourceElement = writeOldSettings(sourceToolName);
           }
-          catch (WriteExternalException ignored) {}
+          catch (WriteExternalException ignored) {
+          }
         }
         else {
           enabled |= isEnabledByDefault(sourceToolName);
@@ -149,7 +151,8 @@ public abstract class InspectionElementsMerger {
             for (Element scopeEl : element.getChildren()) {
               scopeElement.addContent(scopeEl.clone());
             }
-          } else {
+          }
+          else {
             scopes.put(scopeName, element.clone());
           }
           continue;

@@ -17,6 +17,7 @@
 package com.intellij.codeInspection.ui;
 
 import consulo.language.editor.FileModificationService;
+import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import com.intellij.codeInspection.ex.*;
 import consulo.language.editor.inspection.*;

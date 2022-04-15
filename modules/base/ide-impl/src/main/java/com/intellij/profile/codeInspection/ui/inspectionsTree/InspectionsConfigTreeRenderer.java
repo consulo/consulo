@@ -24,7 +24,7 @@ import consulo.language.editor.inspection.InspectionsBundle;
 import com.intellij.codeInspection.ex.Descriptor;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import com.intellij.ide.ui.search.SearchUtil;
 import com.intellij.profile.codeInspection.ui.ToolDescriptors;
 import consulo.ui.ex.JBColor;

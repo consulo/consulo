@@ -245,7 +245,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
       }
       else if (myEditor.getUserData(RealEditor.SOFT_WRAPS_EXIST) == null) {
         myEditor.putUserData(RealEditor.SOFT_WRAPS_EXIST, Boolean.TRUE);
-        EditorInternalHelper.getInstance(project).updateNotifications(file);
+        EditorInternalHelper.getInstance().updateNotifications(project, file);
       }
     }
   }

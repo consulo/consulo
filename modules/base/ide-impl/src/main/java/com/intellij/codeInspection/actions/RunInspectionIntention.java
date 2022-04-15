@@ -16,6 +16,7 @@
 
 package com.intellij.codeInspection.actions;
 
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import com.intellij.analysis.AnalysisUIOptions;

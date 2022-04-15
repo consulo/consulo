@@ -18,7 +18,7 @@ package com.intellij.codeInspection.ex;
 
 import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.codeInspection.InspectionToolsFactory;
-import com.intellij.codeInspection.LocalInspectionEP;
+import consulo.language.editor.inspection.scheme.LocalInspectionEP;
 import consulo.ide.ServiceManager;
 import com.intellij.openapi.util.Factory;
 import com.intellij.util.containers.ContainerUtil;
@@ -30,6 +30,7 @@ import consulo.language.editor.inspection.LocalInspectionTool;
 import consulo.language.editor.inspection.scheme.InspectionEP;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;

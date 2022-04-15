@@ -21,7 +21,7 @@ import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
-import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.inspection.reference.RefElement;
 import consulo.language.editor.inspection.reference.RefEntity;
 import com.intellij.codeInspection.reference.RefManagerImpl;

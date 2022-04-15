@@ -5,7 +5,7 @@ import com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspecti
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
-import com.intellij.codeInspection.ex.LocalInspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.xml.util.XmlStringUtil;

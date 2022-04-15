@@ -253,7 +253,7 @@ public class EditorActionUtil {
   }
 
   private static boolean isLexemeBoundary(@Nonnull Project project, @Nullable IElementType leftTokenType, @Nullable IElementType rightTokenType) {
-    return EditorInternalHelper.getInstance(project).isLexemeBoundary(leftTokenType, rightTokenType);
+    return EditorInternalHelper.getInstance().isLexemeBoundary(leftTokenType, rightTokenType);
   }
 
   public static boolean isWordStart(@Nonnull CharSequence text, int offset, boolean isCamel) {

@@ -1326,7 +1326,7 @@ public class CodeEditorCaretBase extends UserDataHolderBase implements Caret, Du
 
       try {
         EditorActionHandler handler = EditorActionManager.getInstance().getActionHandler(IdeActions.ACTION_EDITOR_SELECT_WORD_AT_CARET);
-        DataContext context = AnActionEvent.getInjectedDataContext(EditorInternalHelper.getInstance(myEditor.getProject()).createCaretDataContext(myEditor.getDataContext(), this));
+        DataContext context = AnActionEvent.getInjectedDataContext(EditorInternalHelper.getInstance().createCaretDataContext(myEditor.getDataContext(), this));
         Caret caret = context.getData(Caret.KEY);
         assert caret != null;
         handler.execute(caret.getEditor(), caret, context);

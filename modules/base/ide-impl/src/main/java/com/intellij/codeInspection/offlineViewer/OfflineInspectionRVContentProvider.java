@@ -29,6 +29,7 @@ import consulo.language.editor.inspection.reference.RefEntity;
 import com.intellij.codeInspection.reference.SmartRefElementPointer;
 import com.intellij.codeInspection.ui.*;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.util.Function;

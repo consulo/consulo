@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInspection.ex;
+package consulo.language.editor.inspection.scheme;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.inspection.scheme.*;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.Function;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 /**
  * User: anna
@@ -43,8 +42,8 @@ public class InspectionProfileWrapper {
    * I.e. given strategy (if any) receives {@link InspectionProfileWrapper} object that is going to be used so far and returns
    * {@link InspectionProfileWrapper} object that should be used later.
    */
-  public static final Key<Function<InspectionProfileWrapper, InspectionProfileWrapper>> CUSTOMIZATION_KEY
-          = Key.create("Inspection Profile Wrapper Customization");
+  public static final Key<Function<InspectionProfile, InspectionProfileWrapper>> CUSTOMIZATION_KEY = Key.create("Inspection Profile Wrapper Customization");
+
   protected final InspectionProfile myProfile;
 
   public InspectionProfileWrapper(@Nonnull InspectionProfile profile) {
@@ -52,12 +51,13 @@ public class InspectionProfileWrapper {
   }
 
   @Nonnull
-  public InspectionToolWrapper[] getInspectionTools(PsiElement element){
+  public InspectionToolWrapper[] getInspectionTools(PsiElement element) {
     return myProfile.getInspectionTools(element);
   }
 
   // check whether some inspection got registered twice by accident. 've bit once.
   private static boolean alreadyChecked;
+
   public static void checkInspectionsDuplicates(@Nonnull InspectionToolWrapper[] toolWrappers) {
     if (alreadyChecked) return;
     alreadyChecked = true;
@@ -91,7 +91,7 @@ public class InspectionProfileWrapper {
     }
   }
 
-  public void cleanup(@Nonnull Project project){
+  public void cleanup(@Nonnull Project project) {
     myProfile.cleanup(project);
   }
 

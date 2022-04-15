@@ -33,7 +33,6 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -44,7 +43,7 @@ import javax.annotation.Nullable;
  * @since 18-Mar-22
  */
 @Singleton
-public class IdeEditorInternalHelper extends EditorInternalHelper {
+public class IdeEditorInternalHelper implements EditorInternalHelper {
   private static class FileEditorAffectCaretContext extends CaretDataContext {
 
     public FileEditorAffectCaretContext(@Nonnull DataContext delegate, @Nonnull Caret caret) {
@@ -67,16 +66,11 @@ public class IdeEditorInternalHelper extends EditorInternalHelper {
     }
   }
 
-  @Inject
-  public IdeEditorInternalHelper(Project project) {
-    super(project);
-  }
-
   @Nullable
   @Override
-  public String getProperIndent(Document document, int offset) {
-    PsiDocumentManager.getInstance(myProject).commitDocument(document); // Sync document and PSI before formatting.
-    return offset >= document.getTextLength() ? "" : CodeStyleFacade.getInstance(myProject).getLineIndent(document, offset);
+  public String getProperIndent(Project project, Document document, int offset) {
+    PsiDocumentManager.getInstance(project).commitDocument(document); // Sync document and PSI before formatting.
+    return offset >= document.getTextLength() ? "" : CodeStyleFacade.getInstance(project).getLineIndent(document, offset);
   }
 
   @Nonnull
@@ -111,7 +105,7 @@ public class IdeEditorInternalHelper extends EditorInternalHelper {
   }
 
   @Override
-  public void updateNotifications(VirtualFile file) {
-    EditorNotifications.getInstance(myProject).updateNotifications(file);
+  public void updateNotifications(Project project, VirtualFile file) {
+    EditorNotifications.getInstance(project).updateNotifications(file);
   }
 }

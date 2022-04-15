@@ -24,6 +24,7 @@ import com.intellij.codeInspection.reference.RefManagerImpl;
 import com.intellij.util.ArrayUtil;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.inspection.scheme.JobDescriptor;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 
 import javax.annotation.Nonnull;
 

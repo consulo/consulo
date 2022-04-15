@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInspection;
+package consulo.language.editor.inspection.scheme;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.inspection.LocalInspectionTool;
-import consulo.language.editor.inspection.scheme.InspectionEP;
 import consulo.util.xml.serializer.annotation.Attribute;
 
 /**

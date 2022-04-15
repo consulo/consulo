@@ -16,51 +16,40 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import consulo.language.editor.DaemonBundle;
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
 import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import com.intellij.codeInspection.InspectionEngine;
-import consulo.language.editor.inspection.ProblemDescriptorBase;
-import consulo.language.editor.inspection.ProblemDescriptorUtil;
 import com.intellij.codeInspection.ex.*;
 import com.intellij.codeInspection.ui.InspectionToolPresentation;
-import consulo.ui.ex.action.IdeActions;
-import consulo.application.internal.ApplicationEx;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.TransferToEDTQueue;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
+import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.concurrency.JobLauncher;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
+import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.Language;
+import consulo.language.editor.DaemonBundle;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
@@ -70,8 +59,13 @@ import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.util.lang.Trinity;
 import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NonNls;
@@ -79,7 +73,9 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Function;
 
 /**
  * @author max
@@ -90,7 +86,7 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
   private static final Condition<PsiFile> SHOULD_INSPECT_FILTER = file -> HighlightingLevelManager.getInstance(file.getProject()).shouldInspect(file);
   private final TextRange myPriorityRange;
   private final boolean myIgnoreSuppressed;
-  private final ConcurrentMap<PsiFile, List<InspectionResult>> result = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<PsiFile, List<InspectionResult>> result = new ConcurrentHashMap<>();
   private static final String PRESENTABLE_NAME = DaemonBundle.message("pass.inspection");
   private volatile List<HighlightInfo> myInfos = Collections.emptyList();
   private final String myShortcutText;
@@ -112,21 +108,15 @@ public class LocalInspectionsPass extends ProgressableTextEditorHighlightingPass
     setId(Pass.LOCAL_INSPECTIONS);
 
     final KeymapManager keymapManager = KeymapManager.getInstance();
-    if (keymapManager != null) {
-      final Keymap keymap = keymapManager.getActiveKeymap();
-      myShortcutText = keymap == null ? "" : "(" + KeymapUtil.getShortcutsText(keymap.getShortcuts(IdeActions.ACTION_SHOW_ERROR_DESCRIPTION)) + ")";
-    }
-    else {
-      myShortcutText = "";
-    }
-    InspectionProfileWrapper profileToUse = InspectionProjectProfileManagerImpl.getInstanceImpl(myProject).getProfileWrapper();
 
-    Function<InspectionProfileWrapper, InspectionProfileWrapper> custom = file.getUserData(InspectionProfileWrapper.CUSTOMIZATION_KEY);
-    if (custom != null) {
-      profileToUse = custom.fun(profileToUse);
-    }
+    final Keymap keymap = keymapManager.getActiveKeymap();
+    myShortcutText = keymap == null ? "" : "(" + KeymapUtil.getShortcutsText(keymap.getShortcuts(IdeActions.ACTION_SHOW_ERROR_DESCRIPTION)) + ")";
 
-    myProfileWrapper = profileToUse;
+    InspectionProfile profile = consulo.language.editor.inspection.scheme.InspectionProjectProfileManager.getInstance(file.getProject()).getCurrentProfile();
+
+    Function<InspectionProfile, InspectionProfileWrapper> custom = file.getUserData(InspectionProfileWrapper.CUSTOMIZATION_KEY);
+
+    myProfileWrapper = custom == null ? new InspectionProfileWrapper(profile) : custom.apply(profile);
     assert myProfileWrapper != null;
     mySeverityRegistrar = (SeverityRegistrarImpl)((SeverityProvider)myProfileWrapper.getInspectionProfile().getProfileManager()).getSeverityRegistrar();
 
