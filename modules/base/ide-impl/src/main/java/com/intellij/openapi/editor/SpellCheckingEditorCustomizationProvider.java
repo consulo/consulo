@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.openapi.vcs.ui.SpellCheckerCustomization;
-import com.intellij.ui.EditorCustomization;
+import consulo.language.editor.ui.SpellCheckerCustomization;
+import consulo.language.editor.ui.EditorCustomization;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

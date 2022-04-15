@@ -20,7 +20,7 @@ import com.intellij.openapi.editor.SpellCheckingEditorCustomizationProvider;
 import consulo.codeEditor.EditorEx;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
-import com.intellij.ui.EditorCustomization;
+import consulo.language.editor.ui.EditorCustomization;
 import com.intellij.ui.LanguageTextField;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

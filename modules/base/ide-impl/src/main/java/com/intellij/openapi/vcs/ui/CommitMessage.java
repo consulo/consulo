@@ -20,6 +20,8 @@ import consulo.dataContext.DataSink;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
+import consulo.language.editor.ui.EditorCustomization;
+import consulo.language.editor.ui.SpellCheckerCustomization;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;

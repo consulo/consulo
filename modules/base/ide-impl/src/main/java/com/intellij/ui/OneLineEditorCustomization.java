@@ -16,6 +16,8 @@
 package com.intellij.ui;
 
 import consulo.codeEditor.EditorEx;
+import consulo.language.editor.ui.SimpleEditorCustomization;
+
 import javax.annotation.Nonnull;
 
 /**
