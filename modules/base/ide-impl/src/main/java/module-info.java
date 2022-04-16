@@ -1114,10 +1114,7 @@ open module consulo.ide.impl {
   exports consulo.ui.popup;
   exports consulo.ui.tree.impl;
   exports consulo.ui.wizard;
-  exports consulo.util;
-  exports consulo.util.containers;
   exports consulo.util.io2;
-  exports consulo.util.pointers;
   exports consulo.util.ui;
   exports consulo.vcs.changes.ui;
   exports consulo.vfs.impl.archive;

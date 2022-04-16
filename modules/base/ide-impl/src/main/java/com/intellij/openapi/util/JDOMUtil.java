@@ -16,7 +16,6 @@
 package com.intellij.openapi.util;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.Interner;
 import com.intellij.util.text.CharArrayUtil;
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.logging.Logger;
@@ -140,42 +139,6 @@ public class JDOMUtil {
 
   public static void addContent(@Nonnull final Element targetElement, final Object node) {
     consulo.util.jdom.JDOMUtil.addContent(targetElement, node);
-  }
-
-  /**
-   * Replace all strings in JDOM {@code element} with their interned variants with the help of {@code interner} to reduce memory.
-   * It's better to use {@link #internElement(Element)} though because the latter will intern the Element instances too.
-   */
-  public static void internStringsInElement(@Nonnull Element element, @Nonnull Interner<String> interner) {
-    element.setName(intern(interner, element.getName()));
-
-    for (Attribute attr : element.getAttributes()) {
-      attr.setName(intern(interner, attr.getName()));
-      attr.setValue(intern(interner, attr.getValue()));
-    }
-
-    for (Content o : element.getContent()) {
-      if (o instanceof Element) {
-        Element e = (Element)o;
-        internStringsInElement(e, interner);
-      }
-      else if (o instanceof Text) {
-        Text text = (Text)o;
-        text.setText(intern(interner, text.getText()));
-      }
-      else if (o instanceof Comment) {
-        Comment comment = (Comment)o;
-        comment.setText(intern(interner, comment.getText()));
-      }
-      else {
-        throw new IllegalArgumentException("Wrong node: " + o);
-      }
-    }
-  }
-
-  @Nonnull
-  private static String intern(@Nonnull final Interner<String> interner, @Nonnull final String s) {
-    return interner.intern(s);
   }
 
   @Nonnull

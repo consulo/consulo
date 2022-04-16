@@ -1,33 +1,33 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.vfs.newvfs.persistent;
 
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
 import com.intellij.openapi.util.Pair;
-import consulo.application.util.SystemInfo;
-import consulo.util.io.FileAttributes;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
-import consulo.virtualFileSystem.VFileProperty;
 import com.intellij.openapi.vfs.VfsUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.openapi.vfs.impl.local.DirectoryAccessChecker;
 import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
 import com.intellij.openapi.vfs.newvfs.ChildInfoImpl;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.virtualFileSystem.NewVirtualFileSystem;
-import consulo.virtualFileSystem.event.ChildInfo;
-import consulo.virtualFileSystem.event.VFileEvent;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
 import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Interner;
 import com.intellij.util.containers.Queue;
 import com.intellij.util.text.FilePathHashingStrategy;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import consulo.util.interner.Interner;
+import consulo.util.io.FileAttributes;
+import consulo.virtualFileSystem.InvalidVirtualFileAccessException;
+import consulo.virtualFileSystem.NewVirtualFileSystem;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.ChildInfo;
+import consulo.virtualFileSystem.event.VFileEvent;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;

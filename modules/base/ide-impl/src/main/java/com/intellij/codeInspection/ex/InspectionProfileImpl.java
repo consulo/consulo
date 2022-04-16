@@ -21,28 +21,28 @@ import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.openapi.options.ExternalInfo;
 import com.intellij.openapi.options.ExternalizableScheme;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.profile.DefaultProjectProfileManager;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Interner;
+import consulo.application.ApplicationManager;
+import consulo.application.util.function.Computable;
+import consulo.component.ProcessCanceledException;
 import consulo.component.util.graph.CachingSemiGraph;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.GraphGenerator;
-import consulo.application.ApplicationManager;
-import consulo.component.ProcessCanceledException;
-import consulo.application.util.function.Computable;
+import consulo.content.scope.NamedScope;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.inspection.scheme.*;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.psi.PsiElement;
-import consulo.content.scope.NamedScope;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.util.interner.Interner;
+import consulo.util.jdom.interner.JDOMInterner;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.util.xml.serializer.annotation.Attribute;
@@ -263,7 +263,7 @@ public class InspectionProfileImpl extends ProfileEx implements ModifiableModel,
     for (Element toolElement : element.getChildren(INSPECTION_TOOL_TAG)) {
       // make clone to avoid retaining memory via o.parent pointers
       toolElement = toolElement.clone();
-      JDOMUtil.internStringsInElement(toolElement, interner);
+      JDOMInterner.internStringsInElement(toolElement, interner);
       myUninstalledInspectionsSettings.put(toolElement.getAttributeValue(CLASS_TAG), toolElement);
     }
   }

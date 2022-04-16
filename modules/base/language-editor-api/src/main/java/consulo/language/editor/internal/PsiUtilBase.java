@@ -16,7 +16,6 @@
 
 package consulo.language.editor.internal;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
@@ -254,7 +253,7 @@ public class PsiUtilBase extends PsiUtilCore {
       // We assume that data context from focus-based retrieval should success if performed from EDT.
       AsyncResult<DataContext> asyncResult = DataManager.getInstance().getDataContextFromFocus();
       if (asyncResult.isDone()) {
-        Editor editor = asyncResult.getResult().getData(CommonDataKeys.EDITOR);
+        Editor editor = asyncResult.getResult().getData(Editor.KEY);
         if (editor != null) {
           Document cachedDocument = PsiDocumentManager.getInstance(project).getCachedDocument(psiFile);
           // Ensure that target editor is found by checking its document against the one from given PSI element.

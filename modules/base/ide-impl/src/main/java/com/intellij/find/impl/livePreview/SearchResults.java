@@ -23,7 +23,7 @@ import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
 import consulo.project.Project;
-import consulo.util.BombedStringUtil;
+import consulo.application.util.BombedStringUtil;
 import consulo.util.collection.Stack;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.lang.StringUtil;

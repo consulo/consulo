@@ -41,7 +41,7 @@ import consulo.compiler.ModuleCompilerPathsManager;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.component.util.pointer.NamedPointer;
-import consulo.util.pointers.NamedPointerUtil;
+import consulo.component.util.pointer.NamedPointerUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

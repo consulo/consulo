@@ -1,10 +1,10 @@
 package com.intellij.vcs.log.impl;
 
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.containers.Interner;
 import com.intellij.vcs.log.Hash;
 import com.intellij.vcs.log.VcsRef;
 import com.intellij.vcs.log.VcsRefType;
+import consulo.util.interner.Interner;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 

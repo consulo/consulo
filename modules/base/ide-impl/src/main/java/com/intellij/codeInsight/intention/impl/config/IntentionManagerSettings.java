@@ -24,20 +24,20 @@
  */
 package com.intellij.codeInsight.intention.impl.config;
 
+import com.intellij.ide.ui.search.SearchableOptionContributor;
+import com.intellij.ide.ui.search.SearchableOptionProcessor;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.util.text.StringUtil;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionActionBean;
 import consulo.language.editor.intention.IntentionManager;
-import com.intellij.ide.ui.search.SearchableOptionContributor;
-import com.intellij.ide.ui.search.SearchableOptionProcessor;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.Interner;
 import consulo.logging.Logger;
+import consulo.util.interner.Interner;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 @State(name = "IntentionManagerSettings", storages = @Storage("intentionSettings.xml"))
 public class IntentionManagerSettings implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(IntentionManagerSettings.class);
-  private static final Interner<String> ourStringInterner = Interner.createStringInterner();
+  private static final Interner<String> ourStringInterner = consulo.util.interner.Interner.createStringInterner();
 
   private static class MetaDataKey extends Pair<String, String> {
     private MetaDataKey(@Nonnull String[] categoryNames, @Nonnull final String familyName) {

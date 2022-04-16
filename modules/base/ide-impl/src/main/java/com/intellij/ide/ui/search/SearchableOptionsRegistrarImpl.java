@@ -16,22 +16,22 @@
 
 package com.intellij.ide.ui.search;
 
-import consulo.language.codeStyle.CodeStyle;
-import consulo.ide.IdeBundle;
-import consulo.application.ApplicationBundle;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Interner;
+import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.IdeBundle;
 import consulo.ide.plugins.PluginsConfigurable;
+import consulo.language.codeStyle.CodeStyle;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.interner.Interner;
 import consulo.util.io.ResourceUtil;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
@@ -58,7 +58,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   private final Map<Pair<String, String>, Set<String>> myHighlightOption2Synonym = Collections.synchronizedMap(new HashMap<Pair<String, String>, Set<String>>());
   private volatile boolean allTheseHugeFilesAreLoaded;
 
-  private final Interner<String> myIdentifierTable = Interner.createStringInterner();
+  private final consulo.util.interner.Interner<String> myIdentifierTable = Interner.createStringInterner();
 
   private static final Logger LOG = Logger.getInstance(SearchableOptionsRegistrarImpl.class);
   public static final int LOAD_FACTOR = 20;

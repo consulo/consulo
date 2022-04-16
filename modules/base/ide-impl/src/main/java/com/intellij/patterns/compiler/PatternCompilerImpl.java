@@ -16,21 +16,21 @@
 
 package com.intellij.patterns.compiler;
 
-import consulo.language.pattern.compiler.PatternCompiler;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.ref.Ref;
-import consulo.util.lang.StringHash;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Function;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.ElementPatternCondition;
 import consulo.language.pattern.InitialPatternCondition;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.Function;
+import consulo.language.pattern.compiler.PatternCompiler;
 import consulo.language.util.ProcessingContext;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Interner;
-import consulo.util.collection.Stack;
 import consulo.logging.Logger;
+import consulo.util.collection.Stack;
+import consulo.util.interner.Interner;
+import consulo.util.lang.StringHash;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.*;
@@ -44,7 +44,7 @@ public class PatternCompilerImpl<T> implements PatternCompiler<T> {
   private static final Logger LOG = Logger.getInstance(PatternCompilerImpl.class);
 
   private final Set<Method> myStaticMethods;
-  private final Interner<String> myStringInterner = Interner.createStringInterner();
+  private final consulo.util.interner.Interner<String> myStringInterner = Interner.createStringInterner();
 
   public PatternCompilerImpl(final List<Class> patternClasses) {
     myStaticMethods = getStaticMethods(patternClasses);

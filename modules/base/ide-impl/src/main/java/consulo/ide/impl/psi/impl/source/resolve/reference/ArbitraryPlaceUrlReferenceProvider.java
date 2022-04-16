@@ -27,7 +27,7 @@ import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
 import consulo.language.util.ProcessingContext;
 import consulo.util.collection.SmartList;
-import consulo.util.BombedStringUtil;
+import consulo.application.util.BombedStringUtil;
 
 import javax.annotation.Nonnull;
 import java.util.List;

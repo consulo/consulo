@@ -11,7 +11,6 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.util.ConcurrencyUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.containers.Interner;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.IndexNotReadyException;
@@ -37,6 +36,7 @@ import consulo.module.ModuleManager;
 import consulo.module.content.util.ProjectUtilCore;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.util.interner.Interner;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
@@ -79,7 +79,7 @@ public class RefManagerImpl extends RefManager {
 
   private final Map<Key, RefManagerExtension> myExtensions = new HashMap<>();
   private final Map<Language, RefManagerExtension> myLanguageExtensions = new HashMap<>();
-  private final Interner<String> myNameInterner = Interner.createStringInterner();
+  private final Interner<String> myNameInterner = consulo.util.interner.Interner.createStringInterner();
 
   public RefManagerImpl(@Nonnull Project project, @Nullable AnalysisScope scope, @Nonnull GlobalInspectionContext context) {
     myProject = project;

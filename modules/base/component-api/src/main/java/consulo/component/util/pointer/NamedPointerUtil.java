@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.util.pointers;
-
-import consulo.component.util.pointer.Named;
-import consulo.component.util.pointer.NamedPointer;
+package consulo.component.util.pointer;
 
 import javax.annotation.Nullable;
 
