@@ -210,7 +210,6 @@
                     interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
     <extensionPoint name="editorNotificationProvider" area="PROJECT" interface="consulo.codeEditor.notifications.EditorNotificationProvider"/>
 
-    <extensionPoint name="editorCustomization" area="PROJECT" interface="com.intellij.ui.EditorCustomization"/>
     <extensionPoint name="editorNavigation" interface="com.intellij.openapi.editor.EditorNavigationDelegate"/>
 
     <extensionPoint name="statistics.usagesCollector" interface="com.intellij.internal.statistic.UsagesCollector"/>
@@ -657,7 +656,7 @@
     <extensionPoint name="patternDialectProvider" interface="com.intellij.packageDependencies.ui.PatternDialectProvider"/>
 
     <extensionPoint name="localInspection"
-                    beanClass="com.intellij.codeInspection.LocalInspectionEP">
+                    beanClass="consulo.language.editor.inspection.scheme.LocalInspectionEP">
       <with attribute="implementationClass" implements="consulo.language.editor.inspection.LocalInspectionTool"/>
     </extensionPoint>
 
@@ -2183,13 +2182,6 @@
     <codeInsight.lineMarkerProvider language="" implementationClass="com.intellij.execution.lineMarker.RunLineMarkerProvider"/>
     <codeInsight.lineMarkerProvider language="" implementationClass="com.intellij.ui.ColorLineMarkerProvider"/>
 
-
-    <editorCustomization implementation="com.intellij.ui.SoftWrapsEditorCustomization"/>
-    <editorCustomization implementation="com.intellij.ui.HorizontalScrollBarEditorCustomization"/>
-    <editorCustomization implementation="com.intellij.ui.AdditionalPageAtBottomEditorCustomization"/>
-    <editorCustomization implementation="com.intellij.ui.OneLineEditorCustomization"/>
-    <editorCustomization implementation="com.intellij.ui.RightMarginEditorCustomization"/>
-
     <applicationConfigurable id="editor.preferences.folding.general"
                              parentId="editor.preferences.folding"
                              displayName="General"
@@ -2539,8 +2531,6 @@
     <fileIndentOptionsProvider implementation="consulo.ide.impl.psi.codeStyle.DetectableIndentOptionsProvider" order="last"/>
 
     <predefinedBundlesProvider implementation="consulo.bundle.impl.DefaultPredefinedBundlesProvider" order="first"/>
-
-    <ui.suitableFontProvider implementation="com.intellij.ui.SuitableFontProviderImpl"/>
 
     <moduleRootsProcessor implementation="consulo.module.impl.internal.layer.NullModuleDirModuleRootsProcessor" order="last"/>
 
