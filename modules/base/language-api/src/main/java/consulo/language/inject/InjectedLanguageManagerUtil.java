@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class InjectLanguageManagerUtil {
+public class InjectedLanguageManagerUtil {
   /**
    * Used in RegExp plugin for value pattern annotator
    *

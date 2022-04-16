@@ -17,27 +17,20 @@
 /*
  * @author max
  */
-package com.intellij.openapi.util;
+package consulo.application.extension;
 
-import consulo.application.extension.LazyInstance;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.KeyedLazyInstance;
 import consulo.util.xml.serializer.annotation.Attribute;
 
 public class ClassExtensionPoint<T> extends AbstractExtensionPointBean implements KeyedLazyInstance<T> {
-  // these must be public for scrambling compatibility
   @Attribute("forClass")
   public String psiElementClass;
 
   @Attribute("implementationClass")
   public String implementationClass;
 
-  private final LazyInstance<T> myHandler = new LazyInstance<T>() {
-    @Override
-    protected Class<T> getInstanceClass() throws ClassNotFoundException {
-      return findClass(implementationClass);
-    }
-  };
+  private final LazyInstance<T> myHandler = LazyInstance.createInstance(() -> findClass(implementationClass));
 
   @Override
   public T getInstance() {
@@ -48,5 +41,4 @@ public class ClassExtensionPoint<T> extends AbstractExtensionPointBean implement
   public String getKey() {
     return psiElementClass;
   }
-
 }

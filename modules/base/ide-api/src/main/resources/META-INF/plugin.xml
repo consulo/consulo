@@ -140,7 +140,7 @@
       <with attribute="implementationClass" implements="consulo.language.editor.highlight.SyntaxHighlighter"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.syntaxHighlighterFactory" beanClass="com.intellij.openapi.fileTypes.SyntaxHighlighterFactoryEP">
+    <extensionPoint name="lang.syntaxHighlighterFactory" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.editor.highlight.SyntaxHighlighterFactory"/>
     </extensionPoint>
 
@@ -223,7 +223,7 @@
     <extensionPoint name="fileDocumentManagerListener" interface="consulo.document.event.FileDocumentManagerListener"/>
     <extensionPoint name="fileDocumentSynchronizationVetoer" interface="consulo.document.FileDocumentSynchronizationVetoer"/>
 
-    <extensionPoint name="itemPresentationProvider" beanClass="com.intellij.openapi.util.ClassExtensionPoint">
+    <extensionPoint name="itemPresentationProvider" beanClass="consulo.application.extension.ClassExtensionPoint">
       <with attribute="implementationClass" implements="consulo.navigation.ItemPresentationProvider"/>
     </extensionPoint>
 
@@ -804,7 +804,7 @@
       <with attribute="implementationClass" implements="com.intellij.openapi.options.SchemeImporter"/>
     </extensionPoint>
 
-    <extensionPoint name="lang.elementManipulator" beanClass="com.intellij.openapi.util.ClassExtensionPoint">
+    <extensionPoint name="lang.elementManipulator" beanClass="consulo.application.extension.ClassExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.psi.ElementManipulator"/>
     </extensionPoint>
 
@@ -831,7 +831,7 @@
       <with attribute="implementationClass" implements="consulo.language.Weigher"/>
     </extensionPoint>
 
-    <extensionPoint name="completion.contributor" beanClass="com.intellij.codeInsight.completion.CompletionContributorEP">
+    <extensionPoint name="completion.contributor" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.editor.completion.CompletionContributor"/>
     </extensionPoint>
 

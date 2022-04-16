@@ -585,7 +585,7 @@ public class InjectedLanguageUtil {
 
   @Deprecated
   public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull final PsiElement element) {
-    return InjectLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element);
+    return InjectedLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element);
   }
 
   public static int hostToInjectedUnescaped(DocumentWindow window, int hostOffset) {
@@ -705,7 +705,7 @@ public class InjectedLanguageUtil {
 
   @Nullable
   public static PsiLanguageInjectionHost findInjectionHost(@Nullable PsiElement psi) {
-    return InjectLanguageManagerUtil.findInjectionHost(psi);
+    return InjectedLanguageManagerUtil.findInjectionHost(psi);
   }
 
   @Nullable

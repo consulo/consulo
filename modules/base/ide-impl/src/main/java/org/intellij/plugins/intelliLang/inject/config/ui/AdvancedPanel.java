@@ -16,7 +16,7 @@
 package org.intellij.plugins.intelliLang.inject.config.ui;
 
 import consulo.language.Language;
-import consulo.language.inject.InjectLanguageManagerUtil;
+import consulo.language.inject.InjectedLanguageManagerUtil;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.ui.awt.EditorTextField;
@@ -29,7 +29,7 @@ import javax.swing.*;
 public class AdvancedPanel extends AbstractInjectionPanel<BaseInjection>
 {
 	@Deprecated
-	public static final Key<Boolean> KEY = InjectLanguageManagerUtil.VALUE_PATTERN_KEY_FOR_ADVANCED_INJECT;
+	public static final Key<Boolean> KEY = InjectedLanguageManagerUtil.VALUE_PATTERN_KEY_FOR_ADVANCED_INJECT;
 
 	private JPanel myRoot;
 
