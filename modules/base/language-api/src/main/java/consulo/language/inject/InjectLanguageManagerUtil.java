@@ -24,6 +24,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
+import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -31,6 +32,14 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class InjectLanguageManagerUtil {
+  /**
+   * Used in RegExp plugin for value pattern annotator
+   *
+   * Annotator that is used to validate the "Value-Pattern" textfield: The regex entered there should contain exactly
+   * one capturing group that determines the text-range the configured language will be injected into.
+   */
+  public static final Key<Boolean> VALUE_PATTERN_KEY_FOR_ADVANCED_INJECT = Key.create("IS_VALUE_REGEXP");
+
   @RequiredReadAction
   public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull final PsiElement element) {
     PsiFile injectedFile = element.getContainingFile();

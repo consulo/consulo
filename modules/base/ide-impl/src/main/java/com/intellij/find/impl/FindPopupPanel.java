@@ -7,6 +7,7 @@ import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.ide.IdeEventQueue;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.find.*;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.ui.ex.internal.ActionButtonComponent;
 import consulo.language.editor.CommonDataKeys;

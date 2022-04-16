@@ -43,7 +43,7 @@ import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.TaskRepository;
 import com.intellij.tasks.impl.BaseRepository;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.PanelWithAnchor;
 import com.intellij.ui.components.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;

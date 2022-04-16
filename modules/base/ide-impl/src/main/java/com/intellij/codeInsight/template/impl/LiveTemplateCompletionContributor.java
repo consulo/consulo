@@ -18,7 +18,7 @@ import consulo.language.pattern.PlatformPatterns;
 import consulo.language.pattern.StandardPatterns;
 import consulo.language.psi.PsiFile;
 import consulo.language.plain.psi.PsiPlainTextFile;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.util.ProcessingContext;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;

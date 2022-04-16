@@ -22,7 +22,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.FoldingModelEx;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import com.intellij.xdebugger.impl.XDebuggerHistoryManager;
 import com.intellij.xdebugger.impl.breakpoints.XExpressionImpl;
 import consulo.application.AllIcons;

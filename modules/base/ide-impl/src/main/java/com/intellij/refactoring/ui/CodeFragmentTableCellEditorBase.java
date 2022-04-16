@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.swing.*;

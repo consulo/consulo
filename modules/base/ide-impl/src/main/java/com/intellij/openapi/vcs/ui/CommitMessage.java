@@ -22,6 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.SpellCheckerCustomization;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;

@@ -20,7 +20,7 @@ import consulo.document.Document;
 import consulo.document.event.DocumentListener;
 import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.project.Project;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.swing.*;

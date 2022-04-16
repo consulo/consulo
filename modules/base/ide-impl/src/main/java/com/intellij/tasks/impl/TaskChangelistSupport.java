@@ -24,7 +24,7 @@ import com.intellij.tasks.ChangeListInfo;
 import com.intellij.tasks.LocalTask;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.actions.TaskAutoCompletionListProvider;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import com.intellij.ui.TextFieldWithAutoCompletionContributor;
 import com.intellij.util.Consumer;
 

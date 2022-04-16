@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.language.editor.ui.awt;
 
+import consulo.application.ui.wm.ApplicationIdeFocusManager;
+import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.event.FocusChangeListener;
-import consulo.codeEditor.Editor;
 import consulo.document.Document;
 import consulo.project.Project;
-import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -84,12 +84,9 @@ public class ComboboxEditorTextField extends EditorTextField {
   private void repaintComboBox() {
     // TODO:
     if (UIUtil.isUnderBuildInLaF()) {
-      ProjectIdeFocusManager.getInstance(getProject()).doWhenFocusSettlesDown(new Runnable() {
-        @Override
-        public void run() {
-          final Container parent = getParent();
-          if (parent != null) parent.repaint();
-        }
+      ApplicationIdeFocusManager.getInstance().getInstanceForProject(getProject()).doWhenFocusSettlesDown(() -> {
+        final Container parent = getParent();
+        if (parent != null) parent.repaint();
       });
     }
   }

@@ -32,7 +32,7 @@ import com.intellij.openapi.util.*;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.WindowManager;
 import com.intellij.ui.AppUIUtil;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.list.ListPopupImpl;

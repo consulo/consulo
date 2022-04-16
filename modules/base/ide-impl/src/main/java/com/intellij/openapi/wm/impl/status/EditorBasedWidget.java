@@ -2,7 +2,7 @@
 package com.intellij.openapi.wm.impl.status;
 
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import com.intellij.util.ArrayUtil;
 import consulo.application.Application;
 import consulo.application.ui.wm.FocusableFrame;

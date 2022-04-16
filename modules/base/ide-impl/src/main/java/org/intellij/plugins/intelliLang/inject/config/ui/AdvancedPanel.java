@@ -16,10 +16,11 @@
 package org.intellij.plugins.intelliLang.inject.config.ui;
 
 import consulo.language.Language;
+import consulo.language.inject.InjectLanguageManagerUtil;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.EditorTextField;
-import com.intellij.ui.LanguageTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.editor.ui.awt.LanguageTextField;
 import consulo.util.dataholder.Key;
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
 
@@ -27,7 +28,8 @@ import javax.swing.*;
 
 public class AdvancedPanel extends AbstractInjectionPanel<BaseInjection>
 {
-	public static final Key<Boolean> KEY = Key.create("IS_VALUE_REGEXP");
+	@Deprecated
+	public static final Key<Boolean> KEY = InjectLanguageManagerUtil.VALUE_PATTERN_KEY_FOR_ADVANCED_INJECT;
 
 	private JPanel myRoot;
 

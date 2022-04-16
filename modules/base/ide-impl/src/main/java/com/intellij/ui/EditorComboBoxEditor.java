@@ -18,6 +18,8 @@ package com.intellij.ui;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
+import consulo.language.editor.ui.awt.ComboboxEditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.application.ui.wm.IdeFocusManager;

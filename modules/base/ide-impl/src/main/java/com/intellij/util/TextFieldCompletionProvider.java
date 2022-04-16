@@ -11,7 +11,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.util.lang.LocalTimeCounter;
 
 import javax.annotation.Nonnull;

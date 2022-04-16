@@ -31,7 +31,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.LanguageTextField;
+import consulo.language.editor.ui.awt.LanguageTextField;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -28,7 +28,7 @@ import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.openapi.vcs.changes.committed.CommittedChangeListRenderer;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.ui.StringComboboxEditor;
 import com.intellij.util.ArrayUtil;

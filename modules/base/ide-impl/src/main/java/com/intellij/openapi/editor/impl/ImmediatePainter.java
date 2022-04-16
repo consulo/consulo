@@ -19,7 +19,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.Consumer;

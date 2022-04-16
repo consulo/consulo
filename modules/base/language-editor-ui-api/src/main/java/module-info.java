@@ -13,4 +13,5 @@ module consulo.language.editor.ui.api {
 
   exports consulo.language.editor.ui;
   exports consulo.language.editor.ui.navigation;
+  exports consulo.language.editor.ui.awt;
 }

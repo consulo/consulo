@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.language.editor.ui.awt.EditorComboBox;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;

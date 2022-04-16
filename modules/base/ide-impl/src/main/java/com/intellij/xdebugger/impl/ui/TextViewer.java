@@ -6,7 +6,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.document.impl.DocumentImpl;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import javax.annotation.Nonnull;
 
 public final class TextViewer extends EditorTextField {

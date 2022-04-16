@@ -42,7 +42,7 @@ import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.TextAccessor;
 import consulo.ui.ex.awt.tree.Tree;

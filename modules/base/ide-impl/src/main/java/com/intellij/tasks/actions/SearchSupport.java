@@ -27,7 +27,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.application.util.function.Computable;
 import com.intellij.tasks.Task;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import com.intellij.ui.ListScrollingUtil;
 import consulo.ui.ex.awt.SortedListModel;
 import consulo.ui.ex.awt.JBList;

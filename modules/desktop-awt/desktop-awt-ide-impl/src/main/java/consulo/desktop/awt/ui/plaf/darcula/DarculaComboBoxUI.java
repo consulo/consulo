@@ -7,7 +7,7 @@ import consulo.application.util.ColoredItem;
 import com.intellij.openapi.util.Comparing;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;

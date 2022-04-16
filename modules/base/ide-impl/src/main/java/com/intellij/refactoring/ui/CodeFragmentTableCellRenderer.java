@@ -21,7 +21,7 @@ import com.intellij.openapi.fileTypes.InternalStdFileTypes;
 import consulo.project.Project;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.IdeBorderFactory;
 
 import javax.swing.*;

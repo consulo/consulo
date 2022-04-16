@@ -363,4 +363,10 @@ public interface EditorEx extends Editor {
   default boolean isRightAligned() {
     return false;
   }
+
+  default void setPaintSelection(boolean paintSelection) {
+  }
+
+  default void setUseEditorAntialiasing(boolean value) {
+  }
 }

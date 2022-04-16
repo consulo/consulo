@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.project.Project;
 import consulo.language.editor.ui.EditorCustomization;
-import com.intellij.ui.LanguageTextField;
+import consulo.language.editor.ui.awt.LanguageTextField;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

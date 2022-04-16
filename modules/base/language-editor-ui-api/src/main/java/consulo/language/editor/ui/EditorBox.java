@@ -20,6 +20,8 @@ import consulo.ui.ValueComponent;
 /**
  * @author VISTALL
  * @since 15-Mar-22
+ *
+ * Stub for future re-implement {@link consulo.language.editor.ui.awt.EditorTextField}
  */
 public interface EditorBox extends ValueComponent<String> {
 }

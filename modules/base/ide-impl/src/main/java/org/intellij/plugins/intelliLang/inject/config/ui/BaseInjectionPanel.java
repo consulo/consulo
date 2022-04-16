@@ -15,30 +15,28 @@
  */
 package org.intellij.plugins.intelliLang.inject.config.ui;
 
-import java.awt.BorderLayout;
-import java.util.ArrayList;
-
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
-import org.intellij.plugins.intelliLang.inject.config.InjectionPlace;
-import consulo.document.Document;
-import consulo.codeEditor.EditorEx;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
-import consulo.language.plain.PlainTextFileType;
-import consulo.virtualFileSystem.fileType.UnknownFileType;
-import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.patterns.compiler.PatternCompilerImpl;
+import consulo.codeEditor.EditorEx;
+import consulo.document.Document;
+import consulo.language.editor.ui.awt.EditorTextField;
+import consulo.language.file.FileTypeManager;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.pattern.compiler.PatternCompiler;
-import com.intellij.patterns.compiler.PatternCompilerImpl;
+import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
-import com.intellij.ui.EditorTextField;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.UnknownFileType;
+import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
+import org.intellij.plugins.intelliLang.inject.config.InjectionPlace;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * @author Gregory.Shrago

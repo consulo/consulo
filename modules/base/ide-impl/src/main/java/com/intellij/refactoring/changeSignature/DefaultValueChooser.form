@@ -67,7 +67,7 @@
           <text resource-bundle="messages/RefactoringBundle" key="change.signature.use.selected.value"/>
         </properties>
       </component>
-      <component id="10901" class="com.intellij.ui.EditorTextField" binding="myValueEditor">
+      <component id="10901" class="consulo.language.editor.ui.awt.EditorTextField" binding="myValueEditor">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="20" bottom="0" right="0" weightx="1.0" weighty="0.0"/>

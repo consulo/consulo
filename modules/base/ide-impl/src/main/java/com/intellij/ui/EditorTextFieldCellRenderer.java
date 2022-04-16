@@ -16,6 +16,7 @@
 package com.intellij.ui;
 
 import consulo.codeEditor.EditorEx;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.SelectionModel;

@@ -13,30 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.language.editor.ui.awt;
 
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.CaretModel;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
+import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
-import consulo.codeEditor.EditorEx;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
+import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.TextComponentAccessor;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.util.MacUIUtil;
-import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.Lists;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -45,9 +43,8 @@ import java.util.List;
 /**
  * @author max
  */
-// TODO[pegov]: should extend ComboBox not JComboBox!
-public class EditorComboBox extends JComboBox implements DocumentListener {
-  public static TextComponentAccessor<EditorComboBox> COMPONENT_ACCESSOR = new TextComponentAccessor<EditorComboBox>() {
+public class EditorComboBox extends ComboBox implements DocumentListener {
+  public static TextComponentAccessor<EditorComboBox> COMPONENT_ACCESSOR = new TextComponentAccessor<>() {
     @Override
     public String getText(EditorComboBox component) {
       return component.getText();
@@ -62,7 +59,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
   private Document myDocument;
   private final Project myProject;
   private EditorTextField myEditorField = null;
-  private final List<DocumentListener> myDocumentListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<DocumentListener> myDocumentListeners = Lists.newLockFreeCopyOnWriteList();
   private boolean myIsListenerInstalled = false;
   private boolean myInheritSwingFont = true;
   private final FileType myFileType;
@@ -272,12 +269,7 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     setEditor();
 
     super.addNotify();
-    if (UIUtil.isUnderDarcula() || UIUtil.isUnderIntelliJLaF()) {
-      final JScrollPane scrollPane = UIUtil.findComponentOfType(myEditorField, JScrollPane.class);
-      if (scrollPane != null) {
-        scrollPane.setBorder(new EmptyBorder(1,0,1,0));
-      }
-    }
+
     myEditorField.getFocusTarget().addFocusListener(new FocusAdapter() {
       @Override
       public void focusGained(FocusEvent e) {
@@ -330,10 +322,6 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
     }
   }
 
-  protected boolean shouldHaveBorder() {
-    return true;
-  }
-
   @Override
   public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
@@ -341,21 +329,6 @@ public class EditorComboBox extends JComboBox implements DocumentListener {
       return;
     }
     myEditorField.setEnabled(enabled);
-  }
-
-  @Override
-  public Dimension getPreferredSize() {
-    if (UIUtil.isUnderIntelliJLaF() || UIUtil.isUnderDarcula()) {
-      return super.getPreferredSize();
-    }
-    if (myEditorField != null) {
-      final Dimension preferredSize = new Dimension(myEditorField.getComponent().getPreferredSize());
-      JBInsets.addTo(preferredSize, getInsets());
-      return preferredSize;
-    }
-
-    //final int cbHeight = new JComboBox().getPreferredSize().height; // should be used actually
-    return new Dimension(100, 20);
   }
 
   @Override

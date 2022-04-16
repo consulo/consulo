@@ -28,7 +28,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import com.intellij.ui.EditorComboBox;
+import consulo.language.editor.ui.awt.EditorComboBox;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

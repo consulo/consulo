@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.PlaceHolder;
 import com.intellij.util.ObjectUtils;
 import javax.annotation.Nonnull;

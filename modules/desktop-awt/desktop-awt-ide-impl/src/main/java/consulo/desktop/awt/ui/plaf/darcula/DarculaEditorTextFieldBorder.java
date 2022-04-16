@@ -6,7 +6,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.event.FocusChangeListener;
 import consulo.ui.ex.awt.util.ComponentUtil;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.util.MacUIUtil;

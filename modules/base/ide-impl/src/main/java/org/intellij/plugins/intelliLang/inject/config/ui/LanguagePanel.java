@@ -40,7 +40,7 @@ import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.SimpleTextAttributes;
 
 public class LanguagePanel extends AbstractInjectionPanel<BaseInjection>

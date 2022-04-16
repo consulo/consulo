@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.refactoring.util.RadioUpDownListener;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

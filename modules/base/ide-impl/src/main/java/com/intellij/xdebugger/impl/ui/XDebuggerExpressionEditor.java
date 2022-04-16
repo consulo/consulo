@@ -24,7 +24,7 @@ import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
-import com.intellij.ui.EditorTextField;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.execution.debug.breakpoint.XExpression;
 import consulo.execution.debug.XSourcePosition;

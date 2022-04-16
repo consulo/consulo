@@ -13,17 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.language.editor.ui.awt;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.codeEditor.EditorEx;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import consulo.ui.ex.awt.AbstractDelegatingToRootTraversalPolicy;
-import consulo.ui.ex.awt.IJSwingUtilities;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -36,6 +27,9 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.language.editor.ui.EditorSettingsProvider;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -43,15 +37,14 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
+import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.DocumentBasedComponent;
 import consulo.ui.ex.TextComponent;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -130,7 +123,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   private EditorEx myEditor;
   private Component myNextFocusable;
   private boolean myWholeTextSelected;
-  private final List<DocumentListener> myDocumentListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<DocumentListener> myDocumentListeners = Lists.newLockFreeCopyOnWriteList();
   private boolean myIsListenerInstalled;
   private boolean myIsViewer;
   private boolean myIsSupplementary;
@@ -574,7 +567,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
     initOneLineMode(editor);
 
     if (myIsRendererWithSelection) {
-      ((DesktopEditorImpl)editor).setPaintSelection(true);
+      editor.setPaintSelection(true);
       editor.getColorsScheme().setColor(EditorColors.SELECTION_BACKGROUND_COLOR, TargetAWT.from(myRendererBg));
       editor.getColorsScheme().setColor(EditorColors.SELECTION_FOREGROUND_COLOR, TargetAWT.from(myRendererFg));
       editor.getSelectionModel().setSelection(0, myDocument.getTextLength());
@@ -598,7 +591,7 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
 
   private void setupEditorFont(final EditorEx editor) {
     if (myInheritSwingFont) {
-      ((DesktopEditorImpl)editor).setUseEditorAntialiasing(false);
+      editor.setUseEditorAntialiasing(false);
       editor.getColorsScheme().setEditorFontName(getFont().getFontName());
       editor.getColorsScheme().setEditorFontSize(getFont().getSize());
       return;
@@ -811,13 +804,13 @@ public class EditorTextField extends NonOpaquePanel implements DocumentListener,
   @Override
   public Object getData(@Nonnull Key<?> dataId) {
     if (myEditor != null && myEditor.isRendererMode()) {
-      if (PlatformDataKeys.COPY_PROVIDER == dataId) {
+      if (CopyProvider.KEY == dataId) {
         return myEditor.getCopyProvider();
       }
       return null;
     }
 
-    if (CommonDataKeys.EDITOR == dataId) {
+    if (Editor.KEY == dataId) {
       return myEditor;
     }
 

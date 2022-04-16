@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.language.editor.ui;
 
 import consulo.codeEditor.EditorEx;
 
