@@ -26,8 +26,8 @@ public final class SimpleDataContext extends BuilderDataContext implements DataC
   }
 
   /**
-   * @see SimpleDataContext#builder()
-   * @deprecated prefer type-safe {@link SimpleDataContext#builder()} where possible.
+   * @see DataContext#builder()
+   * @deprecated prefer type-safe {@link DataContext#builder()} where possible.
    */
   @Deprecated
   @Nonnull
