@@ -2,6 +2,7 @@
 package consulo.language.psi;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
 import consulo.component.util.ModificationTracker;
@@ -127,6 +128,12 @@ public interface PsiModificationTracker extends ModificationTracker {
   @Deprecated
   @Nonnull
   ModificationTracker getJavaStructureModificationTracker();
+
+  /**
+   * Increase count. Required write action. Please we careful calling this method
+   */
+  @RequiredWriteAction
+  void incCounter();
 
   /**
    * A listener to be notified on any PSI modification count change (which happens on any physical PSI change).

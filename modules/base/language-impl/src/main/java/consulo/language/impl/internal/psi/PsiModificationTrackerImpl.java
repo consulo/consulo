@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.application.internal.TransactionGuardEx;
@@ -59,6 +60,8 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
     });
   }
 
+  @Override
+  @RequiredWriteAction
   public void incCounter() {
     incCountersInner();
   }
