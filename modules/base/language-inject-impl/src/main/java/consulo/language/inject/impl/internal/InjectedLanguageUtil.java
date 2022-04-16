@@ -22,18 +22,14 @@ import consulo.language.editor.inject.EditorWindow;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.file.inject.VirtualFileWindow;
-import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.psi.DummyHolder;
-import consulo.language.impl.psi.PsiFileBase;
 import consulo.language.impl.internal.psi.BooleanRunnable;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.language.inject.InjectionBackgroundSuppressor;
-import consulo.language.inject.MultiHostRegistrar;
-import consulo.language.inject.ReferenceInjector;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.psi.PsiFileBase;
+import consulo.language.inject.*;
 import consulo.language.psi.*;
 import consulo.language.psi.util.CachedValueProvider;
 import consulo.language.psi.util.CachedValuesManager;
@@ -587,19 +583,10 @@ public class InjectedLanguageUtil {
     return EditorWindow.getTopLevelEditor(editor);
   }
 
+  @Deprecated
   public static boolean isInInjectedLanguagePrefixSuffix(@Nonnull final PsiElement element) {
-    PsiFile injectedFile = element.getContainingFile();
-    if (injectedFile == null) return false;
-    Project project = injectedFile.getProject();
-    InjectedLanguageManager languageManager = InjectedLanguageManager.getInstance(project);
-    if (!languageManager.isInjectedFragment(injectedFile)) return false;
-    TextRange elementRange = element.getTextRange();
-    List<TextRange> edibles = languageManager.intersectWithAllEditableFragments(injectedFile, elementRange);
-    int combinedEdiblesLength = edibles.stream().mapToInt(TextRange::getLength).sum();
-
-    return combinedEdiblesLength != elementRange.getLength();
+    return InjectLanguageManagerUtil.isInInjectedLanguagePrefixSuffix(element);
   }
-
 
   public static int hostToInjectedUnescaped(DocumentWindow window, int hostOffset) {
     PlaceImpl shreds = ((DocumentWindowImpl)window).getShreds();
@@ -718,21 +705,7 @@ public class InjectedLanguageUtil {
 
   @Nullable
   public static PsiLanguageInjectionHost findInjectionHost(@Nullable PsiElement psi) {
-    if (psi == null) return null;
-    PsiFile containingFile = psi.getContainingFile().getOriginalFile();              // * formatting
-    PsiElement fileContext = containingFile.getContext();                            // * quick-edit-handler
-    if (fileContext instanceof PsiLanguageInjectionHost) return (PsiLanguageInjectionHost)fileContext;
-    PlaceImpl shreds = getShreds(containingFile.getViewProvider()); // * injection-registrar
-    if (shreds == null) {
-      VirtualFile virtualFile = PsiUtilCore.getVirtualFile(containingFile);
-      if (virtualFile instanceof LightVirtualFile) {
-        virtualFile = ((LightVirtualFile)virtualFile).getOriginalFile();             // * dynamic files-from-text
-      }
-      if (virtualFile instanceof VirtualFileWindow) {
-        shreds = getShreds(((VirtualFileWindow)virtualFile).getDocumentWindow());
-      }
-    }
-    return shreds != null ? shreds.getHostPointer().getElement() : null;
+    return InjectLanguageManagerUtil.findInjectionHost(psi);
   }
 
   @Nullable

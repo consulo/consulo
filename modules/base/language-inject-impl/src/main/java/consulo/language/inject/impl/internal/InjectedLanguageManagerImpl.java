@@ -301,6 +301,24 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     return new DocumentWindowImpl(delegate, place);
   }
 
+  @Nullable
+  @Override
+  public PsiLanguageInjectionHost.Place getShreds(@Nonnull PsiFile injectedFile) {
+    return InjectedLanguageUtil.getShreds(injectedFile);
+  }
+
+  @Nullable
+  @Override
+  public PsiLanguageInjectionHost.Place getShreds(@Nonnull FileViewProvider viewProvider) {
+    return InjectedLanguageUtil.getShreds(viewProvider);
+  }
+
+  @Nonnull
+  @Override
+  public PsiLanguageInjectionHost.Place getShreds(@Nonnull DocumentWindow documentWindow) {
+    return ((DocumentWindowImpl)documentWindow).getShreds();
+  }
+
   private static int appendRange(@Nonnull List<TextRange> result, int start, int length) {
     if (length > 0) {
       int lastIndex = result.size() - 1;

@@ -100,4 +100,13 @@ public abstract class InjectedLanguageManager {
 
   @Nonnull
   public abstract DocumentWindow freezeWindow(@Nonnull DocumentWindow document);
+
+  @Nullable
+  public abstract PsiLanguageInjectionHost.Place getShreds(@Nonnull PsiFile injectedFile);
+
+  @Nullable
+  public abstract PsiLanguageInjectionHost.Place getShreds(@Nonnull FileViewProvider viewProvider);
+
+  @Nonnull
+  public abstract PsiLanguageInjectionHost.Place getShreds(@Nonnull DocumentWindow documentWindow);
 }
