@@ -16,13 +16,12 @@
 package com.intellij.util.io;
 
 import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.util.lang.ThreeState;
 import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
+import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -199,7 +198,7 @@ public class URLUtil {
   }
 
   public static boolean containsScheme(@Nonnull String url) {
-    return url.contains(SCHEME_SEPARATOR);
+    return consulo.util.io.URLUtil.containsScheme(url);
   }
 
   public static boolean isDataUri(@Nonnull String value) {
@@ -287,39 +286,6 @@ public class URLUtil {
 
   @Nonnull
   public static String toIdeaUrl(@Nonnull String url, boolean removeLocalhostPrefix) {
-    int index = url.indexOf(":/");
-    if (index < 0 || (index + 2) >= url.length()) {
-      return url;
-    }
-
-    if (url.charAt(index + 2) != '/') {
-      String prefix = url.substring(0, index);
-      String suffix = url.substring(index + 2);
-
-      if (SystemInfoRt.isWindows) {
-        return prefix + URLUtil.SCHEME_SEPARATOR + suffix;
-      }
-      else if (removeLocalhostPrefix && prefix.equals(URLUtil.FILE_PROTOCOL) && suffix.startsWith(LOCALHOST_URI_PATH_PREFIX)) {
-        // sometimes (e.g. in Google Chrome for Mac) local file url is prefixed with 'localhost' so we need to remove it
-        return prefix + ":///" + suffix.substring(LOCALHOST_URI_PATH_PREFIX.length());
-      }
-      else {
-        return prefix + ":///" + suffix;
-      }
-    }
-    else if (SystemInfoRt.isWindows && (index + 3) < url.length() && url.charAt(index + 3) == '/' && url.regionMatches(0, URLUtil.FILE_PROTOCOL_PREFIX, 0, FILE_PROTOCOL_PREFIX.length())) {
-      // file:///C:/test/file.js -> file://C:/test/file.js
-      for (int i = index + 4; i < url.length(); i++) {
-        char c = url.charAt(i);
-        if (c == '/') {
-          break;
-        }
-        else if (c == ':') {
-          return FILE_PROTOCOL_PREFIX + url.substring(index + 4);
-        }
-      }
-      return url;
-    }
-    return url;
+    return consulo.util.io.URLUtil.toIdeaUrl(url, removeLocalhostPrefix);
   }
 }

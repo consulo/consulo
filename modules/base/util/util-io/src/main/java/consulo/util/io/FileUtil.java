@@ -23,7 +23,6 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1018,6 +1017,11 @@ public class FileUtil {
     }
 
     return result.toString();
+  }
+
+  @Contract("null -> null")
+  public static String toCanonicalUriPath(@Nullable String path) {
+    return toCanonicalPath(path, '/', false);
   }
 
   /**

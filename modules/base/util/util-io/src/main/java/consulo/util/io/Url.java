@@ -1,4 +1,4 @@
-package com.intellij.util;
+package consulo.util.io;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

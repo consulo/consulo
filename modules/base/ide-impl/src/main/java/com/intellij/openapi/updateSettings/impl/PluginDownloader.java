@@ -38,7 +38,7 @@ import consulo.ide.updateSettings.impl.PluginDownloadFailedException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.platform.base.localize.IdeLocalize;
-import consulo.util.io2.PathUtil;
+import consulo.util.io.NioPathUtil;
 import consulo.util.lang.StringUtil;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -198,7 +198,7 @@ public class PluginDownloader {
 
               // it's a fix for TarArchiveEntry.DEFAULT_FILE_MODE
               if (tempEntry.getMode() == 0b111_101_101) {
-                PathUtil.setPosixFilePermissions(targetFile.toPath(), PathUtil.convertModeToFilePermissions(tempEntry.getMode()));
+                NioPathUtil.setPosixFilePermissions(targetFile.toPath(), NioPathUtil.convertModeToFilePermissions(tempEntry.getMode()));
               }
             }
           }

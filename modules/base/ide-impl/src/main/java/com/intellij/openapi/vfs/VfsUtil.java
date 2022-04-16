@@ -19,13 +19,17 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.SystemInfoRt;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.util.*;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.Function;
+import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.function.Processor;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
+import consulo.util.io.Url;
+import consulo.util.io.Urls;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.*;
@@ -572,7 +576,7 @@ public class VfsUtil extends VfsUtilCore {
     }
     else {
       Url url = Urls.parseUrlUnsafe(file.getUrl());
-      return url == null ? new UrlImpl(file.getPath()) : url;
+      return url == null ? Urls.newPathUrl(file.getPath()) : url;
     }
   }
 

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.util.io;
 
-import com.intellij.openapi.util.SystemInfoRt;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.io.URLUtil;
-import consulo.logging.Logger;
 import consulo.util.collection.HashingStrategy;
+import consulo.util.io.internal.LocalFileUrl;
+import consulo.util.io.internal.UrlImpl;
+import consulo.util.lang.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class Urls {
-  private static final Logger LOG = Logger.getInstance(Urls.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Urls.class);
 
   // about ";" see WEB-100359
   private static final Pattern URI_PATTERN = Pattern.compile("^([^:/?#]+):(//)?([^/?#]*)([^?#;]*)(.*)");
@@ -49,13 +49,20 @@ public final class Urls {
   @Nonnull
   public static Url newFromEncoded(@Nonnull String url) {
     Url result = parseEncoded(url);
-    LOG.assertTrue(result != null, url);
+    if (result == null) {
+      LOG.error(url, new IllegalAccessException(url));
+    }
     return result;
   }
 
   @Nullable
   public static Url parseEncoded(@Nonnull String url) {
     return parse(url, false);
+  }
+
+  @Nonnull
+  public static Url newPathUrl(@Nullable String path) {
+    return new UrlImpl(path);
   }
 
   @Nonnull
@@ -69,12 +76,18 @@ public final class Urls {
   }
 
   @Nonnull
+  public static Url newUrl(@Nullable String scheme, @Nullable String authority, @Nullable String path, @Nullable String parameters) {
+    return new UrlImpl(scheme, authority, path, parameters);
+  }
+
+  @Nonnull
   /**
    * Url will not be normalized (see {@link VfsUtilCore#toIdeaUrl(String)}), parsed as is
-   */
-  public static Url newFromIdea(@Nonnull String url) {
+   */ public static Url newFromIdea(@Nonnull String url) {
     Url result = parseFromIdea(url);
-    LOG.assertTrue(result != null, url);
+    if (result == null) {
+      LOG.error(url, new IllegalAccessException(url));
+    }
     return result;
   }
 
@@ -165,7 +178,7 @@ public final class Urls {
   }
 
   public static boolean equals(@Nullable Url url1, @Nullable Url url2, boolean caseSensitive, boolean ignoreParameters) {
-    if (url1 == null || url2 == null){
+    if (url1 == null || url2 == null) {
       return url1 == url2;
     }
 
@@ -179,7 +192,7 @@ public final class Urls {
     try {
       String externalPath = url.getPath();
       boolean inLocalFileSystem = url.isInLocalFileSystem();
-      if (inLocalFileSystem && SystemInfoRt.isWindows && externalPath.charAt(0) != '/') {
+      if (inLocalFileSystem && OSInfo.isWindows && externalPath.charAt(0) != '/') {
         externalPath = '/' + externalPath;
       }
       return new URI(inLocalFileSystem ? "file" : url.getScheme(), inLocalFileSystem ? "" : url.getAuthority(), externalPath, null, null);

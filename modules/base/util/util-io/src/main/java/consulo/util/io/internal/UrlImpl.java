@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.util.io.internal;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.io.URLUtil;
+import consulo.util.io.URLUtil;
+import consulo.util.io.Url;
+import consulo.util.io.Urls;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -36,7 +39,7 @@ public final class UrlImpl implements Url {
     this(null, null, path, null);
   }
 
-  UrlImpl(@Nonnull String scheme, @Nullable String authority, @Nullable String path) {
+  public UrlImpl(@Nonnull String scheme, @Nullable String authority, @Nullable String path) {
     this(scheme, authority, path, null);
   }
 

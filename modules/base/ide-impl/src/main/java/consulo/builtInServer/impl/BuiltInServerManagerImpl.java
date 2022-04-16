@@ -1,30 +1,30 @@
 package consulo.builtInServer.impl;
 
-import consulo.application.impl.internal.start.StartupUtil;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
+import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.net.NetUtils;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.impl.internal.start.ImportantFolderLocker;
+import consulo.application.impl.internal.start.StartupUtil;
+import consulo.builtInServer.BuiltInServerManager;
+import consulo.builtInServer.custom.CustomPortServerManager;
+import consulo.builtInServer.impl.ide.BuiltInServerOptions;
+import consulo.builtInServer.impl.net.http.BuiltInServer;
+import consulo.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
+import consulo.builtInServer.impl.net.http.SubServer;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.Url;
-import com.intellij.util.UrlImpl;
-import com.intellij.util.net.NetUtils;
-import consulo.builtInServer.BuiltInServerManager;
-import consulo.builtInServer.custom.CustomPortServerManager;
-import consulo.builtInServer.impl.net.http.ImportantFolderLockerViaBuiltInServer;
-import consulo.application.impl.internal.start.ImportantFolderLocker;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.util.io.Url;
+import consulo.util.io.Urls;
 import io.netty.channel.oio.OioEventLoopGroup;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
-import consulo.builtInServer.impl.ide.BuiltInServerOptions;
-import consulo.builtInServer.impl.net.http.BuiltInServer;
-import consulo.builtInServer.impl.net.http.SubServer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -142,7 +142,7 @@ public class BuiltInServerManagerImpl extends BuiltInServerManager {
       // built-in server url contains query only if token specified
       return url;
     }
-    return new UrlImpl(url.getScheme(), url.getAuthority(), url.getPath(), "?" + BuiltInWebServerKt.TOKEN_PARAM_NAME + "=" + BuiltInWebServerKt.acquireToken());
+    return Urls.newUrl(url.getScheme(), url.getAuthority(), url.getPath(), "?" + BuiltInWebServerKt.TOKEN_PARAM_NAME + "=" + BuiltInWebServerKt.acquireToken());
   }
 
   @Override

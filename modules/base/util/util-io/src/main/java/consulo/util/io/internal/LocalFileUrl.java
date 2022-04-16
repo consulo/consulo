@@ -1,6 +1,9 @@
-package com.intellij.util;
+package consulo.util.io.internal;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.io.Url;
+import consulo.util.io.Urls;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

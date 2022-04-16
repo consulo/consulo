@@ -48,6 +48,7 @@ public class URLUtil {
   @Deprecated
   @DeprecationInfo(value = "Use #ARCHIVE_SEPARATOR")
   public static final String JAR_SEPARATOR = ARCHIVE_SEPARATOR;
+  public static final String LOCALHOST_URI_PATH_PREFIX = "localhost/";
 
   /**
    * Opens a url stream. The semantics is the sames as {@link URL#openStream()}. The
@@ -96,6 +97,10 @@ public class URLUtil {
     }
 
     return Pair.create(jarPath, resourcePath);
+  }
+
+  public static boolean containsScheme(@Nonnull String url) {
+    return url.contains(SCHEME_SEPARATOR);
   }
 
   @Nonnull
@@ -226,5 +231,48 @@ public class URLUtil {
     if ((c >= 'a') && (c <= 'f')) return c - 'a' + 10;
     if ((c >= 'A') && (c <= 'F')) return c - 'A' + 10;
     return -1;
+  }
+
+  @Nonnull
+  public static String toIdeaUrl(@Nonnull String url) {
+    return toIdeaUrl(url, true);
+  }
+
+  @Nonnull
+  public static String toIdeaUrl(@Nonnull String url, boolean removeLocalhostPrefix) {
+    int index = url.indexOf(":/");
+    if (index < 0 || (index + 2) >= url.length()) {
+      return url;
+    }
+
+    if (url.charAt(index + 2) != '/') {
+      String prefix = url.substring(0, index);
+      String suffix = url.substring(index + 2);
+
+      if (OSInfo.isWindows) {
+        return prefix + URLUtil.SCHEME_SEPARATOR + suffix;
+      }
+      else if (removeLocalhostPrefix && prefix.equals(URLUtil.FILE_PROTOCOL) && suffix.startsWith(LOCALHOST_URI_PATH_PREFIX)) {
+        // sometimes (e.g. in Google Chrome for Mac) local file url is prefixed with 'localhost' so we need to remove it
+        return prefix + ":///" + suffix.substring(LOCALHOST_URI_PATH_PREFIX.length());
+      }
+      else {
+        return prefix + ":///" + suffix;
+      }
+    }
+    else if (OSInfo.isWindows && (index + 3) < url.length() && url.charAt(index + 3) == '/' && url.regionMatches(0, URLUtil.FILE_PROTOCOL_PREFIX, 0, FILE_PROTOCOL_PREFIX.length())) {
+      // file:///C:/test/file.js -> file://C:/test/file.js
+      for (int i = index + 4; i < url.length(); i++) {
+        char c = url.charAt(i);
+        if (c == '/') {
+          break;
+        }
+        else if (c == ':') {
+          return FILE_PROTOCOL_PREFIX + url.substring(index + 4);
+        }
+      }
+      return url;
+    }
+    return url;
   }
 }

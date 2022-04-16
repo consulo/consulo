@@ -1,8 +1,9 @@
-package consulo.util.io2;
+package consulo.util.io;
 
-import consulo.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.annotation.Nonnull;
-
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -15,8 +16,8 @@ import java.util.Set;
  * @author VISTALL
  * @since 31-Oct-16
  */
-public class PathUtil {
-  public static final Logger LOGGER = Logger.getInstance(PathUtil.class);
+public class NioPathUtil {
+  private static final Logger LOGGER = LoggerFactory.getLogger(NioPathUtil.class);
 
   private static final boolean ourSupportPosixFilePermissions = FileSystems.getDefault().supportedFileAttributeViews().contains("posix");
 
@@ -30,7 +31,7 @@ public class PathUtil {
         Files.setPosixFilePermissions(path, posixFilePermissions);
       }
       catch (IOException e) {
-        LOGGER.error(e);
+        LOGGER.error(path.toString(), e);
       }
     }
   }
