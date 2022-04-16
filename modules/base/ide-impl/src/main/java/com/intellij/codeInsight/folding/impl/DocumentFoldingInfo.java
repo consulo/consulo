@@ -12,7 +12,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.document.RangeMarker;
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
+import consulo.fileEditor.text.CodeFoldingState;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import consulo.util.dataholder.Key;

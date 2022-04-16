@@ -21,21 +21,17 @@ import consulo.util.lang.LocalTimeCounter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
-import consulo.virtualFileSystem.light.LightVirtualFileBase;
-import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.light.TextLightVirtualFileBase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
-import java.io.*;
 import java.nio.charset.Charset;
 
 /**
  * In-memory implementation of {@link VirtualFile}.
  */
-public class LightVirtualFile extends LightVirtualFileBase {
-  private CharSequence myContent = "";
+public class LightVirtualFile extends TextLightVirtualFileBase {
   private Language myLanguage;
-  private boolean myReadOnly;
 
   public LightVirtualFile() {
     this("");
@@ -62,11 +58,7 @@ public class LightVirtualFile extends LightVirtualFileBase {
     this(name, fileType, text, CharsetUtil.extractCharsetFromFileContent(null, null, fileType, text), modificationStamp);
   }
 
-  public LightVirtualFile(@Nonnull String name,
-                          final FileType fileType,
-                          @Nonnull CharSequence text,
-                          Charset charset,
-                          final long modificationStamp) {
+  public LightVirtualFile(@Nonnull String name, final FileType fileType, @Nonnull CharSequence text, Charset charset, final long modificationStamp) {
     super(name, fileType, modificationStamp);
     setContent(text);
     setCharset(charset);
@@ -89,59 +81,6 @@ public class LightVirtualFile extends LightVirtualFileBase {
       type = FileTypeRegistry.getInstance().getFileTypeByFileName(getName());
     }
     setFileType(type);
-  }
-
-  @Override
-  public InputStream getInputStream() throws IOException {
-    return VirtualFileUtil.byteStreamSkippingBOM(contentsToByteArray(), this);
-  }
-
-  @Override
-  @Nonnull
-  public OutputStream getOutputStream(Object requestor, final long newModificationStamp, long newTimeStamp) throws IOException {
-    return VirtualFileUtil.outputStreamAddingBOM(new ByteArrayOutputStream() {
-      @Override
-      public void close() {
-        setModificationStamp(newModificationStamp);
-
-        try {
-          String content = toString(getCharset().name());
-          setContent(content);
-        }
-        catch (UnsupportedEncodingException e) {
-          throw new RuntimeException(e);
-        }
-      }
-    }, this);
-  }
-
-  @Override
-  @Nonnull
-  public byte[] contentsToByteArray() throws IOException {
-    final Charset charset = getCharset();
-    final String s = getContent().toString();
-    return s.getBytes(charset.name());
-  }
-
-  public void setContent(Object requestor, @Nonnull CharSequence content, boolean fireEvent) {
-    setContent(content);
-    setModificationStamp(LocalTimeCounter.currentTime());
-  }
-
-  private void setContent(@Nonnull CharSequence content) {
-    assert !myReadOnly;
-    //StringUtil.assertValidSeparators(content);
-    myContent = content;
-  }
-
-  @Nonnull
-  public CharSequence getContent() {
-    return myContent;
-  }
-
-  public void markReadOnly() {
-    setWritable(false);
-    myReadOnly = true;
   }
 
   @Override

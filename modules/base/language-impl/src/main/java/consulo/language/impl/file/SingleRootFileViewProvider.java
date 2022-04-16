@@ -18,7 +18,6 @@ package consulo.language.impl.file;
 import consulo.component.ProcessCanceledException;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
-import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.internal.psi.PsiFileEx;
@@ -29,9 +28,8 @@ import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.collection.ContainerUtil;
-import consulo.util.dataholder.Key;
 import consulo.util.lang.reflect.ReflectionUtil;
-import consulo.virtualFileSystem.RawFileLoader;
+import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
@@ -44,7 +42,6 @@ import java.util.List;
 import java.util.Set;
 
 public class SingleRootFileViewProvider extends AbstractFileViewProvider implements FileViewProvider {
-  private static final Key<Boolean> OUR_NO_SIZE_LIMIT_KEY = Key.create("no.size.limit");
   private static final Logger LOG = Logger.getInstance(SingleRootFileViewProvider.class);
   @SuppressWarnings("unused")
   private volatile PsiFile myPsiFile;
@@ -87,7 +84,7 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
 
   private static Language calcBaseLanguage(@Nonnull VirtualFile file, @Nonnull Project project, @Nonnull final FileType fileType) {
     if (fileType.isBinary()) return Language.ANY;
-    if (isTooLargeForIntelligence(file)) return PlainTextLanguage.INSTANCE;
+    if (RawFileLoaderHelper.isTooLargeForIntelligence(file)) return PlainTextLanguage.INSTANCE;
 
     Language language = LanguageUtil.getLanguageForPsi(project, file);
 
@@ -169,50 +166,6 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
     }
   }
 
-  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile) {
-    if (!checkFileSizeLimit(vFile)) return false;
-    return fileSizeIsGreaterThan(vFile, RawFileLoader.getInstance().getMaxIntellisenseFileSize());
-  }
-
-  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile) {
-    return fileSizeIsGreaterThan(vFile, RawFileLoader.getInstance().getFileLengthToCacheThreshold());
-  }
-
-  private static boolean checkFileSizeLimit(@Nonnull VirtualFile vFile) {
-    if (Boolean.TRUE.equals(vFile.getCopyableUserData(OUR_NO_SIZE_LIMIT_KEY))) {
-      return false;
-    }
-    if (vFile instanceof LightVirtualFile) {
-      VirtualFile original = ((LightVirtualFile)vFile).getOriginalFile();
-      if (original != null) return checkFileSizeLimit(original);
-    }
-    return true;
-  }
-
-  public static void doNotCheckFileSizeLimit(@Nonnull VirtualFile vFile) {
-    vFile.putCopyableUserData(OUR_NO_SIZE_LIMIT_KEY, Boolean.TRUE);
-  }
-
-  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, final long contentSize) {
-    if (!checkFileSizeLimit(vFile)) return false;
-    return contentSize > RawFileLoader.getInstance().getMaxIntellisenseFileSize();
-  }
-
-  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, final long contentSize) {
-    return contentSize > RawFileLoader.getInstance().getFileLengthToCacheThreshold();
-  }
-
-  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, final long maxBytes) {
-    if (vFile instanceof LightVirtualFile) {
-      // This is optimization in order to avoid conversion of [large] file contents to bytes
-      final int lengthInChars = ((LightVirtualFile)vFile).getContent().length();
-      if (lengthInChars < maxBytes / 2) return false;
-      if (lengthInChars > maxBytes) return true;
-    }
-
-    return vFile.getLength() > maxBytes;
-  }
-
   @Nonnull
   @Override
   public SingleRootFileViewProvider createCopy(@Nonnull final VirtualFile copy) {
@@ -240,7 +193,6 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
   public final void forceCachedPsi(@Nonnull PsiFile psiFile) {
     while (true) {
       PsiFile prev = myPsiFile;
-      // jdk 6 doesn't have getAndSet()
       if (ourPsiFileUpdater.compareAndSet(this, prev, psiFile)) {
         if (prev != psiFile && prev instanceof PsiFileEx) {
           ((PsiFileEx)prev).markInvalidated();
@@ -250,4 +202,38 @@ public class SingleRootFileViewProvider extends AbstractFileViewProvider impleme
     }
     getManager().getFileManager().setViewProvider(getVirtualFile(), this);
   }
+
+  // region deprecated methods
+
+  @Deprecated
+  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile) {
+    return RawFileLoaderHelper.isTooLargeForIntelligence(vFile);
+  }
+
+  @Deprecated
+  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile) {
+    return RawFileLoaderHelper.isTooLargeForContentLoading(vFile);
+  }
+
+  @Deprecated
+  public static void doNotCheckFileSizeLimit(@Nonnull VirtualFile vFile) {
+    RawFileLoaderHelper.doNotCheckFileSizeLimit(vFile);
+  }
+
+  @Deprecated
+  public static boolean isTooLargeForIntelligence(@Nonnull VirtualFile vFile, final long contentSize) {
+    return RawFileLoaderHelper.isTooLargeForIntelligence(vFile, contentSize);
+  }
+
+  @Deprecated
+  public static boolean isTooLargeForContentLoading(@Nonnull VirtualFile vFile, final long contentSize) {
+    return RawFileLoaderHelper.isTooLargeForContentLoading(vFile, contentSize);
+  }
+
+  @Deprecated
+  public static boolean fileSizeIsGreaterThan(@Nonnull VirtualFile vFile, final long maxBytes) {
+    return RawFileLoaderHelper.fileSizeIsGreaterThan(vFile, maxBytes);
+  }
+
+  // endregion
 }

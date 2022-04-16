@@ -37,7 +37,7 @@ import com.intellij.util.net.HttpProxyConfigurable;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;

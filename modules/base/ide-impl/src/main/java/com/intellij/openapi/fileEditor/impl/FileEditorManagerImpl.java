@@ -69,7 +69,7 @@ import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.impl.FileEditorsSplittersBase;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.file.FileTypeManager;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;

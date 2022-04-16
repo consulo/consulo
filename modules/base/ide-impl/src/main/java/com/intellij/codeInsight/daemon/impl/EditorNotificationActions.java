@@ -10,7 +10,7 @@ import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

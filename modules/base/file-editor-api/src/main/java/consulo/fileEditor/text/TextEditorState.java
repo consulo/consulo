@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.fileEditor.impl.text;
+package consulo.fileEditor.text;
 
 import consulo.document.Document;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
-import com.intellij.util.Producer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 /**
  * @author Vladimir Kondratyev
@@ -37,9 +37,9 @@ public final class TextEditorState implements FileEditorState {
    * State which describes how editor is folded.
    * This field can be <code>null</code>.
    */
-  private           CodeFoldingState           myFoldingState;
+  private CodeFoldingState myFoldingState;
   @Nullable
-  private Producer<CodeFoldingState> myDelayedFoldInfoProducer;
+  private Supplier<CodeFoldingState> myDelayedFoldInfoProducer;
 
   private static final int MIN_CHANGE_DISTANCE = 4;
 
@@ -53,9 +53,9 @@ public final class TextEditorState implements FileEditorState {
    * However, we can't be sure that those conditions are met on IDE startup (when editor states are read). Current method allows
    * to register a closure within the current state object which returns folding info if possible.
    *
-   * @param producer  delayed folding info producer
+   * @param producer delayed folding info producer
    */
-  public void setDelayedFoldState(@Nonnull Producer<CodeFoldingState> producer) {
+  public void setDelayedFoldState(@Nonnull Supplier<CodeFoldingState> producer) {
     myDelayedFoldInfoProducer = producer;
   }
 
@@ -63,7 +63,7 @@ public final class TextEditorState implements FileEditorState {
   public CodeFoldingState getFoldingState() {
     // Assuming single-thread access here.
     if (myFoldingState == null && myDelayedFoldInfoProducer != null) {
-      myFoldingState = myDelayedFoldInfoProducer.produce();
+      myFoldingState = myDelayedFoldInfoProducer.get();
       if (myFoldingState != null) {
         myDelayedFoldInfoProducer = null;
       }
@@ -108,10 +108,12 @@ public final class TextEditorState implements FileEditorState {
   public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
     if (!(otherState instanceof TextEditorState)) return false;
     TextEditorState other = (TextEditorState)otherState;
-    return level == FileEditorStateLevel.NAVIGATION
-           && CARETS != null && CARETS.length == 1
-           && other.CARETS != null && other.CARETS.length == 1
-           && Math.abs(CARETS[0].LINE - other.CARETS[0].LINE) < MIN_CHANGE_DISTANCE;
+    return level == FileEditorStateLevel.NAVIGATION &&
+           CARETS != null &&
+           CARETS.length == 1 &&
+           other.CARETS != null &&
+           other.CARETS.length == 1 &&
+           Math.abs(CARETS[0].LINE - other.CARETS[0].LINE) < MIN_CHANGE_DISTANCE;
   }
 
   public String toString() {
@@ -119,13 +121,13 @@ public final class TextEditorState implements FileEditorState {
   }
 
   public static class CaretState {
-    public int   LINE;
-    public int   COLUMN;
+    public int LINE;
+    public int COLUMN;
     public boolean LEAN_FORWARD;
-    public int   SELECTION_START_LINE;
-    public int   SELECTION_START_COLUMN;
-    public int   SELECTION_END_LINE;
-    public int   SELECTION_END_COLUMN;
+    public int SELECTION_START_LINE;
+    public int SELECTION_START_COLUMN;
+    public int SELECTION_END_LINE;
+    public int SELECTION_END_COLUMN;
 
     public boolean equals(Object o) {
       if (!(o instanceof CaretState)) {

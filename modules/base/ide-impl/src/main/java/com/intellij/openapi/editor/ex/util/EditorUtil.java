@@ -45,7 +45,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.logging.Logger;

@@ -19,7 +19,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorPolicy;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.fileEditor.FileEditorState;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
+import consulo.fileEditor.text.TextEditorState;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

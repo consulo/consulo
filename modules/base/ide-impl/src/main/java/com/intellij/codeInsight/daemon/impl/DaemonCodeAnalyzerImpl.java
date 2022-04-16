@@ -50,7 +50,7 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.gutter.LineMarkerInfo;

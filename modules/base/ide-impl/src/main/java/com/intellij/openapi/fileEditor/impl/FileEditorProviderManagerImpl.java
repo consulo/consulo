@@ -33,7 +33,7 @@ import consulo.util.xml.serializer.annotation.MapAnnotation;
 import consulo.application.AccessRule;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 

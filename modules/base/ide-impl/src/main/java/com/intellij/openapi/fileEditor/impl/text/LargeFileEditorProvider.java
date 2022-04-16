@@ -19,13 +19,14 @@ import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.*;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.application.dumb.DumbAware;
+import consulo.fileEditor.text.TextEditorState;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import kava.beans.PropertyChangeListener;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.codeStyle.arrangement.engine;
 
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import consulo.codeEditor.Editor;
-import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
+import consulo.fileEditor.text.CodeFoldingState;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

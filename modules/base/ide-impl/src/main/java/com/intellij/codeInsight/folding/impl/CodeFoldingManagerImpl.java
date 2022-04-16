@@ -9,7 +9,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.FoldingModelEx;
-import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
+import consulo.fileEditor.text.CodeFoldingState;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.disposer.Disposable;

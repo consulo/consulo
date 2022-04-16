@@ -27,6 +27,8 @@ import java.nio.file.Path;
 /**
  * @author VISTALL
  * @since 15-Feb-22
+ *
+ * @see RawFileLoaderHelper
  */
 public interface RawFileLoader {
   @Nonnull

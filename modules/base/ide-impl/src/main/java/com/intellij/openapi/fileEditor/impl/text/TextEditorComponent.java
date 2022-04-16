@@ -40,7 +40,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.impl.text.TextEditorComponentContainer;
 import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;

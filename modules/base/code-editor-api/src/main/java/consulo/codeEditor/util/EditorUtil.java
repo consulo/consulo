@@ -31,6 +31,12 @@ import java.util.List;
  * @since 12-Mar-22
  */
 public class EditorUtil {
+  public static int calcRelativeCaretPosition(@Nonnull Editor editor) {
+    int caretY = editor.getCaretModel().getVisualPosition().line * editor.getLineHeight();
+    int viewAreaPosition = editor.getScrollingModel().getVisibleAreaOnScrollingFinished().y;
+    return caretY - viewAreaPosition;
+  }
+
   public static boolean isAtLineEnd(@Nonnull Editor editor, int offset) {
     Document document = editor.getDocument();
     if (offset < 0 || offset > document.getTextLength()) {

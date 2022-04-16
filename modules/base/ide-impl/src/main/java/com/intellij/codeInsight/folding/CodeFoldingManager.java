@@ -5,7 +5,7 @@ import consulo.ide.ServiceManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
-import com.intellij.openapi.fileEditor.impl.text.CodeFoldingState;
+import consulo.fileEditor.text.CodeFoldingState;
 import consulo.project.Project;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

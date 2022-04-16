@@ -54,7 +54,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.messagebus.Topic;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.fileEditor.FileEditorWindow;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -28,6 +28,8 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;
+import consulo.fileEditor.text.CodeFoldingState;
+import consulo.fileEditor.text.TextEditorState;
 import consulo.project.Project;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;

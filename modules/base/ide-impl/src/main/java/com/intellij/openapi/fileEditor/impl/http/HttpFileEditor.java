@@ -21,7 +21,7 @@ import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.document.impl.DocumentImpl;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
+import consulo.fileEditor.text.TextEditorState;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.FileEditorState;
 import consulo.fileEditor.FileEditorStateLevel;

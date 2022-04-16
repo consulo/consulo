@@ -55,7 +55,7 @@ import consulo.ui.ex.awt.JBScrollPane;
 import consulo.usage.UsageView;
 import com.intellij.util.PairFunction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;

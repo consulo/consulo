@@ -25,6 +25,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
+import consulo.fileEditor.text.TextEditorState;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;

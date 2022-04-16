@@ -28,6 +28,7 @@ import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.fileEditor.FileEditorsSplitters;
+import consulo.fileEditor.text.TextEditorState;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.logging.Logger;
 import consulo.project.Project;

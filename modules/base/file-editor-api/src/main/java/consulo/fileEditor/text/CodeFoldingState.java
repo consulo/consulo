@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.fileEditor.impl.text;
+package consulo.fileEditor.text;
 
 import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -25,4 +26,8 @@ import javax.annotation.Nonnull;
 public interface CodeFoldingState {
   @RequiredUIAccess
   void setToEditor(@Nonnull Editor editor);
+
+  boolean equals(Object o);
+
+  String toString();
 }

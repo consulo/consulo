@@ -21,7 +21,7 @@ import consulo.codeEditor.Editor;
 import consulo.undoRedo.ApplicationUndoManager;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.fileEditor.TextEditor;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;

@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor.impl.text;
+package consulo.fileEditor.text;
 
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorProviderImpl;
-import com.intellij.openapi.fileEditor.impl.text.TextEditorState;
-import consulo.fileEditor.*;
-import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.CaretState;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.util.EditorUtil;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.fileEditor.*;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.BinaryFileTypeDecompilers;
+import consulo.virtualFileSystem.RawFileLoaderHelper;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -86,7 +83,7 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
 
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {
-    return isTextFile(file) && !SingleRootFileViewProvider.isTooLargeForContentLoading(file);
+    return isTextFile(file) && !RawFileLoaderHelper.isTooLargeForContentLoading(file);
   }
 
   @Override
@@ -184,7 +181,7 @@ public abstract class TextEditorProvider implements FileEditorProvider, DumbAwar
 
     Project[] projects = ProjectManager.getInstance().getOpenProjects();
     for (int i = projects.length - 1; i >= 0; i--) {
-      VirtualFile file = FileEditorManagerEx.getInstanceEx(projects[i]).getFile(editor);
+      VirtualFile file = FileEditorManager.getInstance(projects[i]).getFile(editor);
       if (file != null) {
         Document document = FileDocumentManager.getInstance().getDocument(file);
         if (document != null) {

@@ -27,7 +27,7 @@ import consulo.document.Document;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiDocumentManager;

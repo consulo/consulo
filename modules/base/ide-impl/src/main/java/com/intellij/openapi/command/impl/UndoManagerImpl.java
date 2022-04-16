@@ -35,7 +35,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.fileEditor.TextEditor;
-import consulo.fileEditor.impl.text.TextEditorProvider;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.internal.ExternalChangeAction;

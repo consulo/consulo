@@ -16,6 +16,7 @@ module consulo.file.editor.api {
   exports consulo.fileEditor;
   exports consulo.fileEditor.event;
   exports consulo.fileEditor.highlight;
+  exports consulo.fileEditor.text;
   exports consulo.fileEditor.structureView;
   exports consulo.fileEditor.structureView.tree;
   exports consulo.fileEditor.structureView.event;
