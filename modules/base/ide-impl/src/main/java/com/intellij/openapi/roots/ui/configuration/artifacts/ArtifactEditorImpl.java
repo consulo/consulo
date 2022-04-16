@@ -48,7 +48,6 @@ import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.ModifiableArtifact;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import com.intellij.packaging.impl.elements.ArchivePackagingElement;
-import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.util.ui.ThreeStateCheckBox;

@@ -21,7 +21,7 @@ import com.intellij.openapi.projectRoots.ui.BaseSdkEditor;
 import com.intellij.openapi.projectRoots.ui.SdkPathEditor;
 import consulo.content.OrderRootType;
 import com.intellij.openapi.roots.ui.OrderRootTypeUIFactory;
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

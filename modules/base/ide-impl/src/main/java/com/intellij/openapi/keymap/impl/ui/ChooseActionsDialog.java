@@ -19,27 +19,25 @@
  */
 package com.intellij.openapi.keymap.impl.ui;
 
-import consulo.application.AllIcons;
-import consulo.ui.ex.action.CommonActionsManager;
-import consulo.ui.ex.TreeExpander;
 import com.intellij.openapi.actionSystem.ex.QuickList;
-import consulo.ui.ex.keymap.KeyMapBundle;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.application.ui.wm.IdeFocusManager;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.ui.FormBuilder;
+import consulo.application.AllIcons;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.ui.ex.TreeExpander;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.FilterComponent;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.FilterComponent;
-import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.ui.FormBuilder;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.keymap.KeyMapBundle;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -245,7 +243,6 @@ public class ChooseActionsDialog extends DialogWrapper {
       }
     });
 
-    IJSwingUtilities.adjustComponentsOnMac(firstLabel, firstShortcut);
     JPanel filterComponent = FormBuilder.createFormBuilder()
       .addLabeledComponent(firstLabel, firstShortcut, true)
       .addComponent(enable2Shortcut)

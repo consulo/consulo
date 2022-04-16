@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package com.intellij.ui;
+package consulo.ui.ex;
 
 public class PrevNextActionsDescriptor {
   private final String myPrevActionId;

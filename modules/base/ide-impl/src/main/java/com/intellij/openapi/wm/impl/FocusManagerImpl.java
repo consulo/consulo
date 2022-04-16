@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.internal.ApplicationManagerEx;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.TimedOutCallback;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;

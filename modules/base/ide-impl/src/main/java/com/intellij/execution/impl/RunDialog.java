@@ -27,7 +27,7 @@ import com.intellij.openapi.options.ex.SingleConfigurableEditor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

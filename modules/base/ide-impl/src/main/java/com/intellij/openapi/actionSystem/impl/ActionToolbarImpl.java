@@ -10,7 +10,7 @@ import com.intellij.openapi.keymap.ex.KeymapManagerEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.awt.RelativeRectangle;
 import com.intellij.ui.switcher.QuickActionProvider;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;

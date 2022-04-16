@@ -15,13 +15,12 @@
  */
 package com.intellij.util.ui.table;
 
+import com.intellij.util.containers.ContainerUtil;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.util.IJSwingUtilities;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.VerticalFlowLayout;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -70,7 +69,6 @@ public abstract class JBTableRowEditor extends JPanel {
   public static JPanel createLabeledPanel(String labelText, JComponent component) {
     final JPanel panel = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 4, 2, true, false));
     final JBLabel label = new JBLabel(labelText, UIUtil.ComponentStyle.SMALL);
-    IJSwingUtilities.adjustComponentsOnMac(label, component);
     panel.add(label);
     panel.add(component);
     return panel;

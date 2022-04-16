@@ -54,7 +54,7 @@ import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;

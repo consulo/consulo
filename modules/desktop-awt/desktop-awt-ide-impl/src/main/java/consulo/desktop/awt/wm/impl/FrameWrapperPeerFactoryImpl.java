@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
@@ -29,7 +30,6 @@ import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
-import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.project.ui.wm.BalloonLayout;
 import com.intellij.ui.FrameState;
@@ -92,7 +92,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       }
 
       MouseGestureManager.getInstance().add(this);
-      setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
+      setFocusTraversalPolicy(new IdeFocusTraversalPolicy());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
@@ -195,7 +195,7 @@ public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
       getRootPane().putClientProperty("Window.style", "small");
       setBackground(UIUtil.getPanelBackground());
       MouseGestureManager.getInstance().add(this);
-      setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt());
+      setFocusTraversalPolicy(new IdeFocusTraversalPolicy());
       setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
       toUIWindow().putUserData(IdeFrame.KEY, this);

@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.ui.ex.awt;
 
-import consulo.application.ui.UISettings;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.ui.EditorTextField;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.FilteringIterator;
+import consulo.application.ui.UISettings;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.FilteringIterator;
 import consulo.util.collection.primitive.ints.IntStack;
 
 import javax.annotation.Nonnull;
@@ -38,10 +36,12 @@ import java.util.Iterator;
 
 public class IJSwingUtilities extends JBSwingUtilities {
   public static void invoke(Runnable runnable) {
-    if (ApplicationManager.getApplication().isDispatchThread()) {
+    Application application = Application.get();
+    if (application.isDispatchThread()) {
       runnable.run();
-    } else {
-      ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.NON_MODAL);
+    }
+    else {
+      application.invokeLater(runnable, application.getNoneModalityState());
     }
   }
 
@@ -57,8 +57,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
     Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
 
     // verify focusOwner is a descendant of c
-    for (Component temp = focusOwner; temp != null; temp = (temp instanceof Window) ? null : temp.getParent())
-    {
+    for (Component temp = focusOwner; temp != null; temp = (temp instanceof Window) ? null : temp.getParent()) {
       if (temp == c) {
         return focusOwner;
       }
@@ -72,12 +71,13 @@ public class IJSwingUtilities extends JBSwingUtilities {
    * in that window was descended from component
    */
   public static boolean hasFocus2(Component component) {
-    WindowManagerEx windowManager = WindowManagerEx.getInstanceEx();
-    Window activeWindow=null;
+    WindowManager windowManager = WindowManager.getInstance();
+    Window activeWindow = null;
     if (windowManager != null) {
       activeWindow = TargetAWT.to(windowManager.getMostRecentFocusedWindow());
     }
-    if(activeWindow==null){
+
+    if (activeWindow == null) {
       return false;
     }
     Component focusedComponent = windowManager.getFocusedComponent(activeWindow);
@@ -91,7 +91,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
   @Nonnull
   public static Component getFocusedComponentInWindowOrSelf(@Nonnull Component component) {
     Window window = UIUtil.getWindow(component);
-    Component focusedComponent = window == null ? null : WindowManagerEx.getInstanceEx().getFocusedComponent(window);
+    Component focusedComponent = window == null ? null : WindowManager.getInstance().getFocusedComponent(window);
     return focusedComponent != null ? focusedComponent : component;
   }
 
@@ -101,7 +101,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
    * within string <code>text</code>. Matching algorithm is not
    * case-sensitive.
    *
-   * @param text The text to search through, may be null
+   * @param text     The text to search through, may be null
    * @param mnemonic The mnemonic to find the character for.
    * @return index into the string if exists, otherwise -1
    */
@@ -118,9 +118,11 @@ public class IJSwingUtilities extends JBSwingUtilities {
 
     if (uci == -1) {
       return lci;
-    } else if(lci == -1) {
+    }
+    else if (lci == -1) {
       return uci;
-    } else {
+    }
+    else {
       return (lci < uci) ? lci : uci;
     }
   }
@@ -128,6 +130,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
   public static Iterator<Component> getParents(final Component component) {
     return new Iterator<Component>() {
       private Component myCurrent = component;
+
       public boolean hasNext() {
         return myCurrent != null && myCurrent.getParent() != null;
       }
@@ -191,34 +194,10 @@ public class IJSwingUtilities extends JBSwingUtilities {
     return (T)ContainerUtil.find(getParents(focusOwner), FilteringIterator.instanceOf(aClass));
 
   }
+
   @Nullable
   public static Component findParentByInterface(Component focusOwner, Class aClass) {
     return ContainerUtil.find(getParents(focusOwner), FilteringIterator.instanceOf(aClass));
-  }
-
-  public static void adjustComponentsOnMac(@Nullable JComponent component) {
-    adjustComponentsOnMac(null, component);
-  }
-
-
-  public static void adjustComponentsOnMac(@Nullable JLabel label, @Nullable JComponent component) {
-    if (component == null) return;
-    if (!UIUtil.isUnderAquaLookAndFeel()) return;
-
-    if (component instanceof JComboBox) {
-      UIUtil.addInsets(component, new Insets(0,-2,0,0));
-      if (label != null) {
-        UIUtil.addInsets(label, new Insets(0,2,0,0));
-      }
-    }
-    if (component instanceof JCheckBox) {
-      UIUtil.addInsets(component, new Insets(0,-5,0,0));
-    }
-    if (component instanceof JTextField || component instanceof EditorTextField) {
-      if (label != null) {
-        UIUtil.addInsets(label, new Insets(0,3,0,0));
-      }
-    }
   }
 
   public static HyperlinkEvent createHyperlinkEvent(@Nullable String href, @Nonnull Object source) {
@@ -233,7 +212,7 @@ public class IJSwingUtilities extends JBSwingUtilities {
 
   /**
    * A copy of javax.swing.SwingUtilities#updateComponentTreeUI that invokes children updateUI() first
-
+   *
    * @param c component
    * @see javax.swing.SwingUtilities#updateComponentTreeUI
    */

@@ -154,4 +154,23 @@ public abstract class WindowManager {
   public abstract boolean isFullScreenSupportedInCurrentOS();
 
   public abstract void requestUserAttention(@Nonnull IdeFrame frame, boolean critical);
+
+  @Nullable
+  public abstract consulo.ui.Window getMostRecentFocusedWindow();
+
+
+  /**
+   * @return focus owner of the specified window.
+   * @throws IllegalArgumentException if <code>window</code> is <code>null</code>.
+   */
+  public abstract Component getFocusedComponent(@Nonnull Window window);
+
+  /**
+   * @param project may be <code>null</code> when no project is opened.
+   * @return focused component for the project. If project isn't specified then
+   * the method returns focused component in window which has no project.
+   * If there is no focused component at all then the method returns <code>null</code>.
+   */
+  @Nullable
+  public abstract Component getFocusedComponent(@Nullable Project project);
 }

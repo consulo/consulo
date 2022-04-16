@@ -21,7 +21,7 @@ import com.intellij.ui.*;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import consulo.ui.ex.awt.speedSearch.SpeedSearch;
 import com.intellij.util.FunctionUtil;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ChildFocusWatcher;

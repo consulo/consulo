@@ -41,7 +41,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.ContainerUtil;
@@ -961,7 +961,7 @@ public abstract class DiffRequestProcessor implements Disposable {
 
   private class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
     @Override
-    public final Component getDefaultComponentImpl(final Container focusCycleRoot) {
+    public final Component getDefaultComponent(final Container focusCycleRoot) {
       JComponent component = DiffRequestProcessor.this.getPreferredFocusedComponent();
       if (component == null) return null;
       return IdeFocusTraversalPolicy.getPreferredFocusedComponent(component, this);

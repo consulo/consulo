@@ -210,12 +210,6 @@ public class WebApplicationImpl extends BaseApplication implements WebApplicatio
     return true;
   }
 
-  @RequiredUIAccess
-  @Override
-  public void assertIsDispatchThread(@Nullable JComponent component) {
-
-  }
-
   @Override
   public void assertTimeConsuming() {
 

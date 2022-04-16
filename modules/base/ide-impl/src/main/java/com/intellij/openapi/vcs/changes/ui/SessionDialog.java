@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.ValidationInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.CommitSession;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 

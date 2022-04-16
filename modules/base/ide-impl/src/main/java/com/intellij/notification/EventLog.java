@@ -35,6 +35,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.*;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.util.*;
 import com.intellij.openapi.util.text.StringUtil;

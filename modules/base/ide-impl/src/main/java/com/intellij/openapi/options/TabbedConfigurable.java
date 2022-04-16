@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.options;
 
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 

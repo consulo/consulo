@@ -56,7 +56,7 @@ import consulo.desktop.awt.ui.plaf.beg.BegMenuItemUI;
 import consulo.desktop.awt.ui.plaf.beg.IdeaMenuUI;
 import consulo.ui.ex.awt.internal.laf.DefaultTreeUI;
 import com.intellij.util.EventDispatcher;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.ReflectionUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

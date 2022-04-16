@@ -21,7 +21,9 @@ import com.intellij.ui.tabs.impl.JBTabsImpl;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
+import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.awt.TabbedPane;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

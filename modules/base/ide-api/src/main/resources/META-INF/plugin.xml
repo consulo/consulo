@@ -2803,6 +2803,7 @@
     <applicationService serviceInterface="consulo.content.impl.internal.GlobalLibraryRootListenerProvider" serviceImplementation="consulo.module.impl.internal.GlobalLibraryRootListenerProviderImpl"/>
     <applicationService serviceInterface="consulo.codeEditor.EditorPopupHelper" serviceImplementation="consulo.ide.impl.codeEditor.EditorPopupHelperImpl"/>
     <applicationService serviceInterface="consulo.content.bundle.SdkModelFactory" serviceImplementation="consulo.ide.impl.IdeSdkModelFactory"/>
+    <applicationService serviceInterface="consulo.ui.ex.awt.internal.TabFactoryBuilder" serviceImplementation="consulo.ide.impl.TabFactoryBuilderImpl"/>
   </extensions>
 
   <applicationListeners>

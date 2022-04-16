@@ -40,6 +40,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.UIUtil;
@@ -397,7 +398,7 @@ public class DesktopFileEditorWindow extends FileEditorWindowBase implements Fil
     myTabbedPane.setPaintBlocked(blocked);
   }
 
-  protected static class TComp extends JPanel implements DataProvider, EditorWindowHolder {
+  protected static class TComp extends JPanel implements DataProvider, EditorWindowHolder, IdeFocusTraversalPolicy.PassThroughComponent {
     @Nonnull
     final DesktopFileEditorWithProviderComposite myEditor;
     protected final FileEditorWindow myWindow;

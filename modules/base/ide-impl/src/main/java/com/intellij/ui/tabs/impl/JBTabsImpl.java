@@ -16,8 +16,7 @@
 package com.intellij.ui.tabs.impl;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ui.ex.awt.JBMenuItem;
-import consulo.ui.ex.awt.JBPopupMenu;
+import consulo.ui.ex.awt.*;
 import com.intellij.openapi.ui.ShadowAction;
 import com.intellij.openapi.util.Getter;
 import com.intellij.ui.switcher.QuickActionProvider;
@@ -45,9 +44,6 @@ import consulo.ui.ex.Gray;
 import consulo.ui.ex.IdeGlassPane;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.awt.Animator;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -76,7 +72,7 @@ import static consulo.application.ui.wm.IdeFocusManager.getGlobalInstance;
 /**
  * Consulo tab panel
  * <p>
- * For implementation use {@link JBEditorTabs} or {@link com.intellij.ui.TabbedPaneWrapper}
+ * For implementation use {@link JBEditorTabs} or {@link TabbedPaneWrapper}
  */
 public abstract class JBTabsImpl extends JComponent
         implements JBTabs, PropertyChangeListener, TimerListener, DataProvider, PopupMenuListener, consulo.disposer.Disposable, JBTabsPresentation, Queryable, QuickActionProvider {

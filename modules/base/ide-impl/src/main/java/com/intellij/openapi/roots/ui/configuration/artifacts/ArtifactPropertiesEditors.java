@@ -23,7 +23,7 @@ import consulo.compiler.artifact.ModifiableArtifact;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.ArtifactPropertiesEditor;
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

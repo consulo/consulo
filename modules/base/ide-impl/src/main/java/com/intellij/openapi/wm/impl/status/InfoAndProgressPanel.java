@@ -30,7 +30,7 @@ import consulo.application.progress.ProgressIndicatorEx;
 import com.intellij.reference.SoftReference;
 import consulo.ui.ex.awt.AnimatedIcon;
 import com.intellij.ui.InplaceButton;
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.LinkLabel;
 import com.intellij.ui.components.panels.HorizontalLayout;

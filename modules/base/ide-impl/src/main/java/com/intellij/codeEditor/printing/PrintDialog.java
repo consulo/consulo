@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

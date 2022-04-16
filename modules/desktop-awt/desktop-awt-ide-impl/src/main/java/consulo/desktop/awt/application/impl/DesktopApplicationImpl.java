@@ -92,8 +92,6 @@ public class DesktopApplicationImpl extends BaseApplication {
 
   private volatile boolean myDisposeInProgress;
 
-  private static final String WAS_EVER_SHOWN = "was.ever.shown";
-
   private static final IdeaModalityState ANY = new IdeaModalityState() {
     @Override
     public boolean dominates(@Nonnull IdeaModalityState anotherState) {
@@ -622,27 +620,6 @@ public class DesktopApplicationImpl extends BaseApplication {
                                          describe(Thread.currentThread()) +
                                          " SystemEventQueueThread: " +
                                          describe(getEventQueueThread()), dump);
-  }
-
-  @RequiredUIAccess
-  @Override
-  public void assertIsDispatchThread(@Nullable final JComponent component) {
-    if (component == null) return;
-
-    if (isDispatchThread()) {
-      return;
-    }
-
-    if (Boolean.TRUE.equals(component.getClientProperty(WAS_EVER_SHOWN))) {
-      assertIsDispatchThread();
-    }
-    else {
-      final JRootPane root = component.getRootPane();
-      if (root != null) {
-        component.putClientProperty(WAS_EVER_SHOWN, Boolean.TRUE);
-        assertIsDispatchThread();
-      }
-    }
   }
 
   @Override

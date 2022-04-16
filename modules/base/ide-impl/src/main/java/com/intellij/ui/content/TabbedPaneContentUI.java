@@ -17,9 +17,13 @@ package com.intellij.ui.content;
 
 import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataProvider;
+import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.TabbedPane;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
+import consulo.ui.ex.awt.internal.TabbedPaneHolder;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
@@ -33,7 +37,7 @@ import consulo.application.util.SystemInfo;
 import com.intellij.ui.*;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
 import com.intellij.ui.content.tabs.TabbedContentAction;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.image.Image;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -77,10 +81,12 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
     myTabbedPaneWrapper = new MyTabbedPaneWrapper(tabPlacement);
   }
 
+  @Override
   public JComponent getComponent() {
     return myTabbedPaneWrapper.getComponent();
   }
 
+  @Override
   public void setManager(@Nonnull ContentManager manager) {
     if (myManager != null) {
       throw new IllegalStateException();
@@ -89,6 +95,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
     myManager.addContentManagerListener(new MyContentManagerListener());
   }
 
+  @Override
   public void propertyChange(PropertyChangeEvent e) {
     if (Content.PROP_DISPLAY_NAME.equals(e.getPropertyName())) {
       Content content = (Content)e.getSource();
@@ -131,15 +138,17 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   }
 
 
-  private class MyTabbedPaneWrapper extends TabbedPaneWrapper.AsJTabbedPane {
+  private class MyTabbedPaneWrapper extends TabFactoryBuilderImpl.AsJTabbedPane {
     public MyTabbedPaneWrapper(int tabPlacement) {
       super(tabPlacement);
     }
 
+    @Override
     protected TabbedPane createTabbedPane(int tabPlacement) {
       return new MyTabbedPane(tabPlacement);
     }
 
+    @Override
     protected TabbedPaneHolder createTabbedPaneHolder() {
       return new MyTabbedPaneHolder(this);
     }
@@ -171,6 +180,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
         menuSelectionManager.clearSelectedPath();
       }
 
+      @Override
       protected void processMouseEvent(MouseEvent e) {
         if (e.isPopupTrigger()) { // Popup doesn't activate clicked tab.
           showPopup(e.getX(), e.getY());
@@ -206,11 +216,13 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
         }
       }
 
+      @Override
       protected ChangeListener createChangeListener() {
         return new MyModelListener();
       }
 
       private class MyModelListener extends ModelListener {
+        @Override
         public void stateChanged(ChangeEvent e) {
           Content content = getSelectedContent();
           if (content != null) {
@@ -235,6 +247,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
       }
 
       protected class MyPopupHandler extends PopupHandler {
+        @Override
         public void invokePopup(Component comp, int x, int y) {
           if (myManager.getContentCount() == 0) return;
           showPopup(x, y);
@@ -279,6 +292,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
         super(wrapper);
       }
 
+      @Override
       public Object getData(@Nonnull Key<?> dataId) {
         if (PlatformDataKeys.CONTENT_MANAGER == dataId) {
           return myManager;
@@ -292,17 +306,20 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
   }
 
   private class MyContentManagerListener extends ContentManagerAdapter {
+    @Override
     public void contentAdded(ContentManagerEvent event) {
       Content content = event.getContent();
       myTabbedPaneWrapper.insertTab(content.getTabName(), content.getIcon(), content.getComponent(), content.getDescription(), event.getIndex());
       content.addPropertyChangeListener(TabbedPaneContentUI.this);
     }
 
+    @Override
     public void contentRemoved(ContentManagerEvent event) {
       event.getContent().removePropertyChangeListener(TabbedPaneContentUI.this);
       myTabbedPaneWrapper.removeTabAt(event.getIndex());
     }
 
+    @Override
     public void selectionChanged(ContentManagerEvent event) {
       int index = event.getIndex();
       if (index != -1) {
@@ -311,21 +328,26 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
     }
   }
 
+  @Override
   public boolean isSingleSelection() {
     return true;
   }
 
+  @Override
   public boolean isToSelectAddedContent() {
     return false;
   }
 
+  @Override
   public boolean canBeEmptySelection() {
     return false;
   }
 
+  @Override
   public void beforeDispose() {
   }
 
+  @Override
   public boolean canChangeSelectionTo(@Nonnull Content content, boolean implicit) {
     return true;
   }
@@ -354,6 +376,7 @@ public class TabbedPaneContentUI implements ContentUI, PropertyChangeListener {
     return "Select Next Tab";
   }
 
+  @Override
   public void dispose() {
   }
 }

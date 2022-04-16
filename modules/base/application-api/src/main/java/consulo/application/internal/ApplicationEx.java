@@ -128,7 +128,10 @@ public interface ApplicationEx extends Application {
                                               @Nullable @Nls(capitalization = Nls.Capitalization.Title) String cancelText);
 
   @RequiredUIAccess
-  void assertIsDispatchThread(@Nullable JComponent component);
+  @Deprecated
+  default void assertIsDispatchThread(@Nullable JComponent component) {
+    assertIsDispatchThread();
+  }
 
   void assertTimeConsuming();
 

@@ -28,7 +28,6 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;

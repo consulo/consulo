@@ -40,7 +40,7 @@ import com.intellij.openapi.wm.ex.ToolWindowEx;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.io.URLUtil;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;

@@ -18,7 +18,7 @@ package com.intellij.xdebugger.impl.ui.tree.nodes;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.util.collection.SmartList;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;

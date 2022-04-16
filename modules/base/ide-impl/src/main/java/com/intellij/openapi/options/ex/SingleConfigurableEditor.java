@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.JBUI;

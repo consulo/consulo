@@ -34,7 +34,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.packageDependencies.ui.TreeExpansionMonitor;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.FilterComponent;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.ui.FormBuilder;
 import consulo.application.AllIcons;
 import consulo.application.CommonBundle;
@@ -471,7 +471,6 @@ public class KeymapPanel implements SearchableConfigurable, Configurable.NoScrol
       }
     });
 
-    IJSwingUtilities.adjustComponentsOnMac(firstLabel, firstShortcut);
     JPanel filterComponent =
             FormBuilder.createFormBuilder().addLabeledComponent(firstLabel, firstShortcut, true).addComponent(enable2Shortcut).setVerticalGap(0).setIndent(5).addComponent(secondShortcut).getPanel();
 

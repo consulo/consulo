@@ -36,7 +36,6 @@ import java.awt.event.ComponentEvent;
 public abstract class WindowManagerEx extends WindowManager {
   public static final String ID = "WindowManager";
 
-  @NonNls
   public static final String FULL_SCREEN = "ide.frame.full.screen";
 
   public enum WindowShadowMode {

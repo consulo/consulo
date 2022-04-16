@@ -14,7 +14,7 @@ import consulo.dataContext.DataProvider;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 

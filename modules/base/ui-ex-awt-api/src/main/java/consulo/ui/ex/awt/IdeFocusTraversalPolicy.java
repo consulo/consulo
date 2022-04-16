@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm.ex;
+package consulo.ui.ex.awt;
 
-import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import consulo.awt.hacking.ContainerHacking;
-import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 
-public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
-  private static final Logger LOG = Logger.getInstance(IdeFocusTraversalPolicy.class);
+public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicy {
+  public interface PassThroughComponent {
+  }
 
-  protected Component getDefaultComponentImpl(Container focusCycleRoot) {
+  @Override
+  public Component getDefaultComponent(Container focusCycleRoot) {
     if (!(focusCycleRoot instanceof JComponent)) {
       return super.getDefaultComponent(focusCycleRoot);
     }
@@ -55,14 +54,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
         return component;
       }
 
-      Component defaultComponent;
-      if (focusTraversalPolicy instanceof LayoutFocusTraversalPolicyExt) {
-        final LayoutFocusTraversalPolicyExt extPolicy = (LayoutFocusTraversalPolicyExt)focusTraversalPolicy;
-        defaultComponent = extPolicy.queryImpl(() -> extPolicy.getDefaultComponent(component));
-      }
-      else {
-        defaultComponent = focusTraversalPolicy.getDefaultComponent(component);
-      }
+      Component defaultComponent = focusTraversalPolicy.getDefaultComponent(component);
 
       if (defaultComponent instanceof JComponent) {
         return (JComponent)defaultComponent;
@@ -94,6 +86,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
     return null;
   }
 
+  @Override
   protected final boolean accept(final Component aComponent) {
     if (aComponent instanceof JComponent) {
       return _accept((JComponent)aComponent);
@@ -106,8 +99,7 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
       return false;
     }
 
-    /* TODO[anton,vova] implement Policy in Editor component instead */
-    if (component instanceof EditorComponentImpl || component instanceof EditorWindowHolder) {
+    if (component instanceof PassThroughComponent) {
       return true;
     }
 
@@ -115,10 +107,6 @@ public class IdeFocusTraversalPolicy extends LayoutFocusTraversalPolicyExt {
       return ((JTextComponent)component).isEditable();
     }
 
-    return component instanceof AbstractButton ||
-           component instanceof JList ||
-           component instanceof JTree ||
-           component instanceof JTable ||
-           component instanceof JComboBox;
+    return component instanceof AbstractButton || component instanceof JList || component instanceof JTree || component instanceof JTable || component instanceof JComboBox;
   }
 }

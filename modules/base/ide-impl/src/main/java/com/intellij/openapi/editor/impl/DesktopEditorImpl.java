@@ -23,7 +23,7 @@ import com.intellij.ui.LightweightHint;
 import com.intellij.ui.mac.MacGestureSupportForEditor;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;

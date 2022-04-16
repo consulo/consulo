@@ -30,13 +30,12 @@ import com.intellij.openapi.ui.impl.AbstractDialog;
 import com.intellij.openapi.ui.impl.HeadlessDialog;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.application.ui.WindowStateService;
-import com.intellij.openapi.wm.ex.LayoutFocusTraversalPolicyExt;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.reference.SoftReference;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
 import com.intellij.ui.components.JBLayeredPane;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.ui.OwnerOptional;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -621,7 +620,7 @@ public class DialogWrapperPeerImpl extends DialogWrapperPeer {
       myDialogWrapper = new WeakReference<>(dialogWrapper);
       myProject = project != null ? new WeakReference<>(project) : null;
 
-      setFocusTraversalPolicy(new LayoutFocusTraversalPolicyExt() {
+      setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
         @Override
         protected boolean accept(Component aComponent) {
           if (UIUtil.isFocusProxy(aComponent)) return false;

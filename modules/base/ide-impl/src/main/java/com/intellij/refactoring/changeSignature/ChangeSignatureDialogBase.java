@@ -48,7 +48,7 @@ import consulo.ui.ex.awt.table.TableView;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.Consumer;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.ui.table.JBListTable;
 import com.intellij.util.ui.table.JBTableRowEditor;
 import consulo.ui.image.ImageEffects;
@@ -231,7 +231,6 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
       myNameField.setPreferredWidth(200);
     }
     myNamePanel.add(nameLabel, BorderLayout.NORTH);
-    IJSwingUtilities.adjustComponentsOnMac(nameLabel, myNameField);
     myNamePanel.add(myNameField, BorderLayout.SOUTH);
 
     createVisibilityPanel();
@@ -264,7 +263,6 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
       }
 
       typePanel.add(typeLabel, BorderLayout.NORTH);
-      IJSwingUtilities.adjustComponentsOnMac(typeLabel, myReturnTypeField);
       typePanel.add(myReturnTypeField, BorderLayout.SOUTH);
       panel.add(typePanel, gbc);
       gbc.gridx++;

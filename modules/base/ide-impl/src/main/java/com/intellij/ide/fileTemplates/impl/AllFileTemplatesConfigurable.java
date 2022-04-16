@@ -37,7 +37,7 @@ import consulo.ui.ex.awt.Splitter;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
@@ -317,7 +317,9 @@ public class AllFileTemplatesConfigurable implements SearchableConfigurable, Con
     addAction.registerCustomShortcutSet(CommonShortcuts.INSERT, myCurrentTab.getComponent());
     removeAction.registerCustomShortcutSet(CommonShortcuts.getDelete(), myCurrentTab.getComponent());
 
-    myToolBar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true).getComponent();
+    ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+    toolbar.setTargetComponent(myMainPanel);
+    myToolBar = toolbar.getComponent();
     myToolBar.setBorder(IdeBorderFactory.createEmptyBorder());
 
     JPanel toolbarPanel = new JPanel(new BorderLayout());

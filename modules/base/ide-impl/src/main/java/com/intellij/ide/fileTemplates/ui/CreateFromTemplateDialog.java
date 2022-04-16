@@ -20,7 +20,7 @@ import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.CreateFileAction;
 import com.intellij.ide.fileTemplates.actions.AttributesDefaults;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;

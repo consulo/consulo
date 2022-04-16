@@ -27,7 +27,7 @@ import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.ScrollPaneFactory;

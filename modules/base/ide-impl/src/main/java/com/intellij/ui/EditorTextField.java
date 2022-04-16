@@ -22,7 +22,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import consulo.ui.ex.awt.AbstractDelegatingToRootTraversalPolicy;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;

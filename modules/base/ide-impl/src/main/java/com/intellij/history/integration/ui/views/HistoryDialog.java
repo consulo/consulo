@@ -50,7 +50,7 @@ import com.intellij.openapi.vcs.changes.ChangesUtil;
 import com.intellij.openapi.vcs.changes.patch.CreatePatchConfigurationPanel;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import com.intellij.ui.*;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.components.JBLayeredPane;

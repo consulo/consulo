@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
+import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

@@ -191,12 +191,6 @@ public class DesktopSwtApplicationImpl extends BaseApplication {
     return DesktopSwtUIAccess.INSTANCE;
   }
 
-  @RequiredUIAccess
-  @Override
-  public void assertIsDispatchThread(@Nullable JComponent component) {
-
-  }
-
   @Override
   public void assertTimeConsuming() {
 

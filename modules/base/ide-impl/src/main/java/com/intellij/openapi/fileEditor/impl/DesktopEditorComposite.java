@@ -15,6 +15,7 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
+import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.ui.ex.action.IdeActions;
@@ -38,9 +39,9 @@ import consulo.component.util.Weighted;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.ui.PrevNextActionsDescriptor;
+import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.awt.SideBorder;
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.Wrapper;
@@ -172,9 +173,9 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
   }
 
   @Nonnull
-  private TabbedPaneWrapper.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
+  private TabFactoryBuilderImpl.AsJBTabs createTabbedPaneWrapper(FileEditor[] editors) {
     PrevNextActionsDescriptor descriptor = new PrevNextActionsDescriptor(IdeActions.ACTION_NEXT_EDITOR_TAB, IdeActions.ACTION_PREVIOUS_EDITOR_TAB);
-    final TabbedPaneWrapper.AsJBTabs wrapper = new TabbedPaneWrapper.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
+    final TabFactoryBuilderImpl.AsJBTabs wrapper = new TabFactoryBuilderImpl.AsJBTabs(myFileEditorManager.getProject(), SwingConstants.BOTTOM, descriptor, this);
     wrapper.getTabs().getPresentation()
             .setUiDecorator(() -> new UiDecorator.UiDecoration(null, JBUI.insets(0, 8)));
     wrapper.getTabs().getComponent().setBorder(new EmptyBorder(0, 0, 1, 0));

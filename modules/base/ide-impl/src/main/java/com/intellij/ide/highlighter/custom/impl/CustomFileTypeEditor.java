@@ -22,7 +22,6 @@ import com.intellij.openapi.fileTypes.impl.AbstractFileType;
 import consulo.configurable.ConfigurationException;
 import consulo.execution.configuration.ui.SettingsEditor;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.*;
 import consulo.ui.ex.awt.*;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.GridBag;

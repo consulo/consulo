@@ -38,7 +38,7 @@ import consulo.disposer.Disposer;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.Wrapper;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
@@ -468,7 +468,7 @@ public abstract class MergeRequestProcessor implements Disposable {
 
   private class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
     @Override
-    public final Component getDefaultComponentImpl(final Container focusCycleRoot) {
+    public final Component getDefaultComponent(final Container focusCycleRoot) {
       JComponent component = MergeRequestProcessor.this.getPreferredFocusedComponent();
       if (component == null) return null;
       return IdeFocusTraversalPolicy.getPreferredFocusedComponent(component, this);

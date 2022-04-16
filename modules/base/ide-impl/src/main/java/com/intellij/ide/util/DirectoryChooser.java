@@ -44,7 +44,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import com.intellij.refactoring.RefactoringBundle;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.annotation.DeprecationInfo;

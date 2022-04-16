@@ -30,7 +30,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.virtualFileSystem.status.FileStatus;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.table.JBTable;

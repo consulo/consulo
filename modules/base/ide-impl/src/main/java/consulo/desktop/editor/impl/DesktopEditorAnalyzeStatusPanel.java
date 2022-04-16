@@ -33,7 +33,7 @@ import com.intellij.ui.AncestorListenerAdapter;
 import com.intellij.ui.components.labels.DropDownLink;
 import com.intellij.ui.popup.util.PopupState;
 import com.intellij.util.Function;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.GridBag;

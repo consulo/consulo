@@ -1,6 +1,7 @@
 package com.intellij.ui;
 
 import consulo.disposer.Disposable;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 
 import javax.annotation.Nullable;
 

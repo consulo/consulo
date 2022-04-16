@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.util.FocusWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ex.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.impl.IdePanePanel;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.RelativePoint;
@@ -354,7 +354,7 @@ public class DesktopFileEditorsSplitters extends FileEditorsSplittersBase<Deskto
 
   private final class MyFocusTraversalPolicy extends IdeFocusTraversalPolicy {
     @Override
-    public final Component getDefaultComponentImpl(final Container focusCycleRoot) {
+    public final Component getDefaultComponent(final Container focusCycleRoot) {
       if (myCurrentWindow != null) {
         final DesktopFileEditorWithProviderComposite selectedEditor = myCurrentWindow.getSelectedEditor();
         if (selectedEditor != null) {

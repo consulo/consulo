@@ -40,7 +40,7 @@ import com.intellij.openapi.project.ProjectUtil;
 import consulo.ui.ex.awt.JBMenuItem;
 import consulo.ui.ex.awt.JBPopupMenu;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.TabbedPaneWrapper;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

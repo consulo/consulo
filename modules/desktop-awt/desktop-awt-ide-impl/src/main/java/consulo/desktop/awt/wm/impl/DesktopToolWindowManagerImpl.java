@@ -30,7 +30,7 @@ import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;
 import com.intellij.ui.BalloonImpl;
-import com.intellij.util.IJSwingUtilities;
+import consulo.ui.ex.awt.IJSwingUtilities;
 import com.intellij.util.ObjectUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
