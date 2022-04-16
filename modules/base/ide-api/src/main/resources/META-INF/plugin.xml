@@ -893,7 +893,7 @@
     <extensionPoint name="moveFileHandler" interface="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler"/>
     <extensionPoint name="automaticRenamerFactory" interface="com.intellij.refactoring.rename.naming.AutomaticRenamerFactory"/>
     <extensionPoint name="nameSuggestionProvider" interface="consulo.language.editor.refactoring.rename.NameSuggestionProvider"/>
-    <extensionPoint name="vetoRenameCondition" interface="consulo.util.lang.function.Condition"/>
+    <extensionPoint name="vetoRenameCondition" interface="consulo.language.editor.refactoring.rename.VetoRenameCondition"/>
 
     <extensionPoint name="rename.inplace.resolveSnapshotProvider"
                     beanClass="consulo.language.LanguageExtensionPoint">

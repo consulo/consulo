@@ -16,22 +16,22 @@
 
 package com.intellij.refactoring.rename;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.application.statistic.FeatureUsageTracker;
+import consulo.language.editor.refactoring.rename.VetoRenameCondition;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
 import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -57,7 +57,6 @@ import java.util.Arrays;
 public class PsiElementRenameHandler implements RenameHandler {
   private static final Logger LOG = Logger.getInstance(PsiElementRenameHandler.class);
 
-  public static final ExtensionPointName<Condition<PsiElement>> VETO_RENAME_CONDITION_EP = ExtensionPointName.create("consulo.vetoRenameCondition");
   public static Key<String> DEFAULT_NAME = Key.create("DEFAULT_NAME");
 
   @Override
@@ -204,12 +203,10 @@ public class PsiElementRenameHandler implements RenameHandler {
     return !isVetoed(getElement(dataContext));
   }
 
+  @RequiredReadAction
   public static boolean isVetoed(PsiElement element) {
     if (element == null || element instanceof SyntheticElement) return true;
-    for (Condition<PsiElement> condition : Extensions.getExtensions(VETO_RENAME_CONDITION_EP)) {
-      if (condition.value(element)) return true;
-    }
-    return false;
+    return VetoRenameCondition.EP.findFirstSafe(Application.get(), it -> it.isVetoed(element)) != null;
   }
 
   @Nullable
