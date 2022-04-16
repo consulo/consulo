@@ -18,29 +18,20 @@ package consulo.language.editor.internal;
 
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataManager;
-import consulo.document.Document;
 import consulo.document.util.TextRange;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
+import consulo.language.editor.util.PsiEditorUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ui.UIAccess;
-import consulo.util.concurrent.AsyncResult;
-import consulo.virtualFileSystem.NonPhysicalFileSystem;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.*;
 
 public class PsiUtilBase extends PsiUtilCore {
@@ -230,40 +221,7 @@ public class PsiUtilBase extends PsiUtilCore {
    */
   @Nullable
   public static Editor findEditor(@Nonnull PsiElement element) {
-    if (!UIAccess.isUIThread()) {
-      LOG.warn("Invoke findEditor() from EDT only. Otherwise, it causes deadlocks.");
-    }
-    PsiFile psiFile = element.getContainingFile();
-    VirtualFile virtualFile = PsiUtilCore.getVirtualFile(element);
-    if (virtualFile == null) {
-      return null;
-    }
-
-    Project project = psiFile.getProject();
-    if (virtualFile.isInLocalFileSystem() || virtualFile.getFileSystem() instanceof NonPhysicalFileSystem) {
-      // Try to find editor for the real file.
-      final FileEditor[] editors = FileEditorManager.getInstance(project).getEditors(virtualFile);
-      for (FileEditor editor : editors) {
-        if (editor instanceof TextEditor) {
-          return ((TextEditor)editor).getEditor();
-        }
-      }
-    }
-    if (SwingUtilities.isEventDispatchThread()) {
-      // We assume that data context from focus-based retrieval should success if performed from EDT.
-      AsyncResult<DataContext> asyncResult = DataManager.getInstance().getDataContextFromFocus();
-      if (asyncResult.isDone()) {
-        Editor editor = asyncResult.getResult().getData(Editor.KEY);
-        if (editor != null) {
-          Document cachedDocument = PsiDocumentManager.getInstance(project).getCachedDocument(psiFile);
-          // Ensure that target editor is found by checking its document against the one from given PSI element.
-          if (cachedDocument == editor.getDocument()) {
-            return editor;
-          }
-        }
-      }
-    }
-    return null;
+    return PsiEditorUtil.findEditor(element);
   }
 
   public static boolean isSymLink(@Nonnull final PsiFileSystemItem element) {
