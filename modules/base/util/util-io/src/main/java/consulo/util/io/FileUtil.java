@@ -23,6 +23,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.ThreeState;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,33 @@ public class FileUtil {
       return new byte[THREAD_LOCAL_BUFFER_LENGTH];
     }
   };
+
+  public static boolean visitFiles(@Nonnull File root, @Nonnull Predicate<? super File> processor) {
+    if (!processor.test(root)) {
+      return false;
+    }
+
+    File[] children = root.listFiles();
+    if (children != null) {
+      for (File child : children) {
+        if (!visitFiles(child, processor)) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  public static boolean extensionEquals(@Nonnull String filePath, @Nonnull String extension) {
+    int extLen = extension.length();
+    if (extLen == 0) {
+      int lastSlash = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+      return filePath.indexOf('.', lastSlash + 1) == -1;
+    }
+    int extStart = filePath.length() - extLen;
+    return extStart >= 1 && filePath.charAt(extStart - 1) == '.' && filePath.regionMatches(!OSInfo.isFileSystemCaseSensitive, extStart, extension, 0, extLen);
+  }
 
   @Nonnull
   public static File createTempFile(@Nonnull String prefix, @Nullable String suffix) throws IOException {

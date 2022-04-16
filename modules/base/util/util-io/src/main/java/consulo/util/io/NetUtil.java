@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.net.util;
+package consulo.util.io;
 
-import consulo.application.util.Patches;
-import consulo.application.util.SystemInfo;
 import consulo.util.lang.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +23,6 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.*;
 
-/**
- * @author VISTALL
- * @since 2019-02-22
- */
 public class NetUtil {
   private static final Logger LOG = LoggerFactory.getLogger(NetUtil.class);
 
@@ -41,25 +35,18 @@ public class NetUtil {
   }
 
   public static boolean canConnectToSocket(String host, int port) {
-    return canConnectToSocket(host, port, false);
-  }
-
-  public static boolean canConnectToSocketOpenedByJavaProcess(String host, int port) {
-    return canConnectToSocket(host, port, Patches.SUN_BUG_ID_7179799);
-  }
-
-  private static boolean canConnectToSocket(String host, int port, boolean alwaysTryToConnectDirectly) {
     if (isLocalhost(host)) {
-      if (!canBindToLocalSocket(host, port)) {
-        return true;
-      }
-      return alwaysTryToConnectDirectly && canConnectToRemoteSocket(host, port);
+      return !canBindToLocalSocket(host, port);
     }
     else {
       return canConnectToRemoteSocket(host, port);
     }
   }
 
+  /**
+   * @deprecated use {@link InetAddress#getLoopbackAddress()}
+   */
+  @Deprecated(forRemoval = true)
   public static InetAddress getLoopbackAddress() {
     return InetAddress.getLoopbackAddress();
   }
@@ -103,8 +90,7 @@ public class NetUtil {
   }
 
   public static int findAvailableSocketPort() throws IOException {
-    final ServerSocket serverSocket = new ServerSocket(0);
-    try {
+    try (ServerSocket serverSocket = new ServerSocket(0)) {
       int port = serverSocket.getLocalPort();
       // workaround for linux : calling close() immediately after opening socket
       // may result that socket is not closed
@@ -119,9 +105,6 @@ public class NetUtil {
         }
       }
       return port;
-    }
-    finally {
-      serverSocket.close();
     }
   }
 
@@ -172,7 +155,7 @@ public class NetUtil {
     String localHostString = "localhost";
     try {
       final InetAddress localHost = InetAddress.getByName(localHostString);
-      if ((localHost.getAddress().length != 4 && SystemInfo.isWindows) || (localHost.getAddress().length == 4 && SystemInfo.isMac)) {
+      if ((localHost.getAddress().length != 4 && OSInfo.isWindows) || (localHost.getAddress().length == 4 && OSInfo.isMac)) {
         localHostString = "127.0.0.1";
       }
     }

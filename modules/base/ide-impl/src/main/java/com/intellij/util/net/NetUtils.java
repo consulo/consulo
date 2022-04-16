@@ -17,7 +17,7 @@ package com.intellij.util.net;
 
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import consulo.net.util.NetUtil;
+import consulo.util.io.NetUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,6 +28,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.MessageDigest;
 
+@Deprecated
 public class NetUtils {
   private NetUtils() {
   }

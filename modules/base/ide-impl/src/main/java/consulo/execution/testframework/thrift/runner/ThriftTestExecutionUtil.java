@@ -32,7 +32,7 @@ import consulo.execution.test.ui.BaseTestsOutputConsoleView;
 import consulo.application.ApplicationManager;
 import com.intellij.testIntegration.TestLocationProvider;
 import consulo.disposer.Disposer;
-import consulo.net.util.NetUtil;
+import consulo.util.io.NetUtil;
 import consulo.util.dataholder.Key;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
