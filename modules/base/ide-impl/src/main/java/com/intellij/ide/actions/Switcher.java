@@ -28,7 +28,7 @@ import consulo.virtualFileSystem.status.FileStatusManager;
 import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import com.intellij.ui.*;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import com.intellij.ui.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchUtil;
 import com.intellij.util.ArrayUtil;

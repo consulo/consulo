@@ -13,28 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.module.extension.ui;
+package consulo.module.ui.extension;
 
-import consulo.module.Module;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.ProjectBundle;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkModel;
-import consulo.content.bundle.SdkType;
-import consulo.content.bundle.SdkTypeId;
-import consulo.ui.ex.awt.LabeledComponent;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.function.Conditions;
-import com.intellij.util.NullableFunction;
-import com.intellij.util.PairConsumer;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.content.bundle.*;
+import consulo.module.Module;
 import consulo.module.extension.MutableModuleExtension;
 import consulo.module.extension.MutableModuleExtensionWithSdk;
 import consulo.module.extension.MutableModuleInheritableNamedPointer;
 import consulo.module.ui.awt.SdkComboBox;
+import consulo.project.ProjectBundle;
+import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.image.Image;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.Conditions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,6 +35,8 @@ import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.util.Collections;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -62,7 +57,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   }
 
   @Nonnull
-  private NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
+  private Function<T, MutableModuleInheritableNamedPointer<Sdk>> mySdkPointerFunction;
   @Nonnull
   private Condition<SdkTypeId> mySdkFilter = Conditions.alwaysTrue();
 
@@ -76,7 +71,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
   private Runnable myLaterUpdater;
 
-  private PairConsumer<Sdk, Sdk> myPostConsumer;
+  private BiConsumer<Sdk, Sdk> myPostConsumer;
 
   private ModuleExtensionSdkBoxBuilder(@Nonnull T mutableModuleExtension) {
     myMutableModuleExtension = mutableModuleExtension;
@@ -104,7 +99,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
   @Nonnull
   @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> sdkPointerFunc(@Nonnull NullableFunction<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
+  public ModuleExtensionSdkBoxBuilder<T> sdkPointerFunc(@Nonnull Function<T, MutableModuleInheritableNamedPointer<Sdk>> function) {
     mySdkPointerFunction = function;
     return this;
   }
@@ -125,7 +120,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
   @Nonnull
   @UsedInPlugin
-  public ModuleExtensionSdkBoxBuilder<T> postConsumer(@Nonnull PairConsumer<Sdk, Sdk> consumer) {
+  public ModuleExtensionSdkBoxBuilder<T> postConsumer(@Nonnull BiConsumer<Sdk, Sdk> consumer) {
     myPostConsumer = consumer;
     return this;
   }
@@ -141,15 +136,13 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
   @Nonnull
   @RequiredReadAction
   public JComponent build() {
-    ProjectStructureSettingsUtil util = (ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance();
-
-    final SdkModel projectSdksModel = util.getSdksModel();
+    final SdkModel projectSdksModel = SdkModelFactory.getInstance().getOrCreateModel();
 
     final SdkComboBox comboBox = new SdkComboBox(projectSdksModel, mySdkFilter, null, myNullItemName, myNullItemIcon);
 
     comboBox.insertModuleItems(myMutableModuleExtension, mySdkPointerFunction);
 
-    final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = mySdkPointerFunction.fun(myMutableModuleExtension);
+    final MutableModuleInheritableNamedPointer<Sdk> inheritableSdk = mySdkPointerFunction.apply(myMutableModuleExtension);
     assert inheritableSdk != null;
     if (inheritableSdk.isNull()) {
       comboBox.setSelectedNoneSdk();
@@ -176,7 +169,7 @@ public class ModuleExtensionSdkBoxBuilder<T extends MutableModuleExtension<?>> {
 
         if (myPostConsumer != null) {
           Sdk sdk = inheritableSdk.get();
-          myPostConsumer.consume(oldValue, sdk);
+          myPostConsumer.accept(oldValue, sdk);
         }
 
         if (myLaterUpdater != null) {

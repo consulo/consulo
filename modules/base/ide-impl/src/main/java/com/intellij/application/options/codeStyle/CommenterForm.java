@@ -22,7 +22,7 @@ import consulo.language.codeStyle.setting.CodeStyleSettingsCustomizable;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

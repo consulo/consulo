@@ -26,7 +26,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
 import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ide.settings.impl.EditorGeneralConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;

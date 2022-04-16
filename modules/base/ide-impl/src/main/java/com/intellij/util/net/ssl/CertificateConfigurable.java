@@ -10,7 +10,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;
 import consulo.ui.ex.awt.ToolbarDecorator;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.tree.Tree;
 import com.intellij.util.Consumer;

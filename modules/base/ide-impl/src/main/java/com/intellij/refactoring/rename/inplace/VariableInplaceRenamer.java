@@ -163,7 +163,7 @@ public class VariableInplaceRenamer extends InplaceRefactoring {
   protected boolean shouldSelectAll() {
     if (myEditor.getSettings().isPreselectRename()) return true;
     final Boolean selectAll = myEditor.getUserData(RenameHandlerRegistry.SELECT_ALL);
-    return selectAll != null && selectAll.booleanValue();
+    return selectAll != null && selectAll;
   }
 
   protected VariableInplaceRenamer createInplaceRenamerToRestart(PsiNamedElement variable, Editor editor, String initialName) {

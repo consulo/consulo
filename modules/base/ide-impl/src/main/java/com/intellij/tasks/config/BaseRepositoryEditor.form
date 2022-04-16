@@ -54,7 +54,7 @@
                 <border type="none"/>
                 <children/>
               </grid>
-              <component id="1e777" class="com.intellij.ui.components.JBCheckBox" binding="myUseProxy">
+              <component id="1e777" class="consulo.ui.ex.awt.JBCheckBox" binding="myUseProxy">
                 <constraints>
                   <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -100,7 +100,7 @@
                   <text value="Sh&amp;are URL"/>
                 </properties>
               </component>
-              <component id="93b1c" class="com.intellij.ui.components.JBCheckBox" binding="myLoginAnonymouslyJBCheckBox" default-binding="true">
+              <component id="93b1c" class="consulo.ui.ex.awt.JBCheckBox" binding="myLoginAnonymouslyJBCheckBox" default-binding="true">
                 <constraints>
                   <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -174,7 +174,7 @@
                   <text value="Use..."/>
                 </properties>
               </component>
-              <component id="b2312" class="com.intellij.ui.components.JBCheckBox" binding="myAddCommitMessage">
+              <component id="b2312" class="consulo.ui.ex.awt.JBCheckBox" binding="myAddCommitMessage">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>

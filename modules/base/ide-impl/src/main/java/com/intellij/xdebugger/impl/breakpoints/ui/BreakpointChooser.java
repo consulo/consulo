@@ -21,7 +21,7 @@ import consulo.ui.ex.awt.ComboBox;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
 import consulo.util.dataholder.UserDataHolderBase;
-import com.intellij.ui.CollectionComboBoxModel;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
 import com.intellij.ui.popup.util.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

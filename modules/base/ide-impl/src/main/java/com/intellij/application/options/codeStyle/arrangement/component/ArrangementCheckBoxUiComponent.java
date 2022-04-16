@@ -19,7 +19,7 @@ import com.intellij.application.options.codeStyle.arrangement.ArrangementConstan
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import com.intellij.util.ui.GridBag;
 import javax.annotation.Nonnull;
 

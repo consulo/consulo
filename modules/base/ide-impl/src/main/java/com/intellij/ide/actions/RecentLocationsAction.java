@@ -30,7 +30,7 @@ import com.intellij.ui.CaptionPanel;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.ScrollingUtil;
 import com.intellij.ui.WindowMoveListener;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.JBUIScale;

@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.FontComboBox;
 import com.intellij.ui.FontInfoRenderer;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
 import com.intellij.ui.components.panels.HorizontalLayout;

@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.checkin.CheckinHandler;
 import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
-import com.intellij.ui.CollectionComboBoxModel;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import com.intellij.ui.ListCellRendererWrapper;
 import consulo.ui.ex.awt.UIUtil;

@@ -1,9 +1,7 @@
-package com.intellij.ui.components;
+package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.AnchorableComponent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import javax.swing.plaf.ButtonUI;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
@@ -44,7 +42,7 @@ public class JBCheckBox extends JCheckBox implements AnchorableComponent {
       Dimension anchorSize = myAnchor.getPreferredSize();
       size.width = Math.max(size.width, anchorSize.width);
       size.height = Math.max(size.height, anchorSize.height);
-    }
+    }                                                                                
     return size;
   }
 

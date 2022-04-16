@@ -20,7 +20,7 @@ import com.intellij.dvcs.push.PushTargetPanel;
 import com.intellij.dvcs.push.RepositoryNodeListener;
 import consulo.ui.ex.awt.ValidationInfo;
 import com.intellij.openapi.ui.popup.util.PopupUtil;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.NotificationType;

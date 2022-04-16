@@ -38,7 +38,7 @@ import com.intellij.tasks.impl.TaskStateCombo;
 import com.intellij.tasks.impl.TaskUtil;
 import com.intellij.tasks.ui.TaskDialogPanel;
 import com.intellij.tasks.ui.TaskDialogPanelProvider;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 /**

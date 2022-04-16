@@ -39,7 +39,7 @@
               <enabled value="false"/>
             </properties>
           </component>
-          <component id="30060" class="com.intellij.ui.components.JBCheckBox" binding="myCreateBranch" default-binding="true">
+          <component id="30060" class="consulo.ui.ex.awt.JBCheckBox" binding="myCreateBranch" default-binding="true">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -47,7 +47,7 @@
               <text value="Create &amp;branch"/>
             </properties>
           </component>
-          <component id="601c" class="com.intellij.ui.components.JBCheckBox" binding="myCreateChangelist" default-binding="true">
+          <component id="601c" class="consulo.ui.ex.awt.JBCheckBox" binding="myCreateChangelist" default-binding="true">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
@@ -72,7 +72,7 @@
               <text value="&amp;from"/>
             </properties>
           </component>
-          <component id="2ca8c" class="com.intellij.ui.components.JBCheckBox" binding="myUseBranch">
+          <component id="2ca8c" class="consulo.ui.ex.awt.JBCheckBox" binding="myUseBranch">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>

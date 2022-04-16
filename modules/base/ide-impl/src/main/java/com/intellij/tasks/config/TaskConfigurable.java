@@ -11,7 +11,7 @@ import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.tasks.TaskManager;
 import com.intellij.tasks.impl.TaskManagerImpl;
 import consulo.ui.ex.awt.internal.GuiUtils;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;
 

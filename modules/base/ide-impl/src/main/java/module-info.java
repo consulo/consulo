@@ -1132,7 +1132,6 @@ open module consulo.ide.impl {
   exports org.intellij.plugins.intelliLang.inject.config.ui.configurables;
   exports org.intellij.plugins.intelliLang.references;
   exports org.intellij.plugins.intelliLang.util;
-  exports consulo.module.extension.ui;
 
   exports consulo.ide.impl.psi.codeStyle to consulo.desktop.awt.ide.impl;
   exports consulo.application.ui.impl to consulo.desktop.awt.ide.impl;

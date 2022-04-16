@@ -8,7 +8,7 @@
     <properties/>
     <border type="none" title-resource-bundle="consulo/application/ApplicationBundle" title-key="title.naming.comment.code"/>
     <children>
-      <component id="e86e0" class="com.intellij.ui.components.JBCheckBox" binding="myLineCommentAtFirstColumnCb">
+      <component id="e86e0" class="consulo.ui.ex.awt.JBCheckBox" binding="myLineCommentAtFirstColumnCb">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -21,7 +21,7 @@
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
-      <component id="98a1c" class="com.intellij.ui.components.JBCheckBox" binding="myLineCommentAddSpaceCb">
+      <component id="98a1c" class="consulo.ui.ex.awt.JBCheckBox" binding="myLineCommentAddSpaceCb">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="2" use-parent-layout="false"/>
         </constraints>
@@ -29,7 +29,7 @@
           <text resource-bundle="consulo/application/ApplicationBundle" key="checkbox.line.comment.add.space"/>
         </properties>
       </component>
-      <component id="35ede" class="com.intellij.ui.components.JBCheckBox" binding="myBlockCommentAtFirstJBCheckBox" default-binding="true">
+      <component id="35ede" class="consulo.ui.ex.awt.JBCheckBox" binding="myBlockCommentAtFirstJBCheckBox" default-binding="true">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

@@ -16,6 +16,8 @@
 package com.intellij.ui;
 
 import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.AbstractCollectionComboBoxModel;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

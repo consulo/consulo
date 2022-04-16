@@ -32,7 +32,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.impl.FakeVirtualFile;
 import consulo.language.impl.internal.psi.PsiManagerEx;
-import com.intellij.ui.CollectionComboBoxModel;
+import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.ScrollingUtil;

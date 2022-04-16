@@ -98,13 +98,13 @@
                   <text value="Do not show if method name contains parameter name"/>
                 </properties>
               </component>
-              <component id="359bc" class="com.intellij.ui.components.JBCheckBox" binding="myShowWhenMultipleParamsWithSameType" custom-create="true">
+              <component id="359bc" class="consulo.ui.ex.awt.JBCheckBox" binding="myShowWhenMultipleParamsWithSameType" custom-create="true">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>
-              <component id="fb44" class="com.intellij.ui.components.JBCheckBox" binding="myDoNotShowIfParameterNameContainedInMethodName" custom-create="true">
+              <component id="fb44" class="consulo.ui.ex.awt.JBCheckBox" binding="myDoNotShowIfParameterNameContainedInMethodName" custom-create="true">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>

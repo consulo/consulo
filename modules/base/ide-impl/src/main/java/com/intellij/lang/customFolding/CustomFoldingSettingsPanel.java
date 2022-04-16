@@ -1,6 +1,6 @@
 package com.intellij.lang.customFolding;
 
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

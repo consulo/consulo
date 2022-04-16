@@ -30,7 +30,7 @@ import com.intellij.openapi.vcs.changes.ui.ChangesTreeList;
 import com.intellij.openapi.vcs.changes.ui.TreeModelBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import javax.annotation.Nullable;
 
 import javax.swing.*;

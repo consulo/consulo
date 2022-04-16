@@ -33,7 +33,7 @@ import consulo.application.util.matcher.NameUtil;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchComparator;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchObjectWithWeight;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.PopupUpdateProcessor;
 import com.intellij.ui.speedSearch.ElementFilter;

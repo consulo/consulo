@@ -108,7 +108,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="57fb7" class="com.intellij.ui.components.JBCheckBox" binding="myShowParameterNameHints">
+          <component id="57fb7" class="consulo.ui.ex.awt.JBCheckBox" binding="myShowParameterNameHints">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>

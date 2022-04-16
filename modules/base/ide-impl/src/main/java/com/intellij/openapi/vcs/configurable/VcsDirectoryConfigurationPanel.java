@@ -37,7 +37,7 @@ import com.intellij.ui.ColoredTableCellRenderer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ToolbarDecorator;
-import com.intellij.ui.components.JBCheckBox;
+import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.table.TableView;
 import com.intellij.util.Function;
