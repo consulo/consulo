@@ -16,7 +16,7 @@
 package com.intellij.util.textCompletion;
 
 import consulo.language.editor.AutoPopupController;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;

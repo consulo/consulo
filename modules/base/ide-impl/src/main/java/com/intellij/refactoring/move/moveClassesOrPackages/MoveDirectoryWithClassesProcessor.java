@@ -31,7 +31,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.BaseRefactoringProcessor;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.move.FileReferenceContextUtil;
 import com.intellij.refactoring.move.MoveCallback;

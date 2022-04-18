@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

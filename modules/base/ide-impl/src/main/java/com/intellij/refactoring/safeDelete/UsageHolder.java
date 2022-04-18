@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
 import com.intellij.refactoring.util.RefactoringUIUtil;
 import consulo.usage.UsageInfo;

@@ -6,7 +6,7 @@ import consulo.language.editor.CodeInsightSettings;
 import com.intellij.codeInsight.completion.impl.CompletionServiceImpl;
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl;
 import com.intellij.codeInsight.hint.EditorHintListener;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.statistic.FeatureUsageTracker;

@@ -25,7 +25,7 @@ import consulo.project.Project;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.awt.Messages;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.usage.UsageViewUtil;
 
 /**

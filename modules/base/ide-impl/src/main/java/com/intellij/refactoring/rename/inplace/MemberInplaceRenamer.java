@@ -20,7 +20,7 @@ import com.intellij.openapi.command.impl.FinishMarkAction;
 import com.intellij.openapi.command.impl.StartMarkAction;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.RenameProcessor;
 import com.intellij.refactoring.rename.RenamePsiElementProcessor;
 import com.intellij.refactoring.rename.naming.AutomaticRenamerFactory;

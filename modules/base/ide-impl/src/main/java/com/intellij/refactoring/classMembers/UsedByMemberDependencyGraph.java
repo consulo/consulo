@@ -21,7 +21,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import java.util.HashMap;
 
 import java.util.ArrayList;

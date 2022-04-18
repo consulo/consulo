@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.RefactoringSettings;
 import com.intellij.refactoring.util.TextOccurrencesUtil;
 import consulo.ui.ex.awt.StateRestoringCheckBox;

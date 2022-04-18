@@ -22,7 +22,7 @@ import consulo.dataContext.TypeSafeDataProvider;
 import consulo.ui.ex.JBColor;
 import consulo.component.util.Iconable;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.classMembers.MemberInfoBase;
 import com.intellij.refactoring.classMembers.MemberInfoChange;
 import com.intellij.refactoring.classMembers.MemberInfoChangeListener;

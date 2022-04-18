@@ -15,6 +15,8 @@
  */
 package com.intellij.codeInsight.hint;
 
+import consulo.language.editor.hint.QuestionAction;
+
 /**
  * @author cdr
  */

@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.inspection;
+package consulo.language.editor.refactoring;
 
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.inspection.LocalQuickFix;
+import consulo.language.editor.inspection.ProblemDescriptor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.project.Project;

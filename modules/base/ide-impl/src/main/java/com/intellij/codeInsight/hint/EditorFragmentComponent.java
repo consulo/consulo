@@ -2,6 +2,7 @@
 package com.intellij.codeInsight.hint;
 
 import consulo.application.ApplicationManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.logging.Logger;
 import consulo.document.Document;

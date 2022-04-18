@@ -8,7 +8,7 @@ import consulo.language.editor.completion.CompletionService;
 import consulo.language.editor.internal.matcher.CamelHumpMatcher;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.hint.EditorHintListener;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

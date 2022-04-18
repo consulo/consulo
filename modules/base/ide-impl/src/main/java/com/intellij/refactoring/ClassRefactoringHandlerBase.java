@@ -6,11 +6,12 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.refactoring.lang.ElementsHandler;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.PsiNavigateUtil;
 import javax.annotation.Nonnull;
 

@@ -23,11 +23,11 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import com.intellij.refactoring.BaseRefactoringProcessor;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.classMembers.MemberInfoBase;
 import com.intellij.refactoring.ui.DocCommentPanel;
 import com.intellij.refactoring.ui.RefactoringDialog;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import com.intellij.ui.RecentsManager;
 import consulo.language.util.IncorrectOperationException;
 

@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import com.intellij.refactoring.BaseRefactoringProcessor;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.listeners.RefactoringEventData;
 import com.intellij.refactoring.listeners.UndoRefactoringElementListener;

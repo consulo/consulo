@@ -1,6 +1,6 @@
 package com.intellij.internal;
 
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.openapi.actionSystem.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

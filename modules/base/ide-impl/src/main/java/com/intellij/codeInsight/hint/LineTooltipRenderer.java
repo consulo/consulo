@@ -4,6 +4,7 @@ package com.intellij.codeInsight.hint;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.IdeTooltipManager;
 import com.intellij.ide.TooltipEvent;
+import consulo.language.editor.hint.HintManager;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.action.AnAction;

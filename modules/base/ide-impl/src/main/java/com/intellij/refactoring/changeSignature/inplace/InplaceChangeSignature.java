@@ -53,7 +53,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
 import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
 import com.intellij.refactoring.rename.inplace.InplaceRefactoring;

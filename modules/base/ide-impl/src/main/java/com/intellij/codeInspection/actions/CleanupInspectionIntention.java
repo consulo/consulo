@@ -17,7 +17,7 @@
 package com.intellij.codeInspection.actions;
 
 import consulo.language.editor.FileModificationService;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import com.intellij.codeInsight.intention.HighPriorityAction;
 import consulo.language.editor.inspection.*;

@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler;
 import com.intellij.refactoring.util.RadioUpDownListener;
 import com.intellij.util.ArrayUtil;

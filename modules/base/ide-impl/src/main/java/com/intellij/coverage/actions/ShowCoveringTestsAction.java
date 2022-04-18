@@ -4,7 +4,7 @@
  */
 package com.intellij.coverage.actions;
 
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.ImplementationViewComponent;
 import com.intellij.openapi.ui.PanelWithText;
 import com.intellij.openapi.util.Comparing;

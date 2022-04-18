@@ -10,7 +10,7 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
 import com.intellij.codeInsight.daemon.ReferenceImporter;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.intention.impl.FileLevelIntentionComponent;
 import com.intellij.codeInsight.intention.impl.IntentionHintComponent;
 import consulo.application.PowerSaveMode;

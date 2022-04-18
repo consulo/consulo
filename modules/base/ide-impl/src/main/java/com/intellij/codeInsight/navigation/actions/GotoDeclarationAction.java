@@ -17,7 +17,7 @@ package com.intellij.codeInsight.navigation.actions;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.find.actions.ShowUsagesAction;

@@ -37,7 +37,7 @@ import consulo.application.util.function.Computable;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.ui.ReplacePromptDialog;
 import com.intellij.util.Consumer;
 import consulo.application.AccessRule;

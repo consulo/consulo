@@ -21,7 +21,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.MethodSignatureComponent;
 import com.intellij.refactoring.util.SimpleParameterTablePanel;
 import consulo.ui.ex.awt.event.DocumentAdapter;

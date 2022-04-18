@@ -24,7 +24,7 @@ import consulo.language.editor.highlight.ReadWriteAccessDetector;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.ui.ex.awt.DialogWrapper;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.usage.*;
 import com.intellij.util.ArrayUtil;

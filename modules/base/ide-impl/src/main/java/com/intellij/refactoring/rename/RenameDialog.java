@@ -31,7 +31,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler;
 import com.intellij.refactoring.rename.naming.AutomaticRenamerFactory;
 import com.intellij.refactoring.ui.NameSuggestionsField;

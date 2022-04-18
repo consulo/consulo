@@ -14,6 +14,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorActivityManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;

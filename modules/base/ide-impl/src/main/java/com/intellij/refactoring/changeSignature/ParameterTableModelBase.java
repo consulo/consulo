@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.CodeFragmentTableCellEditorBase;
 import com.intellij.refactoring.ui.CodeFragmentTableCellRenderer;
 import com.intellij.refactoring.ui.StringTableCellEditor;

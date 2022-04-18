@@ -16,7 +16,7 @@
 
 package com.intellij.ui;
 
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.ui.awt.LanguageTextField;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.IdeActions;

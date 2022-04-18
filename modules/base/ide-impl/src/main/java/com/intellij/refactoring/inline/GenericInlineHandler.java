@@ -33,9 +33,9 @@ import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.search.ReferencesSearch;
 import com.intellij.refactoring.BaseRefactoringProcessor;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.ConflictsDialog;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.usage.UsageInfo;
 import java.util.HashMap;
 

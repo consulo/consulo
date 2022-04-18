@@ -5,7 +5,7 @@ import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.documentation.DocumentationManagerProtocol;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationAction;

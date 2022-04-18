@@ -22,7 +22,7 @@ import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

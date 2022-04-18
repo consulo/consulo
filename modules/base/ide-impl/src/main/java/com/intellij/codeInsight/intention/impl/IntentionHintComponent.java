@@ -4,6 +4,8 @@ package com.intellij.codeInsight.intention.impl;
 
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.hint.*;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.hint.QuestionAction;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;
 import com.intellij.codeInsight.intention.impl.config.IntentionManagerSettings;

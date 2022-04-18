@@ -5,6 +5,8 @@ import com.intellij.ide.IdeTooltip;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.colorScheme.TextAttributes;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.hint.QuestionAction;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.codeEditor.event.*;

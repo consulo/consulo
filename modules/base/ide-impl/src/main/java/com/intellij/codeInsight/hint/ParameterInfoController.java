@@ -2,6 +2,7 @@
 
 package com.intellij.codeInsight.hint;
 
+import consulo.language.editor.hint.HintManager;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.language.editor.AutoPopupController;
 import consulo.language.editor.CodeInsightBundle;

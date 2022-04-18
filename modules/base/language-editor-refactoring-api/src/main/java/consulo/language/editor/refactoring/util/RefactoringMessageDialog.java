@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.refactoring.util;
+package consulo.language.editor.refactoring.util;
 
 import consulo.application.HelpManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.laf.MultiLineLabelUI;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RefactoringMessageDialog extends DialogWrapper {
+class RefactoringMessageDialog extends DialogWrapper {
   private final String myMessage;
   private final String myHelpTopic;
   private final Icon myIcon;
   private final boolean myIsCancelButtonVisible;
 
-  public RefactoringMessageDialog(String title, String message, String helpTopic, @NonNls String iconId, boolean showCancelButton, Project project) {
+  RefactoringMessageDialog(String title, String message, String helpTopic, @NonNls String iconId, boolean showCancelButton, Project project) {
     super(project, false);
     setTitle(title);
     myMessage = message;
@@ -46,7 +46,7 @@ public class RefactoringMessageDialog extends DialogWrapper {
   @Nonnull
   @Override
   protected Action[] createActions() {
-    List<Action> actions = new ArrayList<Action>();
+    List<Action> actions = new ArrayList<>();
     actions.add(getOKAction());
     if (myIsCancelButtonVisible) {
       actions.add(getCancelAction());

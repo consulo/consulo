@@ -33,7 +33,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.rename.RenameHandler;
 import consulo.logging.Logger;
 

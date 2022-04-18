@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.internal.DialogWrapperPeer;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.TextComponentAccessor;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import com.intellij.ui.RecentsManager;
 import com.intellij.ui.TextFieldWithHistoryWithBrowseButton;

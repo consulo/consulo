@@ -23,6 +23,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.completion.lookup.event;
   exports consulo.language.editor.documentation;
   exports consulo.language.editor.gutter;
+  exports consulo.language.editor.hint;
   exports consulo.language.editor.highlight;
   exports consulo.language.editor.inject;
   exports consulo.language.editor.completion.internal to consulo.ide.impl;
@@ -42,8 +43,6 @@ module consulo.language.editor.api {
   exports consulo.language.editor.template.context;
   exports consulo.language.editor.template.event;
   exports consulo.language.editor.surroundWith;
-  exports consulo.language.editor.refactoring;
-  exports consulo.language.editor.refactoring.rename;
   exports consulo.language.editor.wolfAnalyzer;
   exports consulo.language.editor.scratch;
   exports consulo.language.editor.util;

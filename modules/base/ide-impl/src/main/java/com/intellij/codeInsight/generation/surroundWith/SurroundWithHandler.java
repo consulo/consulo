@@ -4,7 +4,7 @@ package com.intellij.codeInsight.generation.surroundWith;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.template.TemplateManager;
 import com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable;

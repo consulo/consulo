@@ -28,7 +28,7 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.PsiReference;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

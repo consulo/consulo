@@ -23,7 +23,7 @@ package com.intellij.refactoring.move;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewDescriptor;
 import consulo.usage.UsageViewBundle;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import javax.annotation.Nonnull;
 
 public class MoveMemberViewDescriptor implements UsageViewDescriptor {

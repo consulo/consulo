@@ -84,6 +84,7 @@
         <include>consulo:consulo-application-impl</include>
         <include>consulo:consulo-code-editor-impl</include>
         <include>consulo:consulo-language-editor-ui-api</include>
+        <include>consulo:consulo-language-editor-refactoring-api</include>
         <include>consulo:consulo-color-scheme-impl</include>
         <include>consulo:consulo-file-template-api</include>
         <include>consulo:consulo-file-template-impl</include>

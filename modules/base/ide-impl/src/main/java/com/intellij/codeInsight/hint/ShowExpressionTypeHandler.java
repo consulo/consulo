@@ -9,6 +9,7 @@ import com.intellij.lang.LanguageExpressionTypes;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
+import consulo.language.editor.hint.HintManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pass;

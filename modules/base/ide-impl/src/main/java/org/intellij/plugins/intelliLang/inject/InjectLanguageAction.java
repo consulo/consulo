@@ -16,8 +16,8 @@
 package org.intellij.plugins.intelliLang.inject;
 
 import consulo.language.editor.DaemonCodeAnalyzer;
-import com.intellij.codeInsight.hint.HintManager;
-import com.intellij.codeInsight.hint.QuestionAction;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.hint.QuestionAction;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.language.editor.inject.EditorWindow;

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.LineTooltipRenderer;
 import com.intellij.codeInsight.hint.TooltipGroup;

@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.ui;
 
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;

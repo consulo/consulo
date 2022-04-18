@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.document.Document;

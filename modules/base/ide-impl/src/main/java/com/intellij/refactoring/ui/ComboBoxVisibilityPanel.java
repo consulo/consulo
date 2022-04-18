@@ -15,9 +15,8 @@
  */
 package com.intellij.refactoring.ui;
 
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.ui.ListCellRendererWrapper;
-import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.util.DialogUtil;
 import com.intellij.util.ui.UpDownHandler;
 

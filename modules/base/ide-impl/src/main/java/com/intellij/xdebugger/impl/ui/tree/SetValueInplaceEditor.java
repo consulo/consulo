@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.ui.AppUIUtil;

@@ -1,12 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.codeInsight.hint;
+package consulo.language.editor.hint;
 
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.RelativePoint;
 import org.intellij.lang.annotations.MagicConstant;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkListener;
@@ -16,7 +16,7 @@ import javax.swing.event.HyperlinkListener;
  */
 public abstract class HintManager {
   public static HintManager getInstance() {
-    return ServiceManager.getService(HintManager.class);
+    return Application.get().getInstance(HintManager.class);
   }
 
   // Constants for 'constraint' parameter of showErrorHint()

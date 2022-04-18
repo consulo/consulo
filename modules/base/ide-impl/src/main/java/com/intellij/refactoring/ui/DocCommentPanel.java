@@ -25,7 +25,7 @@
 package com.intellij.refactoring.ui;
 
 import com.intellij.refactoring.util.DocCommentPolicy;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.UIUtil;
 

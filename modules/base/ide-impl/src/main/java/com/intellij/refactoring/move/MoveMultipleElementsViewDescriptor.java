@@ -22,7 +22,7 @@ package com.intellij.refactoring.move;
 
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
 import consulo.usage.UsageViewUtil;

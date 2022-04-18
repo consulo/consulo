@@ -14,7 +14,7 @@
         </constraints>
         <properties>
           <font style="1"/>
-          <text resource-bundle="messages/RefactoringBundle" key="change.signature.leave.blank.default.value"/>
+          <text resource-bundle="RefactoringBundle" key="change.signature.leave.blank.default.value"/>
         </properties>
       </component>
       <hspacer id="f0897">

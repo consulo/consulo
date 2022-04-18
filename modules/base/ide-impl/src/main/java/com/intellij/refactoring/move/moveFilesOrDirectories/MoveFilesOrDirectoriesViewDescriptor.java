@@ -20,7 +20,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
 import consulo.usage.UsageViewUtil;

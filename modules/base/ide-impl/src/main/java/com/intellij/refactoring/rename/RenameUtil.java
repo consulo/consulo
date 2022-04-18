@@ -18,6 +18,7 @@ package com.intellij.refactoring.rename;
 
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.ide.actions.CopyReferenceAction;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.undoRedo.ProjectUndoManager;
 import consulo.document.util.ProperTextRange;
 import consulo.language.psi.ElementDescriptionUtil;
@@ -43,7 +44,7 @@ import consulo.language.psi.meta.PsiMetaData;
 import consulo.language.psi.meta.PsiMetaOwner;
 import consulo.ide.impl.psi.meta.PsiWritableMetaData;
 import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.listeners.RefactoringElementListener;
 import com.intellij.refactoring.listeners.UndoRefactoringElementListener;
 import com.intellij.refactoring.util.*;

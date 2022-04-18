@@ -40,7 +40,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.impl.psi.PsiPackageBase;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.refactoring.BaseRefactoringProcessor;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

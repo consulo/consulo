@@ -25,7 +25,7 @@ import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.ArrayUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.virtualFileSystem.fileType.FileTypeWithPredefinedCharset;

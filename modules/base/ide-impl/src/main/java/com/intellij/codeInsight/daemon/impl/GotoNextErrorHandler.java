@@ -19,7 +19,7 @@ package com.intellij.codeInsight.daemon.impl;
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.application.util.function.Processor;
 import consulo.codeEditor.Editor;

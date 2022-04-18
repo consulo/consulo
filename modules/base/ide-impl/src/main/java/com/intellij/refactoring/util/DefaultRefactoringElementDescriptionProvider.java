@@ -16,6 +16,7 @@
 
 package com.intellij.refactoring.util;
 
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.language.psi.ElementDescriptionProvider;
 import consulo.language.psi.PsiElement;

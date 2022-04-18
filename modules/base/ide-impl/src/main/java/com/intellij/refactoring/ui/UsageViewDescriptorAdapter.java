@@ -16,7 +16,7 @@
 
 package com.intellij.refactoring.ui;
 
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewDescriptor;
 

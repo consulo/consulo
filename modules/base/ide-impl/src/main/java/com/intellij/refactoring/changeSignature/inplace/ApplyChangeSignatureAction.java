@@ -20,7 +20,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.refactoring.BaseRefactoringIntentionAction;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
 import consulo.language.util.IncorrectOperationException;
 import javax.annotation.Nonnull;

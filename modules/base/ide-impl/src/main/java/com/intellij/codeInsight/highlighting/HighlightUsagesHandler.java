@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.highlighting;
 
 import com.intellij.codeInsight.daemon.impl.IdentifierUtil;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.find.EditorSearchSession;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.containers.ContainerUtil;

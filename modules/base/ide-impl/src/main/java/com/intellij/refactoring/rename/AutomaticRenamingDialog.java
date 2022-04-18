@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.rename.naming.AutomaticRenamer;
 import com.intellij.refactoring.ui.EnableDisableAction;
 import com.intellij.refactoring.ui.StringTableCellEditor;

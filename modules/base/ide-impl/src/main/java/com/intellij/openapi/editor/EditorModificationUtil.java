@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.editor;
 
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.codeEditor.TextComponentEditor;
 import com.intellij.util.Producer;
 import consulo.application.ApplicationManager;

@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.refactoring.util;
+package consulo.language.editor.refactoring.util;
 
-import com.intellij.codeInsight.hint.HintManager;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.file.FileTypeManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.project.Project;
 import consulo.usage.UsageInfo;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.ReadonlyStatusHandler;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
+import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -48,7 +48,7 @@ import java.util.HashSet;
 public class CommonRefactoringUtil {
   private CommonRefactoringUtil() { }
 
-  public static void showErrorMessage(String title, String message, @javax.annotation.Nullable String helpId, @Nonnull Project project) {
+  public static void showErrorMessage(String title, String message, @Nullable String helpId, @Nonnull Project project) {
     if (ApplicationManager.getApplication().isUnitTestMode()) throw new RuntimeException(message);
     RefactoringMessageDialog dialog = new RefactoringMessageDialog(title, message, helpId, "OptionPane.errorIcon", false, project);
     dialog.show();
@@ -78,7 +78,7 @@ public class CommonRefactoringUtil {
                                    @Nullable Editor editor,
                                    @Nonnull @Nls String message,
                                    @Nonnull @Nls String title,
-                                   @javax.annotation.Nullable String helpId) {
+                                   @Nullable String helpId) {
     if (ApplicationManager.getApplication().isUnitTestMode()) throw new RefactoringErrorHintException(message);
 
     ApplicationManager.getApplication().invokeLater(() -> {
@@ -233,7 +233,7 @@ public class CommonRefactoringUtil {
   public static void collectReadOnlyFiles(@Nonnull VirtualFile vFile, @Nonnull final Collection<VirtualFile> list) {
     final FileTypeManager fileTypeManager = FileTypeManager.getInstance();
 
-    VfsUtilCore.visitChildrenRecursively(vFile, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
+    VirtualFileUtil.visitChildrenRecursively(vFile, new VirtualFileVisitor(VirtualFileVisitor.NO_FOLLOW_SYMLINKS) {
       @Override
       public boolean visitFile(@Nonnull VirtualFile file) {
         final boolean ignored = fileTypeManager.isFileIgnored(file);

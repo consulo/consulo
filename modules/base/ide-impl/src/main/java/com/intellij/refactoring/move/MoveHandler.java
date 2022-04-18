@@ -33,9 +33,9 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.move.moveFilesOrDirectories.MoveFilesOrDirectoriesUtil;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

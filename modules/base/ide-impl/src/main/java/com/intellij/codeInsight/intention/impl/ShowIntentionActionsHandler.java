@@ -8,7 +8,7 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import com.intellij.codeInsight.daemon.impl.IntentionsUI;
 import com.intellij.codeInsight.daemon.impl.ShowIntentionsPass;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.IntentionActionDelegate;

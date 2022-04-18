@@ -35,7 +35,7 @@ import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.BaseRefactoringProcessor;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.listeners.RefactoringEventData;
 import com.intellij.refactoring.listeners.RefactoringEventListener;
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteCustomUsageInfo;

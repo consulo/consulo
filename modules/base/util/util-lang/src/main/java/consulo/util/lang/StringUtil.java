@@ -106,6 +106,12 @@ public class StringUtil {
     return isAscii((CharSequence)str);
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String htmlEmphasize(@Nonnull String text) {
+    return "<b><code>" + escapeXml(text) + "</code></b>";
+  }
+
   public static boolean isAscii(@Nonnull CharSequence str) {
     for (int i = 0, length = str.length(); i < length; ++i) {
       if (str.charAt(i) >= 128) return false;

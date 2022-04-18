@@ -42,7 +42,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import com.intellij.refactoring.RefactoringBundle;
+import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import com.intellij.util.ArrayUtil;

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.intellij.refactoring;
+package consulo.language.editor.refactoring;
 
 import consulo.application.CommonBundle;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
 
+import javax.annotation.Nullable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ResourceBundle;
@@ -30,7 +31,7 @@ import java.util.ResourceBundle;
 public class RefactoringBundle {
   private static Reference<ResourceBundle> ourBundle;
 
-  @NonNls private static final String BUNDLE = "messages.RefactoringBundle";
+  @NonNls private static final String BUNDLE = "consulo.language.editor.refactoring.RefactoringBundle";
 
   private RefactoringBundle() {
   }
@@ -67,7 +68,7 @@ public class RefactoringBundle {
     return message("visibility.escalate");
   }
 
-  public static String getCannotRefactorMessage(@javax.annotation.Nullable final String message) {
+  public static String getCannotRefactorMessage(@Nullable final String message) {
     return message("cannot.perform.refactoring") + (message == null ? "" : "\n" + message);
   }
 

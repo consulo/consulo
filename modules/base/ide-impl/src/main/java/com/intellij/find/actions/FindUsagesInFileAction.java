@@ -17,7 +17,7 @@
 package com.intellij.find.actions;
 
 import consulo.application.CommonBundle;
-import com.intellij.codeInsight.hint.HintManager;
+import consulo.language.editor.hint.HintManager;
 import consulo.find.FindBundle;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
