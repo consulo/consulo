@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.util;
-
-import consulo.component.util.ModificationTracker;
-import consulo.component.util.SimpleModificationTracker;
+package consulo.component.util;
 
 import javax.annotation.Nonnull;
 
