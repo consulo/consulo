@@ -2,6 +2,7 @@
 package com.intellij.ui.components;
 
 import com.intellij.openapi.application.Application;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.wm.IdeGlassPane.TopComponent;
 import com.intellij.ui.ComponentUtil;
@@ -101,7 +102,9 @@ public class JBScrollBar extends JScrollBar implements TopComponent, Interpolabl
   @Nonnull
   public static ScrollBarUI createUI(JComponent c) {
     // do not try create swing specific ui, until we fully migrate to unified ui
-    if (!Application.get().isSwingApplication()) {
+    // application can be null inside ui designer
+    Application application = ApplicationManager.getApplication();
+    if (application != null && !application.isSwingApplication()) {
       return new BasicScrollBarUI();
     }
     return SystemInfo.isMac ? new MacScrollBarUI() : new DefaultScrollBarUI();
