@@ -24,6 +24,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -38,7 +39,7 @@ public class InjectedEditorManagerImpl implements InjectedEditorManager {
     myProject = project;
   }
 
-  @Nonnull
+  @Nullable
   @Override
   public Editor openEditorFor(@Nonnull PsiFile file) {
     return InjectedLanguageUtil.openEditorFor(file, myProject);

@@ -20,6 +20,7 @@ import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -30,6 +31,6 @@ public interface InjectedEditorManager {
     return project.getInstance(InjectedEditorManager.class);
   }
 
-  @Nonnull
+  @Nullable
   Editor openEditorFor(@Nonnull PsiFile file);
 }
