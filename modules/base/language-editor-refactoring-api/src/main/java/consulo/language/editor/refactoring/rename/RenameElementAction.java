@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.intellij.refactoring.actions;
+package consulo.language.editor.refactoring.rename;
 
-import consulo.language.Language;
-import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.language.Language;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SyntheticElement;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
-import consulo.language.editor.refactoring.rename.RenameHandlerRegistry;
+
 import javax.annotation.Nonnull;
 
 public class RenameElementAction extends BaseRefactoringAction {
