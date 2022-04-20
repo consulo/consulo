@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.templateLanguages;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.template.ConfigurableTemplateLanguageFileViewProvider;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.project.Project;

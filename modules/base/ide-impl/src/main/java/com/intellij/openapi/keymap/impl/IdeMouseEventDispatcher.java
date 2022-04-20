@@ -15,41 +15,38 @@
  */
 package com.intellij.openapi.keymap.impl;
 
-import consulo.application.statistic.FeatureUsageTracker;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.ui.MouseShortcutPanel;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
-import consulo.dataContext.DataContext;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.impl.FocusManagerImpl;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
 import com.intellij.util.ReflectionUtil;
-import java.util.HashMap;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.statistic.FeatureUsageTracker;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static consulo.ui.ex.awt.JBScrollPane.isScrollEvent;
 import static java.awt.event.MouseEvent.*;
@@ -266,7 +263,7 @@ public final class IdeMouseEventDispatcher {
 
         if (ActionUtil.lastUpdateAndCheckDumb(action, actionEvent, false)) {
           actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-          final Component context = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+          final Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
 
           if (context != null && !context.isShowing()) continue;
 

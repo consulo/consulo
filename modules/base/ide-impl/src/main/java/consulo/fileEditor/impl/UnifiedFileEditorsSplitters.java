@@ -19,7 +19,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.project.Project;
-import com.intellij.ui.docking.DockManager;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.Component;

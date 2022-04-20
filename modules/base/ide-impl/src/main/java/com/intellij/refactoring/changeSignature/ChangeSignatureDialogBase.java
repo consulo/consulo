@@ -17,6 +17,9 @@ package com.intellij.refactoring.changeSignature;
 
 import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
+import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
+import consulo.language.editor.refactoring.ui.RefactoringDialog;
+import consulo.language.editor.refactoring.ui.StringTableCellEditor;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -39,7 +42,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.BaseRefactoringProcessor;
+import consulo.language.editor.refactoring.BaseRefactoringProcessor;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.*;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
@@ -79,7 +82,7 @@ public abstract class ChangeSignatureDialogBase<ParamInfo extends ParameterInfo,
   Descriptor extends MethodDescriptor<ParamInfo, Visibility>,
   ParameterTableModelItem extends ParameterTableModelItemBase<ParamInfo>,
   ParameterTableModel extends ParameterTableModelBase<ParamInfo, ParameterTableModelItem>>
-  extends RefactoringDialog {
+        extends RefactoringDialog {
 
   private static final Logger LOG = Logger.getInstance(ChangeSignatureDialogBase.class);
 

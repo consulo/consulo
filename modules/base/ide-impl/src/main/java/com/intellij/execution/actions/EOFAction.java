@@ -15,19 +15,19 @@
  */
 package com.intellij.execution.actions;
 
-import consulo.process.ProcessHandler;
+import consulo.execution.ExecutionDataKeys;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.execution.ui.RunContentDescriptor;
+import consulo.language.editor.CommonDataKeys;
+import consulo.process.ProcessHandler;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -42,7 +42,7 @@ public class EOFAction extends DumbAwareAction implements AnAction.TransparentUp
   public void update(@Nonnull AnActionEvent e) {
     RunContentDescriptor descriptor = StopAction.getRecentlyStartedContentDescriptor(e.getDataContext());
     ProcessHandler handler = descriptor != null ? descriptor.getProcessHandler() : null;
-    e.getPresentation().setEnabledAndVisible(e.getData(LangDataKeys.CONSOLE_VIEW) != null
+    e.getPresentation().setEnabledAndVisible(e.getData(ExecutionDataKeys.CONSOLE_VIEW) != null
                                              && e.getData(CommonDataKeys.EDITOR) != null
                                              && handler != null
                                              && !handler.isProcessTerminated());
@@ -58,7 +58,7 @@ public class EOFAction extends DumbAwareAction implements AnAction.TransparentUp
     try {
       OutputStream input = activeProcessHandler.getProcessInput();
       if (input != null) {
-        ConsoleView console = e.getData(LangDataKeys.CONSOLE_VIEW);
+        ConsoleView console = e.getData(ExecutionDataKeys.CONSOLE_VIEW);
         if (console != null) {
           console.print("^D\n", ConsoleViewContentType.SYSTEM_OUTPUT);
         }

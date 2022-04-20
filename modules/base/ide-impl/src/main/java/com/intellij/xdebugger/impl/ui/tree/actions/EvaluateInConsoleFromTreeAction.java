@@ -1,10 +1,11 @@
 package com.intellij.xdebugger.impl.ui.tree.actions;
 
 import com.intellij.execution.console.ConsoleExecuteAction;
-import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import com.intellij.xdebugger.impl.actions.handlers.XEvaluateInConsoleFromEditorActionHandler;
 import com.intellij.xdebugger.impl.ui.tree.nodes.XValueNodeImpl;
+import consulo.execution.ExecutionDataKeys;
+import consulo.ui.ex.action.AnActionEvent;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -27,7 +28,7 @@ public class EvaluateInConsoleFromTreeAction extends XAddToWatchesTreeAction {
 
   @Nullable
   private static ConsoleExecuteAction getConsoleExecuteAction(@Nonnull AnActionEvent e) {
-    return XEvaluateInConsoleFromEditorActionHandler.getConsoleExecuteAction(e.getData(LangDataKeys.CONSOLE_VIEW));
+    return XEvaluateInConsoleFromEditorActionHandler.getConsoleExecuteAction(e.getData(ExecutionDataKeys.CONSOLE_VIEW));
   }
 
   @Override

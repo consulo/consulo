@@ -15,33 +15,34 @@
  */
 package consulo.ide.base;
 
-import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.dataRules.*;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.dataContext.GetDataRule;
-import consulo.dataContext.internal.DataRuleHoler;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.concurrent.AsyncResult;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.reference.SoftReference;
 import com.intellij.util.ObjectUtil;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
+import consulo.dataContext.GetDataRule;
+import consulo.dataContext.internal.DataRuleHoler;
 import consulo.ide.impl.DataValidators;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.util.concurrent.AsyncPromise;
+import consulo.util.concurrent.AsyncResult;
+import consulo.util.concurrent.Promise;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import org.jetbrains.annotations.NonNls;
-import consulo.util.concurrent.AsyncPromise;
-import consulo.util.concurrent.Promise;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -164,7 +165,7 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
   }
 
   protected static final Set<Key> ourSafeKeys = ContainerUtil
-          .newHashSet(CommonDataKeys.PROJECT, CommonDataKeys.EDITOR, PlatformDataKeys.IS_MODAL_CONTEXT, PlatformDataKeys.CONTEXT_COMPONENT, PlatformDataKeys.CONTEXT_UI_COMPONENT,
+          .newHashSet(CommonDataKeys.PROJECT, CommonDataKeys.EDITOR, PlatformDataKeys.IS_MODAL_CONTEXT, UIExAWTDataKey.CONTEXT_COMPONENT, PlatformDataKeys.CONTEXT_UI_COMPONENT,
                       PlatformDataKeys.MODALITY_STATE);
 
 

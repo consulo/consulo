@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ import java.awt.*;
 public class ScrollTreeToCenterAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component instanceof JTree) {
       JTree tree = (JTree)component;
       final int[] selection = tree.getSelectionRows();
@@ -41,6 +41,6 @@ public class ScrollTreeToCenterAction extends AnAction {
 
   @Override
   public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getData(PlatformDataKeys.CONTEXT_COMPONENT) instanceof JTree);
+    e.getPresentation().setEnabled(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof JTree);
   }
 }

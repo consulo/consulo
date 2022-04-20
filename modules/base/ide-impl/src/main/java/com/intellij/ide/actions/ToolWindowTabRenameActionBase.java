@@ -15,23 +15,19 @@
  */
 package com.intellij.ide.actions;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ui.ex.popup.Balloon;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowContextMenuActionBase;
+import com.intellij.util.BooleanFunction;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.disposer.Disposer;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.ui.wm.ToolWindowDataKeys;
 import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.JBLabel;
-import consulo.ui.ex.awt.JBTextField;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.content.Content;
-import com.intellij.util.BooleanFunction;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposer;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +58,7 @@ public class ToolWindowTabRenameActionBase extends ToolWindowContextMenuActionBa
 
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e, @Nonnull ToolWindow toolWindow, @Nullable Content content) {
-    Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component == null || content == null || e.getData(ToolWindowDataKeys.CONTENT) == null) {
       return;
     }

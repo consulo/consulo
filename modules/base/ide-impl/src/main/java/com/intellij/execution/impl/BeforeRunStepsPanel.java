@@ -15,32 +15,27 @@
  */
 package com.intellij.execution.impl;
 
+import com.intellij.execution.configurations.UnknownRunConfiguration;
+import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
+import com.intellij.openapi.util.Pair;
+import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.BeforeRunTaskProvider;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
-import com.intellij.execution.configurations.UnknownRunConfiguration;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.ActionToolbarPosition;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.function.Conditions;
-import com.intellij.openapi.util.Pair;
-import consulo.ui.ex.awt.AnActionButton;
-import consulo.ui.ex.awt.CollectionListModel;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.JBList;
-import consulo.dataContext.DataContext;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionToolbarPosition;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.function.Conditions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -274,7 +269,7 @@ class BeforeRunStepsPanel {
 
     DataContext dataContext = SimpleDataContext.builder()
             .add(CommonDataKeys.PROJECT, myRunConfiguration.getProject())
-            .add(PlatformDataKeys.CONTEXT_COMPONENT, myPanel)
+            .add(UIExAWTDataKey.CONTEXT_COMPONENT, myPanel)
             .build();
 
     final ListPopup popup = popupFactory .createActionGroupPopup(ExecutionBundle.message("add.new.run.configuration.acrtion.name"), actionGroup.build(), dataContext, false, false, false, null, -1, Conditions.alwaysTrue());

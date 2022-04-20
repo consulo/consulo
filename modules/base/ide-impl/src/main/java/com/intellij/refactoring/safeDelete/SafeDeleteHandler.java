@@ -18,7 +18,7 @@ package com.intellij.refactoring.safeDelete;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -32,7 +32,7 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import com.intellij.refactoring.RefactoringSettings;
+import consulo.language.editor.refactoring.RefactoringSettings;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import com.intellij.util.containers.ContainerUtil;
 import java.util.HashSet;

@@ -16,12 +16,12 @@
 package com.intellij.ide.actionMacro;
 
 import consulo.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
 import com.intellij.openapi.ui.playback.commands.KeyCodeTypeCommand;
 import com.intellij.openapi.ui.playback.commands.TypeCommand;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import com.intellij.openapi.util.Pair;

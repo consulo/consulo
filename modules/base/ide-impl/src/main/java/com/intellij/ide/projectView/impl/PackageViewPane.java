@@ -19,6 +19,8 @@
  */
 package com.intellij.ide.projectView.impl;
 
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.application.AllIcons;
@@ -36,7 +38,6 @@ import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.module.Module;
 import consulo.project.Project;

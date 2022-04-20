@@ -39,7 +39,8 @@ module consulo.application.api {
           consulo.language.impl,
           consulo.application.impl,
           consulo.test.impl,
-          consulo.ui.ex.api;
+          consulo.ui.ex.api,
+          consulo.language.editor.refactoring.api;
 
   exports consulo.application.internal.concurrency to
           consulo.ide.impl,

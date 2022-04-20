@@ -22,7 +22,7 @@ import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
 import consulo.ui.ex.awt.tree.table.TreeTableTree;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;

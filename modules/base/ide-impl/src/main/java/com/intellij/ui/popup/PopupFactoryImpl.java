@@ -3,13 +3,9 @@ package com.intellij.ui.popup;
 
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.IdeTooltipManager;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.ui.ex.action.ShortcutProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
-import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
 import com.intellij.ui.HintHint;
@@ -21,13 +17,17 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorPopupHelper;
 import consulo.codeEditor.VisualPosition;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -60,14 +60,6 @@ import java.util.function.Supplier;
 
 @Singleton
 public class PopupFactoryImpl extends JBPopupFactory {
-
-  /**
-   * Allows to get an editor position for which a popup with auxiliary information might be shown.
-   * <p/>
-   * Primary intention for this key is to hint popup position for the non-caret location.
-   */
-  public static final Key<VisualPosition> ANCHOR_POPUP_POSITION = Key.create("popup.anchor.position");
-
   private static final Logger LOG = Logger.getInstance(PopupFactoryImpl.class);
 
   private final Map<Disposable, List<Balloon>> myStorage = ContainerUtil.createWeakMap();
@@ -202,7 +194,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
       super(dataContext.getData(CommonDataKeys.PROJECT), aParent, step, null);
       setMaxRowCount(maxRowCount);
       myDisposeCallback = disposeCallback;
-      myComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      myComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       myActionPlace = actionPlace == null ? ActionPlaces.UNKNOWN : actionPlace;
 
       registerAction("handleActionToggle1", KeyEvent.VK_SPACE, 0, new AbstractAction() {
@@ -244,7 +236,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
                                                         @Nullable String actionPlace,
                                                         @Nullable PresentationFactory presentationFactory,
                                                         boolean autoSelection) {
-      final Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      final Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       LOG.assertTrue(component != null, "dataContext has no component for new ListPopupStep");
 
       List<ActionItem> items = ActionPopupStep.createActionItems(actionGroup, dataContext, showNumbers, useAlphaAsNumbers, showDisabledActions, honorActionMnemonics, actionPlace, presentationFactory);
@@ -421,7 +413,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
   @Nonnull
   @Override
   public RelativePoint guessBestPopupLocation(@Nonnull DataContext dataContext) {
-    Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     JComponent focusOwner = component instanceof JComponent ? (JComponent)component : null;
 
     if (focusOwner == null) {
@@ -533,7 +525,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
 
   @Nullable
   private static Point getVisibleBestPopupLocation(@Nonnull Editor editor) {
-    VisualPosition visualPosition = editor.getUserData(ANCHOR_POPUP_POSITION);
+    VisualPosition visualPosition = editor.getUserData(EditorPopupHelper.ANCHOR_POPUP_POSITION);
 
     if (visualPosition == null) {
       CaretModel caretModel = editor.getCaretModel();

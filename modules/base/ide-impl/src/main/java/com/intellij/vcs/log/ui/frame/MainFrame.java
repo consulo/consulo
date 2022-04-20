@@ -1,8 +1,8 @@
 package com.intellij.vcs.log.ui.frame;
 
 import com.google.common.primitives.Ints;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.progress.util.ProgressWindow;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.*;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;

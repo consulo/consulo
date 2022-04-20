@@ -17,9 +17,9 @@
 package com.intellij.ide.actions;
 
 import consulo.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.undoRedo.CommandProcessor;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;

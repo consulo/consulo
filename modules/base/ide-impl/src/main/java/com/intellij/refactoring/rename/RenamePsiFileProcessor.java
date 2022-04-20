@@ -16,12 +16,14 @@
 package com.intellij.refactoring.rename;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.rename.RenameDialog;
+import consulo.language.editor.refactoring.rename.RenamePsiElementProcessor;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiReference;
-import com.intellij.refactoring.RefactoringSettings;
+import consulo.language.editor.refactoring.RefactoringSettings;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

@@ -15,31 +15,32 @@
  */
 package consulo.wm.impl;
 
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.util.Pair;
+import com.intellij.openapi.wm.ex.StatusBarEx;
+import com.intellij.openapi.wm.impl.status.ToolWindowsWidget;
+import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.BalloonHandler;
-import com.intellij.openapi.util.Pair;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.application.progress.ProgressIndicatorEx;
-import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.status.ToolWindowsWidget;
-import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.ui.Label;
+import consulo.ui.NotificationType;
 import consulo.ui.PseudoComponent;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.border.BorderPosition;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.popup.BalloonHandler;
 import consulo.ui.image.Image;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
@@ -293,6 +294,12 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
     return true;
   }
 
+  @Override
+  public BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
+    return () -> {
+    };
+  }
+
   @Nullable
   @Override
   public StatusBarWidget getWidget(String id) {
@@ -344,16 +351,6 @@ public class UnifiedStatusBarImpl implements StatusBarEx {
   @Override
   public void stopRefreshIndication() {
 
-  }
-
-  @Override
-  public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody) {
-    return null;
-  }
-
-  @Override
-  public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
-    return null;
   }
 
   @Override

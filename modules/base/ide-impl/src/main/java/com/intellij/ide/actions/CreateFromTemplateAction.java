@@ -15,29 +15,28 @@
  */
 package com.intellij.ide.actions;
 
-import consulo.application.CommonBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.actionSystem.*;
+import consulo.application.CommonBundle;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.util.lang.ref.Ref;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,7 +67,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
   @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull AnActionEvent e) {
-    final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
+    final IdeView view = e.getData(IdeView.KEY);
     if (view == null) {
       return;
     }
@@ -142,7 +141,7 @@ public abstract class CreateFromTemplateAction<T extends PsiElement> extends AnA
 
   protected boolean isAvailable(DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
+    final IdeView view = dataContext.getData(IdeView.KEY);
     return project != null && view != null && view.getDirectories().length != 0;
   }
 

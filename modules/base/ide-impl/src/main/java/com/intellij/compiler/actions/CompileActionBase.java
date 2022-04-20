@@ -17,11 +17,12 @@ package com.intellij.compiler.actions;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.DaemonCodeAnalyzer;
-import com.intellij.openapi.actionSystem.*;
 import consulo.compiler.CompilerManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

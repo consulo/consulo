@@ -15,8 +15,8 @@
  */
 package com.intellij.openapi.ui;
 
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.CloseTabToolbarAction;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

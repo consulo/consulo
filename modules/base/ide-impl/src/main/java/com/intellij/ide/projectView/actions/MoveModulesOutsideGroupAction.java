@@ -23,7 +23,7 @@ import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 
 public class MoveModulesOutsideGroupAction extends AnAction {

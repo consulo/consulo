@@ -20,7 +20,7 @@ import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.editor.ui.awt.LanguageTextField;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.EditorSettings;
 import consulo.codeEditor.impl.action.EditorAction;
 import com.intellij.openapi.editor.actions.TextComponentEditorAction;

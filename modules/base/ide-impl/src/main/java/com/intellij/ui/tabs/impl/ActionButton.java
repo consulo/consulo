@@ -15,20 +15,19 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import consulo.dataContext.DataManager;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.popup.IconButton;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Pass;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.util.ui.TimedDeadzone;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.popup.IconButton;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -36,6 +35,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.util.function.Consumer;
 
 class ActionButton extends IconButton implements ActionListener {
 
@@ -48,7 +48,7 @@ class ActionButton extends IconButton implements ActionListener {
   private boolean myAutoHide;
   private boolean myToShow;
 
-  public ActionButton(JBTabsImpl tabs, TabInfo tabInfo, AnAction action, String place, Pass<MouseEvent> pass, TimedDeadzone.Length deadzone) {
+  public ActionButton(JBTabsImpl tabs, TabInfo tabInfo, AnAction action, String place, Consumer<MouseEvent> pass, TimedDeadzone.Length deadzone) {
     super(null, action.getTemplatePresentation().getIcon());
     myTabs = tabs;
     myTabInfo = tabInfo;

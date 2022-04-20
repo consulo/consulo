@@ -2,6 +2,7 @@
 
 package consulo.language.inject.impl.internal;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Caret;
@@ -545,7 +546,8 @@ public class InjectedLanguageUtil {
     }
   }
 
-
+  @Deprecated
+  @DeprecationInfo("Use InjectedEditorManager")
   public static Editor openEditorFor(@Nonnull PsiFile file, @Nonnull Project project) {
     Document document = PsiDocumentManager.getInstance(project).getDocument(file);
     // may return editor injected in current selection in the host editor, not for the file passed as argument

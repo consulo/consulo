@@ -17,10 +17,10 @@
 package com.intellij.refactoring.listeners.impl.impl;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.listeners.RefactoringElementListener;
-import com.intellij.refactoring.listeners.RefactoringElementListenerProvider;
-import com.intellij.refactoring.listeners.UndoRefactoringElementListener;
-import com.intellij.refactoring.listeners.impl.RefactoringTransaction;
+import consulo.language.editor.refactoring.event.RefactoringElementListener;
+import consulo.language.editor.refactoring.event.RefactoringElementListenerProvider;
+import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
+import consulo.language.editor.refactoring.RefactoringTransaction;
 import java.util.HashMap;
 import consulo.logging.Logger;
 import javax.annotation.Nonnull;

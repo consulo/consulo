@@ -9,7 +9,7 @@ import com.intellij.ide.actions.WindowAction;
 import com.intellij.ide.ui.PopupLocationTracker;
 import com.intellij.ide.ui.ScreenAreaConsumer;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.project.ProjectUtil;
@@ -547,7 +547,7 @@ public class AbstractPopup implements JBPopup, ScreenAreaConsumer {
       }
     }
     RelativePoint location;
-    Component contextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component contextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (contextComponent == myComponent) {
       location = new RelativePoint(myComponent, new Point());
     }

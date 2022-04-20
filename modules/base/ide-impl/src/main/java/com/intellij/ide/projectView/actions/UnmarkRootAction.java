@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;

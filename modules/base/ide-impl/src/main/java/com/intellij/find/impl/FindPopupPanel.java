@@ -1,28 +1,16 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.find.impl;
 
-import com.intellij.find.*;
+import com.intellij.find.SearchTextArea;
 import com.intellij.find.actions.ShowUsagesAction;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
 import com.intellij.ide.IdeEventQueue;
-import consulo.language.editor.scratch.ScratchUtil;
-import consulo.find.*;
-import consulo.language.editor.ui.awt.EditorTextField;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
-import consulo.ui.ex.internal.ActionButtonComponent;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.ActionButton;
 import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.fileEditor.UniqueVFilePathBuilder;
-import consulo.application.HelpManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.application.impl.internal.progress.ReadTask;
 import com.intellij.openapi.project.DumbAwareToggleAction;
-import com.intellij.openapi.ui.*;
+import com.intellij.openapi.ui.ComponentValidator;
+import com.intellij.openapi.ui.LoadingDecorator;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.DimensionService;
 import com.intellij.openapi.util.Pair;
@@ -30,26 +18,26 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.fileEditor.VfsPresentationUtil;
 import com.intellij.openapi.wm.ex.IdeFrameEx;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.*;
-import consulo.ui.ex.awt.JBTextArea;
 import com.intellij.ui.mac.TouchbarDataKeys;
 import com.intellij.ui.popup.util.PopupState;
-import consulo.usage.*;
 import com.intellij.usages.impl.UsagePreviewPanel;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.PathUtil;
-import consulo.util.lang.PatternUtil;
 import com.intellij.util.Producer;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
+import consulo.application.HelpManager;
 import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
+import consulo.application.impl.internal.progress.ReadTask;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
@@ -57,7 +45,13 @@ import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.event.DocumentListener;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.fileEditor.UniqueVFilePathBuilder;
+import consulo.fileEditor.VfsPresentationUtil;
+import consulo.find.*;
+import consulo.ide.impl.psi.search.GlobalSearchScopeUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.scratch.ScratchUtil;
+import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
@@ -73,19 +67,24 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.internal.MnemonicHelper;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ActionButtonComponent;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.undoRedo.CommandProcessor;
+import consulo.usage.*;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.SmartList;
 import consulo.util.lang.MathUtil;
+import consulo.util.lang.PatternUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.Contract;
@@ -1683,7 +1682,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      if (e.getData(PlatformDataKeys.CONTEXT_COMPONENT) == null) return;
+      if (e.getData(UIExAWTDataKey.CONTEXT_COMPONENT) == null) return;
       if (myPopupState.isRecentlyHidden()) return;
 
       ListPopup listPopup = JBPopupFactory.getInstance().createActionGroupPopup(null, mySwitchContextGroup, e.getDataContext(), false, null, 10);
@@ -1846,12 +1845,12 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
 
     @Override
     public void update(@Nonnull AnActionEvent e) {
-      e.getPresentation().setEnabled(e.getData(CommonDataKeys.EDITOR) == null || SwingUtilities.isDescendingFrom(e.getData(PlatformDataKeys.CONTEXT_COMPONENT), myFileMaskField));
+      e.getPresentation().setEnabled(e.getData(CommonDataKeys.EDITOR) == null || SwingUtilities.isDescendingFrom(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT), myFileMaskField));
     }
 
     @Override
     public void actionPerformed(@Nonnull AnActionEvent e) {
-      if (SwingUtilities.isDescendingFrom(e.getData(PlatformDataKeys.CONTEXT_COMPONENT), myFileMaskField) && myFileMaskField.isPopupVisible()) {
+      if (SwingUtilities.isDescendingFrom(e.getData(UIExAWTDataKey.CONTEXT_COMPONENT), myFileMaskField) && myFileMaskField.isPopupVisible()) {
         myFileMaskField.hidePopup();
         return;
       }

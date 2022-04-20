@@ -54,7 +54,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.usage.UsageInfo;
 import consulo.usage.UsageViewBundle;
-import com.intellij.usages.UsageContextPanel;
+import consulo.usage.UsageContextPanel;
 import consulo.usage.UsageView;
 import consulo.usage.UsageViewPresentation;
 import consulo.ui.ex.PositionTracker;
@@ -71,7 +71,7 @@ import java.util.regex.Pattern;
 /**
  * @author cdr
  */
-public class UsagePreviewPanel extends UsageContextPanelBase implements DataProvider {
+public class UsagePreviewPanel extends UsageContextPanelBase implements DataProvider, consulo.usage.UsagePreviewPanel {
   private static final Logger LOG = Logger.getInstance(UsagePreviewPanel.class);
   private Editor myEditor;
   private final boolean myIsEditor;

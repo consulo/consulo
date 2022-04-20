@@ -23,7 +23,7 @@ import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.document.internal.EditorDocumentPriorities;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import javax.annotation.Nonnull;
 

@@ -23,7 +23,7 @@ import consulo.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ModuleGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.module.Module;
 import consulo.ui.ex.awt.Messages;

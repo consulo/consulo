@@ -19,7 +19,7 @@ package com.intellij.ui;
 import consulo.document.Document;
 import consulo.document.event.DocumentListener;
 import consulo.document.impl.event.DocumentEventImpl;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
+import consulo.language.internal.InternalStdFileTypes;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;

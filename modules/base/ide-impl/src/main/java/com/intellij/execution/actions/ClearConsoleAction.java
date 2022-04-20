@@ -1,12 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.actions;
 
-import consulo.execution.ExecutionBundle;
-import consulo.execution.ui.console.ConsoleView;
 import consulo.application.AllIcons;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionDataKeys;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
+
 import javax.annotation.Nonnull;
 
 public class ClearConsoleAction extends DumbAwareAction {
@@ -16,14 +17,14 @@ public class ClearConsoleAction extends DumbAwareAction {
 
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    ConsoleView data = e.getData(LangDataKeys.CONSOLE_VIEW);
+    ConsoleView data = e.getData(ExecutionDataKeys.CONSOLE_VIEW);
     boolean enabled = data != null && data.getContentSize() > 0;
     e.getPresentation().setEnabled(enabled);
   }
 
   @Override
   public void actionPerformed(@Nonnull final AnActionEvent e) {
-    final ConsoleView consoleView = e.getData(LangDataKeys.CONSOLE_VIEW);
+    final ConsoleView consoleView = e.getData(ExecutionDataKeys.CONSOLE_VIEW);
     if (consoleView != null) {
       consoleView.clear();
     }

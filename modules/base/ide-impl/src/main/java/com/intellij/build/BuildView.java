@@ -11,11 +11,11 @@ import com.intellij.execution.actions.StopProcessAction;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.execution.ui.RunContentDescriptor;
+import consulo.language.editor.LangDataKeys;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.OccurenceNavigator;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -341,7 +341,7 @@ public class BuildView extends CompositeView<ExecutionConsole> implements BuildP
   @Nullable
   @Override
   public Object getData(@Nonnull Key dataId) {
-    if (LangDataKeys.CONSOLE_VIEW == dataId) {
+    if (ExecutionDataKeys.CONSOLE_VIEW == dataId) {
       return getConsoleView();
     }
     Object data = super.getData(dataId);

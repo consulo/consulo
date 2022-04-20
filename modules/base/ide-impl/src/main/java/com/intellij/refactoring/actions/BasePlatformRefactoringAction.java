@@ -16,12 +16,13 @@
 package com.intellij.refactoring.actions;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageRefactoringSupport;
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
+import consulo.language.editor.refactoring.LanguageRefactoringSupport;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

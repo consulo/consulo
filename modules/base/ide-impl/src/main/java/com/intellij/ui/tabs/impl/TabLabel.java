@@ -15,24 +15,24 @@
  */
 package com.intellij.ui.tabs.impl;
 
-import consulo.ui.ex.JBColor;
-import consulo.dataContext.DataManager;
-import consulo.application.ui.UISettings;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.util.Pass;
-import com.intellij.ui.*;
-import consulo.ui.ex.awt.Wrapper;
+import com.intellij.ui.InplaceButton;
+import com.intellij.ui.SimpleColoredText;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.ui.tabs.UiDecorator;
 import com.intellij.util.PairConsumer;
 import com.intellij.util.ui.Centerizer;
+import consulo.application.ui.UISettings;
+import consulo.dataContext.DataManager;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
@@ -47,6 +47,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class TabLabel extends JPanel {
   public class IconInfo {
@@ -377,9 +378,9 @@ public class TabLabel extends JPanel {
 
     if (group == null) return;
 
-    myActionPanel = new ActionPanel(myTabs, myInfo, new Pass<>() {
+    myActionPanel = new ActionPanel(myTabs, myInfo, new Consumer<>() {
       @Override
-      public void pass(final MouseEvent event) {
+      public void accept(final MouseEvent event) {
         final MouseEvent me = SwingUtilities.convertMouseEvent(event.getComponent(), event, TabLabel.this);
         processMouseEvent(me);
       }

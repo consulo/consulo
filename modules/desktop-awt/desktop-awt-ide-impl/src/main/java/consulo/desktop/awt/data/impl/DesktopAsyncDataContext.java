@@ -2,18 +2,19 @@
 package consulo.desktop.awt.data.impl;
 
 import com.intellij.ide.ProhibitAWTEvents;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.BackgroundableDataProvider;
 import com.intellij.openapi.actionSystem.impl.ActionUpdateEdtExecutor;
+import com.intellij.reference.SoftReference;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
-import com.intellij.reference.SoftReference;
 import consulo.application.util.ConcurrentFactoryMap;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.JBIterable;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -53,9 +54,9 @@ class DesktopAsyncDataContext extends DesktopDataManagerImpl.MyDataContext imple
                                                                                        ContainerUtil::createConcurrentWeakKeySoftValueMap);
 
   DesktopAsyncDataContext(DesktopDataManagerImpl dataManager, DataContext syncContext) {
-    super(dataManager, syncContext.getData(PlatformDataKeys.CONTEXT_COMPONENT));
+    super(dataManager, syncContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
     ApplicationManager.getApplication().assertIsDispatchThread();
-    Component component = getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component component = getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     List<Component> hierarchy = JBIterable.generate(component, Component::getParent).toList();
     for (Component each : hierarchy) {
       myProviders.get(each);

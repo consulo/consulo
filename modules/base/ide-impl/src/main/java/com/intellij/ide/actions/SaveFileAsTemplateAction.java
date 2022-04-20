@@ -18,9 +18,10 @@ package com.intellij.ide.actions;
 
 import com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable;
 import com.intellij.ide.fileTemplates.ui.ConfigureTemplatesDialog;
-import com.intellij.openapi.actionSystem.*;
 import consulo.component.extension.Extensions;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

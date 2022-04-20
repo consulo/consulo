@@ -37,7 +37,7 @@ import consulo.diff.request.MessageDiffRequest;
 import consulo.diff.request.NoDiffRequest;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.EmptyAction;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.ui.ex.awt.Messages;

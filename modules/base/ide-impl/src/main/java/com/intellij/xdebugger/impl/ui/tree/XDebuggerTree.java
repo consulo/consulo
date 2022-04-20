@@ -15,42 +15,43 @@
  */
 package com.intellij.xdebugger.impl.ui.tree;
 
-import consulo.execution.configuration.RemoteRunProfile;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.openapi.actionSystem.*;
-import consulo.codeEditor.Editor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.project.Project;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.util.lang.function.Condition;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import com.intellij.util.SingleAlarm;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
 import com.intellij.util.ui.TextTransferable;
-import consulo.ui.ex.awt.UIUtil;
+import com.intellij.xdebugger.impl.actions.XDebuggerActions;
+import com.intellij.xdebugger.impl.frame.XValueMarkers;
+import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
+import com.intellij.xdebugger.impl.ui.tree.nodes.*;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposable;
+import consulo.execution.ExecutionDataKeys;
+import consulo.execution.configuration.RemoteRunProfile;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;
 import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.XValuePlace;
-import com.intellij.xdebugger.impl.actions.XDebuggerActions;
-import com.intellij.xdebugger.impl.frame.XValueMarkers;
-import com.intellij.xdebugger.impl.ui.DebuggerUIUtil;
-import com.intellij.xdebugger.impl.ui.tree.nodes.*;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.fileEditor.FileEditorManager;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.function.Condition;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -227,7 +228,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
 
   public boolean isUnderRemoteDebug() {
     DataContext context = DataManager.getInstance().getDataContext(this);
-    ExecutionEnvironment env = context.getData(LangDataKeys.EXECUTION_ENVIRONMENT);
+    ExecutionEnvironment env = context.getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
     if (env != null && env.getRunProfile() instanceof RemoteRunProfile) {
       return true;
     }

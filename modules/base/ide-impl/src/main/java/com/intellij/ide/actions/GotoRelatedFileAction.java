@@ -15,10 +15,11 @@
  */
 package com.intellij.ide.actions;
 
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;

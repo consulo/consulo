@@ -68,7 +68,7 @@
 
     <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
 
-    <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="consulo.ui.docking.impl.UnifiedDockManagerImpl"/>
+    <projectService serviceInterface="consulo.project.ui.wm.dock.DockManager" serviceImplementation="consulo.ui.docking.impl.UnifiedDockManagerImpl"/>
 
     <projectService serviceInterface="consulo.fileEditor.FileEditorManager" serviceImplementation="consulo.fileEditor.impl.UnifiedPsiAwareFileEditorManagerImpl" lazy="false"/>
 

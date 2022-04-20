@@ -3,12 +3,11 @@
  */
 package consulo.usage;
 
+import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
-import consulo.content.scope.SearchScope;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.Collection;

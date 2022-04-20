@@ -18,7 +18,7 @@ package com.intellij.testIntegration;
 import com.intellij.navigation.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;

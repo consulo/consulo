@@ -26,7 +26,7 @@ import consulo.ui.ex.DeleteProvider;
 import com.intellij.ide.actions.EditSourceAction;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataSink;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.diff.impl.patch.FilePatch;

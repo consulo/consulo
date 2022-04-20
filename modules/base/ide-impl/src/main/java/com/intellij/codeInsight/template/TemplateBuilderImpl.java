@@ -16,10 +16,7 @@
 
 package com.intellij.codeInsight.template;
 
-import consulo.language.editor.template.ConstantNode;
-import consulo.language.editor.template.Expression;
-import consulo.language.editor.template.Template;
-import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.template.*;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
@@ -68,6 +65,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     myContainerElement = wrapElement(element);
   }
 
+  @Override
   public void replaceElement(PsiElement element, Expression expression, boolean alwaysStopAt) {
     final RangeMarker key = wrapElement(element);
     myAlwaysStopAtMap.put(key, alwaysStopAt ? Boolean.TRUE : Boolean.FALSE);
@@ -86,10 +84,12 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     ));
   }
 
+  @Override
   public void replaceElement(PsiElement element, String varName, Expression expression, boolean alwaysStopAt) {
     replaceElement(element, varName, expression, alwaysStopAt, false);
   }
 
+  @Override
   public void replaceElement(PsiReference ref, String varName, Expression expression, boolean alwaysStopAt) {
     final RangeMarker key = wrapReference(ref);
     myAlwaysStopAtMap.put(key, alwaysStopAt ? Boolean.TRUE : Boolean.FALSE);
@@ -102,6 +102,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     myElements.add(key);
   }
 
+  @Override
   public void replaceElement (PsiElement element, String varName, String dependantVariableName, boolean alwaysStopAt) {
     final RangeMarker key = wrapElement(element);
     myAlwaysStopAtMap.put(key, alwaysStopAt ? Boolean.TRUE : Boolean.FALSE);
@@ -110,6 +111,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     myElements.add(key);
   }
 
+  @Override
   public void replaceElement (PsiReference ref, String varName, String dependantVariableName, boolean alwaysStopAt) {
     final RangeMarker key = wrapReference(ref);
     myAlwaysStopAtMap.put(key, alwaysStopAt ? Boolean.TRUE : Boolean.FALSE);
@@ -118,6 +120,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     myElements.add(key);
   }
 
+  @Override
   public void replaceElement(PsiElement element, TextRange textRange, String primaryVariableName, String otherVariableName, boolean alwaysStopAt) {
     final RangeMarker key = myDocument.createRangeMarker(textRange.shiftRight(element.getTextRange().getStartOffset()));
     myAlwaysStopAtMap.put(key, alwaysStopAt ? Boolean.TRUE : Boolean.FALSE);
@@ -173,6 +176,8 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     myElements.add(mySelection);
   }
 
+  @Nonnull
+  @Override
   public Template buildInlineTemplate() {
     Template template = buildTemplate();
     template.setInline(true);

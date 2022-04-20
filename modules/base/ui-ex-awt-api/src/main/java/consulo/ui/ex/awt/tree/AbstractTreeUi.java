@@ -25,7 +25,7 @@ import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.util.collection.ArrayUtil;

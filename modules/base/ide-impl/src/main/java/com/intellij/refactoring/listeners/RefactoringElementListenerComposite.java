@@ -16,6 +16,8 @@
 
 package com.intellij.refactoring.listeners;
 
+import consulo.language.editor.refactoring.event.RefactoringElementListener;
+import consulo.language.editor.refactoring.event.UndoRefactoringElementListener;
 import consulo.language.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;

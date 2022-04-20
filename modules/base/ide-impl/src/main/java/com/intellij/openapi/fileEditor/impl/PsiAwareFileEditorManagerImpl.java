@@ -40,7 +40,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import com.intellij.ui.docking.DockManager;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.UIAccess;

@@ -16,10 +16,10 @@
 
 package com.intellij.ui;
 
+import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -34,7 +34,7 @@ public class ClearTextAction extends AnAction implements DumbAware {
   }
 
   public void actionPerformed(AnActionEvent e) {
-    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component instanceof JTextComponent) {
       final JTextComponent textComponent = (JTextComponent)component;
       textComponent.setText("");
@@ -43,7 +43,7 @@ public class ClearTextAction extends AnAction implements DumbAware {
 
 
   public void update(AnActionEvent e) {
-    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component instanceof JTextComponent) {
       final JTextComponent textComponent = (JTextComponent)component;
       e.getPresentation().setEnabled(textComponent.getText().length() > 0 && ((JTextComponent)component).isEditable());

@@ -16,6 +16,8 @@
 
 package com.intellij.ide.commander;
 
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import com.intellij.ide.CopyPasteDelegator;
@@ -36,7 +38,6 @@ import com.intellij.ide.util.DirectoryChooserUtil;
 import com.intellij.ide.util.EditSourceUtil;
 import consulo.language.editor.impl.util.EditorHelper;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ui.ex.JBColor;
@@ -477,7 +478,7 @@ public class CommanderPanel extends JPanel {
     if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
       return myCopyPasteDelegator != null ? myCopyPasteDelegator.getPasteProvider() : null;
     }
-    if (LangDataKeys.IDE_VIEW == dataId) {
+    if (IdeView.KEY == dataId) {
       return myIdeView;
     }
     if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {

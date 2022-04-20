@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.Splitter;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

@@ -23,6 +23,7 @@ import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 
 /**
  * User: anna

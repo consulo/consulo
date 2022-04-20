@@ -22,7 +22,7 @@ import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;

@@ -6,7 +6,7 @@ import com.intellij.ide.actions.runAnything.activity.RunAnythingProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.KeyboardShortcut;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.logging.Logger;
 import com.intellij.openapi.keymap.KeymapUtil;
 import consulo.module.Module;

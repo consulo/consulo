@@ -20,9 +20,9 @@ import com.intellij.execution.configurations.RefactoringListenerProvider;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.listeners.RefactoringElementListener;
+import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import com.intellij.refactoring.listeners.RefactoringElementListenerComposite;
-import com.intellij.refactoring.listeners.RefactoringElementListenerProvider;
+import consulo.language.editor.refactoring.event.RefactoringElementListenerProvider;
 
 /**
  * @author spleaner

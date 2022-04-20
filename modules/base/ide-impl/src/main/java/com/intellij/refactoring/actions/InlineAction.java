@@ -25,7 +25,7 @@ import consulo.language.Language;
 import com.intellij.lang.refactoring.InlineActionHandler;
 import com.intellij.lang.refactoring.InlineHandler;
 import com.intellij.lang.refactoring.InlineHandlers;
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;

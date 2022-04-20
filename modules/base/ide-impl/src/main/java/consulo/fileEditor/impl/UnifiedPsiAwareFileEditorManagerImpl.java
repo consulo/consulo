@@ -24,7 +24,7 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiManager;
-import com.intellij.ui.docking.DockManager;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.Component;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

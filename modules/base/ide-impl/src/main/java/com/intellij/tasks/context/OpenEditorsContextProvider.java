@@ -17,10 +17,10 @@
 package com.intellij.tasks.context;
 
 import consulo.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
+import consulo.fileEditor.DockableEditorTabbedContainer;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import com.intellij.ui.docking.DockContainer;
-import com.intellij.ui.docking.DockManager;
+import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
 import consulo.ui.docking.BaseDockManager;
 import org.jdom.Element;

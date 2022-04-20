@@ -18,37 +18,37 @@ package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.ide.BrowserUtil;
+import com.intellij.lang.documentation.ExternalDocumentationHandler;
+import com.intellij.lang.documentation.ExternalDocumentationProvider;
+import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.util.ArrayUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AccessRule;
+import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.documentation.DocumentationProvider;
-import com.intellij.lang.documentation.ExternalDocumentationHandler;
-import com.intellij.lang.documentation.ExternalDocumentationProvider;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.codeEditor.Editor;
-import consulo.dataContext.DataContext;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiReference;
 import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
-import consulo.application.util.function.ThrowableComputable;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiReference;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.application.AccessRule;
-import consulo.language.editor.TargetElementUtil;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -95,7 +95,7 @@ public class ExternalJavaDocAction extends AnAction {
       return;
     }
     Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final Component contextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component contextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       List<String> urls;
       if (StringUtil.isEmptyOrSpaces(docUrl)) {

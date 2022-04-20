@@ -17,29 +17,31 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.SelectInContext;
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import com.intellij.util.ArrayUtil;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
-import com.intellij.openapi.fileEditor.*;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.document.FileDocumentManager;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;
-import com.intellij.util.ArrayUtil;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.event.InputEvent;
 import java.util.function.Supplier;
@@ -161,7 +163,7 @@ public abstract class SelectInContextImpl implements SelectInContext {
       return (JComponent)source;
     }
     else {
-      return safeCast(event.getDataContext().getData(PlatformDataKeys.CONTEXT_COMPONENT), JComponent.class);
+      return safeCast(event.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT), JComponent.class);
     }
   }
 

@@ -15,31 +15,21 @@
  */
 package com.intellij.execution.testframework.sm.runner.ui;
 
-import consulo.execution.test.*;
-import consulo.execution.test.ui.TestTreeView;
-import consulo.execution.test.ui.ToolbarPanel;
-import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.execution.TestStateStorage;
-import consulo.execution.test.action.ScrollToTestSourceAction;
-import consulo.execution.test.export.TestResultsXmlFormatter;
 import com.intellij.execution.testframework.sm.SMRunnerUtil;
 import com.intellij.execution.testframework.sm.TestHistoryConfiguration;
 import com.intellij.execution.testframework.sm.runner.*;
 import com.intellij.execution.testframework.sm.runner.history.ImportedTestConsoleProperties;
 import com.intellij.execution.testframework.sm.runner.history.actions.AbstractImportTestsAction;
 import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
-import consulo.execution.test.ui.TestResultsPanel;
-import consulo.execution.test.ui.TestsProgressAnimator;
-import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
-import consulo.ui.ex.awt.ColorProgressBar;
-import com.intellij.openapi.util.Pass;
 import com.intellij.openapi.util.io.FileUtilRt;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.text.DateFormatUtil;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
@@ -49,6 +39,14 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
+import consulo.execution.test.*;
+import consulo.execution.test.action.ScrollToTestSourceAction;
+import consulo.execution.test.export.TestResultsXmlFormatter;
+import consulo.execution.test.ui.TestResultsPanel;
+import consulo.execution.test.ui.TestTreeView;
+import consulo.execution.test.ui.TestsProgressAnimator;
+import consulo.execution.test.ui.ToolbarPanel;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
@@ -56,6 +54,7 @@ import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.ColorProgressBar;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.Update;
 import org.jetbrains.annotations.NonNls;
@@ -78,6 +77,7 @@ import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author: Roman Chernyatchik
@@ -196,9 +196,9 @@ public class SMTestRunnerResultsForm extends TestResultsPanel implements TestFra
 
     myAnimator = new TestsProgressAnimator(myTreeBuilder);
 
-    TrackRunningTestUtil.installStopListeners(myTreeView, myProperties, new Pass<AbstractTestProxy>() {
+    TrackRunningTestUtil.installStopListeners(myTreeView, myProperties, new Consumer<AbstractTestProxy>() {
       @Override
-      public void pass(AbstractTestProxy testProxy) {
+      public void accept(AbstractTestProxy testProxy) {
         if (testProxy == null) return;
         final AbstractTestProxy selectedProxy = testProxy;
         //drill to the first leaf

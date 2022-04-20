@@ -18,7 +18,7 @@ package com.intellij.ide.macro;
 import consulo.ide.IdeBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.pathMacro.Macro;

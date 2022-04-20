@@ -16,25 +16,24 @@
 
 package com.intellij.refactoring.listeners.impl;
 
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
-import com.intellij.refactoring.listeners.RefactoringElementListenerProvider;
-import com.intellij.refactoring.listeners.RefactoringListenerManager;
 import com.intellij.refactoring.listeners.impl.impl.RefactoringTransactionImpl;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.editor.refactoring.RefactoringTransaction;
+import consulo.language.editor.refactoring.event.RefactoringElementListenerProvider;
+import consulo.language.editor.refactoring.internal.RefactoringListenerManagerEx;
+import consulo.project.Project;
+import consulo.util.collection.Lists;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author dsl
  */
 @Singleton
-public class RefactoringListenerManagerImpl extends RefactoringListenerManager {
-  private final List<RefactoringElementListenerProvider> myListenerProviders = ContainerUtil.createLockFreeCopyOnWriteList();
+public class RefactoringListenerManagerImpl extends RefactoringListenerManagerEx {
+  private final List<RefactoringElementListenerProvider> myListenerProviders = Lists.newLockFreeCopyOnWriteList();
   private final Project myProject;
 
   @Inject
@@ -52,9 +51,10 @@ public class RefactoringListenerManagerImpl extends RefactoringListenerManager {
     myListenerProviders.remove(provider);
   }
 
+  @Override
   public RefactoringTransaction startTransaction() {
-    List<RefactoringElementListenerProvider> providers = new ArrayList<RefactoringElementListenerProvider>(myListenerProviders);
-    Collections.addAll(providers, Extensions.getExtensions(RefactoringElementListenerProvider.EP_NAME, myProject));
+    List<RefactoringElementListenerProvider> providers = new ArrayList<>(myListenerProviders);
+    providers.addAll(RefactoringElementListenerProvider.EP_NAME.getExtensionList(myProject));
     return new RefactoringTransactionImpl(providers);
   }
 }

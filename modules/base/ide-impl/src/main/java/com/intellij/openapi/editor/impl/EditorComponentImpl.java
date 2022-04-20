@@ -16,7 +16,7 @@
 package com.intellij.openapi.editor.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.editor.ex.util.EditorUIUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.application.ApplicationManager;
@@ -29,7 +29,7 @@ import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.CaretListener;
-import consulo.codeEditor.impl.EditorActionUtil;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;

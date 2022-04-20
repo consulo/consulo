@@ -16,15 +16,14 @@
 package consulo.ui.docking.impl;
 
 import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
-import com.intellij.openapi.fileEditor.impl.DockableEditorTabbedContainer;
-import consulo.project.Project;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.RelativeRectangle;
-import com.intellij.ui.docking.DockableContent;
+import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditorsSplitters;
-import consulo.ui.Component;
 import consulo.fileEditor.impl.UnifiedFileEditorsSplitters;
+import consulo.project.Project;
+import consulo.project.ui.wm.dock.DockableContent;
+import consulo.ui.Component;
+import consulo.ui.ex.RelativePoint;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -64,16 +63,6 @@ public class UnifiedDockableEditorTabbedContainer implements DockableEditorTabbe
 
   @Override
   public Element getState() {
-    return null;
-  }
-
-  @Override
-  public RelativeRectangle getAcceptArea() {
-    return null;
-  }
-
-  @Override
-  public RelativeRectangle getAcceptAreaFallback() {
     return null;
   }
 

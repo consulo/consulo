@@ -1,13 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.navigationToolbar;
 
-import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.ide.CopyPasteDelegator;
 import com.intellij.ide.CopyPasteSupport;
 import com.intellij.ide.IdeView;
-import consulo.ui.ex.awt.dnd.DnDDragStartBean;
-import consulo.ui.ex.awt.dnd.DnDSupport;
 import com.intellij.ide.dnd.TransferableWrapper;
 import com.intellij.ide.navigationToolbar.ui.NavBarUI;
 import com.intellij.ide.navigationToolbar.ui.NavBarUIManager;
@@ -16,9 +13,6 @@ import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.ide.util.DeleteHandler;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;
@@ -41,7 +35,10 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiElement;
@@ -59,11 +56,15 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awt.dnd.DnDDragStartBean;
+import consulo.ui.ex.awt.dnd.DnDSupport;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.concurrent.ActionCallback;
@@ -732,7 +733,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
       return elements.isEmpty() ? null : elements.toArray(new Navigatable[0]);
     }
 
-    if (PlatformDataKeys.CONTEXT_COMPONENT == dataId) {
+    if (UIExAWTDataKey.CONTEXT_COMPONENT == dataId) {
       return this;
     }
     if (PlatformDataKeys.CUT_PROVIDER == dataId) {
@@ -748,7 +749,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
       return selection.get().filter(Module.class).isNotEmpty() ? myDeleteModuleProvider : new DeleteHandler.DefaultDeleteProvider();
     }
 
-    if (LangDataKeys.IDE_VIEW == dataId) {
+    if (IdeView.KEY== dataId) {
       return myIdeView;
     }
 
@@ -828,7 +829,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     final KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
     myUpdateQueue.rebuildUi();
     if (editor == null) {
-      myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       getHintContainerShowPoint().doWhenDone((Consumer<RelativePoint>)relativePoint -> {
         final Component owner = focusManager.getFocusOwner();
         final Component cmp = relativePoint.getComponent();
@@ -866,7 +867,7 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
         }
         else {
           dataManager.getDataContextFromFocus().doWhenDone((Consumer<DataContext>)dataContext -> {
-            myContextComponent = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+            myContextComponent = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
             DataContext ctx = dataManager.getDataContext(myContextComponent);
             myLocationCache = JBPopupFactory.getInstance().guessBestPopupLocation(ctx);
           });

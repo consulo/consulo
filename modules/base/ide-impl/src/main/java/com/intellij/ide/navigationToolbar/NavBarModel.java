@@ -2,26 +2,26 @@
 
 package com.intellij.ide.navigationToolbar;
 
-import consulo.application.ui.UISettings;
-import consulo.ui.ex.awt.tree.TreeAnchorizer;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.ReadAction;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.language.psi.*;
-import consulo.module.Module;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.util.function.CommonProcessors;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.PairProcessor;
-import consulo.application.util.function.Processor;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.ReadAction;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.ui.UISettings;
+import consulo.application.util.function.CommonProcessors;
+import consulo.application.util.function.Processor;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.psi.*;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.tree.TreeAnchorizer;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -87,7 +87,7 @@ public class NavBarModel {
   protected void updateModel(DataContext dataContext) {
     if (LaterInvocator.isInModalContext() || (updated && !isFixedComponent)) return;
 
-    if (dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT) instanceof NavBarPanel) return;
+    if (dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT) instanceof NavBarPanel) return;
 
     NavBarModelExtension ownerExtension = null;
     PsiElement psiElement = null;

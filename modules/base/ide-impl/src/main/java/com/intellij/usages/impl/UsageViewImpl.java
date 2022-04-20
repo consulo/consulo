@@ -6,8 +6,8 @@ import consulo.find.FindManager;
 import com.intellij.ide.*;
 import com.intellij.ide.actions.exclusion.ExclusionHandler;
 import consulo.dataContext.DataSink;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.TypeSafeDataProvider;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import consulo.ui.ex.OccurenceNavigator;
@@ -19,7 +19,7 @@ import com.intellij.ui.SmartExpander;
 import com.intellij.ui.TreeUIHelper;
 import com.intellij.ui.components.JBPanelWithEmptyText;
 import com.intellij.ui.components.JBTabbedPane;
-import com.intellij.usages.UsageContextPanel;
+import consulo.usage.UsageContextPanel;
 import com.intellij.usages.UsageDataUtil;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageViewSettings;
@@ -62,6 +62,7 @@ import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.content.Content;
 import consulo.undoRedo.CommandProcessor;
 import consulo.usage.*;
+import consulo.usage.internal.UsageViewEx;
 import consulo.usage.rule.*;
 import consulo.util.collection.LinkedMultiMap;
 import consulo.util.collection.MultiMap;
@@ -869,17 +870,6 @@ public class UsageViewImpl implements UsageViewEx {
     return target instanceof ConfigurableUsageTarget;
   }
 
-  private static ConfigurableUsageTarget getConfigurableTarget(@Nonnull UsageTarget[] targets) {
-    ConfigurableUsageTarget configurableUsageTarget = null;
-    if (targets.length != 0) {
-      NavigationItem target = targets[0];
-      if (target instanceof ConfigurableUsageTarget) {
-        configurableUsageTarget = (ConfigurableUsageTarget)target;
-      }
-    }
-    return configurableUsageTarget;
-  }
-
   @Nonnull
   private AnAction[] createGroupingActions() {
     final List<UsageGroupingRuleProvider> providers = UsageGroupingRuleProvider.EP_NAME.getExtensionList();
@@ -1035,13 +1025,9 @@ public class UsageViewImpl implements UsageViewEx {
   }
 
   @Nullable
+  @Deprecated
   public static KeyboardShortcut getShowUsagesWithSettingsShortcut() {
-    return ActionManager.getInstance().getKeyboardShortcut("ShowSettingsAndFindUsages");
-  }
-
-  static KeyboardShortcut getShowUsagesWithSettingsShortcut(@Nonnull UsageTarget[] targets) {
-    ConfigurableUsageTarget configurableTarget = getConfigurableTarget(targets);
-    return configurableTarget == null ? getShowUsagesWithSettingsShortcut() : configurableTarget.getShortcut();
+    return UsageViewUtil.getShowUsagesWithSettingsShortcut();
   }
 
   @Override
@@ -1069,7 +1055,7 @@ public class UsageViewImpl implements UsageViewEx {
   private class ShowSettings extends AnAction {
     private ShowSettings() {
       super("Settings...", null, AllIcons.General.GearPlain);
-      final ConfigurableUsageTarget configurableUsageTarget = getConfigurableTarget(myTargets);
+      final ConfigurableUsageTarget configurableUsageTarget = UsageViewUtil.getConfigurableTarget(myTargets);
       String description = null;
       try {
         description = configurableUsageTarget == null ? null : "Show settings for " + configurableUsageTarget.getLongDescriptiveName();

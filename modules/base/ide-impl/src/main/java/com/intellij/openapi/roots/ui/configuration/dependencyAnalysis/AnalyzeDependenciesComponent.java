@@ -17,10 +17,10 @@ package com.intellij.openapi.roots.ui.configuration.dependencyAnalysis;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import com.intellij.openapi.roots.ui.CellAppearanceEx;
 import com.intellij.openapi.roots.ui.OrderEntryAppearanceService;

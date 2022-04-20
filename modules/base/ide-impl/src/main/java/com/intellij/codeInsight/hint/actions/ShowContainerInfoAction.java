@@ -21,7 +21,7 @@ import com.intellij.codeInsight.hint.ShowContainerInfoHandler;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiFile;

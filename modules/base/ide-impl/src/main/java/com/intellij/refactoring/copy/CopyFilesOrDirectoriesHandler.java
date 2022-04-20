@@ -353,34 +353,9 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
     }
   }
 
+  @Deprecated
   public static boolean checkFileExist(@Nullable PsiDirectory targetDirectory, int[] choice, PsiFile file, String name, String title) {
-    if (targetDirectory == null) return false;
-    final PsiFile existing = targetDirectory.findFile(name);
-    if (existing != null && !existing.equals(file)) {
-      int selection;
-      if (choice == null || choice[0] == -1) {
-        String message = String.format("File '%s' already exists in directory '%s'", name, targetDirectory.getVirtualFile().getPath());
-        String[] options = choice == null ? new String[]{"Overwrite", "Skip"} : new String[]{"Overwrite", "Skip", "Overwrite for all", "Skip for all"};
-        selection = Messages.showDialog(message, title, options, 0, Messages.getQuestionIcon());
-      }
-      else {
-        selection = choice[0];
-      }
-
-      if (choice != null && selection > 1) {
-        choice[0] = selection % 2;
-        selection = choice[0];
-      }
-
-      if (selection == 0 && file != existing) {
-        WriteCommandAction.writeCommandAction(targetDirectory.getProject()).withName(title).run(() -> existing.delete());
-      }
-      else {
-        return true;
-      }
-    }
-
-    return false;
+    return CommonRefactoringUtil.checkFileExist(targetDirectory, choice, file, name, title);
   }
 
   @Nullable

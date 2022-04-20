@@ -16,8 +16,8 @@
 package com.intellij.refactoring.actions;
 
 import consulo.language.Language;
-import com.intellij.lang.LanguageRefactoringSupport;
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
+import consulo.language.editor.refactoring.LanguageRefactoringSupport;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -27,7 +27,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.PsiReference;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
+import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

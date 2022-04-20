@@ -14,7 +14,7 @@ package com.intellij.refactoring.changeSignature;
 
 import consulo.application.ApplicationManager;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.rename.RenameProcessor;
+import consulo.language.editor.refactoring.rename.RenameProcessor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNameIdentifierOwner;

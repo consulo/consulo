@@ -21,7 +21,9 @@ import javax.annotation.Nonnull;
 
 public interface ConfigurableUsageTarget extends UsageTarget {
   void showSettings();
+
   KeyboardShortcut getShortcut();
+
   @Nonnull
   String getLongDescriptiveName();
 }

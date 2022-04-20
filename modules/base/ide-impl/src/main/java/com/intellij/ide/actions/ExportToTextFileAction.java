@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.actions;
 
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.ExporterToTextFile;
 import com.intellij.ide.util.ExportToFileUtil;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;

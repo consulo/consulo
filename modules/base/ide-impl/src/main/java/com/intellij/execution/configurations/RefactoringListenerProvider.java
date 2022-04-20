@@ -16,7 +16,7 @@
 package com.intellij.execution.configurations;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.listeners.RefactoringElementListener;
+import consulo.language.editor.refactoring.event.RefactoringElementListener;
 
 /**
  * @author spleaner

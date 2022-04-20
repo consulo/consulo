@@ -16,19 +16,17 @@
 
 package consulo.ide.impl.psi.impl.light;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
-import consulo.language.ast.ASTNode;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiElementVisitor;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.language.impl.psi.PsiElementBase;
-import consulo.language.util.IncorrectOperationException;
 import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.impl.psi.PsiElementBase;
+import consulo.language.psi.*;
+import consulo.language.util.IncorrectOperationException;
 
 import javax.annotation.Nonnull;
 
-public abstract class LightElement extends PsiElementBase {
+public abstract class LightElement extends PsiElementBase implements LightweightPsiElement {
   protected final PsiManager myManager;
   private final Language myLanguage;
   private volatile PsiElement myNavigationElement = this;
@@ -38,6 +36,7 @@ public abstract class LightElement extends PsiElementBase {
     myLanguage = language;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public Language getLanguage() {
@@ -54,6 +53,7 @@ public abstract class LightElement extends PsiElementBase {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public PsiElement[] getChildren() {
@@ -65,22 +65,26 @@ public abstract class LightElement extends PsiElementBase {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public TextRange getTextRange() {
-    return null;
+    return TextRange.EMPTY_RANGE;
   }
 
+  @RequiredReadAction
   @Override
   public int getStartOffsetInParent() {
     return -1;
   }
 
+  @RequiredReadAction
   @Override
   public final int getTextLength() {
     String text = getText();
     return text != null ? text.length() : 0;
   }
 
+  @RequiredReadAction
   @Override
   @Nonnull
   public char[] textToCharArray() {
@@ -97,6 +101,7 @@ public abstract class LightElement extends PsiElementBase {
     return getText().equals(element.getText());
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement findElementAt(int offset) {
     return null;
@@ -169,6 +174,7 @@ public abstract class LightElement extends PsiElementBase {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public String getText() {
     return null;
@@ -197,11 +203,13 @@ public abstract class LightElement extends PsiElementBase {
     myNavigationElement = navigationElement;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getPrevSibling() {
     return null;
   }
 
+  @RequiredReadAction
   @Override
   public PsiElement getNextSibling() {
     return null;

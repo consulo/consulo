@@ -29,8 +29,8 @@ import com.intellij.ide.projectView.impl.nodes.*;
 import com.intellij.ide.scopeView.ScopeViewPane;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.DirectoryChooserUtil;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
@@ -1083,7 +1083,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
       if (PlatformDataKeys.PASTE_PROVIDER == dataId) {
         return myCopyPasteDelegator.getPasteProvider();
       }
-      if (LangDataKeys.IDE_VIEW == dataId) {
+      if (IdeView.KEY == dataId) {
         return myIdeView;
       }
       if (PlatformDataKeys.DELETE_ELEMENT_PROVIDER == dataId) {

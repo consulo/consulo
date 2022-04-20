@@ -18,7 +18,7 @@ package com.intellij.openapi.vcs.history;
 import consulo.ui.ex.CopyProvider;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;

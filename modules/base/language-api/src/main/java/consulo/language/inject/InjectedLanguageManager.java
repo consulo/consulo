@@ -72,6 +72,12 @@ public abstract class InjectedLanguageManager {
   @Nullable
   public abstract PsiElement findInjectedElementAt(@Nonnull PsiFile hostFile, int hostDocumentOffset);
 
+  /**
+   * Invocation of this method on uncommitted {@code file} can lead to unexpected results, including throwing an exception!
+   */
+  @Nullable
+  public abstract PsiElement findElementAtNoCommit(@Nonnull PsiFile file, int offset);
+
   @Nullable
   public abstract List<Pair<PsiElement, TextRange>> getInjectedPsiFiles(@Nonnull PsiElement host);
 

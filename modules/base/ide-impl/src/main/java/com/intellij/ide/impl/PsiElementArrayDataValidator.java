@@ -16,7 +16,7 @@
 
 package com.intellij.ide.impl;
 
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.DataValidators;

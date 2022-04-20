@@ -21,9 +21,9 @@ package com.intellij.ide.projectView.impl;
 
 import com.intellij.ide.projectView.actions.MoveModulesOutsideGroupAction;
 import com.intellij.ide.projectView.actions.MoveModulesToSubGroupAction;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
 import consulo.module.ModuleManager;

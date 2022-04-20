@@ -15,37 +15,36 @@
  */
 package com.intellij.ide.actions.runAnything;
 
-import consulo.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
-import consulo.application.Application;
-import consulo.dataContext.DataContext;
-import consulo.fileChooser.FileChooserDescriptor;
-import consulo.fileChooser.FileChooserDescriptorFactory;
-import consulo.fileChooser.FileChooserFactory;
-import consulo.fileChooser.PathChooserDialog;
-import consulo.language.editor.CommonDataKeys;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.ListSeparator;
-import consulo.util.lang.function.Conditions;
-import consulo.application.util.registry.Registry;
 import com.intellij.ui.ErrorLabel;
 import com.intellij.ui.popup.ActionPopupStep;
 import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.application.Application;
+import consulo.application.dumb.DumbAware;
+import consulo.application.util.registry.Registry;
+import consulo.dataContext.DataContext;
+import consulo.fileChooser.FileChooserDescriptor;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.fileChooser.FileChooserFactory;
+import consulo.fileChooser.PathChooserDialog;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.image.Image;
+import consulo.util.lang.function.Conditions;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -145,7 +144,7 @@ public abstract class RunAnythingChooseContextAction extends ActionGroup impleme
         FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
         descriptor.setUseApplicationDialog();
 
-        PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, project, e.getDataContext().getData(PlatformDataKeys.CONTEXT_COMPONENT));
+        PathChooserDialog chooser = FileChooserFactory.getInstance().createPathChooser(descriptor, project, e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT));
 
         chooser.chooseAsync(project.getBaseDir()).doWhenDone(virtualFiles -> {
           List<String> recentDirectories = RunAnythingContextRecentDirectoryCache.getInstance(project).getState().paths;

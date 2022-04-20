@@ -35,7 +35,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
+import consulo.language.internal.InternalStdFileTypes;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.ex.popup.PopupStep;

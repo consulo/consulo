@@ -23,7 +23,7 @@ import com.intellij.internal.psiView.formattingblocks.BlockTreeBuilder;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeNode;
 import com.intellij.internal.psiView.formattingblocks.BlockTreeStructure;
 import consulo.language.codeStyle.LanguageFormatting;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.EditorEx;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.file.FileTypeManager;

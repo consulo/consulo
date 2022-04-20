@@ -15,48 +15,45 @@
  */
 package com.intellij.refactoring.introduce.inplace;
 
-import com.intellij.codeInsight.highlighting.HighlightManager;
-import consulo.language.editor.template.TextResult;
 import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
 import com.intellij.codeInsight.template.impl.TemplateStateImpl;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
-import consulo.undoRedo.CommandProcessor;
-import consulo.language.editor.WriteCommandAction;
-import com.intellij.openapi.command.impl.StartMarkAction;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.RangeMarker;
-import consulo.document.event.DocumentEvent;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.ScrollType;
+import consulo.codeEditor.*;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.language.psi.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.ui.ex.popup.Balloon;
-import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Pair;
-import consulo.util.lang.ref.Ref;
+import consulo.document.RangeMarker;
+import consulo.document.event.DocumentAdapter;
+import consulo.document.event.DocumentEvent;
 import consulo.document.util.TextRange;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.refactoring.RefactoringActionHandler;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.language.editor.template.TextResult;
+import consulo.language.psi.*;
 import consulo.language.psi.search.ReferencesSearch;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.language.editor.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import consulo.ui.ex.awt.JBUI;
+import consulo.project.Project;
 import consulo.ui.ex.PositionTracker;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.popup.Balloon;
+import consulo.undoRedo.CommandProcessor;
+import consulo.undoRedo.internal.StartMarkAction;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * User: anna
@@ -137,7 +134,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
 
   @Override
   protected StartMarkAction startRename() throws StartMarkAction.AlreadyStartedException {
-    return StartMarkAction.start(myEditor, myProject, getCommandName());
+    return StartMarkAction.start(myEditor.getDocument(), myProject, getCommandName());
   }
 
   /**
@@ -382,6 +379,7 @@ public abstract class AbstractInplaceIntroducer<V extends PsiNameIdentifierOwner
   }
 
   @Override
+  @RequiredReadAction
   protected void collectAdditionalElementsToRename(List<Pair<PsiElement, TextRange>> stringUsages) {
     if (isReplaceAllOccurrences()) {
       for (E expression : getOccurrences()) {

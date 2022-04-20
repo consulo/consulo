@@ -26,7 +26,7 @@ import com.intellij.openapi.ui.StripeTable;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.BooleanTableCellRenderer;
+import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SystemNotifications;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;

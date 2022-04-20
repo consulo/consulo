@@ -19,7 +19,7 @@ import consulo.ide.impl.TabFactoryBuilderImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.ui.ex.action.IdeActions;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.EditorColors;

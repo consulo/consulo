@@ -15,19 +15,19 @@
  */
 package com.intellij.execution.runners;
 
+import com.intellij.execution.impl.ExecutionManagerImpl;
+import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataManager;
 import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ExecutionManager;
 import consulo.execution.ExecutionUtil;
 import consulo.execution.executor.ExecutorRegistry;
-import com.intellij.execution.impl.ExecutionManagerImpl;
 import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.process.ProcessHandler;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
-import consulo.dataContext.DataManager;
-import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
@@ -65,19 +65,19 @@ public class FakeRerunAction extends AnAction implements DumbAware {
 
   @Nullable
   protected RunContentDescriptor getDescriptor(AnActionEvent event) {
-    return event.getData(LangDataKeys.RUN_CONTENT_DESCRIPTOR);
+    return event.getData(ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR);
   }
 
   @Nullable
   protected ExecutionEnvironment getEnvironment(@Nonnull AnActionEvent event) {
-    ExecutionEnvironment environment = event.getData(LangDataKeys.EXECUTION_ENVIRONMENT);
+    ExecutionEnvironment environment = event.getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
     if (environment == null) {
       Project project = event.getData(CommonDataKeys.PROJECT);
       RunContentDescriptor contentDescriptor = project == null ? null : ExecutionManager.getInstance(project).getContentManager().getSelectedContent();
       if (contentDescriptor != null) {
         JComponent component = contentDescriptor.getComponent();
         if (component != null) {
-          environment = DataManager.getInstance().getDataContext(component).getData(LangDataKeys.EXECUTION_ENVIRONMENT);
+          environment = DataManager.getInstance().getDataContext(component).getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
         }
       }
     }

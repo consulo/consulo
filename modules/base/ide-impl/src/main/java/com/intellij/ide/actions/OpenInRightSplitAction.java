@@ -18,7 +18,7 @@ package com.intellij.ide.actions;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;

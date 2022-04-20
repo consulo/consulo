@@ -19,7 +19,7 @@ package com.intellij.openapi.vcs.changes.actions;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.vcs.changes.VcsDirtyScopeManager;

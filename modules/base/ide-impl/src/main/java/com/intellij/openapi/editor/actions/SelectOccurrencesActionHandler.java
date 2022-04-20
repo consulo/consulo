@@ -15,12 +15,12 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.codeInsight.editorActions.SelectWordUtil;
+import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.find.FindBundle;
-import consulo.codeEditor.impl.EditorActionUtil;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.ui.ex.action.IdeActions;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

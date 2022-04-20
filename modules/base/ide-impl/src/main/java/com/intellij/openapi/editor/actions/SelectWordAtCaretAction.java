@@ -24,7 +24,7 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import com.intellij.codeInsight.editorActions.SelectWordUtil;
+import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.editor.action.BraceMatchingUtil;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.util.text.CharArrayUtil;

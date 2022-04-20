@@ -28,6 +28,8 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.undoRedo.internal.FinishMarkAction;
+import consulo.undoRedo.internal.StartMarkAction;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import com.intellij.util.containers.ContainerUtil;

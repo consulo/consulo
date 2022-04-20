@@ -20,7 +20,7 @@ import com.intellij.openapi.fileEditor.impl.DesktopFileEditorWithProviderComposi
 import com.intellij.openapi.fileEditor.impl.DesktopFileEditorsSplitters;
 import com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
-import com.intellij.ui.docking.DockManager;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;

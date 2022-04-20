@@ -22,37 +22,37 @@
  */
 package com.intellij.codeInspection;
 
-import consulo.dataContext.DataManager;
-import consulo.language.inject.InjectedLanguageManager;
-import consulo.bootstrap.charset.Native2AsciiCharset;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.FileDocumentManager;
-import consulo.language.impl.internal.psi.LoadTextUtil;
-import consulo.language.editor.inspection.*;
-import consulo.language.editor.inspection.scheme.InspectionManager;
-import consulo.project.Project;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.document.util.TextRange;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.encoding.ChangeFileEncodingAction;
 import com.intellij.openapi.vfs.encoding.EncodingUtil;
-import consulo.language.file.FileViewProvider;
-import consulo.language.psi.PsiFile;
-import consulo.language.editor.internal.PsiUtilBase;
 import com.intellij.util.ArrayUtil;
-import consulo.util.collection.SmartList;
+import consulo.bootstrap.charset.Native2AsciiCharset;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.inspection.*;
+import consulo.language.editor.inspection.scheme.InspectionManager;
+import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.internal.psi.LoadTextUtil;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -245,7 +245,7 @@ public class LossyEncodingInspection extends LocalInspectionTool {
     public static DataContext createDataContext(Editor editor, Component component, VirtualFile selectedFile, Project project) {
       DataContext parent = DataManager.getInstance().getDataContext(component);
       DataContext context =
-              SimpleDataContext.getSimpleContext(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent);
+              SimpleDataContext.getSimpleContext(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent(), parent);
       DataContext projectContext = SimpleDataContext.getSimpleContext(CommonDataKeys.PROJECT, project, context);
       return SimpleDataContext.getSimpleContext(CommonDataKeys.VIRTUAL_FILE, selectedFile, projectContext);
     }

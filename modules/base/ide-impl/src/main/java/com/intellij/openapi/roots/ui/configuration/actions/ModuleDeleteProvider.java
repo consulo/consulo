@@ -20,7 +20,7 @@ import consulo.ui.ex.DeleteProvider;
 import com.intellij.ide.TitledHandler;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.module.ModifiableModuleModel;

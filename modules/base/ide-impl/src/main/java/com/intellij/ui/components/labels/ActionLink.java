@@ -16,8 +16,8 @@
 package com.intellij.ui.components.labels;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.awt.LinkListener;
 import consulo.ui.ex.awt.UIUtil;

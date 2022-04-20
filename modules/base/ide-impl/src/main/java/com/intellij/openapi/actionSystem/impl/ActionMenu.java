@@ -15,25 +15,25 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import consulo.dataContext.DataManager;
-import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.actionholder.ActionRef;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.util.TextWithMnemonic;
-import consulo.dataContext.DataContext;
-import consulo.application.ui.wm.IdeFocusManager;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.StatusBar;
 import com.intellij.ui.plaf.gtk.GtkMenuUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.ui.UISettings;
+import consulo.application.ui.wm.IdeFocusManager;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
 import consulo.localize.LocalizeValue;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.StatusBar;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import kava.beans.PropertyChangeEvent;
@@ -370,7 +370,7 @@ public final class ActionMenu extends JMenu {
     else {
       @SuppressWarnings("deprecation") DataContext contextFromFocus = DataManager.getInstance().getDataContext();
       context = contextFromFocus;
-      if (context.getData(PlatformDataKeys.CONTEXT_COMPONENT) == null) {
+      if (context.getData(UIExAWTDataKey.CONTEXT_COMPONENT) == null) {
         IdeFrame frame = DesktopIdeFrameUtil.findIdeFrameFromParent(this);
         context = DataManager.getInstance().getDataContext(IdeFocusManager.getGlobalInstance().getLastFocusedFor(frame));
       }

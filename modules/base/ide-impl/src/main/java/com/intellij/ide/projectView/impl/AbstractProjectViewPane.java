@@ -19,7 +19,7 @@ import com.intellij.ide.projectView.impl.nodes.ModuleGroupNode;
 import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import com.intellij.ide.util.treeView.AbstractTreeStructureBase;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.refactoring.move.MoveHandler;
 import com.intellij.ui.tree.project.ProjectFileNode;

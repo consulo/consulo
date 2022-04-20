@@ -16,17 +16,17 @@
 package com.intellij.openapi.editor.actions;
 
 import com.intellij.ide.CopyPasteManagerEx;
-import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataManager;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
@@ -51,7 +51,7 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
   @Override
   public void actionPerformed(final AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
-    Component focusedComponent = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component focusedComponent = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     Editor editor = e.getData(CommonDataKeys.EDITOR);
 
     if (!(focusedComponent instanceof JComponent)) return;
@@ -134,7 +134,7 @@ public class MultiplePasteAction extends AnAction implements DumbAware {
   }
 
   private static boolean isEnabled(AnActionEvent e) {
-    Object component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Object component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (!(component instanceof JComponent)) return false;
     Editor editor = e.getData(CommonDataKeys.EDITOR);
     if (editor != null) return !editor.isViewer();

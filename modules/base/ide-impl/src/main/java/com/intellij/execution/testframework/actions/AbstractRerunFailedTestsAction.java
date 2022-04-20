@@ -15,17 +15,17 @@
  */
 package com.intellij.execution.testframework.actions;
 
+import com.intellij.openapi.util.Getter;
+import consulo.execution.ExecutionDataKeys;
+import consulo.execution.RunnerRegistry;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.log.LogFileOptions;
 import consulo.execution.configuration.log.PredefinedLogFile;
-import consulo.ide.ui.impl.PopupChooserBuilder;
-import consulo.language.editor.CommonDataKeys;
-import consulo.process.ExecutionException;
-import consulo.execution.executor.Executor;
-import consulo.execution.RunnerRegistry;
+import consulo.execution.configuration.ui.SettingsEditor;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
 import consulo.execution.runner.ProgramRunner;
@@ -33,23 +33,23 @@ import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.Filter;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
-import consulo.ui.ex.action.ActionsBundle;
-import com.intellij.openapi.actionSystem.*;
-import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.project.Project;
-import consulo.ui.ex.ComponentContainer;
-import com.intellij.openapi.util.Getter;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
+import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.project.Project;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ComponentContainer;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionsBundle;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.logging.Logger;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
 import org.jetbrains.annotations.TestOnly;
 
@@ -145,7 +145,7 @@ public class AbstractRerunFailedTestsAction extends AnAction implements AnAction
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    ExecutionEnvironment environment = e.getData(LangDataKeys.EXECUTION_ENVIRONMENT);
+    ExecutionEnvironment environment = e.getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
     if (environment == null) {
       return;
     }

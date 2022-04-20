@@ -16,7 +16,7 @@
 package com.intellij.build.issue.quickfix;
 
 import com.intellij.build.issue.BuildIssueQuickFix;
-import com.intellij.codeInsight.highlighting.HighlightManager;
+import consulo.language.editor.highlight.HighlightManager;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandler;
 import consulo.find.FindManager;
 import consulo.find.FindModel;

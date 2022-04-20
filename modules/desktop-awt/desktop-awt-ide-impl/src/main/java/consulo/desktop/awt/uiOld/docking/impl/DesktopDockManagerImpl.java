@@ -24,10 +24,10 @@ import consulo.ui.ex.awt.FrameWrapper;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.awt.RelativeRectangle;
 import com.intellij.ui.components.panels.VerticalBox;
-import com.intellij.ui.docking.DockContainer;
-import com.intellij.ui.docking.DockContainerFactory;
-import com.intellij.ui.docking.DockableContent;
-import com.intellij.ui.docking.DragSession;
+import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockContainerFactory;
+import consulo.project.ui.wm.dock.DockableContent;
+import consulo.project.ui.wm.dock.DragSession;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.IconUtil;
 import consulo.application.ApplicationManager;
@@ -51,6 +51,7 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.SwingDockContainer;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -250,7 +251,7 @@ public class DesktopDockManagerImpl extends BaseDockManager {
     public DockContainer.ContentResponse getResponse(MouseEvent e) {
       RelativePoint point = new RelativePoint(e);
       for (DockContainer each : myContainers) {
-        RelativeRectangle rec = each.getAcceptArea();
+        RelativeRectangle rec = ((SwingDockContainer)each).getAcceptArea();
         if (rec.contains(point)) {
           DockContainer.ContentResponse response = each.getContentResponse(myContent, point);
           if (response.canAccept()) {
@@ -324,14 +325,14 @@ public class DesktopDockManagerImpl extends BaseDockManager {
   @Nullable
   private DockContainer findContainerFor(RelativePoint point, @Nonnull DockableContent content) {
     for (DockContainer each : myContainers) {
-      RelativeRectangle rec = each.getAcceptArea();
+      RelativeRectangle rec = ((SwingDockContainer)each).getAcceptArea();
       if (rec.contains(point) && each.getContentResponse(content, point).canAccept()) {
         return each;
       }
     }
 
     for (DockContainer each : myContainers) {
-      RelativeRectangle rec = each.getAcceptAreaFallback();
+      RelativeRectangle rec = ((SwingDockContainer)each).getAcceptAreaFallback();
       if (rec.contains(point) && each.getContentResponse(content, point).canAccept()) {
         return each;
       }

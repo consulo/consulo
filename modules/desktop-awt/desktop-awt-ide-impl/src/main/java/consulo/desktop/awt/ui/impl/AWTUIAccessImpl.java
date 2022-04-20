@@ -53,6 +53,13 @@ public class AWTUIAccessImpl implements UIAccess {
     return IdeEventQueue.getInstance().getEventCount();
   }
 
+  @RequiredUIAccess
+  @Override
+  public Runnable markEventCount() {
+    int eventCount = getEventCount();
+    return () -> IdeEventQueue.getInstance().setEventCount(eventCount);
+  }
+
   @Nonnull
   @Override
   public <T> AsyncResult<T> give(@Nonnull Supplier<T> supplier) {

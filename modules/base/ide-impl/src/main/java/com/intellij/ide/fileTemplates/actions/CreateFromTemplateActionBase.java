@@ -18,7 +18,6 @@ package com.intellij.ide.fileTemplates.actions;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.fileTemplates.ui.CreateFromTemplateDialog;
 import com.intellij.ide.util.DirectoryChooserUtil;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.dataContext.DataContext;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
@@ -48,7 +47,7 @@ public abstract class CreateFromTemplateActionBase extends AnAction {
   @Override
   public final void actionPerformed(@Nonnull AnActionEvent e) {
     DataContext dataContext = e.getDataContext();
-    IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
+    IdeView view = dataContext.getData(IdeView.KEY);
     if (view == null) return;
     PsiDirectory dir = getTargetDirectory(dataContext, view);
     if (dir == null) return;

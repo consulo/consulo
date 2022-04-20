@@ -17,7 +17,7 @@ package com.intellij.internal.tree;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.TreeUtil;
 
@@ -30,7 +30,7 @@ import java.awt.*;
 public class ExpandAll extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    final Component c = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component c = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (c != null) {
       final JTree tree = UIUtil.getParentOfType(JTree.class, c);
       if (tree != null) {

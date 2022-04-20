@@ -24,7 +24,7 @@ import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.TableCell;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.JBSwingUtilities;

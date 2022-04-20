@@ -23,6 +23,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.action.EditorActionHandler;
+import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.util.lang.ref.Ref;

@@ -17,7 +17,7 @@ package com.intellij.ide.impl.dataRules;
 
 import consulo.ui.ex.CopyProvider;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.dataContext.GetDataRule;

@@ -2,7 +2,7 @@
 package com.intellij.ui.breadcrumbs;
 
 import com.intellij.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
-import com.intellij.codeInsight.highlighting.HighlightManager;
+import consulo.language.editor.highlight.HighlightManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorGutterComponentEx;

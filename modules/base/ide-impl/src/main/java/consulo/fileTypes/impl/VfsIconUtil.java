@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.component.util.Iconable;
 import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.WritingAccessProvider;
+import consulo.virtualFileSystem.WritingAccessProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.ui.ex.IconDeferrer;

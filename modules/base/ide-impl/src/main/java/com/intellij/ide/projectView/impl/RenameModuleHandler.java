@@ -19,7 +19,7 @@ package com.intellij.ide.projectView.impl;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.TitledHandler;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;

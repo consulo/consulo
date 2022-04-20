@@ -15,14 +15,16 @@
  */
 package com.intellij.refactoring.rename.inplace;
 
+import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
+import com.intellij.codeInsight.template.impl.TemplateStateImpl;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.codeEditor.Editor;
 import consulo.language.editor.completion.CompletionContributor;
 import consulo.language.editor.completion.CompletionParameters;
 import consulo.language.editor.completion.CompletionResultSet;
-import com.intellij.codeInsight.template.impl.TemplateManagerImpl;
-import com.intellij.codeInsight.template.impl.TemplateStateImpl;
-import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
+
 import javax.annotation.Nonnull;
-import consulo.annotation.access.RequiredReadAction;
 
 /**
  * User: anna

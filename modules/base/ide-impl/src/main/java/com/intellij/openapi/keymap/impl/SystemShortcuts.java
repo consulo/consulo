@@ -1,35 +1,30 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.keymap.impl;
 
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.notification.NotificationsConfiguration;
+import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
+import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
+import com.intellij.util.ArrayUtilRt;
+import com.intellij.util.ReflectionUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.registry.Registry;
+import consulo.logging.Logger;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationType;
-import com.intellij.notification.NotificationsConfiguration;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.keymap.Keymap;
-import com.intellij.openapi.keymap.impl.ui.ActionsTreeUtil;
-import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
-import consulo.application.util.SystemInfo;
-import consulo.application.util.registry.Registry;
-import com.intellij.util.ArrayUtilRt;
-import com.intellij.util.ReflectionUtil;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.KeyboardShortcut;
-import consulo.ui.ex.action.Shortcut;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -248,7 +243,7 @@ public final class SystemShortcuts {
     final Notification notification = new Notification(ourNotificationGroupId, "Shortcuts conflicts", message, NotificationType.WARNING, null);
 
     final AnAction configureShortcut = DumbAwareAction.create("Modify shortcut", e -> {
-      Component component = e.getDataContext().getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      Component component = e.getDataContext().getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       if (component == null) {
         Window[] frames = Window.getWindows();
         component = frames == null || frames.length == 0 ? null : frames[0];

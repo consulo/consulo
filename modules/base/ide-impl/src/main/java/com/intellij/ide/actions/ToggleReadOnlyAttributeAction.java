@@ -20,12 +20,12 @@
 package com.intellij.ide.actions;
 
 import consulo.application.CommonBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vfs.VfsUtil;

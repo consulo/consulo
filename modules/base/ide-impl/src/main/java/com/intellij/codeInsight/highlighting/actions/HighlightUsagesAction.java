@@ -16,8 +16,8 @@
 package com.intellij.codeInsight.highlighting.actions;
 
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandler;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.ActionsBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.Editor;

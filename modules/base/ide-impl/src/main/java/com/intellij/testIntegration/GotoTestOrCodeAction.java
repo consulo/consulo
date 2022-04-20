@@ -21,7 +21,7 @@ import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;

@@ -15,8 +15,9 @@
  */
 package com.intellij.compiler.actions;
 
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.ActionsBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;

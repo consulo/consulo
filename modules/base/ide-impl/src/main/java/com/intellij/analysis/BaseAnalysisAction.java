@@ -18,6 +18,8 @@ package com.intellij.analysis;
 
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.ui.ex.action.ActionPlaces;
@@ -25,7 +27,6 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import com.intellij.openapi.actionSystem.*;
 import consulo.logging.Logger;
 import consulo.document.FileDocumentManager;
 import consulo.application.HelpManager;

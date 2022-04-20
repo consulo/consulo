@@ -24,7 +24,7 @@ import consulo.ui.ModalityState;
 import consulo.ui.ex.UiActivity;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.util.collection.ContainerUtil;
 import org.jetbrains.annotations.NonNls;

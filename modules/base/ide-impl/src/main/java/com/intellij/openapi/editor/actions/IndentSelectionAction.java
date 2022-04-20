@@ -17,7 +17,7 @@
 package com.intellij.openapi.editor.actions;
 
 import consulo.language.editor.CommonDataKeys;
-import consulo.codeEditor.impl.EditorActionUtil;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;

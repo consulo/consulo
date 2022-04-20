@@ -16,7 +16,7 @@
 
 package com.intellij.find.impl;
 
-import com.intellij.codeInsight.highlighting.HighlightManager;
+import consulo.language.editor.highlight.HighlightManager;
 import com.intellij.codeInsight.highlighting.HighlightManagerImpl;
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
@@ -979,6 +979,13 @@ public class FindManagerImpl extends FindManager {
   @Override
   public boolean findPreviousUsageInEditor(@Nonnull FileEditor fileEditor) {
     return findNextUsageInFile(fileEditor, SearchResults.Direction.UP);
+  }
+
+  @Nullable
+  @Override
+  public FindUsagesHandler getFindUsagesHandler(@Nonnull PsiElement element, boolean forHighlightUsages) {
+    final FindUsagesManager findUsagesManager = ((FindManagerImpl)FindManager.getInstance(myProject)).getFindUsagesManager();
+    return findUsagesManager.getFindUsagesHandler(element, forHighlightUsages);
   }
 
   private static boolean highlightNextHighlighter(RangeHighlighter[] highlighters, Editor editor, int offset, boolean isForward, boolean secondPass) {

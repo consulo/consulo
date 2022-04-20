@@ -15,29 +15,30 @@
  */
 package com.intellij.openapi.fileEditor.impl;
 
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.util.dataholder.NotNullLazyKey;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
-import com.intellij.openapi.vfs.*;
+import com.intellij.openapi.vfs.VfsUtilCore;
 import com.intellij.openapi.vfs.ex.temp.TempFileSystem;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.module.content.ProjectFileIndex;
+import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.util.dataholder.NotNullLazyKey;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.WritingAccessProvider;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileCopyEvent;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -55,14 +56,14 @@ import java.util.stream.Stream;
 
 public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   private static final Key<Boolean> ENABLE_IN_TESTS = Key.create("NON_PROJECT_FILE_ACCESS_ENABLE_IN_TESTS");
-  private static final NotNullLazyKey<AtomicInteger, UserDataHolder> ACCESS_ALLOWED =
-          NotNullLazyKey.create("NON_PROJECT_FILE_ACCESS", holder -> new AtomicInteger());
+  private static final NotNullLazyKey<AtomicInteger, UserDataHolder> ACCESS_ALLOWED = NotNullLazyKey.create("NON_PROJECT_FILE_ACCESS", holder -> new AtomicInteger());
 
   private static final AtomicBoolean myInitialized = new AtomicBoolean();
 
   @Nonnull
   private final Project myProject;
-  @Nullable private static NullableFunction<List<VirtualFile>, UnlockOption> ourCustomUnlocker;
+  @Nullable
+  private static NullableFunction<List<VirtualFile>, UnlockOption> ourCustomUnlocker;
 
   @TestOnly
   public static void setCustomUnlocker(@Nullable NullableFunction<List<VirtualFile>, UnlockOption> unlocker) {
@@ -70,11 +71,11 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   }
 
   @Inject
-  public NonProjectFileWritingAccessProvider(@Nonnull Project project) {
+  public NonProjectFileWritingAccessProvider(@Nonnull Project project, @Nonnull VirtualFileManager virtualFileManager) {
     myProject = project;
 
     if (myInitialized.compareAndSet(false, true)) {
-      VirtualFileManager.getInstance().addVirtualFileListener(new OurVirtualFileAdapter());
+      virtualFileManager.addVirtualFileListener(new OurVirtualFileAdapter());
     }
   }
 
@@ -200,7 +201,11 @@ public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
     return ApplicationManager.getApplication();
   }
 
-  public enum UnlockOption {UNLOCK, UNLOCK_DIR, UNLOCK_ALL}
+  public enum UnlockOption {
+    UNLOCK,
+    UNLOCK_DIR,
+    UNLOCK_ALL
+  }
 
   private static class OurVirtualFileAdapter extends VirtualFileAdapter {
     @Override

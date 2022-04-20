@@ -21,7 +21,7 @@ import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
-import com.intellij.ui.EditorComboBoxEditor;
+import consulo.language.editor.ui.awt.EditorComboBoxEditor;
 import consulo.language.editor.ui.awt.EditorComboBoxRenderer;
 import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.JBUI;

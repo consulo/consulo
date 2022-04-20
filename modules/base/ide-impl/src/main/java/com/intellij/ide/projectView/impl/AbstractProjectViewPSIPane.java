@@ -31,7 +31,7 @@ import consulo.ui.ex.OpenSourceUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.disposer.Disposer;
 import consulo.ui.color.ColorValue;

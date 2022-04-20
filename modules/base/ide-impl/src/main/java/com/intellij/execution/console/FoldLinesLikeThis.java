@@ -1,18 +1,19 @@
 package com.intellij.execution.console;
 
 import com.intellij.execution.impl.ConsoleViewImpl;
-import consulo.execution.ui.console.ConsoleView;
-import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
+import consulo.document.Document;
+import consulo.execution.ExecutionDataKeys;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.openapi.util.text.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -52,7 +53,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
   public void update(AnActionEvent e) {
     final Editor editor = e.getData(PlatformDataKeys.EDITOR);
 
-    final boolean enabled = e.getData(LangDataKeys.CONSOLE_VIEW) != null &&  editor != null && getSingleLineSelection(editor) != null;
+    final boolean enabled = e.getData(ExecutionDataKeys.CONSOLE_VIEW) != null && editor != null && getSingleLineSelection(editor) != null;
     e.getPresentation().setEnabled(enabled);
     e.getPresentation().setVisible(enabled);
   }
@@ -75,7 +76,7 @@ public class FoldLinesLikeThis extends DumbAwareAction {
         }, IdeaModalityState.stateForComponent(createComponent()));
       }
     });
-    final ConsoleView consoleView = e.getData(LangDataKeys.CONSOLE_VIEW);
+    final ConsoleView consoleView = e.getData(ExecutionDataKeys.CONSOLE_VIEW);
     if (consoleView instanceof ConsoleViewImpl) {
       ((ConsoleViewImpl)consoleView).foldImmediately();
     }

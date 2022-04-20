@@ -18,9 +18,9 @@ package com.intellij.refactoring.openapi.impl;
 
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.RefactoringImpl;
+import consulo.language.editor.refactoring.RefactoringImpl;
 import com.intellij.refactoring.RenameRefactoring;
-import com.intellij.refactoring.rename.RenameProcessor;
+import consulo.language.editor.refactoring.rename.RenameProcessor;
 
 import java.util.Collection;
 import java.util.Set;

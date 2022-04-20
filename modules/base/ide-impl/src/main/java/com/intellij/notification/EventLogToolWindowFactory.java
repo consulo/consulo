@@ -16,10 +16,10 @@
 package com.intellij.notification;
 
 import consulo.application.AllIcons;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.ContextHelpAction;
 import com.intellij.notification.impl.NotificationsConfigurable;
 import com.intellij.notification.impl.NotificationsConfigurationImpl;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import com.intellij.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;

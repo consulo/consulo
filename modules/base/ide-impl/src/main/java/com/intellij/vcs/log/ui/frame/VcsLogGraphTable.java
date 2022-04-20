@@ -20,7 +20,7 @@ import consulo.ui.ex.CopyProvider;
 import consulo.ui.ex.JBColor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.ui.LoadingDecorator;
 import consulo.ui.ex.SimpleTextAttributes;

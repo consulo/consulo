@@ -19,7 +19,7 @@ package com.intellij.ide.actions;
 import com.intellij.ide.IdeView;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.DumbService;
@@ -67,7 +67,7 @@ public abstract class CreateTemplateInPackageAction<T extends PsiElement> extend
   @SuppressWarnings("unchecked")
   protected boolean isAvailable(final DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
+    final IdeView view = dataContext.getData(IdeView.KEY);
     if (project == null || view == null || view.getDirectories().length == 0) {
       return false;
     }

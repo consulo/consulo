@@ -25,14 +25,18 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.logging.Logger;
+import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.KeyboardShortcut;
 import consulo.util.collection.ContainerUtil;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -42,6 +46,27 @@ public class UsageViewUtil {
   private static final Logger LOG = Logger.getInstance(UsageViewUtil.class);
 
   private UsageViewUtil() {
+  }
+
+  @Nullable
+  public static KeyboardShortcut getShowUsagesWithSettingsShortcut() {
+    return ActionManager.getInstance().getKeyboardShortcut("ShowSettingsAndFindUsages");
+  }
+
+  public static KeyboardShortcut getShowUsagesWithSettingsShortcut(@Nonnull UsageTarget[] targets) {
+    ConfigurableUsageTarget configurableTarget = getConfigurableTarget(targets);
+    return configurableTarget == null ? getShowUsagesWithSettingsShortcut() : configurableTarget.getShortcut();
+  }
+
+  public static ConfigurableUsageTarget getConfigurableTarget(@Nonnull UsageTarget[] targets) {
+    ConfigurableUsageTarget configurableUsageTarget = null;
+    if (targets.length != 0) {
+      NavigationItem target = targets[0];
+      if (target instanceof ConfigurableUsageTarget) {
+        configurableUsageTarget = (ConfigurableUsageTarget)target;
+      }
+    }
+    return configurableUsageTarget;
   }
 
   public static String createNodeText(PsiElement element) {

@@ -7,6 +7,7 @@ import consulo.application.util.diff.FilesTooBigForDiffException;
 import consulo.codeEditor.*;
 import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.event.CaretEvent;
 import consulo.codeEditor.event.SelectionEvent;
 import consulo.codeEditor.impl.softwrap.SoftWrapHelper;

@@ -17,12 +17,11 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeView;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
+import consulo.localize.LocalizeValue;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -93,7 +92,7 @@ public abstract class CreateInDirectoryActionBase extends AnAction {
       return false;
     }
 
-    final IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
+    final IdeView view = dataContext.getData(IdeView.KEY);
     if (view == null || view.getDirectories().length == 0) {
       return false;
     }

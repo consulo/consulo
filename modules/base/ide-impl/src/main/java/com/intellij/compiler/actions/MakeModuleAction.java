@@ -15,10 +15,10 @@
  */
 package com.intellij.compiler.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerManager;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

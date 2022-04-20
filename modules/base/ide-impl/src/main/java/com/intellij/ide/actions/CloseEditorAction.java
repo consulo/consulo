@@ -17,11 +17,11 @@
 package com.intellij.ide.actions;
 
 import consulo.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;

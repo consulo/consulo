@@ -17,7 +17,9 @@ package consulo.codeEditor.internal;
 
 import consulo.application.Application;
 import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
 import consulo.document.Document;
@@ -79,5 +81,25 @@ public interface EditorInternalHelper {
   }
 
   default void updateNotifications(Project project, VirtualFile file) {
+  }
+
+  default boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
+    return false;
+  }
+
+  default int calcColumnNumber(@Nonnull Editor editor, @Nonnull CharSequence text, int start, int offset) {
+    return calcColumnNumber(editor, text, start, offset, EditorUtil.getTabSize(editor));
+  }
+
+  default int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, final int start, final int offset, final int tabSize) {
+    return 0;
+  }
+
+  default int getLastVisualLineColumnNumber(@Nonnull Editor editor, final int line) {
+    return line;
+  }
+
+  default int getSpaceWidth(@Nonnull Editor editor) {
+    return 1;
   }
 }

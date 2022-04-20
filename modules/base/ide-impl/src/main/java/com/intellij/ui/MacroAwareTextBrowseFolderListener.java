@@ -1,6 +1,6 @@
 package com.intellij.ui;
 
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.impl.internal.ModulePathMacroManager;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.fileChooser.FileChooserDescriptor;

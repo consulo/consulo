@@ -22,6 +22,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.*;
@@ -100,7 +101,7 @@ public class NewElementAction extends AnAction implements DumbAware, PopupAction
       presentation.setEnabled(false);
       return;
     }
-    final IdeView ideView = context.getData(LangDataKeys.IDE_VIEW);
+    final IdeView ideView = context.getData(IdeView.KEY);
     if (ideView == null) {
       presentation.setEnabled(false);
       return;

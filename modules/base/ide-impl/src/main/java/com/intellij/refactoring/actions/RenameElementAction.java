@@ -19,12 +19,13 @@ package com.intellij.refactoring.actions;
 import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.SyntheticElement;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
-import com.intellij.refactoring.rename.RenameHandlerRegistry;
+import consulo.language.editor.refactoring.rename.RenameHandlerRegistry;
 import javax.annotation.Nonnull;
 
 public class RenameElementAction extends BaseRefactoringAction {
@@ -52,7 +53,7 @@ public class RenameElementAction extends BaseRefactoringAction {
   }
 
   @Override
-  protected boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
+  public boolean hasAvailableHandler(@Nonnull DataContext dataContext) {
     return isEnabledOnDataContext(dataContext);
   }
 

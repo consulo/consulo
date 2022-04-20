@@ -24,7 +24,7 @@ import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.action.EditorActionHandler;
-import consulo.codeEditor.impl.EditorActionUtil;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.EditorHighlighter;

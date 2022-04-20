@@ -1,9 +1,9 @@
 package com.intellij.openapi.vcs.actions;
 
 import com.intellij.ide.actions.QuickSwitchSchemeAction;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.vcs.AbstractVcs;

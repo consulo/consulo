@@ -15,9 +15,10 @@
  */
 package com.intellij.tools;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;

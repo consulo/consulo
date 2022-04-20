@@ -6,7 +6,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
-import com.intellij.openapi.wm.impl.status.StatusBarUtil;
+import consulo.language.editor.ui.util.StatusBarUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

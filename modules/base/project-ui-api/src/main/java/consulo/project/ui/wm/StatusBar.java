@@ -16,16 +16,20 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
-import consulo.project.startup.StartupManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
+import consulo.ui.NotificationType;
+import consulo.ui.ex.popup.BalloonHandler;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 
 /**
@@ -122,4 +126,10 @@ public interface StatusBar extends StatusBarInfo, Disposable {
   default boolean isUnified() {
     return false;
   }
+
+  default BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody) {
+    return notifyProgressByBalloon(type, htmlBody, null, null);
+  }
+
+  BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener);
 }

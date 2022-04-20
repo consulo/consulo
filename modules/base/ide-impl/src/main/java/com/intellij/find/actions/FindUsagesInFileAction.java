@@ -17,13 +17,13 @@
 package com.intellij.find.actions;
 
 import consulo.application.CommonBundle;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.find.FindBundle;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
 import consulo.language.findUsage.EmptyFindUsagesProvider;
 import consulo.language.internal.LanguageFindUsages;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditor;
 import consulo.language.editor.CommonDataKeys;

@@ -24,7 +24,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.StringComboboxEditor;
+import consulo.language.editor.ui.awt.StringComboboxEditor;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

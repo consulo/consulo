@@ -17,9 +17,9 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.ex.FileChooserKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.module.content.layer.ModulesProvider;

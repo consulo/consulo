@@ -10,7 +10,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
 import consulo.ui.ModalityState;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.ui.ex.concurrent.EdtScheduledExecutorService;

@@ -16,17 +16,18 @@
 
 package com.intellij.ide.actions;
 
-import consulo.dataContext.DataManager;
+import com.intellij.ide.IdeView;
 import com.intellij.ide.projectView.ProjectView;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 /**
  * @author yole
@@ -34,7 +35,7 @@ import consulo.language.psi.PsiFileSystemItem;
 public class NewElementToolbarAction extends NewElementAction {
   @Override
   public void actionPerformed(AnActionEvent e) {
-    if (e.getData(LangDataKeys.IDE_VIEW) == null) {
+    if (e.getData(IdeView.KEY) == null) {
       final Project project = e.getData(CommonDataKeys.PROJECT);
       final PsiFileSystemItem psiFile = e.getData(LangDataKeys.PSI_FILE).getParent();
       ProjectView.getInstance(project).selectCB(psiFile, psiFile.getVirtualFile(), true).doWhenDone(new Runnable() {
@@ -52,7 +53,7 @@ public class NewElementToolbarAction extends NewElementAction {
   @Override
   public void update(AnActionEvent event) {
     super.update(event);
-    if (event.getData(LangDataKeys.IDE_VIEW) == null) {
+    if (event.getData(IdeView.KEY) == null) {
       Project project = event.getData(CommonDataKeys.PROJECT);
       PsiFile psiFile = event.getData(LangDataKeys.PSI_FILE);
       if (project != null && psiFile != null) {

@@ -22,8 +22,8 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.search.PsiSearchHelper;
 import consulo.language.psi.search.ReferencesSearch;
-import com.intellij.refactoring.ui.RefactoringDialog;
-import com.intellij.refactoring.util.RadioUpDownListener;
+import consulo.language.editor.refactoring.ui.RefactoringDialog;
+import consulo.language.editor.refactoring.ui.RadioUpDownListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

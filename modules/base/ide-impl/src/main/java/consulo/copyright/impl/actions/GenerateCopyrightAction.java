@@ -16,10 +16,11 @@
 
 package consulo.copyright.impl.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.module.Module;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;

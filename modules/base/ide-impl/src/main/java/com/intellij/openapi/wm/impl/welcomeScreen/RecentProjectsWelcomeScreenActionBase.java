@@ -17,13 +17,13 @@ package com.intellij.openapi.wm.impl.welcomeScreen;
 
 import com.intellij.ide.ProjectGroupActionGroup;
 import com.intellij.ide.RecentProjectsManager;
+import com.intellij.ui.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.ui.speedSearch.NameFilteringListModel;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -65,7 +65,7 @@ public abstract class RecentProjectsWelcomeScreenActionBase extends DumbAwareAct
 
   @Nullable
   public static JList getList(@Nonnull AnActionEvent e) {
-    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component instanceof JList) {
       return (JList)component;
     }

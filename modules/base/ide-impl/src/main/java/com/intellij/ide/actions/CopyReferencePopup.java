@@ -28,7 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import static consulo.language.editor.CommonDataKeys.*;
-import static com.intellij.openapi.actionSystem.LangDataKeys.PSI_ELEMENT_ARRAY;
+import static consulo.language.editor.LangDataKeys.PSI_ELEMENT_ARRAY;
 import static consulo.ui.ex.awt.UIUtil.DEFAULT_HGAP;
 
 public class CopyReferencePopup extends NonTrivialActionGroup implements AlwaysPerformingActionGroup {

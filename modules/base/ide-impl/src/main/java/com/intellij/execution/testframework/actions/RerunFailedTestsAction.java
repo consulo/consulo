@@ -15,16 +15,16 @@
  */
 package com.intellij.execution.testframework.actions;
 
+import consulo.dataContext.DataManager;
+import consulo.execution.ExecutionDataKeys;
 import consulo.execution.ExecutionManager;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -58,7 +58,7 @@ public class RerunFailedTestsAction extends AnAction {
       return false;
     }
 
-    ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(LangDataKeys.EXECUTION_ENVIRONMENT);
+    ExecutionEnvironment environment = DataManager.getInstance().getDataContext(component).getData(ExecutionDataKeys.EXECUTION_ENVIRONMENT);
     if (environment == null) {
       return false;
     }

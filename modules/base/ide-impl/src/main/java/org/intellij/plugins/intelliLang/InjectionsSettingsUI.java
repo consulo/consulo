@@ -18,6 +18,7 @@ package org.intellij.plugins.intelliLang;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
+import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -26,7 +27,6 @@ import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.function.Condition;
 import consulo.dataContext.DataContext;
 import consulo.language.Language;
-import com.intellij.openapi.actionSystem.*;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserFactory;

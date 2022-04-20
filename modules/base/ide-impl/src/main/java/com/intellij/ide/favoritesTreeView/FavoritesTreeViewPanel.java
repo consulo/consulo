@@ -16,6 +16,8 @@
 
 package com.intellij.ide.favoritesTreeView;
 
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.application.AllIcons;
@@ -27,6 +29,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.SwingDockContainer;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.tree.LoadingNode;
 import consulo.ui.ex.tree.PresentationData;
@@ -40,7 +43,6 @@ import consulo.language.editor.impl.util.EditorHelper;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.tree.NodeRenderer;
 import consulo.navigation.ItemPresentation;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.Extensions;
 import consulo.dataContext.DataContext;
@@ -60,9 +62,9 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.RelativeRectangle;
-import com.intellij.ui.docking.DockContainer;
-import com.intellij.ui.docking.DockManager;
-import com.intellij.ui.docking.DockableContent;
+import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockManager;
+import consulo.project.ui.wm.dock.DockableContent;
 import com.intellij.ui.treeStructure.actions.CollapseAllAction;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
@@ -91,7 +93,7 @@ import java.util.*;
  * @author anna
  * @author Konstantin Bulenkov
  */
-public class FavoritesTreeViewPanel extends JPanel implements DataProvider, DockContainer {
+public class FavoritesTreeViewPanel extends JPanel implements DataProvider, DockContainer, SwingDockContainer {
   private final FavoritesTreeStructure myFavoritesTreeStructure;
   private FavoritesViewTreeBuilder myBuilder;
   private final CopyPasteDelegator myCopyPasteDelegator;
@@ -437,7 +439,7 @@ public class FavoritesTreeViewPanel extends JPanel implements DataProvider, Dock
       return result.isEmpty() ? null : PsiUtilCore.toPsiElementArray(result);
     }
 
-    if (LangDataKeys.IDE_VIEW == dataId) {
+    if (IdeView.KEY == dataId) {
       return myIdeView;
     }
 

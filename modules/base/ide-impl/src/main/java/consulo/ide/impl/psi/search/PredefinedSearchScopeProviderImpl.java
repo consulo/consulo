@@ -21,7 +21,7 @@ import com.intellij.ide.hierarchy.HierarchyBrowserBase;
 import com.intellij.ide.projectView.impl.AbstractUrl;
 import com.intellij.ide.scratch.ScratchesSearchScope;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.util.Pair;
 import consulo.content.scope.PredefinedSearchScopeProvider;

@@ -26,7 +26,7 @@ import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.NonFocusableCheckBox;
+import consulo.ui.ex.awt.NonFocusableCheckBox;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;

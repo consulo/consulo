@@ -83,7 +83,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.internal.AbstractPainter;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.paint.PaintUtil.RoundingMode;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.*;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

@@ -34,4 +34,18 @@ public interface TemplateState {
   void nextTab();
 
   void cancelTemplate();
+
+  default void gotoEnd() {
+    gotoEnd(true);
+  }
+
+  void gotoEnd(boolean brokenOff);
+
+  int getSegmentsCount();
+
+  @Nonnull
+  TextRange getSegmentRange(int index);
+
+  @Nullable
+  TextRange getVariableRange(String varName);
 }

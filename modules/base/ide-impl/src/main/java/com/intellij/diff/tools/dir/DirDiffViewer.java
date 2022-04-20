@@ -31,7 +31,7 @@ import com.intellij.ide.diff.VirtualFileDiffElement;
 import consulo.ui.ex.action.AnAction;
 import consulo.dataContext.DataProvider;
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.diff.impl.dir.DirDiffFrame;
 import com.intellij.openapi.diff.impl.dir.DirDiffPanel;
 import com.intellij.openapi.diff.impl.dir.DirDiffTableModel;

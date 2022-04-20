@@ -1,42 +1,37 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.scratch;
 
-import consulo.application.statistic.FeatureUsageTracker;
-import consulo.application.AllIcons;
+import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.NewActionGroup;
-import consulo.ide.impl.psi.SyntaxTraverser;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.scratch.RootType;
-import consulo.language.editor.scratch.ScratchFileService;
-import consulo.language.psi.PsiNavigationSupport;
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.dataContext.DataContext;
-import consulo.language.Language;
-import consulo.language.util.LanguageUtil;
-import consulo.virtualFileSystem.util.PerFileMappings;
-import consulo.language.inject.InjectedLanguageManager;
-import com.intellij.openapi.actionSystem.*;
-import consulo.codeEditor.Caret;
-import consulo.codeEditor.Editor;
-import consulo.language.file.LanguageFileType;
-import consulo.language.plain.PlainTextLanguage;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.util.lang.function.Condition;
 import com.intellij.openapi.util.NotNullLazyValue;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiUtilCore;
 import com.intellij.util.*;
-import consulo.util.collection.JBIterable;
+import consulo.application.AllIcons;
+import consulo.application.statistic.FeatureUsageTracker;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.psi.SyntaxTraverser;
+import consulo.language.Language;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.scratch.RootType;
+import consulo.language.editor.scratch.ScratchFileService;
+import consulo.language.file.LanguageFileType;
+import consulo.language.inject.InjectedLanguageManager;
+import consulo.language.plain.PlainTextLanguage;
+import consulo.language.psi.*;
+import consulo.language.util.LanguageUtil;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.collection.JBIterable;
+import consulo.util.lang.function.Condition;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.PerFileMappings;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
@@ -79,7 +74,7 @@ public class ScratchFileActions {
 
       Project project = e.getData(CommonDataKeys.PROJECT);
       String place = e.getPlace();
-      boolean enabled = project != null && (e.isFromActionToolbar() || ActionPlaces.isMainMenuOrActionSearch(place) || ActionPlaces.isPopupPlace(place) && e.getData(LangDataKeys.IDE_VIEW) != null);
+      boolean enabled = project != null && (e.isFromActionToolbar() || ActionPlaces.isMainMenuOrActionSearch(place) || ActionPlaces.isPopupPlace(place) && e.getData(IdeView.KEY) != null);
 
       e.getPresentation().setEnabledAndVisible(enabled);
       updatePresentationTextAndIcon(e, e.getPresentation());
@@ -152,7 +147,7 @@ public class ScratchFileActions {
     else {
       context.text = StringUtil.notNullize(e.getData(PlatformDataKeys.PREDEFINED_TEXT));
     }
-    context.ideView = e.getData(LangDataKeys.IDE_VIEW);
+    context.ideView = e.getData(IdeView.KEY);
     return context;
   }
 

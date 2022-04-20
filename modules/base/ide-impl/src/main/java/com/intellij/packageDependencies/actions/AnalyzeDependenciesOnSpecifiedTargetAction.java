@@ -15,8 +15,8 @@
  */
 package com.intellij.packageDependencies.actions;
 
+import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scope.AnalysisScope;
-import com.intellij.openapi.actionSystem.*;
 import consulo.module.Module;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.classpath;
 
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.impl.FileChooserUtil;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;

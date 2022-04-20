@@ -35,7 +35,7 @@ import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import com.intellij.openapi.wm.impl.IdePanePanel;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.docking.DockManager;
+import consulo.project.ui.wm.dock.DockManager;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
 import com.intellij.util.PathUtil;

@@ -10,7 +10,7 @@ import consulo.language.Language;
 import consulo.language.util.LanguageUtil;
 import consulo.virtualFileSystem.util.PerFileMappings;
 import consulo.language.editor.WriteCommandAction;
-import com.intellij.openapi.command.undo.BasicUndoableAction;
+import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.UnexpectedUndoException;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;

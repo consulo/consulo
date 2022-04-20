@@ -16,16 +16,15 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import consulo.dataContext.DataManager;
+import consulo.fileEditor.FileEditorWindow;
+import consulo.fileEditor.FileEditorsSplitters;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileEditor.FileEditorsSplitters;
-import consulo.fileEditor.FileEditorWindow;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 
 /**
@@ -47,7 +46,7 @@ public class ReopenClosedTabAction extends AnAction {
 
   @Nullable
   private static FileEditorWindow getEditorWindow(AnActionEvent e) {
-    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component != null) {
       FileEditorsSplitters splitters = DataManager.getInstance().getDataContext(component).getData(FileEditorsSplitters.KEY);
       if (splitters != null) {

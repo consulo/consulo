@@ -19,7 +19,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.BalloonHandler;
+import consulo.ui.ex.popup.BalloonHandler;
 import com.intellij.openapi.util.Pair;
 import consulo.project.ui.wm.StatusBar;
 import consulo.disposer.Disposable;
@@ -41,10 +41,6 @@ public interface StatusBarEx extends StatusBar, Disposable {
   void startRefreshIndication(String tooltipText);
 
   void stopRefreshIndication();
-
-  BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody);
-
-  BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener);
 
   void addProgress(@Nonnull ProgressIndicatorEx indicator, @Nonnull TaskInfo info);
 

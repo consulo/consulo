@@ -21,7 +21,7 @@
 package com.intellij.refactoring.move;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.component.extension.Extensions;

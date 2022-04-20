@@ -1,19 +1,15 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions;
 
-import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.ide.actions.searcheverywhere.ActionSearchEverywhereContributor;
 import com.intellij.ide.ui.search.BooleanOptionDescription;
 import com.intellij.ide.ui.search.OptionDescription;
 import com.intellij.ide.util.gotoByName.ChooseByNamePopup;
 import com.intellij.ide.util.gotoByName.GotoActionItemProvider;
 import com.intellij.ide.util.gotoByName.GotoActionModel;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
-import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;
 import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
@@ -23,6 +19,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
@@ -31,13 +29,15 @@ import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -68,7 +68,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
   @Override
   public void gotoActionPerformed(@Nonnull AnActionEvent e) {
     Project project = e.getData(CommonDataKeys.PROJECT);
-    Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     Editor editor = e.getData(CommonDataKeys.EDITOR);
 
     FeatureUsageTracker.getInstance().triggerFeatureUsed("navigation.popup.action");

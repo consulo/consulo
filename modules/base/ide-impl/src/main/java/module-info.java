@@ -763,7 +763,6 @@ open module consulo.ide.impl {
   exports com.intellij.refactoring.openapi.impl;
   exports com.intellij.refactoring.rename;
   exports com.intellij.refactoring.rename.inplace;
-  exports com.intellij.refactoring.rename.naming;
   exports com.intellij.refactoring.safeDelete;
   exports com.intellij.refactoring.safeDelete.usageInfo;
   exports com.intellij.refactoring.ui;
@@ -826,7 +825,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.content.tabs;
   exports com.intellij.ui.debugger;
   exports com.intellij.ui.debugger.extensions;
-  exports com.intellij.ui.docking;
   exports com.intellij.ui.dualView;
   exports com.intellij.ui.mac;
   exports com.intellij.ui.mac.foundation;

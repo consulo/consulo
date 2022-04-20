@@ -16,6 +16,7 @@
 package com.intellij.ide.projectView.actions;
 
 import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.ActionGroup;

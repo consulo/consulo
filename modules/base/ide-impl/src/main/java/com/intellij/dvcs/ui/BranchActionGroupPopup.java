@@ -4,7 +4,7 @@ package com.intellij.dvcs.ui;
 import com.intellij.ide.util.PropertiesComponent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.EmptyAction;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.ui.FlatSpeedSearchPopup;
@@ -72,7 +72,7 @@ public class BranchActionGroupPopup extends FlatSpeedSearchPopup {
     super(title, createBranchSpeedSearchActionGroup(actions),
           SimpleDataContext.builder()
                   .add(CommonDataKeys.PROJECT, project)
-                  .add(PlatformDataKeys.CONTEXT_COMPONENT, ProjectIdeFocusManager.getInstance(project).getFocusOwner())
+                  .add(UIExAWTDataKey.CONTEXT_COMPONENT, ProjectIdeFocusManager.getInstance(project).getFocusOwner())
                   .build(),
           preselectActionCondition, true);
     myProject = project;

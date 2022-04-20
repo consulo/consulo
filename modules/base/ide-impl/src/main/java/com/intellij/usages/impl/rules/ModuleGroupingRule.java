@@ -17,7 +17,7 @@ package com.intellij.usages.impl.rules;
 
 import consulo.application.AllIcons;
 import consulo.dataContext.DataSink;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.OrderEntry;

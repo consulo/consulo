@@ -17,7 +17,7 @@
 package com.intellij.ide.actions;
 
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.logging.Logger;
 import consulo.project.ui.wm.ToolWindowId;

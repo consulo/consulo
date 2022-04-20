@@ -15,11 +15,11 @@
  */
 package com.intellij.openapi.vcs.update;
 
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.Label;
 import consulo.application.AllIcons;
 import com.intellij.ide.DefaultTreeExpander;
 import consulo.ui.ex.TreeExpander;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.dumb.DumbAware;

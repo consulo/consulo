@@ -1,33 +1,33 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions.searcheverywhere;
 
-import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.GotoActionAction;
 import com.intellij.ide.actions.SetShortcutAction;
-import consulo.application.ui.UISettings;
 import com.intellij.ide.ui.search.BooleanOptionDescription;
 import com.intellij.ide.util.gotoByName.GotoActionItemProvider;
 import com.intellij.ide.util.gotoByName.GotoActionModel;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;
 import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.logging.Logger;
-import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.WindowManager;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.ui.UISettings;
 import consulo.application.util.function.Processor;
+import consulo.codeEditor.Editor;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -210,7 +210,7 @@ public class ActionSearchEverywhereContributor implements SearchEverywhereContri
     @Nonnull
     @Override
     public SearchEverywhereContributor<GotoActionModel.MatchedValue> createContributor(@Nonnull AnActionEvent initEvent) {
-      return new ActionSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), initEvent.getData(PlatformDataKeys.CONTEXT_COMPONENT), initEvent.getData(CommonDataKeys.EDITOR));
+      return new ActionSearchEverywhereContributor(initEvent.getData(CommonDataKeys.PROJECT), initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT), initEvent.getData(CommonDataKeys.EDITOR));
     }
   }
 }

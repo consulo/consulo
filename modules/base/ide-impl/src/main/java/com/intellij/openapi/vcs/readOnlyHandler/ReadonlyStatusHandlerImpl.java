@@ -28,7 +28,7 @@ import consulo.util.collection.MultiValuesMap;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.WritingAccessProvider;
+import consulo.virtualFileSystem.WritingAccessProvider;
 import com.intellij.util.containers.ContainerUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -52,7 +52,7 @@ public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements 
   @Inject
   public ReadonlyStatusHandlerImpl(Project project) {
     myProject = project;
-    myAccessProviders = WritingAccessProvider.getProvidersForProject(myProject);
+    myAccessProviders = myProject.isDefault() ? List.of() : WritingAccessProvider.getProvidersForProject(myProject);
   }
 
   @Override

@@ -19,26 +19,26 @@
  */
 package com.intellij.ide.actions;
 
-import consulo.ide.IdeBundle;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.startup.StartupActionScriptManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.application.internal.ApplicationEx;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.io.FileUtilRt;
-import consulo.util.collection.MultiMap;
 import com.intellij.util.io.ZipUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.store.IApplicationStore;
+import consulo.application.internal.ApplicationEx;
 import consulo.container.boot.ContainerPathManager;
+import consulo.ide.IdeBundle;
 import consulo.ide.updateSettings.UpdateSettings;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.util.collection.MultiMap;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -62,7 +62,7 @@ public class ImportSettingsAction extends AnAction implements DumbAware {
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    final Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     ChooseComponentsToExportDialog.chooseSettingsFile(ContainerPathManager.get().getConfigPath(), component, IdeBundle.message("title.import.file.location"),
                                                       IdeBundle.message("prompt.choose.import.file.path")).doWhenDone(this::doImport);
   }

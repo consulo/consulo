@@ -39,8 +39,8 @@ import consulo.ui.ex.awt.tree.TreeState;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.IdeActions;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import consulo.virtualFileSystem.status.FileStatusListener;
@@ -411,7 +411,7 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
         return psiElements.isEmpty() ? null : PsiUtilBase.toPsiElementArray(psiElements);
       }
     }
-    if (LangDataKeys.IDE_VIEW == dataId) {
+    if (IdeView.KEY == dataId) {
       return myIdeView;
     }
     if (PlatformDataKeys.CUT_PROVIDER == dataId) {

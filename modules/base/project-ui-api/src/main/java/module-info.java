@@ -14,6 +14,7 @@ module consulo.project.ui.api {
   exports consulo.project.ui;
   exports consulo.project.ui.wm;
   exports consulo.project.ui.wm.event;
+  exports consulo.project.ui.wm.dock;
   exports consulo.project.ui.notification;
   exports consulo.project.ui.notification.event;
 

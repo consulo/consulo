@@ -21,7 +21,7 @@ import com.intellij.ide.bookmarks.BookmarkManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;

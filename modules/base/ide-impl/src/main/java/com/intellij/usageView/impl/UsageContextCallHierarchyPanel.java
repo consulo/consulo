@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.language.psi.PsiElement;
 import consulo.usage.*;
-import com.intellij.usages.*;
 import com.intellij.usages.impl.UsageContextPanelBase;
 import com.intellij.usages.impl.UsageViewImpl;
 

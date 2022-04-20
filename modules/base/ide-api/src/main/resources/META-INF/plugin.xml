@@ -205,7 +205,7 @@
 
     <extensionPoint name="checkinHandlerFactory" interface="com.intellij.openapi.vcs.checkin.CheckinHandlerFactory"/>
 
-    <extensionPoint name="writingAccessProvider" area="PROJECT" interface="com.intellij.openapi.vfs.WritingAccessProvider"/>
+    <extensionPoint name="writingAccessProvider" area="PROJECT" interface="consulo.virtualFileSystem.WritingAccessProvider"/>
     <extensionPoint name="nonProjectFileWritingAccessExtension" area="PROJECT"
                     interface="com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension"/>
     <extensionPoint name="editorNotificationProvider" area="PROJECT" interface="consulo.codeEditor.notifications.EditorNotificationProvider"/>
@@ -462,7 +462,7 @@
 
     <extensionPoint name="lang.refactoringSupport"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.refactoring.RefactoringSupportProvider"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.RefactoringSupportProvider"/>
     </extensionPoint>
 
     <extensionPoint name="lang.refactoringSupport.classMembersRefactoringSupport"
@@ -724,7 +724,7 @@
                     interface="com.intellij.refactoring.move.moveClassesOrPackages.MoveDirectoryWithClassesHelper"/>
 
 
-    <extensionPoint name="refactoring.helper" interface="com.intellij.refactoring.RefactoringHelper"/>
+    <extensionPoint name="refactoring.helper" interface="consulo.language.editor.refactoring.RefactoringHelper"/>
     <extensionPoint name="refactoring.inlineHandler" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="com.intellij.lang.refactoring.InlineHandler"/>
     </extensionPoint>
@@ -1072,7 +1072,7 @@
     </extensionPoint>
 
     <extensionPoint name="refactoring.elementListenerProvider"
-                    interface="com.intellij.refactoring.listeners.RefactoringElementListenerProvider"
+                    interface="consulo.language.editor.refactoring.event.RefactoringElementListenerProvider"
                     area="PROJECT"/>
 
     <extensionPoint name="problemFileHighlightFilter" interface="consulo.util.lang.function.Condition" area="PROJECT"/>
@@ -1290,7 +1290,7 @@
                         serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingManagerImpl"/>
     <applicationService serviceInterface="com.intellij.ide.plugins.PluginManagerUISettings"
                         serviceImplementation="com.intellij.ide.plugins.PluginManagerUISettings"/>
-    <applicationService serviceInterface="com.intellij.codeInsight.hint.HintManager"
+    <applicationService serviceInterface="consulo.language.editor.hint.HintManager"
                         serviceImplementation="com.intellij.codeInsight.hint.HintManagerImpl"/>
     <applicationService serviceInterface="com.intellij.codeInsight.hint.TooltipController"
                         serviceImplementation="com.intellij.codeInsight.hint.TooltipController"/>
@@ -1685,8 +1685,7 @@
 
     <applicationService serviceInterface="consulo.usage.UsageViewSettings"
                         serviceImplementation="consulo.usage.UsageViewSettings"/>
-    <applicationService serviceInterface="com.intellij.refactoring.RefactoringSettings"
-                        serviceImplementation="com.intellij.refactoring.RefactoringSettings"/>
+    <applicationService serviceImplementation="consulo.language.editor.refactoring.RefactoringSettings"/>
     <applicationService serviceInterface="com.intellij.refactoring.RefactoringActionHandlerFactory"
                         serviceImplementation="com.intellij.refactoring.openapi.impl.RefactoringActionHandlerFactoryImpl"/>
 
@@ -1883,7 +1882,7 @@
     <projectService serviceInterface="com.intellij.ide.util.gotoByName.ChooseByNameFactory"
                     serviceImplementation="com.intellij.ide.util.gotoByName.ChooseByNameFactoryImpl"/>
 
-    <projectService serviceInterface="com.intellij.refactoring.listeners.RefactoringListenerManager"
+    <projectService serviceInterface="consulo.language.editor.refactoring.event.RefactoringListenerManager"
                     serviceImplementation="com.intellij.refactoring.listeners.impl.RefactoringListenerManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.util.LogicalRootsManager"
@@ -1990,7 +1989,7 @@
                     serviceImplementation="com.intellij.tools.ToolsProjectConfig"/>
 
     <lang.parserDefinition language="TEXT" implementationClass="consulo.language.impl.plain.PlainTextParserDefinition"/>
-    <lang.syntaxHighlighterFactory key="TEXT" implementationClass="com.intellij.openapi.fileTypes.PlainTextSyntaxHighlighterFactory"/>
+    <lang.syntaxHighlighterFactory language="TEXT" implementationClass="com.intellij.openapi.fileTypes.PlainTextSyntaxHighlighterFactory"/>
     <lang.braceMatcher language="TEXT" implementationClass="com.intellij.ide.highlighter.custom.impl.CustomFileTypeBraceMatcher"/>
     <lang.ast.leafFactory implementation="consulo.ide.impl.psi.impl.source.tree.PlainTextASTLeafFactory"/>
 
@@ -2804,6 +2803,10 @@
     <applicationService serviceInterface="consulo.codeEditor.EditorPopupHelper" serviceImplementation="consulo.ide.impl.codeEditor.EditorPopupHelperImpl"/>
     <applicationService serviceInterface="consulo.content.bundle.SdkModelFactory" serviceImplementation="consulo.ide.impl.IdeSdkModelFactory"/>
     <applicationService serviceInterface="consulo.ui.ex.awt.internal.TabFactoryBuilder" serviceImplementation="consulo.ide.impl.TabFactoryBuilderImpl"/>
+    <applicationService serviceInterface="consulo.language.editor.refactoring.internal.RefactoringInternalHelper"
+                        serviceImplementation="consulo.ide.impl.language.editor.refactoring.RefactoringInternalHelperImpl"/>
+    <applicationService serviceInterface="consulo.usage.UsagePreviewPanelFactory" serviceImplementation="consulo.ide.impl.usage.UsagePreviewPanelFactoryImpl"/>
+    <projectService serviceInterface="consulo.language.editor.inject.InjectedEditorManager" serviceImplementation="consulo.ide.impl.language.editor.InjectedEditorManagerImpl"/>
   </extensions>
 
   <applicationListeners>

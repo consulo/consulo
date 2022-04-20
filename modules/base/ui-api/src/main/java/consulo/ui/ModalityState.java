@@ -15,6 +15,8 @@
  */
 package consulo.ui;
 
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -22,5 +24,7 @@ import javax.annotation.Nonnull;
  * @since 29/12/2021
  */
 public interface ModalityState {
+  Key<ModalityState> KEY = Key.create(ModalityState.class);
+
   boolean dominates(@Nonnull ModalityState anotherState);
 }

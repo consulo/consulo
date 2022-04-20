@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
+import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;
@@ -25,7 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.ui.CodeFragmentTableCellEditorBase;
 import com.intellij.refactoring.ui.CodeFragmentTableCellRenderer;
-import com.intellij.refactoring.ui.StringTableCellEditor;
+import consulo.language.editor.refactoring.ui.StringTableCellEditor;
 import com.intellij.ui.*;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.table.ListTableModel;

@@ -228,7 +228,7 @@
     <projectService serviceInterface="consulo.project.ui.wm.ToolWindowManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
 
-    <projectService serviceInterface="com.intellij.ui.docking.DockManager" serviceImplementation="consulo.desktop.awt.uiOld.docking.impl.DesktopDockManagerImpl"/>
+    <projectService serviceInterface="consulo.project.ui.wm.dock.DockManager" serviceImplementation="consulo.desktop.awt.uiOld.docking.impl.DesktopDockManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.desktop.awt.daemon.impl.DesktopEditorTrackerImpl"/>
 

@@ -19,6 +19,7 @@ package com.intellij.refactoring.actions;
 import consulo.language.Language;
 import consulo.dataContext.DataContext;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.editor.refactoring.RefactoringActionHandler;

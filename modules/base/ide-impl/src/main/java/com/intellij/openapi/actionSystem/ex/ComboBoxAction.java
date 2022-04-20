@@ -15,21 +15,21 @@
  */
 package com.intellij.openapi.actionSystem.ex;
 
-import com.intellij.openapi.actionSystem.*;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.ListPopup;
-import consulo.util.lang.function.Condition;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.actionSystem.ex.ComboBoxButton;
 import consulo.actionSystem.ex.ComboBoxButtonImpl;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +47,7 @@ public abstract class ComboBoxAction extends AnAction implements CustomComponent
   public void actionPerformed(@Nonnull AnActionEvent e) {
     ComboBoxButton button = (ComboBoxButton)e.getPresentation().getClientProperty(COMPONENT_KEY);
     if (button == null) {
-      Component contextComponent = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      Component contextComponent = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       JRootPane rootPane = UIUtil.getParentOfType(JRootPane.class, contextComponent);
       if (rootPane != null) {
         button = (ComboBoxButton)UIUtil.uiTraverser().withRoot(rootPane).bfsTraversal()

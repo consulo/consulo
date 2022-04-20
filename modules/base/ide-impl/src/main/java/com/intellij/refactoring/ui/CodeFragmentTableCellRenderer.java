@@ -17,7 +17,7 @@ package com.intellij.refactoring.ui;
 
 import consulo.document.Document;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
+import consulo.language.internal.InternalStdFileTypes;
 import consulo.project.Project;
 import consulo.language.psi.PsiCodeFragment;
 import consulo.language.psi.PsiDocumentManager;

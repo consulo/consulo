@@ -17,7 +17,7 @@ package com.intellij.codeInsight.lookup.impl;
 
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import consulo.application.util.matcher.MatcherTextRange;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;

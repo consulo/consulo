@@ -17,12 +17,12 @@ package com.intellij.util.ui.update;
 
 import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;

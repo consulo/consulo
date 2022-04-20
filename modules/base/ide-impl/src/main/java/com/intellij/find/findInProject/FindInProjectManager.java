@@ -5,7 +5,7 @@ package com.intellij.find.findInProject;
 import com.intellij.find.impl.FindInProjectUtil;
 import com.intellij.find.impl.FindManagerImpl;
 import com.intellij.find.replaceInProject.ReplaceInProjectManager;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.application.util.function.Processor;
 import consulo.dataContext.DataContext;
 import consulo.find.FindManager;

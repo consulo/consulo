@@ -24,7 +24,7 @@ import consulo.language.psi.SmartPointerManager;
 import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.safeDelete.usageInfo.SafeDeleteReferenceUsageInfo;
-import com.intellij.refactoring.util.RefactoringUIUtil;
+import consulo.language.editor.refactoring.ui.RefactoringUIUtil;
 import consulo.usage.UsageInfo;
 import javax.annotation.Nonnull;
 

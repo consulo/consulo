@@ -16,7 +16,7 @@
 package com.intellij.openapi.command.impl;
 
 import consulo.undoRedo.UndoConfirmationPolicy;
-import com.intellij.openapi.command.undo.BasicUndoableAction;
+import consulo.undoRedo.BasicUndoableAction;
 import consulo.document.DocumentReference;
 import consulo.undoRedo.UndoableAction;
 import consulo.fileEditor.FileEditor;

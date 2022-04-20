@@ -16,13 +16,13 @@
 package com.intellij.openapi.vcs.history;
 
 import consulo.application.CommonBundle;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.application.AllIcons;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.CopyProvider;
 import com.intellij.ide.actions.RefreshAction;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
@@ -581,7 +581,7 @@ public class FileHistoryPanelImpl extends PanelWithActionsAndCloseButton impleme
     else if (VcsDataKeys.HISTORY_PROVIDER== dataId) {
       return myProvider;
     }
-    else if (PlatformDataKeys.COPY_PROVIDER== dataId) {
+    else if (PlatformDataKeys.COPY_PROVIDER == dataId) {
       return this;
     }
     else {

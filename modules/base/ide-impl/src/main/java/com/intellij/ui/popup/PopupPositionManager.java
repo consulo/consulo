@@ -7,7 +7,7 @@ import consulo.language.editor.completion.lookup.event.LookupListener;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.ui.ex.popup.JBPopup;

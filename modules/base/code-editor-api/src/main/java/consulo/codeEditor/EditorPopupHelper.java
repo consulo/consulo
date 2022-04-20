@@ -18,6 +18,7 @@ package consulo.codeEditor;
 import consulo.application.Application;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
@@ -26,6 +27,14 @@ import javax.annotation.Nonnull;
  * @since 09-Mar-22
  */
 public interface EditorPopupHelper {
+
+  /**
+   * Allows to get an editor position for which a popup with auxiliary information might be shown.
+   * <p/>
+   * Primary intention for this key is to hint popup position for the non-caret location.
+   */
+  public static final Key<VisualPosition> ANCHOR_POPUP_POSITION = Key.create("popup.anchor.position");
+
   static EditorPopupHelper getInstance() {
     return Application.get().getInstance(EditorPopupHelper.class);
   }

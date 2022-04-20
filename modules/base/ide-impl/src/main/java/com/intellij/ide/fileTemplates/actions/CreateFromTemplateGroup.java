@@ -16,16 +16,15 @@
 
 package com.intellij.ide.fileTemplates.actions;
 
-import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.actions.EditFileTemplatesAction;
 import com.intellij.ide.fileTemplates.ui.SelectTemplateDialog;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.application.dumb.DumbAware;
 import consulo.dataContext.DataContext;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.impl.internal.FileTemplateImplUtil;
+import consulo.ide.IdeBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.project.Project;
@@ -112,7 +111,7 @@ public class CreateFromTemplateGroup extends ActionGroup implements DumbAware {
   static boolean canCreateFromTemplate(AnActionEvent e, FileTemplate template) {
     if (e == null) return false;
     DataContext dataContext = e.getDataContext();
-    IdeView view = dataContext.getData(LangDataKeys.IDE_VIEW);
+    IdeView view = dataContext.getData(IdeView.KEY);
     if (view == null) return false;
 
     PsiDirectory[] dirs = view.getDirectories();

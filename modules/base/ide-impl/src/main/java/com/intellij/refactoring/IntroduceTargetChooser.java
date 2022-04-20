@@ -16,17 +16,16 @@
 package com.intellij.refactoring;
 
 import com.intellij.codeInsight.unwrap.ScopeHighlighter;
-import consulo.codeEditor.Editor;
-import consulo.ide.ui.impl.PopupChooserBuilder;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.event.LightweightWindowEvent;
-import com.intellij.openapi.util.Pass;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
-import consulo.ui.ex.awt.JBList;
 import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.psi.PsiElement;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
+import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -34,19 +33,20 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class IntroduceTargetChooser {
   private IntroduceTargetChooser() {
   }
 
-  public static <T extends PsiElement> void showChooser(final Editor editor, final List<T> expressions, final Pass<T> callback,
+  public static <T extends PsiElement> void showChooser(final Editor editor, final List<T> expressions, final Consumer<T> callback,
                                                         final Function<T, String> renderer) {
     showChooser(editor, expressions, callback, renderer, "Expressions");
   }
 
   public static <T extends PsiElement> void showChooser(final Editor editor,
                                                         final List<T> expressions,
-                                                        final Pass<T> callback,
+                                                        final Consumer<T> callback,
                                                         final Function<T, String> renderer,
                                                         String title) {
     showChooser(editor, expressions, callback, renderer, title, ScopeHighlighter.NATURAL_RANGER);
@@ -54,7 +54,7 @@ public class IntroduceTargetChooser {
 
   public static <T extends PsiElement> void showChooser(final Editor editor,
                                                         final List<T> expressions,
-                                                        final Pass<T> callback,
+                                                        final Consumer<T> callback,
                                                         final Function<T, String> renderer,
                                                         String title,
                                                         NotNullFunction<PsiElement, TextRange> ranger) {
@@ -63,7 +63,7 @@ public class IntroduceTargetChooser {
 
   public static <T extends PsiElement> void showChooser(final Editor editor,
                                                         final List<T> expressions,
-                                                        final Pass<T> callback,
+                                                        final Consumer<T> callback,
                                                         final Function<T, String> renderer,
                                                         String title,
                                                         int selection,
@@ -113,7 +113,7 @@ public class IntroduceTargetChooser {
     JBPopup popup = new PopupChooserBuilder<>(list).setTitle(title).setMovable(false).setResizable(false).setRequestFocus(true).setItemChoosenCallback(new Runnable() {
       @Override
       public void run() {
-        callback.pass((T)list.getSelectedValue());
+        callback.accept((T)list.getSelectedValue());
       }
     }).addListener(new JBPopupAdapter() {
       @Override

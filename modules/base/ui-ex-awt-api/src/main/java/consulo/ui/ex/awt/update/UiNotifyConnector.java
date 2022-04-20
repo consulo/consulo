@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.update.Activatable;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

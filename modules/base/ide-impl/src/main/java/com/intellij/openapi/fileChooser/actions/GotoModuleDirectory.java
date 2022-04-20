@@ -17,7 +17,7 @@
 package com.intellij.openapi.fileChooser.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.action.Presentation;
 import com.intellij.openapi.fileChooser.FileSystemTree;
 import consulo.module.Module;

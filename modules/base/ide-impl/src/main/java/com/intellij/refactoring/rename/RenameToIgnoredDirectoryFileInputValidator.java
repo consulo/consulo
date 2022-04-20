@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring.rename;
 
+import consulo.language.editor.refactoring.rename.RenameInputValidatorEx;
 import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.language.pattern.ElementPattern;

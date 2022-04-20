@@ -20,7 +20,7 @@ import consulo.usage.UsageViewManager;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.disposer.Disposable;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;

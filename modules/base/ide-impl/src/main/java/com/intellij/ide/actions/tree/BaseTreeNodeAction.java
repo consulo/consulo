@@ -15,10 +15,10 @@
  */
 package com.intellij.ide.actions.tree;
 
+import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.dumb.DumbAware;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.tree.table.TreeTable;
 
 import javax.swing.*;
@@ -55,6 +55,6 @@ abstract class BaseTreeNodeAction extends AnAction implements DumbAware {
   }
 
   private static Object getSourceComponent(AnActionEvent e) {
-    return e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    return e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
   }
 }

@@ -20,7 +20,7 @@ import com.intellij.ide.dnd.FileCopyPasteUtil;
 import com.intellij.ide.dnd.LinuxDragAndDropSupport;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.ui.ex.PasteProvider;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.project.Project;
@@ -47,7 +47,7 @@ public class FileListPasteProvider implements PasteProvider {
   @Override
   public void performPaste(@Nonnull DataContext dataContext) {
     final Project project = dataContext.getData(CommonDataKeys.PROJECT);
-    final IdeView ideView = dataContext.getData(LangDataKeys.IDE_VIEW);
+    final IdeView ideView = dataContext.getData(IdeView.KEY);
     if (project == null || ideView == null) return;
 
     if (!FileCopyPasteUtil.isFileListFlavorAvailable()) return;
@@ -90,7 +90,7 @@ public class FileListPasteProvider implements PasteProvider {
 
   @Override
   public boolean isPasteEnabled(@Nonnull DataContext dataContext) {
-    return dataContext.getData(LangDataKeys.IDE_VIEW) != null &&
+    return dataContext.getData(IdeView.KEY) != null &&
            FileCopyPasteUtil.isFileListFlavorAvailable();
   }
 }

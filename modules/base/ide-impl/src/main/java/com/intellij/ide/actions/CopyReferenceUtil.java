@@ -2,8 +2,8 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.daemon.impl.IdentifierUtil;
-import com.intellij.codeInsight.highlighting.HighlightManager;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.LangDataKeys;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.ex.StatusBarEx;
 import com.intellij.util.containers.ContainerUtil;

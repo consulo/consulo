@@ -20,6 +20,7 @@ import consulo.project.startup.StartupManager;
 import com.intellij.openapi.ui.MessageType;
 import consulo.component.util.ModificationTracker;
 import com.intellij.openapi.util.Pair;
+import consulo.ui.NotificationType;
 import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.AppIconScheme;
@@ -410,7 +411,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
     UIUtil.invokeLaterIfNeeded(() -> {
       final IdeFrame ideFrame = WindowManager.getInstance().getIdeFrame(myProject);
       if (ideFrame != null) {
-        ((StatusBarEx)ideFrame.getStatusBar()).notifyProgressByBalloon(MessageType.WARNING, message);
+        ideFrame.getStatusBar().notifyProgressByBalloon(NotificationType.WARNING, message);
       }
     });
   }

@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.changeSignature;
 
-import com.intellij.codeInsight.highlighting.HighlightManager;
+import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.highlight.HighlighterFactory;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;

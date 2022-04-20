@@ -22,7 +22,7 @@ import com.intellij.openapi.vcs.changes.ChangeList;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.WritingAccessProvider;
+import consulo.virtualFileSystem.WritingAccessProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

@@ -2,37 +2,37 @@
 package com.intellij.codeInsight.documentation;
 
 import com.intellij.ide.IdeTooltipManager;
-import consulo.application.Application;
-import consulo.project.ui.wm.event.ApplicationActivationListener;
-import consulo.application.ApplicationManager;
-import consulo.document.event.DocumentEvent;
-import consulo.document.event.DocumentListener;
-import consulo.codeEditor.event.*;
-import consulo.language.plain.psi.PsiPlainText;
-import consulo.language.psi.*;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.VisualPosition;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.ref.Ref;
-import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.wm.IdeFrame;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.popup.PopupFactoryImpl;
-import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.*;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.document.Document;
+import consulo.document.event.DocumentEvent;
+import consulo.document.event.DocumentListener;
+import consulo.language.plain.psi.PsiPlainText;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiWhiteSpace;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.event.ApplicationActivationListener;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.util.lang.ref.Ref;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -336,7 +336,7 @@ public final class QuickDocOnMouseOverManager {
           return;
         }
 
-        editor.putUserData(PopupFactoryImpl.ANCHOR_POPUP_POSITION, editor.offsetToVisualPosition(originalElement.getTextRange().getStartOffset()));
+        editor.putUserData(EditorPopupHelper.ANCHOR_POPUP_POSITION, editor.offsetToVisualPosition(originalElement.getTextRange().getStartOffset()));
         docManager.showJavaDocInfo(editor, targetElement, originalElement, new MyCloseDocCallback(editor), documentation, true, false);
         myDocumentationManager = new WeakReference<>(docManager);
       }, ApplicationManager.getApplication().getNoneModalityState());
@@ -354,7 +354,7 @@ public final class QuickDocOnMouseOverManager {
     @Override
     public void run() {
       myActiveElements.clear();
-      myEditor.putUserData(PopupFactoryImpl.ANCHOR_POPUP_POSITION, null);
+      myEditor.putUserData(EditorPopupHelper.ANCHOR_POPUP_POSITION, null);
       myDocumentationManager = null;
     }
   }

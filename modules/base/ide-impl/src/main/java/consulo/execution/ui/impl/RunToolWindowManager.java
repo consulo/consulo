@@ -21,7 +21,7 @@ import consulo.execution.ui.RunContentManager;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;

@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.impl;
 import com.intellij.ide.actions.ResizeToolWindowAction;
 import com.intellij.ide.actions.ToggleToolbarAction;
 import consulo.ui.ex.action.ActionsBundle;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.toolWindow.WindowInfo;

@@ -20,16 +20,20 @@ import com.intellij.openapi.editor.impl.EditorHighlighterCache;
 import com.intellij.ui.EditorNotifications;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.EditorInternalHelper;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.ast.IElementType;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.action.LanguageWordBoundaryFilter;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
@@ -37,6 +41,7 @@ import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.awt.*;
 
 /**
  * @author VISTALL
@@ -107,5 +112,27 @@ public class IdeEditorInternalHelper implements EditorInternalHelper {
   @Override
   public void updateNotifications(Project project, VirtualFile file) {
     EditorNotifications.getInstance(project).updateNotifications(file);
+  }
+
+  @Override
+  public boolean shouldUseSmartTabs(Project project, @Nonnull Editor editor) {
+    if (!(editor instanceof EditorEx)) return false;
+    PsiFile file = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+    return CodeStyleSettingsManager.getSettings(project).getIndentOptionsByFile(file).SMART_TABS;
+  }
+
+  @Override
+  public int calcColumnNumber(@Nullable Editor editor, @Nonnull CharSequence text, int start, int offset, int tabSize) {
+    return EditorImplUtil.calcColumnNumber(editor, text, start, offset, tabSize);
+  }
+
+  @Override
+  public int getLastVisualLineColumnNumber(@Nonnull Editor editor, int line) {
+    return EditorImplUtil.getLastVisualLineColumnNumber(editor, line);
+  }
+
+  @Override
+  public int getSpaceWidth(@Nonnull Editor editor) {
+    return EditorImplUtil.getSpaceWidth(Font.PLAIN, editor);
   }
 }

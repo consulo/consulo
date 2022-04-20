@@ -16,38 +16,37 @@
 
 package com.intellij.ide.actions;
 
-import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeView;
 import com.intellij.ide.ui.newItemPopup.NewItemPopupUtil;
 import com.intellij.ide.ui.newItemPopup.NewItemSimplePopupPanel;
 import com.intellij.ide.util.DirectoryChooserUtil;
-import consulo.language.LangBundle;
-import com.intellij.openapi.actionSystem.*;
-import consulo.language.editor.CommonDataKeys;
-import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
+import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.IdeBundle;
+import consulo.ide.actions.CreateDirectoryOrPackageType;
+import consulo.language.LangBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiPackageSupportProvider;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
+import consulo.module.extension.ModuleExtension;
+import consulo.project.Project;
+import consulo.ui.TextBox;
+import consulo.ui.ValidableComponent;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.util.lang.Trinity;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.actions.CreateDirectoryOrPackageType;
-import consulo.module.extension.ModuleExtension;
-import consulo.language.psi.PsiPackageSupportProvider;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.ui.TextBox;
-import consulo.ui.ValidableComponent;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
+import consulo.util.lang.Trinity;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -62,7 +61,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
-    IdeView view = e.getData(LangDataKeys.IDE_VIEW);
+    IdeView view = e.getData(IdeView.KEY);
     Project project = e.getData(CommonDataKeys.PROJECT);
 
     if (view == null || project == null) {
@@ -131,7 +130,7 @@ public class CreateDirectoryOrPackageAction extends AnAction implements DumbAwar
       return;
     }
 
-    IdeView view = event.getData(LangDataKeys.IDE_VIEW);
+    IdeView view = event.getData(IdeView.KEY);
     if (view == null) {
       presentation.setVisible(false);
       presentation.setEnabled(false);

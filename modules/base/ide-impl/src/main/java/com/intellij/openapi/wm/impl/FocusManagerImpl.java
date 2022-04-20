@@ -2,15 +2,13 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.application.internal.ApplicationManagerEx;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.util.TimedOutCallback;
-import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.ui.wm.*;
 import consulo.application.util.registry.Registry;
 import consulo.component.ComponentManager;
@@ -25,6 +23,8 @@ import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ModalityState;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.UiActivityMonitor;
+import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.concurrent.EdtExecutorService;
@@ -264,7 +264,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
       result = myLastFocusedAtDeactivation.get(getLastFocusedFrame());
     }
     else if (myRunContext != null) {
-      result = myRunContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      result = myRunContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     }
 
     if (result == null) {

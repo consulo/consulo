@@ -15,20 +15,20 @@
  */
 package com.intellij.execution.console;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.application.AllIcons;
 import com.intellij.ide.util.PropertiesComponent;
+import com.intellij.openapi.actionSystem.ex.ActionUtil;
+import com.intellij.util.containers.ContainerUtil;
+import consulo.application.AllIcons;
+import consulo.application.dumb.DumbAware;
+import consulo.execution.ExecutionDataKeys;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.psi.PsiFile;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
 import consulo.ui.ex.action.ToggleAction;
-import com.intellij.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.dumb.DumbAware;
-import consulo.language.psi.PsiFile;
-import com.intellij.util.containers.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 final class UseConsoleInputAction extends ToggleAction implements DumbAware {
@@ -51,7 +51,7 @@ final class UseConsoleInputAction extends ToggleAction implements DumbAware {
   public void setSelected(AnActionEvent event, boolean state) {
     useProcessStdIn = !state;
 
-    LanguageConsoleView consoleView = (LanguageConsoleView)event.getData(LangDataKeys.CONSOLE_VIEW);
+    LanguageConsoleView consoleView = (LanguageConsoleView)event.getData(ExecutionDataKeys.CONSOLE_VIEW);
     assert consoleView != null;
     DaemonCodeAnalyzer daemonCodeAnalyzer = DaemonCodeAnalyzer.getInstance(consoleView.getProject());
     PsiFile file = consoleView.getFile();

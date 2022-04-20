@@ -18,7 +18,6 @@ package com.intellij.ui.tabs.impl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.util.Pass;
 import com.intellij.ui.InplaceButton;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.tabs.TabInfo;
@@ -28,6 +27,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ActionPanel extends NonOpaquePanel {
 
@@ -37,7 +37,7 @@ public class ActionPanel extends NonOpaquePanel {
   private boolean myAutoHide;
   private boolean myActionsIsVisible = false;
 
-  public ActionPanel(JBTabsImpl tabs, TabInfo tabInfo, Pass<MouseEvent> pass) {
+  public ActionPanel(JBTabsImpl tabs, TabInfo tabInfo, Consumer<MouseEvent> pass) {
     myTabs = tabs;
     ActionGroup group = tabInfo.getTabLabelActions() != null ? tabInfo.getTabLabelActions() : new DefaultActionGroup();
     AnAction[] children = group.getChildren(null);

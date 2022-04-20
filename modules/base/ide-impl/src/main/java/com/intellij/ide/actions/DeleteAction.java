@@ -16,21 +16,22 @@
  */
 package com.intellij.ide.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.DeleteProvider;
-import consulo.ide.IdeBundle;
 import com.intellij.ide.TitledHandler;
-import com.intellij.openapi.actionSystem.*;
-import consulo.dataContext.DataContext;
-import consulo.logging.Logger;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
+import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.DeleteProvider;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;
@@ -77,7 +78,7 @@ public class DeleteAction extends AnAction implements DumbAware {
     DeleteProvider provider = getDeleteProvider(dataContext);
     if (event.getInputEvent() instanceof KeyEvent) {
       KeyEvent keyEvent = (KeyEvent)event.getInputEvent();
-      Object component = event.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      Object component = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       if (component instanceof JTextComponent) provider = null; // Do not override text deletion
       if (keyEvent.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
         // Do not override text deletion in speed search

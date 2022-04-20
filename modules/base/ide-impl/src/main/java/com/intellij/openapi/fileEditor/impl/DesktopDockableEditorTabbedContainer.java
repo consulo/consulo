@@ -16,14 +16,16 @@
 package com.intellij.openapi.fileEditor.impl;
 
 import consulo.dataContext.DataProvider;
+import consulo.fileEditor.DockableEditorTabbedContainer;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.Application;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.project.Project;
+import consulo.ui.ex.awt.internal.SwingDockContainer;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.RelativeRectangle;
-import com.intellij.ui.docking.DockableContent;
+import consulo.project.ui.wm.dock.DockableContent;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.impl.JBTabsImpl;
@@ -43,7 +45,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 @Deprecated
 @DeprecationInfo("Desktop only")
-public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbedContainer {
+public class DesktopDockableEditorTabbedContainer implements DockableEditorTabbedContainer, SwingDockContainer {
 
   private final DesktopFileEditorsSplitters mySplitters;
   private final Project myProject;

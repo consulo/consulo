@@ -15,9 +15,9 @@
  */
 package com.intellij.execution.ui.layout.impl;
 
-import com.intellij.ui.docking.DockContainer;
-import com.intellij.ui.docking.DockContainerFactory;
-import com.intellij.ui.docking.DockableContent;
+import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockContainerFactory;
+import consulo.project.ui.wm.dock.DockableContent;
 
 /**
  * @author Dennis.Ushakov

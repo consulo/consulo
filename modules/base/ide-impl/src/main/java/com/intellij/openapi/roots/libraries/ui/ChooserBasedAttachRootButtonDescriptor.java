@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.roots.libraries.ui;
 
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.content.library.ui.AttachRootButtonDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.fileChooser.IdeaFileChooser;

@@ -25,6 +25,7 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.action.event;
   exports consulo.ui.ex.action.util;
   exports consulo.ui.ex.content;
+  exports consulo.ui.ex.update;
   exports consulo.ui.ex.content.event;
   exports consulo.ui.ex.tree;
   exports consulo.ui.ex.util;

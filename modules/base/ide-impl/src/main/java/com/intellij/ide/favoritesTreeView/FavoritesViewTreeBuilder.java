@@ -11,7 +11,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.ex.tree.NodeDescriptor;
-import com.intellij.openapi.fileTypes.InternalStdFileTypes;
+import consulo.language.internal.InternalStdFileTypes;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;

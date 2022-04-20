@@ -19,6 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.console.ConsoleView;
 import consulo.util.dataholder.Key;
 
 /**
@@ -31,4 +32,5 @@ public interface ExecutionDataKeys {
   Key<RunProfile> RUN_PROFILE = RunProfile.KEY;
   Key<ExecutionEnvironment> EXECUTION_ENVIRONMENT = ExecutionEnvironment.KEY;
   Key<RunContentDescriptor> RUN_CONTENT_DESCRIPTOR = RunContentDescriptor.KEY;
+  Key<ConsoleView> CONSOLE_VIEW = ConsoleView.KEY;
 }

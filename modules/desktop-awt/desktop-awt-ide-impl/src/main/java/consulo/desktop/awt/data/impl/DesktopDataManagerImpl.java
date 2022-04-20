@@ -18,25 +18,26 @@ package consulo.desktop.awt.data.impl;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.ProhibitAWTEvents;
 import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.dataContext.TypeSafeDataProvider;
-import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import consulo.application.AccessToken;
+import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.TypeSafeDataProvider;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
 import consulo.desktop.awt.facade.FromSwingWindowWrapper;
 import consulo.ide.base.BaseDataManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.toolWindow.ToolWindowFloatingDecorator;
 import consulo.util.dataholder.Key;
@@ -91,7 +92,7 @@ public class DesktopDataManagerImpl extends BaseDataManager {
         }
         return (T)(Boolean)IdeKeyEventDispatcher.isModalContext(component);
       }
-      if (PlatformDataKeys.CONTEXT_COMPONENT == dataId) {
+      if (UIExAWTDataKey.CONTEXT_COMPONENT == dataId) {
         return (T)component;
       }
       if (PlatformDataKeys.MODALITY_STATE == dataId) {

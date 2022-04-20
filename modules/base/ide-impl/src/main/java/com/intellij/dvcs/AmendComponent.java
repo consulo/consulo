@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.FilePath;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.VcsException;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.NonFocusableCheckBox;
+import consulo.ui.ex.awt.NonFocusableCheckBox;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.logging.Logger;

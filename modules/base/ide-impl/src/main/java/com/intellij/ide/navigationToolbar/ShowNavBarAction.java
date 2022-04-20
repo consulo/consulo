@@ -16,16 +16,18 @@
 
 package com.intellij.ide.navigationToolbar;
 
+import com.intellij.openapi.actionSystem.PopupAction;
+import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
 
 import java.awt.*;
 
@@ -42,7 +44,7 @@ public class ShowNavBarAction extends AnAction implements DumbAware, PopupAction
       if (uiSettings.SHOW_NAVIGATION_BAR && !uiSettings.PRESENTATION_MODE){
         new SelectInNavBarTarget(project).select(null, false);
       } else {
-        final Component component = context.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+        final Component component = context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
         if (!isInsideNavBar(component)) {
           final Editor editor = context.getData(PlatformDataKeys.EDITOR);
           final NavBarPanel toolbarPanel = new NavBarPanel(project, false);

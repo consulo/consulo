@@ -6,7 +6,7 @@ import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.ide.util.gotoByName.QuickSearchComponent;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
 import consulo.application.impl.internal.IdeaModalityState;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;

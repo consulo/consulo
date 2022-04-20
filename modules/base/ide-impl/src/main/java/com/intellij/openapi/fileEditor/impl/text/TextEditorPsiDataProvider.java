@@ -40,7 +40,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedHashSet;
 
 import static consulo.ui.ex.action.AnActionEvent.injectedId;
-import static com.intellij.openapi.actionSystem.LangDataKeys.*;
+import static consulo.language.editor.LangDataKeys.*;
 import static com.intellij.util.containers.ContainerUtil.addIfNotNull;
 
 public class TextEditorPsiDataProvider implements EditorDataProvider {
@@ -112,7 +112,7 @@ public class TextEditorPsiDataProvider implements EditorDataProvider {
     if (PSI_FILE == dataId) {
       return getPsiFile(e, file);
     }
-    if (IDE_VIEW == dataId) {
+    if (IdeView.KEY == dataId) {
       final PsiFile psiFile = project == null ? null : PsiManager.getInstance(project).findFile(file);
       final PsiDirectory psiDirectory = psiFile != null ? psiFile.getParent() : null;
       if (psiDirectory != null && psiDirectory.isPhysical()) {

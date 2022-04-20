@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.actions;
 
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.PasteProvider;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.ActionPlaces;

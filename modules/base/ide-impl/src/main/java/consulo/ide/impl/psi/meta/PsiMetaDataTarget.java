@@ -18,6 +18,7 @@ package consulo.ide.impl.psi.meta;
 import consulo.language.pom.PomRenameableTarget;
 import consulo.ide.impl.psi.DelegatePsiTarget;
 import consulo.language.psi.meta.PsiMetaData;
+import consulo.language.psi.meta.PsiWritableMetaData;
 
 import javax.annotation.Nonnull;
 

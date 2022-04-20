@@ -18,6 +18,7 @@ package com.intellij.refactoring.actions;
 
 import consulo.language.Language;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import com.intellij.refactoring.move.MoveHandler;

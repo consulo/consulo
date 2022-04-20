@@ -15,24 +15,25 @@
  */
 package com.intellij.ide.actions;
 
-import consulo.ide.IdeBundle;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
+import com.intellij.ui.tabs.impl.TabLabel;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
+import consulo.ide.IdeBundle;
 import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.LangDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import com.intellij.ui.tabs.impl.TabLabel;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,7 +64,7 @@ public class CopyPathProvider extends DumbAwareAction {
   }
 
   private DataContext createCustomDataContext(DataContext dataContext) {
-    Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (!(component instanceof TabLabel)) {
       return dataContext;
     }

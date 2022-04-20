@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import com.intellij.refactoring.RefactoringSettings;
+import consulo.language.editor.refactoring.RefactoringSettings;
 import com.intellij.refactoring.copy.CopyFilesOrDirectoriesHandler;
 import com.intellij.refactoring.move.MoveCallback;
 import com.intellij.refactoring.move.MoveHandler;

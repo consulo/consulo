@@ -15,27 +15,27 @@
  */
 package com.intellij.openapi.actionSystem.impl;
 
-import consulo.dataContext.DataManager;
 import com.intellij.ide.HelpTooltip;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction;
 import com.intellij.openapi.actionSystem.ex.TooltipDescriptionProvider;
-import consulo.application.impl.internal.LaterInvocator;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.application.util.registry.Registry;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.internal.ActionButtonComponent;
-import consulo.ui.ex.util.TextWithMnemonic;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.accessibility.ScreenReader;
 import consulo.annotation.DeprecationInfo;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Size;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.accessibility.ScreenReader;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.dataholder.Key;
@@ -219,7 +219,7 @@ public class ActionButton extends JComponent implements ActionButtonComponent, A
       final ActionManagerEx manager = ActionManagerEx.getInstanceEx();
       final DataContext dataContext = event.getDataContext();
       manager.fireBeforeActionPerformed(myAction, dataContext, event);
-      Component component = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+      Component component = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
       if (component != null && !component.isShowing()) {
         return;
       }

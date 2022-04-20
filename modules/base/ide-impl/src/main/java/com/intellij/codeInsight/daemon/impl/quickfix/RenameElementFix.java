@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
-import com.intellij.refactoring.rename.RenameProcessor;
+import consulo.language.editor.refactoring.rename.RenameProcessor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

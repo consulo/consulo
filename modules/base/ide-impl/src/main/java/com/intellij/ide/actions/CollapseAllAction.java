@@ -17,7 +17,7 @@ package com.intellij.ide.actions;
 
 import consulo.ui.ex.TreeExpander;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 
 public class CollapseAllAction extends TreeCollapseAllActionBase {
   @Override

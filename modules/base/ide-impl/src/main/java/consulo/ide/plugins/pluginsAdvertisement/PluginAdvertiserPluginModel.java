@@ -20,7 +20,7 @@ import com.intellij.ide.plugins.PluginTableModel;
 import com.intellij.ide.plugins.PluginsTableRenderer;
 import consulo.container.plugin.PluginId;
 import com.intellij.ui.BooleanTableCellEditor;
-import com.intellij.ui.BooleanTableCellRenderer;
+import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
 

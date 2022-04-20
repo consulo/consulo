@@ -45,7 +45,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import com.intellij.ui.docking.DockManager;
+import consulo.project.ui.wm.dock.DockManager;
 import consulo.util.collection.SmartList;
 import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;

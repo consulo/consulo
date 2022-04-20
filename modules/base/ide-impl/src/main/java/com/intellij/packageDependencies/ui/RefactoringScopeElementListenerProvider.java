@@ -25,9 +25,9 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiQualifiedNamedElement;
 import com.intellij.refactoring.listeners.RefactoringElementAdapter;
-import com.intellij.refactoring.listeners.RefactoringElementListener;
+import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import com.intellij.refactoring.listeners.RefactoringElementListenerComposite;
-import com.intellij.refactoring.listeners.RefactoringElementListenerProvider;
+import consulo.language.editor.refactoring.event.RefactoringElementListenerProvider;
 import javax.annotation.Nonnull;
 
 /**

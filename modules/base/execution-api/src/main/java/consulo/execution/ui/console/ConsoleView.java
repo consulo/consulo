@@ -18,6 +18,7 @@ package consulo.execution.ui.console;
 import consulo.execution.ui.ExecutionConsole;
 import consulo.process.ProcessHandler;
 import consulo.ui.ex.action.AnAction;
+import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 
@@ -25,6 +26,8 @@ import javax.annotation.Nonnull;
  * @see TextConsoleBuilder
  */
 public interface ConsoleView extends ExecutionConsole {
+  static Key<ConsoleView> KEY = Key.create(ConsoleView.class);
+
   void print(@Nonnull String s, @Nonnull ConsoleViewContentType contentType);
 
   void clear();

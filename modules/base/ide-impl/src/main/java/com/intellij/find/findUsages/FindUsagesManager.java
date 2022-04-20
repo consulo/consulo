@@ -93,7 +93,6 @@ public class FindUsagesManager {
   }
 
   private static final Key<String> KEY_START_USAGE_AGAIN = Key.create("KEY_START_USAGE_AGAIN");
-  @NonNls
   private static final String VALUE_START_USAGE_AGAIN = "START_AGAIN";
   private final Project myProject;
   private final UsageViewManager myAnotherManager;
@@ -107,7 +106,7 @@ public class FindUsagesManager {
   }
 
   public boolean canFindUsages(@Nonnull final PsiElement element) {
-    for (FindUsagesHandlerFactory factory : Extensions.getExtensions(FindUsagesHandlerFactory.EP_NAME, myProject)) {
+    for (FindUsagesHandlerFactory factory : FindUsagesHandlerFactory.EP_NAME.getExtensionList(myProject)) {
       try {
         if (factory.canFindUsages(element)) {
           return true;

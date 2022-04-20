@@ -16,19 +16,11 @@
 
 package com.intellij.codeInsight.highlighting;
 
-import consulo.language.editor.inject.EditorWindow;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
-import consulo.project.ProjectComponent;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.MarkupModel;
-import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
@@ -36,11 +28,16 @@ import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.highlight.HighlightManager;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
+import consulo.project.ProjectComponent;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -164,7 +161,7 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
       PsiFile containingFile = element.getContainingFile();
       Project project = element.getProject();
       // each reference can reside in its own injected editor
-      Editor textEditor = InjectedLanguageUtil.openEditorFor(containingFile, project);
+      Editor textEditor = InjectedEditorManager.getInstance(project).openEditorFor(containingFile);
       if (textEditor != null) {
         addOccurrenceHighlight(textEditor, start, end, attributes, flags, outHighlighters, scrollmarkColor);
       }

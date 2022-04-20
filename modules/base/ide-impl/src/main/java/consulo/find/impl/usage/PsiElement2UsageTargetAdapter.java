@@ -19,7 +19,6 @@ package consulo.find.impl.usage;
 import com.intellij.codeInsight.highlighting.HighlightUsagesHandler;
 import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.find.impl.FindManagerImpl;
-import com.intellij.usages.impl.UsageViewImpl;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataSink;
@@ -212,7 +211,7 @@ public class PsiElement2UsageTargetAdapter implements PsiElementUsageTarget, Typ
 
   @Override
   public KeyboardShortcut getShortcut() {
-    return UsageViewImpl.getShowUsagesWithSettingsShortcut();
+    return UsageViewUtil.getShowUsagesWithSettingsShortcut();
   }
 
   @Nonnull

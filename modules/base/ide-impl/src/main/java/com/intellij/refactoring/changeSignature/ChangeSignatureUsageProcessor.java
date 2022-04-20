@@ -18,7 +18,7 @@ package com.intellij.refactoring.changeSignature;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiElement;
-import com.intellij.refactoring.rename.ResolveSnapshotProvider;
+import consulo.language.editor.refactoring.ResolveSnapshotProvider;
 import consulo.usage.UsageInfo;
 import consulo.util.collection.MultiMap;
 import javax.annotation.Nonnull;

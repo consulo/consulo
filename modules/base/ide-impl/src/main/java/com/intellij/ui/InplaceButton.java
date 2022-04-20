@@ -15,15 +15,14 @@
  */
 package com.intellij.ui;
 
-import consulo.ui.ex.popup.IconButton;
-import com.intellij.openapi.util.Pass;
+import com.intellij.util.ui.BaseButtonBehavior;
+import com.intellij.util.ui.TimedDeadzone;
 import consulo.ui.ex.ActiveComponent;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.ui.BaseButtonBehavior;
 import consulo.ui.ex.awt.CenteredIcon;
-import com.intellij.util.ui.TimedDeadzone;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.IconButton;
 import consulo.ui.image.Image;
 
 import javax.accessibility.*;
@@ -33,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class InplaceButton extends JComponent implements ActiveComponent, Accessible {
 
@@ -56,7 +56,7 @@ public class InplaceButton extends JComponent implements ActiveComponent, Access
     this(new IconButton(tooltip, icon, icon), listener, null);
   }
 
-  public InplaceButton(String tooltip, final Image icon, final ActionListener listener, final Pass<MouseEvent> me) {
+  public InplaceButton(String tooltip, final Image icon, final ActionListener listener, final Consumer<MouseEvent> me) {
     this(new IconButton(tooltip, icon, icon), listener, me);
   }
 
@@ -64,11 +64,11 @@ public class InplaceButton extends JComponent implements ActiveComponent, Access
     this(source, listener, null);
   }
 
-  public InplaceButton(IconButton source, final ActionListener listener, final Pass<MouseEvent> me) {
+  public InplaceButton(IconButton source, final ActionListener listener, final Consumer<MouseEvent> me) {
     this(source, listener, me, TimedDeadzone.DEFAULT);
   }
 
-  public InplaceButton(IconButton source, final ActionListener listener, final Pass<MouseEvent> me, TimedDeadzone.Length mouseDeadzone) {
+  public InplaceButton(IconButton source, final ActionListener listener, final Consumer<MouseEvent> me, TimedDeadzone.Length mouseDeadzone) {
     myListener = listener;
     myBehavior = new BaseButtonBehavior(this, mouseDeadzone) {
       @Override
@@ -84,7 +84,7 @@ public class InplaceButton extends JComponent implements ActiveComponent, Access
       @Override
       protected void pass(final MouseEvent e) {
         if (me != null) {
-          me.pass(e);
+          me.accept(e);
         }
       }
     };

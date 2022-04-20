@@ -25,13 +25,12 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.internal.psi.LanguageTokenSeparatorGenerators;
 import consulo.application.Result;
 import consulo.language.editor.WriteCommandAction;
-import com.intellij.openapi.command.impl.StartMarkAction;
+import consulo.undoRedo.internal.StartMarkAction;
 import consulo.codeEditor.Editor;
 import consulo.document.RangeMarker;
 import consulo.component.extension.Extensions;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
@@ -40,8 +39,10 @@ import consulo.language.psi.SmartPsiElementPointer;
 import consulo.language.editor.refactoring.rename.SuggestedNameInfo;
 import consulo.language.editor.refactoring.rename.NameSuggestionProvider;
 import consulo.language.editor.refactoring.rename.PreferrableNameSuggestionProvider;
-import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import com.intellij.refactoring.rename.inplace.MyLookupExpression;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.language.editor.refactoring.rename.inplace.MyLookupExpression;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;

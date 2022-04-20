@@ -15,45 +15,44 @@
  */
 package com.intellij.xdebugger.impl.ui;
 
-import consulo.execution.debug.ui.DebuggerContentInfo;
-import consulo.execution.ExecutionManager;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.runner.RunContentBuilder;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.execution.ui.RunContentManager;
-import consulo.execution.ui.layout.RunnerLayoutUi;
-import consulo.execution.ui.layout.PlaceInGrid;
 import com.intellij.execution.ui.layout.impl.RunnerContentUi;
 import com.intellij.execution.ui.layout.impl.ViewImpl;
-import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
 import com.intellij.ide.impl.ProjectUtil;
-import consulo.ui.ex.action.ActionsBundle;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.ApplicationManager;
-import consulo.application.util.registry.Registry;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.dataContext.DataProvider;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ui.ex.AppIcon;
 import com.intellij.ui.AppUIUtil;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.content.Content;
-import consulo.ui.ex.content.event.ContentManagerAdapter;
-import consulo.ui.ex.content.event.ContentManagerEvent;
 import com.intellij.ui.content.tabs.PinToolwindowTabAction;
-import consulo.util.lang.SystemProperties;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.execution.debug.XDebugSession;
-import consulo.execution.debug.XDebuggerBundle;
 import com.intellij.xdebugger.impl.XDebugSessionImpl;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import com.intellij.xdebugger.impl.frame.*;
 import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
-import consulo.execution.debug.ui.XDebugTabLayouter;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
+import consulo.dataContext.DataManager;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
+import consulo.execution.ExecutionDataKeys;
+import consulo.execution.ExecutionManager;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.ui.DebuggerContentInfo;
+import consulo.execution.debug.ui.XDebugTabLayouter;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.RunContentBuilder;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.ui.RunContentManager;
+import consulo.execution.ui.layout.PlaceInGrid;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.ui.ex.AppIcon;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.event.ContentManagerAdapter;
+import consulo.ui.ex.content.event.ContentManagerEvent;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.SystemProperties;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -177,7 +176,7 @@ public class XDebugSessionTab extends DebuggerSessionTabBase {
       if (XDebugSession.DATA_KEY == dataId) {
         return mySession;
       }
-      else if (LangDataKeys.CONSOLE_VIEW == dataId) {
+      else if (ExecutionDataKeys.CONSOLE_VIEW == dataId) {
         return mySession.getConsoleView();
       }
     }

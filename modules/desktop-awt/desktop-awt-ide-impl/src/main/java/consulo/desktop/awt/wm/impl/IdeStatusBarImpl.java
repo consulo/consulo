@@ -18,17 +18,18 @@ package consulo.desktop.awt.wm.impl;
 import com.intellij.diagnostic.IdeMessagePanel;
 import com.intellij.ide.IdeEventQueue;
 import com.intellij.notification.impl.IdeNotificationArea;
-import com.intellij.openapi.actionSystem.*;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.ui.wm.impl.StatusWidgetBorders;
+import consulo.ui.NotificationType;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.dataContext.DataProvider;
 import consulo.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.BalloonHandler;
+import consulo.ui.ex.popup.BalloonHandler;
 import com.intellij.openapi.util.Couple;
 import com.intellij.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
@@ -432,13 +433,8 @@ public class IdeStatusBarImpl extends JComponent implements StatusBarEx, IdeEven
   }
 
   @Override
-  public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody) {
-    return notifyProgressByBalloon(type, htmlBody, null, null);
-  }
-
-  @Override
-  public BalloonHandler notifyProgressByBalloon(@Nonnull MessageType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
-    return myInfoAndProgressPanel.notifyByBalloon(type, htmlBody, icon, listener);
+  public BalloonHandler notifyProgressByBalloon(@Nonnull NotificationType type, @Nonnull String htmlBody, @Nullable Image icon, @Nullable HyperlinkListener listener) {
+    return myInfoAndProgressPanel.notifyByBalloon(MessageType.from(type), htmlBody, icon, listener);
   }
 
   @Override

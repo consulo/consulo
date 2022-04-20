@@ -16,17 +16,8 @@
 
 package com.intellij.tasks.actions;
 
-import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.CommonDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.ui.playback.commands.ActionCommand;
-import com.intellij.openapi.ui.popup.*;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.lang.ref.Ref;
+import com.intellij.openapi.ui.popup.MultiSelectionListPopupStep;
 import com.intellij.openapi.vcs.changes.ChangeListManager;
 import com.intellij.openapi.vcs.changes.LocalChangeList;
 import com.intellij.tasks.ChangeListInfo;
@@ -36,10 +27,19 @@ import com.intellij.tasks.impl.TaskManagerImpl;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.popup.ListSeparator;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.language.editor.CommonDataKeys;
+import consulo.project.Project;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopupStep;
+import consulo.ui.ex.popup.ListSeparator;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,7 +71,7 @@ public class SwitchTaskAction extends BaseTaskAction {
     final Ref<Boolean> shiftPressed = Ref.create(false);
     final Ref<JComponent> componentRef = Ref.create();
     List<TaskListItem> items = project == null ? Collections.<TaskListItem>emptyList() :
-                               createPopupActionGroup(project, shiftPressed, dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT));
+                               createPopupActionGroup(project, shiftPressed, dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT));
     final String title = withTitle ? "Switch to Task" : null;
     ListPopupStep<TaskListItem> step = new MultiSelectionListPopupStep<TaskListItem>(title, items) {
       @Override

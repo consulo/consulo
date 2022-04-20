@@ -15,21 +15,21 @@
  */
 package com.intellij.ui.mac;
 
-import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
 import com.intellij.openapi.keymap.impl.IdeMouseEventDispatcher;
 import com.intellij.openapi.keymap.impl.KeymapManagerImpl;
 import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.eawt.wrapper.GestureUtilitiesWrapper;
 import consulo.eawt.wrapper.event.PressureEventWrapper;
 import consulo.eawt.wrapper.event.PressureListenerWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +62,7 @@ public class MacGestureSupportForEditor {
 
             if (presentation.isEnabled()) {
               actionManager.fireBeforeActionPerformed(action, dataContext, actionEvent);
-              final Component context = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+              final Component context = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
 
               if (context != null && !context.isShowing()) continue;
 

@@ -16,12 +16,12 @@
 
 package com.intellij.ide.hierarchy;
 
+import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.util.DeleteHandler;
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;

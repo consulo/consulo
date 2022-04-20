@@ -2,22 +2,22 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.actions.searcheverywhere.SearchEverywhereManager;
-import com.intellij.openapi.actionSystem.*;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.impl.ActionShortcutRestrictions;
 import com.intellij.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 
 public class SetShortcutAction extends AnAction implements DumbAware {
@@ -43,7 +43,7 @@ public class SetShortcutAction extends AnAction implements DumbAware {
     }
 
     AnAction action = e.getData(SELECTED_ACTION);
-    Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (action == null || component == null) {
       return;
     }
@@ -72,7 +72,7 @@ public class SetShortcutAction extends AnAction implements DumbAware {
     }
 
     AnAction action = e.getData(SELECTED_ACTION);
-    Component component = e.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     presentation.setEnabled(action != null && component != null);
   }
 }

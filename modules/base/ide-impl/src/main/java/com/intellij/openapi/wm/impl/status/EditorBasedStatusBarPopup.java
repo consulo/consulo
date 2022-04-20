@@ -1,18 +1,20 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.openapi.wm.impl.status;
 
-import consulo.dataContext.DataManager;
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.popup.PopupState;
+import com.intellij.util.ObjectUtils;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
@@ -20,30 +22,28 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.ide.IdeBundle;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.project.ui.wm.impl.StatusWidgetBorders;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.ListPopup;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.VirtualFileListener;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.ui.ex.awt.ClickListener;
+import consulo.project.ui.wm.impl.StatusWidgetBorders;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.ui.popup.PopupState;
-import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;
 
@@ -212,7 +212,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
     return SimpleDataContext.getSimpleContext(ContainerUtil.<Key, Object>immutableMapBuilder().put(CommonDataKeys.VIRTUAL_FILE, selectedFile)
                                                       .put(CommonDataKeys.VIRTUAL_FILE_ARRAY, selectedFile == null ? VirtualFile.EMPTY_ARRAY : new VirtualFile[]{selectedFile})
                                                       .put(CommonDataKeys.PROJECT, getProject())
-                                                      .put(PlatformDataKeys.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
+                                                      .put(UIExAWTDataKey.CONTEXT_COMPONENT, editor == null ? null : editor.getComponent()).build(), parent);
   }
 
   @Override

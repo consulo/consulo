@@ -1,40 +1,36 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.execution.actions;
 
-import consulo.execution.ExecutionBundle;
-import consulo.execution.ExecutionManager;
-import consulo.language.editor.CommonDataKeys;
-import consulo.process.KillableProcess;
-import consulo.execution.configuration.RunProfile;
 import com.intellij.execution.impl.ExecutionManagerImpl;
-import consulo.process.ProcessHandler;
-import consulo.execution.ui.RunContentDescriptor;
-import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.*;
-import consulo.application.ApplicationManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
-import com.intellij.openapi.ui.popup.*;
+import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
 import com.intellij.ui.mac.touchbar.TouchBarsManager;
 import com.intellij.ui.popup.list.GroupedItemsListRenderer;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.popup.IPopupChooserBuilder;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.util.collection.SmartList;
+import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.dataContext.DataContext;
+import consulo.execution.ExecutionBundle;
+import consulo.execution.ExecutionDataKeys;
+import consulo.execution.ExecutionManager;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.language.editor.CommonDataKeys;
+import consulo.process.KillableProcess;
+import consulo.process.ProcessHandler;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.popup.IPopupChooserBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -75,7 +71,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
       }
     }
     else {
-      RunContentDescriptor contentDescriptor = e.getData(LangDataKeys.RUN_CONTENT_DESCRIPTOR);
+      RunContentDescriptor contentDescriptor = e.getData(ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR);
       ProcessHandler processHandler = contentDescriptor == null ? null : contentDescriptor.getProcessHandler();
       if (processHandler != null && !processHandler.isProcessTerminated()) {
         if (!processHandler.isProcessTerminating()) {
@@ -88,7 +84,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
         }
       }
 
-      RunProfile runProfile = e.getData(LangDataKeys.RUN_PROFILE);
+      RunProfile runProfile = e.getData(ExecutionDataKeys.RUN_PROFILE);
       if (runProfile == null && contentDescriptor == null) {
         presentation.setTextValue(getTemplatePresentation().getTextValue());
       }
@@ -228,7 +224,7 @@ public class StopAction extends DumbAwareAction implements AnAction.TransparentU
 
   @Nullable
   static RunContentDescriptor getRecentlyStartedContentDescriptor(@Nonnull DataContext dataContext) {
-    final RunContentDescriptor contentDescriptor = dataContext.getData(LangDataKeys.RUN_CONTENT_DESCRIPTOR);
+    final RunContentDescriptor contentDescriptor = dataContext.getData(ExecutionDataKeys.RUN_CONTENT_DESCRIPTOR);
     if (contentDescriptor != null) {
       // toolwindow case
       return contentDescriptor;

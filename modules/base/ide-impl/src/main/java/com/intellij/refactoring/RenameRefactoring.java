@@ -15,6 +15,7 @@
  */
 package com.intellij.refactoring;
 
+import consulo.language.editor.refactoring.Refactoring;
 import consulo.language.psi.PsiElement;
 
 import java.util.Collection;

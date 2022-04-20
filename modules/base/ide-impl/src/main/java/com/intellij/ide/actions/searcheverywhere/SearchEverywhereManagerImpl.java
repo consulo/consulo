@@ -2,31 +2,30 @@
 package com.intellij.ide.actions.searcheverywhere;
 
 import com.intellij.ide.actions.GotoActionBase;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.action.DumbAwareAction;
+import consulo.application.util.registry.Registry;
+import consulo.disposer.Disposer;
+import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
+import consulo.project.ui.ProjectWindowStateService;
+import consulo.project.ui.wm.WindowManager;
+import consulo.ui.TextBox;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.JBInsets;
+import consulo.ui.ex.awt.SearchTextField;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.util.ScreenUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.disposer.Disposer;
-import consulo.application.util.registry.Registry;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.SearchTextField;
-import consulo.ui.ex.RelativePoint;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.TextBox;
-import consulo.project.ui.ProjectWindowStateService;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -63,7 +62,7 @@ public class SearchEverywhereManagerImpl implements SearchEverywhereManager {
     }
 
     Project project = initEvent.getData(CommonDataKeys.PROJECT);
-    Component contextComponent = initEvent.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component contextComponent = initEvent.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     List<SearchEverywhereContributor<?>> serviceContributors = Collections.EMPTY_LIST;
     Arrays.asList(//new TopHitSEContributor(project, contextComponent, s -> mySearchEverywhereUI.getSearchField().setValue(s)),
                   new RecentFilesSEContributor(project, GotoActionBase.getPsiContext(initEvent)),

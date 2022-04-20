@@ -15,16 +15,16 @@
  */
 package com.intellij.openapi.editor.actions;
 
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.action.EditorAction;
-import consulo.codeEditor.action.EditorActionHandler;
 import com.intellij.openapi.editor.textarea.TextComponentEditorImpl;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.EditorActionHandler;
+import consulo.codeEditor.impl.action.EditorAction;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.CommonDataKeys;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.text.JTextComponent;
 
 /**
@@ -45,7 +45,7 @@ public abstract class TextComponentEditorAction extends EditorAction {
   public static Editor getEditorFromContext(@Nonnull DataContext dataContext) {
     final Editor editor = dataContext.getData(CommonDataKeys.EDITOR);
     if (editor != null) return editor;
-    final Object data = dataContext.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Object data = dataContext.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (data instanceof JTextComponent) {
       return new TextComponentEditorImpl(dataContext.getData(CommonDataKeys.PROJECT), (JTextComponent) data);
     }

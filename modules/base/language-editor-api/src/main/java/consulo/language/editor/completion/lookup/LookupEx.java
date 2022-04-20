@@ -30,4 +30,10 @@ public interface LookupEx extends Lookup {
   void showElementActions(@Nullable InputEvent event);
 
   void hideLookup(boolean explicitly);
+
+  void finishLookup(final char completionChar);
+
+  void setFocusDegree(LookupFocusDegree focusDegree);
+
+  boolean performGuardedChange(Runnable change);
 }

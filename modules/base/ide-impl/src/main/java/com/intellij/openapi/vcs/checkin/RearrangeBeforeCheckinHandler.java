@@ -24,7 +24,7 @@ import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.openapi.vcs.VcsConfiguration;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
-import com.intellij.ui.NonFocusableCheckBox;
+import consulo.ui.ex.awt.NonFocusableCheckBox;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

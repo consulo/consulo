@@ -15,19 +15,21 @@
  */
 package com.intellij.refactoring.introduce.inplace;
 
+import com.intellij.util.containers.ContainerUtil;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.ui.impl.PopupChooserBuilder;
-import consulo.ui.ex.popup.event.JBPopupAdapter;
-import com.intellij.openapi.util.Pass;
-import consulo.ui.ex.awt.JBList;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.markup.*;
+import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
+import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 
 import javax.swing.*;
@@ -37,6 +39,7 @@ import java.awt.*;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * User: anna
@@ -80,9 +83,9 @@ public abstract class OccurrencesChooser<T> {
     myAttributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.SEARCH_RESULT_ATTRIBUTES);
   }
 
-  public void showChooser(final T selectedOccurrence, final List<T> allOccurrences, final Pass<ReplaceChoice> callback) {
+  public void showChooser(final T selectedOccurrence, final List<T> allOccurrences, final Consumer<ReplaceChoice> callback) {
     if (allOccurrences.size() == 1) {
-      callback.pass(ReplaceChoice.ALL);
+      callback.accept(ReplaceChoice.ALL);
     }
     else {
       Map<ReplaceChoice, List<T>> occurrencesMap = ContainerUtil.newLinkedHashMap();
@@ -92,9 +95,9 @@ public abstract class OccurrencesChooser<T> {
     }
   }
 
-  public void showChooser(final Pass<ReplaceChoice> callback, final Map<ReplaceChoice, List<T>> occurrencesMap) {
+  public void showChooser(final Consumer<ReplaceChoice> callback, final Map<ReplaceChoice, List<T>> occurrencesMap) {
     if (occurrencesMap.size() == 1) {
-      callback.pass(occurrencesMap.keySet().iterator().next());
+      callback.accept(occurrencesMap.keySet().iterator().next());
       return;
     }
     final DefaultListModel model = new DefaultListModel();
@@ -138,7 +141,7 @@ public abstract class OccurrencesChooser<T> {
             .setItemChoosenCallback(new Runnable() {
               @Override
               public void run() {
-                callback.pass((ReplaceChoice)list.getSelectedValue());
+                callback.accept((ReplaceChoice)list.getSelectedValue());
               }
             }).addListener(new JBPopupAdapter() {
               @Override

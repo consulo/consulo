@@ -18,7 +18,7 @@ import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ui.ex.awt.tree.AbstractTreeUi;
 import consulo.language.Language;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.language.file.LanguageFileType;

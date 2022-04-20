@@ -17,16 +17,15 @@
 package com.intellij.ide.actions;
 
 import com.intellij.ide.IdeView;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import consulo.project.Project;
-import consulo.ui.ex.InputValidator;
 import com.intellij.openapi.util.text.StringUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.InputValidator;
+import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
@@ -78,7 +77,7 @@ public abstract class CreateElementActionBase extends CreateInDirectoryActionBas
   @RequiredUIAccess
   @Override
   public final void actionPerformed(@Nonnull final AnActionEvent e) {
-    final IdeView view = e.getData(LangDataKeys.IDE_VIEW);
+    final IdeView view = e.getData(IdeView.KEY);
     if (view == null) {
       return;
     }

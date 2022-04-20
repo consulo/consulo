@@ -16,18 +16,20 @@
 
 package com.intellij.ide;
 
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nullable;
 
 /**
  * Common interface for IDE views where files can be selected (project view, packages view,
  * favorites or commander).
- *
- * @since 5.1
- * @see com.intellij.openapi.actionSystem.PlatformDataKeys#IDE_VIEW
  */
 public interface IdeView {
+  static Key<IdeView> KEY = Key.create(IdeView.class);
+  
   /**
    * Selects the specified element in the view.
    *

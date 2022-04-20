@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration;
 
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import com.intellij.openapi.module.ModuleConfigurationEditor;
 import com.intellij.openapi.module.impl.ModuleConfigurationStateImpl;

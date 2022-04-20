@@ -4,7 +4,7 @@ package com.intellij.ide;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.LangDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.application.TransactionGuard;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataManager;

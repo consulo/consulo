@@ -1,19 +1,18 @@
 package com.intellij.internal;
 
-import consulo.language.editor.hint.HintManager;
-import com.intellij.openapi.actionSystem.*;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import com.intellij.refactoring.IntroduceTargetChooser;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.SelectionModel;
-import com.intellij.openapi.util.Pass;
 import consulo.document.util.TextRange;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
-import com.intellij.refactoring.IntroduceTargetChooser;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -27,7 +26,7 @@ import java.util.List;
  */
 public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElement> extends AnAction {
   @Nonnull
-  protected final Class<T> myClass;  
+  protected final Class<T> myClass;
   @Nonnull
   protected final Class<? extends PsiFile> myFileClass;
 
@@ -41,25 +40,12 @@ public abstract class SelectionBasedPsiElementInternalAction<T extends PsiElemen
     final Editor editor = getEditor(e);
     final PsiFile file = getPsiFile(e);
     if (editor == null || file == null) return;
-    
+
     final List<T> expressions = getElement(editor, file);
     T first = ContainerUtil.getFirstItem(expressions);
 
     if (expressions.size() > 1) {
-      IntroduceTargetChooser.showChooser(
-        editor, expressions,
-        new Pass<T>() {
-          @Override
-          public void pass(@Nonnull T expression) {
-            performOnElement(editor, expression);
-          }
-        },
-        new Function<T, String>() {
-          public String fun(@Nonnull T expression) {
-            return expression.getText();
-          }
-        }
-      );
+      IntroduceTargetChooser.showChooser(editor, expressions, expression -> performOnElement(editor, expression), PsiElement::getText);
     }
     else if (expressions.size() == 1 && first != null) {
       performOnElement(editor, first);

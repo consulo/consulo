@@ -242,6 +242,12 @@ public class InjectedLanguageManagerImpl extends InjectedLanguageManager impleme
     return InjectedLanguageUtil.findInjectedElementNoCommit(hostFile, hostDocumentOffset);
   }
 
+  @Nullable
+  @Override
+  public PsiElement findElementAtNoCommit(@Nonnull PsiFile file, int offset) {
+    return InjectedLanguageUtil.findElementAtNoCommit(file, offset);
+  }
+
   @Override
   public void dropFileCaches(@Nonnull PsiFile file) {
     InjectedLanguageUtil.clearCachedInjectedFragmentsForFile(file);

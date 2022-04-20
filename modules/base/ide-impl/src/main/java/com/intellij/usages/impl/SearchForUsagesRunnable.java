@@ -112,7 +112,7 @@ class SearchForUsagesRunnable implements Runnable {
 
   @Nonnull
   private static String createOptionsHtml(UsageTarget[] searchFor) {
-    KeyboardShortcut shortcut = UsageViewImpl.getShowUsagesWithSettingsShortcut(searchFor);
+    KeyboardShortcut shortcut = UsageViewUtil.getShowUsagesWithSettingsShortcut(searchFor);
     String shortcutText = "";
     if (shortcut != null) {
       shortcutText = "&nbsp;(" + KeymapUtil.getShortcutText(shortcut) + ")";

@@ -15,7 +15,7 @@
  */
 package com.intellij.refactoring.actions;
 
-import com.intellij.lang.refactoring.RefactoringSupportProvider;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 
 import javax.annotation.Nonnull;

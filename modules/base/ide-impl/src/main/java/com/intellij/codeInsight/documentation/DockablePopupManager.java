@@ -21,7 +21,7 @@ import consulo.language.editor.internal.PsiUtilBase;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ToggleAction;
-import consulo.ui.ex.awt.update.Activatable;
+import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

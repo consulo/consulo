@@ -16,6 +16,8 @@
 
 package com.intellij.usages.impl;
 
+import consulo.usage.UsageAdapter;
+
 /**
  * @author cdr
  */

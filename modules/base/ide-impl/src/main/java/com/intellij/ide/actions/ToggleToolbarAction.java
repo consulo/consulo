@@ -20,6 +20,7 @@ import com.intellij.openapi.actionSystem.*;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.dataContext.DataProvider;
 import consulo.application.dumb.DumbAware;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.action.DefaultActionGroup;

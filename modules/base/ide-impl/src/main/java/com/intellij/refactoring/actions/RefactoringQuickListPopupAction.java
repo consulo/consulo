@@ -16,9 +16,10 @@
 package com.intellij.refactoring.actions;
 
 import com.intellij.ide.actions.QuickSwitchSchemeAction;
-import com.intellij.openapi.actionSystem.*;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;

@@ -4,33 +4,32 @@ package com.intellij.codeInsight.hint;
 
 import com.intellij.codeInsight.CodeInsightActionHandler;
 import com.intellij.lang.ExpressionTypeProvider;
-import consulo.language.Language;
 import com.intellij.lang.LanguageExpressionTypes;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.language.editor.hint.HintManager;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pass;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiUtilCore;
 import com.intellij.refactoring.IntroduceTargetChooser;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.JBIterable;
-import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
+import consulo.language.Language;
 import consulo.language.editor.TargetElementUtil;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiUtilCore;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;
+import consulo.util.collection.JBIterable;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
   private final boolean myRequestFocus;
@@ -54,9 +53,9 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
     if (handlers.isEmpty()) return;
 
     Map<PsiElement, ExpressionTypeProvider> map = getExpressions(file, editor, handlers);
-    Pass<PsiElement> callback = new Pass<PsiElement>() {
+    Consumer<PsiElement> callback = new Consumer<PsiElement>() {
       @Override
-      public void pass(@Nonnull PsiElement expression) {
+      public void accept(@Nonnull PsiElement expression) {
         ExpressionTypeProvider provider = Objects.requireNonNull(map.get(expression));
         //noinspection unchecked
         final String informationHint = provider.getInformationHint(expression);
@@ -82,7 +81,7 @@ public class ShowExpressionTypeHandler implements CodeInsightActionHandler {
         displayHint(typeInfo, informationHint);
       }
       else {
-        callback.pass(expression);
+        callback.accept(expression);
       }
     }
     else {

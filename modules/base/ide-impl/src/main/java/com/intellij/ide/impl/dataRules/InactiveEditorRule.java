@@ -21,7 +21,7 @@ package com.intellij.ide.impl.dataRules;
 
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.GetDataRule;
 import consulo.util.dataholder.Key;

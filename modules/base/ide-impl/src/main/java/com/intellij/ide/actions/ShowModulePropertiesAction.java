@@ -15,8 +15,8 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;

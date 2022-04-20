@@ -18,6 +18,7 @@ package com.intellij.ide.hierarchy;
 
 import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.OccurenceNavigator;
 import com.intellij.ide.OccurenceNavigatorSupport;
 import com.intellij.ide.PsiCopyPasteManager;
@@ -34,7 +35,6 @@ import consulo.ui.ex.awt.dnd.DnDSource;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.dataContext.DataContext;
 import consulo.language.LanguageExtension;
-import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;

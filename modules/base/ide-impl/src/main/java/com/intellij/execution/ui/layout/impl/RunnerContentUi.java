@@ -21,13 +21,7 @@ import com.intellij.execution.ui.layout.actions.CloseViewAction;
 import com.intellij.execution.ui.layout.actions.MinimizeViewAction;
 import com.intellij.execution.ui.layout.actions.RestoreViewAction;
 import com.intellij.ide.actions.CloseAction;
-import consulo.ui.ex.awt.internal.AbstractPainter;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.RelativeRectangle;
-import com.intellij.ui.docking.DockContainer;
-import com.intellij.ui.docking.DockManager;
-import com.intellij.ui.docking.DockableContent;
-import com.intellij.ui.docking.DragSession;
 import com.intellij.ui.switcher.QuickActionProvider;
 import com.intellij.ui.tabs.JBTabs;
 import com.intellij.ui.tabs.TabInfo;
@@ -47,6 +41,10 @@ import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.dock.DockContainer;
+import consulo.project.ui.wm.dock.DockManager;
+import consulo.project.ui.wm.dock.DockableContent;
+import consulo.project.ui.wm.dock.DragSession;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.docking.BaseDockManager;
 import consulo.ui.ex.JBColor;
@@ -54,6 +52,8 @@ import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.AbstractPainter;
+import consulo.ui.ex.awt.internal.SwingDockContainer;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
@@ -86,7 +86,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Facade, ViewContextEx, PropertyChangeListener, QuickActionProvider, DockContainer.Dialog {
+public class RunnerContentUi implements ContentUI, Disposable, CellTransform.Facade, ViewContextEx, PropertyChangeListener, QuickActionProvider, SwingDockContainer, DockContainer.Dialog {
   public static final Key<RunnerContentUi> KEY = Key.create("DebuggerContentUI");
   public static final Key<Boolean> LIGHTWEIGHT_CONTENT_MARKER = Key.create("LightweightContent");
 

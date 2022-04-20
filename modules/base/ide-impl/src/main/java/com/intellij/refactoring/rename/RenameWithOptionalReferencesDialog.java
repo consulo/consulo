@@ -16,10 +16,11 @@
 package com.intellij.refactoring.rename;
 
 import consulo.codeEditor.Editor;
+import consulo.language.editor.refactoring.rename.RenameDialog;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringBundle;
-import com.intellij.ui.NonFocusableCheckBox;
+import consulo.ui.ex.awt.NonFocusableCheckBox;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

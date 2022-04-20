@@ -15,12 +15,12 @@
  */
 package com.intellij.refactoring.changeSignature.inplace;
 
-import com.intellij.codeInsight.highlighting.HighlightManager;
+import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.findUsage.DescriptiveNameUtil;
 import consulo.application.Result;
 import consulo.language.editor.WriteCommandAction;
-import com.intellij.openapi.command.impl.FinishMarkAction;
-import com.intellij.openapi.command.impl.StartMarkAction;
+import consulo.undoRedo.internal.FinishMarkAction;
+import consulo.undoRedo.internal.StartMarkAction;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.EditorColors;
 import consulo.colorScheme.EditorColorsManager;
@@ -55,9 +55,9 @@ import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
-import com.intellij.refactoring.changeSignature.ChangeSignatureHandler;
-import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
-import com.intellij.ui.NonFocusableCheckBox;
+import consulo.language.editor.refactoring.changeSignature.ChangeSignatureHandler;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.ui.ex.awt.NonFocusableCheckBox;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.PositionTracker;
@@ -89,7 +89,7 @@ public class InplaceChangeSignature implements DocumentListener {
     myDocumentManager = PsiDocumentManager.getInstance(project);
     myProject = project;
     try {
-      myMarkAction = StartMarkAction.start(editor, project, ChangeSignatureHandler.REFACTORING_NAME);
+      myMarkAction = StartMarkAction.start(editor.getDocument(), project, ChangeSignatureHandler.REFACTORING_NAME);
     }
     catch (StartMarkAction.AlreadyStartedException e) {
       final int exitCode = Messages.showYesNoDialog(myProject, e.getMessage(), ChangeSignatureHandler.REFACTORING_NAME, "Navigate to Started", "Cancel", Messages.getErrorIcon());
@@ -259,7 +259,7 @@ public class InplaceChangeSignature implements DocumentListener {
     myHighlighters.clear();
     myBalloon.hide();
     myDetector = null;
-    FinishMarkAction.finish(myProject, myEditor, myMarkAction);
+    FinishMarkAction.finish(myProject, myEditor.getDocument(), myMarkAction);
     myEditor.putUserData(INPLACE_CHANGE_SIGNATURE, null);
   }
 

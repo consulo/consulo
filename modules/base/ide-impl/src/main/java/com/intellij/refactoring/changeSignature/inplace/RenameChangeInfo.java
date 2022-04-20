@@ -22,7 +22,7 @@ import consulo.language.psi.PsiNameIdentifierOwner;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.changeSignature.ChangeInfo;
 import com.intellij.refactoring.changeSignature.ParameterInfo;
-import com.intellij.refactoring.rename.RenameProcessor;
+import consulo.language.editor.refactoring.rename.RenameProcessor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
 import consulo.application.util.matcher.MatcherTextRange;
-import consulo.codeEditor.impl.EditorActionUtil;
+import consulo.codeEditor.action.EditorActionUtil;
 import consulo.codeEditor.EditorEx;
 import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import com.intellij.openapi.util.text.StringUtil;

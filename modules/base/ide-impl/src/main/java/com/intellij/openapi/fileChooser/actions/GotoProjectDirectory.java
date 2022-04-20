@@ -16,7 +16,7 @@
 package com.intellij.openapi.fileChooser.actions;
 
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.application.Application;
 import com.intellij.openapi.fileChooser.FileSystemTree;

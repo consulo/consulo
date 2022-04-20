@@ -15,17 +15,17 @@
  */
 package com.intellij.openapi.wm.impl.welcomeScreen;
 
-import com.intellij.openapi.actionSystem.*;
-import consulo.dataContext.DataContext;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.popup.ListPopup;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
 import com.intellij.ui.popup.PopupFactoryImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.dataContext.DataContext;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.popup.JBPopupFactory;
+import consulo.ui.ex.popup.ListPopup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,7 +95,7 @@ public abstract class WelcomePopupAction extends AnAction implements DumbAware {
   }
 
   protected void showPopup(DataContext context, ListPopup popup, JComponent contextComponent) {
-    Component focusedComponent = contextComponent != null ? contextComponent : context.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    Component focusedComponent = contextComponent != null ? contextComponent : context.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (focusedComponent != null) {
       if (popup instanceof PopupFactoryImpl.ActionGroupPopup && focusedComponent instanceof JLabel) {
         ((PopupFactoryImpl.ActionGroupPopup)popup).showUnderneathOfLabel((JLabel)focusedComponent);

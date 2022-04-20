@@ -24,13 +24,13 @@ import com.intellij.codeInsight.template.RecalculatableResult;
 import consulo.language.editor.template.TemplateCompletionProcessor;
 import com.intellij.openapi.command.CommandAdapter;
 import consulo.language.editor.WriteCommandAction;
-import com.intellij.openapi.command.undo.BasicUndoableAction;
+import consulo.undoRedo.BasicUndoableAction;
 import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import consulo.codeEditor.event.CaretAdapter;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.refactoring.rename.inplace.InplaceRefactoring;
+import consulo.language.editor.refactoring.rename.inplace.InplaceRefactoring;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
@@ -275,6 +275,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
     myCurrentSegmentNumber = isFinished ? -1 : getCurrentSegmentNumber();
   }
 
+  @Override
   @Nullable
   public TextResult getVariableValue(@Nonnull String variableName) {
     if (variableName.equals(TemplateImpl.SELECTION)) {
@@ -308,6 +309,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
     return (String)getProperties().get(ExpressionContext.SELECTION);
   }
 
+  @Override
   @Nullable
   public TextRange getCurrentVariableRange() {
     int number = getCurrentSegmentNumber();
@@ -323,10 +325,12 @@ public class TemplateStateImpl implements Disposable, TemplateState {
     return new TextRange(mySegments.getSegmentStart(segment), mySegments.getSegmentEnd(segment));
   }
 
+  @Override
   public int getSegmentsCount() {
     return mySegments.getSegmentsCount();
   }
 
+  @Override
   public TextRange getSegmentRange(int segment) {
     return new TextRange(mySegments.getSegmentStart(segment), mySegments.getSegmentEnd(segment));
   }
@@ -916,6 +920,7 @@ public class TemplateStateImpl implements Disposable, TemplateState {
     }
   }
 
+  @Override
   public void nextTab() {
     if (isFinished()) {
       return;
@@ -1036,13 +1041,10 @@ public class TemplateStateImpl implements Disposable, TemplateState {
     cleanupTemplateState(brokenOff);
   }
 
-  public void gotoEnd() {
-    gotoEnd(true);
-  }
-
   /**
    * @deprecated use this#gotoEnd(true)
    */
+  @Override
   public void cancelTemplate() {
     if (isDisposed()) return;
     LookupManager.getInstance(myProject).hideActiveLookup();

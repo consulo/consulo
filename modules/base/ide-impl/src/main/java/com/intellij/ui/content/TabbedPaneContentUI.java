@@ -15,9 +15,9 @@
  */
 package com.intellij.ui.content;
 
-import com.intellij.openapi.actionSystem.*;
 import consulo.dataContext.DataProvider;
 import consulo.ide.impl.TabFactoryBuilderImpl;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.PopupHandler;

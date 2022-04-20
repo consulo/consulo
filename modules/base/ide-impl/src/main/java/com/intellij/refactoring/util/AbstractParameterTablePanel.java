@@ -19,7 +19,7 @@ import consulo.language.Language;
 import consulo.language.editor.refactoring.LanguageNamesValidation;
 import consulo.project.Project;
 import com.intellij.refactoring.extractMethod.AbstractVariableData;
-import com.intellij.ui.BooleanTableCellRenderer;
+import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.table.JBTable;

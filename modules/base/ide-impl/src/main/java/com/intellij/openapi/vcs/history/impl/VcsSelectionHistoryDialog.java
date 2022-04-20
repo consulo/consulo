@@ -26,7 +26,7 @@ import consulo.diff.request.NoDiffRequest;
 import consulo.diff.request.SimpleDiffRequest;
 import com.intellij.diff.util.IntPair;
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.ui.ex.awt.FrameWrapper;
 import com.intellij.openapi.ui.popup.util.PopupUtil;

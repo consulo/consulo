@@ -15,21 +15,20 @@
  */
 package com.intellij.ide.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.ui.ShadowAction;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import com.intellij.openapi.ui.ShadowAction;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.UIExAWTDataKey;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +75,7 @@ public class ShowContentAction extends AnAction implements DumbAware {
     final ToolWindow window = manager.getToolWindow(manager.getActiveToolWindowId());
     if (window == null) return null;
 
-    final Component context = event.getData(PlatformDataKeys.CONTEXT_COMPONENT);
+    final Component context = event.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (context == null) return null;
 
     return SwingUtilities.isDescendingFrom(window.getComponent(), context) ? window : null;
