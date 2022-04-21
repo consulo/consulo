@@ -25,10 +25,7 @@
   <artifactId>consulo-find-api</artifactId>
   <version>3-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>11</java.level>
-  </properties>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

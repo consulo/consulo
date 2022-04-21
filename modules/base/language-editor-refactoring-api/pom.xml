@@ -31,14 +31,6 @@
 
   <packaging>jar</packaging>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>11</java.level>
-  </properties>
-
-  <build>
-  </build>
-
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

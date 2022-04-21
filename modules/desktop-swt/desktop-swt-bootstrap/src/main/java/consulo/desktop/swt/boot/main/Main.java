@@ -37,7 +37,7 @@ public class Main {
   }
 
   public static void main(final String[] args) {
-    if (!SystemInfoRt.isJavaVersionAtLeast(11)) {
+    if (!SystemInfoRt.isJavaVersionAtLeast(17)) {
       showMessage("Unsupported Java Version", "Cannot start under Java " + SystemInfoRt.JAVA_RUNTIME_VERSION + ": Java 11 or later is required.", true);
       System.exit(ExitCodes.UNSUPPORTED_JAVA_VERSION);
     }

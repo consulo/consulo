@@ -33,7 +33,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>1.5</java.level>
+    <java.level>1.6</java.level>
   </properties>
 
   <build>

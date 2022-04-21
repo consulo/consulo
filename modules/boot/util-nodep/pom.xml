@@ -20,4 +20,27 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>9</java.level>
   </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerId>javi</compilerId>
+          <source>17</source>
+          <target>${java.level}</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>consulo.internal</groupId>
+            <artifactId>plexus-compiler-javi</artifactId>
+            <version>16.0.7-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 </project>

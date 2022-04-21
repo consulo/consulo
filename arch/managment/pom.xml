@@ -563,7 +563,7 @@
         </property>
       </activation>
       <properties>
-        <java.level>11</java.level>
+        <java.level>17</java.level>
       </properties>
     </profile>
   </profiles>
@@ -608,19 +608,11 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compile.plugin}</version>
         <configuration>
-          <source>16</source>
+          <source>${java.level}</source>
           <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
-          <compilerId>javi</compilerId>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>consulo.internal</groupId>
-            <artifactId>plexus-compiler-javi</artifactId>
-            <version>16.0.7-SNAPSHOT</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

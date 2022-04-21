@@ -33,7 +33,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.level>11</java.level>
   </properties>
 
   <build>
@@ -42,8 +41,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>${java.level}</source>
-          <target>${java.level}</target>
+          <source>17</source>
+          <target>17</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
           <compilerArgs>

@@ -9,6 +9,7 @@
     <inspection_tool class="Deprecation" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="IGNORE_IMPORT_STATEMENTS" value="false" />
     </inspection_tool>
+    <inspection_tool class="DevKitIconNotResolved" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JavadocReference" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="MissingOverrideAnnotation" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoreObjectMethods" value="true" />
