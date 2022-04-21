@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.unwrap;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;

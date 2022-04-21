@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.settings;
 
+import consulo.ui.ex.awt.tree.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.tree.NodeRenderer;
@@ -25,7 +27,7 @@ import com.intellij.openapi.options.ex.ConfigurableWrapper;
 import com.intellij.ui.CellRendererPanel;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.ui.TreeUIHelper;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
 import com.intellij.ui.treeStructure.*;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;

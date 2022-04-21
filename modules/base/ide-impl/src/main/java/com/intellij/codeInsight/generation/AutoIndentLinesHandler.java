@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.generation;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.openapi.diagnostic.Logger;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;

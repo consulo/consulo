@@ -1,6 +1,6 @@
 package com.intellij.codeInsight.editorActions.fillParagraph;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;

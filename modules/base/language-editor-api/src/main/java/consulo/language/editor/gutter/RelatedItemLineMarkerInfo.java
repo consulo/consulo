@@ -13,54 +13,52 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight.daemon;
+package consulo.language.editor.gutter;
 
-import com.intellij.navigation.GotoRelatedItem;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import com.intellij.openapi.util.NotNullLazyValue;
 import consulo.document.util.TextRange;
-import consulo.language.editor.gutter.GutterIconNavigationHandler;
-import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.Function;
 import consulo.ui.image.Image;
+import consulo.util.lang.lazy.LazyValue;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author nik
  */
 public class RelatedItemLineMarkerInfo<T extends PsiElement> extends LineMarkerInfo<T> {
-  private final NotNullLazyValue<Collection<? extends GotoRelatedItem>> myTargets;
+  private final Supplier<Collection<? extends GotoRelatedItem>> myTargets;
 
-  public RelatedItemLineMarkerInfo(@Nonnull T element, @Nonnull TextRange range, Image icon, int updatePass,
+  public RelatedItemLineMarkerInfo(@Nonnull T element,
+                                   @Nonnull TextRange range,
+                                   Image icon,
+                                   int updatePass,
                                    @Nullable Function<? super T, String> tooltipProvider,
                                    @Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
-                                   @Nonnull NotNullLazyValue<Collection<? extends GotoRelatedItem>> targets) {
+                                   @Nonnull Supplier<Collection<? extends GotoRelatedItem>> targets) {
     super(element, range, icon, updatePass, tooltipProvider, navHandler, alignment);
-    myTargets = targets;
+    myTargets = LazyValue.notNull(targets);
   }
 
-  public RelatedItemLineMarkerInfo(@Nonnull T element, @Nonnull TextRange range, Image icon, int updatePass,
+  public RelatedItemLineMarkerInfo(@Nonnull T element,
+                                   @Nonnull TextRange range,
+                                   Image icon,
+                                   int updatePass,
                                    @Nullable Function<? super T, String> tooltipProvider,
                                    @Nullable GutterIconNavigationHandler<T> navHandler,
                                    GutterIconRenderer.Alignment alignment,
                                    @Nonnull final Collection<? extends GotoRelatedItem> targets) {
-    this(element, range, icon, updatePass, tooltipProvider, navHandler, alignment, new NotNullLazyValue<Collection<? extends GotoRelatedItem>>() {
-      @Nonnull
-      @Override
-      protected Collection<? extends GotoRelatedItem> compute() {
-        return targets;
-      }
-    });
+    this(element, range, icon, updatePass, tooltipProvider, navHandler, alignment, () -> targets);
   }
 
   @Nonnull
   public Collection<? extends GotoRelatedItem> createGotoRelatedItems() {
-    return myTargets.getValue();
+    return myTargets.get();
   }
 
   @Override

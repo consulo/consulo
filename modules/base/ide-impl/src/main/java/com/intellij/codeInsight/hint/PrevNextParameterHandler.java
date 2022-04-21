@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.hint;
 
-import com.intellij.codeInsight.actions.CodeInsightEditorAction;
+import consulo.language.editor.action.CodeInsightEditorAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataContext;

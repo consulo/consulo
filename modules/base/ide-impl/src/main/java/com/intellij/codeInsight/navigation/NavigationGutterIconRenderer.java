@@ -32,7 +32,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.NullableFunction;
-import com.intellij.util.PsiNavigateUtil;
+import consulo.language.editor.util.PsiNavigateUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

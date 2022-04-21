@@ -21,6 +21,7 @@ package com.intellij.lang;
 
 import consulo.container.plugin.PluginIds;
 import consulo.language.LanguageExtension;
+import consulo.language.editor.action.LanguageCodeInsightActionHandler;
 
 public class CodeInsightActions {
   public static final LanguageExtension<LanguageCodeInsightActionHandler>

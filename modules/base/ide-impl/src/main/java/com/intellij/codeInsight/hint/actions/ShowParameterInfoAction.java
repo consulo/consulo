@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.hint.actions;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.hint.ShowParameterInfoHandler;
 import consulo.language.Language;

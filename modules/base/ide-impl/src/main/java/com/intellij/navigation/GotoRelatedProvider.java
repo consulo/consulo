@@ -17,6 +17,7 @@ package com.intellij.navigation;
 
 import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.gutter.GotoRelatedItem;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 

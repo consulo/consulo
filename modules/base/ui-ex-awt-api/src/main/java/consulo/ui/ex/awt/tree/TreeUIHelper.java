@@ -13,41 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt.tree;
 
-import consulo.ide.ServiceManager;
-import com.intellij.util.containers.Convertor;
+import consulo.application.Application;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
+import java.util.function.Function;
 
 /**
  * @author yole
  */
 public abstract class TreeUIHelper {
   public static TreeUIHelper getInstance() {
-    return ServiceManager.getService(TreeUIHelper.class);
+    return Application.get().getInstance(TreeUIHelper.class);
   }
 
   /**
-   * @deprecated use JBTree class instead, it will automatically configure tool tips 
+   * @deprecated use JBTree class instead, it will automatically configure tool tips
    */
   public abstract void installToolTipHandler(JTree tree);
+
   /**
    * @deprecated use JBTable class instead, it will automatically configure tool tips
    */
   public abstract void installToolTipHandler(JTable table);
+
   /**
-   * @deprecated use JBLIst class instead, it will automatically configure tool tips 
+   * @deprecated use JBLIst class instead, it will automatically configure tool tips
    */
   public abstract void installToolTipHandler(JList list);
 
   public abstract void installEditSourceOnDoubleClick(JTree tree);
 
   public abstract void installTreeSpeedSearch(JTree tree);
+
   public abstract void installListSpeedSearch(JList list);
-  public abstract void installTreeSpeedSearch(JTree tree, Convertor<TreePath, String> convertor, boolean canExpand);
-  public abstract void installListSpeedSearch(JList list, Convertor<Object, String> convertor);
+
+  public abstract void installTreeSpeedSearch(JTree tree, Function<TreePath, String> convertor, boolean canExpand);
+
+  public abstract void installListSpeedSearch(JList list, Function<Object, String> convertor);
 
   public abstract void installEditSourceOnEnterKeyHandler(JTree tree);
 

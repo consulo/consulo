@@ -16,7 +16,7 @@ import consulo.ui.ex.popup.TreePopupStep;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.ui.popup.NextStepHandler;
 import com.intellij.ui.popup.WizardPopup;
-import com.intellij.ui.treeStructure.SimpleTree;
+import consulo.ui.ex.awt.tree.SimpleTree;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeBuilder;
 import com.intellij.ui.treeStructure.filtered.FilteringTreeStructure;
 import consulo.ui.ex.awt.tree.TreeUtil;

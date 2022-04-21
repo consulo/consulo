@@ -16,12 +16,13 @@
 
 package com.intellij.codeInsight.daemon.impl.actions;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import com.intellij.codeInsight.daemon.impl.ShowErrorDescriptionHandler;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
@@ -63,6 +64,7 @@ public class ShowErrorDescriptionAction extends BaseCodeInsightAction implements
     return info != null && info.getDescription() != null;
   }
 
+  @RequiredUIAccess
   @Override
   public void beforeActionPerformedUpdate(@Nonnull final AnActionEvent e) {
     super.beforeActionPerformedUpdate(e);

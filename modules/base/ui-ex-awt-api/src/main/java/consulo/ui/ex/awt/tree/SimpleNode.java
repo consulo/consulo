@@ -13,23 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.treeStructure;
+package consulo.ui.ex.awt.tree;
 
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ui.ex.tree.NodeDescriptor;
-import consulo.ui.ex.tree.PresentableNodeDescriptor;
-import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
-import consulo.virtualFileSystem.status.FileStatus;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.tree.LeafState;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.component.util.ComparableObject;
 import consulo.component.util.ComparableObjectCheck;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.tree.LeafState;
+import consulo.ui.ex.tree.NodeDescriptor;
+import consulo.ui.ex.tree.PresentableNodeDescriptor;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
+import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,6 +36,7 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class SimpleNode extends PresentableNodeDescriptor implements ComparableObject, LeafState.Supplier {
   protected static final SimpleNode[] NO_CHILDREN = new SimpleNode[0];
@@ -84,10 +84,6 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
     return new SimpleTextAttributes(Font.PLAIN, TargetAWT.to(getColor()));
   }
 
-  private FileStatus getFileStatus() {
-    return FileStatus.NOT_CHANGED;
-  }
-
   @Nullable
   protected Object updateElement() {
     return getElement();
@@ -107,7 +103,6 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
     List<ColoredFragment> oldFragments = new ArrayList<ColoredFragment>(presentation.getColoredText());
 
     myColor = TargetAWT.from(UIUtil.getTreeTextForeground());
-    updateFileStatus();
 
     doUpdate();
 
@@ -119,15 +114,6 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
 
     presentation.setForcedTextForeground(myColor);
     presentation.setIcon(getIcon());
-  }
-
-  protected void updateFileStatus() {
-    assert getFileStatus() != null : getClass().getName() + ' ' + toString();
-
-    ColorValue fileStatusColor = getFileStatus().getColor();
-    if (fileStatusColor != null) {
-      myColor = fileStatusColor;
-    }
   }
 
   /**
@@ -221,8 +207,8 @@ public abstract class SimpleNode extends PresentableNodeDescriptor implements Co
 
   public abstract SimpleNode[] getChildren();
 
-  public void accept(SimpleNodeVisitor visitor) {
-    visitor.accept(this);
+  public void accept(Predicate<SimpleNode> visitor) {
+    visitor.test(this);
   }
 
   public void handleSelection(SimpleTree tree) {

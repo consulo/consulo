@@ -20,7 +20,7 @@ import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.tree.PresentableNodeDescriptor;
 import consulo.util.concurrent.ActionCallback;
 import com.intellij.ui.speedSearch.ElementFilter;
-import com.intellij.ui.treeStructure.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleNode;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 
@@ -221,12 +221,6 @@ public class FilteringTreeStructure extends AbstractTreeStructure {
     @Override
     public boolean isHighlightableContentNode(@Nonnull final PresentableNodeDescriptor kid) {
       return myDelegate instanceof PresentableNodeDescriptor && ((PresentableNodeDescriptor)myDelegate).isHighlightableContentNode(kid);
-    }
-
-
-    @Override
-    protected void updateFileStatus() {
-      // DO NOTHING
     }
 
     @Override

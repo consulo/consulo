@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.generation.surroundWith.SurroundWithHandler;
 import consulo.language.editor.hint.HintManager;

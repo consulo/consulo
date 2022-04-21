@@ -20,7 +20,7 @@ import consulo.component.macro.PathMacroFilter;
 import consulo.application.impl.internal.progress.CoreProgressManager;
 import consulo.language.file.EncodingManager;
 import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
-import com.intellij.ui.TreeUIHelper;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
 import consulo.application.Application;
 import consulo.application.macro.PathMacros;
 import consulo.application.internal.concurrency.JobLauncher;

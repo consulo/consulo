@@ -15,13 +15,12 @@
  */
 package com.intellij.openapi.editor;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.codeEditor.TextComponentEditor;
 import com.intellij.util.Producer;
-import consulo.application.ApplicationManager;
 import consulo.application.util.LineTokenizer;
 import consulo.codeEditor.*;
 import consulo.document.FileDocumentManager;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.ui.ex.awt.CopyPasteManager;
 
 import javax.annotation.Nonnull;
@@ -200,10 +199,6 @@ public class EditorModificationUtil {
    * false otherwise, additionally information hint with warning would be shown
    */
   public static boolean checkModificationAllowed(Editor editor) {
-    if (!editor.isViewer()) return true;
-    if (ApplicationManager.getApplication().isHeadlessEnvironment() || editor instanceof TextComponentEditor) return false;
-
-    HintManager.getInstance().showInformationHint(editor, EditorBundle.message("editing.viewer.hint"));
-    return false;
+    return LanguageEditorUtil.checkModificationAllowed(editor);
   }
 }

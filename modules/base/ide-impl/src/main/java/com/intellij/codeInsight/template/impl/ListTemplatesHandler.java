@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;

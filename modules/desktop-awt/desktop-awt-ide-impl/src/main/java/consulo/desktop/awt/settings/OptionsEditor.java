@@ -48,7 +48,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.SearchTextField;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.speedSearch.ElementFilter;
-import com.intellij.ui.treeStructure.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleNode;
 import com.intellij.util.ReflectionUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

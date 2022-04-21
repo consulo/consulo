@@ -16,12 +16,12 @@
 
 package com.intellij.codeInsight.generation.actions;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.generation.DelegateMethodsHandler;
 import com.intellij.lang.CodeInsightActions;
 import consulo.language.Language;
-import com.intellij.lang.LanguageCodeInsightActionHandler;
+import consulo.language.editor.action.LanguageCodeInsightActionHandler;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;

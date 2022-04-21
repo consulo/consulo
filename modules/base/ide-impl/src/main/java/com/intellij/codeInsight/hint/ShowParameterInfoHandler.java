@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.hint;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.Lookup;
 import consulo.language.editor.completion.lookup.LookupElement;

@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.ui.ex.awt.dnd.DnDAware;
-import com.intellij.ui.treeStructure.SimpleTree;
+import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import javax.annotation.Nonnull;
 

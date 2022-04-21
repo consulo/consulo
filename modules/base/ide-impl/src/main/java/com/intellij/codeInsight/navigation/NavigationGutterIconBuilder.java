@@ -15,26 +15,26 @@
  */
 package com.intellij.codeInsight.navigation;
 
-import consulo.language.editor.Pass;
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
-import consulo.application.util.TypePresentationService;
-import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.language.editor.gutter.LineMarkerInfo;
-import consulo.language.editor.annotation.Annotation;
-import consulo.language.editor.annotation.AnnotationHolder;
-import com.intellij.navigation.GotoRelatedItem;
-import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.project.Project;
-import consulo.application.util.function.Computable;
+import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
 import com.intellij.openapi.util.NotNullLazyValue;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.SmartPointerManager;
-import consulo.language.psi.SmartPsiElementPointer;
 import com.intellij.util.ConstantFunction;
 import com.intellij.util.NotNullFunction;
 import com.intellij.util.NullableFunction;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.TypePresentationService;
+import consulo.application.util.function.Computable;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.language.editor.gutter.GotoRelatedItem;
+import consulo.language.editor.Pass;
+import consulo.language.editor.annotation.Annotation;
+import consulo.language.editor.annotation.AnnotationHolder;
+import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.SmartPointerManager;
+import consulo.language.psi.SmartPsiElementPointer;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.NonNls;
 
@@ -50,8 +50,8 @@ import java.util.*;
  * @author peter
  */
 public class NavigationGutterIconBuilder<T> {
-  @NonNls private static final String PATTERN = "&nbsp;&nbsp;&nbsp;&nbsp;{0}";
-  protected static final NotNullFunction<PsiElement,Collection<? extends PsiElement>> DEFAULT_PSI_CONVERTOR = new NotNullFunction<PsiElement, Collection<? extends PsiElement>>() {
+  private static final String PATTERN = "&nbsp;&nbsp;&nbsp;&nbsp;{0}";
+  protected static final NotNullFunction<PsiElement, Collection<? extends PsiElement>> DEFAULT_PSI_CONVERTOR = new NotNullFunction<PsiElement, Collection<? extends PsiElement>>() {
     @Override
     @Nonnull
     public Collection<? extends PsiElement> fun(final PsiElement element) {
@@ -68,7 +68,7 @@ public class NavigationGutterIconBuilder<T> {
   };
 
   private final Image myIcon;
-  private final NotNullFunction<T,Collection<? extends PsiElement>> myConverter;
+  private final NotNullFunction<T, Collection<? extends PsiElement>> myConverter;
 
   protected NotNullLazyValue<Collection<? extends T>> myTargets;
   protected boolean myLazy;
@@ -78,7 +78,7 @@ public class NavigationGutterIconBuilder<T> {
   private String myTooltipTitle;
   private GutterIconRenderer.Alignment myAlignment = GutterIconRenderer.Alignment.CENTER;
   private Computable<PsiElementListCellRenderer> myCellRenderer;
-  private NullableFunction<T,String> myNamer = createDefaultNamer();
+  private NullableFunction<T, String> myNamer = createDefaultNamer();
   private final NotNullFunction<T, Collection<? extends GotoRelatedItem>> myGotoRelatedItemProvider;
 
   public static final NotNullFunction<PsiElement, Collection<? extends GotoRelatedItem>> PSI_GOTO_RELATED_ITEM_PROVIDER = new NotNullFunction<PsiElement, Collection<? extends GotoRelatedItem>>() {
@@ -105,8 +105,7 @@ public class NavigationGutterIconBuilder<T> {
     return create(icon, DEFAULT_PSI_CONVERTOR, PSI_GOTO_RELATED_ITEM_PROVIDER);
   }
 
-  public static <T> NavigationGutterIconBuilder<T> create(@Nonnull final Image icon,
-                                                          @Nonnull NotNullFunction<T, Collection<? extends PsiElement>> converter) {
+  public static <T> NavigationGutterIconBuilder<T> create(@Nonnull final Image icon, @Nonnull NotNullFunction<T, Collection<? extends PsiElement>> converter) {
     return create(icon, converter, null);
   }
 
@@ -166,7 +165,7 @@ public class NavigationGutterIconBuilder<T> {
     return this;
   }
 
-  public NavigationGutterIconBuilder<T> setNamer(@Nonnull NullableFunction<T,String> namer) {
+  public NavigationGutterIconBuilder<T> setNamer(@Nonnull NullableFunction<T, String> namer) {
     myNamer = namer;
     return this;
   }
@@ -176,7 +175,7 @@ public class NavigationGutterIconBuilder<T> {
     return this;
   }
 
-  protected NullableFunction<T,String> createDefaultNamer() {
+  protected NullableFunction<T, String> createDefaultNamer() {
     return DEFAULT_NAMER;
   }
 
@@ -206,10 +205,8 @@ public class NavigationGutterIconBuilder<T> {
         return Collections.emptyList();
       }
     };
-    return new RelatedItemLineMarkerInfo<PsiElement>(element, element.getTextRange(), renderer.getIcon(), Pass.LINE_MARKERS,
-                                                     tooltip == null ? null : new ConstantFunction<PsiElement, String>(tooltip),
-                                                     renderer.isNavigateAction() ? renderer : null, renderer.getAlignment(),
-                                                     gotoTargets);
+    return new RelatedItemLineMarkerInfo<PsiElement>(element, element.getTextRange(), renderer.getIcon(), Pass.LINE_MARKERS, tooltip == null ? null : new ConstantFunction<PsiElement, String>(tooltip),
+                                                     renderer.isNavigateAction() ? renderer : null, renderer.getAlignment(), gotoTargets);
   }
 
   private void checkBuilt() {
@@ -259,8 +256,7 @@ public class NavigationGutterIconBuilder<T> {
       myTooltipText = sb.toString();
     }
 
-    Computable<PsiElementListCellRenderer> renderer =
-      myCellRenderer == null ? DefaultPsiElementCellRenderer::new : myCellRenderer;
+    Computable<PsiElementListCellRenderer> renderer = myCellRenderer == null ? DefaultPsiElementCellRenderer::new : myCellRenderer;
     return new MyNavigationGutterIconRenderer(this, myAlignment, myIcon, myTooltipText, pointers, renderer, empty);
   }
 

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.navigation;
+package consulo.language.editor.gutter;
 
+import consulo.language.editor.util.PsiNavigateUtil;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.PsiNavigateUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

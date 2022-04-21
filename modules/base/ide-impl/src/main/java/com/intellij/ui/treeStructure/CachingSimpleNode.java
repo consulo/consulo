@@ -15,6 +15,7 @@
  */
 package com.intellij.ui.treeStructure;
 
+import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.project.Project;
 import javax.annotation.Nullable;

@@ -17,6 +17,7 @@ package com.intellij.codeInsight.daemon;
 
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.LineMarkerProvider;
+import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
 import javax.annotation.Nonnull;

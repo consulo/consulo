@@ -19,7 +19,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElem
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import com.intellij.packaging.impl.artifacts.ArtifactUtil;
-import com.intellij.ui.treeStructure.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleNode;
 import javax.annotation.Nonnull;
 
 import javax.swing.tree.TreePath;

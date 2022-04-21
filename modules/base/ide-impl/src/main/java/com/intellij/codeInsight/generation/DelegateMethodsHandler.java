@@ -16,11 +16,11 @@
 
 package com.intellij.codeInsight.generation;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import com.intellij.lang.CodeInsightActions;
 import consulo.language.Language;
-import com.intellij.lang.LanguageCodeInsightActionHandler;
+import consulo.language.editor.action.LanguageCodeInsightActionHandler;
 import consulo.codeEditor.Editor;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;

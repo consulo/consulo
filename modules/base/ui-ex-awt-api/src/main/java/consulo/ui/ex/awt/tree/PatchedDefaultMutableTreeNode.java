@@ -13,14 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ui.ex.awt.tree;
 
-package com.intellij.lang;
+import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
-import consulo.codeEditor.Editor;
-import consulo.language.psi.PsiFile;
+/**
+ * @author peter
+ * IBM Rational Software Functional Tester used to test Fabrique requires that every node has
+ * public String getText()
+ * method to provide a string representation for a node. We delegate it to toString()
+ */
+public class PatchedDefaultMutableTreeNode extends DefaultMutableTreeNode {
+  public PatchedDefaultMutableTreeNode() {
+  }
 
-public interface LanguageCodeInsightActionHandler extends CodeInsightActionHandler {
-  
-  boolean isValidFor(Editor editor, PsiFile file);
+  public PatchedDefaultMutableTreeNode(Object userObject) {
+    super(userObject);
+  }
+
+  public String getText() {
+    return String.valueOf(getUserObject());
+  }
+
 }

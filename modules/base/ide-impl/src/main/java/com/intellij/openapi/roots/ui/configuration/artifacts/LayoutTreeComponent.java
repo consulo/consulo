@@ -40,7 +40,7 @@ import consulo.compiler.artifact.ui.PackagingSourceItem;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.ui.ex.awt.CustomLineBorder;
-import com.intellij.ui.treeStructure.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleNode;
 import com.intellij.ui.treeStructure.SimpleTreeBuilder;
 import com.intellij.ui.treeStructure.SimpleTreeStructure;
 import com.intellij.ui.treeStructure.WeightBasedComparator;

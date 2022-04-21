@@ -20,7 +20,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTree;
 import consulo.compiler.artifact.element.ComplexPackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import com.intellij.ui.treeStructure.SimpleTree;
+import consulo.ui.ex.awt.tree.SimpleTree;
 
 import java.awt.event.InputEvent;
 import java.util.Collection;

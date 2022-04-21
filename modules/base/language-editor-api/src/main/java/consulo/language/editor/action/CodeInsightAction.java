@@ -1,25 +1,24 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.intellij.codeInsight.actions;
+package consulo.language.editor.action;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
+import consulo.document.DocCommandGroupId;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.FileModificationService;
-import consulo.application.ApplicationManager;
-import consulo.ui.ex.action.UpdateInBackground;
-import consulo.undoRedo.CommandProcessor;
-import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.EditorModificationUtil;
-import consulo.document.DocCommandGroupId;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
+import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.util.LanguageEditorUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.UpdateInBackground;
+import consulo.undoRedo.CommandProcessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,7 +50,7 @@ public abstract class CodeInsightAction extends AnAction implements UpdateInBack
     if (psiFile == null) return;
     final CodeInsightActionHandler handler = getHandler();
     PsiElement elementToMakeWritable = handler.getElementToMakeWritable(psiFile);
-    if (elementToMakeWritable != null && !(EditorModificationUtil.checkModificationAllowed(editor) && FileModificationService.getInstance().preparePsiElementsForWrite(elementToMakeWritable))) {
+    if (elementToMakeWritable != null && !(LanguageEditorUtil.checkModificationAllowed(editor) && FileModificationService.getInstance().preparePsiElementsForWrite(elementToMakeWritable))) {
       return;
     }
 

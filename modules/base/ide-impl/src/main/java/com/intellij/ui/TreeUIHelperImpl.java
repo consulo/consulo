@@ -15,17 +15,18 @@
  */
 package com.intellij.ui;
 
+import com.intellij.util.EditSourceOnEnterKeyHandler;
+import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.tree.Tree;
-import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
-import com.intellij.util.EditSourceOnEnterKeyHandler;
-import com.intellij.util.containers.Convertor;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
 import jakarta.inject.Singleton;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
+import java.util.function.Function;
 
 /**
  * @author yole
@@ -61,7 +62,7 @@ public class TreeUIHelperImpl extends TreeUIHelper {
   }
 
   @Override
-  public void installTreeSpeedSearch(JTree tree, Convertor<TreePath, String> convertor, boolean canExpand) {
+  public void installTreeSpeedSearch(JTree tree, Function<TreePath, String> convertor, boolean canExpand) {
     new TreeSpeedSearch(tree, convertor, canExpand);
   }
 
@@ -71,7 +72,7 @@ public class TreeUIHelperImpl extends TreeUIHelper {
   }
 
   @Override
-  public void installListSpeedSearch(JList list, Convertor<Object, String> convertor) {
+  public void installListSpeedSearch(JList list, Function<Object, String> convertor) {
     new ListSpeedSearch(list, convertor);
   }
 

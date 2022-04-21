@@ -20,7 +20,7 @@ import com.intellij.formatting.templateLanguages.DataLanguageBlockWrapper;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.ui.treeStructure.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleNode;
 import com.intellij.util.Function;
 import com.intellij.util.containers.ContainerUtil;
 

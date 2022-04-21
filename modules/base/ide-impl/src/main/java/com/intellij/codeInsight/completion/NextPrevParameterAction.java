@@ -20,8 +20,8 @@
  */
 package com.intellij.codeInsight.completion;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
-import com.intellij.codeInsight.actions.CodeInsightAction;
+import consulo.language.editor.action.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightAction;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;

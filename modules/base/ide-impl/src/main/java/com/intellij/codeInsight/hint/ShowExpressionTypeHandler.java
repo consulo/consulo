@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.hint;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.lang.ExpressionTypeProvider;
 import com.intellij.lang.LanguageExpressionTypes;
 import com.intellij.openapi.editor.ex.util.EditorUtil;

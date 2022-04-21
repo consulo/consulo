@@ -11,7 +11,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.treeStructure.SimpleTree;
+import consulo.ui.ex.awt.tree.SimpleTree;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.util.collection.MultiMap;
 import javax.annotation.Nullable;

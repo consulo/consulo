@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.template.impl.actions;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import com.intellij.codeInsight.template.impl.SurroundWithTemplateHandler;
 import javax.annotation.Nonnull;

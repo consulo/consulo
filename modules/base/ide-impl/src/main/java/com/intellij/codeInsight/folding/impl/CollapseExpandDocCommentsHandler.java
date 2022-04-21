@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.folding.impl;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;

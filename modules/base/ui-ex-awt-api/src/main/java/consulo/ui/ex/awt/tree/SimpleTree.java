@@ -1,22 +1,14 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ui.treeStructure;
+package consulo.ui.ex.awt.tree;
 
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.ui.ex.awt.tree.NodeRenderer;
-import com.intellij.ide.util.treeView.TreeVisitor;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.SystemInfo;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPopupMenu;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.util.SystemInfo;
-import com.intellij.ui.TreeUIHelper;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
-import consulo.ui.ex.awt.tree.Tree;
-
-import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -25,11 +17,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.basic.BasicTreeUI;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class SimpleTree extends Tree implements CellEditorListener {
   private static final SimpleNode NULL_NODE = new NullNode();
@@ -98,13 +92,8 @@ public class SimpleTree extends Tree implements CellEditorListener {
     helper.installTreeSpeedSearch(this);
   }
 
-  public boolean accept(AbstractTreeBuilder builder, final SimpleNodeVisitor visitor) {
-    return builder.accept(SimpleNode.class, new TreeVisitor<SimpleNode>() {
-      @Override
-      public boolean visit(@Nonnull SimpleNode node) {
-        return visitor.accept(node);
-      }
-    }) != null;
+  public boolean accept(AbstractTreeBuilder builder, final Predicate<SimpleNode> visitor) {
+    return builder.accept(SimpleNode.class, visitor) != null;
   }
 
   public void setPopupGroup(ActionGroup aPopupGroup, String aPlace) {
@@ -387,7 +376,7 @@ public class SimpleTree extends Tree implements CellEditorListener {
 
   private void handleDoubleClickOrEnter(final TreePath treePath, final InputEvent e) {
     Runnable runnable = () -> getNodeFor(treePath).handleDoubleClickOrEnter(this, e);
-    ApplicationManager.getApplication().invokeLater(runnable, IdeaModalityState.stateForComponent(this));
+    ApplicationManager.getApplication().invokeLater(runnable, Application.get().getModalityStateForComponent(this));
   }
 
   // TODO: move to some util?
@@ -461,13 +450,8 @@ public class SimpleTree extends Tree implements CellEditorListener {
     }
   }
 
-  public boolean select(AbstractTreeBuilder aBuilder, final SimpleNodeVisitor aVisitor, boolean shouldExpand) {
-    return aBuilder.select(SimpleNode.class, new TreeVisitor<SimpleNode>() {
-      @Override
-      public boolean visit(@Nonnull SimpleNode node) {
-        return aVisitor.accept(node);
-      }
-    }, null, false);
+  public boolean select(AbstractTreeBuilder aBuilder, final Predicate<SimpleNode> visitor, boolean shouldExpand) {
+    return aBuilder.select(SimpleNode.class, visitor, null, false);
   }
 
   private boolean hasSingleSelection() {

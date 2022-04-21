@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.intellij.util;
+package consulo.language.editor.util;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.fileEditor.OpenFileDescriptorFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nullable;
 
 public class PsiNavigateUtil {
@@ -29,7 +30,7 @@ public class PsiNavigateUtil {
       final int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
       final VirtualFile virtualFile = navigationElement.getContainingFile().getVirtualFile();
       if (virtualFile != null && virtualFile.isValid()) {
-        new OpenFileDescriptorImpl(navigationElement.getProject(), virtualFile, offset).navigate(true);
+        OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).builder(virtualFile).offset(offset).build().navigate(true);
       }
     }
   }

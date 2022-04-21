@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.navigation;
 
 import com.intellij.ide.util.EditSourceUtil;
-import com.intellij.navigation.GotoRelatedItem;
+import consulo.language.editor.gutter.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
@@ -36,10 +36,6 @@ import consulo.colorScheme.TextAttributes;
 import consulo.component.extension.Extensions;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
-import consulo.fileEditor.EditorHistoryManager;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
 import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
@@ -62,7 +58,6 @@ import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

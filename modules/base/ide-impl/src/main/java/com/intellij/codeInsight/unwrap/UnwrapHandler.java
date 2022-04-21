@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.unwrap;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.CodeInsightUtilBase;
 import consulo.language.editor.FileModificationService;

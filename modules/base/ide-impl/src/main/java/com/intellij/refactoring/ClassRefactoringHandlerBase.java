@@ -12,7 +12,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.refactoring.lang.ElementsHandler;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
-import com.intellij.util.PsiNavigateUtil;
+import consulo.language.editor.util.PsiNavigateUtil;
 import javax.annotation.Nonnull;
 
 /**

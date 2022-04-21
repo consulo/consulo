@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ui.ex.awt.tree;
 
-package com.intellij.codeInsight;
+public class NullNode extends SimpleNode {
+  public NullNode() {
+    super();
+  }
 
-import consulo.language.editor.inspection.FileModifier;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.language.psi.PsiFile;
-import consulo.ui.annotation.RequiredUIAccess;
-
-import javax.annotation.Nonnull;
-
-public interface CodeInsightActionHandler extends FileModifier {
-  @RequiredUIAccess
-  void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
+  public SimpleNode[] getChildren() {
+    return NO_CHILDREN;
+  }
 }

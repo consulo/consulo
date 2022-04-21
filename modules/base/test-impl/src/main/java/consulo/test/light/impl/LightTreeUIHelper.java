@@ -15,11 +15,11 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.ui.TreeUIHelper;
-import com.intellij.util.containers.Convertor;
+import consulo.ui.ex.awt.tree.TreeUIHelper;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -57,12 +57,12 @@ public class LightTreeUIHelper extends TreeUIHelper {
   }
 
   @Override
-  public void installTreeSpeedSearch(JTree tree, Convertor<TreePath, String> convertor, boolean canExpand) {
+  public void installTreeSpeedSearch(JTree tree, Function<TreePath, String> convertor, boolean canExpand) {
 
   }
 
   @Override
-  public void installListSpeedSearch(JList list, Convertor<Object, String> convertor) {
+  public void installListSpeedSearch(JList list, Function<Object, String> convertor) {
 
   }
 

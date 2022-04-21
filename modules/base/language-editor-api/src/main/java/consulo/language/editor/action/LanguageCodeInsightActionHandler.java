@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.treeStructure;
 
-public class NullNode extends SimpleNode {
-  public NullNode() {
-    super();
-  }
+package consulo.language.editor.action;
 
-  public SimpleNode[] getChildren() {
-    return NO_CHILDREN;
-  }
+import consulo.codeEditor.Editor;
+import consulo.language.psi.PsiFile;
+
+public interface LanguageCodeInsightActionHandler extends CodeInsightActionHandler {
+  
+  boolean isValidFor(Editor editor, PsiFile file);
 }

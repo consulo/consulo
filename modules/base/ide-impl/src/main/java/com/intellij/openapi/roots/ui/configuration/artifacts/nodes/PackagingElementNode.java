@@ -23,7 +23,7 @@ import consulo.util.collection.MultiValuesMap;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
-import com.intellij.ui.treeStructure.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleNode;
 import com.intellij.util.ArrayUtil;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.colorScheme.TextAttributes;

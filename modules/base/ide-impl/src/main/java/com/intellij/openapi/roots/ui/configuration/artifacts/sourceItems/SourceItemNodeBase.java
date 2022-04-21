@@ -25,7 +25,7 @@ import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;
 import com.intellij.packaging.ui.PackagingSourceItemsProvider;
 import consulo.compiler.artifact.ui.TreeNodePresentation;
-import com.intellij.ui.treeStructure.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleNode;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

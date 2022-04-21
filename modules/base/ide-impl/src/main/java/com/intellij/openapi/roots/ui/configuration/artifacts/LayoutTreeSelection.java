@@ -18,7 +18,7 @@ package com.intellij.openapi.roots.ui.configuration.artifacts;
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import com.intellij.ui.treeStructure.SimpleNode;
+import consulo.ui.ex.awt.tree.SimpleNode;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

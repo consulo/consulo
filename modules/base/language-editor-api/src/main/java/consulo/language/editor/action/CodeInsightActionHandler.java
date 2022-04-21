@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.treeStructure;
 
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+package consulo.language.editor.action;
 
-/**
- * @author kir
- * @see SimpleTree#accept(AbstractTreeBuilder, SimpleNodeVisitor) 
- */
-public interface SimpleNodeVisitor {
-  /** return true if no further recursive processing is required */
-  boolean accept(SimpleNode simpleNode);
+import consulo.language.editor.inspection.FileModifier;
+import consulo.codeEditor.Editor;
+import consulo.project.Project;
+import consulo.language.psi.PsiFile;
+import consulo.ui.annotation.RequiredUIAccess;
+
+import javax.annotation.Nonnull;
+
+public interface CodeInsightActionHandler extends FileModifier {
+  @RequiredUIAccess
+  void invoke(@Nonnull Project project, @Nonnull Editor editor, @Nonnull PsiFile file);
 }

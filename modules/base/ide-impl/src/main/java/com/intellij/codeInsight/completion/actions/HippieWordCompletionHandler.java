@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.completion.actions;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
+import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.highlight.HighlightManager;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.codeEditor.Editor;

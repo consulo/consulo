@@ -15,7 +15,7 @@
  */
 package com.intellij.testIntegration;
 
-import com.intellij.navigation.GotoRelatedItem;
+import consulo.language.editor.gutter.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
