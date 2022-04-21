@@ -850,7 +850,6 @@ open module consulo.ide.impl {
   exports com.intellij.ui.tree;
   exports com.intellij.ui.tree.project;
   exports com.intellij.ui.treeStructure;
-  exports com.intellij.ui.treeStructure.actions;
   exports com.intellij.ui.treeStructure.filtered;
   exports com.intellij.ui.treeStructure.treetable;
   exports com.intellij.ui.util;

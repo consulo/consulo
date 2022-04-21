@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl.file.impl;
 
 import consulo.language.psi.ResolveScopeEnlarger;
-import consulo.ide.impl.psi.ResolveScopeProvider;
+import consulo.language.psi.ResolveScopeProvider;
 import consulo.language.psi.*;
 import consulo.module.Module;
 import com.intellij.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
