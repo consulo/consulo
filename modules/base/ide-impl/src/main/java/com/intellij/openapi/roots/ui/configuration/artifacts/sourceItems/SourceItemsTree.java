@@ -26,8 +26,8 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.actions
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.actions.PutSourceItemIntoDefaultLocationAction;
 import com.intellij.openapi.roots.ui.configuration.artifacts.sourceItems.actions.SourceItemNavigateAction;
 import com.intellij.ui.treeStructure.SimpleTreeBuilder;
-import com.intellij.ui.treeStructure.SimpleTreeStructure;
-import com.intellij.ui.treeStructure.WeightBasedComparator;
+import consulo.ui.ex.awt.tree.SimpleTreeStructure;
+import consulo.ui.ex.awt.tree.WeightBasedComparator;
 import consulo.application.ApplicationManager;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingSourceItem;

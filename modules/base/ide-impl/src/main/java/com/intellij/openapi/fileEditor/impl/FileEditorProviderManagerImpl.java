@@ -21,7 +21,7 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.fileEditor.FileEditorPolicy;
 import consulo.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.WeighedFileEditorProvider;
+import consulo.fileEditor.WeighedFileEditorProvider;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import consulo.project.DumbService;
 import consulo.project.Project;

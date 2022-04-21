@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package com.intellij.util.containers;
+package consulo.util.collection;
+
+import consulo.util.lang.ObjectUtil;
 
 import java.util.concurrent.ConcurrentMap;
-
-import static com.intellij.util.ObjectUtils.NULL;
 
 /**
  * @author peter
  */
 public abstract class SoftFactoryMap<T, V> {
-  private final ConcurrentMap<T, V> myMap = ContainerUtil.createConcurrentWeakKeySoftValueMap();
+  private final ConcurrentMap<T, V> myMap = Maps.newConcurrentWeakKeySoftValueHashMap();
 
   protected abstract V create(T key);
 
   public final V get(T key) {
     final V v = myMap.get(key);
     if (v != null) {
-      return v == NULL ? null : v;
+      return v == ObjectUtil.NULL ? null : v;
     }
 
     final V value = create(key);
-    V toPut = value == null ? (V)NULL : value;
+    V toPut = value == null ? (V)ObjectUtil.NULL : value;
     V prev = myMap.putIfAbsent(key, toPut);
-    return prev == null || prev == NULL ? value : prev;
+    return prev == null || prev == ObjectUtil.NULL ? value : prev;
   }
 
   public void clear() {

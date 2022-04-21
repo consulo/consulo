@@ -20,7 +20,7 @@ import com.intellij.ide.util.EditSourceUtil;
 import consulo.language.editor.gutter.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.SeparatorWithText;
 import com.intellij.ui.popup.list.ListPopupImpl;

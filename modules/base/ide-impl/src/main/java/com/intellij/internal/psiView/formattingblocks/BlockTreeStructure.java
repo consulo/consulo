@@ -1,6 +1,6 @@
 package com.intellij.internal.psiView.formattingblocks;
 
-import com.intellij.ui.treeStructure.SimpleTreeStructure;
+import consulo.ui.ex.awt.tree.SimpleTreeStructure;
 
 public class BlockTreeStructure extends SimpleTreeStructure {
   private BlockTreeNode myRoot;

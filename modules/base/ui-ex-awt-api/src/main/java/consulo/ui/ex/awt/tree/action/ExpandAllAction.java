@@ -13,29 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.treeStructure.actions;
+package consulo.ui.ex.awt.tree.action;
 
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.dumb.DumbAware;
 
 import javax.swing.*;
 
-public class CollapseAllAction extends AnAction implements DumbAware {
+public class ExpandAllAction extends AnAction {
 
   protected JTree myTree;
 
-  public CollapseAllAction(JTree tree) {
-    super("Collapse All", "", AllIcons.Actions.Collapseall);
+  public ExpandAllAction(JTree tree) {
+    super("Expand All", "", AllIcons.Actions.Expandall);
     myTree = tree;
   }
 
   public void actionPerformed(AnActionEvent e) {
-    int row = getTree().getRowCount() - 1;
-    while (row >= 0) {
-      getTree().collapseRow(row);
-      row--;
+    for (int i = 0; i < getTree().getRowCount(); i++) {
+      getTree().expandRow(i);
     }
   }
 

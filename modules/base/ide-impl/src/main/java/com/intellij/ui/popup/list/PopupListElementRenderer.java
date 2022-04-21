@@ -10,7 +10,7 @@ import com.intellij.openapi.ui.popup.ListItemDescriptorAdapter;
 import consulo.ui.ex.popup.ListPopupStep;
 import com.intellij.openapi.ui.popup.ListPopupStepEx;
 import consulo.ui.ex.popup.MnemonicNavigationFilter;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.awt.JBUIScale;
 import com.intellij.util.ArrayUtil;

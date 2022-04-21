@@ -17,7 +17,7 @@ import consulo.project.Project;
 import com.intellij.openapi.roots.ui.configuration.ConfigurationError;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;

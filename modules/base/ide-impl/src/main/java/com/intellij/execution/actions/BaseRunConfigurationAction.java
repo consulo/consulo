@@ -34,7 +34,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.dataContext.DataContext;

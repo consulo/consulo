@@ -25,7 +25,7 @@ import com.intellij.openapi.roots.ui.configuration.artifacts.LayoutTreeSelection
 import com.intellij.openapi.roots.ui.configuration.artifacts.nodes.PackagingElementNode;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.CompositePackagingElementType;
 import consulo.compiler.artifact.element.PackagingElement;

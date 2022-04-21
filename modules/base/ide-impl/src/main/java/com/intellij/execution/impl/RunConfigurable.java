@@ -23,7 +23,7 @@ import com.intellij.execution.configurations.UnknownConfigurationType;
 import com.intellij.execution.configurations.UnknownRunConfiguration;
 import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.Pair;
 import com.intellij.ui.components.labels.ActionLink;

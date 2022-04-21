@@ -7,7 +7,7 @@ import consulo.project.Project;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.RelativePoint;

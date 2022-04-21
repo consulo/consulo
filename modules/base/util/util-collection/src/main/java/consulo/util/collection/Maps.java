@@ -212,6 +212,12 @@ public final class Maps {
 
   @Nonnull
   @Contract(pure = true)
+  public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeySoftValueHashMap() {
+    return newConcurrentWeakKeySoftValueHashMap(100, 0.75f, Runtime.getRuntime().availableProcessors(), ContainerUtil.<K>canonicalStrategy());
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static <K, V> ConcurrentMap<K, V> newConcurrentWeakKeySoftValueHashMap(int initialCapacity, float loadFactor, int concurrencyLevel, @Nonnull final HashingStrategy<K> hashingStrategy) {
     return new ConcurrentWeakKeySoftValueHashMap<K, V>(initialCapacity, loadFactor, concurrencyLevel, hashingStrategy);
   }

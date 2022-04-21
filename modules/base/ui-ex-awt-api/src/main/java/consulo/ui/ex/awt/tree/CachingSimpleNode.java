@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.treeStructure;
+package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.tree.NodeDescriptor;

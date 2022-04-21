@@ -56,6 +56,7 @@ public class EditSourceUtil {
     return desc;
   }
 
+  @Deprecated
   public static boolean canNavigate(PsiElement element) {
     return PsiNavigateApiUtil.canNavigate(element);
   }

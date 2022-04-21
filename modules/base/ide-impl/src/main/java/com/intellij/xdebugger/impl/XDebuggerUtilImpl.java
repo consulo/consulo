@@ -39,7 +39,7 @@ import consulo.language.internal.InternalStdFileTypes;
 import consulo.language.psi.*;
 import consulo.project.Project;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.util.concurrent.AsyncResult;
 import consulo.application.util.function.Computable;
 import consulo.document.util.TextRange;

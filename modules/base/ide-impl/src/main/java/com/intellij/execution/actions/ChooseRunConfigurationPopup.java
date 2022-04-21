@@ -26,7 +26,7 @@ import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl;
 import consulo.execution.ExecutionUtil;
 import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.ui.popup.WizardPopup;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;

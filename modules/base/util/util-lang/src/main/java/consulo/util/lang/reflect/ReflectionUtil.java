@@ -33,6 +33,56 @@ import java.util.function.Predicate;
 public class ReflectionUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtil.class);
 
+  @Nullable
+  public static Class<?> substituteGenericType(@Nonnull Type genericType, @Nonnull Type classType) {
+    if (genericType instanceof TypeVariable) {
+      final Class<?> aClass = getRawType(classType);
+      final Type type = resolveVariable((TypeVariable)genericType, aClass);
+      if (type instanceof Class) {
+        return (Class)type;
+      }
+      if (type instanceof ParameterizedType) {
+        return (Class<?>)((ParameterizedType)type).getRawType();
+      }
+      if (type instanceof TypeVariable && classType instanceof ParameterizedType) {
+        final int index = find(aClass.getTypeParameters(), type);
+        if (index >= 0) {
+          return getRawType(getActualTypeArguments((ParameterizedType)classType)[index]);
+        }
+      }
+    }
+    else {
+      return getRawType(genericType);
+    }
+    return null;
+  }
+
+  /**
+   * @param src source array.
+   * @param obj object to be found.
+   * @return index of <code>obj</code> in the <code>src</code> array.
+   * Returns <code>-1</code> if passed object isn't found. This method uses
+   * <code>equals</code> of arrays elements to compare <code>obj</code> with
+   * these elements.
+   */
+  private static <T> int find(@Nonnull final T[] src, final T obj) {
+    for (int i = 0; i < src.length; i++) {
+      final T o = src[i];
+      if (o == null) {
+        if (obj == null) {
+          return i;
+        }
+      }
+      else {
+        if (o.equals(obj)) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+
   @Nonnull
   public static List<Field> collectFields(@Nonnull Class clazz) {
     Set<Field> result = new LinkedHashSet<>();

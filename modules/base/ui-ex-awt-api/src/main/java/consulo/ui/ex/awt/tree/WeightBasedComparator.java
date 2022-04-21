@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.treeStructure;
+package consulo.ui.ex.awt.tree;
 
 import consulo.ui.ex.tree.NodeDescriptor;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 
 import java.util.Comparator;
 
@@ -42,6 +42,7 @@ public class WeightBasedComparator implements Comparator<NodeDescriptor> {
     myCompareToString = compareToString;
   }
 
+  @Override
   public int compare(NodeDescriptor o1, NodeDescriptor o2) {
     final int w1 = getWeight(o1);
     final int w2 = getWeight(o2);

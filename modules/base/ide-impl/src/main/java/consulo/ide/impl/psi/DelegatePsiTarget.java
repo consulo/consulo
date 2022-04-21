@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.psi;
 
-import com.intellij.ide.util.EditSourceUtil;
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.document.util.TextRange;
+import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiTarget;
+import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.util.PsiNavigateApiUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.pom.PsiDeclaredTarget;
-import consulo.language.editor.internal.PsiUtilBase;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -49,20 +50,20 @@ public class DelegatePsiTarget implements PsiTarget {
   @Override
   public void navigate(boolean requestFocus) {
     final int offset = getTextOffset();
-    final VirtualFile virtualFile = PsiUtilBase.getVirtualFile(myElement);
+    final VirtualFile virtualFile = PsiUtilCore.getVirtualFile(myElement);
     if (virtualFile != null && virtualFile.isValid()) {
-      new OpenFileDescriptorImpl(myElement.getProject(), virtualFile, offset).navigate(requestFocus);
+      OpenFileDescriptorFactory.getInstance(myElement.getProject()).builder(virtualFile).offset(offset).build().navigate(requestFocus);
     }
   }
 
   @Override
   public boolean canNavigate() {
-    return EditSourceUtil.canNavigate(myElement);
+    return PsiNavigateApiUtil.canNavigate(myElement);
   }
 
   @Override
   public boolean canNavigateToSource() {
-    return EditSourceUtil.canNavigate(myElement);
+    return PsiNavigateApiUtil.canNavigate(myElement);
   }
 
   @Override

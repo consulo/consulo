@@ -26,7 +26,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.RelativePoint;
 import consulo.usage.ConfigurableUsageTarget;
 import consulo.usage.UsageView;

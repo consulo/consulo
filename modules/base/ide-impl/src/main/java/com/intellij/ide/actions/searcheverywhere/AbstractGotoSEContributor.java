@@ -29,7 +29,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.*;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;

@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.ui.popup.util;
+package consulo.ui.ex.popup;
 
-import consulo.ui.ex.popup.ListPopupStep;
-import consulo.ui.ex.popup.ListSeparator;
-import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

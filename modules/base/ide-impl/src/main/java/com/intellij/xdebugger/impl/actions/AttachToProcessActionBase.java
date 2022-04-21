@@ -10,7 +10,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.ui.popup.ListPopupStepEx;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.ToolWindowId;
 import com.intellij.ui.popup.async.AsyncPopupStep;

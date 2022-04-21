@@ -13,20 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.fileEditor;
+package consulo.undoRedo.event;
 
-import consulo.fileEditor.FileEditorProvider;
-
-/**
- * @author peter
- */
-public abstract class WeighedFileEditorProvider implements FileEditorProvider {
-
-  double DEFAULT_WEIGHT = 1;
-
-  /**
-   * @return double value used for editor ascending ordering 
-   */
-  public double getWeight() { return DEFAULT_WEIGHT; }
-  
+@Deprecated
+public abstract class CommandAdapter implements CommandListener {
 }

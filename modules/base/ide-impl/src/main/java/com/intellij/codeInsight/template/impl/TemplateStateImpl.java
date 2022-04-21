@@ -22,7 +22,7 @@ import consulo.language.editor.completion.lookup.event.LookupAdapter;
 import com.intellij.codeInsight.lookup.impl.LookupImpl;
 import com.intellij.codeInsight.template.RecalculatableResult;
 import consulo.language.editor.template.TemplateCompletionProcessor;
-import com.intellij.openapi.command.CommandAdapter;
+import consulo.undoRedo.event.CommandAdapter;
 import consulo.language.editor.WriteCommandAction;
 import consulo.undoRedo.BasicUndoableAction;
 import consulo.document.DocumentReference;

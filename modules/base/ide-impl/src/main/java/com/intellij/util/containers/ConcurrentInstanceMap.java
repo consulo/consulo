@@ -16,6 +16,7 @@
 
 package com.intellij.util.containers;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.application.util.ConcurrentFactoryMap;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,8 @@ import java.util.Map;
 /**
  * @author peter
  */
+@Deprecated
+@DeprecationInfo("Ugly impl, due it's require open to util module")
 public class ConcurrentInstanceMap {
   private ConcurrentInstanceMap() {
   }

@@ -13,54 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.ui.popup.util;
+package consulo.ui.ex.popup;
 
-import consulo.ui.ex.popup.MnemonicNavigationFilter;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.SpeedSearchFilter;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.component.util.localize.BundleBase;
 
 public abstract class BaseStep<T> implements PopupStep<T>, SpeedSearchFilter<T>, MnemonicNavigationFilter<T> {
 
   private Runnable myFinalRunnable;
 
+  @Override
   public boolean isSpeedSearchEnabled() {
     return false;
   }
 
+  @Override
   public boolean isAutoSelectionEnabled() {
     return true;
   }
 
+  @Override
   public SpeedSearchFilter<T> getSpeedSearchFilter() {
     return this;
   }
 
+  @Override
   public boolean canBeHidden(T value) {
     return true;
   }
 
+  @Override
   public String getIndexedString(T value) {
     return getTextFor(value);
   }
 
+  @Override
   public boolean isMnemonicsNavigationEnabled() {
     return false;
   }
 
+  @Override
   public int getMnemonicPos(T value) {
     final String text = getTextFor(value);
     int i = text.indexOf("&");
     if (i < 0) {
-      i = text.indexOf(UIUtil.MNEMONIC);
+      i = text.indexOf(BundleBase.MNEMONIC);
     }
     return i;
   }
 
+  @Override
   public MnemonicNavigationFilter<T> getMnemonicNavigationFilter() {
     return this;
   }
 
+  @Override
   public Runnable getFinalRunnable() {
     return myFinalRunnable;
   }

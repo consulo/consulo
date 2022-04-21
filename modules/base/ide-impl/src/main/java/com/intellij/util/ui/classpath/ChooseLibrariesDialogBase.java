@@ -50,7 +50,7 @@ import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.tree.SimpleNode;
 import consulo.ui.ex.awt.tree.SimpleTree;
 import com.intellij.ui.treeStructure.SimpleTreeBuilder;
-import com.intellij.ui.treeStructure.WeightBasedComparator;
+import consulo.ui.ex.awt.tree.WeightBasedComparator;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
 import consulo.ui.ex.awt.UIUtil;

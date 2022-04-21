@@ -259,6 +259,63 @@ public class StringUtil {
     return suggestion + "s";
   }
 
+  /**
+   * Returns unpluralized variant using English based heuristics like properties -> property, names -> name, children -> child.
+   * Returns <code>null</code> if failed to match appropriate heuristic.
+   *
+   * @param name english word in plural form
+   * @return name in singular form or <code>null</code> if failed to find one.
+   */
+  @SuppressWarnings({"HardCodedStringLiteral"})
+  @Nullable
+  @Contract(pure = true)
+  public static String unpluralize(@Nonnull final String name) {
+    if (name.endsWith("sses") || name.endsWith("shes") || name.endsWith("ches") || name.endsWith("xes")) { //?
+      return name.substring(0, name.length() - 2);
+    }
+
+    if (name.endsWith("ses")) {
+      return name.substring(0, name.length() - 1);
+    }
+
+    if (name.endsWith("ies")) {
+      if (name.endsWith("cookies") || name.endsWith("Cookies")) {
+        return name.substring(0, name.length() - "ookies".length()) + "ookie";
+      }
+
+      return name.substring(0, name.length() - 3) + "y";
+    }
+
+    if (name.endsWith("leaves") || name.endsWith("Leaves")) {
+      return name.substring(0, name.length() - "eaves".length()) + "eaf";
+    }
+
+    String result = stripEnding(name, "s");
+    if (result != null) {
+      return result;
+    }
+
+    if (name.endsWith("children")) {
+      return name.substring(0, name.length() - "children".length()) + "child";
+    }
+
+    if (name.endsWith("Children") && name.length() > "Children".length()) {
+      return name.substring(0, name.length() - "Children".length()) + "Child";
+    }
+
+    return null;
+  }
+
+  @Nullable
+  @Contract(pure = true)
+  private static String stripEnding(@Nonnull String name, @Nonnull String ending) {
+    if (name.endsWith(ending)) {
+      if (name.equals(ending)) return name; // do not return empty string
+      return name.substring(0, name.length() - 1);
+    }
+    return null;
+  }
+
   @Contract(pure = true)
   public static boolean isVowel(char c) {
     return VOWELS.indexOf(c) >= 0;

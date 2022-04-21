@@ -14,7 +14,7 @@ import consulo.undoRedo.BasicUndoableAction;
 import consulo.undoRedo.UnexpectedUndoException;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;

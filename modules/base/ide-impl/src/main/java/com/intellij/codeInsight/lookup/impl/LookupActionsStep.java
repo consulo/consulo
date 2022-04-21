@@ -20,7 +20,7 @@ import consulo.language.editor.completion.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementAction;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ui.ex.popup.PopupStep;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.ui.popup.ClosableByLeftArrow;
 import consulo.ui.image.Image;
 

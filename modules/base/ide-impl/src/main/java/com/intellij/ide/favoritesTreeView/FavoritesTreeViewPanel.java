@@ -65,7 +65,7 @@ import consulo.ui.ex.awt.RelativeRectangle;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
-import com.intellij.ui.treeStructure.actions.CollapseAllAction;
+import consulo.ui.ex.awt.tree.action.CollapseAllAction;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import com.intellij.util.EditSourceOnEnterKeyHandler;

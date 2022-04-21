@@ -31,7 +31,7 @@ import com.intellij.codeInspection.util.RefEntityAlphabeticalComparator;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.ui.popup.util.BaseListPopupStep;
+import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.JDOMUtil;
 import consulo.annotation.access.RequiredReadAction;
