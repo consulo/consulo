@@ -1,6 +1,6 @@
 package com.intellij.model.search.impl;
 
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

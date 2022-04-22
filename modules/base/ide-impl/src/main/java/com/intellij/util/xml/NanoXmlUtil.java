@@ -4,14 +4,12 @@ package com.intellij.util.xml;
 
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiFile;
-import consulo.util.collection.Stack;
 import com.intellij.util.text.CharSequenceReader;
-import com.intellij.util.text.StringFactory;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.util.collection.Stack;
+import consulo.virtualFileSystem.VirtualFile;
 import net.n3.nanoxml.*;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -143,7 +141,7 @@ public class NanoXmlUtil {
     return new XmlFileHeader(builder.getRootTagName(), builder.getNamespace(), r.publicId, r.systemId);
   }
 
-  public static String createLocation(@NonNls String... tagNames) {
+  public static String createLocation(String... tagNames) {
     StringBuilder result = new StringBuilder();
     for (String tagName : tagNames) {
       result.append(".");
@@ -187,7 +185,7 @@ public class NanoXmlUtil {
     }
 
     protected static String readText(final Reader reader) throws IOException {
-      return StringFactory.createShared(StreamUtil.readTextAndConvertSeparators(reader));
+      return new String(StreamUtil.readTextAndConvertSeparators(reader));
     }
 
     protected String getLocation() {

@@ -26,7 +26,7 @@ import consulo.language.psi.PsiManager;
 import consulo.language.impl.internal.psi.FileContextUtil;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.intellij.util.FilteredQuery;
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

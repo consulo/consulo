@@ -3,7 +3,6 @@
 package consulo.application.util.query;
 
 import consulo.application.progress.ProgressManager;
-import consulo.application.util.Query;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.HashingStrategy;

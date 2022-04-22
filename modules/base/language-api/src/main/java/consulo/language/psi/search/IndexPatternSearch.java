@@ -4,7 +4,7 @@ package consulo.language.psi.search;
 import consulo.application.ApplicationManager;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import consulo.application.util.query.QueryFactory;
 import javax.annotation.Nonnull;
 

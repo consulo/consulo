@@ -2,7 +2,7 @@
 package consulo.language.psi.search;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import consulo.application.util.ReadActionProcessor;
 import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiReference;

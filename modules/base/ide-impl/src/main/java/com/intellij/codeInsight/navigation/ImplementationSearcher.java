@@ -30,7 +30,7 @@ import consulo.content.scope.SearchScope;
 import consulo.language.psi.search.DefinitionsScopedSearch;
 import com.intellij.util.ArrayUtil;
 import consulo.application.util.function.CommonProcessors;
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;

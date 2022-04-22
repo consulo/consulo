@@ -17,7 +17,7 @@ package consulo.language.editor.refactoring.rename.inplace;
 
 import consulo.application.ApplicationManager;
 import consulo.application.Result;
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import consulo.application.util.function.CommonProcessors;
 import consulo.codeEditor.*;
 import consulo.codeEditor.internal.RealEditor;

@@ -1718,7 +1718,7 @@
     <applicationService serviceInterface="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettings"
                         serviceImplementation="com.intellij.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl"/>
 
-    <applicationService serviceInterface="consulo.application.util.Queries" serviceImplementation="com.intellij.util.QueriesImpl"/>
+    <applicationService serviceInterface="consulo.application.util.query.Queries" serviceImplementation="com.intellij.util.QueriesImpl"/>
 
     <projectService serviceInterface="consulo.language.pom.PomService"
                     serviceImplementation="com.intellij.pom.references.PomServiceImpl"/>

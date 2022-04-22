@@ -2,7 +2,7 @@
 package consulo.project.util.query;
 
 import consulo.project.Project;
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import javax.annotation.Nonnull;
 
 /**

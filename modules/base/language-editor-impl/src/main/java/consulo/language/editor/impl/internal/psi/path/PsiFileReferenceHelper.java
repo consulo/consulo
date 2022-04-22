@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.impl.internal.psi.path;
 
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import consulo.language.psi.path.FileReferenceHelper;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;

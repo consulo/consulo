@@ -17,6 +17,7 @@ package com.intellij.util.text;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
 public class StringFactory {
   @Nonnull
   public static String createShared(@Nonnull char[] chars) {

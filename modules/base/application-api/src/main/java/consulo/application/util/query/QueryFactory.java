@@ -15,7 +15,6 @@
  */
 package consulo.application.util.query;
 
-import consulo.application.util.Query;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Lists;
 

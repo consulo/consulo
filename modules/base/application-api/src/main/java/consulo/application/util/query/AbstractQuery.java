@@ -2,7 +2,6 @@
 package consulo.application.util.query;
 
 import consulo.application.ApplicationManager;
-import consulo.application.util.Query;
 import consulo.application.util.ReadActionProcessor;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;

@@ -16,7 +16,7 @@
 
 package consulo.module.content;
 
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;

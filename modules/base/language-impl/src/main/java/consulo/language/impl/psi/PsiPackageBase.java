@@ -18,7 +18,7 @@ package consulo.language.impl.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import consulo.application.util.Queryable;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;

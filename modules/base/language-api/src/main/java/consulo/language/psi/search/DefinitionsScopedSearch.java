@@ -22,7 +22,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.application.util.function.Computable;
 import consulo.language.psi.PsiElement;
 import consulo.content.scope.SearchScope;
-import consulo.application.util.Query;
+import consulo.application.util.query.Query;
 import consulo.application.util.query.QueryExecutor;
 import javax.annotation.Nonnull;
 
