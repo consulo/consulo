@@ -27,6 +27,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.fileEditor.text.TextEditorState;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;

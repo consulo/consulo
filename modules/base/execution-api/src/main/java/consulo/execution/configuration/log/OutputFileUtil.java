@@ -24,7 +24,7 @@ import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.process.ProcessHandler;
 import consulo.process.ProcessOutputTypes;
 import consulo.process.event.ProcessAdapter;

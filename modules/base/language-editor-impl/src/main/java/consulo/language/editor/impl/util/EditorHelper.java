@@ -21,6 +21,8 @@ import consulo.codeEditor.Editor;
 import consulo.fileEditor.*;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.navigation.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 

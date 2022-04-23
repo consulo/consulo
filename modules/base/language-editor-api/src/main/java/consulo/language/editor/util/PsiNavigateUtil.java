@@ -16,7 +16,7 @@
 
 package consulo.language.editor.util;
 
-import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.VirtualFile;

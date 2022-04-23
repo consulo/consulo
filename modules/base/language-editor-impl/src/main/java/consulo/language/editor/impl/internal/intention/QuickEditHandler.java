@@ -51,6 +51,7 @@ import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.inject.impl.internal.PlaceImpl;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.RelativePoint;

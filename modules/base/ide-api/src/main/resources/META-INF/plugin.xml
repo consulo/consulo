@@ -2774,7 +2774,7 @@
                         serviceImplementation="consulo.project.ui.notification.impl.NotificationActionInvokerImpl"/>
     <applicationService serviceInterface="consulo.virtualFileSystem.RawFileLoader" serviceImplementation="consulo.virtualFileSystem.impl.internal.RawFileLoaderImpl"/>
     <projectService serviceInterface="consulo.language.impl.internal.psi.FormattingService" serviceImplementation="consulo.ide.impl.language.psi.FormattingServiceImpl"/>
-    <projectService serviceInterface="consulo.fileEditor.OpenFileDescriptorFactory" serviceImplementation="consulo.ide.impl.fileEditor.OpenFileDescriptorFactoryImpl"/>
+    <projectService serviceInterface="consulo.navigation.OpenFileDescriptorFactory" serviceImplementation="consulo.ide.impl.fileEditor.OpenFileDescriptorFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.ui.ex.util.InvokerFactory" serviceImplementation="consulo.ide.ui.ex.impl.util.InvokerFactoryImpl"/>
     <applicationService serviceInterface="consulo.component.store.impl.internal.StorageNotificationService" serviceImplementation="consulo.ide.impl.store.IdeStorageNotificationService"/>

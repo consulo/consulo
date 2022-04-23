@@ -18,6 +18,7 @@ package consulo.ide.impl.psi;
 import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.pom.PomRenameableTarget;
 import consulo.document.util.TextRange;
+import consulo.language.impl.psi.DelegatePsiTarget;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 

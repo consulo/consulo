@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor;
+package consulo.navigation;
 
-import consulo.document.RangeMarker;
-import consulo.navigation.Navigatable;
-import consulo.project.Project;
+import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @see OpenFileDescriptorFactory
@@ -34,16 +31,17 @@ public interface OpenFileDescriptor extends Navigatable, Comparable<OpenFileDesc
   VirtualFile getFile();
 
   @Nonnull
-  Project getProject();
-
-  @Nullable
-  RangeMarker getRangeMarker();
+  ComponentManager getProject();
 
   int getOffset();
 
   int getLine();
 
   int getColumn();
+
+  default boolean isValid() {
+    return true;
+  }
 
   default boolean isUseCurrentWindow() {
     return false;

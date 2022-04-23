@@ -15,8 +15,8 @@
  */
 package consulo.execution.action;
 
-import consulo.fileEditor.OpenFileDescriptor;
-import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.navigation.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;

@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.fileEditor;
+package consulo.navigation;
 
-import consulo.project.Project;
+import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public interface OpenFileDescriptorFactory {
   @Nonnull
-  static OpenFileDescriptorFactory getInstance(@Nonnull Project project) {
+  static OpenFileDescriptorFactory getInstance(@Nonnull ComponentManager project) {
     return project.getInstance(OpenFileDescriptorFactory.class);
   }
 

@@ -248,11 +248,7 @@ public class Bookmark implements Navigatable {
     if (!getFile().isValid()) {
       return false;
     }
-
-    // There is a possible case that target document line that is referenced by the current bookmark is removed. We assume
-    // that corresponding range marker becomes invalid then.
-    RangeMarker rangeMarker = myTarget.getRangeMarker();
-    return rangeMarker == null || rangeMarker.isValid();
+    return myTarget.isValid();
   }
 
   @Override
@@ -271,7 +267,7 @@ public class Bookmark implements Navigatable {
   }
 
   public int getLine() {
-    RangeMarker marker = myTarget.getRangeMarker();
+    RangeMarker marker = ((OpenFileDescriptorImpl)myTarget).getRangeMarker();
     if (marker != null && marker.isValid()) {
       Document document = marker.getDocument();
       return document.getLineNumber(marker.getStartOffset());

@@ -16,7 +16,7 @@
 package consulo.diff.content;
 
 import consulo.diff.request.DiffRequest;
-import consulo.fileEditor.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.Navigatable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolder;

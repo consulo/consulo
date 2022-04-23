@@ -26,6 +26,7 @@ import com.intellij.openapi.project.impl.ProjectImpl;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.NullUtils;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -1058,7 +1059,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     if (descriptor.getFile() instanceof VirtualFileWindow) {
       VirtualFileWindow delegate = (VirtualFileWindow)descriptor.getFile();
       int hostOffset = delegate.getDocumentWindow().injectedToHost(descriptor.getOffset());
-      OpenFileDescriptorImpl realDescriptor = new OpenFileDescriptorImpl(descriptor.getProject(), delegate.getDelegate(), hostOffset);
+      OpenFileDescriptorImpl realDescriptor = new OpenFileDescriptorImpl((Project)descriptor.getProject(), delegate.getDelegate(), hostOffset);
       realDescriptor.setUseCurrentWindow(descriptor.isUseCurrentWindow());
       return openEditor(realDescriptor, focusEditor);
     }

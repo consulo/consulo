@@ -17,7 +17,7 @@ package consulo.diff.content;
 
 import consulo.diff.util.LineCol;
 import consulo.document.Document;
-import consulo.fileEditor.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.Navigatable;
 import consulo.platform.LineSeparator;
 import consulo.util.lang.ObjectUtil;

@@ -18,7 +18,6 @@ package com.intellij.openapi.fileEditor;
 import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInManager;
 import com.intellij.ide.SelectInTarget;
-import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.util.Comparing;
 import consulo.codeEditor.*;
 import consulo.dataContext.DataContext;
@@ -29,8 +28,9 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.fileEditor.TextEditor;
+import consulo.language.file.FileTypeManager;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
@@ -99,7 +99,6 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
     return myFile;
   }
 
-  @Override
   @Nullable
   public RangeMarker getRangeMarker() {
     return myRangeMarker;
@@ -118,6 +117,12 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
   @Override
   public int getColumn() {
     return myLogicalColumn;
+  }
+
+  @Override
+  public boolean isValid() {
+    RangeMarker rangeMarker = getRangeMarker();
+    return rangeMarker == null || rangeMarker.isValid();
   }
 
   @Override
@@ -292,11 +297,11 @@ public class OpenFileDescriptorImpl implements Navigatable, OpenFileDescriptor {
 
   @Override
   public int compareTo(OpenFileDescriptor o) {
-    int i = myProject.getName().compareTo(o.getProject().getName());
+    int i = myProject.getName().compareTo(((Project)o.getProject()).getName());
     if (i != 0) return i;
     i = myFile.getName().compareTo(o.getFile().getName());
     if (i != 0) return i;
-    RangeMarker rangeMarker = o.getRangeMarker();
+    RangeMarker rangeMarker = ((OpenFileDescriptorImpl)o).getRangeMarker();
     if (myRangeMarker != null) {
       if (rangeMarker == null) return 1;
       i = myRangeMarker.getStartOffset() - rangeMarker.getStartOffset();

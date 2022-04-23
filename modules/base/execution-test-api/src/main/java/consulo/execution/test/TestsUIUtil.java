@@ -20,7 +20,7 @@ import consulo.execution.ExecutionBundle;
 import consulo.execution.action.Location;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
-import consulo.fileEditor.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.navigation.Navigatable;

@@ -51,7 +51,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
 import consulo.project.ProjectComponent;

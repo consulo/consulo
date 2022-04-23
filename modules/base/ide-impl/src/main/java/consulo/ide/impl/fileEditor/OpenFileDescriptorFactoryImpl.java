@@ -16,8 +16,8 @@
 package consulo.ide.impl.fileEditor;
 
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.fileEditor.OpenFileDescriptor;
-import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.navigation.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;

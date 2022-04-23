@@ -18,7 +18,7 @@ package consulo.usage;
 
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.psi.PsiElement;

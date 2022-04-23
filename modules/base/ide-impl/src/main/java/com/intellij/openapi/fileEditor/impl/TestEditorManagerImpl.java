@@ -19,6 +19,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
 import com.intellij.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
 import com.intellij.openapi.util.Comparing;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.util.lang.Pair;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.codeEditor.*;

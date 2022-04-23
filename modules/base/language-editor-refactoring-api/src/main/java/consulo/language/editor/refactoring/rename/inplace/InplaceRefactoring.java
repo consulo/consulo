@@ -32,7 +32,7 @@ import consulo.document.RangeMarker;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.OpenFileDescriptorFactory;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.fileEditor.TextEditor;
 import consulo.language.Language;
 import consulo.language.editor.DaemonCodeAnalyzer;

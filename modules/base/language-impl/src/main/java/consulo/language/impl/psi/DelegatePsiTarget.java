@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi;
+package consulo.language.impl.psi;
 
 import consulo.document.util.TextRange;
-import consulo.fileEditor.OpenFileDescriptorFactory;
 import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiTarget;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.util.PsiNavigateApiUtil;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
