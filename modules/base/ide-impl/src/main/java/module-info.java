@@ -795,7 +795,6 @@ open module consulo.ide.impl {
   exports com.intellij.remoteServer.runtime.log;
   exports com.intellij.remoteServer.runtime.ui;
   exports com.intellij.reporting;
-  exports com.intellij.semantic;
   exports com.intellij.ssh;
   exports com.intellij.tasks;
   exports com.intellij.tasks.actions;

@@ -17,7 +17,7 @@ package com.intellij.ide.plugins;
 
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.BooleanTableCellEditor;
+import consulo.ui.ex.awt.table.BooleanTableCellEditor;
 import consulo.ui.ex.awt.BooleanTableCellRenderer;
 import consulo.container.plugin.PluginIds;
 import consulo.ui.ex.awt.ColumnInfo;

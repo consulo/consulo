@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
+package consulo.language.psi.path;
 
-import consulo.language.psi.path.FileReference;
-import consulo.language.psi.path.FileReferenceOwner;
-import consulo.language.psi.path.FileReferenceSet;
-import consulo.language.psi.path.PsiFileReference;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

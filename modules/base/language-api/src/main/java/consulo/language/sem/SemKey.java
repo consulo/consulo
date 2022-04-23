@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.semantic;
+package consulo.language.sem;
 
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.collection.Lists;
+
 import javax.annotation.Nonnull;
-
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -36,7 +35,7 @@ public class SemKey<T extends SemElement> {
   private final String myDebugName;
   @Nonnull
   private final SemKey<? super T>[] mySupers;
-  private final List<SemKey> myInheritors = ContainerUtil.createEmptyCOWList();
+  private final List<SemKey> myInheritors = Lists.newLockFreeCopyOnWriteList();
   private final int myUniqueId;
 
   @SafeVarargs
@@ -94,7 +93,7 @@ public class SemKey<T extends SemElement> {
   }
 
   @SafeVarargs
-  public final <K extends T> SemKey<K> subKey(@NonNls String debugName, @Nonnull SemKey<? super T>... otherSupers) {
+  public final <K extends T> SemKey<K> subKey(String debugName, @Nonnull SemKey<? super T>... otherSupers) {
     if (otherSupers.length == 0) {
       return new SemKey<>(debugName, this);
     }

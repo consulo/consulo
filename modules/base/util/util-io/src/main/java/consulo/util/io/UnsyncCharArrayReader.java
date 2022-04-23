@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.text;
+package consulo.util.io;
 
 import java.io.Reader;
 
@@ -31,13 +31,17 @@ public class UnsyncCharArrayReader extends Reader {
     myCurPos = offset;
   }
 
-  public void close() {}
+  @Override
+  public void close() {
+  }
 
+  @Override
   public int read(char[] cbuf, int off, int len) {
     if (off < 0 || off > cbuf.length || len < 0 || off + len > cbuf.length || off + len < 0) {
-        throw new IndexOutOfBoundsException();
-    } else if (len == 0) {
-        return 0;
+      throw new IndexOutOfBoundsException();
+    }
+    else if (len == 0) {
+      return 0;
     }
 
     int charsToCopy = Math.min(len, myLength - myCurPos);
@@ -49,6 +53,7 @@ public class UnsyncCharArrayReader extends Reader {
     return charsToCopy;
   }
 
+  @Override
   public int read() {
     if (myCurPos >= myLength) return -1;
     return myText[myCurPos++];

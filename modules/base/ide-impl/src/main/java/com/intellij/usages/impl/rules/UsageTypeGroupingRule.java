@@ -66,13 +66,8 @@ public class UsageTypeGroupingRule extends SingleParentUsageGroupingRule {
     if (PsiTreeUtil.getParentOfType(element, PsiComment.class, false) != null) { return UsageType.COMMENT_USAGE; }
 
     for(UsageTypeProvider provider: UsageTypeProvider.EP_NAME.getExtensionList()) {
-      UsageType usageType;
-      if (provider instanceof UsageTypeProviderEx) {
-        usageType = ((UsageTypeProviderEx) provider).getUsageType(element, targets);
-      }
-      else {
-        usageType = provider.getUsageType(element);
-      }
+      UsageType usageType = provider.getUsageType(element, targets);
+
       if (usageType != null) {
         return usageType;
       }

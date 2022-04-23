@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.light;
+package consulo.language.impl.psi;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.psi.PsiElementBase;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
 

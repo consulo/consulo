@@ -14,34 +14,33 @@
  * limitations under the License.
  */
 
-package com.intellij.ui;
+package consulo.language.editor.ui.awt;
 
+import consulo.application.WriteAction;
 import consulo.document.Document;
 import consulo.document.event.DocumentListener;
-import consulo.document.impl.event.DocumentEventImpl;
 import consulo.language.internal.InternalStdFileTypes;
-import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComponentWithBrowseButton;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.TextAccessor;
+import consulo.util.collection.Lists;
 
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author ven
  */
 public class ReferenceEditorWithBrowseButton extends ComponentWithBrowseButton<EditorTextField> implements TextAccessor {
   private final Function<String, Document> myFactory;
-  private final List<DocumentListener> myDocumentListeners = ContainerUtil.createLockFreeCopyOnWriteList();
+  private final List<DocumentListener> myDocumentListeners = Lists.newLockFreeCopyOnWriteList();
 
   public ReferenceEditorWithBrowseButton(final ActionListener browseActionListener,
                                          final Project project,
                                          final Function<String, Document> factory,
                                          String text) {
-    this(browseActionListener, new EditorTextField(factory.fun(text), project, InternalStdFileTypes.JAVA), factory);
+    this(browseActionListener, new EditorTextField(factory.apply(text), project, InternalStdFileTypes.JAVA), factory);
   }
 
   public ReferenceEditorWithBrowseButton(final ActionListener browseActionListener,
@@ -75,12 +74,12 @@ public class ReferenceEditorWithBrowseButton extends ComponentWithBrowseButton<E
     for (DocumentListener listener : myDocumentListeners) {
       oldDocument.removeDocumentListener(listener);
     }
-    Document document = myFactory.fun(text);
+    Document document = myFactory.apply(text);
     getEditorTextField().setDocument(document);
     for (DocumentListener listener : myDocumentListeners) {
       document.addDocumentListener(listener);
-      listener.documentChanged(new DocumentEventImpl(document, 0, oldText, text, -1, false));
     }
+    WriteAction.run(() -> document.setText(text));
   }
 
   public boolean isEditable() {

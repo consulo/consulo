@@ -18,4 +18,5 @@ module consulo.module.impl {
   opens consulo.module.impl.internal to consulo.injecting.pico.impl;
   opens consulo.module.impl.internal.extension to consulo.util.xml.serializer;
   opens consulo.module.impl.internal.layer.orderEntry to consulo.injecting.pico.impl;
+  opens consulo.module.impl.internal.layer to consulo.injecting.pico.impl;
 }

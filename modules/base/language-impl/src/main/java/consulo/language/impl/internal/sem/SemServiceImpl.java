@@ -13,25 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.semantic;
+package consulo.language.impl.internal.sem;
 
 import consulo.application.ApplicationManager;
-import consulo.project.Project;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.application.util.RecursionGuard;
 import consulo.application.util.RecursionManager;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.PsiModificationTracker;
-import com.intellij.util.ConcurrencyUtil;
-import com.intellij.util.NullableFunction;
-import consulo.util.collection.SmartList;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.sem.*;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.Maps;
 import consulo.util.collection.MultiMap;
-import consulo.component.messagebus.MessageBusConnection;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.ConcurrentIntObjectMap;
+import consulo.util.collection.primitive.ints.IntMaps;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -40,14 +42,17 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * @author peter
  */
 @Singleton
 public class SemServiceImpl extends SemService {
-  private final ConcurrentMap<PsiElement, SemCacheChunk> myCache = ContainerUtil.createConcurrentWeakKeySoftValueMap();
-  private volatile MultiMap<SemKey, NullableFunction<PsiElement, ? extends SemElement>> myProducers;
+  private static final Logger LOG = Logger.getInstance(SemServiceImpl.class);
+
+  private final ConcurrentMap<PsiElement, SemCacheChunk> myCache = Maps.newConcurrentWeakKeySoftValueHashMap();
+  private volatile MultiMap<SemKey, Function<PsiElement, ? extends SemElement>> myProducers;
   private final Project myProject;
 
   private boolean myBulkChange = false;
@@ -81,25 +86,32 @@ public class SemServiceImpl extends SemService {
     }, project);
   }
 
-  private MultiMap<SemKey, NullableFunction<PsiElement, ? extends SemElement>> collectProducers() {
-    final MultiMap<SemKey, NullableFunction<PsiElement, ? extends SemElement>> map = MultiMap.createSmart();
+  private MultiMap<SemKey, Function<PsiElement, ? extends SemElement>> collectProducers() {
+    final MultiMap<SemKey, Function<PsiElement, ? extends SemElement>> map = MultiMap.createSmart();
 
     final SemRegistrar registrar = new SemRegistrar() {
       @Override
-      public <T extends SemElement, V extends PsiElement> void registerSemElementProvider(SemKey<T> key,
-                                                                                          final ElementPattern<? extends V> place,
-                                                                                          final NullableFunction<V, T> provider) {
+      public <T extends SemElement, V extends PsiElement> void registerSemElementProvider(SemKey<T> key, final ElementPattern<? extends V> place, final Function<V, T> provider) {
         map.putValue(key, element -> {
           if (place.accepts(element)) {
-            return provider.fun((V)element);
+            return provider.apply((V)element);
           }
           return null;
         });
       }
     };
 
-    for (SemContributorEP contributor : myProject.getExtensions(SemContributor.EP_NAME)) {
-      contributor.registerSemProviders(myProject.getInjectingContainer(), registrar);
+    for (SemContributorEP contributor : myProject.getExtensionList(SemContributor.EP_NAME)) {
+      try {
+        Class<SemContributor> contributorClass = contributor.<SemContributor>findClass(contributor.implementation);
+
+        SemContributor semContributor = myProject.getUnbindedInstance(contributorClass);
+
+        semContributor.registerSemProviders(registrar);
+      }
+      catch (ClassNotFoundException e) {
+        LOG.error(e);
+      }
     }
 
     return map;
@@ -171,12 +183,12 @@ public class SemServiceImpl extends SemService {
   @Nonnull
   private List<SemElement> createSemElements(SemKey key, PsiElement psi) {
     List<SemElement> result = null;
-    final Collection<NullableFunction<PsiElement, ? extends SemElement>> producers = myProducers.get(key);
+    final Collection<Function<PsiElement, ? extends SemElement>> producers = myProducers.get(key);
     if (!producers.isEmpty()) {
-      for (final NullableFunction<PsiElement, ? extends SemElement> producer : producers) {
+      for (final Function<PsiElement, ? extends SemElement> producer : producers) {
         myCreatingSem.incrementAndGet();
         try {
-          final SemElement element = producer.fun(psi);
+          final SemElement element = producer.apply(psi);
           if (element != null) {
             if (result == null) result = new SmartList<>();
             result.add(element);
@@ -255,13 +267,13 @@ public class SemServiceImpl extends SemService {
   private SemCacheChunk getOrCreateChunk(final PsiElement element) {
     SemCacheChunk chunk = obtainChunk(element);
     if (chunk == null) {
-      chunk = ConcurrencyUtil.cacheOrGet(myCache, element, new SemCacheChunk());
+      chunk = Maps.cacheOrGet(myCache, element, new SemCacheChunk());
     }
     return chunk;
   }
 
   private static class SemCacheChunk {
-    private final ConcurrentIntObjectMap<List<SemElement>> map = ContainerUtil.createConcurrentIntObjectMap();
+    private final ConcurrentIntObjectMap<List<SemElement>> map = IntMaps.newConcurrentIntObjectHashMap();
 
     public List<SemElement> getSemElements(SemKey<?> key) {
       return map.get(key.getUniqueId());

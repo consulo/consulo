@@ -1105,8 +1105,8 @@
     <extensionPoint name="predefinedCodeStyle" interface="consulo.language.codeStyle.PredefinedCodeStyle"/>
 
     <extensionPoint name="semContributor"
-                    beanClass="com.intellij.semantic.SemContributorEP" area="PROJECT">
-      <with attribute="implementation" implements="com.intellij.semantic.SemContributor"/>
+                    beanClass="consulo.language.sem.SemContributorEP" area="PROJECT">
+      <with attribute="implementation" implements="consulo.language.sem.SemContributor"/>
     </extensionPoint>
 
     <extensionPoint name="typeName" beanClass="com.intellij.ide.TypeNameEP"/>
@@ -1975,7 +1975,7 @@
                     serviceImplementation="com.intellij.codeInspection.ex.ProjectInspectionProfilesVisibleTreeState"/>
 
 
-    <projectService serviceInterface="com.intellij.semantic.SemService" serviceImplementation="com.intellij.semantic.SemServiceImpl"/>
+    <projectService serviceInterface="consulo.language.sem.SemService" serviceImplementation="consulo.language.impl.internal.sem.SemServiceImpl"/>
 
     <applicationService serviceInterface="com.intellij.application.options.codeStyle.CodeStyleSchemesUIConfiguration"
                         serviceImplementation="com.intellij.application.options.codeStyle.CodeStyleSchemesUIConfiguration"/>

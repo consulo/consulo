@@ -17,7 +17,7 @@
 /*
  * @author max
  */
-package consulo.ide.impl.psi.stubs;
+package consulo.language.psi.stub;
 
 import consulo.language.psi.PsiElement;
 import consulo.index.io.EnumeratorStringDescriptor;

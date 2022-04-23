@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2000-2010 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.sem;
 
-/*
- * Created by IntelliJ IDEA.
- * User: yole
- * Date: 01.11.2006
- * Time: 17:15:24
- */
-package com.intellij.usages.impl.rules;
-
+import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
-import consulo.component.extension.ExtensionPointName;
-import consulo.usage.UsageType;
 
-import javax.annotation.Nullable;
+import java.util.function.Function;
 
-public interface UsageTypeProvider {
-  ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create("consulo.usageTypeProvider");
+/**
+ * @author peter
+ * @see SemContributor#registerSemProviders(SemRegistrar)
+ */
+public interface SemRegistrar {
 
-  @Nullable
-  UsageType getUsageType(PsiElement element);
+  <T extends SemElement, V extends PsiElement> void registerSemElementProvider(SemKey<T> key, ElementPattern<? extends V> place, Function<V, T> provider);
+
 }

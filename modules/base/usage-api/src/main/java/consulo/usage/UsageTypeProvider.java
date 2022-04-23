@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.semantic;
+
+/*
+ * Created by IntelliJ IDEA.
+ * User: yole
+ * Date: 01.11.2006
+ * Time: 17:15:24
+ */
+package consulo.usage;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiElement;
 
-/**
- * Register sem providers via extension point {@code com.intellij.semContributor}.
- *
- * @author peter
- */
-public abstract class SemContributor {
-  public static final ExtensionPointName<SemContributorEP> EP_NAME = ExtensionPointName.create("consulo.semContributor");
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-  public abstract void registerSemProviders(SemRegistrar registrar);
+public interface UsageTypeProvider {
+  ExtensionPointName<UsageTypeProvider> EP_NAME = ExtensionPointName.create("consulo.usageTypeProvider");
 
+  @Nullable
+  UsageType getUsageType(PsiElement element);
+
+  @Nullable
+  default UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets) {
+    return getUsageType(element);
+  }
 }

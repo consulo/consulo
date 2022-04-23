@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2000-2011 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.semantic;
+package consulo.usage;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.language.psi.PsiElement;
 
-/**
- * Represents a computed and cached value attached to {@link PsiElement} using {@link SemKey}.
- * <p/>
- * Cached value will be dropped automatically on any change of PSI.
- *
- * @author peter
- */
-public interface SemElement {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+/**
+ * @author yole
+ */
+@Deprecated
+@DeprecationInfo("Use UsageTypeProvider")
+public interface UsageTypeProviderEx extends UsageTypeProvider {
+  @Override
+  @Nullable
+  UsageType getUsageType(PsiElement element, @Nonnull UsageTarget[] targets);
 }

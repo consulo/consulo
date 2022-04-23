@@ -28,6 +28,7 @@ module consulo.language.api {
   exports consulo.language.pattern;
   exports consulo.language.inject;
   exports consulo.language.pom;
+  exports consulo.language.sem;
   exports consulo.language.pom.event;
   exports consulo.language.psi;
   exports consulo.language.psi.path;
@@ -40,7 +41,7 @@ module consulo.language.api {
   exports consulo.language.psi.stub;
   exports consulo.language.psi.search;
   exports consulo.language.psi.internal to consulo.ide.impl, consulo.language.impl;
-  exports consulo.language.internal to consulo.ide.impl, consulo.language.impl, consulo.usage.api, consulo.find.api, consulo.language.editor.refactoring.api;
+  exports consulo.language.internal to consulo.ide.impl, consulo.language.impl, consulo.usage.api, consulo.find.api, consulo.language.editor.refactoring.api, consulo.language.editor.ui.api;
   exports consulo.language.psi.stub.internal to consulo.ide.impl, consulo.language.impl;
 
   exports consulo.language.psi.util;

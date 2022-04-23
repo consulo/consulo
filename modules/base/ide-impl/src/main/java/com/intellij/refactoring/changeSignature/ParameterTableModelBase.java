@@ -16,6 +16,7 @@
 package com.intellij.refactoring.changeSignature;
 
 import consulo.ui.ex.awt.BooleanTableCellRenderer;
+import consulo.ui.ex.awt.table.BooleanTableCellEditor;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.SimpleTextAttributes;

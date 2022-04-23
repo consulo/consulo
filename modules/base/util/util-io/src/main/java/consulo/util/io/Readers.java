@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2010 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.semantic;
+package consulo.util.io;
 
-import consulo.language.pattern.ElementPattern;
-import consulo.language.psi.PsiElement;
-import com.intellij.util.NullableFunction;
+import consulo.util.lang.CharArrayUtil;
+
+import javax.annotation.Nonnull;
+import java.io.Reader;
 
 /**
- * @see com.intellij.semantic.SemContributor#registerSemProviders(SemRegistrar)
- * @author peter
+ * @author VISTALL
+ * @since 23-Apr-22
  */
-public interface SemRegistrar {
-
-  <T extends SemElement, V extends PsiElement> void registerSemElementProvider(SemKey<T> key, ElementPattern<? extends V> place, NullableFunction<V, T> provider);
-
+public class Readers {
+  @Nonnull
+  public static Reader readerFromCharSequence(@Nonnull CharSequence text) {
+    char[] chars = CharArrayUtil.fromSequenceWithoutCopying(text);
+    //noinspection IOResourceOpenedButNotSafelyClosed
+    return chars == null ? new CharSequenceReader(text.toString()) : new UnsyncCharArrayReader(chars, 0, text.length());
+  }
 }

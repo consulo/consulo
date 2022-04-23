@@ -17,6 +17,8 @@ package com.intellij.util.text;
 
 import consulo.annotation.internal.MigratedExtensionsTo;
 import consulo.document.util.TextRange;
+import consulo.util.io.CharSequenceReader;
+import consulo.util.io.UnsyncCharArrayReader;
 import consulo.util.lang.ImmutableCharSequence;
 
 import javax.annotation.Nonnull;

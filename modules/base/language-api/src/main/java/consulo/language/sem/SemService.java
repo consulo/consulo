@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.semantic;
+package consulo.language.sem;
 
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -28,10 +28,10 @@ import java.util.List;
 public abstract class SemService {
 
   public static SemService getSemService(Project p) {
-    return ServiceManager.getService(p, SemService.class);
+    return p.getInstance(SemService.class);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public <T extends SemElement> T getSemElement(SemKey<T> key, @Nonnull PsiElement psi) {
     final List<T> list = getSemElements(key, psi);
     if (list.isEmpty()) return null;
@@ -40,10 +40,10 @@ public abstract class SemService {
 
   public abstract <T extends SemElement> List<T> getSemElements(SemKey<T> key, @Nonnull PsiElement psi);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract <T extends SemElement> List<T> getCachedSemElements(SemKey<T> key, @Nonnull PsiElement psi);
 
-  public abstract <T extends SemElement> void setCachedSemElement(SemKey<T> key, @Nonnull PsiElement psi, @javax.annotation.Nullable T semElement);
+  public abstract <T extends SemElement> void setCachedSemElement(SemKey<T> key, @Nonnull PsiElement psi, @Nullable T semElement);
 
   public abstract void clearCachedSemElements(@Nonnull PsiElement psi);
 

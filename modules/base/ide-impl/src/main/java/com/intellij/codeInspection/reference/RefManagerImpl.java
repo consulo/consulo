@@ -19,7 +19,7 @@ import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.document.Document;
 import consulo.document.util.Segment;
-import consulo.ide.impl.psi.impl.light.LightElement;
+import consulo.language.impl.psi.LightElement;
 import consulo.language.Language;
 import consulo.language.editor.inspection.GlobalInspectionContext;
 import consulo.language.editor.inspection.InspectionExtensionsFactory;
@@ -537,7 +537,7 @@ public class RefManagerImpl extends RefManager {
 
   @Nullable
   public RefElement getReference(PsiElement elem, final boolean ignoreScope) {
-    if (ReadAction.compute(() -> elem == null || !elem.isValid() || elem instanceof LightElement || !(elem instanceof PsiDirectory) && !belongsToScope(elem, ignoreScope))) {
+    if (ReadAction.compute(() -> elem == null || !elem.isValid() || elem instanceof LightweightPsiElement || !(elem instanceof PsiDirectory) && !belongsToScope(elem, ignoreScope))) {
       return null;
     }
 
