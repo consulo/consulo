@@ -32,6 +32,7 @@ package net.n3.nanoxml;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Stack;
 
 
@@ -287,7 +288,7 @@ public class StdXMLReader
                pbstream.read();
             }
 
-            return new InputStreamReader(pbstream, "UTF-8");
+            return new InputStreamReader(pbstream, StandardCharsets.UTF_8);
 
          case 0x3C:
             b = pbstream.read();
@@ -305,7 +306,7 @@ public class StdXMLReader
             String encoding = this.getEncoding(charsRead.toString());
 
             if (encoding == null) {
-               return new InputStreamReader(pbstream, "UTF-8");
+               return new InputStreamReader(pbstream, StandardCharsets.UTF_8);
             }
 
             charsRead.setLength(0);
@@ -313,12 +314,12 @@ public class StdXMLReader
             try {
                return new InputStreamReader(pbstream, encoding);
             } catch (UnsupportedEncodingException e) {
-               return new InputStreamReader(pbstream, "UTF-8");
+               return new InputStreamReader(pbstream, StandardCharsets.UTF_8);
             }
 
             default:
                charsRead.append((char) b);
-               return new InputStreamReader(pbstream, "UTF-8");
+               return new InputStreamReader(pbstream, StandardCharsets.UTF_8);
       }
    }
 

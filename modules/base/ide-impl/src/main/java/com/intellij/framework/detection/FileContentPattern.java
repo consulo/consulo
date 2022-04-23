@@ -19,8 +19,8 @@ import consulo.language.pattern.*;
 import consulo.language.util.ProcessingContext;
 import consulo.language.psi.stub.FileContent;
 import com.intellij.util.text.CharArrayUtil;
-import com.intellij.util.xml.NanoXmlUtil;
-import com.intellij.util.xml.XmlFileHeader;
+import consulo.util.xml.fastReader.NanoXmlUtil;
+import consulo.util.xml.fastReader.XmlFileHeader;
 import javax.annotation.Nonnull;
 
 import java.io.IOException;
@@ -102,7 +102,7 @@ public class FileContentPattern extends ObjectPattern<FileContent, FileContentPa
   @Nonnull
   private static XmlFileHeader parseHeaderWithException(FileContent fileContent) throws IOException {
     //noinspection IOResourceOpenedButNotSafelyClosed
-    return NanoXmlUtil.parseHeaderWithException(CharArrayUtil.readerFromCharSequence(fileContent.getContentAsText()));
+    return NanoXmlUtil.parseHeaderWithException(fileContent.getContentAsText());
   }
 
 }

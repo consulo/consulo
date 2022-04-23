@@ -118,6 +118,7 @@
         <include>consulo:consulo-util-jdom</include>
         <include>consulo:consulo-util-interner</include>
         <include>consulo:consulo-util-jna</include>
+        <include>consulo:consulo-util-xml-fast-reader</include>
 
         <include>consulo:consulo-hacking-java-base</include>
 
@@ -167,7 +168,6 @@
         <include>net.bytebuddy:byte-buddy</include>
         <include>org.apache.commons:commons-compress</include>
         <include>commons-codec:commons-codec</include>
-        <include>be.cyberelf.nanoxml:nanoxml</include>
         <include>org.apache.velocity:velocity-engine-core</include>
         <include>org.jvnet.winp:winp</include>
         <include>org.apache.commons:commons-lang3</include>

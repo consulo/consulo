@@ -74,6 +74,7 @@ open module consulo.ide.impl {
   requires transitive consulo.virtual.file.status.impl;
   requires transitive consulo.application.content.impl;
   requires transitive consulo.module.impl;
+  requires transitive consulo.util.xml.fast.reader;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -128,7 +129,6 @@ open module consulo.ide.impl {
   requires imgscalr.lib;
   requires proxy.vole;
   requires args4j;
-  requires nanoxml;
   requires winp;
   requires xmlrpc.client;
   requires xmlrpc.common;
@@ -894,7 +894,6 @@ open module consulo.ide.impl {
   exports com.intellij.util.ui.table;
   exports com.intellij.util.ui.tree;
   exports com.intellij.util.ui.update;
-  exports com.intellij.util.xml;
   exports com.intellij.vcs;
   exports com.intellij.vcs.changes;
   exports com.intellij.vcs.history;

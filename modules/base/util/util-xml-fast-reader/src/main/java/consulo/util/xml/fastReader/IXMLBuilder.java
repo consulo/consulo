@@ -26,10 +26,8 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-package net.n3.nanoxml;
+package consulo.util.xml.fastReader;
 
-
-import consulo.annotation.DeprecationInfo;
 
 import java.io.Reader;
 
@@ -47,10 +45,10 @@ import java.io.Reader;
  * @author Marc De Scheemaecker
  * @version $Name: RELEASE_2_2_1 $, $Revision: 1.3 $
  * @see net.n3.nanoxml.IXMLParser
+ * <p>
+ * This class is copy&paste from nanoxml - but with own package, and impl nanoxml interface, do not expose nanoxml dep
  */
-@Deprecated
-@DeprecationInfo("Use IXMLBuilder - no not export this class")
-public interface IXMLBuilder {
+public interface IXMLBuilder extends net.n3.nanoxml.IXMLBuilder {
 
   /**
    * This method is called before the parser starts processing its input.

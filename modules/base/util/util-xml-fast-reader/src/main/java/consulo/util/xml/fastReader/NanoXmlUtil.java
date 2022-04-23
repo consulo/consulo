@@ -1,15 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.intellij.util.xml;
+package consulo.util.xml.fastReader;
 
-import com.intellij.openapi.util.io.StreamUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.text.CharSequenceReader;
-import consulo.language.psi.PsiFile;
-import consulo.logging.Logger;
-import consulo.util.collection.Stack;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.io.CharSequenceReader;
+import consulo.util.io.StreamUtil;
+import consulo.util.lang.StringUtil;
 import net.n3.nanoxml.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,32 +15,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Properties;
 
 /**
  * @author mike
  */
 public class NanoXmlUtil {
-  private static final Logger LOG = Logger.getInstance(NanoXmlUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(NanoXmlUtil.class);
 
   private NanoXmlUtil() {
   }
 
-  private static MyXMLReader createReader(PsiFile psiFile) {
-    return new MyXMLReader(new CharSequenceReader(psiFile.getViewProvider().getContents()));
-  }
-
-  public static void parseFile(PsiFile psiFile, final IXMLBuilder builder) {
-    MyXMLReader reader = createReader(psiFile);
-    parse(reader, builder);
-  }
 
   public static void parse(final InputStream is, final IXMLBuilder builder) {
     try {
       parse(new MyXMLReader(is), builder);
     }
     catch (IOException e) {
-      LOG.error(e);
+      LOG.error(e.getMessage(), e);
     }
     finally {
 
@@ -55,8 +47,16 @@ public class NanoXmlUtil {
     }
   }
 
+  public static void parse(final CharSequence text, final IXMLBuilder builder) {
+    parse(text, builder, null);
+  }
+
   public static void parse(final Reader reader, final IXMLBuilder builder) {
     parse(reader, builder, null);
+  }
+
+  public static void parse(@Nonnull CharSequence text, @Nonnull IXMLBuilder builder, @Nullable IXMLValidator validator) {
+    parse(new CharSequenceReader(text), builder, validator);
   }
 
   public static void parse(@Nonnull Reader reader, @Nonnull IXMLBuilder builder, @Nullable IXMLValidator validator) {
@@ -64,7 +64,7 @@ public class NanoXmlUtil {
       parse(new MyXMLReader(reader), builder, validator);
     }
     catch (Exception e) {
-      LOG.error(e);
+      LOG.error(e.getMessage(), e);
     }
     finally {
       try {
@@ -93,23 +93,17 @@ public class NanoXmlUtil {
       catch (ParserStoppedXmlException ignore) {
       }
       catch (XMLException e) {
-        LOG.debug(e);
+        LOG.debug(e.getMessage(), e);
       }
     }
     catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
-      LOG.error(e);
+      LOG.error(e.getMessage(), e);
     }
   }
 
   @Nonnull
-  public static XmlFileHeader parseHeader(VirtualFile file) {
-    try {
-      return parseHeaderWithException(file);
-    }
-    catch (IOException e) {
-      LOG.error(e);
-      return null;
-    }
+  public static XmlFileHeader parseHeaderWithException(CharSequence text) {
+    return parseHeader(new MyXMLReader(new CharSequenceReader(text)));
   }
 
   @Nonnull
@@ -118,20 +112,13 @@ public class NanoXmlUtil {
   }
 
   @Nonnull
-  public static XmlFileHeader parseHeaderWithException(final VirtualFile file) throws IOException {
-    try (InputStream stream = file.getInputStream()) {
-      return parseHeader(new MyXMLReader(stream));
-    }
+  public static XmlFileHeader parseHeaderWithException(InputStream inputStream) throws IOException {
+    return parseHeader(new MyXMLReader(inputStream));
   }
 
   @Nonnull
   public static XmlFileHeader parseHeader(final Reader reader) {
     return parseHeader(new MyXMLReader(reader));
-  }
-
-  @Nonnull
-  public static XmlFileHeader parseHeader(PsiFile file) {
-    return parseHeader(createReader(file));
   }
 
   @Nonnull
@@ -167,7 +154,7 @@ public class NanoXmlUtil {
   }
 
   public static class BaseXmlBuilder implements NanoXmlBuilder {
-    private final Stack<String> myLocation = new Stack<>();
+    private final Deque<String> myLocation = new ArrayDeque<>();
 
     @Override
     public void startBuilding(String systemID, int lineNr) {
@@ -176,7 +163,7 @@ public class NanoXmlUtil {
 
     @Override
     public void startElement(String name, String nsPrefix, String nsURI, String systemID, int lineNr) throws Exception {
-      myLocation.push(myLocation.peek() + "." + name);
+      myLocation.push(myLocation.getFirst() + "." + name);
     }
 
     @Override
@@ -189,7 +176,7 @@ public class NanoXmlUtil {
     }
 
     protected String getLocation() {
-      return myLocation.peek();
+      return myLocation.getFirst();
     }
   }
 

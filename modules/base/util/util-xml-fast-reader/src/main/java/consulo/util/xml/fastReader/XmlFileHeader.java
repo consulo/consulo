@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.xml;
-
-import org.jetbrains.annotations.NonNls;
+package consulo.util.xml.fastReader;
 
 /**
  * @author peter
@@ -51,7 +49,7 @@ public class XmlFileHeader {
     return mySystemId;
   }
 
-  @NonNls
+  @Override
   public String toString() {
     return "XmlFileHeader: name=" + myRootTagLocalName + "; namespace=" + myRootTagNamespace + "; publicId=" + myPublicId + "; systemId=" + mySystemId;
   }

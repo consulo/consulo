@@ -12,7 +12,7 @@ module consulo.util.xml.serializer {
 
   requires org.slf4j;
 
-  // todo bosolete dependency
+  // todo obsolete dependency
   requires java.desktop;
 
   exports consulo.util.xml.serializer;
