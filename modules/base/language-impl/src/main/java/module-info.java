@@ -6,6 +6,7 @@ module consulo.language.impl {
   requires consulo.project.api;
   requires consulo.language.api;
   requires consulo.document.impl;
+  requires consulo.application.impl;
   requires consulo.undo.redo.api;
   requires consulo.util.interner;
 

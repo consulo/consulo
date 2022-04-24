@@ -101,6 +101,7 @@
         <include>consulo:consulo-path-macro-api</include>
         <include>consulo:consulo-path-macro-impl</include>
         <include>consulo:consulo-module-ui-api</include>
+        <include>consulo:consulo-web-browser-api</include>
 
         <include>consulo:consulo-base-localize-library</include>
         <include>consulo:consulo-base-icon-library</include>

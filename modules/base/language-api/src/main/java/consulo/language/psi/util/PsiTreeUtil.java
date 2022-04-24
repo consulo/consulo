@@ -16,6 +16,7 @@
 package consulo.language.psi.util;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.util.CachedValueProvider;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
@@ -1066,7 +1067,7 @@ public class PsiTreeUtil {
       return containingFile.getLanguageVersion();
     }
 
-    return CachedValuesManager.getCachedValue(element, () -> {
+    return LanguageCachedValueUtil.getCachedValue(element, () -> {
       final LanguageVersionResolver versionResolver = LanguageVersionResolvers.INSTANCE.forLanguage(language);
       return CachedValueProvider.Result.create(versionResolver.getLanguageVersion(language, element), PsiModificationTracker.MODIFICATION_COUNT);
     });

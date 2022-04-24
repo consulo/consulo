@@ -395,8 +395,6 @@ open module consulo.ide.impl {
   exports com.intellij.ide.bookmarks;
   exports com.intellij.ide.bookmarks.actions;
   exports com.intellij.ide.browsers;
-  exports com.intellij.ide.browsers.chrome;
-  exports com.intellij.ide.browsers.firefox;
   exports com.intellij.ide.browsers.impl;
   exports com.intellij.ide.caches;
   exports com.intellij.ide.commander;
@@ -1032,9 +1030,7 @@ open module consulo.ide.impl {
   exports consulo.fileTypes.ui.impl;
   exports consulo.ide.actions;
   exports consulo.ide.actions.impl;
-  exports consulo.ide.actions.webSearch;
   exports consulo.ide.base;
-  exports consulo.ide.browsers;
   exports consulo.ide.eap;
   exports consulo.ide.eap.plugins;
   exports consulo.ide.impl;
@@ -1129,4 +1125,5 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.codeStyle to consulo.desktop.awt.ide.impl;
   exports consulo.application.ui.impl to consulo.desktop.awt.ide.impl;
   exports consulo.options.impl to consulo.desktop.awt.ide.impl, consulo.sand.language.plugin;
+  exports consulo.webBrowser.impl to consulo.injecting.pico.impl;
 }

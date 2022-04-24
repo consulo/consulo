@@ -33,4 +33,5 @@ module consulo.application.impl {
   exports consulo.application.impl.internal.plugin to consulo.ide.impl, consulo.desktop.awt.ide.impl;
   exports consulo.application.impl.internal.start to consulo.desktop.awt.ide.impl, consulo.ide.impl, consulo.logging.log4j2.impl, consulo.desktop.ide.impl, consulo.injecting.pico.impl;
   exports consulo.application.impl.internal.store to consulo.ide.impl, consulo.injecting.pico.impl;
+  exports consulo.application.impl.internal.util to consulo.language.impl, consulo.ide.impl, consulo.injecting.pico.impl;
 }

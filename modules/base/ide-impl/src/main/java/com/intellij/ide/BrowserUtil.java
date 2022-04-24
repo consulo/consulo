@@ -17,7 +17,7 @@ package com.intellij.ide;
 
 import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.util.ExecUtil;
-import com.intellij.ide.browsers.BrowserLauncher;
+import consulo.webBrowser.BrowserLauncher;
 import com.intellij.ide.browsers.BrowserLauncherAppless;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
@@ -145,6 +145,9 @@ public class BrowserUtil {
     }
     else if (SystemInfo.isMac) {
       return "open";
+    }
+    else if (SystemInfo.isUnix) {
+      return "/usr/bin/firefox";
     }
     else {
       return "";

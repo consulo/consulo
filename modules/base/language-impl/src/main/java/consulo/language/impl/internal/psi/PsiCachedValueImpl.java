@@ -16,9 +16,10 @@
 
 package consulo.language.impl.internal.psi;
 
+import consulo.application.impl.internal.util.CachedValuesFactory;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
 import consulo.language.psi.PsiManager;
-import consulo.language.psi.util.CachedValue;
-import consulo.language.psi.util.CachedValueProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,12 +30,12 @@ import javax.annotation.Nullable;
 public class PsiCachedValueImpl<T> extends PsiCachedValue<T> implements CachedValue<T> {
   private final CachedValueProvider<T> myProvider;
 
-  public PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider) {
-    this(manager, provider, false);
+  public PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, CachedValuesFactory factory) {
+    this(manager, provider, false, factory);
   }
 
-  PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, boolean trackValue) {
-    super(manager, trackValue);
+  PsiCachedValueImpl(@Nonnull PsiManager manager, @Nonnull CachedValueProvider<T> provider, boolean trackValue, CachedValuesFactory factory) {
+    super(manager, trackValue, factory);
     myProvider = provider;
   }
 

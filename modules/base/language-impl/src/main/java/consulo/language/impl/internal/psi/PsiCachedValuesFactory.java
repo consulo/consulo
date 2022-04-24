@@ -2,15 +2,20 @@
 
 package consulo.language.impl.internal.psi;
 
+import consulo.application.impl.internal.util.CachedValuesFactory;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.ParameterizedCachedValue;
+import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.language.psi.PsiManager;
-import consulo.language.psi.util.CachedValue;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.util.ParameterizedCachedValue;
-import consulo.language.psi.util.ParameterizedCachedValueProvider;
+import consulo.util.dataholder.Key;
+import consulo.util.dataholder.UserDataHolder;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * @author Dmitry Avdeev
@@ -27,12 +32,32 @@ public final class PsiCachedValuesFactory implements CachedValuesFactory {
   @Nonnull
   @Override
   public <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue) {
-    return new PsiCachedValueImpl<>(myManager, provider, trackValue);
+    return new PsiCachedValueImpl<>(myManager, provider, trackValue, this);
   }
 
   @Nonnull
   @Override
   public <T, P> ParameterizedCachedValue<T, P> createParameterizedCachedValue(@Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue) {
-    return new PsiParameterizedCachedValue<>(myManager, provider, trackValue);
+    return new PsiParameterizedCachedValue<>(myManager, provider, trackValue, this);
+  }
+
+  @Override
+  public void checkProviderForMemoryLeak(@Nonnull CachedValueProvider<?> provider, @Nonnull Key<?> key, @Nonnull UserDataHolder userDataHolder) {
+    CachedValueLeakChecker.checkProvider(provider, key, userDataHolder);
+  }
+
+  @Override
+  public boolean areRandomChecksEnabled() {
+    return IdempotenceChecker.areRandomChecksEnabled();
+  }
+
+  @Override
+  public <T> void applyForRandomCheck(T data, Object provider, Supplier<? extends T> recomputeValue) {
+    IdempotenceChecker.applyForRandomCheck(data, provider, recomputeValue);
+  }
+
+  @Override
+  public <T> void checkEquivalence(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue) {
+    IdempotenceChecker.checkEquivalence(existing, false, providerClass, recomputeValue);
   }
 }

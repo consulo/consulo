@@ -29,9 +29,9 @@ import consulo.ide.impl.psi.filters.position.PatternFilter;
 import consulo.ide.impl.psi.meta.MetaDataContributor;
 import consulo.ide.impl.psi.meta.MetaDataRegistrar;
 import consulo.language.psi.meta.PsiMetaData;
-import consulo.language.psi.util.CachedValue;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.util.CachedValuesManager;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
 import com.intellij.util.containers.ContainerUtil;
 
 import javax.annotation.Nonnull;

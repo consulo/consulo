@@ -1,27 +1,26 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.application.options.codeStyle.cache;
 
+import com.intellij.util.ArrayUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
-import consulo.logging.Logger;
-import consulo.project.Project;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.util.SimpleModificationTracker;
-import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.ide.impl.psi.codeStyle.modifier.CodeStyleSettingsModifier;
 import consulo.ide.impl.psi.codeStyle.modifier.TransientCodeStyleSettings;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.util.CachedValuesManager;
-import com.intellij.util.ArrayUtil;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.util.lang.ObjectUtil;
-import javax.annotation.Nonnull;
-
+import consulo.language.codeStyle.CodeStyleSettings;
+import consulo.language.codeStyle.CodeStyleSettingsManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.util.LanguageCachedValueUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.util.concurrent.CancellablePromise;
+import consulo.util.lang.ObjectUtil;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ class CodeStyleCachedValueProvider implements CachedValueProvider<CodeStyleSetti
       final PsiFile file = getReferencedPsi();
       if (myComputationLock.tryLock()) {
         try {
-          return CachedValuesManager.getCachedValue(file, this);
+          return LanguageCachedValueUtil.getCachedValue(file, this);
         }
         finally {
           myComputationLock.unlock();

@@ -16,8 +16,8 @@
 package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.util.CachedValuesManager;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;

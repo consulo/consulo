@@ -6,6 +6,9 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.PathUtil;
 import consulo.ui.image.Image;
+import consulo.webBrowser.BrowserFamily;
+import consulo.webBrowser.BrowserSpecificSettings;
+import consulo.webBrowser.WebBrowser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

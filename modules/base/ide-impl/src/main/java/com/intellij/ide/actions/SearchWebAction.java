@@ -11,8 +11,8 @@ import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.io.URLUtil;
-import consulo.ide.actions.webSearch.WebSearchEngine;
-import consulo.ide.actions.webSearch.WebSearchOptions;
+import consulo.webBrowser.WebSearchEngine;
+import consulo.webBrowser.WebSearchOptions;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

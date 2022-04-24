@@ -42,7 +42,9 @@ module consulo.application.api {
           consulo.ui.ex.api,
           consulo.language.editor.refactoring.api;
 
-  exports consulo.application.internal.concurrency to
+  exports consulo.application.internal.util to consulo.language.api, consulo.application.impl;
+
+          exports consulo.application.internal.concurrency to
           consulo.ide.impl,
           consulo.test.impl;
 

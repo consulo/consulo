@@ -48,6 +48,10 @@ import com.intellij.util.ui.OptionsDialog;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.webBrowser.BrowserLauncher;
+import consulo.webBrowser.BrowserSpecificSettings;
+import consulo.webBrowser.UrlOpener;
+import consulo.webBrowser.WebBrowser;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

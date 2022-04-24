@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.browsers;
 
-import com.intellij.execution.filters.HyperlinkWithPopupMenuInfo;
+import consulo.execution.ui.console.HyperlinkWithPopupMenuInfo;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -23,11 +23,13 @@ import consulo.project.Project;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import consulo.ide.browsers.WebBrowserManager;
+import consulo.webBrowser.BrowserLauncher;
+import consulo.webBrowser.WebBrowserManager;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.webBrowser.WebBrowser;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

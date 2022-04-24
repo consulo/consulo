@@ -16,14 +16,16 @@
 
 package com.intellij.codeInsight.template.impl;
 
-import consulo.language.editor.impl.internal.completion.CompletionUtil;
 import com.intellij.codeInsight.completion.OffsetsInFile;
-import com.intellij.codeInsight.template.*;
+import com.intellij.codeInsight.template.CustomLiveTemplate;
+import com.intellij.codeInsight.template.CustomLiveTemplateBase;
+import com.intellij.codeInsight.template.CustomTemplateCallback;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.util.Pair;
 import com.intellij.util.PairProcessor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
+import consulo.application.util.CachedValueProvider;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
@@ -34,11 +36,15 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.OffsetKey;
-import consulo.language.editor.template.*;
+import consulo.language.editor.impl.internal.completion.CompletionUtil;
+import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.template.ExpressionContext;
+import consulo.language.editor.template.Template;
+import consulo.language.editor.template.TemplateManager;
+import consulo.language.editor.template.TemplateState;
 import consulo.language.editor.template.context.TemplateActionContext;
 import consulo.language.editor.template.context.TemplateContextType;
 import consulo.language.editor.template.event.TemplateEditingListener;
@@ -46,8 +52,7 @@ import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.util.CachedValuesManager;
+import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
@@ -612,7 +617,7 @@ public class TemplateManagerImpl extends TemplateManager implements Disposable {
     PsiFile file = templateActionContext.getFile();
     assertRangeWithinDocument(editRange, Objects.requireNonNull(file.getViewProvider().getDocument()));
 
-    ConcurrentMap<Pair<ProperTextRange, String>, OffsetsInFile> map = CachedValuesManager.getCachedValue(file, () -> CachedValueProvider.Result
+    ConcurrentMap<Pair<ProperTextRange, String>, OffsetsInFile> map = LanguageCachedValueUtil.getCachedValue(file, () -> CachedValueProvider.Result
             .create(ConcurrentFactoryMap.createMap(key -> copyWithDummyIdentifier(new OffsetsInFile(file), key.first.getStartOffset(), key.first.getEndOffset(), key.second)), file,
                     file.getViewProvider().getDocument()));
     return map.get(Pair.create(editRange, CompletionUtil.DUMMY_IDENTIFIER_TRIMMED));

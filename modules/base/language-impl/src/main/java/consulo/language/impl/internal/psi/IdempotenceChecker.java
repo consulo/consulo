@@ -2,6 +2,8 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.util.CachedValueBase;
+import consulo.application.util.CachedValue;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.application.util.RecursionGuard;
 import consulo.application.util.RecursionManager;
@@ -11,7 +13,6 @@ import consulo.disposer.Disposable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
 import consulo.language.psi.ResolveResult;
-import consulo.language.psi.util.CachedValue;
 import consulo.logging.Logger;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;

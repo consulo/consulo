@@ -5,7 +5,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.util.CachedValueProvider;
+import consulo.application.util.CachedValueProvider;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.logging.Logger;
 import consulo.module.Module;

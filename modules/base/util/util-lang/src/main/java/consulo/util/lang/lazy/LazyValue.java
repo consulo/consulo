@@ -15,7 +15,13 @@
  */
 package consulo.util.lang.lazy;
 
+import consulo.util.lang.lazy.impl.AtomicLazyValueImpl;
+import consulo.util.lang.lazy.impl.DefaultLazyValueImpl;
+import consulo.util.lang.lazy.impl.NonNullLazyValueWithModCountImpl;
+import consulo.util.lang.lazy.impl.NullableLazyValueImpl;
+
 import javax.annotation.Nonnull;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -31,6 +37,11 @@ public interface LazyValue<T> extends Supplier<T> {
   @Nonnull
   static <K> LazyValue<K> notNull(@Nonnull Supplier<K> factory) {
     return new DefaultLazyValueImpl<>(factory);
+  }
+
+  @Nonnull
+  static <K> LazyValue<K> notNullWithModCount(@Nonnull Supplier<K> factory, @Nonnull LongSupplier modCount) {
+    return new NonNullLazyValueWithModCountImpl<>(factory, modCount);
   }
 
   @Nonnull

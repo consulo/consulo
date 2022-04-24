@@ -26,6 +26,8 @@ import consulo.ui.ex.awt.Messages;
 import com.intellij.ui.AppUIUtil;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.StringUtil;
+import consulo.webBrowser.DefaultBrowserPolicy;
+import consulo.webBrowser.WebBrowser;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

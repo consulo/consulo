@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.browsers;
 
+import com.intellij.ide.GeneralSettings;
 import consulo.application.util.SystemInfo;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
@@ -16,6 +17,10 @@ import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.logging.Logger;
+import consulo.webBrowser.BrowserFamily;
+import consulo.webBrowser.BrowserSpecificSettings;
+import consulo.webBrowser.DefaultBrowserPolicy;
+import consulo.webBrowser.WebBrowser;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -25,7 +30,7 @@ import java.util.*;
 
 @Singleton
 @State(name = "WebBrowsersConfiguration", storages = @Storage("web-browsers.xml"))
-public class WebBrowserManager extends SimpleModificationTracker implements PersistentStateComponent<Element>, consulo.ide.browsers.WebBrowserManager {
+public class WebBrowserManager extends SimpleModificationTracker implements PersistentStateComponent<Element>, consulo.webBrowser.WebBrowserManager {
   private static final Logger LOG = Logger.getInstance(WebBrowserManager.class);
 
   // default standard browser ID must be constant across all IDE versions on all machines for all users
@@ -59,7 +64,7 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
   }
 
   public static WebBrowserManager getInstance() {
-    return (WebBrowserManager)ServiceManager.getService(consulo.ide.browsers.WebBrowserManager.class);
+    return (WebBrowserManager)ServiceManager.getService(consulo.webBrowser.WebBrowserManager.class);
   }
 
   public static boolean isYandexBrowser(@Nonnull WebBrowser browser) {
@@ -96,6 +101,7 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
     return false;
   }
 
+  @Override
   @Nonnull
   public DefaultBrowserPolicy getDefaultBrowserPolicy() {
     return defaultBrowserPolicy;
@@ -287,6 +293,7 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
     incModificationCount();
   }
 
+  @Override
   @Nonnull
   public List<WebBrowser> getActiveBrowsers() {
     return getBrowsers(Conditions.alwaysTrue(), true);
@@ -344,9 +351,16 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
     }
   }
 
+  @Nonnull
+  @Override
+  public String getAlternativeBrowserPath() {
+    return GeneralSettings.getInstance().getBrowserPath();
+  }
+
   /**
    * @param idOrFamilyName UUID or, due to backward compatibility, browser family name or JS debugger engine ID
    */
+  @Override
   @Nullable
   public WebBrowser findBrowserById(@Nullable String idOrFamilyName) {
     if (StringUtil.isEmpty(idOrFamilyName)) {
@@ -397,10 +411,12 @@ public class WebBrowserManager extends SimpleModificationTracker implements Pers
     return result;
   }
 
+  @Override
   public boolean isActive(@Nonnull WebBrowser browser) {
     return !(browser instanceof ConfigurableWebBrowser) || ((ConfigurableWebBrowser)browser).isActive();
   }
 
+  @Override
   @Nullable
   public WebBrowser getFirstActiveBrowser() {
     for (ConfigurableWebBrowser browser : browsers) {

@@ -16,17 +16,18 @@
 
 package consulo.language.impl.internal.psi;
 
+import consulo.application.impl.internal.util.CachedValuesFactory;
 import consulo.language.psi.PsiManager;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.util.ParameterizedCachedValue;
-import consulo.language.psi.util.ParameterizedCachedValueProvider;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.ParameterizedCachedValue;
+import consulo.application.util.ParameterizedCachedValueProvider;
 import javax.annotation.Nonnull;
 
 public class PsiParameterizedCachedValue<T, P> extends PsiCachedValue<T> implements ParameterizedCachedValue<T, P> {
   private final ParameterizedCachedValueProvider<T, P> myProvider;
 
-  PsiParameterizedCachedValue(@Nonnull PsiManager manager, @Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue) {
-    super(manager, trackValue);
+  PsiParameterizedCachedValue(@Nonnull PsiManager manager, @Nonnull ParameterizedCachedValueProvider<T, P> provider, boolean trackValue, CachedValuesFactory factory) {
+    super(manager, trackValue, factory);
     myProvider = provider;
   }
 

@@ -15,16 +15,16 @@
  */
 package com.intellij.ide.browsers.impl;
 
-import com.intellij.ide.browsers.BrowserLauncher;
-import com.intellij.ide.browsers.UrlOpener;
-import com.intellij.ide.browsers.WebBrowser;
+import consulo.webBrowser.BrowserLauncher;
+import consulo.webBrowser.UrlOpener;
+import consulo.webBrowser.WebBrowser;
 import consulo.project.Project;
 import com.intellij.util.ArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-final class DefaultUrlOpener extends UrlOpener {
+public final class DefaultUrlOpener implements UrlOpener {
   @Override
   public boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project) {
     return BrowserLauncher.getInstance().browseUsingPath(url, null, browser, project, ArrayUtil.EMPTY_STRING_ARRAY);

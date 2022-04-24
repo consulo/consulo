@@ -21,15 +21,16 @@ import consulo.util.io.BufferExposingByteArrayOutputStream;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.index.io.data.DataInputOutputUtil;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.newvfs.ManagingFS;
 import com.intellij.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.psi.stubs.provided.StubProvidedIndexExtension;
-import consulo.language.psi.util.CachedValue;
-import consulo.language.psi.util.CachedValueProvider;
-import com.intellij.util.CachedValueImpl;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.impl.internal.util.CachedValueImpl;
 import com.intellij.util.ConcurrencyUtil;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
@@ -58,6 +59,7 @@ import java.util.*;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.Supplier;
 
 @Singleton
 @State(name = "FileBasedIndex", storages = @Storage(value = "stubIndex.xml", roamingType = RoamingType.DISABLED))
@@ -71,10 +73,10 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
     private final TObjectIntHashMap<ID<?, ?>> myIndexIdToVersionMap = new TObjectIntHashMap<>();
   }
 
-  private final Map<StubIndexKey<?, ?>, CachedValue<Map<CompositeKey, StubIdList>>> myCachedStubIds = FactoryMap.createMap(k -> {
+  private final Map<StubIndexKey<?, ?>, Supplier<Map<CompositeKey, StubIdList>>> myCachedStubIds = FactoryMap.createMap(k -> {
     UpdatableIndex<Integer, SerializedStubTree, FileContent> index = getStubUpdatingIndex();
     ModificationTracker tracker = index::getModificationStamp;
-    return new CachedValueImpl<>(() -> new CachedValueProvider.Result<>(ContainerUtil.newConcurrentMap(), tracker));
+    return LazyValue.notNullWithModCount(() -> ContainerUtil.newConcurrentMap(), tracker::getModificationCount);
   }, ContainerUtil::newConcurrentMap);
 
   private final StubProcessingHelper myStubProcessingHelper;
@@ -389,7 +391,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
           continue;
         }
 
-        StubIdList list = myCachedStubIds.get(indexKey).getValue().computeIfAbsent(new CompositeKey(key, id), __ -> {
+        StubIdList list = myCachedStubIds.get(indexKey).get().computeIfAbsent(new CompositeKey(key, id), __ -> {
           try {
             Map<Integer, SerializedStubTree> data = stubUpdatingIndex.getIndexedFileData(id);
             LOG.assertTrue(data.size() == 1);

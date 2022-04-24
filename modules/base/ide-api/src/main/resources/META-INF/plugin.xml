@@ -600,8 +600,11 @@
 
     <extensionPoint name="useScopeEnlarger" interface="consulo.ide.impl.psi.search.UseScopeEnlarger"/>
     <extensionPoint name="resolveScopeEnlarger" interface="consulo.language.psi.ResolveScopeEnlarger"/>
-    <extensionPoint name="resolveScopeProvider" interface="consulo.ide.impl.psi.ResolveScopeProvider"/>
+    <extensionPoint name="resolveScopeProvider" interface="consulo.language.psi.ResolveScopeProvider"/>
     <extensionPoint name="codeUsageScopeOptimizer" interface="consulo.language.psi.search.ScopeOptimizer"/>
+
+    <extensionPoint name="webFileFilter" interface="consulo.webBrowser.WebFileFilter"/>
+    <extensionPoint name="webBrowserUrlProvider" interface="consulo.webBrowser.WebBrowserUrlProvider"/>
 
     <extensionPoint name="gotoClassContributor"
                     interface="consulo.ide.navigation.ChooseByNameContributor"/>
@@ -887,19 +890,19 @@
     <extensionPoint name="navbar" interface="com.intellij.ide.navigationToolbar.NavBarModelExtension"/>
 
     <extensionPoint name="renameHandler" interface="consulo.language.editor.refactoring.rename.RenameHandler"/>
-    <extensionPoint name="renamePsiElementProcessor" interface="com.intellij.refactoring.rename.RenamePsiElementProcessor"/>
+    <extensionPoint name="renamePsiElementProcessor" interface="consulo.language.editor.refactoring.rename.RenamePsiElementProcessor"/>
     <extensionPoint name="updateAddedFileProcessor" interface="consulo.language.psi.UpdateAddedFileProcessor"/>
     <extensionPoint name="moveFileHandler" interface="com.intellij.refactoring.move.moveFilesOrDirectories.MoveFileHandler"/>
-    <extensionPoint name="automaticRenamerFactory" interface="com.intellij.refactoring.rename.naming.AutomaticRenamerFactory"/>
+    <extensionPoint name="automaticRenamerFactory" interface="consulo.language.editor.refactoring.rename.AutomaticRenamerFactory"/>
     <extensionPoint name="nameSuggestionProvider" interface="consulo.language.editor.refactoring.rename.NameSuggestionProvider"/>
     <extensionPoint name="vetoRenameCondition" interface="consulo.language.editor.refactoring.rename.VetoRenameCondition"/>
 
     <extensionPoint name="rename.inplace.resolveSnapshotProvider"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.refactoring.rename.ResolveSnapshotProvider"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.ResolveSnapshotProvider"/>
     </extensionPoint>
 
-    <extensionPoint name="renameInputValidator" interface="com.intellij.refactoring.rename.RenameInputValidator"/>
+    <extensionPoint name="renameInputValidator" interface="consulo.language.editor.refactoring.rename.RenameInputValidator"/>
 
     <extensionPoint name="findUsagesHandlerFactory" interface="consulo.find.FindUsagesHandlerFactory"
                     area="PROJECT"/>
@@ -950,11 +953,11 @@
     <extensionPoint name="usageGroupingRuleProvider"
                     interface="consulo.usage.rule.UsageGroupingRuleProvider"/>
     <extensionPoint name="usageTypeProvider"
-                    interface="com.intellij.usages.impl.rules.UsageTypeProvider"/>
+                    interface="consulo.usage.UsageTypeProvider"/>
     <extensionPoint name="fileStructureGroupRuleProvider"
                     interface="com.intellij.usages.impl.FileStructureGroupRuleProvider"/>
     <extensionPoint name="usageContextPanelProvider"
-                    interface="com.intellij.usages.UsageContextPanel$Provider"
+                    interface="consulo.usage.UsageContextPanel$Provider"
                     area="PROJECT"/>
     <extensionPoint name="usageViewElementsListener" interface="com.intellij.usages.impl.UsageViewElementsListener"/>
 
@@ -966,19 +969,19 @@
                     interface="com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider"/>
 
     <extensionPoint name="codeInsight.implementMethod" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.LanguageCodeInsightActionHandler"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.action.LanguageCodeInsightActionHandler"/>
     </extensionPoint>
 
     <extensionPoint name="codeInsight.overrideMethod" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.LanguageCodeInsightActionHandler"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.action.LanguageCodeInsightActionHandler"/>
     </extensionPoint>
 
     <extensionPoint name="codeInsight.delegateMethods" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.LanguageCodeInsightActionHandler"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.action.LanguageCodeInsightActionHandler"/>
     </extensionPoint>
 
     <extensionPoint name="codeInsight.gotoSuper" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.LanguageCodeInsightActionHandler"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.action.LanguageCodeInsightActionHandler"/>
     </extensionPoint>
 
     <extensionPoint name="codeInsight.lineMarkerProvider" beanClass="consulo.language.LanguageExtensionPoint">
@@ -1157,7 +1160,7 @@
 
     <extensionPoint name="eventLogCategory" interface="com.intellij.notification.EventLogCategory"/>
 
-    <extensionPoint name="urlOpener" interface="com.intellij.ide.browsers.UrlOpener"/>
+    <extensionPoint name="urlOpener" interface="consulo.webBrowser.UrlOpener"/>
 
     <extensionPoint name="editor.linePainter" interface="consulo.codeEditor.EditorLinePainter"/>
 
@@ -1224,9 +1227,10 @@
     <applicationService serviceInterface="com.intellij.openapi.projectRoots.impl.JdkVersionDetector"
                         serviceImplementation="com.intellij.openapi.projectRoots.impl.JdkVersionDetectorImpl"/>
 
-    <applicationService serviceInterface="consulo.ide.browsers.WebBrowserManager" serviceImplementation="com.intellij.ide.browsers.WebBrowserManager"/>
+    <applicationService serviceInterface="consulo.webBrowser.WebBrowserManager" serviceImplementation="com.intellij.ide.browsers.WebBrowserManager"/>
+    <applicationService serviceInterface="consulo.webBrowser.WebBrowserService" serviceImplementation="consulo.webBrowser.impl.WebBrowserServiceImpl"/>
 
-    <applicationService serviceInterface="com.intellij.ide.browsers.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl"/>
+    <applicationService serviceInterface="consulo.webBrowser.BrowserLauncher" serviceImplementation="com.intellij.ide.browsers.BrowserLauncherImpl"/>
 
     <urlOpener implementation="com.intellij.ide.browsers.impl.DefaultUrlOpener" order="last"/>
 
@@ -1276,7 +1280,7 @@
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
     <applicationService serviceImplementation="consulo.component.store.impl.internal.ApplicationDefaultStoreCache"/>
 
-    <applicationService serviceInterface="com.intellij.ui.TreeUIHelper"
+    <applicationService serviceInterface="consulo.ui.ex.awt.tree.TreeUIHelper"
                         serviceImplementation="com.intellij.ui.TreeUIHelperImpl"/>
     <applicationService serviceInterface="consulo.ui.ex.awt.ExpandableItemsHandlerFactory"
                         serviceImplementation="com.intellij.ui.ExpandTipHandlerFactoryImpl"/>
@@ -1365,7 +1369,7 @@
 
     <applicationService serviceImplementation="consulo.fileChooser.impl.FileOperateDialogSettings"/>
     <applicationService serviceImplementation="com.intellij.ide.MacOSApplicationProvider"/>
-    <applicationService serviceImplementation="consulo.ide.actions.webSearch.WebSearchOptions"/>
+    <applicationService serviceImplementation="consulo.webBrowser.WebSearchOptions"/>
 
     <applicationService serviceInterface="consulo.process.local.ProcessHandlerFactory"
                         serviceImplementation="com.intellij.execution.process.ProcessHandlerFactoryImpl"/>
@@ -1397,8 +1401,8 @@
     <projectService serviceInterface="consulo.project.DumbService"
                     serviceImplementation="com.intellij.openapi.project.DumbServiceImpl"/>
 
-    <projectService serviceInterface="consulo.language.psi.util.CachedValuesManager"
-                    serviceImplementation="consulo.language.impl.internal.psi.CachedValuesManagerImpl"/>
+    <projectService serviceInterface="consulo.application.util.CachedValuesManager"
+                    serviceImplementation="consulo.application.impl.internal.util.CachedValuesManagerImpl"/>
 
     <projectService serviceInterface="com.intellij.openapi.vcs.impl.projectlevelman.AllVcsesI"
                     serviceImplementation="com.intellij.openapi.vcs.impl.projectlevelman.AllVcses"/>
@@ -1857,7 +1861,7 @@
                     serviceImplementation="com.intellij.pom.core.impl.PomModelImpl"/>
     <projectService serviceInterface="consulo.ide.impl.psi.impl.include.FileIncludeManager"
                     serviceImplementation="consulo.ide.impl.psi.impl.include.FileIncludeManagerImpl"/>
-    <projectService serviceInterface="consulo.language.impl.internal.psi.CachedValuesFactory"
+    <projectService serviceInterface="consulo.application.impl.internal.util.CachedValuesFactory"
                     serviceImplementation="consulo.language.impl.internal.psi.PsiCachedValuesFactory"/>
 
 
@@ -2317,13 +2321,13 @@
                      groupKey="group.names.internationalization.issues" enabledByDefault="true" level="WARNING"
                      implementationClass="com.intellij.codeInspection.LossyEncodingInspection"/>
 
-    <applicationService serviceInterface="com.intellij.codeInsight.template.TemplateBuilderFactory"
+    <applicationService serviceInterface="consulo.language.editor.template.TemplateBuilderFactory"
                         serviceImplementation="com.intellij.codeInsight.template.TemplateBuilderFactoryImpl"/>
 
     <projectViewPane implementation="com.intellij.ide.scopeView.ScopeViewPane"/>
 
-    <renameHandler implementation="com.intellij.refactoring.rename.inplace.VariableInplaceRenameHandler"/>
-    <renameHandler implementation="com.intellij.refactoring.rename.inplace.MemberInplaceRenameHandler"/>
+    <renameHandler implementation="consulo.language.editor.refactoring.rename.inplace.VariableInplaceRenameHandler"/>
+    <renameHandler implementation="consulo.language.editor.refactoring.rename.inplace.MemberInplaceRenameHandler"/>
     <completion.contributor language="any"
                             implementationClass="com.intellij.refactoring.rename.inplace.CompletionContributorForInplaceRename"
                             order="first"/>
@@ -2807,6 +2811,10 @@
                         serviceImplementation="consulo.ide.impl.language.editor.refactoring.RefactoringInternalHelperImpl"/>
     <applicationService serviceInterface="consulo.usage.UsagePreviewPanelFactory" serviceImplementation="consulo.ide.impl.usage.UsagePreviewPanelFactoryImpl"/>
     <projectService serviceInterface="consulo.language.editor.inject.InjectedEditorManager" serviceImplementation="consulo.ide.impl.language.editor.InjectedEditorManagerImpl"/>
+
+    <selectInTarget implementation="consulo.webBrowser.impl.SelectInDefaultBrowserTarget"/>
+
+    <webFileFilter implementation="consulo.webBrowser.impl.DefaultHtmlWebFileFilter" order="last"/>
   </extensions>
 
   <applicationListeners>

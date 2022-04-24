@@ -15,37 +15,34 @@
  */
 package org.intellij.plugins.intelliLang;
 
-import consulo.undoRedo.ProjectUndoManager;
-import consulo.util.collection.MultiValuesMap;
-import consulo.util.xml.serializer.JDOMExternalizerUtil;
-import consulo.util.lang.function.Condition;
-import consulo.language.Language;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.language.editor.WriteCommandAction;
 import com.intellij.openapi.command.undo.GlobalUndoableAction;
-import consulo.undoRedo.UndoableAction;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.*;
-import consulo.language.psi.PsiCompiledElement;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiLanguageInjectionHost;
-import consulo.language.psi.util.CachedValue;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.PsiUtilCore;
+import com.intellij.openapi.util.Comparing;
+import com.intellij.openapi.util.JDOMUtil;
+import com.intellij.openapi.util.Pair;
 import com.intellij.util.*;
-import consulo.application.util.ConcurrentFactoryMap;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.containers.Convertor;
-import consulo.util.collection.MultiMap;
+import consulo.application.util.ConcurrentFactoryMap;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.util.ModificationTracker;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.ide.ServiceManager;
+import consulo.language.Language;
+import consulo.language.editor.WriteCommandAction;
+import consulo.language.psi.*;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import consulo.psi.injection.LanguageInjectionSupport;
 import consulo.psi.injection.impl.ApplicationInjectionConfiguration;
 import consulo.psi.injection.impl.ProjectInjectionConfiguration;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UndoConfirmationPolicy;
+import consulo.undoRedo.UndoableAction;
+import consulo.util.collection.MultiMap;
+import consulo.util.collection.MultiValuesMap;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.lazy.LazyValue;
+import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import org.intellij.plugins.intelliLang.inject.InjectorUtils;
 import org.intellij.plugins.intelliLang.inject.LanguageInjectionConfigBean;
 import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
@@ -61,6 +58,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Supplier;
 
 /**
  * Configuration that holds configured xml tag, attribute and method parameter
@@ -131,17 +129,13 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
     return injections;
   }
 
-  private CachedValue<MultiMap<String, BaseInjection>> myInjectionsById = new CachedValueImpl<>(new CachedValueProvider<MultiMap<String, BaseInjection>>() {
-    @Nullable
-    @Override
-    public Result<MultiMap<String, BaseInjection>> compute() {
-      MultiMap<String, BaseInjection> map = new MultiMap<>();
-      for (BaseInjection injection : getAllInjections()) {
-        map.putValue(injection.getInjectedLanguageId(), injection);
-      }
-      return Result.create(map, Configuration.this);
+  private Supplier<MultiMap<String, BaseInjection>> myInjectionsById = LazyValue.notNullWithModCount(() -> {
+    MultiMap<String, BaseInjection> map = new MultiMap<>();
+    for (BaseInjection injection : getAllInjections()) {
+      map.putValue(injection.getInjectedLanguageId(), injection);
     }
-  });
+    return map;
+  }, this::getModificationCount);
 
   private volatile long myModificationCount;
 
@@ -263,7 +257,7 @@ public class Configuration implements PersistentStateComponent<Element>, Modific
   }
 
   public Collection<BaseInjection> getInjectionsByLanguageId(String languageId) {
-    return myInjectionsById.getValue().get(languageId);
+    return myInjectionsById.get().get(languageId);
   }
 
   @Nullable

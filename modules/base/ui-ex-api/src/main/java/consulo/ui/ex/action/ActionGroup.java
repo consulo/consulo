@@ -22,10 +22,10 @@ import java.util.Set;
 /**
  * Represents a group of actions.
  *
- * @see com.intellij.openapi.actionSystem.DefaultActionGroup
- * @see com.intellij.openapi.actionSystem.ComputableActionGroup
- * @see com.intellij.openapi.actionSystem.CheckedActionGroup
- * @see com.intellij.openapi.actionSystem.CompactActionGroup
+ * @see DefaultActionGroup
+ * @see ComputableActionGroup
+ * @see CheckedActionGroup
+ * @see CompactActionGroup
  */
 public abstract class ActionGroup extends AnAction {
   public abstract static class Builder {

@@ -7,7 +7,7 @@ import consulo.codeEditor.FoldingGroup;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.component.util.ModificationTracker;
-import consulo.language.psi.util.CachedValueProvider;
+import consulo.application.util.CachedValueProvider;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
 

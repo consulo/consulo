@@ -120,7 +120,7 @@
     <module>modules/base/path-macro-impl</module>
     <module>modules/base/module-ui-api</module>
     <module>modules/base/language-editor-refactoring-api</module>
-    <module>modules/base/util/util-xml-fast-reader</module>
+    <module>modules/base/web-browser-api</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>
@@ -140,6 +140,7 @@
     <module>modules/base/util/util-xml-serializer</module>
     <module>modules/base/util/util-interner</module>
     <module>modules/base/util/util-jna</module>
+    <module>modules/base/util/util-xml-fast-reader</module>
 
     <module>modules/base/injecting/injecting-api</module>
     <module>modules/base/injecting/injecting-pico-impl</module>

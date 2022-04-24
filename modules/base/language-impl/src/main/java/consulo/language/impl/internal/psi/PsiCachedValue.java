@@ -16,9 +16,11 @@
 
 package consulo.language.impl.internal.psi;
 
+import consulo.application.impl.internal.util.CachedValueBase;
+import consulo.application.impl.internal.util.CachedValuesFactory;
+import consulo.application.util.CachedValueProvider;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.*;
-import consulo.language.psi.util.CachedValueProvider;
 import consulo.project.Project;
 import consulo.project.content.ProjectRootModificationTracker;
 import consulo.util.collection.ArrayUtil;
@@ -34,8 +36,8 @@ public abstract class PsiCachedValue<T> extends CachedValueBase<T> {
   private static final Key<?> PSI_MOD_COUNT_OPTIMIZATION = Key.create("PSI_MOD_COUNT_OPTIMIZATION");
   private final PsiManager myManager;
 
-  PsiCachedValue(@Nonnull PsiManager manager, boolean trackValue) {
-    super(trackValue);
+  PsiCachedValue(@Nonnull PsiManager manager, boolean trackValue, CachedValuesFactory factory) {
+    super(trackValue, factory);
     myManager = manager;
   }
 

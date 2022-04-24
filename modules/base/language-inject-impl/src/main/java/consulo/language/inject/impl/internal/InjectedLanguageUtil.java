@@ -5,6 +5,7 @@ package consulo.language.inject.impl.internal;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.application.util.CachedValueProvider;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.internal.RealEditor;
@@ -15,7 +16,6 @@ import consulo.document.util.ProperTextRange;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditorManager;
-import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
@@ -32,12 +32,12 @@ import consulo.language.impl.psi.DummyHolder;
 import consulo.language.impl.psi.PsiFileBase;
 import consulo.language.inject.*;
 import consulo.language.psi.*;
-import consulo.language.psi.util.CachedValueProvider;
-import consulo.language.psi.util.CachedValuesManager;
+import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.version.LanguageVersion;
 import consulo.language.version.LanguageVersionUtil;
 import consulo.logging.Logger;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;
 import consulo.util.collection.ConcurrentList;
 import consulo.util.collection.ContainerUtil;
@@ -396,7 +396,7 @@ public class InjectedLanguageUtil {
 
   @Nonnull
   private static InjectionResult getEmptyInjectionResult(@Nonnull PsiFile host) {
-    return CachedValuesManager.getCachedValue(host, () -> CachedValueProvider.Result.createSingleDependency(new InjectionResult(host, null, null), PsiModificationTracker.MODIFICATION_COUNT));
+    return LanguageCachedValueUtil.getCachedValue(host, () -> CachedValueProvider.Result.createSingleDependency(new InjectionResult(host, null, null), PsiModificationTracker.MODIFICATION_COUNT));
   }
 
   /**
