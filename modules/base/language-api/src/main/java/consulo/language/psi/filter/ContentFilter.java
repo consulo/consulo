@@ -14,56 +14,37 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.filters.position;
+package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.filter.ElementFilter;
+import consulo.language.psi.filter.position.PositionElementFilter;
 
 /**
  * Created by IntelliJ IDEA.
  * User: ik
- * Date: 03.02.2003
- * Time: 18:54:57
+ * Date: 13.02.2003
+ * Time: 12:17:49
  * To change this template use Options | File Templates.
  */
-public class ParentElementFilter extends PositionElementFilter{
-  private PsiElement myParent = null;
-  private int myLevel = 1;
-  public ParentElementFilter(ElementFilter filter){
+public class ContentFilter extends PositionElementFilter {
+  public ContentFilter(ElementFilter filter){
     setFilter(filter);
   }
-
-  public ParentElementFilter(ElementFilter filter, int level) {
-    setFilter(filter);
-    myLevel = level;
-  }
-
-  public ParentElementFilter(PsiElement parent){
-    myParent = parent;
-  }
-
-
-  public ParentElementFilter(){}
 
   @Override
   public boolean isAcceptable(Object element, PsiElement scope){
     if (!(element instanceof PsiElement)) return false;
-    PsiElement context = (PsiElement)element;
-    for(int i = 0; i < myLevel && context != null; i++){
-       context = context.getContext();
-    }
-    if(context != null){
-      if(myParent == null){
-        return getFilter().isAcceptable(context, scope);
+    PsiElement currentChild = ((PsiElement) element).getFirstChild();
+    while(currentChild != null){
+      if(getFilter().isAcceptable(currentChild, ((PsiElement) element))){
+        return true;
       }
-      return myParent == context;
+      currentChild = currentChild.getNextSibling();
     }
     return false;
   }
 
-
   public String toString(){
-    return "parent(" +getFilter()+")";
+    return "content(" + getFilter().toString() + ")";
   }
-
 }

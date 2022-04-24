@@ -16,27 +16,27 @@
 
 package consulo.ide.impl.psi.impl.meta;
 
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
-import consulo.disposer.Disposable;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
-import consulo.application.util.UserDataCache;
-import consulo.language.pattern.ElementPattern;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.filter.ElementFilter;
-import consulo.ide.impl.psi.filters.position.PatternFilter;
-import consulo.ide.impl.psi.meta.MetaDataContributor;
-import consulo.ide.impl.psi.meta.MetaDataRegistrar;
-import consulo.language.psi.meta.PsiMetaData;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.application.util.UserDataCache;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.psi.meta.MetaDataContributor;
+import consulo.ide.impl.psi.meta.MetaDataRegistrar;
+import consulo.language.pattern.ElementPattern;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.filter.ElementFilter;
+import consulo.language.psi.filter.position.PatternFilter;
+import consulo.language.psi.meta.PsiMetaData;
+import consulo.util.dataholder.Key;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.util.List;
 
 /**

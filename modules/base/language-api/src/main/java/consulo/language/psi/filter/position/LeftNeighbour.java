@@ -14,37 +14,38 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.filters.position;
+package consulo.language.psi.filter.position;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
+import consulo.language.psi.filter.FilterPositionUtil;
 
 /**
  * Created by IntelliJ IDEA.
  * User: ik
- * Date: 11.02.2003
- * Time: 13:54:33
+ * Date: 06.02.2003
+ * Time: 19:03:05
  * To change this template use Options | File Templates.
  */
-public class SuperParentFilter extends PositionElementFilter{
-  public SuperParentFilter(ElementFilter filter){
+public class LeftNeighbour extends PositionElementFilter {
+  public LeftNeighbour(){}
+
+  public LeftNeighbour(ElementFilter filter){
     setFilter(filter);
   }
 
-  public SuperParentFilter(){}
-
   @Override
-  public boolean isAcceptable(Object element, PsiElement scope){
+  public boolean isAcceptable(Object element, PsiElement context){
     if (!(element instanceof PsiElement)) return false;
-    while((element = ((PsiElement) element).getParent()) != null){
-      if(getFilter().isAcceptable(element, scope))
-        return true;
+    final PsiElement previous = FilterPositionUtil.searchNonSpaceNonCommentBack((PsiElement) element);
+    if(previous != null){
+      return getFilter().isAcceptable(previous, context);
     }
     return false;
   }
 
-
   public String toString(){
-    return "super-parent(" +getFilter()+")";
+    return "left(" +getFilter()+")";
   }
 }
+

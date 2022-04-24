@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.filters;
+package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.util.ReflectionUtil;
-import consulo.language.psi.filter.ElementFilter;
+import consulo.util.lang.reflect.ReflectionUtil;
 import org.jetbrains.annotations.NonNls;
 
 /**

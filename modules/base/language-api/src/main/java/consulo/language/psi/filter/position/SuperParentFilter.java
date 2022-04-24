@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.filters;
+package consulo.language.psi.filter.position;
 
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.psi.filters.position.PositionElementFilter;
 import consulo.language.psi.filter.ElementFilter;
 
 /**
  * Created by IntelliJ IDEA.
  * User: ik
- * Date: 30.01.2003
- * Time: 13:38:10
+ * Date: 11.02.2003
+ * Time: 13:54:33
  * To change this template use Options | File Templates.
  */
-public class ScopeFilter extends PositionElementFilter{
-  public ScopeFilter(){}
-
-  public ScopeFilter(ElementFilter filter){
+public class SuperParentFilter extends PositionElementFilter {
+  public SuperParentFilter(ElementFilter filter){
     setFilter(filter);
   }
 
+  public SuperParentFilter(){}
+
   @Override
-  public boolean isAcceptable(Object element, PsiElement context){
-    return context != null && getFilter().isAcceptable(context, context);
+  public boolean isAcceptable(Object element, PsiElement scope){
+    if (!(element instanceof PsiElement)) return false;
+    while((element = ((PsiElement) element).getParent()) != null){
+      if(getFilter().isAcceptable(element, scope))
+        return true;
+    }
+    return false;
   }
 
+
   public String toString(){
-    return "scope(" +getFilter()+")";
+    return "super-parent(" +getFilter()+")";
   }
 }

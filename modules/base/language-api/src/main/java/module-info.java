@@ -34,6 +34,7 @@ module consulo.language.api {
   exports consulo.language.psi.path;
   exports consulo.language.psi.include;
   exports consulo.language.psi.filter;
+  exports consulo.language.psi.filter.position;
   exports consulo.language.psi.event;
   exports consulo.language.pattern.compiler;
   exports consulo.language.psi.meta;

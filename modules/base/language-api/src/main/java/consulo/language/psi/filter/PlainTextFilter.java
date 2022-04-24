@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.filters;
+package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import consulo.language.psi.filter.ElementFilter;
 
 /**
  * @author yole

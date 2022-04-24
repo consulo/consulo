@@ -642,6 +642,7 @@ public class PsiTreeUtil {
     return getNonStrictParentOfType(parent, classes);
   }
 
+  @SafeVarargs
   @Nullable
   @Contract("null, _ -> null")
   public static <T extends PsiElement> T getNonStrictParentOfType(@Nullable final PsiElement element, @Nonnull final Class<? extends T>... classes) {
@@ -1063,7 +1064,7 @@ public class PsiTreeUtil {
 
     Language language = element.getLanguage();
     PsiFile containingFile = element.getContainingFile();
-    if(containingFile != null && containingFile != element && containingFile.getLanguage() == language) {
+    if (containingFile != null && containingFile != element && containingFile.getLanguage() == language) {
       return containingFile.getLanguageVersion();
     }
 
@@ -1196,5 +1197,34 @@ public class PsiTreeUtil {
     }
     //noinspection unchecked
     return (T)cur;
+  }
+
+  /**
+   * @return closest leaf (not necessarily a sibling) before the given element
+   * which has non-empty range and is neither a whitespace nor a comment
+   */
+  @Nullable
+  @RequiredReadAction
+  public static PsiElement prevCodeLeaf(@Nonnull PsiElement element) {
+    PsiElement prevLeaf = prevLeaf(element, true);
+    while (prevLeaf != null && isNonCodeLeaf(prevLeaf)) prevLeaf = prevLeaf(prevLeaf, true);
+    return prevLeaf;
+  }
+
+  /**
+   * @return closest leaf (not necessarily a sibling) after the given element
+   * which has non-empty range and is neither a whitespace nor a comment
+   */
+  @Nullable
+  @RequiredReadAction
+  public static PsiElement nextCodeLeaf(@Nonnull PsiElement element) {
+    PsiElement nextLeaf = nextLeaf(element, true);
+    while (nextLeaf != null && isNonCodeLeaf(nextLeaf)) nextLeaf = nextLeaf(nextLeaf, true);
+    return nextLeaf;
+  }
+
+  @RequiredReadAction
+  private static boolean isNonCodeLeaf(PsiElement leaf) {
+    return StringUtil.isEmptyOrSpaces(leaf.getText()) || getNonStrictParentOfType(leaf, PsiComment.class) != null;
   }
 }

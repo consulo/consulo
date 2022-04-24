@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.filters;
+package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.filter.ElementFilter;
 
 import java.util.ArrayList;
 import java.util.Iterator;

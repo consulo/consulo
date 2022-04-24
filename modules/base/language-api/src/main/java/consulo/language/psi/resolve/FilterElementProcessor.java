@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.scope.processor;
+package consulo.language.psi.resolve;
 
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
-import consulo.language.psi.resolve.PsiElementProcessor;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 

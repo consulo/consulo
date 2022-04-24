@@ -14,35 +14,19 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.filters;
+package consulo.language.psi.filter;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
-import consulo.language.ast.TokenType;
-import consulo.language.impl.ast.TreeUtil;
+import consulo.language.psi.util.PsiTreeUtil;
+
 import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
 public class FilterPositionUtil {
-
   @Nullable
   public static PsiElement searchNonSpaceNonCommentBack(PsiElement element) {
-    return searchNonSpaceNonCommentBack(element, false);
-  }
-
-  @Nullable
-  public static PsiElement searchNonSpaceNonCommentBack(PsiElement element, final boolean strict) {
-    if(element == null || element.getNode() == null) return null;
-    ASTNode leftNeibour = TreeUtil.prevLeaf(element.getNode());
-    if (!strict) {
-      while (leftNeibour != null && (leftNeibour.getElementType() == TokenType.WHITE_SPACE || leftNeibour.getPsi() instanceof PsiComment)){
-        leftNeibour = TreeUtil.prevLeaf(leftNeibour);
-      }
-    }
-    return leftNeibour != null ? leftNeibour.getPsi() : null;
-
+    return element == null ? null : PsiTreeUtil.prevCodeLeaf(element);
   }
 }

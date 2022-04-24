@@ -13,32 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.filters;
+
+package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.filter.ElementFilter;
+import consulo.language.psi.filter.position.PositionElementFilter;
 
 /**
  * Created by IntelliJ IDEA.
  * User: ik
- * Date: 03.02.2003
- * Time: 17:31:05
+ * Date: 30.01.2003
+ * Time: 13:38:10
  * To change this template use Options | File Templates.
  */
-public class FalseFilter implements ElementFilter {
-  public static final FalseFilter INSTANCE = new FalseFilter();
+public class ScopeFilter extends PositionElementFilter {
+  public ScopeFilter(){}
 
-  @Override
-  public boolean isClassAcceptable(Class hintClass){
-    return true;
+  public ScopeFilter(ElementFilter filter){
+    setFilter(filter);
   }
 
   @Override
   public boolean isAcceptable(Object element, PsiElement context){
-    return false;
+    return context != null && getFilter().isAcceptable(context, context);
   }
 
   public String toString(){
-    return "false";
+    return "scope(" +getFilter()+")";
   }
 }

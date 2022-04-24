@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.filters.position;
+package consulo.language.pattern;
 
-import consulo.language.pattern.ObjectPattern;
-import consulo.language.pattern.InitialPatternCondition;
 import consulo.language.util.ProcessingContext;
 import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.PsiElement;

@@ -13,39 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package consulo.ide.impl.psi.filters.position;
+package consulo.language.psi.filter;
 
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.filter.ElementFilter;
-import consulo.ide.impl.psi.filters.FilterPositionUtil;
 
 /**
  * Created by IntelliJ IDEA.
  * User: ik
- * Date: 06.02.2003
- * Time: 19:03:05
+ * Date: 03.02.2003
+ * Time: 17:31:05
  * To change this template use Options | File Templates.
  */
-public class LeftNeighbour extends PositionElementFilter{
-  public LeftNeighbour(){}
+public class FalseFilter implements ElementFilter {
+  public static final FalseFilter INSTANCE = new FalseFilter();
 
-  public LeftNeighbour(ElementFilter filter){
-    setFilter(filter);
+  @Override
+  public boolean isClassAcceptable(Class hintClass){
+    return true;
   }
 
   @Override
   public boolean isAcceptable(Object element, PsiElement context){
-    if (!(element instanceof PsiElement)) return false;
-    final PsiElement previous = FilterPositionUtil.searchNonSpaceNonCommentBack((PsiElement) element);
-    if(previous != null){
-      return getFilter().isAcceptable(previous, context);
-    }
     return false;
   }
 
   public String toString(){
-    return "left(" +getFilter()+")";
+    return "false";
   }
 }
-

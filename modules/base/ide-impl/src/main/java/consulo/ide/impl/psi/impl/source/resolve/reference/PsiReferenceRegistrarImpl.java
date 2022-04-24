@@ -22,7 +22,7 @@ import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceRegistrar;
 import consulo.language.psi.PsiReferenceService;
 import consulo.language.psi.filter.ElementFilter;
-import consulo.ide.impl.psi.filters.position.FilterPattern;
+import consulo.language.pattern.FilterPattern;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.ConcurrencyUtil;
 import consulo.language.util.ProcessingContext;

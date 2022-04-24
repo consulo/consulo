@@ -13,34 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.filters.position;
 
-import consulo.language.pattern.ElementPattern;
+package consulo.language.psi.filter.position;
+
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
 
 /**
- * @author peter
+ * Created by IntelliJ IDEA.
+ * User: ik
+ * Date: 30.01.2003
+ * Time: 13:51:02
+ * To change this template use Options | File Templates.
  */
-public class PatternFilter implements ElementFilter {
-  private final ElementPattern<?> myPattern;
+public abstract class PositionElementFilter implements ElementFilter {
+  private ElementFilter myFilter;
 
-  public PatternFilter(final ElementPattern<?> pattern) {
-    myPattern = pattern;
+  public void setFilter(ElementFilter filter){
+    myFilter = filter;
+  }
+
+  public ElementFilter getFilter(){
+    return myFilter;
   }
 
   @Override
-  public boolean isAcceptable(Object element, PsiElement context) {
-    return myPattern.accepts(element);
-  }
-
-  @Override
-  public boolean isClassAcceptable(Class hintClass) {
+  public boolean isClassAcceptable(Class hintClass){
     return true;
-    //throw new UnsupportedOperationException("Method isClassAcceptable is not yet implemented in " + getClass().getName());
   }
 
-  public String toString() {
-    return myPattern.toString();
+  protected static PsiElement getOwnerChild(final PsiElement scope, PsiElement element){
+    while(element != null && element.getParent() != scope){
+      element = element.getParent();
+    }
+    return element;
   }
 }
