@@ -25,7 +25,7 @@ import com.intellij.openapi.vfs.VfsUtil;
 import consulo.usage.UsageTypeProvider;
 import com.intellij.util.PathUtil;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.IndexableSetContributor;
+import consulo.language.psi.stub.IndexableSetContributor;
 import com.intellij.util.indexing.LightDirectoryIndex;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AccessToken;

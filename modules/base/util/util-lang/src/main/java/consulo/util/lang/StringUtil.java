@@ -2202,4 +2202,43 @@ public class StringUtil {
     }
     return i;
   }
+
+  /**
+   * Consider using {@link StringUtil#unquoteString(String)} instead.
+   * Note: this method has an odd behavior:
+   * Quotes are removed even if leading and trailing quotes are different or
+   * if there is only one quote (leading or trailing).
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static String stripQuotesAroundValue(@Nonnull String text) {
+    final int len = text.length();
+    if (len > 0) {
+      final int from = isQuoteAt(text, 0) ? 1 : 0;
+      final int to = len > 1 && isQuoteAt(text, len - 1) ? len - 1 : len;
+      if (from > 0 || to < len) {
+        return text.substring(from, to);
+      }
+    }
+    return text;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String[] filterEmptyStrings(@Nonnull String[] strings) {
+    int emptyCount = 0;
+    for (String string : strings) {
+      if (string == null || string.isEmpty()) emptyCount++;
+    }
+    if (emptyCount == 0) return strings;
+
+    String[] result = new String[strings.length - emptyCount];
+    int count = 0;
+    for (String string : strings) {
+      if (string == null || string.isEmpty()) continue;
+      result[count++] = string;
+    }
+
+    return result;
+  }
 }

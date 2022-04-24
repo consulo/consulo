@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.indexing;
+package consulo.language.psi.stub;
 
-import consulo.language.psi.stub.IndexableFileSet;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
+
 import javax.annotation.Nonnull;
 
 /**

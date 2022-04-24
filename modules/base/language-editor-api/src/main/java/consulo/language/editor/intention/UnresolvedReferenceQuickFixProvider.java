@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight.quickfix;
+package consulo.language.editor.intention;
 
-import com.intellij.codeInsight.daemon.QuickFixActionRegistrar;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.Extensions;
-import consulo.project.DumbService;
 import consulo.language.psi.PsiReference;
-import com.intellij.util.ReflectionUtil;
+import consulo.project.DumbService;
+import consulo.util.lang.reflect.ReflectionUtil;
+
 import javax.annotation.Nonnull;
 
 public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference> {
 
+  @RequiredReadAction
   public static <T extends PsiReference> void registerReferenceFixes(T ref, QuickFixActionRegistrar registrar) {
 
     final boolean dumb = DumbService.getInstance(ref.getElement().getProject()).isDumb();
@@ -40,8 +42,7 @@ public abstract class UnresolvedReferenceQuickFixProvider<T extends PsiReference
     }
   }
 
-  private static final ExtensionPointName<UnresolvedReferenceQuickFixProvider> EXTENSION_NAME =
-      ExtensionPointName.create("consulo.codeInsight.unresolvedReferenceQuickFixProvider");
+  private static final ExtensionPointName<UnresolvedReferenceQuickFixProvider> EXTENSION_NAME = ExtensionPointName.create("consulo.codeInsight.unresolvedReferenceQuickFixProvider");
 
   public abstract void registerFixes(T ref, QuickFixActionRegistrar registrar);
 

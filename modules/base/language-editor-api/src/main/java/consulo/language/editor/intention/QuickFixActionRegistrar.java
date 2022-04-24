@@ -14,21 +14,30 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.daemon;
+package consulo.language.editor.intention;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
+import consulo.language.editor.internal.QuickFixActionRegistrarImpl;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+
+import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 public interface QuickFixActionRegistrar {
+  @Nonnull
+  static QuickFixActionRegistrar create(@Nonnull HighlightInfo highlightInfo) {
+    return new QuickFixActionRegistrarImpl(highlightInfo);
+  }
+
   void register(IntentionAction action);
+
   void register(TextRange fixRange, IntentionAction action, HighlightDisplayKey key);
 
   /**
    * Allows to replace some of the built-in quickfixes.
+   *
    * @param condition condition for quickfixes to remove
-   * @since 9.0
    */
-  void unregister(Condition<IntentionAction> condition);
+  void unregister(Predicate<IntentionAction> condition);
 }

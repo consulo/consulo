@@ -1,26 +1,28 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.ide.impl.psi.impl.include;
+package consulo.language.impl.internal.psi.include;
 
 import consulo.index.io.DataIndexer;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.ID;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
+import consulo.index.io.data.IOUtil;
+import consulo.language.psi.include.FileIncludeInfo;
+import consulo.language.psi.include.FileIncludeProvider;
+import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
-import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.FactoryMap;
 import consulo.util.collection.MultiMap;
-import consulo.index.io.data.DataExternalizer;
-import consulo.index.io.EnumeratorStringDescriptor;
-import consulo.index.io.data.IOUtil;
-import consulo.index.io.KeyDescriptor;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -67,7 +69,7 @@ public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileI
   @Nonnull
   @Override
   public DataIndexer<String, List<FileIncludeInfoImpl>, FileContent> getIndexer() {
-    return new DataIndexer<String, List<FileIncludeInfoImpl>, FileContent>() {
+    return new DataIndexer<>() {
       @Override
       @Nonnull
       public Map<String, List<FileIncludeInfoImpl>> map(@Nonnull FileContent inputData) {

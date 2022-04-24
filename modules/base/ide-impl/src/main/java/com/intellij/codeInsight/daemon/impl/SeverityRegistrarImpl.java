@@ -16,18 +16,16 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.util.concurrency.AtomicFieldUpdater;
 import com.intellij.util.containers.ContainerUtil;
+import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
-import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.language.editor.rawHighlight.SeverityRegistrar;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.SeveritiesProvider;
+import consulo.language.editor.rawHighlight.SeverityRegistrar;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
@@ -82,7 +80,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
 
   @Nonnull
   public static SeverityRegistrar getSeverityRegistrar(@Nullable Project project) {
-    return project == null ? InspectionProfileManager.getInstance().getSeverityRegistrar() : InspectionProjectProfileManager.getInstance(project).getSeverityRegistrar();
+    return SeverityRegistrar.getSeverityRegistrar(project);
   }
 
   public void registerSeverity(@Nonnull SeverityBasedTextAttributes info, @Nullable ColorValue renderColor) {

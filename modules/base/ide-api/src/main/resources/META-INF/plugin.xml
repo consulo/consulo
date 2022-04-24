@@ -375,7 +375,7 @@
     </extensionPoint>
 
     <extensionPoint name="codeInsight.unresolvedReferenceQuickFixProvider"
-                    interface="com.intellij.codeInsight.quickfix.UnresolvedReferenceQuickFixProvider"/>
+                    interface="consulo.language.editor.intention.UnresolvedReferenceQuickFixProvider"/>
 
 
     <extensionPoint name="braceMatcher"
@@ -718,8 +718,8 @@
     <!-- File-Based Index-->
     <extensionPoint name="fileBasedIndex" interface="consulo.language.psi.stub.FileBasedIndexExtension"/>
     <extensionPoint name="stubIndex" interface="consulo.language.psi.stub.StubIndexExtension"/>
-    <extensionPoint name="indexedRootsContributor" interface="com.intellij.util.indexing.IndexableSetContributor"/>
-    <extensionPoint name="include.provider" interface="consulo.ide.impl.psi.impl.include.FileIncludeProvider"/>
+    <extensionPoint name="indexedRootsContributor" interface="consulo.language.psi.stub.IndexableSetContributor"/>
+    <extensionPoint name="include.provider" interface="consulo.language.psi.include.FileIncludeProvider"/>
 
     <extensionPoint name="refactoring.copyHandler" interface="com.intellij.refactoring.copy.CopyHandlerDelegate"/>
     <extensionPoint name="refactoring.moveHandler" interface="com.intellij.refactoring.move.MoveHandlerDelegate"/>
@@ -1859,8 +1859,8 @@
                     serviceImplementation="consulo.ide.impl.psi.impl.source.codeStyle.CodeStyleManagerImpl"/>
     <projectService serviceInterface="consulo.language.pom.PomModel"
                     serviceImplementation="com.intellij.pom.core.impl.PomModelImpl"/>
-    <projectService serviceInterface="consulo.ide.impl.psi.impl.include.FileIncludeManager"
-                    serviceImplementation="consulo.ide.impl.psi.impl.include.FileIncludeManagerImpl"/>
+    <projectService serviceInterface="consulo.language.psi.include.FileIncludeManager"
+                    serviceImplementation="consulo.language.impl.internal.psi.include.FileIncludeManagerImpl"/>
     <projectService serviceInterface="consulo.application.impl.internal.util.CachedValuesFactory"
                     serviceImplementation="consulo.language.impl.internal.psi.PsiCachedValuesFactory"/>
 
@@ -2059,7 +2059,7 @@
 
     <fileBasedIndex implementation="com.intellij.find.ngrams.TrigramIndex"/>
 
-    <fileBasedIndex implementation="consulo.ide.impl.psi.impl.include.FileIncludeIndex"/>
+    <fileBasedIndex implementation="consulo.language.impl.internal.psi.include.FileIncludeIndex"/>
 
     <syntaxHighlighter factoryClass="com.intellij.openapi.fileTypes.LanguageFileTypeHighlighterProvider"/>
     <structureViewBuilder factoryClass="com.intellij.ide.highlighter.LanguageFileTypeStructureViewBuilderProvider"/>

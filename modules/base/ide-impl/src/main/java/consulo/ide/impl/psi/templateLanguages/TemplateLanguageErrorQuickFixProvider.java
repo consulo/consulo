@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.templateLanguages;
 
 import com.intellij.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
-import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
+import consulo.language.editor.intention.QuickFixAction;
 import consulo.language.LangBundle;
 import consulo.codeEditor.Editor;
 import consulo.ide.setting.ShowSettingsUtil;

@@ -231,7 +231,6 @@ open module consulo.ide.impl {
   exports com.intellij.codeInsight.navigation.actions;
   exports com.intellij.codeInsight.preview;
   exports com.intellij.codeInsight.problems;
-  exports com.intellij.codeInsight.quickfix;
   exports com.intellij.codeInsight.template;
   exports com.intellij.codeInsight.template.actions;
   exports com.intellij.codeInsight.template.impl;

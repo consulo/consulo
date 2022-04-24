@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.include;
+package consulo.language.psi.include;
 
 import javax.annotation.Nonnull;
 
@@ -48,5 +48,4 @@ public class FileIncludeInfo {
     int pos = path.lastIndexOf('/');
     return pos == -1 ? path : path.substring(pos + 1);
   }
-
 }

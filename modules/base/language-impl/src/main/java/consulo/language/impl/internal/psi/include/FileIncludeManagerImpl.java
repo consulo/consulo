@@ -1,28 +1,31 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.psi.impl.include;
+package consulo.language.impl.internal.psi.include;
 
-import consulo.language.plain.PlainTextFileType;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileWithId;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileFactory;
-import consulo.language.psi.PsiFileSystemItem;
-import consulo.language.psi.PsiManager;
-import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.psi.path.FileReferenceSet;
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.CachedValuesManager;
 import consulo.application.util.ParameterizedCachedValue;
 import consulo.application.util.ParameterizedCachedValueProvider;
 import consulo.application.util.function.Processor;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.plain.PlainTextFileType;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiFileFactory;
+import consulo.language.psi.PsiFileSystemItem;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.include.FileIncludeInfo;
+import consulo.language.psi.include.FileIncludeManager;
+import consulo.language.psi.include.FileIncludeProvider;
+import consulo.language.psi.path.FileReferenceSet;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -52,7 +55,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
         }
         return true;
       });
-      return VfsUtilCore.toVirtualFileArray(files);
+      return VirtualFileUtil.toVirtualFileArray(files);
     }
   };
   private final Map<String, FileIncludeProvider> myProviderMap;
@@ -74,7 +77,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
         files.add(virtualFileFileIncludeInfoPair.first);
         return true;
       });
-      return VfsUtilCore.toVirtualFileArray(files);
+      return VirtualFileUtil.toVirtualFileArray(files);
     }
   };
 
@@ -207,7 +210,7 @@ public final class FileIncludeManagerImpl extends FileIncludeManager {
       if (recursively) {
         Set<VirtualFile> result = new HashSet<>();
         getAllFilesRecursively(file, compileTimeOnly, result);
-        return VfsUtilCore.toVirtualFileArray(result);
+        return VirtualFileUtil.toVirtualFileArray(result);
       }
       return getFiles(file, compileTimeOnly);
     }

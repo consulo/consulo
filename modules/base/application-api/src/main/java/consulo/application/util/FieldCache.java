@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.util;
-
-import consulo.application.util.RecursionGuard;
-import consulo.application.util.RecursionManager;
+package consulo.application.util;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.include;
+package consulo.language.psi.include;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;

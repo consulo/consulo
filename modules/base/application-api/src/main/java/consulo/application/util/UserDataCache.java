@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.util;
+package consulo.application.util;
 
-import consulo.application.util.RecursionGuard;
-import consulo.application.util.RecursionManager;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderEx;
-import org.jetbrains.annotations.NonNls;
 
 public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> extends FieldCache<T, Owner, Key<T>, Param> {
   private static final RecursionGuard ourGuard = RecursionManager.createGuard("userDataCache");
@@ -31,8 +28,8 @@ public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> exte
     myKey = null;
   }
 
-  public UserDataCache(@NonNls String keyName) {
-    myKey = new Key<T>(keyName);
+  public UserDataCache(String keyName) {
+    myKey = Key.create(keyName);
   }
 
   public T get(final Owner owner, final Param parameter) {
@@ -43,10 +40,12 @@ public abstract class UserDataCache<T, Owner extends UserDataHolder, Param> exte
     putValue(value, owner, myKey);
   }
 
+  @Override
   protected final T getValue(final Owner owner, final Key<T> key) {
     return owner.getUserData(key);
   }
 
+  @Override
   protected final void putValue(final T t, final Owner owner, final Key<T> key) {
     owner.putUserData(key, t);
   }

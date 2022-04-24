@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.include;
+package consulo.language.psi.include;
 
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import com.intellij.openapi.util.Pair;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.application.util.function.Processor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileSystemItem;
-import consulo.application.util.function.Processor;
+import consulo.project.Project;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 public abstract class FileIncludeManager {
 
   public static FileIncludeManager getManager(Project project) {
-    return ServiceManager.getService(project, FileIncludeManager.class);
+    return project.getInstance(FileIncludeManager.class);
   }
 
   public abstract VirtualFile[] getIncludedFiles(@Nonnull VirtualFile file, boolean compileTimeOnly);

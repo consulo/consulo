@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.include;
+package consulo.language.impl.internal.psi.include;
+
+import consulo.language.psi.include.FileIncludeInfo;
 
 import javax.annotation.Nonnull;
 

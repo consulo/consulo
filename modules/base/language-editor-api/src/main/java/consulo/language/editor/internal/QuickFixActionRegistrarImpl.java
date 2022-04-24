@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.daemon.impl.quickfix;
+package consulo.language.editor.internal;
 
-import consulo.language.editor.rawHighlight.HighlightDisplayKey;
-import com.intellij.codeInsight.daemon.QuickFixActionRegistrar;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.language.editor.intention.IntentionAction;
-import consulo.util.lang.function.Condition;
 import consulo.document.util.TextRange;
+import consulo.language.editor.intention.IntentionAction;
+import consulo.language.editor.intention.QuickFixAction;
+import consulo.language.editor.intention.QuickFixActionRegistrar;
+import consulo.language.editor.rawHighlight.HighlightDisplayKey;
+import consulo.language.editor.rawHighlight.HighlightInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {
-  private final HighlightInfoImpl myInfo;
+  private final HighlightInfo myInfo;
 
-  public QuickFixActionRegistrarImpl(@Nullable HighlightInfoImpl info) {
+  public QuickFixActionRegistrarImpl(@Nullable HighlightInfo info) {
     myInfo = info;
   }
 
@@ -43,7 +45,7 @@ public class QuickFixActionRegistrarImpl implements QuickFixActionRegistrar {
   }
 
   @Override
-  public void unregister(@Nonnull Condition<IntentionAction> condition) {
+  public void unregister(@Nonnull Predicate<IntentionAction> condition) {
     if (myInfo != null) {
       myInfo.unregisterQuickFix(condition);
     }

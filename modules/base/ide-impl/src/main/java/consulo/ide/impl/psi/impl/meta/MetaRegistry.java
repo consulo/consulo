@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.UserDataCache;
+import consulo.application.util.UserDataCache;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;

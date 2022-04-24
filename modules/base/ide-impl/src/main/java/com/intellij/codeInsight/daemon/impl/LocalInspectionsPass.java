@@ -17,7 +17,7 @@
 package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeInsight.daemon.impl.analysis.HighlightingLevelManager;
-import com.intellij.codeInsight.daemon.impl.quickfix.QuickFixAction;
+import consulo.language.editor.intention.QuickFixAction;
 import com.intellij.codeInsight.intention.EmptyIntentionAction;
 import com.intellij.codeInspection.InspectionEngine;
 import com.intellij.codeInspection.ex.*;

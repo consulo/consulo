@@ -31,7 +31,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiFileFactory;
 import consulo.language.impl.psi.PsiFileImpl;
-import consulo.ide.impl.psi.templateLanguages.TemplateLanguageUtil;
+import consulo.language.template.TemplateLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
 import consulo.disposer.Disposable;
 import org.jetbrains.annotations.NonNls;

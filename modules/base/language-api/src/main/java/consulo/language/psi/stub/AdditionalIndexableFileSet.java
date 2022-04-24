@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.indexing;
+package consulo.language.psi.stub;
 
 import consulo.content.ContentIterator;
-import com.intellij.openapi.vfs.VfsUtilCore;
-import consulo.language.psi.stub.IndexableFileSet;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 
 import javax.annotation.Nonnull;
@@ -78,7 +77,7 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
   @Override
   public boolean isInSet(@Nonnull VirtualFile file) {
     for (final VirtualFile root : getDirectories()) {
-      if (VfsUtilCore.isAncestor(root, file, false)) {
+      if (VirtualFileUtil.isAncestor(root, file, false)) {
         return true;
       }
     }
@@ -87,7 +86,7 @@ public class AdditionalIndexableFileSet implements IndexableFileSet {
 
   @Override
   public void iterateIndexableFilesIn(@Nonnull VirtualFile file, @Nonnull final ContentIterator iterator) {
-    VfsUtilCore.visitChildrenRecursively(file, new VirtualFileVisitor() {
+    VirtualFileUtil.visitChildrenRecursively(file, new VirtualFileVisitor() {
       @Override
       public boolean visitFile(@Nonnull VirtualFile file) {
         if (!isInSet(file)) {

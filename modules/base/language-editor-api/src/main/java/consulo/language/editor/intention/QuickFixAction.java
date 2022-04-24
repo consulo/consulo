@@ -1,9 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package com.intellij.codeInsight.daemon.impl.quickfix;
+package consulo.language.editor.intention;
 
 import consulo.document.util.TextRange;
-import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import org.jetbrains.annotations.Nls;

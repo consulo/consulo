@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.indexing;
+package consulo.language.psi.stub;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.collection.ContainerUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -68,7 +68,7 @@ public abstract class IndexableSetContributor {
       if (root == null || !root.isValid()) {
         LOG.error("Please fix " + contributor.getClass().getName() + "#" + methodInfo + ".\n" +
                   (root == null ? "The returned set is not expected to contain nulls, but it is " + roots : "Invalid file returned: " + root));
-        return ContainerUtil.newLinkedHashSet(ContainerUtil.filter(roots, virtualFile -> virtualFile != null && virtualFile.isValid()));
+        return new LinkedHashSet<>(ContainerUtil.filter(roots, virtualFile -> virtualFile != null && virtualFile.isValid()));
       }
     }
     return roots;

@@ -19,6 +19,7 @@ import consulo.component.extension.Extensions;
 import consulo.language.file.FileTypeManager;
 import consulo.content.ContentIterator;
 import consulo.language.psi.stub.FileBasedIndex;
+import consulo.language.psi.stub.IndexableSetContributor;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;

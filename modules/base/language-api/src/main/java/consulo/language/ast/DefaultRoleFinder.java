@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.tree;
+package consulo.language.ast;
 
-import consulo.language.ast.ASTNode;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public interface RoleFinder {
-  @Nullable
-  ASTNode findChild(@Nonnull ASTNode parent);
+public class DefaultRoleFinder implements RoleFinder {
+  protected IElementType[] myElementTypes;
+
+  public DefaultRoleFinder(IElementType... elementType) {
+    myElementTypes = elementType;
+  }
+
+  @Override
+  public ASTNode findChild(@Nonnull ASTNode parent) {
+    ASTNode current = parent.getFirstChildNode();
+    while (current != null) {
+      for (final IElementType elementType : myElementTypes) {
+        if (current.getElementType() == elementType) return current;
+      }
+      current = current.getTreeNext();
+    }
+    return null;
+  }
 }

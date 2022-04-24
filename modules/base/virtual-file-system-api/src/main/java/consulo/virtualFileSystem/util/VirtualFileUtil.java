@@ -196,6 +196,39 @@ public final class VirtualFileUtil {
     return file;
   }
 
+  @Nonnull
+  public static String fixIDEAUrl(@Nonnull String ideaUrl) {
+    final String ideaProtocolMarker = "://";
+    int idx = ideaUrl.indexOf(ideaProtocolMarker);
+    if (idx >= 0) {
+      String s = ideaUrl.substring(0, idx);
+
+      if (s.equals("jar") || s.equals(StandardFileSystems.ZIP_PROTOCOL)) {
+        s = "jar:file";
+      }
+      final String urlWithoutProtocol = ideaUrl.substring(idx + ideaProtocolMarker.length());
+      ideaUrl = s + ":" + (urlWithoutProtocol.startsWith("/") ? "" : "/") + urlWithoutProtocol;
+    }
+
+    return ideaUrl;
+  }
+
+  @Nonnull
+  public static String toIdeaUrl(@Nonnull String url) {
+    return toIdeaUrl(url, true);
+  }
+
+  @Nonnull
+  public static String toIdeaUrl(@Nonnull String url, boolean removeLocalhostPrefix) {
+    return URLUtil.toIdeaUrl(url, removeLocalhostPrefix);
+  }
+
+  @Nonnull
+  public static String fixURLforIDEA(@Nonnull String url) {
+    // removeLocalhostPrefix - false due to backward compatibility reasons
+    return toIdeaUrl(url, false);
+  }
+
   @Nullable
   public static VirtualFile findRelativeFile(@Nonnull String uri, @Nullable VirtualFile base) {
     if (base != null) {

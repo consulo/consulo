@@ -1287,4 +1287,23 @@ public class ContainerUtil {
     }
     return hashMap;
   }
+
+
+  /**
+   * @return read-only list consisting of the elements from all of the collections
+   */
+  @Nonnull
+  @Contract(pure = true)
+  public static <E> List<E> flatten(@Nonnull Iterable<? extends Collection<? extends E>> collections) {
+    int totalSize = 0;
+    for (Collection<? extends E> list : collections) {
+      totalSize += list.size();
+    }
+    List<E> result = new ArrayList<>(totalSize);
+    for (Collection<? extends E> list : collections) {
+      result.addAll(list);
+    }
+
+    return result.isEmpty() ? List.of() : result;
+  }
 }

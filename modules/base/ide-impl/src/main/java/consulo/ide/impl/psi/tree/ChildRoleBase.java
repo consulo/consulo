@@ -20,7 +20,5 @@ package consulo.ide.impl.psi.tree;
  * @author Dmitry Avdeev
  */
 public interface ChildRoleBase {
-
-
   int NONE = 0;
 }

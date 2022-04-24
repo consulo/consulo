@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.util;
+package consulo.application.util;
 
-public abstract class SimpleFieldCache<T, Owner> extends FieldCache<T,Owner,Object, Object>{
+public abstract class SimpleFieldCache<T, Owner> extends FieldCache<T, Owner, Object, Object> {
   public final T get(Owner owner) {
     return get(null, owner, null);
   }
@@ -34,6 +34,8 @@ public abstract class SimpleFieldCache<T, Owner> extends FieldCache<T,Owner,Obje
   }
 
   protected abstract T compute(Owner owner);
+
   protected abstract T getValue(Owner owner);
+
   protected abstract void putValue(T t, Owner owner);
 }

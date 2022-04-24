@@ -5,8 +5,6 @@ import com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspecti
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
 import com.intellij.codeInspection.CustomSuppressableInspectionTool;
 import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
-import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.codeEditor.markup.RangeHighlighterEx;
 import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
 import com.intellij.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
@@ -16,6 +14,7 @@ import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.codeEditor.markup.GutterMark;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.colorScheme.*;
 import consulo.document.RangeMarker;
 import consulo.document.util.ProperTextRange;
@@ -32,6 +31,7 @@ import consulo.language.editor.inspection.SuppressQuickFix;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
+import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.IntentionManager;
@@ -48,7 +48,6 @@ import consulo.util.lang.BitUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
-import consulo.util.lang.function.Condition;
 import org.intellij.lang.annotations.MagicConstant;
 
 import javax.annotation.Nonnull;
@@ -58,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class HighlightInfoImpl implements HighlightInfo {
   private static final Logger LOG = Logger.getInstance(HighlightInfoImpl.class);
@@ -942,6 +942,7 @@ public class HighlightInfoImpl implements HighlightInfo {
     return highlighter.getDocument().getText(TextRange.create(highlighter));
   }
 
+  @Override
   public void registerFix(@Nullable IntentionAction action, @Nullable List<IntentionAction> options, @Nullable String displayName, @Nullable TextRange fixRange, @Nullable HighlightDisplayKey key) {
     if (action == null) return;
     if (fixRange == null) fixRange = new TextRange(startOffset, endOffset);
@@ -957,9 +958,9 @@ public class HighlightInfoImpl implements HighlightInfo {
     }
   }
 
-  public void unregisterQuickFix(@Nonnull Condition<? super IntentionAction> condition) {
+  public void unregisterQuickFix(@Nonnull Predicate<? super IntentionAction> condition) {
     if (quickFixActionRanges != null) {
-      quickFixActionRanges.removeIf(pair -> condition.value(pair.first.getAction()));
+      quickFixActionRanges.removeIf(pair -> condition.test(pair.first.getAction()));
     }
   }
 }
