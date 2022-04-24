@@ -213,7 +213,7 @@ public final class ContextMenuImpl extends JPanel implements Disposable, Desktop
 
   @Override
   public int getPositionYInLayer() {
-    return 50;
+    return 23;
   }
 
   private static class ContextMenuPanel extends DesktopEditorFloatPanel {

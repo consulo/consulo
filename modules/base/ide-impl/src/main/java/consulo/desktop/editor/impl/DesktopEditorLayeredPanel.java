@@ -16,8 +16,8 @@
 package consulo.desktop.editor.impl;
 
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.ui.components.JBLayeredPane;
+import consulo.ui.ex.awt.JBUI;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;
@@ -68,16 +68,12 @@ public class DesktopEditorLayeredPanel {
     JScrollBar bar = myEditor.getVerticalScrollBar();
 
     int padding = bar.getWidth();
-    DesktopEditorMarkupModelImpl markupModel = (DesktopEditorMarkupModelImpl)myEditor.getMarkupModel();
-    DesktopEditorErrorPanel errorPanel = markupModel.getErrorPanel();
-    if (errorPanel != null) {
-      padding += errorPanel.getWidth();
-    }
+    padding += JBUI.scale(1); // just spacing
     return padding;
   }
 
   public void addLayerPanel(JComponent panel) {
-    myLayeredPane.add(panel, new Integer(myLayerPosition ++));
+    myLayeredPane.add(panel, Integer.valueOf(myLayerPosition++));
   }
 
   public void setMainPanel(JComponent rootPanel) {
