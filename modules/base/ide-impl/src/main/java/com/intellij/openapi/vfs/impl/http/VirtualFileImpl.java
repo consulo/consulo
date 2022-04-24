@@ -23,6 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import com.intellij.util.ArrayUtil;
 import consulo.document.util.FileContentUtilCore;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,13 +33,14 @@ import java.io.OutputStream;
 
 class VirtualFileImpl extends HttpVirtualFile {
   private final HttpFileSystemBase myFileSystem;
-  private final @Nullable RemoteFileInfo myFileInfo;
+  private final @Nullable
+  RemoteFileInfoImpl myFileInfo;
   private FileType myInitialFileType;
   private final String myPath;
   private final String myParentPath;
   private final String myName;
 
-  VirtualFileImpl(HttpFileSystemBase fileSystem, String path, final @Nullable RemoteFileInfo fileInfo) {
+  VirtualFileImpl(HttpFileSystemBase fileSystem, String path, final @Nullable RemoteFileInfoImpl fileInfo) {
     myFileSystem = fileSystem;
     myPath = path;
     myFileInfo = fileInfo;
@@ -96,7 +98,7 @@ class VirtualFileImpl extends HttpVirtualFile {
 
   @Override
   @Nullable
-  public RemoteFileInfo getFileInfo() {
+  public RemoteFileInfoImpl getFileInfo() {
     return myFileInfo;
   }
 

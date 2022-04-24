@@ -17,10 +17,12 @@ package com.intellij.openapi.vfs.impl.http;
 
 import com.intellij.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
+import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 import com.intellij.util.EventDispatcher;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.virtualFileSystem.http.RemoteContentProvider;
+import consulo.virtualFileSystem.http.RemoteFileManager;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -38,12 +40,12 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
   private final LocalFileStorage myStorage;
   private final Map<Pair<Boolean, String>, VirtualFileImpl> myRemoteFiles;
   private final EventDispatcher<HttpVirtualFileListener> myDispatcher = EventDispatcher.create(HttpVirtualFileListener.class);
-  private final List<RemoteContentProvider> myProviders = new ArrayList<RemoteContentProvider>();
+  private final List<RemoteContentProvider> myProviders = new ArrayList<>();
   private final DefaultRemoteContentProvider myDefaultRemoteContentProvider;
 
   public RemoteFileManagerImpl() {
     myStorage = new LocalFileStorage();
-    myRemoteFiles = new HashMap<Pair<Boolean, String>, VirtualFileImpl>();
+    myRemoteFiles = new HashMap<>();
     myDefaultRemoteContentProvider = new DefaultRemoteContentProvider();
   }
 
@@ -63,7 +65,7 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
 
     if (file == null) {
       if (!directory) {
-        RemoteFileInfo fileInfo = new RemoteFileInfo(url, this);
+        RemoteFileInfoImpl fileInfo = new RemoteFileInfoImpl(url, this);
         file = new VirtualFileImpl(getHttpFileSystem(url), path, fileInfo);
         fileInfo.addDownloadingListener(new MyDownloadingListener(file));
       }
@@ -108,12 +110,7 @@ public class RemoteFileManagerImpl extends RemoteFileManager implements Disposab
   @Override
   public void addFileListener(@Nonnull final HttpVirtualFileListener listener, @Nonnull final Disposable parentDisposable) {
     addFileListener(listener);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        removeFileListener(listener);
-      }
-    });
+    Disposer.register(parentDisposable, () -> removeFileListener(listener));
   }
 
   @Override

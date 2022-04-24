@@ -21,7 +21,7 @@ import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.roots.ui.util.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
+import consulo.virtualFileSystem.http.HttpFileSystem;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import jakarta.inject.Singleton;

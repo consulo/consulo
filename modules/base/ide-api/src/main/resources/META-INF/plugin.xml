@@ -1276,7 +1276,7 @@
     <applicationService serviceInterface="consulo.codeEditor.EditorCopyPasteHelper"
                         serviceImplementation="com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.vfs.impl.http.RemoteFileManager"
+    <applicationService serviceInterface="consulo.virtualFileSystem.http.RemoteFileManager"
                         serviceImplementation="com.intellij.openapi.vfs.impl.http.RemoteFileManagerImpl"/>
     <applicationService serviceImplementation="consulo.component.store.impl.internal.ApplicationDefaultStoreCache"/>
 

@@ -18,7 +18,7 @@ package com.intellij.codeInsight.documentation;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
+import consulo.virtualFileSystem.http.HttpFileSystem;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nullable;
 

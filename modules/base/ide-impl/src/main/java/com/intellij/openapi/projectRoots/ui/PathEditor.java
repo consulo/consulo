@@ -32,7 +32,7 @@ import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
+import consulo.virtualFileSystem.http.HttpFileSystem;
 import com.intellij.openapi.vfs.newvfs.ArchiveFileSystem;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

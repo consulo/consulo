@@ -29,7 +29,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.navigation.Navigatable;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

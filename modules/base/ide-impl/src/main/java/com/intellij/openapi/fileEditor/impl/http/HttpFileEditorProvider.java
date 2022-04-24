@@ -23,7 +23,7 @@ import consulo.fileEditor.text.TextEditorState;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jdom.Element;
 import javax.annotation.Nonnull;

@@ -21,7 +21,7 @@ import consulo.content.OrderRootType;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
+import consulo.virtualFileSystem.http.HttpFileSystem;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 

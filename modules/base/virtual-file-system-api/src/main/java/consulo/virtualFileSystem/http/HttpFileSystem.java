@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.ex.http;
+package consulo.virtualFileSystem.http;
 
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import org.jetbrains.annotations.NonNls;
+import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 
 import javax.annotation.Nonnull;
 
 public abstract class HttpFileSystem extends BaseVirtualFileSystem {
-  @NonNls public static final String PROTOCOL = StandardFileSystems.HTTP_PROTOCOL;
+  public static final String PROTOCOL = StandardFileSystems.HTTP_PROTOCOL;
 
   public static HttpFileSystem getInstance() {
     return (HttpFileSystem)VirtualFileManager.getInstance().getFileSystem(PROTOCOL);

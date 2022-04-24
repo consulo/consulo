@@ -8,7 +8,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import com.intellij.openapi.util.AtomicNotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NonNavigatable;
 import consulo.language.psi.PsiElement;

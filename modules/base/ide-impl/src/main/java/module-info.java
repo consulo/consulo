@@ -691,7 +691,6 @@ open module consulo.ide.impl {
   exports com.intellij.openapi.vfs.encoding;
   exports com.intellij.openapi.vfs.ex;
   exports com.intellij.openapi.vfs.ex.dummy;
-  exports com.intellij.openapi.vfs.ex.http;
   exports com.intellij.openapi.vfs.ex.temp;
   exports com.intellij.openapi.vfs.impl;
   exports com.intellij.openapi.vfs.impl.http;

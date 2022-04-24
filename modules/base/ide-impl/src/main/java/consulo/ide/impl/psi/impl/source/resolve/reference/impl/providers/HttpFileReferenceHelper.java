@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 import consulo.language.psi.path.FileReferenceHelper;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.language.psi.PsiFileSystemItem;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

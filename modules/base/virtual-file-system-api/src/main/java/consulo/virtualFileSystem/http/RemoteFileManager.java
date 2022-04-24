@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.impl.http;
+package consulo.virtualFileSystem.http;
 
-import consulo.ide.ServiceManager;
-import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
+import consulo.component.extension.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
+import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 
 import javax.annotation.Nonnull;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class RemoteFileManager {
   public static RemoteFileManager getInstance() {
-    return ServiceManager.getService(RemoteFileManager.class);
+    return RootComponentHolder.getRootComponent().getInstance(RemoteFileManager.class);
   }
 
   public abstract void addRemoteContentProvider(@Nonnull RemoteContentProvider provider, @Nonnull Disposable parentDisposable);

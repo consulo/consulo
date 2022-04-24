@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.fileEditor.impl.http;
+package consulo.virtualFileSystem.http;
 
-import consulo.ui.ex.action.AnAction;
-import consulo.project.Project;
-import consulo.virtualFileSystem.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.event.FileDownloadingListener;
+
 import javax.annotation.Nonnull;
 
 /**
- * @author nik
+ * @author VISTALL
+ * @since 24-Apr-22
  */
-public class LangRemoteFileEditorActionProvider extends RemoteFileEditorActionProvider {
-  @Nonnull
-  @Override
-  public AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file) {
-    return new AnAction[] {new JumpFromRemoteFileToLocalAction(file, project)};
-  }
+public interface RemoteFileInfo extends RemoteContentProvider.DownloadingCallback {
+  void addDownloadingListener(@Nonnull FileDownloadingListener listener);
+
+  void removeDownloadingListener(final @Nonnull FileDownloadingListener listener);
+
+  String getUrl();
+
+  RemoteFileState getState();
+
+  void cancelDownloading();
+
+  void startDownloading();
+
+  void restartDownloading();
+
+  String getErrorMessage();
 }

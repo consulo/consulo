@@ -18,8 +18,8 @@ package com.intellij.openapi.fileEditor.impl.http;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
-import com.intellij.openapi.vfs.impl.http.RemoteFileState;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.RemoteFileState;
 
 /**
  * @author nik

@@ -20,7 +20,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
-import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

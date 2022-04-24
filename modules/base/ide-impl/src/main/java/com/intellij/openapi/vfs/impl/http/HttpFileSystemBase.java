@@ -15,14 +15,16 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
+import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import com.intellij.openapi.vfs.ex.http.HttpFileSystem;
-import com.intellij.openapi.vfs.ex.http.HttpVirtualFileListener;
-import consulo.disposer.Disposable;
+import consulo.virtualFileSystem.http.HttpFileSystem;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.RemoteFileManager;
+import consulo.virtualFileSystem.http.RemoteFileState;
+import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 
 import javax.annotation.Nonnull;
-
 import java.io.IOException;
 
 /**

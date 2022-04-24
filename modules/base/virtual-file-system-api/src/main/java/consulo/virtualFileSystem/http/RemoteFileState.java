@@ -13,18 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.ex.http;
-
-import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
-
-import java.util.EventListener;
+package consulo.virtualFileSystem.http;
 
 /**
  * @author nik
  */
-public interface HttpVirtualFileListener extends EventListener {
-
-  void fileDownloaded(@Nonnull VirtualFile file);
-
+public enum RemoteFileState {
+  DOWNLOADING_NOT_STARTED, DOWNLOADING_IN_PROGRESS, DOWNLOADED, ERROR_OCCURRED
 }

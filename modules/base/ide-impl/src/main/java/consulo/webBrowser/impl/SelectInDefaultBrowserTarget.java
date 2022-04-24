@@ -19,7 +19,7 @@ import com.intellij.ide.SelectInContext;
 import com.intellij.ide.SelectInTargetBase;
 import com.intellij.ide.StandardTargetWeights;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.impl.http.HttpVirtualFile;
+import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.ide.IdeBundle;
 import consulo.language.psi.PsiElement;
 import consulo.virtualFileSystem.VirtualFile;

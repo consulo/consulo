@@ -24,6 +24,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.util.io.UrlConnectionUtil;
+import consulo.virtualFileSystem.http.RemoteContentProvider;
+
 import javax.annotation.Nonnull;
 
 import java.io.*;

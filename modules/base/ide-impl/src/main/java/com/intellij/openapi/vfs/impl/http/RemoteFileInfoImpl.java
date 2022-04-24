@@ -15,15 +15,19 @@
  */
 package com.intellij.openapi.vfs.impl.http;
 
+import com.intellij.openapi.util.io.FileUtil;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.util.containers.ContainerUtil;
 import consulo.application.WriteAction;
 import consulo.logging.Logger;
-import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VfsBundle;
-import com.intellij.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.http.event.FileDownloadingListener;
+import consulo.virtualFileSystem.http.RemoteContentProvider;
+import consulo.virtualFileSystem.http.RemoteFileInfo;
+import consulo.virtualFileSystem.http.RemoteFileState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,8 +39,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author nik
  */
-public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback {
-  private static final Logger LOG = Logger.getInstance(RemoteFileInfo.class);
+public class RemoteFileInfoImpl implements RemoteFileInfo {
+  private static final Logger LOG = Logger.getInstance(RemoteFileInfoImpl.class);
   private final Object myLock = new Object();
   private final String myUrl;
   private final RemoteFileManagerImpl myManager;
@@ -51,23 +55,27 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
   private final AtomicBoolean myCancelled = new AtomicBoolean();
   private final List<FileDownloadingListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 
-  public RemoteFileInfo(final @Nonnull String url, final @Nonnull RemoteFileManagerImpl manager) {
+  public RemoteFileInfoImpl(final @Nonnull String url, final @Nonnull RemoteFileManagerImpl manager) {
     myUrl = url;
     myManager = manager;
   }
 
+  @Override
   public void addDownloadingListener(@Nonnull FileDownloadingListener listener) {
     myListeners.add(listener);
   }
 
+  @Override
   public void removeDownloadingListener(final @Nonnull FileDownloadingListener listener) {
     myListeners.remove(listener);
   }
 
+  @Override
   public String getUrl() {
     return myUrl;
   }
 
+  @Override
   public void restartDownloading() {
     synchronized (myLock) {
       myErrorMessage = null;
@@ -79,6 +87,7 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
     }
   }
 
+  @Override
   public void startDownloading() {
     LOG.debug("Downloading requested");
 
@@ -162,6 +171,7 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
     return myCancelled.get();
   }
 
+  @Override
   public String getErrorMessage() {
     synchronized (myLock) {
       return myErrorMessage;
@@ -210,12 +220,14 @@ public class RemoteFileInfo implements RemoteContentProvider.DownloadingCallback
     return "state=" + getState() + ", local file=" + myLocalFile + (errorMessage != null ? ", error=" + errorMessage : "") + (isCancelled() ? ", cancelled" : "");
   }
 
+  @Override
   public RemoteFileState getState() {
     synchronized (myLock) {
       return myState;
     }
   }
 
+  @Override
   public void cancelDownloading() {
     synchronized (myLock) {
       myCancelled.set(true);

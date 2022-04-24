@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.vfs.impl.http;
+package consulo.virtualFileSystem.http.event;
 
-import javax.annotation.Nonnull;
 import consulo.virtualFileSystem.VirtualFile;
+import javax.annotation.Nonnull;
+
+import java.util.EventListener;
 
 /**
  * @author nik
-*/
-public interface FileDownloadingListener {
+ */
+public interface HttpVirtualFileListener extends EventListener {
 
-  void fileDownloaded(final VirtualFile localFile);
+  void fileDownloaded(@Nonnull VirtualFile file);
 
-  void errorOccurred(@Nonnull String errorMessage);
-
-  void downloadingStarted();
-
-  void downloadingCancelled();
-
-  void progressMessageChanged(final boolean indeterminate, @Nonnull String message);
-
-  void progressFractionChanged(double fraction);
 }
