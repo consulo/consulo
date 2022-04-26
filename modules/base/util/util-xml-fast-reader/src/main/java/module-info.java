@@ -5,6 +5,7 @@
 module consulo.util.xml.fast.reader {
   requires static consulo.annotation;
   requires consulo.util.lang;
+  requires consulo.util.collection;
   requires consulo.util.io;
   requires org.slf4j;
 

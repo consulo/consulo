@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.text;
+package consulo.util.xml.fastReader;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.collection.ArrayUtil;
 import consulo.util.io.CharsetToolkit;
-import com.intellij.util.ArrayUtil;
-import org.jetbrains.annotations.NonNls;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,12 +27,12 @@ import java.nio.charset.StandardCharsets;
  * @author nik
  */
 public class XmlCharsetDetector {
-  @NonNls private static final String XML_PROLOG_START = "<?xml";
-  @NonNls private static final byte[] XML_PROLOG_START_BYTES = XML_PROLOG_START.getBytes(StandardCharsets.UTF_8);
-  @NonNls private static final String ENCODING = "encoding";
-  @NonNls private static final byte[] ENCODING_BYTES = ENCODING.getBytes(StandardCharsets.UTF_8);
-  @NonNls private static final String XML_PROLOG_END = "?>";
-  @NonNls private static final byte[] XML_PROLOG_END_BYTES = XML_PROLOG_END.getBytes(StandardCharsets.UTF_8);
+  private static final String XML_PROLOG_START = "<?xml";
+  private static final byte[] XML_PROLOG_START_BYTES = XML_PROLOG_START.getBytes(StandardCharsets.UTF_8);
+  private static final String ENCODING = "encoding";
+  private static final byte[] ENCODING_BYTES = ENCODING.getBytes(StandardCharsets.UTF_8);
+  private static final String XML_PROLOG_END = "?>";
+  private static final byte[] XML_PROLOG_END_BYTES = XML_PROLOG_END.getBytes(StandardCharsets.UTF_8);
 
   @Nullable
   public static String extractXmlEncodingFromProlog(final byte[] bytes) {
