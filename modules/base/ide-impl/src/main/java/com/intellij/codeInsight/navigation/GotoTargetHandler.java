@@ -16,48 +16,49 @@
 
 package com.intellij.codeInsight.navigation;
 
+import com.intellij.find.FindUtil;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
+import com.intellij.ui.JBListWithHintProvider;
+import com.intellij.ui.popup.AbstractPopup;
+import com.intellij.util.ArrayUtil;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.progress.ProgressManager;
+import consulo.application.statistic.FeatureUsageTracker;
+import consulo.application.util.function.Computable;
+import consulo.codeEditor.Editor;
+import consulo.ide.navigation.GotoTargetRendererProvider;
+import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
-import consulo.application.statistic.FeatureUsageTracker;
-import com.intellij.find.FindUtil;
-import consulo.language.psi.util.EditSourceUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.navigation.ItemPresentation;
-import consulo.navigation.NavigationItem;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.component.extension.Extensions;
-import consulo.application.progress.ProgressManager;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ide.ui.impl.PopupChooserBuilder;
-import consulo.application.util.function.Computable;
-import consulo.util.lang.ref.Ref;
-import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiNamedElement;
+import consulo.language.psi.util.EditSourceUtil;
+import consulo.logging.Logger;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.Navigatable;
+import consulo.navigation.NavigationItem;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
-import com.intellij.ui.JBListWithHintProvider;
-import com.intellij.ui.popup.AbstractPopup;
-import consulo.ide.ui.popup.HintUpdateSupply;
-import consulo.usage.UsageView;
 import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.ArrayUtil;
-import consulo.logging.Logger;
+import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
+import consulo.usage.UsageView;
+import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public abstract class GotoTargetHandler implements CodeInsightActionHandler {
   private static final Logger LOG = Logger.getInstance(GotoTargetHandler.class);
@@ -236,12 +237,7 @@ public abstract class GotoTargetHandler implements CodeInsightActionHandler {
   }
 
   public static PsiElementListCellRenderer createRenderer(@Nonnull GotoData gotoData, @Nonnull PsiElement eachTarget) {
-    PsiElementListCellRenderer renderer = null;
-    for (GotoTargetRendererProvider eachProvider : Extensions.getExtensions(GotoTargetRendererProvider.EP_NAME)) {
-      renderer = eachProvider.getRenderer(eachTarget, gotoData);
-      if (renderer != null) break;
-    }
-    return renderer;
+    return GotoTargetRendererProvider.EP_NAME.computeSafeIfAny(Application.get(), it -> it.getRenderer(eachTarget));
   }
 
   protected boolean navigateToElement(PsiElement target) {

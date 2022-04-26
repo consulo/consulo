@@ -32,8 +32,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.Set;
@@ -44,7 +46,37 @@ import java.util.function.Predicate;
  */
 public final class VirtualFileUtil {
   private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);
+
   public static final char VFS_SEPARATOR_CHAR = '/';
+  private static final String PROTOCOL_DELIMITER = ":";
+
+  @Nonnull
+  public static String convertFromUrl(@Nonnull URL url) {
+    String protocol = url.getProtocol();
+    String path = url.getPath();
+    if (protocol.equals(URLUtil.JAR_PROTOCOL)) {
+      if (StringUtil.startsWithConcatenation(path, URLUtil.FILE_PROTOCOL, PROTOCOL_DELIMITER)) {
+        try {
+          URL subURL = new URL(path);
+          path = subURL.getPath();
+        }
+        catch (MalformedURLException e) {
+          throw new RuntimeException(VfsBundle.message("url.parse.unhandled.exception"), e);
+        }
+      }
+      else {
+        throw new RuntimeException(new IOException(VfsBundle.message("url.parse.error", url.toExternalForm())));
+      }
+    }
+    if (SystemInfo.isWindows) {
+      while (!path.isEmpty() && path.charAt(0) == '/') {
+        path = path.substring(1, path.length());
+      }
+    }
+
+    path = URLUtil.unescapePercentSequences(path);
+    return protocol + "://" + path;
+  }
 
   /**
    * @return {@code true} if {@code file} is located under one of {@code roots} or equal to one of them

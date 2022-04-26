@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.intellij.codeInsight.navigation;
+package consulo.ide.navigation;
 
-import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.component.extension.ExtensionPointName;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
+
 import javax.annotation.Nullable;
 
 /**
@@ -28,5 +29,5 @@ public interface GotoTargetRendererProvider {
   ExtensionPointName<GotoTargetRendererProvider> EP_NAME = ExtensionPointName.create("consulo.gotoTargetRendererProvider");
 
   @Nullable
-  PsiElementListCellRenderer getRenderer(PsiElement element, GotoTargetHandler.GotoData gotoData);
+  PsiElementListCellRenderer getRenderer(PsiElement element);
 }
