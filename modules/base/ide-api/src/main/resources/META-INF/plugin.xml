@@ -1043,7 +1043,7 @@
       <with attribute="instance" implements="com.intellij.application.options.editor.EditorAppearanceConfigurable"/>
     </extensionPoint>
 
-    <extensionPoint name="metaDataContributor" interface="consulo.ide.impl.psi.meta.MetaDataContributor"/>
+    <extensionPoint name="metaDataContributor" interface="consulo.language.psi.meta.MetaDataContributor"/>
 
     <extensionPoint name="documentationProvider"
                     interface="consulo.language.editor.documentation.DocumentationProvider"/>
@@ -1742,8 +1742,8 @@
 
     <projectService serviceImplementation="consulo.compiler.CompilerPathsManager"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.psi.meta.MetaDataRegistrar"
-                        serviceImplementation="consulo.ide.impl.psi.impl.meta.MetaRegistry"/>
+    <applicationService serviceInterface="consulo.language.psi.meta.MetaDataService"
+                        serviceImplementation="consulo.language.impl.internal.psi.meta.MetaRegistryImpl"/>
 
     <applicationService serviceInterface="consulo.language.psi.path.PathReferenceManager"
                         serviceImplementation="com.intellij.openapi.paths.PathReferenceManagerImpl"/>

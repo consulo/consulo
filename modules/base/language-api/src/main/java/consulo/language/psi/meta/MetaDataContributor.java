@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.meta;
+package consulo.language.psi.meta;
 
 import consulo.component.extension.ExtensionPointName;
 

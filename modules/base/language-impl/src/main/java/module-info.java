@@ -38,4 +38,5 @@ module consulo.language.impl {
   opens consulo.language.impl.internal.psi.diff to consulo.injecting.pico.impl;
   opens consulo.language.impl.internal.psi.include to consulo.injecting.pico.impl;
   opens consulo.language.impl.internal.pom to consulo.injecting.pico.impl;
+  opens consulo.language.impl.internal.psi.meta to consulo.injecting.pico.impl;
 }

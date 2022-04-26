@@ -16,12 +16,11 @@
 package consulo.language.psi.meta;
 
 import consulo.language.psi.PsiElement;
-import org.jetbrains.annotations.NonNls;
 
 /**
  * @author peter
  *
- * @see MetaDataRegistrar#registerMetaData(com.intellij.psi.filters.ElementFilter, Class)
+ * @see MetaDataRegistrar#registerMetaData(consulo.language.psi.filter.ElementFilter, Class)
  * @see PsiMetaOwner#getMetaData()
  */
 public interface PsiMetaData {

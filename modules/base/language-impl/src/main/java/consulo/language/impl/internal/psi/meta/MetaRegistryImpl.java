@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.psi.impl.meta;
+package consulo.language.impl.internal.psi.meta;
 
-import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.CachedValue;
@@ -25,13 +24,15 @@ import consulo.application.util.CachedValuesManager;
 import consulo.application.util.UserDataCache;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.psi.meta.MetaDataContributor;
-import consulo.ide.impl.psi.meta.MetaDataRegistrar;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.filter.ElementFilter;
 import consulo.language.psi.filter.position.PatternFilter;
+import consulo.language.psi.meta.MetaDataContributor;
+import consulo.language.psi.meta.MetaDataRegistrar;
+import consulo.language.psi.meta.MetaDataService;
 import consulo.language.psi.meta.PsiMetaData;
+import consulo.util.collection.Lists;
 import consulo.util.dataholder.Key;
 import jakarta.inject.Singleton;
 
@@ -40,56 +41,54 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: ik
  * Date: 07.05.2003
  * Time: 3:31:09
- * To change this template use Options | File Templates.
  */
 @Singleton
-public class MetaRegistry extends MetaDataRegistrar {
-  private static final List<MyBinding> ourBindings = ContainerUtil.createLockFreeCopyOnWriteList();
+public class MetaRegistryImpl implements MetaDataService {
+  private static final List<MyBinding> ourBindings = Lists.newLockFreeCopyOnWriteList();
   private static volatile boolean ourContributorsLoaded = false;
 
   private static final Key<CachedValue<PsiMetaData>> META_DATA_KEY = Key.create("META DATA KEY");
 
-  public static void bindDataToElement(final PsiElement element, final PsiMetaData data) {
-    CachedValue<PsiMetaData> value =
-      CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<PsiMetaData>() {
-        @Override
-        public Result<PsiMetaData> compute() {
-          data.init(element);
-          return new Result<PsiMetaData>(data, data.getDependences());
-        }
-      });
+  @Override
+  public void bindDataToElement(final PsiElement element, final PsiMetaData data) {
+    CachedValue<PsiMetaData> value = CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<PsiMetaData>() {
+      @Override
+      public Result<PsiMetaData> compute() {
+        data.init(element);
+        return new Result<>(data, data.getDependences());
+      }
+    });
     element.putUserData(META_DATA_KEY, value);
   }
 
-  public static PsiMetaData getMeta(final PsiElement element) {
+  @Override
+  public PsiMetaData getMeta(final PsiElement element) {
     final PsiMetaData base = getMetaBase(element);
     return base != null ? base : null;
   }
 
-  private static final UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object> ourCachedMetaCache =
-    new UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object>() {
-      @Override
-      protected CachedValue<PsiMetaData> compute(final PsiElement element, Object p) {
-        return CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<PsiMetaData>() {
-          @Override
-          public Result<PsiMetaData> compute() {
-            ensureContributorsLoaded();
-            for (final MyBinding binding : ourBindings) {
-              if (binding.myFilter.isClassAcceptable(element.getClass()) && binding.myFilter.isAcceptable(element, element.getParent())) {
-                final PsiMetaData data = Application.get().getInjectingContainer().getUnbindedInstance(binding.myDataClass);
-                data.init(element);
-                return new Result<PsiMetaData>(data, data.getDependences());
-              }
+  private static final UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object> ourCachedMetaCache = new UserDataCache<CachedValue<PsiMetaData>, PsiElement, Object>() {
+    @Override
+    protected CachedValue<PsiMetaData> compute(final PsiElement element, Object p) {
+      return CachedValuesManager.getManager(element.getProject()).createCachedValue(new CachedValueProvider<PsiMetaData>() {
+        @Override
+        public Result<PsiMetaData> compute() {
+          ensureContributorsLoaded();
+          for (final MyBinding binding : ourBindings) {
+            if (binding.myFilter.isClassAcceptable(element.getClass()) && binding.myFilter.isAcceptable(element, element.getParent())) {
+              final PsiMetaData data = Application.get().getInjectingContainer().getUnbindedInstance(binding.myDataClass);
+              data.init(element);
+              return new Result<PsiMetaData>(data, data.getDependences());
             }
-            return new Result<PsiMetaData>(null, element);
           }
-        }, false);
-      }
-    };
+          return new Result<PsiMetaData>(null, element);
+        }
+      }, false);
+    }
+  };
 
   private static void ensureContributorsLoaded() {
     if (!ourContributorsLoaded) {
@@ -114,17 +113,10 @@ public class MetaRegistry extends MetaDataRegistrar {
    * @see MetaDataContributor
    * @deprecated
    */
-  public static <T extends PsiMetaData> void addMetadataBinding(ElementFilter filter,
-                                                                Class<T> aMetadataClass,
-                                                                Disposable parentDisposable) {
+  public static <T extends PsiMetaData> void addMetadataBinding(ElementFilter filter, Class<T> aMetadataClass, Disposable parentDisposable) {
     final MyBinding binding = new MyBinding(filter, aMetadataClass);
     addBinding(binding);
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        ourBindings.remove(binding);
-      }
-    });
+    Disposer.register(parentDisposable, () -> ourBindings.remove(binding));
   }
 
   /**

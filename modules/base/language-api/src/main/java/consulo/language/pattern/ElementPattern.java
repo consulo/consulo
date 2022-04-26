@@ -20,7 +20,7 @@ import consulo.language.util.ProcessingContext;
 import javax.annotation.Nullable;
 
 /**
- * @see {@link com.intellij.patterns.StandardPatterns} and its extenders
+ * @see {@link StandardPatterns} and its extenders
  *
  * @author peter
  */
