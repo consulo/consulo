@@ -3,7 +3,7 @@ package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import com.intellij.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
-import com.intellij.ide.util.EditSourceUtil;
+import consulo.language.psi.util.EditSourceUtil;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.lang.LanguageStructureViewBuilder;
 import com.intellij.navigation.AnonymousElementProvider;

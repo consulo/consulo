@@ -4,7 +4,7 @@ package com.intellij.ide.actions.searcheverywhere;
 import com.intellij.codeInsight.navigation.NavigationUtil;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.actions.SearchEverywherePsiRenderer;
-import com.intellij.ide.util.EditSourceUtil;
+import consulo.language.psi.util.EditSourceUtil;
 import com.intellij.ide.util.gotoByName.*;
 import consulo.language.editor.QualifiedNameProviderUtil;
 import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.pom;
+package consulo.navigation;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.navigation.Navigatable;
-import consulo.project.Project;
+import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
@@ -39,11 +37,11 @@ public abstract class NavigatableAdapter implements Navigatable {
     return true;
   }
 
-  public static void navigate(Project project, VirtualFile file, boolean requestFocus) {
+  public static void navigate(ComponentManager project, VirtualFile file, boolean requestFocus) {
     navigate(project, file, 0, requestFocus);
   }
 
-  public static void navigate(Project project, VirtualFile file, int offset, boolean requestFocus) {
-    new OpenFileDescriptorImpl(project, file, offset).navigate(requestFocus);
+  public static void navigate(ComponentManager project, VirtualFile file, int offset, boolean requestFocus) {
+    OpenFileDescriptorFactory.getInstance(project).builder(file).offset(offset).build().navigate(requestFocus);
   }
 }

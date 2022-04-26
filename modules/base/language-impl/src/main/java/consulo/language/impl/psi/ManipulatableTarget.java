@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi;
+package consulo.language.impl.psi;
 
-import consulo.language.pom.PsiDeclaredTarget;
-import consulo.language.pom.PomRenameableTarget;
 import consulo.document.util.TextRange;
-import consulo.language.impl.psi.DelegatePsiTarget;
+import consulo.language.pom.PomRenameableTarget;
+import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.ElementManipulators;
 import consulo.language.psi.PsiElement;
 

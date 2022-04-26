@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.pom.references;
+package consulo.language.impl.internal.pom;
 
-import consulo.ide.impl.psi.impl.PomTargetPsiElementImpl;
+import consulo.language.impl.internal.psi.PomTargetPsiElementImpl;
 import consulo.language.pom.PomService;
 import consulo.language.pom.PomTarget;
 import consulo.language.psi.PsiElement;

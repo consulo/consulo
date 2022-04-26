@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 public class DeprecatedMethodException extends RuntimeException {
   private static final Logger LOG = LoggerFactory.getLogger(DeprecatedMethodException.class);
 
-  private DeprecatedMethodException(@Nonnull String message) {
+  public DeprecatedMethodException(@Nonnull String message) {
     super(message);
   }
 

@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class FileEditorManager {
-  public static final Key<Boolean> USE_CURRENT_WINDOW = Key.create("OpenFile.searchForOpen");
   public static final Key<Boolean> CLOSING_TO_REOPEN = Key.create("CLOSING_TO_REOPEN");
 
   public static FileEditorManager getInstance(@Nonnull Project project) {
@@ -61,7 +60,7 @@ public abstract class FileEditorManager {
    */
   @Nonnull
   public FileEditor[] openFile(@Nonnull VirtualFile file, boolean focusEditor, boolean searchForOpen) {
-    return openFileWithProviders(file, focusEditor, false).getFirst();
+    return openFileWithProviders(file, focusEditor, searchForOpen).getFirst();
   }
 
   /**

@@ -15,6 +15,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.util.collection.SmartList;
+import consulo.util.lang.DeprecatedMethodException;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nls;
@@ -201,14 +202,14 @@ public class AnnotationHolderImpl extends SmartList<Annotation> implements Annot
     Annotation annotation = new Annotation(range.getStartOffset(), range.getEndOffset(), severity, message, tooltip);
     add(annotation);
     String callerInfo = callerClass == null ? "" : " (the call to which was found in " + callerClass + ")";
-    PluginException pluginException = PluginException.createByClass(new IncorrectOperationException("'AnnotationHolder." +
-                                                                                                    methodName +
-                                                                                                    "()' method" +
-                                                                                                    callerInfo +
-                                                                                                    " is slow, non-incremental " +
-                                                                                                    "and thus can cause unexpected behaviour (e.g. annoying blinking), " +
-                                                                                                    "is deprecated and will be removed soon. " +
-                                                                                                    "Please use `newAnnotation().create()` instead"), callerClass == null ? getClass() : callerClass);
+    PluginException pluginException = PluginException.createByClass(new DeprecatedMethodException("'AnnotationHolder." +
+                                                                                                  methodName +
+                                                                                                  "()' method" +
+                                                                                                  callerInfo +
+                                                                                                  " is slow, non-incremental " +
+                                                                                                  "and thus can cause unexpected behaviour (e.g. annoying blinking), " +
+                                                                                                  "is deprecated and will be removed soon. " +
+                                                                                                  "Please use `newAnnotation().create()` instead"), callerClass == null ? getClass() : callerClass);
     if (callerClass != null) {
       if (ourWarnList.add(callerClass.getName())) {
         if (LOG_AS_ERROR) {

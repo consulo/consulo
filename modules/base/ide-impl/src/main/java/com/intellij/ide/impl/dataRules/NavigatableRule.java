@@ -16,7 +16,7 @@
 
 package com.intellij.ide.impl.dataRules;
 
-import com.intellij.ide.util.EditSourceUtil;
+import consulo.language.psi.util.EditSourceUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.LangDataKeys;

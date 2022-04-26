@@ -10,7 +10,7 @@ import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
 import com.intellij.codeInsight.navigation.actions.GotoDeclarationAction;
 import com.intellij.codeInsight.navigation.actions.GotoTypeDeclarationAction;
-import com.intellij.ide.util.EditSourceUtil;
+import consulo.language.psi.util.EditSourceUtil;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.documentation.DocumentationProvider;
 import consulo.codeEditor.event.*;

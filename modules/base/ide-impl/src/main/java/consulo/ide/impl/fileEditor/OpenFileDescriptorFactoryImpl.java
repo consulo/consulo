@@ -39,6 +39,7 @@ public class OpenFileDescriptorFactoryImpl implements OpenFileDescriptorFactory 
     private int myOffset = -1;
     private int myLine = -1;
     private int myColumn = -1;
+    private boolean myUseCurrentWindow;
 
     public BuilderImp(Project project, VirtualFile file) {
       myProject = project;
@@ -68,8 +69,17 @@ public class OpenFileDescriptorFactoryImpl implements OpenFileDescriptorFactory 
 
     @Nonnull
     @Override
+    public Builder useCurrentWindow(boolean useCurrentWindow) {
+      myUseCurrentWindow = useCurrentWindow;
+      return this;
+    }
+
+    @Nonnull
+    @Override
     public OpenFileDescriptor build() {
-      return new OpenFileDescriptorImpl(myProject, myFile, myLine, myColumn, myOffset, false);
+      OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(myProject, myFile, myLine, myColumn, myOffset, false);
+      descriptor.setUseCurrentWindow(myUseCurrentWindow);
+      return descriptor;
     }
   }
 

@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl;
+package consulo.language.impl.internal.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.util.TypePresentationService;
 import consulo.language.Language;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.impl.psi.RenameableFakePsiElement;
-import consulo.project.Project;
 import consulo.language.pom.PomNamedTarget;
 import consulo.language.pom.PomRenameableTarget;
 import consulo.language.pom.PomTarget;
@@ -27,11 +29,8 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiTarget;
 import consulo.language.util.IncorrectOperationException;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.project.Project;
 import consulo.ui.image.Image;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -112,7 +111,7 @@ public class PomTargetPsiElementImpl extends RenameableFakePsiElement implements
 
   @RequiredWriteAction
   @Override
-  public PsiElement setName(@NonNls @Nonnull String name) throws IncorrectOperationException {
+  public PsiElement setName(@Nonnull String name) throws IncorrectOperationException {
     if (myTarget instanceof PomRenameableTarget) {
       ((PomRenameableTarget)myTarget).setName(name);
       return this;

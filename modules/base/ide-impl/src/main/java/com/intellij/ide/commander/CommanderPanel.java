@@ -35,7 +35,7 @@ import consulo.fileEditor.structureView.StructureViewTreeElement;
 import com.intellij.ide.ui.customization.CustomActionsSchemaImpl;
 import com.intellij.ide.util.DeleteHandler;
 import com.intellij.ide.util.DirectoryChooserUtil;
-import com.intellij.ide.util.EditSourceUtil;
+import consulo.language.psi.util.EditSourceUtil;
 import consulo.language.editor.impl.util.EditorHelper;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.application.ApplicationManager;

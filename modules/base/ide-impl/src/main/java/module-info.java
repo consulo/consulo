@@ -724,10 +724,7 @@ open module consulo.ide.impl {
   exports com.intellij.peer.impl;
   exports com.intellij.platform;
   exports com.intellij.platform.templates.github;
-  exports com.intellij.pom;
   exports com.intellij.pom.core.impl;
-  exports com.intellij.pom.references;
-  exports com.intellij.pom.wrappers;
   exports com.intellij.profile;
   exports com.intellij.profile.codeInspection;
   exports com.intellij.profile.codeInspection.ui;

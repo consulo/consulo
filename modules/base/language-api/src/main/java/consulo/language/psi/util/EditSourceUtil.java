@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.intellij.ide.util;
+package consulo.language.psi.util;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.fileEditor.FileEditorManager;
 import consulo.language.pom.PomTargetPsiElement;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
-import consulo.language.psi.util.PsiNavigateApiUtil;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
-import consulo.util.dataholder.UserDataHolder;
+import consulo.navigation.NavigationUtil;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nullable;
 
@@ -51,23 +51,23 @@ public class EditSourceUtil {
     if (virtualFile == null || !virtualFile.isValid()) {
       return null;
     }
-    OpenFileDescriptorImpl desc = new OpenFileDescriptorImpl(navigationElement.getProject(), virtualFile, offset);
-    desc.setUseCurrentWindow(FileEditorManager.USE_CURRENT_WINDOW.isIn(navigationElement));
-    return desc;
+
+    OpenFileDescriptorFactory.Builder builder = OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).builder(virtualFile);
+    builder.offset(offset);
+    builder.useCurrentWindow(NavigationUtil.USE_CURRENT_WINDOW.isIn(navigationElement));
+    return builder.build();
   }
 
-  @Deprecated
   public static boolean canNavigate(PsiElement element) {
-    return PsiNavigateApiUtil.canNavigate(element);
+    if (element == null || !element.isValid()) {
+      return false;
+    }
+
+    VirtualFile file = PsiUtilCore.getVirtualFile(element.getNavigationElement());
+    return file != null && file.isValid() && !file.is(VFileProperty.SPECIAL) && !VirtualFileUtil.isBrokenLink(file);
   }
 
   public static void navigate(NavigationItem item, boolean requestFocus, boolean useCurrentWindow) {
-    if (item instanceof UserDataHolder) {
-      ((UserDataHolder)item).putUserData(FileEditorManager.USE_CURRENT_WINDOW, useCurrentWindow);
-    }
-    item.navigate(requestFocus);
-    if (item instanceof UserDataHolder) {
-      ((UserDataHolder)item).putUserData(FileEditorManager.USE_CURRENT_WINDOW, null);
-    }
+    NavigationUtil.navigate(item, requestFocus, useCurrentWindow);
   }
 }

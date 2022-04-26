@@ -1725,7 +1725,9 @@
     <applicationService serviceInterface="consulo.application.util.query.Queries" serviceImplementation="com.intellij.util.QueriesImpl"/>
 
     <projectService serviceInterface="consulo.language.pom.PomService"
-                    serviceImplementation="com.intellij.pom.references.PomServiceImpl"/>
+                    serviceImplementation="consulo.language.impl.internal.pom.PomServiceImpl"/>
+
+    <projectService serviceImplementation="consulo.language.impl.internal.pom.PsiEventWrapperAspect" lazy="false"/>
 
     <projectService serviceInterface="consulo.language.psi.search.PsiSearchHelper"
                     serviceImplementation="consulo.ide.impl.psi.impl.search.PsiSearchHelperImpl"/>
@@ -2337,7 +2339,7 @@
 
     <filePasteProvider implementation="com.intellij.ide.FileListPasteProvider"/>
 
-    <definitionsScopedSearch implementation="com.intellij.pom.PomDefinitionSearch"/>
+    <definitionsScopedSearch implementation="consulo.language.impl.internal.pom.PomDefinitionSearch"/>
 
 
     <applicationService serviceInterface="com.intellij.ide.todo.TodoConfiguration"

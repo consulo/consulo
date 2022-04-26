@@ -92,12 +92,6 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.pom.wrappers.PsiEventWrapperAspect</interface-class>
-      <implementation-class>com.intellij.pom.wrappers.PsiEventWrapperAspect</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-
-    <component>
       <implementation-class>com.intellij.openapi.vcs.changes.VcsEventWatcher</implementation-class>
     </component>
 

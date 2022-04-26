@@ -24,6 +24,9 @@ import consulo.fileEditor.TextEditor;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.navigation.NavigationItem;
+import consulo.navigation.NavigationUtil;
+import consulo.undoRedo.CommandProcessor;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.INativeFileType;
 import consulo.virtualFileSystem.fileType.UnknownFileType;
@@ -53,20 +56,30 @@ public class LanguageEditorNavigationUtil {
     }
 
     if (searchForOpen) {
-      element.putUserData(FileEditorManager.USE_CURRENT_WINDOW, null);
+      element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, null);
     }
     else {
-      element.putUserData(FileEditorManager.USE_CURRENT_WINDOW, true);
+      element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, true);
     }
 
-    if (openAsNative || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
-      final NavigationItem navigationItem = (NavigationItem)element;
-      if (!navigationItem.canNavigate()) return false;
-      navigationItem.navigate(requestFocus);
-      return true;
-    }
+    SimpleReference<Boolean> resultRef = new SimpleReference<>();
+    boolean openAsNativeFinal = openAsNative;
+    // all navigation inside should be treated as a single operation, so that 'Back' action undoes it in one go
+    CommandProcessor.getInstance().executeCommand(element.getProject(), () -> {
+      if (openAsNativeFinal || !activatePsiElementIfOpen(element, searchForOpen, requestFocus)) {
+        final NavigationItem navigationItem = (NavigationItem)element;
+        if (navigationItem.canNavigate()) {
+          navigationItem.navigate(requestFocus);
+          resultRef.set(Boolean.TRUE);
+        }
+        else {
+          resultRef.set(Boolean.FALSE);
+        }
+      }
+    }, "", null);
+    if (!resultRef.isNull()) return resultRef.get();
 
-    element.putUserData(FileEditorManager.USE_CURRENT_WINDOW, null);
+    element.putUserData(NavigationUtil.USE_CURRENT_WINDOW, null);
     return false;
   }
 

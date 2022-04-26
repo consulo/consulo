@@ -33,8 +33,8 @@ import consulo.language.pom.PomTarget;
 import consulo.language.pom.PsiDeclaredTarget;
 import consulo.language.psi.*;
 import consulo.language.psi.search.PsiSearchHelper;
-import consulo.language.psi.util.PsiNavigateApiUtil;
 import consulo.language.psi.util.PsiTreeUtil;
+import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.Navigatable;
 import consulo.navigation.NavigationItem;
 import consulo.project.Project;
@@ -352,7 +352,7 @@ public class TargetElementUtil {
 
       for (ResolveResult r : results) {
         PsiElement element = r.getElement();
-        if (PsiNavigateApiUtil.canNavigate(element) || element instanceof Navigatable && ((Navigatable)element).canNavigateToSource()) {
+        if (EditSourceUtil.canNavigate(element) || element instanceof Navigatable && ((Navigatable)element).canNavigateToSource()) {
           navigatableResults.add(element);
         }
       }

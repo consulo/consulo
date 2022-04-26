@@ -25,6 +25,9 @@ import java.util.Set;
 public interface PomModel extends UserDataHolder {
   <T extends PomModelAspect> T getModelAspect(Class<T> aClass);
 
+  /**
+   * TODO [VISTALL] replace it by extensions, and don't initialize all aspects while project opening
+   */
   void registerAspect(Class<? extends PomModelAspect> aClass, PomModelAspect aspect, Set<PomModelAspect> dependencies);
 
   void addModelListener(PomModelListener listener);

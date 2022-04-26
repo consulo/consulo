@@ -5,6 +5,7 @@ import com.intellij.ide.impl.ProjectViewSelectInTarget;
 import com.intellij.ide.projectView.impl.ProjectViewPane;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.language.psi.PsiNavigationSupport;
+import consulo.language.psi.util.EditSourceUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;

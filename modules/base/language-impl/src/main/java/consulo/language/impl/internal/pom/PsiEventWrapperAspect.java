@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package com.intellij.pom.wrappers;
+package consulo.language.impl.internal.pom;
 
-import consulo.language.file.inject.VirtualFileWindow;
-import consulo.language.ast.ASTNode;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.pom.PomModel;
-import consulo.language.pom.PomModelAspect;
-import consulo.language.pom.event.PomModelEvent;
-import consulo.language.pom.TreeAspect;
-import consulo.language.pom.event.TreeChangeEvent;
-import consulo.language.impl.internal.pom.TreeChangeEventImpl;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
+import consulo.language.ast.ASTNode;
+import consulo.language.file.inject.VirtualFileWindow;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
 import consulo.language.impl.psi.DummyHolder;
-import consulo.language.file.light.LightVirtualFile;
-
+import consulo.language.pom.PomModel;
+import consulo.language.pom.PomModelAspect;
+import consulo.language.pom.TreeAspect;
+import consulo.language.pom.event.PomModelEvent;
+import consulo.language.pom.event.TreeChangeEvent;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -71,7 +69,7 @@ public class PsiEventWrapperAspect implements PomModelAspect {
 
   private static void promoteNonPhysicalChangesToDocument(ASTNode rootElement, PsiFile file) {
     if (file instanceof DummyHolder) return;
-    if (((PsiDocumentManagerImpl)PsiDocumentManager.getInstance(file.getProject())).isCommitInProgress()) return;
+    if (((PsiDocumentManagerBase)PsiDocumentManager.getInstance(file.getProject())).isCommitInProgress()) return;
 
     VirtualFile vFile = file.getViewProvider().getVirtualFile();
     if (vFile instanceof LightVirtualFile && !(vFile instanceof VirtualFileWindow)) {
