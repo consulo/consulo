@@ -1392,7 +1392,7 @@
                     serviceImplementation="com.intellij.ide.impl.SelectInEditorManagerImpl"/>
     <projectService serviceInterface="com.intellij.ui.RecentsManager"
                     serviceImplementation="com.intellij.ui.RecentsManager"/>
-    <projectService serviceInterface="com.intellij.ui.content.MessageView"
+    <projectService serviceInterface="consulo.project.ui.view.MessageView"
                     serviceImplementation="com.intellij.ui.content.impl.MessageViewImpl"/>
 
     <projectService serviceInterface="com.intellij.ui.tabs.FileColorSharedConfigurationManager"

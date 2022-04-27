@@ -73,7 +73,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
-import com.intellij.ui.content.MessageView;
+import consulo.project.ui.view.MessageView;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.AsynchConsumer;
 import com.intellij.util.BufferedListConsumer;

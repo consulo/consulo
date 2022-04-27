@@ -30,7 +30,7 @@ import consulo.navigation.Navigatable;
 import com.intellij.ui.EditorNotifications;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
-import com.intellij.ui.content.MessageView;
+import consulo.project.ui.view.MessageView;
 import com.intellij.util.ObjectUtil;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;

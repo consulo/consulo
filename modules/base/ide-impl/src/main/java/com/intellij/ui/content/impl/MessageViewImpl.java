@@ -17,19 +17,19 @@
 package com.intellij.ui.content.impl;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.project.ui.view.MessageView;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.ContentManager;
-import com.intellij.ui.content.MessageView;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class MessageViewImpl implements MessageView {
       public void run() {
         myToolWindow = toolWindowManager.registerToolWindow(ToolWindowId.MESSAGES_WINDOW, true, ToolWindowAnchor.BOTTOM, project, true);
         myToolWindow.setIcon(AllIcons.Toolwindows.ToolWindowMessages);
-        new ContentManagerWatcher(myToolWindow, getContentManager());
+        ContentManagerWatcher.watchContentManager(myToolWindow, getContentManager());
         for (Runnable postponedRunnable : myPostponedRunnables) {
           postponedRunnable.run();
         }

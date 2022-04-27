@@ -25,7 +25,7 @@ import consulo.navigation.Navigatable;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import com.intellij.ui.content.MessageView;
+import consulo.project.ui.view.MessageView;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;

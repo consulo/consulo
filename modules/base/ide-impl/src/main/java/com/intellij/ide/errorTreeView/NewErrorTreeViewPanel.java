@@ -23,7 +23,7 @@ import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.ide.errorTreeView.impl.ErrorViewTextExporter;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.content.MessageView;
+import consulo.project.ui.view.MessageView;
 import com.intellij.util.ui.MutableErrorTreeView;
 import consulo.application.AllIcons;
 import consulo.application.impl.internal.IdeaModalityState;

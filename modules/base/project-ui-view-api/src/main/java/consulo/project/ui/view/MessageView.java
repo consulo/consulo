@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.content;
+package consulo.project.ui.view;
 
-import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 
 import javax.annotation.Nonnull;
 
 public interface MessageView {
   @Nonnull
   public static MessageView getInstance(Project project) {
-    return ServiceManager.getService(project, MessageView.class);
+    return project.getInstance(MessageView.class);
   }
 
   @Nonnull
@@ -43,7 +42,7 @@ public interface MessageView {
 
     @Deprecated
     public static MessageView getInstance(Project project) {
-      return ServiceManager.getService(project, MessageView.class);
+      return MessageView.getInstance(project);
     }
   }
 }

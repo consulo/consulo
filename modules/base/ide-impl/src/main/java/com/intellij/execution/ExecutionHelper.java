@@ -46,7 +46,7 @@ import com.intellij.ui.ListCellRendererWrapper;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
-import com.intellij.ui.content.MessageView;
+import consulo.project.ui.view.MessageView;
 import com.intellij.util.ArrayUtil;
 import com.intellij.util.Consumer;
 import com.intellij.util.Function;
