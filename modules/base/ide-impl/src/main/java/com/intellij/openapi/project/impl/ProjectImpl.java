@@ -17,7 +17,7 @@ package com.intellij.openapi.project.impl;
 
 import com.intellij.ide.startup.StartupManagerEx;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.wm.impl.FrameTitleBuilder;
+import consulo.project.ui.wm.FrameTitleBuilder;
 import com.intellij.util.TimedReference;
 import consulo.application.AccessRule;
 import consulo.application.Application;

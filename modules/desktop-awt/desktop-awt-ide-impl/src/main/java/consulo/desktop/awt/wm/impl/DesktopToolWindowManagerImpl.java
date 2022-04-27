@@ -25,7 +25,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import com.intellij.openapi.util.EdtRunnable;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.FrameTitleBuilder;
+import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
 import com.intellij.openapi.wm.impl.ToolWindowLayout;
 import com.intellij.openapi.wm.impl.WindowInfoImpl;

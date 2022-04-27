@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.openapi.wm.impl;
+package consulo.project.ui.wm;
 
-import consulo.ide.ServiceManager;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.Application;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class FrameTitleBuilder {
   public static FrameTitleBuilder getInstance() {
-    return ServiceManager.getService(FrameTitleBuilder.class);
+    return Application.get().getInstance(FrameTitleBuilder.class);
   }
 
   @Nonnull

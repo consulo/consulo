@@ -22,6 +22,7 @@ import consulo.module.content.util.ProjectUtilCore;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import com.intellij.openapi.util.io.FileUtil;
+import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.fileEditor.VfsPresentationUtil;
 import com.intellij.util.containers.ContainerUtil;

@@ -30,7 +30,7 @@ import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.IdeFrame;
 import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.FrameTitleBuilder;
+import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.Alarm;
 import com.intellij.util.containers.ArrayListSet;

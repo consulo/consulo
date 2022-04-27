@@ -20,4 +20,6 @@ module consulo.project.ui.api {
 
   exports consulo.project.ui.notification.internal to consulo.ide.impl;
   exports consulo.project.ui.wm.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.ui.ex.awt.api;
+
+  opens consulo.project.ui.wm to consulo.injecting.pico.impl;
 }
