@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.folding;
+package consulo.language.editor.folding;
 
 import consulo.component.extension.ExtensionPointName;
 
@@ -26,7 +26,9 @@ public abstract class CustomFoldingProvider {
   public static final ExtensionPointName<CustomFoldingProvider> EP_NAME = ExtensionPointName.create("consulo.customFoldingProvider");
 
   public abstract boolean isCustomRegionStart(String elementText);
+
   public abstract boolean isCustomRegionEnd(String elementText);
+
   public abstract String getPlaceholderText(String elementText);
 
   /**
@@ -35,6 +37,7 @@ public abstract class CustomFoldingProvider {
   public abstract String getDescription();
 
   public abstract String getStartString();
+
   public abstract String getEndString();
 
   public boolean isCollapsedByDefault(String text) {

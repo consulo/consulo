@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.customFolding;
 
-import com.intellij.lang.folding.CustomFoldingProvider;
+import consulo.language.editor.folding.CustomFoldingProvider;
 
 /**
  * Supports <a href="http://msdn.microsoft.com/en-us/library/9a1ybwek%28v=vs.100%29.aspx">VisualStudio custom foldings.</a>

@@ -507,11 +507,11 @@
 
     <extensionPoint name="lang.foldingBuilder"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.lang.folding.FoldingBuilder"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.folding.FoldingBuilder"/>
     </extensionPoint>
 
     <extensionPoint name="customFoldingProvider"
-                    interface="com.intellij.lang.folding.CustomFoldingProvider"/>
+                    interface="consulo.language.editor.folding.CustomFoldingProvider"/>
     <extensionPoint name="lang.psiStructureViewFactory"
                     beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.language.editor.structureView.PsiStructureViewFactory"/>

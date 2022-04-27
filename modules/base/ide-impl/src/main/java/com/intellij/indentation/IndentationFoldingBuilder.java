@@ -1,8 +1,8 @@
 package com.intellij.indentation;
 
 import consulo.language.ast.ASTNode;
-import com.intellij.lang.folding.FoldingBuilder;
-import com.intellij.lang.folding.FoldingDescriptor;
+import consulo.language.editor.folding.FoldingBuilder;
+import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.document.Document;
 import consulo.application.dumb.DumbAware;
 import consulo.language.ast.TokenSet;

@@ -2,8 +2,8 @@
 
 package com.intellij.codeInsight.folding.impl;
 
-import com.intellij.lang.folding.FoldingBuilder;
-import com.intellij.lang.folding.FoldingDescriptor;
+import consulo.language.editor.folding.FoldingBuilder;
+import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.logging.Logger;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.language.psi.PsiElement;

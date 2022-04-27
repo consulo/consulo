@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.folding;
+package consulo.language.editor.folding;
 
-import consulo.language.ast.ASTNode;
-import consulo.document.Document;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.dumb.PossiblyDumbAware;
-import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.util.collection.Stack;
-import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

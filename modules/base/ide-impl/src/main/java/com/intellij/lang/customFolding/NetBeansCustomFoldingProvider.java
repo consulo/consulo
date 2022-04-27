@@ -15,7 +15,7 @@
  */
 package com.intellij.lang.customFolding;
 
-import com.intellij.lang.folding.CustomFoldingProvider;
+import consulo.language.editor.folding.CustomFoldingProvider;
 
 /**
  * Custom folding provider for <a href="http://ui.netbeans.org/docs/ui/code_folding/cf_uispec.html#menus">NetBeans folding conventions.</a>

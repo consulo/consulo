@@ -16,7 +16,7 @@
 package com.intellij.lang.customFolding;
 
 import consulo.ide.IdeBundle;
-import com.intellij.lang.folding.FoldingDescriptor;
+import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;

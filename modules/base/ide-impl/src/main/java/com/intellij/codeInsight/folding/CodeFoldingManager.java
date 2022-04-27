@@ -6,6 +6,7 @@ import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;
 import consulo.fileEditor.text.CodeFoldingState;
+import consulo.language.editor.folding.FoldingBuilder;
 import consulo.project.Project;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
@@ -42,7 +43,7 @@ public abstract class CodeFoldingManager {
   public abstract CodeFoldingState buildInitialFoldings(@Nonnull Document document);
 
   /**
-   * For auto-generated regions (created by {@link com.intellij.lang.folding.FoldingBuilder}s), returns their 'collapsed by default'
+   * For auto-generated regions (created by {@link FoldingBuilder}s), returns their 'collapsed by default'
    * status, for other regions returns {@code null}.
    */
   @Nullable
@@ -50,7 +51,7 @@ public abstract class CodeFoldingManager {
 
   /**
    * Schedules recalculation of foldings in editor ({@link com.intellij.codeInsight.daemon.impl.CodeFoldingPass CodeFoldingPass}), which
-   * will happen even if document (and other dependencies declared by {@link com.intellij.lang.folding.FoldingBuilder FoldingBuilder})
+   * will happen even if document (and other dependencies declared by {@link FoldingBuilder FoldingBuilder})
    * haven't changed.
    */
   public abstract void scheduleAsyncFoldingUpdate(@Nonnull Editor editor);

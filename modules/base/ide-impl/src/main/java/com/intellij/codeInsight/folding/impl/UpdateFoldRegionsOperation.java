@@ -2,7 +2,7 @@
 
 package com.intellij.codeInsight.folding.impl;
 
-import com.intellij.lang.folding.FoldingDescriptor;
+import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldRegion;

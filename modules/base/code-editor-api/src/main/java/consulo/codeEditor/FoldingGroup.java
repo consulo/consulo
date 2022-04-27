@@ -15,20 +15,48 @@
  */
 package consulo.codeEditor;
 
+import javax.annotation.Nonnull;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * {@link FoldRegion}s with same FoldingGroup instances expand and collapse together.
  *
  * @author peter
  */
-public class FoldingGroup {
+public final class FoldingGroup {
+  private static final AtomicLong ourCounter = new AtomicLong();
+
   private final String myDebugName;
+  private final long myId;
 
   private FoldingGroup(String debugName) {
     myDebugName = debugName;
+    myId = ourCounter.incrementAndGet();
   }
 
-  public static FoldingGroup newGroup(String debugName) {
+  public static FoldingGroup newGroup(@Nonnull String debugName) {
     return new FoldingGroup(debugName);
+  }
+
+  public long getId() {
+    return myId;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    FoldingGroup group = (FoldingGroup)o;
+
+    if (myId != group.myId) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return (int)(myId ^ (myId >>> 32));
   }
 
   @Override

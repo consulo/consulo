@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.lang.folding;
+package consulo.language.editor.folding;
 
-import consulo.language.ast.ASTNode;
-import consulo.language.Language;
-import consulo.document.Document;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.document.Document;
+import consulo.language.ast.ASTNode;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
  * by the plugin.
  *
  * @author max
- * @see LanguageFolding#forLanguage(Language)
  */
 
 public interface FoldingBuilder {

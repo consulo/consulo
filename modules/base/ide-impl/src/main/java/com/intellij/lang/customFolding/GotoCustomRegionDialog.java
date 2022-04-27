@@ -17,9 +17,13 @@ package com.intellij.lang.customFolding;
 
 import consulo.ide.IdeBundle;
 import consulo.language.Language;
-import com.intellij.lang.folding.*;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.folding.CustomFoldingBuilder;
+import consulo.language.editor.folding.FoldingBuilder;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.language.editor.internal.CompositeFoldingBuilder;
+import consulo.language.editor.internal.LanguageFolding;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.file.FileViewProvider;

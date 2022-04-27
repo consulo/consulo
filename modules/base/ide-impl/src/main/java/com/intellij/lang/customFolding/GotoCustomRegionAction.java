@@ -16,7 +16,6 @@
 package com.intellij.lang.customFolding;
 
 import consulo.ide.IdeBundle;
-import com.intellij.lang.folding.*;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.PopupAction;
@@ -26,6 +25,11 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.language.editor.folding.CustomFoldingBuilder;
+import consulo.language.editor.folding.FoldingBuilder;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.language.editor.internal.CompositeFoldingBuilder;
+import consulo.language.editor.internal.LanguageFolding;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;

@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package com.intellij.lang.folding;
+package consulo.language.editor.internal;
 
-import consulo.language.ast.ASTNode;
-import consulo.document.Document;
-import consulo.application.dumb.DumbAware;
-import consulo.util.dataholder.Key;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
-import javax.annotation.Nonnull;
+import consulo.application.dumb.DumbAware;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
+import consulo.language.editor.folding.FoldingBuilder;
+import consulo.language.editor.folding.FoldingBuilderEx;
+import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.language.psi.PsiElement;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +37,7 @@ import java.util.List;
  * for a particular language.
  *
  * @author Konstantin Bulenkov
- * @see com.intellij.lang.folding.LanguageFolding
+ * @see LanguageFolding
  * @since 9.0
  */
 public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAware {

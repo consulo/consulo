@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.lang.folding;
+package consulo.language.editor.folding;
 
 import consulo.language.ast.ASTNode;
 import consulo.codeEditor.FoldingGroup;

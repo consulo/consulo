@@ -23,6 +23,7 @@ module consulo.language.editor.api {
   exports consulo.language.editor.completion.lookup.event;
   exports consulo.language.editor.documentation;
   exports consulo.language.editor.gutter;
+  exports consulo.language.editor.folding;
   exports consulo.language.editor.hint;
   exports consulo.language.editor.highlight;
   exports consulo.language.editor.inject;
