@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.source.resolve.reference;
+package consulo.language.impl.internal.psi;
 
-import consulo.language.Language;
-import consulo.application.Application;
-import consulo.component.extension.AbstractExtensionPointBean;
-import com.intellij.openapi.util.NotNullLazyValue;
-import consulo.language.psi.PsiReferenceContributor;
+import consulo.component.extension.BaseKeyedLazyInstance;
 import consulo.component.extension.KeyedLazyInstance;
+import consulo.language.Language;
+import consulo.language.psi.PsiReferenceContributor;
 import consulo.util.xml.serializer.annotation.Attribute;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author Dmitry Avdeev
  */
-public class PsiReferenceContributorEP extends AbstractExtensionPointBean implements KeyedLazyInstance<PsiReferenceContributor> {
+public class PsiReferenceContributorEP extends BaseKeyedLazyInstance<PsiReferenceContributor> implements KeyedLazyInstance<PsiReferenceContributor> {
 
   @Attribute("language")
   public String language = Language.ANY.getID();
@@ -36,22 +34,10 @@ public class PsiReferenceContributorEP extends AbstractExtensionPointBean implem
   @Attribute("implementation")
   public String implementationClass;
 
-  private final NotNullLazyValue<PsiReferenceContributor> myHandler = new NotNullLazyValue<PsiReferenceContributor>() {
-    @Override
-    @Nonnull
-    protected PsiReferenceContributor compute() {
-      try {
-        return instantiate(implementationClass, Application.get().getInjectingContainer());
-      }
-      catch (ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      }
-    }
-  };
-
+  @Nullable
   @Override
-  public PsiReferenceContributor getInstance() {
-    return myHandler.getValue();
+  protected String getImplementationClassName() {
+    return implementationClass;
   }
 
   @Override

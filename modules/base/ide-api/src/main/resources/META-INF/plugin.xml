@@ -55,9 +55,9 @@
     <extensionPoint name="contentFolderSupportPatcher" interface="consulo.module.content.layer.ContentFolderSupportPatcher"/>
     <extensionPoint name="createFromTemplateActionModuleResolver" interface="com.intellij.ide.actions.CreateFileFromTemplateAction$ModuleResolver"/>
 
-    <extensionPoint name="applicationService" beanClass="consulo.component.impl.extension.ServiceDescriptor"/>
-    <extensionPoint name="projectService" beanClass="consulo.component.impl.extension.ServiceDescriptor" area="PROJECT"/>
-    <extensionPoint name="moduleService" beanClass="consulo.component.impl.extension.ServiceDescriptor" area="MODULE"/>
+    <extensionPoint name="applicationService" beanClass="consulo.component.internal.ServiceDescriptor"/>
+    <extensionPoint name="projectService" beanClass="consulo.component.internal.ServiceDescriptor" area="PROJECT"/>
+    <extensionPoint name="moduleService" beanClass="consulo.component.internal.ServiceDescriptor" area="MODULE"/>
 
     <extensionPoint name="extensionExtender" beanClass="consulo.component.extension.KeyedLazyInstanceEP">
       <with attribute="implementationClass" implements="consulo.component.extension.ExtensionExtender"/>
@@ -639,7 +639,7 @@
     <extensionPoint name="preFormatProcessor" interface="consulo.ide.impl.psi.impl.source.codeStyle.PreFormatProcessor"/>
     <extensionPoint name="postFormatProcessor" interface="consulo.ide.impl.psi.impl.source.codeStyle.PostFormatProcessor"/>
 
-    <extensionPoint name="declarationRangeHandler" beanClass="com.intellij.util.MixinEP">
+    <extensionPoint name="declarationRangeHandler" beanClass="consulo.component.extension.MixinEP">
       <with attribute="implementationClass" implements="com.intellij.codeInsight.hint.DeclarationRangeHandler"/>
     </extensionPoint>
 
@@ -815,7 +815,7 @@
     <extensionPoint name="psi.fileReferenceHelper"
                     interface="consulo.language.psi.path.FileReferenceHelper"/>
 
-    <extensionPoint name="psi.referenceContributor" beanClass="consulo.ide.impl.psi.impl.source.resolve.reference.PsiReferenceContributorEP">
+    <extensionPoint name="psi.referenceContributor" beanClass="consulo.language.impl.internal.psi.PsiReferenceContributorEP">
       <with attribute="implementation" implements="consulo.language.psi.PsiReferenceContributor"/>
     </extensionPoint>
 

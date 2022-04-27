@@ -3,7 +3,7 @@ package consulo.virtualFileSystem.pointer;
 
 import consulo.component.util.ModificationTracker;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.component.extension.internal.RootComponentHolder;
+import consulo.component.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;

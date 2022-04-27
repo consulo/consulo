@@ -45,7 +45,7 @@ import consulo.component.ComponentManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionPointId;
 import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.impl.extension.ServiceDescriptor;
+import consulo.component.internal.ServiceDescriptor;
 import consulo.component.store.impl.internal.StateStorageException;
 import consulo.component.store.impl.internal.StoreUtil;
 import consulo.container.boot.ContainerPathManager;

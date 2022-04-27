@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.component.impl.extension;
+package consulo.component.internal;
 
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.container.plugin.PluginDescriptor;

@@ -18,7 +18,7 @@ package consulo.virtualFileSystem;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
-import consulo.component.extension.internal.RootComponentHolder;
+import consulo.component.internal.RootComponentHolder;
 import consulo.component.messagebus.Topic;
 import consulo.component.util.Iconable;
 import consulo.component.util.ModificationTracker;

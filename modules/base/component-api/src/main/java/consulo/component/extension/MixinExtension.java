@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2021 consulo.io
+ * Copyright 2000-2009 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.extension.internal;
-
-import consulo.component.ComponentManager;
+package consulo.component.extension;
 
 import javax.annotation.Nullable;
 
 /**
- * @author VISTALL
- * @since 28/12/2021
- *
- * This is holder of Application instance for ExtensionPointName (deprecated methods without ComponentManager)
+ * @author yole
  */
-public class RootComponentHolder {
-  private static ComponentManager ourRootComponent;
-
-  public static void setRootComponent(@Nullable ComponentManager rootComponent) {
-    ourRootComponent = rootComponent;
+public class MixinExtension {
+  private MixinExtension() {
   }
 
-  public static ComponentManager getRootComponent() {
-    return ourRootComponent;
+  @Nullable
+  public static <T> T getInstance(ExtensionPointName<MixinEP<T>> name, Object key) {
+    for(MixinEP<T> ep: name.getExtensionList()) {
+      if (ep.getKey().isInstance(key)) {
+        return ep.getInstance();
+      }
+    }
+    return null;
   }
 }

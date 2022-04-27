@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util;
+package consulo.component.extension;
 
-import consulo.component.extension.AbstractExtensionPointBean;
-import consulo.application.extension.LazyInstance;
-import com.intellij.openapi.util.NotNullLazyValue;
+import consulo.util.lang.lazy.LazyValue;
 import consulo.util.xml.serializer.annotation.Attribute;
-import javax.annotation.Nonnull;
+
+import java.util.function.Supplier;
 
 /**
  * @author yole
@@ -33,30 +32,29 @@ public class MixinEP<T> extends AbstractExtensionPointBean {
   @Attribute("implementationClass")
   public String implementationClass;
 
-  private final NotNullLazyValue<Class> myKey = new NotNullLazyValue<Class>() {
-    @Nonnull
-    protected Class compute() {
-      try {
-        return findClass(key);
-      }
-      catch (ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      }
+  private final Supplier<Class> myKey = LazyValue.notNull(() -> {
+    try {
+      return findClass(key);
     }
-  };
+    catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  });
 
-  private final LazyInstance<T> myHandler = new LazyInstance<T>() {
-    @Override
-    protected Class<T> getInstanceClass() throws ClassNotFoundException {
-      return findClass(implementationClass);
+  private final Supplier<T> myHandler = LazyValue.notNull(() -> {
+    try {
+      return instantiate(implementationClass, myComponent.getInjectingContainer());
     }
-  };
+    catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+  });
 
   public Class getKey() {
-    return myKey.getValue();
+    return myKey.get();
   }
 
   public T getInstance() {
-    return myHandler.getValue();
+    return myHandler.get();
   }
 }

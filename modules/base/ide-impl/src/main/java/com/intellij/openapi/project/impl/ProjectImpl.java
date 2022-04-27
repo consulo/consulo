@@ -16,45 +16,45 @@
 package com.intellij.openapi.project.impl;
 
 import com.intellij.ide.startup.StartupManagerEx;
-import consulo.application.Application;
-import consulo.application.internal.ApplicationEx;
-import consulo.project.ProjectComponent;
-import consulo.component.impl.extension.ServiceDescriptor;
 import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.module.impl.internal.ModuleManagerImpl;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.dumb.DumbAwareRunnable;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.event.ProjectManagerAdapter;
-import consulo.project.internal.ProjectEx;
-import consulo.project.internal.ProjectManagerEx;
-import consulo.project.startup.StartupManager;
-import com.intellij.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.WindowManager;
 import com.intellij.openapi.wm.impl.FrameTitleBuilder;
-import consulo.language.impl.DebugUtil;
 import com.intellij.util.TimedReference;
 import consulo.application.AccessRule;
-import consulo.component.extension.ExtensionPointId;
+import consulo.application.Application;
+import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
+import consulo.application.internal.ApplicationEx;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.component.extension.ExtensionPointId;
+import consulo.component.impl.extension.ExtensionAreaId;
+import consulo.component.internal.ServiceDescriptor;
+import consulo.component.store.impl.internal.StoreUtil;
 import consulo.components.impl.stores.DefaultProjectStoreImpl;
 import consulo.components.impl.stores.IProjectStore;
 import consulo.components.impl.stores.ProjectStoreImpl;
-import consulo.component.store.impl.internal.StoreUtil;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.injecting.InjectingContainerBuilder;
 import consulo.logging.Logger;
+import consulo.module.impl.internal.ModuleManagerImpl;
+import consulo.project.Project;
+import consulo.project.ProjectComponent;
+import consulo.project.ProjectManager;
+import consulo.project.event.ProjectManagerAdapter;
+import consulo.project.internal.ProjectEx;
+import consulo.project.internal.ProjectManagerEx;
+import consulo.project.startup.StartupManager;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.dataholder.Key;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.ExceptionUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -97,7 +97,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     putUserData(CREATION_TIME, System.nanoTime());
 
     if (application.isUnitTestMode()) {
-      putUserData(CREATION_TRACE, DebugUtil.currentStackTrace());
+      putUserData(CREATION_TRACE, ExceptionUtil.currentStackTrace());
     }
 
     if (!isDefault()) {
@@ -203,7 +203,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public boolean isInitialized() {
-    if(isDisposed()) {
+    if (isDisposed()) {
       return false;
     }
     return isOpen() && StartupManagerEx.getInstanceEx(this).startupActivityPassed();
@@ -239,7 +239,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Nonnull
   @Override
   public String getName() {
-    if(myName == null) {
+    if (myName == null) {
       myName = getStateStore().getProjectName();
     }
     return myName;
@@ -297,7 +297,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
       return;
     }
 
-    if(!isModulesReady()) {
+    if (!isModulesReady()) {
       LOG.warn(new Exception("Calling Project#save() but modules not initialized"));
       return;
     }
@@ -446,9 +446,6 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
 
   @Override
   public String toString() {
-    return "Project" +
-           (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + myDirPath + "'") +
-           (isDefault() ? " (Default)" : "") +
-           " " + myName;
+    return "Project" + (isDisposed() ? " (Disposed" + (temporarilyDisposed ? " temporarily" : "") + ")" : isDefault() ? "" : " '" + myDirPath + "'") + (isDefault() ? " (Default)" : "") + " " + myName;
   }
 }

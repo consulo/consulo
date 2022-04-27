@@ -25,7 +25,7 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.component.ComponentManager;
 import consulo.component.impl.BaseComponentManager;
 import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.impl.extension.ServiceDescriptor;
+import consulo.component.internal.ServiceDescriptor;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.StateComponentInfo;
 import consulo.container.plugin.ComponentConfig;

@@ -15,6 +15,7 @@
  */
 package com.intellij.util;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.logging.Logger;
 import com.intellij.openapi.util.text.StringUtil;
 
@@ -25,6 +26,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.ExceptionUtil")
 public class ExceptionUtil {
   private ExceptionUtil() { }
 

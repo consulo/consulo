@@ -19,7 +19,7 @@ package consulo.module.impl.internal;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.component.extension.ExtensionPointId;
 import consulo.component.impl.extension.ExtensionAreaId;
-import consulo.component.impl.extension.ServiceDescriptor;
+import consulo.component.internal.ServiceDescriptor;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginListenerDescriptor;

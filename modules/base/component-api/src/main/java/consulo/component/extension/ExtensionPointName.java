@@ -18,7 +18,7 @@ package consulo.component.extension;
 
 import consulo.component.ComponentManager;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.extension.internal.RootComponentHolder;
+import consulo.component.internal.RootComponentHolder;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
 import consulo.component.util.PluginExceptionUtil;

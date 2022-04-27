@@ -3,7 +3,7 @@ package consulo.virtualFileSystem.encoding;
 
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
-import consulo.component.extension.internal.RootComponentHolder;
+import consulo.component.internal.RootComponentHolder;
 import consulo.util.lang.function.ThrowableSupplier;
 
 import javax.annotation.Nonnull;

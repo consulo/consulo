@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.hint;
 
-import com.intellij.openapi.util.MixinExtension;
+import consulo.component.extension.MixinExtension;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

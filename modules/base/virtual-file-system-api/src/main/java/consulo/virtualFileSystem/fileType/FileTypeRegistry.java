@@ -3,7 +3,7 @@ package consulo.virtualFileSystem.fileType;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.internal.RootComponentHolder;
+import consulo.component.internal.RootComponentHolder;
 import consulo.util.io.ByteSequence;
 import consulo.virtualFileSystem.VirtualFile;
 

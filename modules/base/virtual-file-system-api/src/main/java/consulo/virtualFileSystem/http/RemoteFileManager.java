@@ -15,7 +15,7 @@
  */
 package consulo.virtualFileSystem.http;
 
-import consulo.component.extension.internal.RootComponentHolder;
+import consulo.component.internal.RootComponentHolder;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 

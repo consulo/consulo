@@ -17,9 +17,10 @@
 package com.intellij.codeInsight.hint;
 
 import consulo.component.extension.ExtensionPointName;
+import consulo.component.extension.MixinEP;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
-import com.intellij.util.MixinEP;
+
 import javax.annotation.Nonnull;
 
 /**

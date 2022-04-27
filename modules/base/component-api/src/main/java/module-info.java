@@ -36,5 +36,15 @@ module consulo.component.api {
   exports consulo.component.util.graph;
   exports consulo.component.util.config;
 
-  exports consulo.component.extension.internal to consulo.application.api, consulo.virtual.file.system.api, consulo.datacontext.api;
+  exports consulo.component.internal to
+          consulo.application.api,
+          consulo.virtual.file.system.api,
+          consulo.datacontext.api,
+          consulo.component.impl,
+          consulo.application.impl,
+          // TODO [VISTALL] replace it by consulo.project.impl when ready
+          consulo.ide.impl,
+          consulo.module.impl;
+
+  opens consulo.component.internal to consulo.util.xml.serializer, consulo.injecting.pico.impl;
 }

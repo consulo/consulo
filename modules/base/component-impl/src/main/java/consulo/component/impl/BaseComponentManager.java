@@ -23,6 +23,7 @@ import consulo.component.extension.ExtensionPointId;
 import consulo.component.impl.extension.*;
 import consulo.component.impl.messagebus.MessageBusFactory;
 import consulo.component.impl.messagebus.MessageBusImpl;
+import consulo.component.internal.ServiceDescriptor;
 import consulo.component.messagebus.MessageBus;
 import consulo.container.plugin.ComponentConfig;
 import consulo.container.plugin.PluginDescriptor;
