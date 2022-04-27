@@ -34,7 +34,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.AppTopics;
 import consulo.language.codeStyle.CodeStyle;
-import consulo.language.file.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.language.file.light.LightVirtualFile;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.psi.PsiFileImpl;

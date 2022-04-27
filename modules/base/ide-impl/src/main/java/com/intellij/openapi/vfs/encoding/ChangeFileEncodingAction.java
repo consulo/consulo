@@ -30,7 +30,7 @@ import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.editor.CommonDataKeys;
-import consulo.language.file.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.ui.ex.action.AnAction;

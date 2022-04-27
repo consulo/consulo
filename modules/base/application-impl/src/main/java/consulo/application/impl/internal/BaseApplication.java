@@ -57,7 +57,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.language.file.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;

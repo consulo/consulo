@@ -27,7 +27,7 @@ import com.intellij.openapi.vcs.versionBrowser.CommittedChangeList;
 import com.intellij.openapi.vcs.versionBrowser.DateFilterComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import com.intellij.ui.components.JBTabbedPane;
+import consulo.ui.ex.awt.JBTabbedPane;
 import com.intellij.util.AsynchConsumer;
 import consulo.ui.ex.awt.UIUtil;
 import org.jetbrains.annotations.NonNls;

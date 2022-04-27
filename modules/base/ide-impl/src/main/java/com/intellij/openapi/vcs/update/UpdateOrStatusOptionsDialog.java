@@ -19,7 +19,7 @@ import consulo.application.HelpManager;
 import consulo.ui.ex.awt.Messages;
 import com.intellij.openapi.vcs.AbstractVcs;
 import com.intellij.openapi.vcs.VcsBundle;
-import com.intellij.ui.components.JBTabbedPane;
+import consulo.ui.ex.awt.JBTabbedPane;
 import com.intellij.util.ui.OptionsDialog;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

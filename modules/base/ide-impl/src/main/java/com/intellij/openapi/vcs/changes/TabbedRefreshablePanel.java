@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes;
 
-import com.intellij.ui.components.JBTabbedPane;
+import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.disposer.Disposer;
 
 import javax.swing.*;

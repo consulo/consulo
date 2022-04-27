@@ -7,7 +7,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <tabbedpane id="db4aa" class="com.intellij.ui.components.JBTabbedPane" binding="myTabbedPane">
+      <tabbedpane id="db4aa" class="consulo.ui.ex.awt.JBTabbedPane" binding="myTabbedPane">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>

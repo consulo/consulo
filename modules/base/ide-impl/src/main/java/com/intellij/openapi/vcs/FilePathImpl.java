@@ -26,8 +26,8 @@ import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.file.EncodingManager;
-import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -1,6 +1,6 @@
-package com.intellij.codeInsight.folding;
+package consulo.language.editor.folding;
 
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
 
 public class CodeFoldingSettings {
   public boolean COLLAPSE_IMPORTS = true;
@@ -9,6 +9,6 @@ public class CodeFoldingSettings {
   public boolean COLLAPSE_DOC_COMMENTS;
 
   public static CodeFoldingSettings getInstance() {
-    return ServiceManager.getService(CodeFoldingSettings.class);
+    return Application.get().getInstance(CodeFoldingSettings.class);
   }
 }

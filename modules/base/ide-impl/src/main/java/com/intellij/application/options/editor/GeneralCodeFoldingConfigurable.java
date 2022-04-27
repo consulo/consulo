@@ -16,7 +16,7 @@
 
 package com.intellij.application.options.editor;
 
-import com.intellij.codeInsight.folding.CodeFoldingSettings;
+import consulo.language.editor.folding.CodeFoldingSettings;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 import consulo.configurable.SimpleConfigurableByProperties;

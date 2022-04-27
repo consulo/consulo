@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.formatting;
+package consulo.language.codeStyle;
 
-import consulo.language.codeStyle.Block;
-import consulo.language.codeStyle.Formatter;
-import consulo.language.codeStyle.FormattingModel;
-import consulo.language.codeStyle.FormattingModelBuilder;
-import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 

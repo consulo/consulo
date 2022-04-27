@@ -9,7 +9,7 @@ import consulo.virtualFileSystem.VFileProperty;
 import consulo.virtualFileSystem.VfsBundle;
 import consulo.virtualFileSystem.fileType.FileType;
 import com.intellij.openapi.vfs.*;
-import consulo.language.file.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.virtualFileSystem.NewVirtualFileSystem;

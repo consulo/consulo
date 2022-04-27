@@ -18,7 +18,7 @@ package consulo.test.light;
 import consulo.ui.ex.UiActivityMonitor;
 import consulo.component.macro.PathMacroFilter;
 import consulo.application.impl.internal.progress.CoreProgressManager;
-import consulo.language.file.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
 import consulo.ui.ex.awt.tree.TreeUIHelper;
 import consulo.application.Application;

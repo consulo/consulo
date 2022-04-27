@@ -16,7 +16,7 @@
 package com.intellij.ui;
 
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.components.JBTabbedPane;
+import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.logging.Logger;
 import consulo.ui.ex.PrevNextActionsDescriptor;
 import consulo.ui.ex.action.ActionManager;

@@ -17,7 +17,7 @@ import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import consulo.language.file.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
@@ -32,6 +32,7 @@ import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -159,7 +160,7 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     if (document == null) {
       return null;
     }
-    Charset cached = EncodingManager.getInstance().getCachedCharsetFromContent(document);
+    Charset cached = ((EncodingManagerImpl)EncodingManager.getInstance()).getCachedCharsetFromContent(document);
     if (cached != null) {
       return cached;
     }
@@ -216,7 +217,6 @@ public class EncodingManagerImpl extends EncodingManager implements PersistentSt
     }
   }
 
-  @Override
   @Nullable
   public Charset getCachedCharsetFromContent(@Nonnull Document document) {
     return document.getUserData(CACHED_CHARSET_FROM_CONTENT);

@@ -47,7 +47,7 @@ import consulo.language.editor.ui.awt.EditorTextField;
 import consulo.ui.ex.awt.PanelWithAnchor;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.ui.components.JBTabbedPane;
+import consulo.ui.ex.awt.JBTabbedPane;
 import com.intellij.util.Consumer;
 import com.intellij.util.net.HttpConfigurable;
 import com.intellij.util.net.HttpProxyConfigurable;

@@ -18,7 +18,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.ui.SmartExpander;
 import consulo.ui.ex.awt.tree.TreeUIHelper;
 import com.intellij.ui.components.JBPanelWithEmptyText;
-import com.intellij.ui.components.JBTabbedPane;
+import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.usage.UsageContextPanel;
 import com.intellij.usages.UsageDataUtil;
 import consulo.usage.UsageInfo2UsageAdapter;

@@ -16,7 +16,7 @@
 package consulo.execution.ui.console;
 
 import consulo.execution.ExecutionBundle;
-import consulo.language.file.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessAdapter;
 import consulo.process.event.ProcessEvent;

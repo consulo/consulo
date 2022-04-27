@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl;
 
-import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import com.intellij.openapi.vfs.encoding.EncodingProjectManagerImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.compiler.CompilerEncodingService;

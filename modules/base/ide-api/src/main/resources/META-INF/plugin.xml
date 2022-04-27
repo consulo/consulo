@@ -1290,7 +1290,7 @@
                         serviceImplementation="com.intellij.openapi.editor.highlighter.EditorHighlighterFactoryImpl"/>
     <applicationService serviceInterface="consulo.ui.ex.awt.dnd.DnDManager"
                         serviceImplementation="com.intellij.ide.dnd.DnDManagerImpl"/>
-    <applicationService serviceInterface="consulo.language.file.EncodingManager"
+    <applicationService serviceInterface="consulo.virtualFileSystem.encoding.EncodingManager"
                         serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingManagerImpl"/>
     <applicationService serviceInterface="com.intellij.ide.plugins.PluginManagerUISettings"
                         serviceImplementation="com.intellij.ide.plugins.PluginManagerUISettings"/>
@@ -1748,7 +1748,7 @@
     <applicationService serviceInterface="consulo.language.psi.path.PathReferenceManager"
                         serviceImplementation="com.intellij.openapi.paths.PathReferenceManagerImpl"/>
 
-    <applicationService serviceInterface="com.intellij.codeInsight.folding.CodeFoldingSettings"
+    <applicationService serviceInterface="consulo.language.editor.folding.CodeFoldingSettings"
                         serviceImplementation="com.intellij.codeInsight.folding.CodeFoldingSettingsImpl"/>
     <applicationService serviceInterface="consulo.ide.impl.psi.statistics.StatisticsManager"
                         serviceImplementation="consulo.ide.impl.psi.statistics.impl.StatisticsManagerImpl"/>
@@ -2192,7 +2192,7 @@
                              displayName="General"
                              instance="com.intellij.application.options.editor.GeneralCodeFoldingConfigurable"/>
 
-    <projectService serviceInterface="com.intellij.openapi.vfs.encoding.EncodingProjectManager" serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingProjectManagerImpl"/>
+    <projectService serviceInterface="consulo.virtualFileSystem.encoding.EncodingProjectManager" serviceImplementation="com.intellij.openapi.vfs.encoding.EncodingProjectManagerImpl"/>
     <postStartupActivity implementation="com.intellij.openapi.vfs.encoding.EncodingProjectManagerImpl$EncodingProjectManagerStartUpActivity"/>
 
     <editorTabColorProvider implementation="com.intellij.ui.tabs.EditorTabColorProviderImpl"/>

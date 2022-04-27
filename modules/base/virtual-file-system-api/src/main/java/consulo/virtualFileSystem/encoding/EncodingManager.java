@@ -1,10 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.language.file;
+package consulo.virtualFileSystem.encoding;
 
 import consulo.application.Application;
-import consulo.document.Document;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.encoding.EncodingRegistry;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,9 +51,6 @@ public abstract class EncodingManager extends EncodingRegistry {
   @Override
   @Nonnull
   public abstract Charset getDefaultConsoleEncoding();
-
-  @Nullable
-  public abstract Charset getCachedCharsetFromContent(@Nonnull Document document);
 
   public boolean shouldAddBOMForNewUtf8File() {
     return false;

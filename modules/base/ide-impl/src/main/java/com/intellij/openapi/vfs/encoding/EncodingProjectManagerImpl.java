@@ -15,7 +15,8 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.component.util.ModificationTracker;
-import consulo.language.file.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.language.internal.InternalStdFileTypes;
 import consulo.application.progress.ProgressManager;
@@ -502,7 +503,6 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
     return myIdeEncodingManager.getDefaultConsoleEncoding();
   }
 
-  @Override
   @Nullable
   public Charset getCachedCharsetFromContent(@Nonnull Document document) {
     return myIdeEncodingManager.getCachedCharsetFromContent(document);

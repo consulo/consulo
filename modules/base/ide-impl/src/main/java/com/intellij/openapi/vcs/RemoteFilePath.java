@@ -17,8 +17,8 @@ package com.intellij.openapi.vcs;
 
 import consulo.language.file.FileTypeManager;
 import com.intellij.openapi.util.io.FileUtil;
-import consulo.language.file.EncodingManager;
-import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
+import consulo.virtualFileSystem.encoding.EncodingManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import com.intellij.util.PathUtil;
 import com.intellij.util.text.FilePathHashingStrategy;
 import consulo.document.Document;

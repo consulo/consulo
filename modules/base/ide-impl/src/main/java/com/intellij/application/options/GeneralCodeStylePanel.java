@@ -25,7 +25,7 @@ import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.ui.ex.awt.JBCheckBox;
-import com.intellij.ui.components.JBTabbedPane;
+import consulo.ui.ex.awt.JBTabbedPane;
 import com.intellij.ui.components.fields.CommaSeparatedIntegersField;
 import consulo.ui.ex.awt.IntegerField;
 import consulo.colorScheme.EditorColorsScheme;

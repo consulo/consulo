@@ -38,7 +38,7 @@ import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWrapper;
-import com.intellij.openapi.vfs.encoding.EncodingProjectManager;
+import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.ui.ex.JBColor;
 import com.intellij.util.ObjectUtils;
 import com.intellij.util.ui.FormBuilder;

@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui.components;
+package consulo.ui.ex.awt;
 
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import org.intellij.lang.annotations.JdkConstants;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -36,7 +34,6 @@ import java.awt.event.HierarchyListener;
  * @author evgeny.zakrevsky
  */
 public class JBTabbedPane extends JTabbedPane implements HierarchyListener {
-  @NonNls
   public static final String LABEL_FROM_TABBED_PANE = "JBTabbedPane.labelFromTabbedPane";
   private int previousSelectedIndex = -1;
 

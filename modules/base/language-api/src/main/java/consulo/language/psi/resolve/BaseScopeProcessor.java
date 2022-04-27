@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.scope;
+package consulo.language.psi.resolve;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.language.psi.resolve.PsiScopeProcessor;
 import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 
 @Deprecated

@@ -17,7 +17,7 @@
 package com.intellij.openapi.options.ex;
 
 import com.intellij.ide.ui.search.SearchUtil;
-import com.intellij.ui.components.JBTabbedPane;
+import consulo.ui.ex.awt.JBTabbedPane;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nullable;
 
