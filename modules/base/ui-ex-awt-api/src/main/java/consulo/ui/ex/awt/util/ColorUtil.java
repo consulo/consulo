@@ -170,16 +170,6 @@ public class ColorUtil {
     }
   }
 
-  @Nullable
-  public static Color getColor(@Nonnull Class<?> cls) {
-    final Annotation annotation = cls.getAnnotation(Colored.class);
-    if (annotation instanceof Colored) {
-      final Colored colored = (Colored)annotation;
-      return fromHex(UIUtil.isUnderDarcula() ? colored.darkVariant() : colored.color(), null);
-    }
-    return null;
-  }
-
   /**
    * Checks whether color is dark or not based on perceptional luminosity
    * http://stackoverflow.com/questions/596216/formula-to-determine-brightness-of-rgb-color

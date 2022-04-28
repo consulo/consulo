@@ -16,16 +16,15 @@
 package consulo.psi.search.scope;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ui.ex.Colored;
+import consulo.ide.IdeBundle;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
@@ -33,7 +32,6 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 18:19/17.06.13
  */
-@Colored(color = "dcf0ff", darkVariant = "2B3557")
 public class SourcesScope extends NamedScope {
   public static final String NAME = IdeBundle.message("predefined.scope.sources.name");
 

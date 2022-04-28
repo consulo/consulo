@@ -140,10 +140,6 @@ public class FileColorConfigurationEditDialog extends DialogWrapper {
       Color color = myConfiguration == null ? null : ColorUtil.fromHex(myConfiguration.getColorName(), null);
       final CustomColorButton button = (CustomColorButton)myColorToButtonMap.get(CUSTOM_COLOR_NAME);
 
-      if (color == null) {
-        color = ColorUtil.getColor(myScopeNames.get(item).getClass());
-      }
-
       if (color != null) {
         button.setColor(color);
         button.setSelected(true);

@@ -16,22 +16,20 @@
 package consulo.ide.impl.psi.search.scope;
 
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.project.Project;
-import consulo.project.content.TestSourcesFilter;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ui.ex.Colored;
+import consulo.ide.IdeBundle;
+import consulo.project.Project;
+import consulo.project.content.TestSourcesFilter;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
-@Colored(color = "e7fadb", darkVariant = "2A3B2C")
 public class TestsScope extends NamedScope {
   public static final String NAME = IdeBundle.message("predefined.scope.tests.name");
   public TestsScope() {
