@@ -17,6 +17,9 @@ package consulo.ui.ex.errorTreeView;
 
 import consulo.ui.ex.OccurenceNavigator;
 
+/**
+ * @see NewErrorTreeViewPanelFactory
+ */
 public interface NewErrorTreeViewPanel extends OccurenceNavigator, MutableErrorTreeView {
   interface ProcessController {
     void stopProcess();

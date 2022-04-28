@@ -50,6 +50,26 @@ public final class VirtualFileUtil {
   public static final char VFS_SEPARATOR_CHAR = '/';
   private static final String PROTOCOL_DELIMITER = ":";
 
+
+  /**
+   * Searches for the file specified by given java,net.URL.
+   * Note that this method currently tested only for "file" and "jar" protocols under Unix and Windows
+   *
+   * @param url the URL to find file by
+   * @return <code>{@link VirtualFile}</code> if the file was found, <code>null</code> otherwise
+   */
+  @Nullable
+  public static VirtualFile findFileByURL(@Nonnull URL url) {
+    VirtualFileManager virtualFileManager = VirtualFileManager.getInstance();
+    return findFileByURL(url, virtualFileManager);
+  }
+
+  @Nullable
+  public static VirtualFile findFileByURL(@Nonnull URL url, @Nonnull VirtualFileManager virtualFileManager) {
+    String vfUrl = convertFromUrl(url);
+    return virtualFileManager.findFileByUrl(vfUrl);
+  }
+
   @Nonnull
   public static String convertFromUrl(@Nonnull URL url) {
     String protocol = url.getProtocol();

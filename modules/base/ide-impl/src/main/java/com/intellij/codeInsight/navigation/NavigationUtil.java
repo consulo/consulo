@@ -16,11 +16,8 @@
 
 package com.intellij.codeInsight.navigation;
 
-import consulo.language.psi.util.EditSourceUtil;
-import consulo.language.editor.gutter.GotoRelatedItem;
 import com.intellij.navigation.GotoRelatedProvider;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.ui.ex.popup.BaseListPopupStep;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.ui.SeparatorWithText;
 import com.intellij.ui.popup.list.ListPopupImpl;
@@ -37,12 +34,14 @@ import consulo.component.extension.Extensions;
 import consulo.dataContext.DataContext;
 import consulo.document.util.TextRange;
 import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.gutter.GotoRelatedItem;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.editor.util.LanguageEditorNavigationUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.Navigatable;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -51,10 +50,7 @@ import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.popup.IPopupChooserBuilder;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ui.ex.popup.PopupStep;
+import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
 import consulo.ui.style.StandardColors;
 import consulo.util.lang.ref.Ref;

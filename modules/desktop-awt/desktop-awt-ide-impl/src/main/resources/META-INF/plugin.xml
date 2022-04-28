@@ -250,5 +250,7 @@
 
     <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.ide.impl.progress.DesktopProgressActivityFactory"/>
     <applicationService serviceInterface="consulo.pathMacro.MacroSelector" serviceImplementation="consulo.desktop.awt.pathMacro.DesktopAwtMacroSelectorImpl"/>
+    <applicationService serviceInterface="consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory"
+                        serviceImplementation="consulo.desktop.awt.ui.errorTreeView.DesktopAwtNewErrorTreeViewPanelFactoryImpl"/>
   </extensions>
 </consulo-plugin>
