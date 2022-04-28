@@ -8,7 +8,7 @@ import consulo.ide.IdeBundle;
 import consulo.ui.ex.TreeExpander;
 import com.intellij.ide.actions.ViewStructureAction;
 import com.intellij.ide.dnd.aware.DnDAwareTree;
-import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
+import consulo.language.editor.structureView.PsiTreeElementBase;
 import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
 import com.intellij.ide.structureView.newStructureView.TreeActionWrapper;
 import com.intellij.ide.structureView.newStructureView.TreeActionsOwner;

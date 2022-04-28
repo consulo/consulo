@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.intellij.ide.structureView;
+package consulo.language.editor.structureView;
 
 import consulo.fileEditor.structureView.StructureViewFactory;
-import consulo.project.Project;
+import consulo.fileEditor.structureView.StructureViewWrapper;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
 
 import javax.annotation.Nullable;
 import java.util.Collection;

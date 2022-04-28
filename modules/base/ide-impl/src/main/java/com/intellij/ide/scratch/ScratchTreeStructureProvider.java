@@ -16,7 +16,6 @@ import consulo.language.editor.scratch.ScratchUtil;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.view.tree.ViewSettings;
-import consulo.ui.ex.awt.tree.AbstractTreeUi;
 import consulo.language.Language;
 import consulo.language.editor.LangDataKeys;
 import consulo.application.ApplicationManager;
@@ -29,6 +28,7 @@ import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
 import com.intellij.openapi.util.io.FileUtil;
 import consulo.ui.ex.tree.PresentationData;
+import consulo.ui.ex.tree.TreeHelper;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -326,7 +326,7 @@ public class ScratchTreeStructureProvider implements TreeStructureProvider, Dumb
         }
       };
 
-      return AbstractTreeUi.calculateYieldingToWriteAction(() -> {
+      return TreeHelper.calculateYieldingToWriteAction(() -> {
         if (directory == null || !directory.isValid()) return Collections.emptyList();
         directory.processChildren(processor);
         return result;

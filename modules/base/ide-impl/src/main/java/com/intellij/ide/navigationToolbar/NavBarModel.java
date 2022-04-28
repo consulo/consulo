@@ -20,7 +20,7 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.UIExAWTDataKey;
-import consulo.ui.ex.awt.tree.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

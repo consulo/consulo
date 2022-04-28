@@ -4,7 +4,7 @@ package com.intellij.codeInsight.daemon.impl;
 
 import com.intellij.codeHighlighting.MainHighlightingPassFactory;
 import com.intellij.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.psi.SyntaxTraverser;
+import consulo.language.psi.SyntaxTraverser;
 import com.intellij.util.ObjectUtils;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;

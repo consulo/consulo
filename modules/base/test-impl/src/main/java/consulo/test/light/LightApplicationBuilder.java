@@ -48,7 +48,7 @@ import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.version.LanguageVersionDefines;
 import consulo.language.version.LanguageVersionResolvers;
 import consulo.test.light.impl.*;
-import consulo.ui.ex.awt.tree.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
 import javax.annotation.Nonnull;

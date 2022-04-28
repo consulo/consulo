@@ -1,24 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ide.structureView.customRegions;
+package consulo.language.editor.structureView;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.progress.ProgressManager;
+import consulo.document.util.TextRange;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
-import consulo.ide.impl.psi.SyntaxTraverser;
-import consulo.language.ast.ASTNode;
 import consulo.language.Language;
+import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.internal.LanguageFolding;
-import consulo.application.progress.ProgressManager;
-import consulo.document.util.TextRange;
-import consulo.language.impl.internal.psi.PsiFileEx;
-import consulo.util.collection.SmartList;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.language.internal.PsiFileEx;
 import consulo.language.psi.*;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.SmartList;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import java.util.*;
 

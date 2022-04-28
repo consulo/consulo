@@ -19,7 +19,7 @@ import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
-import com.intellij.ide.structureView.impl.common.PsiTreeElementBase;
+import consulo.language.editor.structureView.PsiTreeElementBase;
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.structureView.tree.NodeProvider;
 import consulo.fileEditor.structureView.tree.TreeElement;

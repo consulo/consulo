@@ -8,6 +8,7 @@ import consulo.logging.Logger;
 import consulo.navigation.NavigationItem;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.tree.NodeDescriptorProvidingKey;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.JBIterable;
 import consulo.util.collection.SmartList;

@@ -1,32 +1,23 @@
-package consulo.ide.impl.psi;
+package consulo.language.psi;
 
-import consulo.util.lang.function.Condition;
-import consulo.language.ast.ASTNode;
-import consulo.language.ast.LighterASTNode;
-import consulo.language.ast.LighterASTTokenNode;
-import consulo.language.parser.PsiBuilder;
-import consulo.language.ast.IElementType;
-import consulo.language.ast.IFileElementType;
-import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.util.collection.FilteredTraverserBase;
-import consulo.util.collection.JBIterable;
-import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.document.util.TextRange;
-import consulo.language.ast.TokenType;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
+import consulo.language.ast.*;
+import consulo.language.parser.PsiBuilder;
+import consulo.language.util.FlyweightCapableTreeStructure;
+import consulo.util.collection.FilteredTraverserBase;
+import consulo.util.collection.Iterators;
+import consulo.util.collection.JBIterable;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.lang.ThreadLocalCachedValue;
+import consulo.util.lang.function.Condition;
 import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.function.Function;
 
 import static consulo.util.lang.function.Conditions.compose;
 
@@ -172,7 +163,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
     public abstract JBIterable<? extends T> children(@Nonnull T node);
 
     @Override
-    public JBIterable<? extends T> fun(T t) {
+    public JBIterable<? extends T> apply(T t) {
       return children(t);
     }
 
@@ -183,7 +174,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
     public final Function<T, IElementType> TO_TYPE = new Function<T, IElementType>() {
       @Override
-      public IElementType fun(T t) {
+      public IElementType apply(T t) {
         return typeOf(t);
       }
 
@@ -195,7 +186,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
     public final Function<T, CharSequence> TO_TEXT = new Function<T, CharSequence>() {
       @Override
-      public CharSequence fun(T t) {
+      public CharSequence apply(T t) {
         return textOf(t);
       }
 
@@ -207,7 +198,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
     public final Function<T, TextRange> TO_RANGE = new Function<T, TextRange>() {
       @Override
-      public TextRange fun(T t) {
+      public TextRange apply(T t) {
         return rangeOf(t);
       }
 
@@ -247,7 +238,7 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
     private final Function<T, T> TO_NEXT = new Function<T, T>() {
       @Override
-      public T fun(T t) {
+      public T apply(T t) {
         return next(t);
       }
 
@@ -410,9 +401,9 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
           FlyweightCapableTreeStructure<T> structure = getStructure();
           Ref<T[]> ref = Ref.create();
           int count = structure.getChildren(node, ref);
-          if (count == 0) return ContainerUtil.emptyIterator();
+          if (count == 0) return Iterators.empty();
           T[] array = ref.get();
-          LinkedList<T> list = ContainerUtil.newLinkedList();
+          LinkedList<T> list = new LinkedList<T>();
           for (int i = 0; i < count; i++) {
             T child = array[i];
             IElementType childType = typeOf(child);
@@ -432,13 +423,12 @@ public class SyntaxTraverser<T> extends FilteredTraverserBase<T, SyntaxTraverser
 
   private static class LighterASTApi extends FlyweightApi<LighterASTNode> {
     private final PsiBuilder builder;
-    private final ThreadLocalCachedValue<FlyweightCapableTreeStructure<LighterASTNode>> structure =
-            new ThreadLocalCachedValue<FlyweightCapableTreeStructure<LighterASTNode>>() {
-              @Override
-              protected FlyweightCapableTreeStructure<LighterASTNode> create() {
-                return builder.getLightTree();
-              }
-            };
+    private final ThreadLocalCachedValue<FlyweightCapableTreeStructure<LighterASTNode>> structure = new ThreadLocalCachedValue<>() {
+      @Override
+      protected FlyweightCapableTreeStructure<LighterASTNode> create() {
+        return builder.getLightTree();
+      }
+    };
 
     public LighterASTApi(final PsiBuilder builder) {
       this.builder = builder;

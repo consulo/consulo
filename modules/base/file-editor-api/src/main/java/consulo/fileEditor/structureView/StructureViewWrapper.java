@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.ide.structureView;
+package consulo.fileEditor.structureView;
 
 import consulo.fileEditor.FileEditor;
 import consulo.virtualFileSystem.VirtualFile;

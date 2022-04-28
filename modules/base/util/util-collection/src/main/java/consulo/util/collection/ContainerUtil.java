@@ -38,6 +38,20 @@ public class ContainerUtil {
 
   @Nonnull
   @Contract(pure = true)
+  public static <T, V> Set<V> map2SetNotNull(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, V> mapper) {
+    if (collection.isEmpty()) return Collections.emptySet();
+    Set<V> set = new HashSet<V>(collection.size());
+    for (T t : collection) {
+      V value = mapper.apply(t);
+      if (value != null) {
+        set.add(value);
+      }
+    }
+    return set.isEmpty() ? Collections.<V>emptySet() : set;
+  }
+
+  @Nonnull
+  @Contract(pure = true)
   public static <T, KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull T[] collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
     return map2Map(Arrays.asList(collection), mapper);
   }

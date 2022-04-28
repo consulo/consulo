@@ -1,24 +1,21 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package com.intellij.ide.structureView.impl.common;
+package consulo.language.editor.structureView;
 
-import com.intellij.ide.structureView.StructureViewExtension;
-import com.intellij.ide.structureView.StructureViewFactoryEx;
-import consulo.fileEditor.structureView.StructureViewTreeElement;
-import com.intellij.ide.structureView.customRegions.CustomRegionStructureUtil;
-import consulo.ui.ex.awt.tree.AbstractTreeUi;
-import consulo.ui.ex.awt.tree.NodeDescriptorProvidingKey;
-import consulo.ui.ex.awt.tree.TreeAnchorizer;
-import consulo.navigation.ItemPresentation;
 import consulo.component.util.Iconable;
-import consulo.navigation.Navigatable;
+import consulo.fileEditor.structureView.StructureViewTreeElement;
+import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.containers.ContainerUtil;
-import consulo.language.icon.IconDescriptorUpdaters;
+import consulo.navigation.ItemPresentation;
+import consulo.navigation.Navigatable;
+import consulo.ui.ex.tree.NodeDescriptorProvidingKey;
+import consulo.ui.ex.tree.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeHelper;
 import consulo.ui.image.Image;
+import consulo.util.collection.ContainerUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 public abstract class PsiTreeElementBase<T extends PsiElement> implements StructureViewTreeElement, ItemPresentation, NodeDescriptorProvidingKey {
@@ -81,13 +78,13 @@ public abstract class PsiTreeElementBase<T extends PsiElement> implements Struct
   @Override
   @Nonnull
   public final StructureViewTreeElement[] getChildren() {
-    List<StructureViewTreeElement> list = AbstractTreeUi.calculateYieldingToWriteAction(() -> doGetChildren(true));
+    List<StructureViewTreeElement> list = TreeHelper.calculateYieldingToWriteAction(() -> doGetChildren(true));
     return list.isEmpty() ? EMPTY_ARRAY : list.toArray(EMPTY_ARRAY);
   }
 
   @Nonnull
   public final List<StructureViewTreeElement> getChildrenWithoutCustomRegions() {
-    return AbstractTreeUi.calculateYieldingToWriteAction(() -> doGetChildren(false));
+    return TreeHelper.calculateYieldingToWriteAction(() -> doGetChildren(false));
   }
 
   @Nonnull

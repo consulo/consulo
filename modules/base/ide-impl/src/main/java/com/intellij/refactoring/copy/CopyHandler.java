@@ -18,7 +18,7 @@ package com.intellij.refactoring.copy;
 
 import com.intellij.ide.TwoPaneIdeView;
 import com.intellij.ide.projectView.ProjectView;
-import com.intellij.ide.structureView.StructureViewFactoryEx;
+import consulo.language.editor.structureView.StructureViewFactoryEx;
 import consulo.component.extension.Extensions;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;

@@ -444,10 +444,7 @@ open module consulo.ide.impl {
   exports com.intellij.ide.script;
   exports com.intellij.ide.startup;
   exports com.intellij.ide.startup.impl;
-  exports com.intellij.ide.structureView;
-  exports com.intellij.ide.structureView.customRegions;
   exports com.intellij.ide.structureView.impl;
-  exports com.intellij.ide.structureView.impl.common;
   exports com.intellij.ide.structureView.newStructureView;
   exports com.intellij.ide.todo;
   exports com.intellij.ide.todo.configurable;

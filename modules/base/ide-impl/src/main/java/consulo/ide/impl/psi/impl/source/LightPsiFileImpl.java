@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.psi.impl.source;
 
-import consulo.language.impl.internal.psi.PsiFileEx;
+import consulo.language.internal.PsiFileEx;
 import consulo.language.impl.psi.ResolveScopeManager;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.PsiNavigationSupport;

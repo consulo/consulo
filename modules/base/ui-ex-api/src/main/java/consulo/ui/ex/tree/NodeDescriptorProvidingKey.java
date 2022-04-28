@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ui.ex.awt.tree;
+package consulo.ui.ex.tree;
 
 import javax.annotation.Nonnull;
 

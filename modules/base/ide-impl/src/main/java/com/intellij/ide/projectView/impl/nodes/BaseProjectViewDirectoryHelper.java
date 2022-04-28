@@ -23,9 +23,9 @@ package com.intellij.ide.projectView.impl.nodes;
 import consulo.project.ui.view.tree.ViewSettings;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
 import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.awt.tree.AbstractTreeUi;
 import com.intellij.ide.util.treeView.TreeViewUtil;
 import consulo.language.psi.*;
+import consulo.ui.ex.tree.TreeHelper;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -138,7 +138,7 @@ public class BaseProjectViewDirectoryHelper {
 
   @RequiredReadAction
   public static Collection<AbstractTreeNode> getDirectoryChildren(final PsiDirectory psiDirectory, final ViewSettings settings, final boolean withSubDirectories) {
-    return AbstractTreeUi.calculateYieldingToWriteAction(() -> doGetDirectoryChildren(psiDirectory, settings, withSubDirectories));
+    return TreeHelper.calculateYieldingToWriteAction(() -> doGetDirectoryChildren(psiDirectory, settings, withSubDirectories));
   }
 
   @RequiredReadAction

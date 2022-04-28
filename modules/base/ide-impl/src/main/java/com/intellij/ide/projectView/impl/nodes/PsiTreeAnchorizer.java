@@ -15,7 +15,7 @@
  */
 package com.intellij.ide.projectView.impl.nodes;
 
-import consulo.ui.ex.awt.tree.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.project.Project;

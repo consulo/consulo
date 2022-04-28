@@ -2412,7 +2412,7 @@
     <favoritesListProvider implementation="com.intellij.ide.bookmarks.BookmarksFavoriteListProvider"/>
     <applicationService serviceInterface="consulo.language.editor.FileModificationService"
                         serviceImplementation="com.intellij.codeInsight.CodeInsightUtilBase"/>
-    <applicationService serviceInterface="consulo.ui.ex.awt.tree.TreeAnchorizer"
+    <applicationService serviceInterface="consulo.ui.ex.tree.TreeAnchorizer"
                         serviceImplementation="com.intellij.ide.projectView.impl.nodes.PsiTreeAnchorizer"/>
 
     <!--Platform-->

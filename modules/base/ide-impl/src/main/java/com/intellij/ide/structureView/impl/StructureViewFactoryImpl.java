@@ -17,27 +17,28 @@
 package com.intellij.ide.structureView.impl;
 
 import com.intellij.ide.impl.StructureViewWrapperImpl;
-import com.intellij.ide.structureView.*;
 import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
+import com.intellij.openapi.util.NotNullLazyValue;
+import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.openapi.wm.ex.ToolWindowEx;
+import com.intellij.util.ReflectionUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.component.extension.Extensions;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.structureView.StructureView;
 import consulo.fileEditor.structureView.StructureViewModel;
+import consulo.fileEditor.structureView.StructureViewWrapper;
+import consulo.language.editor.structureView.StructureViewExtension;
+import consulo.language.editor.structureView.StructureViewFactoryEx;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 import consulo.util.collection.MultiValuesMap;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.wm.ex.ToolWindowEx;
-import consulo.language.psi.PsiElement;
-import com.intellij.util.ReflectionUtil;
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,18 +49,15 @@ import java.util.HashSet;
  */
 
 @Singleton
-@State(
-  name="StructureViewFactory",
-  storages= {
-    @Storage(
-      file = StoragePathMacros.WORKSPACE_FILE
-    )}
-)
+@State(name = "StructureViewFactory", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public final class StructureViewFactoryImpl extends StructureViewFactoryEx implements PersistentStateComponent<StructureViewFactoryImpl.State> {
   public static class State {
-    @SuppressWarnings({"WeakerAccess"}) public boolean AUTOSCROLL_MODE = true;
-    @SuppressWarnings({"WeakerAccess"}) public boolean AUTOSCROLL_FROM_SOURCE = false;
-    @SuppressWarnings({"WeakerAccess"}) public String ACTIVE_ACTIONS = "";
+    @SuppressWarnings({"WeakerAccess"})
+    public boolean AUTOSCROLL_MODE = true;
+    @SuppressWarnings({"WeakerAccess"})
+    public boolean AUTOSCROLL_FROM_SOURCE = false;
+    @SuppressWarnings({"WeakerAccess"})
+    public String ACTIVE_ACTIONS = "";
     public boolean SHOW_TOOLBAR = false;
   }
 
@@ -68,20 +66,18 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   private State myState = new State();
   private Runnable myRunWhenInitialized = null;
 
-  private static final NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>> myExtensions = new NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>>() {
+  private static final NotNullLazyValue<MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>> myExtensions = new NotNullLazyValue<>() {
     @Nonnull
     @Override
     protected MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> compute() {
-      MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> map =
-        new MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>();
-      StructureViewExtension[] extensions = Extensions.getExtensions(StructureViewExtension.EXTENSION_POINT_NAME);
-      for (StructureViewExtension extension : extensions) {
+      MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> map = new MultiValuesMap<>();
+      for (StructureViewExtension extension : StructureViewExtension.EXTENSION_POINT_NAME.getExtensionList()) {
         map.put(extension.getType(), extension);
       }
       return map;
     }
   };
-  private final MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> myImplExtensions = new MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension>();
+  private final MultiValuesMap<Class<? extends PsiElement>, StructureViewExtension> myImplExtensions = new MultiValuesMap<>();
 
   @Inject
   public StructureViewFactoryImpl(Project project) {
@@ -151,7 +147,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
 
   private Collection<String> collectActiveActions() {
     final String[] strings = myState.ACTIVE_ACTIONS.split(",");
-    return new HashSet<String>(Arrays.asList(strings));
+    return new HashSet<>(Arrays.asList(strings));
   }
 
   @Override
@@ -175,8 +171,7 @@ public final class StructureViewFactoryImpl extends StructureViewFactoryEx imple
   }
 
   @Override
-  public StructureView createStructureView(final FileEditor fileEditor,
-                                           final StructureViewModel treeModel, final Project project, final boolean showRootNode) {
+  public StructureView createStructureView(final FileEditor fileEditor, final StructureViewModel treeModel, final Project project, final boolean showRootNode) {
     return new StructureViewComponent(fileEditor, treeModel, project, showRootNode);
   }
 }

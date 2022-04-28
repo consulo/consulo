@@ -20,7 +20,7 @@ import consulo.language.editor.scope.AnalysisScope;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.impl.internal.psi.PsiFileEx;
+import consulo.language.internal.PsiFileEx;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

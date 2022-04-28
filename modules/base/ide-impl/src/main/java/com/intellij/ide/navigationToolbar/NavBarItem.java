@@ -3,7 +3,7 @@ package com.intellij.ide.navigationToolbar;
 
 import consulo.application.AllIcons;
 import com.intellij.ide.navigationToolbar.ui.NavBarUI;
-import consulo.ui.ex.awt.tree.TreeAnchorizer;
+import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.disposer.Disposable;
 import consulo.dataContext.DataProvider;
 import consulo.application.util.registry.Registry;

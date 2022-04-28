@@ -25,6 +25,7 @@ import consulo.ui.ex.UiActivityMonitor;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.tree.TreeAnchorizer;
 import consulo.ui.ex.update.Activatable;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.ui.ex.awt.util.Alarm;
@@ -1692,24 +1693,6 @@ public class AbstractTreeUi {
     final boolean rerunBecauseTreeIsHidden = !pass.isExpired() && !isTreeShowing() && getUpdater().isInPostponeMode();
 
     return rerunBecauseTreeIsHidden || getUpdater().isRerunNeededFor(pass);
-  }
-
-  public static <T> T calculateYieldingToWriteAction(@RequiredReadAction @Nonnull Supplier<? extends T> producer) throws ProcessCanceledException {
-    if (!Registry.is("ide.abstractTreeUi.BuildChildrenInBackgroundYieldingToWriteAction") || ApplicationManager.getApplication().isDispatchThread()) {
-      return producer.get();
-    }
-    ProgressIndicator indicator = ProgressManager.getInstance().getProgressIndicator();
-    if (indicator != null && indicator.isRunning()) {
-      return producer.get();
-    }
-
-    Ref<T> result = new Ref<>();
-    boolean succeeded = ProgressManager.getInstance().runInReadActionWithWriteActionPriority(() -> result.set(producer.get()), indicator);
-
-    if (!succeeded || indicator != null && indicator.isCanceled()) {
-      throw new ProcessCanceledException();
-    }
-    return result.get();
   }
 
   @FunctionalInterface

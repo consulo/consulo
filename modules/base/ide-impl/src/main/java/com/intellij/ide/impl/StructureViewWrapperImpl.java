@@ -16,11 +16,11 @@
 
 package com.intellij.ide.impl;
 
+import consulo.fileEditor.structureView.*;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.projectView.impl.ProjectRootsUtil;
-import com.intellij.ide.structureView.*;
 import com.intellij.ide.structureView.impl.StructureViewComposite;
 import com.intellij.ide.structureView.newStructureView.StructureViewComponent;
 import consulo.dataContext.DataContext;
@@ -32,10 +32,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorProvider;
 import com.intellij.openapi.fileEditor.ex.FileEditorProviderManager;
 import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.fileEditor.structureView.StructureView;
-import consulo.fileEditor.structureView.StructureViewBuilder;
-import consulo.fileEditor.structureView.StructureViewModel;
-import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.language.editor.CommonDataKeys;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
