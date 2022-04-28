@@ -791,7 +791,7 @@
       <with attribute="implementationClass" implements="com.intellij.execution.lineMarker.RunLineMarkerContributor"/>
     </extensionPoint>
 
-    <extensionPoint name="hectorComponentProvider" interface="com.intellij.openapi.editor.HectorComponentPanelsProvider"
+    <extensionPoint name="hectorComponentProvider" interface="consulo.language.editor.HectorComponentPanelsProvider"
                     area="PROJECT"/>
     <extensionPoint name="findInProjectSearchEngine" interface="com.intellij.find.FindInProjectSearchEngine"/>
 

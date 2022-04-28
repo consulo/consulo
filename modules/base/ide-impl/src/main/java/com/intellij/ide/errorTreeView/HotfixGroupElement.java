@@ -15,15 +15,16 @@
  */
 package com.intellij.ide.errorTreeView;
 
-import consulo.application.AllIcons;
-import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.application.AllIcons;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.util.Consumer;
-import com.intellij.util.ui.MutableErrorTreeView;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.errorTreeView.HotfixGate;
+import consulo.ui.ex.errorTreeView.MutableErrorTreeView;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 public class HotfixGroupElement extends GroupingElement {
 
@@ -34,21 +35,14 @@ public class HotfixGroupElement extends GroupingElement {
   private final CustomizeColoredTreeCellRenderer myLeftTreeCellRenderer;
   private final CustomizeColoredTreeCellRenderer myRightTreeCellRenderer;
 
-  public HotfixGroupElement(final String name, final Object data, final VirtualFile file, final Consumer<HotfixGate> hotfix,
-                            final String fixDescription, final MutableErrorTreeView view) {
+  public HotfixGroupElement(final String name, final Object data, final VirtualFile file, final Consumer<HotfixGate> hotfix, final String fixDescription, final MutableErrorTreeView view) {
     super(name, data, file);
     myHotfix = hotfix;
     myFixDescription = fixDescription;
     myView = view;
     myLeftTreeCellRenderer = new CustomizeColoredTreeCellRenderer() {
-      public void customizeCellRenderer(SimpleColoredComponent renderer,
-                                        JTree tree,
-                                        Object value,
-                                        boolean selected,
-                                        boolean expanded,
-                                        boolean leaf,
-                                        int row,
-                                        boolean hasFocus) {
+      @Override
+      public void customizeCellRenderer(SimpleColoredComponent renderer, JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         renderer.setIcon(AllIcons.General.Error);
 
         final String[] text = getText();
@@ -66,18 +60,13 @@ public class HotfixGroupElement extends GroupingElement {
       myRunner = new MyRunner();
     }
 
-    public void customizeCellRenderer(SimpleColoredComponent renderer,
-                                      JTree tree,
-                                      Object value,
-                                      boolean selected,
-                                      boolean expanded,
-                                      boolean leaf,
-                                      int row,
-                                      boolean hasFocus) {
+    @Override
+    public void customizeCellRenderer(SimpleColoredComponent renderer, JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       renderer.append(" ");
       if (myInProgress) {
         renderer.append("fixing...", SimpleTextAttributes.REGULAR_ITALIC_ATTRIBUTES);
-      } else {
+      }
+      else {
         renderer.append("Fix: " + myFixDescription, SimpleTextAttributes.LINK_BOLD_ATTRIBUTES, myRunner);
       }
     }
@@ -104,11 +93,12 @@ public class HotfixGroupElement extends GroupingElement {
     }
 
     // todo name can be an ID
+    @Override
     public void run() {
       myInProgress = true;
       myView.reload();
       final String name = getName();
-      myHotfix.consume(new HotfixGate(name, myView));
+      myHotfix.accept(new HotfixGate(name, myView));
     }
   }
 }

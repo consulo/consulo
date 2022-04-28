@@ -27,8 +27,8 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.project.ui.view.MessageView;
-import com.intellij.util.ui.ErrorTreeView;
-import com.intellij.util.ui.MessageCategory;
+import consulo.ui.ex.errorTreeView.ErrorTreeView;
+import consulo.ui.ex.MessageCategory;
 
 import javax.swing.*;
 

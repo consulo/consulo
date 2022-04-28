@@ -18,7 +18,7 @@ package com.intellij.compiler.impl;
 import com.intellij.ide.errorTreeView.ErrorTreeElement;
 import com.intellij.ide.errorTreeView.ErrorTreeNodeDescriptor;
 import com.intellij.ide.errorTreeView.GroupingElement;
-import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
+import com.intellij.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -36,9 +36,9 @@ import consulo.virtualFileSystem.VirtualFile;
 */
 class ExcludeFromCompileAction extends AnAction {
   private final Project myProject;
-  private final NewErrorTreeViewPanel myErrorTreeView;
+  private final NewErrorTreeViewPanelImpl myErrorTreeView;
 
-  public ExcludeFromCompileAction(Project project, NewErrorTreeViewPanel errorTreeView) {
+  public ExcludeFromCompileAction(Project project, NewErrorTreeViewPanelImpl errorTreeView) {
     super(CompilerBundle.message("actions.exclude.from.compile.text"));
     myProject = project;
     myErrorTreeView = errorTreeView;

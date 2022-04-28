@@ -15,13 +15,13 @@
  */
 package com.intellij.openapi.vcs.impl;
 
-import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
+import com.intellij.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.project.Project;
 
 /**
  * @author yole
 */
-class VcsErrorViewPanel extends NewErrorTreeViewPanel {
+class VcsErrorViewPanel extends NewErrorTreeViewPanelImpl {
   public VcsErrorViewPanel(Project project) {
     super(project, null);
   }

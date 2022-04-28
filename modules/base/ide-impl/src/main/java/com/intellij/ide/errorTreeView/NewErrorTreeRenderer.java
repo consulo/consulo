@@ -25,6 +25,7 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -17,14 +17,14 @@ package com.intellij.compiler.impl;
 
 import consulo.compiler.impl.CompilerWorkspaceConfiguration;
 import consulo.compiler.impl.HelpID;
-import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
+import com.intellij.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 
-public class ProblemsViewPanel extends NewErrorTreeViewPanel {
+public class ProblemsViewPanel extends NewErrorTreeViewPanelImpl {
   public ProblemsViewPanel(Project project) {
     super(project, HelpID.COMPILER, false, true, null);
     myTree.getEmptyText().setText("No compilation problems found");

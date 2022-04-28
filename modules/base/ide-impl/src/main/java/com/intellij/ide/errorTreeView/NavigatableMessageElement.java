@@ -16,6 +16,8 @@
 package com.intellij.ide.errorTreeView;
 
 import consulo.navigation.Navigatable;
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

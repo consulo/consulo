@@ -16,8 +16,8 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.editor.HectorComponentPanel;
-import com.intellij.openapi.editor.HectorComponentPanelsProvider;
+import consulo.language.editor.HectorComponentPanel;
+import consulo.language.editor.HectorComponentPanelsProvider;
 import consulo.project.DumbService;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.include.FileIncludeManager;

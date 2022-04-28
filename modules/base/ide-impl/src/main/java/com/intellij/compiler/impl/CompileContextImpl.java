@@ -47,7 +47,7 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.navigation.Navigatable;
 import consulo.util.collection.OrderedSet;
 import consulo.language.psi.stub.FileBasedIndex;
-import com.intellij.util.ui.MessageCategory;
+import consulo.ui.ex.MessageCategory;
 import consulo.compiler.AdditionalOutputDirectoriesProvider;
 import consulo.compiler.impl.make.CompositeDependencyCache;
 import consulo.compiler.impl.CompilerPathsImpl;

@@ -15,9 +15,9 @@
  */
 package com.intellij.ide.errorTreeView.actions;
 
-import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
+import com.intellij.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.project.Project;
-import com.intellij.util.ui.ErrorTreeView;
+import consulo.ui.ex.errorTreeView.ErrorTreeView;
 import org.jetbrains.annotations.NonNls;
 
 /**
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NonNls;
  */
 public class TestNewErrorViewAction extends TestErrorViewAction{
   protected ErrorTreeView createView(Project project) {
-    return new NewErrorTreeViewPanel(project, null);
+    return new NewErrorTreeViewPanelImpl(project, null);
   }
 
   @NonNls

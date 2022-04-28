@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.errorTreeView;
+package consulo.ui.ex.errorTreeView;
 
-import com.intellij.util.ui.MutableErrorTreeView;
+import java.util.List;
 
-public class HotfixGate {
-  private final String myGroupName;
-  private final MutableErrorTreeView myView;
+public interface MutableErrorTreeView extends ErrorTreeView {
+  void removeGroup(final String name);
 
-  public HotfixGate(final String groupName, final MutableErrorTreeView tree) {
-    myGroupName = groupName;
-    myView = tree;
-  }
+  List<Object> getGroupChildrenData(final String groupName);
 
-  public String getGroupName() {
-    return myGroupName;
-  }
+  void addFixedHotfixGroup(final String text, final List<SimpleErrorData> children);
 
-  public MutableErrorTreeView getView() {
-    return myView;
-  }
+  void addHotfixGroup(final HotfixData hotfixData, final List<SimpleErrorData> children);
+
+  void reload();
 }

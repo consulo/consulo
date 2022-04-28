@@ -1,5 +1,6 @@
 package com.intellij.openapi.externalSystem.service.notification;
 
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 import consulo.util.rmi.RemoteUtil;
 import com.intellij.ide.errorTreeView.*;
 import consulo.project.ui.notification.Notification;
@@ -273,8 +274,8 @@ public class ExternalSystemNotificationManager {
     final ErrorTreeElementKind kind =
             ErrorTreeElementKind.convertMessageFromCompilerErrorType(notificationData.getNotificationCategory().getMessageCategory());
     final String[] message = notificationData.getMessage().split("\n");
-    final String exportPrefix = NewErrorTreeViewPanel.createExportPrefix(guiLine);
-    final String rendererPrefix = NewErrorTreeViewPanel.createRendererPrefix(guiLine, guiColumn);
+    final String exportPrefix = NewErrorTreeViewPanelImpl.createExportPrefix(guiLine);
+    final String rendererPrefix = NewErrorTreeViewPanelImpl.createRendererPrefix(guiLine, guiColumn);
 
     UIUtil.invokeLaterIfNeeded(new Runnable() {
       @Override
@@ -282,7 +283,7 @@ public class ExternalSystemNotificationManager {
         boolean activate =
                 notificationData.getNotificationCategory() == NotificationCategory.ERROR ||
                 notificationData.getNotificationCategory() == NotificationCategory.WARNING;
-        final NewErrorTreeViewPanel errorTreeView =
+        final NewErrorTreeViewPanelImpl errorTreeView =
                 prepareMessagesView(externalSystemId, notificationData.getNotificationSource(), activate);
         final GroupingElement groupingElement = errorTreeView.getErrorViewStructure().getGroupingElement(groupName, null, virtualFile);
         final NavigatableMessageElement navigatableMessageElement;
@@ -319,12 +320,12 @@ public class ExternalSystemNotificationManager {
   }
 
   @Nonnull
-  public NewErrorTreeViewPanel prepareMessagesView(@Nonnull final ProjectSystemId externalSystemId,
-                                                   @Nonnull final NotificationSource notificationSource,
-                                                   boolean activateView) {
+  public NewErrorTreeViewPanelImpl prepareMessagesView(@Nonnull final ProjectSystemId externalSystemId,
+                                                       @Nonnull final NotificationSource notificationSource,
+                                                       boolean activateView) {
     ApplicationManager.getApplication().assertIsDispatchThread();
 
-    final NewErrorTreeViewPanel errorTreeView;
+    final NewErrorTreeViewPanelImpl errorTreeView;
     final String contentDisplayName = getContentDisplayName(notificationSource, externalSystemId);
     final Pair<NotificationSource, ProjectSystemId> contentIdPair = Pair.create(notificationSource, externalSystemId);
     Content targetContent = findContent(contentIdPair, contentDisplayName);

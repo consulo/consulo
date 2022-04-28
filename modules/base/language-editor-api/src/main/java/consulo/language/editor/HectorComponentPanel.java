@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.intellij.openapi.editor;
+package consulo.language.editor;
 
 import consulo.configurable.UnnamedConfigurable;
 

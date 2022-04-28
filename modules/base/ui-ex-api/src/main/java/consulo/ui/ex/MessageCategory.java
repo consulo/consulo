@@ -13,21 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui;
+package consulo.ui.ex;
 
-import com.intellij.ide.errorTreeView.HotfixData;
-import com.intellij.ide.errorTreeView.SimpleErrorData;
-
-import java.util.List;
-
-public interface MutableErrorTreeView extends ErrorTreeView {
-  void removeGroup(final String name);
-
-  List<Object> getGroupChildrenData(final String groupName);
-
-  void addFixedHotfixGroup(final String text, final List<SimpleErrorData> children);
-
-  void addHotfixGroup(final HotfixData hotfixData, final List<SimpleErrorData> children);
-
-  void reload();
+public interface MessageCategory {
+  int SIMPLE = 1;
+  int STATISTICS = 2;
+  int INFORMATION = 3;
+  int ERROR = 4;
+  int WARNING = 5;
+  int NOTE = 6;
 }

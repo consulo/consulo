@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.util.ui;
+package consulo.ui.ex.errorTreeView;
 
-public interface MessageCategory {
-  int SIMPLE = 1;
-  int STATISTICS = 2;
-  int INFORMATION = 3;
-  int ERROR = 4;
-  int WARNING = 5;
-  int NOTE = 6;
+import consulo.ui.ex.OccurenceNavigator;
+
+public interface NewErrorTreeViewPanel extends OccurenceNavigator, MutableErrorTreeView {
+  interface ProcessController {
+    void stopProcess();
+
+    boolean isProcessStopped();
+  }
+
+  void setProcessController(ProcessController controller);
+
+  void stopProcess();
+
+  boolean canControlProcess();
+
+  boolean isProcessStopped();
 }

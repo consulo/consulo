@@ -20,14 +20,14 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
+import com.intellij.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import com.intellij.openapi.vcs.AbstractVcsHelper;
 import com.intellij.openapi.vcs.CodeSmellDetector;
 import com.intellij.openapi.vcs.VcsBundle;
 import com.intellij.util.ExceptionUtil;
-import com.intellij.util.ui.MessageCategory;
+import consulo.ui.ex.MessageCategory;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
@@ -92,9 +92,9 @@ public class CodeSmellDetectorImpl extends CodeSmellDetector {
           final VirtualFile file = fileManager.getFile(smellInfo.getDocument());
           final OpenFileDescriptorImpl navigatable =
                   new OpenFileDescriptorImpl(myProject, file, smellInfo.getStartLine(), smellInfo.getStartColumn());
-          final String exportPrefix = NewErrorTreeViewPanel.createExportPrefix(smellInfo.getStartLine() + 1);
+          final String exportPrefix = NewErrorTreeViewPanelImpl.createExportPrefix(smellInfo.getStartLine() + 1);
           final String rendererPrefix =
-                  NewErrorTreeViewPanel.createRendererPrefix(smellInfo.getStartLine() + 1, smellInfo.getStartColumn() + 1);
+                  NewErrorTreeViewPanelImpl.createRendererPrefix(smellInfo.getStartLine() + 1, smellInfo.getStartColumn() + 1);
           if (smellInfo.getSeverity() == HighlightSeverity.ERROR) {
             errorTreeView.addMessage(MessageCategory.ERROR, new String[]{smellInfo.getDescription()}, file.getPresentableUrl(), navigatable,
                                      exportPrefix, rendererPrefix, null);

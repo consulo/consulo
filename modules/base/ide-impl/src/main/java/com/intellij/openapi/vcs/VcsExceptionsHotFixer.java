@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs;
 
-import com.intellij.ide.errorTreeView.HotfixData;
+import consulo.ui.ex.errorTreeView.HotfixData;
 
 import java.util.List;
 import java.util.Map;

@@ -13,35 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.errorTreeView;
 
-import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
+package consulo.language.editor;
 
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
- * @author Eugene Zhuravlev
- *         Date: Nov 12, 2004
+ * @author nik
  */
-public class SimpleMessageElement extends ErrorTreeElement{
-  private final String[] myMessage;
-  private final Object myData;
+public interface HectorComponentPanelsProvider {
+  ExtensionPointName<HectorComponentPanelsProvider> EP_NAME = ExtensionPointName.create("consulo.hectorComponentProvider");
 
-  public SimpleMessageElement(@Nonnull ErrorTreeElementKind kind, String[] text, Object data) {
-    super(kind);
-    myMessage = text;
-    myData = data;
-  }
-
-  public String[] getText() {
-    return myMessage;
-  }
-
-  public Object getData() {
-    return myData;
-  }
-
-  public String getExportTextPrefix() {
-    return "";
-  }
+  @Nullable HectorComponentPanel createConfigurable(@Nonnull PsiFile file);
 }

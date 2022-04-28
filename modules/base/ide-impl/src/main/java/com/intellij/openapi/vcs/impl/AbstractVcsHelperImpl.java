@@ -16,9 +16,9 @@
 package com.intellij.openapi.vcs.impl;
 
 import consulo.ui.ex.action.CloseTabToolbarAction;
-import com.intellij.ide.errorTreeView.ErrorTreeElementKind;
-import com.intellij.ide.errorTreeView.HotfixData;
-import com.intellij.ide.errorTreeView.SimpleErrorData;
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
+import consulo.ui.ex.errorTreeView.HotfixData;
+import consulo.ui.ex.errorTreeView.SimpleErrorData;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
@@ -80,8 +80,8 @@ import com.intellij.util.BufferedListConsumer;
 import com.intellij.util.Consumer;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.ConfirmationDialog;
-import com.intellij.util.ui.ErrorTreeView;
-import com.intellij.util.ui.MessageCategory;
+import consulo.ui.ex.errorTreeView.ErrorTreeView;
+import consulo.ui.ex.MessageCategory;
 import com.intellij.vcs.history.VcsHistoryProviderEx;
 import com.intellij.vcsUtil.VcsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

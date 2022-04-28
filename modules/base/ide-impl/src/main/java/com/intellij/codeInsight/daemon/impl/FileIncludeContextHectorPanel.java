@@ -16,7 +16,7 @@
 
 package com.intellij.codeInsight.daemon.impl;
 
-import com.intellij.openapi.editor.HectorComponentPanel;
+import consulo.language.editor.HectorComponentPanel;
 import consulo.configurable.ConfigurationException;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
@@ -45,7 +45,6 @@ public class FileIncludeContextHectorPanel extends HectorComponentPanel {
 
     reset();
   }
-
 
   @Override
   public JComponent createComponent() {

@@ -26,6 +26,7 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

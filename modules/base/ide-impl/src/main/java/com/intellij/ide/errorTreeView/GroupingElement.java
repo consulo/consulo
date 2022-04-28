@@ -15,6 +15,7 @@
  */
 package com.intellij.ide.errorTreeView;
 
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**

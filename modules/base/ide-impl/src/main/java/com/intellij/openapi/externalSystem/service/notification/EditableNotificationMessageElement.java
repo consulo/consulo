@@ -24,6 +24,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

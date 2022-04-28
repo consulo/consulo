@@ -16,6 +16,8 @@
 package com.intellij.ide.errorTreeView;
 
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

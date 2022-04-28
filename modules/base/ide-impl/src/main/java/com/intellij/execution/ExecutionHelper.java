@@ -23,7 +23,7 @@ import consulo.process.ProcessHandler;
 import consulo.process.local.ProcessOutput;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
-import com.intellij.ide.errorTreeView.NewErrorTreeViewPanel;
+import com.intellij.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.dataContext.DataContext;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
@@ -53,8 +53,8 @@ import com.intellij.util.Function;
 import com.intellij.util.NotNullFunction;
 import consulo.application.util.Semaphore;
 import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.ui.ErrorTreeView;
-import com.intellij.util.ui.MessageCategory;
+import consulo.ui.ex.errorTreeView.ErrorTreeView;
+import consulo.ui.ex.MessageCategory;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 
@@ -343,7 +343,7 @@ public class ExecutionHelper {
     }, project.getDisposed());
   }
 
-  public static class ErrorViewPanel extends NewErrorTreeViewPanel {
+  public static class ErrorViewPanel extends NewErrorTreeViewPanelImpl {
     public ErrorViewPanel(final Project project) {
       super(project, "reference.toolWindows.messages");
     }

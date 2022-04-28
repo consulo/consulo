@@ -17,6 +17,9 @@ package com.intellij.ide.errorTreeView;
 
 import consulo.language.editor.DaemonCodeAnalyzer;
 import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
+import consulo.ui.ex.errorTreeView.HotfixData;
+import consulo.ui.ex.errorTreeView.SimpleErrorData;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.application.ApplicationManager;
@@ -29,7 +32,7 @@ import consulo.language.psi.PsiManager;
 import com.intellij.ui.CustomizeColoredTreeCellRenderer;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import com.intellij.util.ArrayUtil;
-import com.intellij.util.ui.MutableErrorTreeView;
+import consulo.ui.ex.errorTreeView.MutableErrorTreeView;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -177,7 +180,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
       VirtualFile nav = file != null ? file : underFileGroup;
 
       addNavigatableMessage(group.getPresentableUrl(), new OpenFileDescriptorImpl(myProject, nav, line, column), kind, text, data,
-                            NewErrorTreeViewPanel.createExportPrefix(guiline), NewErrorTreeViewPanel.createRendererPrefix(guiline, guicolumn), group);
+                            NewErrorTreeViewPanelImpl.createExportPrefix(guiline), NewErrorTreeViewPanelImpl.createRendererPrefix(guiline, guicolumn), group);
     }
     else {
       addSimpleMessage(kind, text, data);
@@ -218,7 +221,7 @@ public class ErrorViewStructure extends AbstractTreeStructure {
     final List<NavigatableMessageElement> elements = new ArrayList<NavigatableMessageElement>();
     for (SimpleErrorData child : children) {
       elements.add(new MyNavigatableWithDataElement(myProject, child.getKind(), group, child.getMessages(), child.getVf(),
-                                                    NewErrorTreeViewPanel.createExportPrefix(-1), NewErrorTreeViewPanel.createRendererPrefix(-1, -1)));
+                                                    NewErrorTreeViewPanelImpl.createExportPrefix(-1), NewErrorTreeViewPanelImpl.createRendererPrefix(-1, -1)));
     }
 
     synchronized (myLock) {

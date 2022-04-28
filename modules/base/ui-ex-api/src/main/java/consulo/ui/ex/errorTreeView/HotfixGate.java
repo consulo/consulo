@@ -13,19 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.ui.ex.errorTreeView;
 
-package com.intellij.openapi.editor;
+public class HotfixGate {
+  private final String myGroupName;
+  private final MutableErrorTreeView myView;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+  public HotfixGate(final String groupName, final MutableErrorTreeView tree) {
+    myGroupName = groupName;
+    myView = tree;
+  }
 
-/**
- * @author nik
- */
-public interface HectorComponentPanelsProvider {
-  ExtensionPointName<HectorComponentPanelsProvider> EP_NAME = ExtensionPointName.create("consulo.hectorComponentProvider");
+  public String getGroupName() {
+    return myGroupName;
+  }
 
-  @Nullable HectorComponentPanel createConfigurable(@Nonnull PsiFile file);
+  public MutableErrorTreeView getView() {
+    return myView;
+  }
 }

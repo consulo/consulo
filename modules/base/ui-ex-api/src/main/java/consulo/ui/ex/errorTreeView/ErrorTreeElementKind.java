@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.errorTreeView;
+package consulo.ui.ex.errorTreeView;
 
-import com.intellij.util.ui.MessageCategory;
-import consulo.ide.IdeBundle;
-import org.jetbrains.annotations.NonNls;
+import consulo.ui.ex.MessageCategory;
+import consulo.ui.ex.UIBundle;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author Eugene Zhuravlev
- *         Date: Nov 12, 2004
+ * Date: Nov 12, 2004
  */
 public enum ErrorTreeElementKind {
-  INFO ("INFO", IdeBundle.message("errortree.information")),
-  ERROR ("ERROR", IdeBundle.message("errortree.error")),
-  WARNING ("WARNING", IdeBundle.message("errortree.warning")),
-  NOTE ("NOTE", IdeBundle.message("errortree.note")),
-  GENERIC ("GENERIC", "");
+  INFO("INFO", UIBundle.message("errortree.information")),
+  ERROR("ERROR", UIBundle.message("errortree.error")),
+  WARNING("WARNING", UIBundle.message("errortree.warning")),
+  NOTE("NOTE", UIBundle.message("errortree.note")),
+  GENERIC("GENERIC", "");
 
   private final String myText;
   private final String myPresentableText;
 
-  private ErrorTreeElementKind(@NonNls String text, String presentableText) {
+  private ErrorTreeElementKind(String text, String presentableText) {
     myText = text;
     myPresentableText = presentableText;
   }
@@ -49,14 +49,20 @@ public enum ErrorTreeElementKind {
 
   @Nonnull
   public static ErrorTreeElementKind convertMessageFromCompilerErrorType(int type) {
-    switch(type) {
-      case MessageCategory.ERROR : return ERROR;
-      case MessageCategory.WARNING : return WARNING;
-      case MessageCategory.INFORMATION : return INFO;
-      case MessageCategory.STATISTICS : return INFO;
-      case MessageCategory.SIMPLE : return GENERIC;
-      case MessageCategory.NOTE : return NOTE;
-      default : return GENERIC;
+    switch (type) {
+      case MessageCategory.ERROR:
+        return ERROR;
+      case MessageCategory.WARNING:
+        return WARNING;
+      case MessageCategory.INFORMATION:
+        return INFO;
+      case MessageCategory.STATISTICS:
+        return INFO;
+      case MessageCategory.SIMPLE:
+        return GENERIC;
+      case MessageCategory.NOTE:
+        return NOTE;
+      default:
+        return GENERIC;
     }
-  }
-}
+  }}

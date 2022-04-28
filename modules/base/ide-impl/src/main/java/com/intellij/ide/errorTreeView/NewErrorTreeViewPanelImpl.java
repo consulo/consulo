@@ -23,8 +23,6 @@ import com.intellij.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import com.intellij.ide.errorTreeView.impl.ErrorViewTextExporter;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.util.text.StringUtil;
-import consulo.project.ui.view.MessageView;
-import com.intellij.util.ui.MutableErrorTreeView;
 import consulo.application.AllIcons;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.dataContext.DataContext;
@@ -35,9 +33,9 @@ import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
+import consulo.project.ui.view.MessageView;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.CopyProvider;
-import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
@@ -45,6 +43,10 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.errorTreeView.ErrorTreeElementKind;
+import consulo.ui.ex.errorTreeView.HotfixData;
+import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanel;
+import consulo.ui.ex.errorTreeView.SimpleErrorData;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -60,8 +62,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
-public class NewErrorTreeViewPanel extends JPanel implements DataProvider, OccurenceNavigator, MutableErrorTreeView, CopyProvider {
-  protected static final Logger LOG = Logger.getInstance(NewErrorTreeViewPanel.class);
+public class NewErrorTreeViewPanelImpl extends JPanel implements DataProvider, NewErrorTreeViewPanel, CopyProvider {
+  protected static final Logger LOG = Logger.getInstance(NewErrorTreeViewPanelImpl.class);
   private volatile String myProgressText = "";
   private volatile float myFraction = 0.0f;
   private ErrorViewStructure myErrorViewStructure;
@@ -69,12 +71,6 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   private final Alarm myUpdateAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD);
   private volatile boolean myIsDisposed = false;
   private final ErrorTreeViewConfiguration myConfiguration;
-
-  public interface ProcessController {
-    void stopProcess();
-
-    boolean isProcessStopped();
-  }
 
   private ActionToolbar myToolbar;
   private final TreeExpander myTreeExpander = new MyTreeExpander();
@@ -91,19 +87,19 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   private AutoScrollToSourceHandler myAutoScrollToSourceHandler;
   private MyOccurenceNavigatorSupport myOccurenceNavigatorSupport;
 
-  public NewErrorTreeViewPanel(Project project, String helpId) {
+  public NewErrorTreeViewPanelImpl(Project project, String helpId) {
     this(project, helpId, true);
   }
 
-  public NewErrorTreeViewPanel(Project project, String helpId, boolean createExitAction) {
+  public NewErrorTreeViewPanelImpl(Project project, String helpId, boolean createExitAction) {
     this(project, helpId, createExitAction, true);
   }
 
-  public NewErrorTreeViewPanel(Project project, String helpId, boolean createExitAction, boolean createToolbar) {
+  public NewErrorTreeViewPanelImpl(Project project, String helpId, boolean createExitAction, boolean createToolbar) {
     this(project, helpId, createExitAction, createToolbar, null);
   }
 
-  public NewErrorTreeViewPanel(Project project, String helpId, boolean createExitAction, boolean createToolbar, @Nullable Runnable rerunAction) {
+  public NewErrorTreeViewPanelImpl(Project project, String helpId, boolean createExitAction, boolean createToolbar, @Nullable Runnable rerunAction) {
     myProject = project;
     myHelpId = helpId;
     myConfiguration = ErrorTreeViewConfiguration.getInstance(project);
@@ -392,18 +388,22 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   protected void addExtraPopupMenuActions(ActionGroup.Builder group) {
   }
 
+  @Override
   public void setProcessController(ProcessController controller) {
     myProcessController = controller;
   }
 
+  @Override
   public void stopProcess() {
     myProcessController.stopProcess();
   }
 
+  @Override
   public boolean canControlProcess() {
     return myProcessController != null;
   }
 
+  @Override
   public boolean isProcessStopped() {
     return myProcessController.isProcessStopped();
   }
@@ -677,7 +677,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
   private class MyTreeExpander implements TreeExpander {
     @Override
     public void expandAll() {
-      NewErrorTreeViewPanel.this.expandAll();
+      NewErrorTreeViewPanelImpl.this.expandAll();
     }
 
     @Override
@@ -687,7 +687,7 @@ public class NewErrorTreeViewPanel extends JPanel implements DataProvider, Occur
 
     @Override
     public void collapseAll() {
-      NewErrorTreeViewPanel.this.collapseAll();
+      NewErrorTreeViewPanelImpl.this.collapseAll();
     }
 
     @Override
