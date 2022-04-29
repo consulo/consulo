@@ -35,7 +35,7 @@ import com.intellij.openapi.util.Comparing;
 import consulo.ui.ex.awt.CheckBoxList;
 import com.intellij.ui.ListSpeedSearch;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.SeparatorWithText;
+import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.JBCheckBox;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchSupply;
 import com.intellij.util.NullableFunction;

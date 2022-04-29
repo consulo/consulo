@@ -25,7 +25,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.VcsBundle;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.SeparatorWithText;
+import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.TableCell;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.table.JBTable;

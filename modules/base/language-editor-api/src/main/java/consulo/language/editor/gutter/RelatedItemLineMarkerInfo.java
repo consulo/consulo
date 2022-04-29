@@ -17,6 +17,7 @@ package consulo.language.editor.gutter;
 
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.document.util.TextRange;
+import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 import consulo.util.lang.lazy.LazyValue;

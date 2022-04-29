@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions.searcheverywhere;
 
-import com.intellij.codeInsight.navigation.NavigationUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.actions.GotoActionBase;
 import com.intellij.ide.actions.GotoClassAction;
@@ -130,7 +130,7 @@ public class ClassSearchEverywhereContributor extends AbstractGotoSEContributor 
         return new Navigatable() {
           @Override
           public void navigate(boolean requestFocus) {
-            NavigationUtil.activateFileWithPsiElement(psi, openInCurrentWindow(modifiers));
+            PopupNavigationUtil.activateFileWithPsiElement(psi, openInCurrentWindow(modifiers));
             delegate.navigate(true);
 
           }

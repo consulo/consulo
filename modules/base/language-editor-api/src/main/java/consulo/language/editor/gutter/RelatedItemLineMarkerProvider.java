@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.codeInsight.daemon;
+package consulo.language.editor.gutter;
 
-import consulo.language.editor.gutter.LineMarkerInfo;
-import consulo.language.editor.gutter.LineMarkerProvider;
-import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNameIdentifierOwner;
-import javax.annotation.Nonnull;
-import consulo.annotation.access.RequiredReadAction;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 

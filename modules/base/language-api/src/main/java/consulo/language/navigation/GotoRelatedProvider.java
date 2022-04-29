@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.navigation;
+package consulo.language.navigation;
 
-import consulo.dataContext.DataContext;
 import consulo.component.extension.ExtensionPointName;
-import consulo.language.editor.gutter.GotoRelatedItem;
+import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Provides items for Go To -> Related File action.
  * <p>
- * If related items are represented as icons on the gutter use {@link com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider}
+ * If related items are represented as icons on the gutter use {@link consulo.language.editor.gutter.RelatedItemLineMarkerProvider}
  * to provide both line markers and 'goto related' targets
  *
  * @author Dmitry Avdeev

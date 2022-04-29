@@ -5,6 +5,7 @@ package consulo.language.editor.ui;
 import consulo.application.Application;
 import consulo.application.progress.ProgressManager;
 import consulo.codeEditor.Editor;
+import consulo.language.editor.ui.internal.LanguageEditorPopupFactory;
 import consulo.language.editor.ui.navigation.BackgroundUpdaterTask;
 import consulo.language.psi.NavigatablePsiElement;
 import consulo.language.psi.PsiElement;
@@ -19,7 +20,10 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
-public interface PsiElementListNavigator {
+public class PsiElementListNavigator {
+  private PsiElementListNavigator() {
+  }
+
   public static void openTargets(MouseEvent e, NavigatablePsiElement[] targets, String title, final String findUsagesTitle, ListCellRenderer listRenderer) {
     openTargets(e, targets, title, findUsagesTitle, listRenderer, (BackgroundUpdaterTask)null);
   }
@@ -101,7 +105,9 @@ public interface PsiElementListNavigator {
     return navigator.builder(targets, title).setFindUsagesTitle(findUsagesTitle).setListRenderer(listRenderer).setListUpdaterTask(listUpdaterTask).setTargetsConsumer(consumer).build();
   }
 
-  public NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title);
+  public NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title) {
+    return LanguageEditorPopupFactory.getInstance().builder(targets, title);
+  }
 
   // Helper makes it easier to customize shown popup.
   public static abstract class NavigateOrPopupBuilder {

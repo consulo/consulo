@@ -15,4 +15,6 @@ module consulo.language.editor.ui.api {
   exports consulo.language.editor.ui.navigation;
   exports consulo.language.editor.ui.awt;
   exports consulo.language.editor.ui.util;
+
+  exports consulo.language.editor.ui.internal to consulo.ide.impl, consulo.injecting.pico.impl;
 }

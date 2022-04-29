@@ -14,23 +14,30 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.util;
+package consulo.language.psi.util;
 
-import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
+import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nullable;
 
 public class PsiNavigateUtil {
+  private PsiNavigateUtil() {
+  }
+
   public static void navigate(@Nullable final PsiElement psiElement) {
+    navigate(psiElement, true);
+  }
+
+  public static void navigate(@Nullable final PsiElement psiElement, boolean requestFocus) {
     if (psiElement != null && psiElement.isValid()) {
       final PsiElement navigationElement = psiElement.getNavigationElement();
       final int offset = navigationElement instanceof PsiFile ? -1 : navigationElement.getTextOffset();
       final VirtualFile virtualFile = navigationElement.getContainingFile().getVirtualFile();
       if (virtualFile != null && virtualFile.isValid()) {
-        OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).builder(virtualFile).offset(offset).build().navigate(true);
+        OpenFileDescriptorFactory.getInstance(navigationElement.getProject()).builder(virtualFile).offset(offset).build().navigate(requestFocus);
       }
     }
   }

@@ -23,6 +23,8 @@ import java.util.function.Predicate;
  * @param <T> Input value type.
  * @see com.intellij.util.CommonProcessors
  */
+@Deprecated
+@DeprecationInfo("Use Predicate")
 public interface Processor<T> extends Predicate<T> {
   @Deprecated
   @DeprecationInfo(value = "Use CommonProcessors#alwaysTrue()")

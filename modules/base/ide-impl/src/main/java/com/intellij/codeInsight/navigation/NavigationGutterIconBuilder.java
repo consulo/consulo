@@ -24,7 +24,7 @@ import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.TypePresentationService;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.language.editor.gutter.GotoRelatedItem;
+import consulo.language.navigation.GotoRelatedItem;
 import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.Annotation;
 import consulo.language.editor.annotation.AnnotationHolder;

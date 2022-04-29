@@ -518,7 +518,7 @@
     </extensionPoint>
 
     <extensionPoint name="lang.structureViewExtension"
-                    interface="com.intellij.ide.structureView.StructureViewExtension"/>
+                    interface="consulo.language.editor.structureView.StructureViewExtension"/>
 
     <extensionPoint name="lang.psi.elementFactory" interface="consulo.language.psi.PsiElementFactory"/>
 
@@ -613,9 +613,9 @@
     <extensionPoint name="gotoFileContributor"
                     interface="consulo.ide.navigation.ChooseByNameContributor"/>
     <extensionPoint name="anonymousElementProvider"
-                    interface="com.intellij.navigation.AnonymousElementProvider"/>
+                    interface="consulo.language.navigation.AnonymousElementProvider"/>
 
-    <extensionPoint name="gotoRelatedProvider" interface="com.intellij.navigation.GotoRelatedProvider"/>
+    <extensionPoint name="gotoRelatedProvider" interface="consulo.language.navigation.GotoRelatedProvider"/>
 
     <extensionPoint name="roots.watchedRootsProvider" interface="consulo.project.content.WatchedRootsProvider" area="PROJECT"/>
 
@@ -2795,7 +2795,7 @@
     <applicationService serviceInterface="consulo.language.impl.parser.GeneratedParserUtilBase$PrefixMatcher"
                         serviceImplementation="consulo.language.editor.impl.internal.parser.ParserCamelCaseMatcherPrefixMatcher"/>
 
-    <applicationService serviceInterface="consulo.language.editor.ui.PsiElementListNavigator" serviceImplementation="consulo.ide.impl.language.editor.PsiElementListNavigatorImpl"/>
+    <applicationService serviceInterface="consulo.language.editor.ui.internal.LanguageEditorPopupFactory" serviceImplementation="consulo.ide.impl.language.editor.LanguageEditorPopupFactoryImpl"/>
     <applicationService serviceInterface="consulo.language.editor.rawHighlight.internal.HighlightInfoFactory"
                         serviceImplementation="consulo.ide.impl.language.editor.rawHighlight.HighlightInfoFactoryImpl"/>
 

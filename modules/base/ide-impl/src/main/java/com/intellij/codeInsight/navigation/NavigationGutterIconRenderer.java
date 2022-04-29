@@ -17,6 +17,7 @@ package com.intellij.codeInsight.navigation;
 
 import consulo.language.editor.gutter.GutterIconNavigationHandler;
 import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -32,7 +33,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.NullableFunction;
-import consulo.language.editor.util.PsiNavigateUtil;
+import consulo.language.psi.util.PsiNavigateUtil;
 import com.intellij.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -123,7 +124,7 @@ public abstract class NavigationGutterIconRenderer extends GutterIconRenderer im
     }
     else {
       if (event != null) {
-        final JBPopup popup = NavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.compute(), myPopupTitle);
+        final JBPopup popup = PopupNavigationUtil.getPsiElementPopup(PsiUtilCore.toPsiElementArray(list), myCellRenderer.compute(), myPopupTitle);
         popup.show(new RelativePoint(event));
       }
     }

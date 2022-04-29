@@ -15,45 +15,41 @@
  */
 package com.intellij.xdebugger.impl.evaluate.quick.common;
 
-import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
-import com.intellij.codeInsight.navigation.NavigationUtil;
+import com.intellij.codeInsight.navigation.NavigationImplUtil;
 import com.intellij.ide.TooltipEvent;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.keymap.KeymapManager;
 import com.intellij.openapi.keymap.KeymapUtil;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.ui.ex.awt.ClickListener;
 import com.intellij.ui.HintHint;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.SimpleColoredText;
-import consulo.ui.ex.RelativePoint;
 import com.intellij.util.IconUtil;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.markup.HighlighterLayer;
+import consulo.codeEditor.markup.HighlighterTargetArea;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.TextAttributes;
+import consulo.document.util.TextRange;
+import consulo.language.editor.hint.HintManager;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.RelativePoint;
+import consulo.ui.ex.awt.ClickListener;
+import consulo.ui.ex.keymap.KeymapManager;
 import org.intellij.lang.annotations.JdkConstants;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.EventObject;
 
 /**
@@ -161,7 +157,7 @@ public abstract class AbstractValueHint {
     if (myType == ValueHintType.MOUSE_ALT_OVER_HINT) {
       EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
       TextAttributes attributes = scheme.getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR);
-      attributes = NavigationUtil.patchAttributesColor(attributes, myCurrentRange, myEditor);
+      attributes = NavigationImplUtil.patchAttributesColor(attributes, myCurrentRange, myEditor);
 
       myHighlighter = myEditor.getMarkupModel().addRangeHighlighter(myCurrentRange.getStartOffset(), myCurrentRange.getEndOffset(),
                                                                     HighlighterLayer.SELECTION + 1, attributes,

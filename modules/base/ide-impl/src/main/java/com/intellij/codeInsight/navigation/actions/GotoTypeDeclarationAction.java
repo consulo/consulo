@@ -19,7 +19,7 @@ package com.intellij.codeInsight.navigation.actions;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
-import com.intellij.codeInsight.navigation.NavigationUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
@@ -76,7 +76,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
       navigate(project, symbolTypes[0]);
     }
     else {
-      editor.showPopupInBestPositionFor(NavigationUtil.getPsiElementPopup(symbolTypes, CodeInsightBundle.message("choose.type.popup.title")));
+      editor.showPopupInBestPositionFor(PopupNavigationUtil.getPsiElementPopup(symbolTypes, CodeInsightBundle.message("choose.type.popup.title")));
     }
   }
 

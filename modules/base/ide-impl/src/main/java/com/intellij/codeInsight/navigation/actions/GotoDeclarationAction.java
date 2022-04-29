@@ -18,7 +18,7 @@ package com.intellij.codeInsight.navigation.actions;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import com.intellij.codeInsight.actions.BaseCodeInsightAction;
 import consulo.language.editor.hint.HintManager;
-import com.intellij.codeInsight.navigation.NavigationUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.application.statistic.FeatureUsageTracker;
 import com.intellij.find.actions.ShowUsagesAction;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
@@ -207,7 +207,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
       if(renderer == null) {
         renderer = new DefaultPsiElementCellRenderer();
       }
-      JBPopup popup = NavigationUtil.getPsiElementPopup(elements, renderer, title, processor);
+      JBPopup popup = PopupNavigationUtil.getPsiElementPopup(elements, renderer, title, processor);
 
       editor.showPopupInBestPositionFor(popup);
       return true;

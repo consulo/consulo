@@ -18,7 +18,7 @@ package com.intellij.testIntegration;
 
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.navigation.GotoTargetHandler;
-import com.intellij.codeInsight.navigation.NavigationUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.Shortcut;
@@ -140,7 +140,7 @@ public class GotoTestOrCodeHandler extends GotoTargetHandler {
   @Override
   protected void navigateToElement(@Nonnull Navigatable element) {
     if (element instanceof PsiElement) {
-      NavigationUtil.activateFileWithPsiElement((PsiElement)element, true);
+      PopupNavigationUtil.activateFileWithPsiElement((PsiElement)element, true);
     }
     else {
       element.navigate(true);

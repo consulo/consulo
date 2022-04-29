@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2012 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,103 +13,161 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ide.actions;
+package consulo.ide.impl.language.editor;
 
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
-import consulo.language.navigation.GotoRelatedItem;
-import consulo.language.navigation.GotoRelatedProvider;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.ui.ex.popup.PopupStep;
-import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.util.lang.ref.Ref;
-import com.intellij.openapi.util.text.StringUtil;
-import consulo.dataContext.DataContext;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.SeparatorWithText;
-import consulo.ui.ex.SimpleTextAttributes;
+import com.intellij.find.FindUtil;
+import com.intellij.ide.PsiCopyPasteManager;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.list.PopupListElementRenderer;
-import consulo.application.util.function.Processor;
+import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
+import consulo.language.editor.ui.PsiElementListNavigator;
+import consulo.language.editor.ui.internal.LanguageEditorPopupFactory;
+import consulo.language.navigation.GotoRelatedItem;
+import consulo.language.psi.NavigatablePsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.JBList;
+import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.popup.*;
 import consulo.ui.image.Image;
+import consulo.usage.UsageView;
+import consulo.util.collection.ArrayUtil;
+import consulo.util.lang.StringUtil;
+import consulo.util.lang.ref.Ref;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 /**
- * @author Dmitry Avdeev
+ * @author VISTALL
+ * @since 01-Apr-22
  */
-public class GotoRelatedFileAction extends AnAction {
+@Singleton
+public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactory {
+  private static class NavigateOrPopupBuilderImpl extends PsiElementListNavigator.NavigateOrPopupBuilder {
+    public NavigateOrPopupBuilderImpl(@Nonnull NavigatablePsiElement[] targets, String title) {
+      super(targets, title);
+    }
+
+    @Override
+    @Nullable
+    public final JBPopup build() {
+      if (myTargets.length == 0) {
+        if (!allowEmptyTargets()) return null; // empty initial targets are not allowed
+        if (myListUpdaterTask == null || myListUpdaterTask.isFinished()) return null; // there will be no targets.
+      }
+      if (myTargets.length == 1 && (myListUpdaterTask == null || myListUpdaterTask.isFinished())) {
+        myTargetsConsumer.accept(myTargets);
+        return null;
+      }
+      List<NavigatablePsiElement> initialTargetsList = Arrays.asList(myTargets);
+      Ref<NavigatablePsiElement[]> updatedTargetsList = Ref.create(myTargets);
+
+      final IPopupChooserBuilder<NavigatablePsiElement> builder = JBPopupFactory.getInstance().createPopupChooserBuilder(initialTargetsList);
+      afterPopupBuilderCreated(builder);
+      if (myListRenderer instanceof PsiElementListCellRenderer) {
+        ((PsiElementListCellRenderer)myListRenderer).installSpeedSearch(builder);
+      }
+
+      IPopupChooserBuilder<NavigatablePsiElement> popupChooserBuilder = builder.
+              setTitle(myTitle).
+              setMovable(true).
+              setFont(EditorUtil.getEditorFont()).
+              setRenderer(myListRenderer).
+              withHintUpdateSupply().
+              setResizable(true).
+              setItemsChosenCallback(selectedValues -> myTargetsConsumer.accept(ArrayUtil.toObjectArray(selectedValues))).
+              setCancelCallback(() -> {
+                if (myListUpdaterTask != null) {
+                  myListUpdaterTask.cancelTask();
+                }
+                return true;
+              });
+      final Ref<UsageView> usageView = new Ref<>();
+      if (myFindUsagesTitle != null) {
+        popupChooserBuilder = popupChooserBuilder.setCouldPin(popup -> {
+          usageView.set(FindUtil.showInUsageView(null, updatedTargetsList.get(), myFindUsagesTitle, getProject()));
+          popup.cancel();
+          return false;
+        });
+      }
+
+      final JBPopup popup = popupChooserBuilder.createPopup();
+      if (builder instanceof PopupChooserBuilder) {
+        JBList<NavigatablePsiElement> list = (JBList)((PopupChooserBuilder)builder).getChooserComponent();
+        list.setTransferHandler(new TransferHandler() {
+          @Override
+          protected Transferable createTransferable(JComponent c) {
+            final Object[] selectedValues = list.getSelectedValues();
+            final PsiElement[] copy = new PsiElement[selectedValues.length];
+            for (int i = 0; i < selectedValues.length; i++) {
+              copy[i] = (PsiElement)selectedValues[i];
+            }
+            return new PsiCopyPasteManager.MyTransferable(copy);
+          }
+
+          @Override
+          public int getSourceActions(JComponent c) {
+            return COPY;
+          }
+        });
+
+        JScrollPane pane = ((PopupChooserBuilder)builder).getScrollPane();
+        pane.setBorder(null);
+        pane.setViewportBorder(null);
+      }
+
+      if (myListUpdaterTask != null) {
+        ListComponentUpdater popupUpdater = builder.getBackgroundUpdater();
+        myListUpdaterTask.init(popup, new ListComponentUpdater<>() {
+          @Override
+          public void replaceModel(@Nonnull List<? extends PsiElement> data) {
+            updatedTargetsList.set(data.toArray(NavigatablePsiElement.EMPTY_ARRAY));
+            popupUpdater.replaceModel(data);
+          }
+
+          @Override
+          public void paintBusy(boolean paintBusy) {
+            popupUpdater.paintBusy(paintBusy);
+          }
+        }, usageView);
+      }
+      return popup;
+    }
+  }
+
+  @Nonnull
+  @Override
+  public PsiElementListNavigator.NavigateOrPopupBuilder builder(@Nonnull NavigatablePsiElement[] targets, String title) {
+    return new NavigateOrPopupBuilderImpl(targets, title);
+  }
 
   @Override
-  public void actionPerformed(AnActionEvent e) {
-
-    DataContext context = e.getDataContext();
-    Editor editor = context.getData(PlatformDataKeys.EDITOR);
-    PsiFile psiFile = context.getData(LangDataKeys.PSI_FILE);
-    if (psiFile == null) return;
-
-    List<GotoRelatedItem> items = getItems(psiFile, editor, context);
-    if (items.isEmpty()) return;
-    if (items.size() == 1 && items.get(0).getElement() != null) {
-      items.get(0).navigate();
-      return;
-    }
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      //noinspection UseOfSystemOutOrSystemErr
-      System.out.println(items);
-    }
-    createPopup(items, "Go to Related Files").showInBestPositionFor(context);
-  }
-
-  public static JBPopup createPopup(final List<? extends GotoRelatedItem> items, final String title) {
-    Object[] elements = new Object[items.size()];
-    //todo[nik] move presentation logic to GotoRelatedItem class
-    final Map<PsiElement, GotoRelatedItem> itemsMap = new HashMap<PsiElement, GotoRelatedItem>();
-    for (int i = 0; i < items.size(); i++) {
-      GotoRelatedItem item = items.get(i);
-      elements[i] = item.getElement() != null ? item.getElement() : item;
-      itemsMap.put(item.getElement(), item);
-    }
-
-    return getPsiElementPopup(elements, itemsMap, title, new Processor<Object>() {
-      @Override
-      public boolean process(Object element) {
-        if (element instanceof PsiElement) {
-          //noinspection SuspiciousMethodCalls
-          itemsMap.get(element).navigate();
-        }
-        else {
-          ((GotoRelatedItem)element).navigate();
-        }
-        return true;
-      }
-    }
-    );
-  }
-
-  private static JBPopup getPsiElementPopup(final Object[] elements, final Map<PsiElement, GotoRelatedItem> itemsMap,
-                                            final String title, final Processor<Object> processor) {
+  @Nonnull
+  public JBPopup getPsiElementPopup(final Object[] elements,
+                                            final Map<PsiElement, GotoRelatedItem> itemsMap,
+                                            final String title,
+                                            final boolean showContainingModules,
+                                            final Predicate<Object> processor) {
 
     final Ref<Boolean> hasMnemonic = Ref.create(false);
-    final Ref<ListCellRenderer> rendererRef = Ref.create(null);
-
     final DefaultPsiElementCellRenderer renderer = new DefaultPsiElementCellRenderer() {
       @Override
       public String getElementText(PsiElement element) {
@@ -131,26 +189,19 @@ public class GotoRelatedFileAction extends AnAction {
           return customContainerName;
         }
         PsiFile file = element.getContainingFile();
-        return file != null && !getElementText(element).equals(file.getName())
-               ? "(" + file.getName() + ")"
-               : null;
+        return file != null && !getElementText(element).equals(file.getName()) ? "(" + file.getName() + ")" : null;
       }
 
       @Override
       protected DefaultListCellRenderer getRightCellRenderer(Object value) {
-        return null;
+        return showContainingModules ? super.getRightCellRenderer(value) : null;
       }
 
       @Override
-      protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer,
-                                                           JList list,
-                                                           Object value,
-                                                           int index,
-                                                           boolean selected,
-                                                           boolean hasFocus) {
+      protected boolean customizeNonPsiElementLeftRenderer(ColoredListCellRenderer renderer, JList list, Object value, int index, boolean selected, boolean hasFocus) {
         final GotoRelatedItem item = (GotoRelatedItem)value;
         Color color = list.getForeground();
-        final SimpleTextAttributes nameAttributes = new SimpleTextAttributes(Font.PLAIN, color);
+        final SimpleTextAttributes nameAttributes = new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, color);
         final String name = item.getCustomName();
         if (name == null) return false;
         renderer.append(name, nameAttributes);
@@ -195,19 +246,21 @@ public class GotoRelatedFileAction extends AnAction {
           //noinspection ConstantConditions
           return ((GotoRelatedItem)value).getCustomName();
         }
-        final PsiElement element = (PsiElement)value;
+        PsiElement element = (PsiElement)value;
+        if (!element.isValid()) return "INVALID";
         return renderer.getElementText(element) + " " + renderer.getContainerText(element, null);
       }
 
       @Override
       public PopupStep onChosen(Object selectedValue, boolean finalChoice) {
-        processor.process(selectedValue);
+        processor.test(selectedValue);
         return super.onChosen(selectedValue, finalChoice);
       }
     }) {
     };
     popup.getList().setCellRenderer(new PopupListElementRenderer(popup) {
-      Map<Object, String> separators = new HashMap<Object, String>();
+      Map<Object, String> separators = new HashMap<>();
+
       {
         final ListModel model = popup.getList().getModel();
         String current = null;
@@ -228,6 +281,7 @@ public class GotoRelatedFileAction extends AnAction {
           separators.remove(model.getElementAt(0));
         }
       }
+
       @Override
       public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         final Component component = renderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -240,7 +294,7 @@ public class GotoRelatedFileAction extends AnAction {
             @Override
             protected void paintComponent(Graphics g) {
               g.setColor(new JBColor(Color.WHITE, UIUtil.getSeparatorColor()));
-              g.fillRect(0,0,getWidth(), getHeight());
+              g.fillRect(0, 0, getWidth(), getHeight());
               super.paintComponent(g);
             }
           };
@@ -266,78 +320,21 @@ public class GotoRelatedFileAction extends AnAction {
     return popup;
   }
 
-  @Nonnull
-  public static List<GotoRelatedItem> getItems(@Nonnull PsiFile psiFile, @Nullable Editor editor, @Nullable DataContext dataContext) {
-    PsiElement contextElement = psiFile;
-    if (editor != null) {
-      PsiElement element = psiFile.findElementAt(editor.getCaretModel().getOffset());
-      if (element != null) {
-        contextElement = element;
-      }
-    }
-
-    Set<GotoRelatedItem> items = new LinkedHashSet<GotoRelatedItem>();
-
-    for (GotoRelatedProvider provider : Extensions.getExtensions(GotoRelatedProvider.EP_NAME)) {
-      items.addAll(provider.getItems(contextElement));
-      if (dataContext != null) {
-        items.addAll(provider.getItems(dataContext));
-      }
-    }
-    sortByGroupNames(items);
-    return new ArrayList<GotoRelatedItem>(items);
+  private static int getMnemonic(Object item, Map<PsiElement, GotoRelatedItem> itemsMap) {
+    return (item instanceof GotoRelatedItem ? (GotoRelatedItem)item : itemsMap.get((PsiElement)item)).getMnemonic();
   }
 
-  private static void sortByGroupNames(Set<GotoRelatedItem> items) {
-    Map<String, List<GotoRelatedItem>> map = new HashMap<String, List<GotoRelatedItem>>();
-    for (GotoRelatedItem item : items) {
-      final String key = item.getGroup();
-      if (!map.containsKey(key)) {
-        map.put(key, new ArrayList<GotoRelatedItem>());
-      }
-      map.get(key).add(item);
-    }
-    final List<String> keys = new ArrayList<String>(map.keySet());
-    Collections.sort(keys, new Comparator<String>() {
-      @Override
-      public int compare(String o1, String o2) {
-        return StringUtil.isEmpty(o1) ? 1 : StringUtil.isEmpty(o2) ? -1 : o1.compareTo(o2);
-      }
-    });
-    items.clear();
-    for (String key : keys) {
-      items.addAll(map.get(key));
-    }
-  }
-
-  @Override
-  public void update(AnActionEvent e) {
-    e.getPresentation().setEnabled(e.getDataContext().getData(LangDataKeys.PSI_FILE) != null);
-  }
-
-  private static Action createNumberAction(final int mnemonic,
-                                           final ListPopupImpl listPopup,
-                                           final Map<PsiElement, GotoRelatedItem> itemsMap,
-                                           final Processor<Object> processor) {
+  private static Action createNumberAction(final int mnemonic, final ListPopupImpl listPopup, final Map<PsiElement, GotoRelatedItem> itemsMap, final Predicate<Object> processor) {
     return new AbstractAction() {
       @Override
       public void actionPerformed(ActionEvent e) {
         for (final Object item : listPopup.getListStep().getValues()) {
           if (getMnemonic(item, itemsMap) == mnemonic) {
-            listPopup.setFinalRunnable(new Runnable() {
-              @Override
-              public void run() {
-                processor.process(item);
-              }
-            });
+            listPopup.setFinalRunnable(() -> processor.test(item));
             listPopup.closeOk(null);
           }
         }
       }
     };
-  }
-
-  private static int getMnemonic(Object item, Map<PsiElement, GotoRelatedItem> itemsMap) {
-    return (item instanceof GotoRelatedItem ? (GotoRelatedItem)item : itemsMap.get((PsiElement)item)).getMnemonic();
   }
 }

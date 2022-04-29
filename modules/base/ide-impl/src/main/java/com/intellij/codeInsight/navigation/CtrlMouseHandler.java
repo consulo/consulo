@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.navigation;
 
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.language.psi.ElementDescriptionUtil;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.documentation.DocumentationManager;
@@ -884,7 +885,7 @@ public final class CtrlMouseHandler {
                                   ? EditorColorsManager.getInstance().getGlobalScheme().getAttributes(EditorColors.REFERENCE_HYPERLINK_COLOR)
                                   : new TextAttributes(null, HintUtil.getInformationColor(), null, null, Font.PLAIN);
       for (TextRange range : info.getRanges()) {
-        TextAttributes attr = NavigationUtil.patchAttributesColor(attributes, range, editor);
+        TextAttributes attr = NavigationImplUtil.patchAttributesColor(attributes, range, editor);
         final RangeHighlighter highlighter = editor.getMarkupModel().addRangeHighlighter(range.getStartOffset(), range.getEndOffset(), HighlighterLayer.HYPERLINK, attr, HighlighterTargetArea.EXACT_RANGE);
         highlighters.add(highlighter);
       }

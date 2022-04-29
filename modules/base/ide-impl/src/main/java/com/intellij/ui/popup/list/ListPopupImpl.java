@@ -13,7 +13,7 @@ import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;
 import com.intellij.ui.ListActions;
 import consulo.ui.ex.awt.ScrollingUtil;
-import com.intellij.ui.SeparatorWithText;
+import consulo.ui.ex.awt.SeparatorWithText;
 import consulo.ui.ex.awt.JBList;
 import com.intellij.ui.popup.ClosableByLeftArrow;
 import consulo.ide.ui.popup.HintUpdateSupply;

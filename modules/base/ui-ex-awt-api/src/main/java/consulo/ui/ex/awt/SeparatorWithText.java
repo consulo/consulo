@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.intellij.ui;
+package consulo.ui.ex.awt;
 
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.awt.JBInsets;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.UISettingsUtil;
-
-import javax.annotation.Nonnull;
 
 import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleContext;
 import javax.accessibility.AccessibleRole;
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 

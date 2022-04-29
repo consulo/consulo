@@ -15,7 +15,6 @@
  */
 package com.intellij.openapi.editor.ex.util;
 
-import consulo.language.editor.CommonDataKeys;
 import com.intellij.openapi.editor.EditorModificationUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
 import com.intellij.openapi.editor.impl.DesktopScrollingModelImpl;
@@ -24,14 +23,12 @@ import com.intellij.openapi.util.Pair;
 import com.intellij.util.ObjectUtils;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
-import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.*;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.impl.FontInfo;
 import consulo.codeEditor.impl.util.EditorImplUtil;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBusConnection;
@@ -46,8 +43,10 @@ import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.highlight.EmptyEditorHighlighter;
 import consulo.language.editor.inject.EditorWindow;
+import consulo.language.editor.ui.awt.EditorAWTUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.image.Image;
@@ -440,9 +439,7 @@ public final class EditorUtil {
   }
 
   public static Font getEditorFont() {
-    EditorColorsScheme scheme = EditorColorsManager.getInstance().getGlobalScheme();
-    int size = UISettings.getInstance().getPresentationMode() ? UISettings.getInstance().getPresentationModeFontSize() - 4 : scheme.getEditorFontSize();
-    return new Font(scheme.getEditorFontName(), Font.PLAIN, size);
+    return EditorAWTUtil.getEditorFont();
   }
 
   public static int getDefaultCaretWidth() {

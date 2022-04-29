@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.gutter;
+package consulo.language.navigation;
 
-import consulo.language.editor.util.PsiNavigateUtil;
+import consulo.language.psi.util.PsiNavigateUtil;
 import consulo.language.psi.PsiElement;
 import consulo.ui.image.Image;
 
@@ -81,7 +81,7 @@ public class GotoRelatedItem {
   }
 
   public static List<GotoRelatedItem> createItems(@Nonnull Collection<? extends PsiElement> elements, String group) {
-    List<GotoRelatedItem> items = new ArrayList<GotoRelatedItem>(elements.size());
+    List<GotoRelatedItem> items = new ArrayList<>(elements.size());
     for (PsiElement element : elements) {
       items.add(new GotoRelatedItem(element, group));
     }

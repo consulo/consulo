@@ -29,6 +29,7 @@ module consulo.language.api {
   exports consulo.language.inject;
   exports consulo.language.pom;
   exports consulo.language.sem;
+  exports consulo.language.navigation;
   exports consulo.language.pom.event;
   exports consulo.language.psi;
   exports consulo.language.psi.path;

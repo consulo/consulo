@@ -2,7 +2,7 @@
 
 package com.intellij.ide.projectView.impl.nodes;
 
-import com.intellij.codeInsight.navigation.NavigationUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import com.intellij.ide.bookmarks.Bookmark;
@@ -230,7 +230,7 @@ public abstract class AbstractPsiBasedNode<Value> extends ProjectViewNode<Value>
   public void navigate(boolean requestFocus, boolean preserveState) {
     if (canNavigate()) {
       if (requestFocus || preserveState) {
-        NavigationUtil.openFileWithPsiElement(extractPsiFromValue(), requestFocus, requestFocus);
+        PopupNavigationUtil.openFileWithPsiElement(extractPsiFromValue(), requestFocus, requestFocus);
       }
       else {
         getNavigationItem().navigate(requestFocus);

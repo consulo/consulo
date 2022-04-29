@@ -2,28 +2,20 @@
 package com.intellij.ide.actions;
 
 import com.intellij.codeInsight.hint.HintUtil;
-import consulo.disposer.Disposable;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import consulo.project.Project;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.JBUIScale;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.application.util.registry.Registry;
-import consulo.ui.ex.awt.ScrollingUtil;
 import com.intellij.ui.WindowMoveListener;
-import consulo.ui.ex.awt.JBList;
-import consulo.ui.ex.awt.JBScrollPane;
 import com.intellij.util.containers.ContainerUtil;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.application.util.registry.Registry;
+import consulo.disposer.Disposable;
+import consulo.language.editor.ui.awt.EditorAWTUtil;
+import consulo.project.Project;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopup;
 
 import javax.annotation.Nonnull;
-
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -138,7 +130,7 @@ public abstract class BigPopupUI extends BorderLayoutPanel implements Disposable
     myResultsList.setCellRenderer(createCellRenderer());
 
     if (Registry.is("new.search.everywhere.use.editor.font")) {
-      Font editorFont = EditorUtil.getEditorFont();
+      Font editorFont = EditorAWTUtil.getEditorFont();
       myResultsList.setFont(editorFont);
     }
 

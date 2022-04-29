@@ -17,11 +17,11 @@ package com.intellij.ide.actions;
 
 import consulo.language.editor.gutter.LineMarkerProvider;
 import consulo.language.editor.gutter.RelatedItemLineMarkerInfo;
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerProvider;
+import consulo.language.editor.gutter.RelatedItemLineMarkerProvider;
 import com.intellij.codeInsight.daemon.impl.LineMarkersPass;
 import consulo.language.Language;
-import consulo.language.editor.gutter.GotoRelatedItem;
-import com.intellij.navigation.GotoRelatedProvider;
+import consulo.language.navigation.GotoRelatedItem;
+import consulo.language.navigation.GotoRelatedProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.intellij.util.containers.ContainerUtil;

@@ -1,12 +1,12 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions;
 
-import com.intellij.codeInsight.navigation.NavigationUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import com.intellij.ide.actions.searcheverywhere.ClassSearchEverywhereContributor;
 import consulo.language.psi.util.EditSourceUtil;
 import com.intellij.ide.util.gotoByName.*;
 import com.intellij.lang.LanguageStructureViewBuilder;
-import com.intellij.navigation.AnonymousElementProvider;
+import consulo.language.navigation.AnonymousElementProvider;
 import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
 import com.intellij.openapi.ui.playback.commands.ActionCommand;
 import com.intellij.openapi.util.text.StringUtil;
@@ -133,14 +133,14 @@ public class GotoClassAction extends GotoActionBase implements DumbAware {
       }
 
       if (file != null && popup.getMemberPattern() != null) {
-        NavigationUtil.activateFileWithPsiElement(psiElement, !popup.isOpenInCurrentWindowRequested());
+        PopupNavigationUtil.activateFileWithPsiElement(psiElement, !popup.isOpenInCurrentWindowRequested());
         Navigatable member = findMember(popup.getMemberPattern(), popup.getTrimmedText(), psiElement, file);
         if (member != null) {
           member.navigate(true);
         }
       }
 
-      NavigationUtil.activateFileWithPsiElement(psiElement, !popup.isOpenInCurrentWindowRequested());
+      PopupNavigationUtil.activateFileWithPsiElement(psiElement, !popup.isOpenInCurrentWindowRequested());
     }
     else {
       EditSourceUtil.navigate(((NavigationItem)element), true, popup.isOpenInCurrentWindowRequested());

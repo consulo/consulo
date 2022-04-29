@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions.searcheverywhere;
 
-import com.intellij.codeInsight.navigation.NavigationUtil;
+import consulo.language.editor.ui.PopupNavigationUtil;
 import consulo.dataContext.DataManager;
 import com.intellij.ide.actions.SearchEverywherePsiRenderer;
 import consulo.language.psi.util.EditSourceUtil;
@@ -306,7 +306,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
         return true;
       }
 
-      NavigationUtil.activateFileWithPsiElement(psiElement, openInCurrentWindow(modifiers));
+      PopupNavigationUtil.activateFileWithPsiElement(psiElement, openInCurrentWindow(modifiers));
     }
     else {
       EditSourceUtil.navigate(((NavigationItem)selected), true, openInCurrentWindow(modifiers));
