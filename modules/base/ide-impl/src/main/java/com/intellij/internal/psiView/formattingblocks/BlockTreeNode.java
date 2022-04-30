@@ -16,7 +16,7 @@
 package com.intellij.internal.psiView.formattingblocks;
 
 import consulo.language.codeStyle.Block;
-import com.intellij.formatting.templateLanguages.DataLanguageBlockWrapper;
+import consulo.language.codeStyle.template.DataLanguageBlockWrapper;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;

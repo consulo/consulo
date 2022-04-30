@@ -3,9 +3,10 @@ package com.intellij.ui;
 
 import com.intellij.codeInsight.hint.TooltipController;
 import com.intellij.ide.IdeTooltip;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import com.intellij.ide.TooltipEvent;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -160,7 +161,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
           tooltip.setComponentBorder(border);
         }
 
-        myCurrentIdeTooltip = IdeTooltipManager.getInstance().show(tooltip, hintHint.isShowImmediately(), hintHint.isAnimationEnabled());
+        myCurrentIdeTooltip = IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, hintHint.isShowImmediately(), hintHint.isAnimationEnabled());
       }
       else {
         final Point layeredPanePoint = SwingUtilities.convertPoint(parentComponent, x, y, layeredPane);
@@ -291,7 +292,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
       return myPopup != null && myPopup.isVisible();
     }
     if (myCurrentIdeTooltip != null) {
-      return myComponent.isShowing() || IdeTooltipManager.getInstance().isQueuedToShow(myCurrentIdeTooltip);
+      return myComponent.isShowing() || IdeTooltipManagerImpl.getInstanceImpl().isQueuedToShow(myCurrentIdeTooltip);
     }
     return myComponent.isShowing();
   }
@@ -410,7 +411,7 @@ public class LightweightHint extends UserDataHolderBase implements Hint {
       if (myCurrentIdeTooltip != null) {
         myCurrentIdeTooltip.setPoint(point.getPoint());
         myCurrentIdeTooltip.setComponent(point.getComponent());
-        IdeTooltipManager.getInstance().show(myCurrentIdeTooltip, true, false);
+        IdeTooltipManagerImpl.getInstanceImpl().show(myCurrentIdeTooltip, true, false);
       }
       else {
         Point targetPoint = point.getPoint(myComponent.getParent());

@@ -15,7 +15,7 @@
  */
 package com.intellij.codeInsight.intention.impl;
 
-import com.intellij.codeInsight.intention.HighPriorityAction;
+import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
 import consulo.language.editor.intention.LowPriorityAction;
 import consulo.codeEditor.Editor;

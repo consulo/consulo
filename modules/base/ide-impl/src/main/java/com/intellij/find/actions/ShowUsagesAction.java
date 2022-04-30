@@ -16,7 +16,7 @@
 package com.intellij.find.actions;
 
 import consulo.language.editor.hint.HintManager;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.find.*;
 import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
 import consulo.find.ui.AbstractFindUsagesDialog;

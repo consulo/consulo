@@ -4,7 +4,6 @@ package consulo.language.codeStyle.internal;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.codeStyle.FormattingDocumentModel;
-import consulo.language.impl.DebugUtil;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
 import consulo.logging.attachment.AttachmentFactory;
@@ -40,7 +39,7 @@ public class RangesAssert {
     final List<PsiFile> roots = file.getViewProvider().getAllFiles();
     for (PsiFile root : roots) {
       buffer.append("Root ");
-      DebugUtil.treeToBuffer(buffer, root.getNode(), 0, false, true, true, true);
+      CodeStyleInternalHelper.getInstance().debugTreeToBuffer(buffer, root.getNode(), 0, false, true, true, true);
     }
     buffer.append('\n');
 

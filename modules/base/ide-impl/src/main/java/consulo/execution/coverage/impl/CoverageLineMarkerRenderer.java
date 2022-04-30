@@ -26,8 +26,8 @@ import com.intellij.coverage.actions.ShowCoveringTestsAction;
 import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
-import com.intellij.ui.ColoredSideBorder;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.ColoredSideBorder;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import consulo.application.AllIcons;
 import consulo.codeEditor.*;
@@ -191,7 +191,8 @@ public class CoverageLineMarkerRenderer implements LineMarkerRenderer, ActiveGut
       }
     };
     HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, point,
-                                                     HintManagerImpl.HIDE_BY_ANY_KEY | HintManagerImpl.HIDE_BY_TEXT_CHANGE | HintManagerImpl.HIDE_BY_OTHER_HINT | HintManagerImpl.HIDE_BY_SCROLLING, -1, false, new HintHint(editor, point));
+                                                     HintManagerImpl.HIDE_BY_ANY_KEY | HintManagerImpl.HIDE_BY_TEXT_CHANGE | HintManagerImpl.HIDE_BY_OTHER_HINT | HintManagerImpl.HIDE_BY_SCROLLING,
+                                                     -1, false, new HintHint(editor.getContentComponent(), point));
   }
 
   private String getReport(final Editor editor, final int lineNumber) {

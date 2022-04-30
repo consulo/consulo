@@ -3,34 +3,28 @@
 package com.intellij.formatting;
 
 import com.intellij.formatting.engine.ExpandableIndent;
-import consulo.language.ast.ASTNode;
+import com.intellij.openapi.util.Couple;
+import com.intellij.util.SequentialTask;
+import com.intellij.util.text.CharArrayUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.function.Computable;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.*;
 import consulo.language.codeStyle.internal.*;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
-import consulo.application.util.function.Computable;
-import com.intellij.openapi.util.Couple;
-import consulo.document.util.TextRange;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.language.codeStyle.FormatterUtil;
-import consulo.ide.impl.psi.formatter.FormattingDocumentModelImpl;
-import consulo.ide.impl.psi.formatter.PsiBasedFormattingModel;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.util.SequentialTask;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -507,12 +501,6 @@ public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFac
       }
     }
     return lineStartOffset;
-  }
-
-
-  @Override
-  public FormattingModel createFormattingModelForPsiFile(@Nonnull final PsiFile file, @Nonnull final Block rootBlock, final CodeStyleSettings settings) {
-    return new PsiBasedFormattingModel(file, rootBlock, FormattingDocumentModelImpl.createOn(file));
   }
 
   @Override

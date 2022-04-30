@@ -39,7 +39,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>consulo-language-impl</artifactId>
+      <artifactId>consulo-undo-redo-api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

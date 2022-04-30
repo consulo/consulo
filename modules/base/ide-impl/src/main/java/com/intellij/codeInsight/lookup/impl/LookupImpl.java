@@ -7,7 +7,7 @@ import consulo.language.editor.internal.matcher.CamelHumpMatcher;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.lookup.DeferredUserLookupValue;
+import consulo.language.editor.completion.lookup.DeferredUserLookupValue;
 import com.intellij.codeInsight.lookup.LookupActionProvider;
 import com.intellij.codeInsight.lookup.LookupElementAction;
 import com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction;

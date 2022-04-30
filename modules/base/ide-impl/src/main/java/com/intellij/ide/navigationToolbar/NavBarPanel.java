@@ -17,7 +17,7 @@ import com.intellij.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
 import com.intellij.openapi.util.Getter;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.ListenerUtil;
 import com.intellij.ui.PopupMenuListenerAdapter;
@@ -841,9 +841,9 @@ public class NavBarPanel extends JPanel implements DataProvider, PopupOwner, Dis
     }
     else {
       myHintContainer = editor.getContentComponent();
-      getHintContainerShowPoint().doWhenDone((Consumer<RelativePoint>)rp -> {
+      getHintContainerShowPoint().doWhenDone(rp -> {
         Point p = rp.getPointOn(myHintContainer).getPoint();
-        final HintHint hintInfo = new HintHint(editor, p);
+        final HintHint hintInfo = new HintHint(editor.getContentComponent(), p);
         HintManagerImpl.getInstanceImpl().showEditorHint(myHint, editor, p, HintManager.HIDE_BY_ESCAPE, 0, true, hintInfo);
       });
     }

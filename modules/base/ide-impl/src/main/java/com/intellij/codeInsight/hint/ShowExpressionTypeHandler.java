@@ -16,6 +16,7 @@ import consulo.document.util.TextRange;
 import consulo.language.Language;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;

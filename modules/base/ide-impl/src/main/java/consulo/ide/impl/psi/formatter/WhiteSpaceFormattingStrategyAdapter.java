@@ -16,11 +16,11 @@
 package consulo.ide.impl.psi.formatter;
 
 import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.StaticSymbolWhiteSpaceDefinitionStrategy;
 import consulo.language.codeStyle.WhiteSpaceFormattingStrategy;
 import consulo.language.psi.PsiElement;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.impl.ast.LeafElement;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -64,7 +64,7 @@ public class WhiteSpaceFormattingStrategyAdapter implements WhiteSpaceFormatting
   }
 
   @Override
-  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull LeafElement whiteSpaceElement) {
+  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
     return false;
   }
 }

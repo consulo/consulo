@@ -39,7 +39,7 @@ import consulo.language.plain.PlainTextFileType;
 import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import consulo.application.util.registry.Registry;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.HintListener;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightweightHint;
@@ -152,7 +152,7 @@ public abstract class LineStatusMarkerPopup {
     point.x -= popupPanel.getEditorTextOffset(); // align main editor with the one in popup
 
     int flags = HintManager.HIDE_BY_ANY_KEY | HintManager.HIDE_BY_TEXT_CHANGE | HintManager.HIDE_BY_SCROLLING;
-    HintManagerImpl.getInstanceImpl().showEditorHint(hint, myEditor, point, flags, -1, false, new HintHint(myEditor, point));
+    HintManagerImpl.getInstanceImpl().showEditorHint(hint, myEditor, point, flags, -1, false, new HintHint(myEditor.getContentComponent(), point));
 
     if (!hint.isVisible()) {
       closeListener.hintHidden(null);

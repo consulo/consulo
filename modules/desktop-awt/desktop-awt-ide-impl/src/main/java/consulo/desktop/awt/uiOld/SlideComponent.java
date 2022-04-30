@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.Gray;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.RelativePoint;
 import com.intellij.util.Consumer;

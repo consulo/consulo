@@ -17,7 +17,7 @@ package com.intellij.ui.tabs;
 
 import consulo.application.util.Queryable;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.application.AllIcons;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;

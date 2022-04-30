@@ -16,22 +16,11 @@
 package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
-import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.language.ast.TokenType;
-import consulo.language.impl.ast.ASTFactory;
-import consulo.language.impl.ast.CompositeElement;
-import consulo.language.impl.ast.LeafElement;
-import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.internal.ast.Factory;
-import consulo.language.impl.internal.ast.SharedImplUtil;
-import consulo.language.impl.psi.SourceTreeToPsiMap;
-import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
-import consulo.language.impl.ast.TreeUtil;
-import consulo.language.psi.PsiElement;
-import consulo.language.util.CharTable;
+import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
 import consulo.undoRedo.CommandProcessor;
 
 import javax.annotation.Nonnull;
@@ -122,25 +111,7 @@ public class FormatterUtil {
 
   @Nullable
   public static ASTNode getPreviousNonWhitespaceLeaf(@Nullable ASTNode node) {
-    if (node == null) return null;
-    ASTNode treePrev = node.getTreePrev();
-    if (treePrev != null) {
-      ASTNode candidate = TreeUtil.getLastChild(treePrev);
-      if (candidate != null && !isWhitespaceOrEmpty(candidate)) {
-        return candidate;
-      }
-      else {
-        return getPreviousNonWhitespaceLeaf(candidate);
-      }
-    }
-    final ASTNode treeParent = node.getTreeParent();
-
-    if (treeParent == null || treeParent.getTreeParent() == null) {
-      return null;
-    }
-    else {
-      return getPreviousNonWhitespaceLeaf(treeParent);
-    }
+    return CodeStyleInternalHelper.getInstance().getPreviousNonWhitespaceLeaf(node);
   }
 
   @Nullable
@@ -231,39 +202,7 @@ public class FormatterUtil {
   }
 
   public static boolean containsWhiteSpacesOnly(@Nullable ASTNode node) {
-    if (node == null) return false;
-
-    final boolean[] spacesOnly = {true};
-    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
-      @Override
-      public void visitComposite(CompositeElement composite) {
-        if (!spacesOnly(composite)) {
-          super.visitComposite(composite);
-        }
-      }
-
-      @Override
-      public void visitLeaf(LeafElement leaf) {
-        if (!spacesOnly(leaf)) {
-          spacesOnly[0] = false;
-          stopWalking();
-        }
-      }
-    });
-
-    return spacesOnly[0];
-  }
-
-  private static boolean spacesOnly(@Nullable TreeElement node) {
-    if (node == null) return false;
-
-    if (isWhitespaceOrEmpty(node)) return true;
-    PsiElement psi = node.getPsi();
-    if (psi == null) {
-      return false;
-    }
-    Language language = psi.getLanguage();
-    return WhiteSpaceFormattingStrategyFactory.getStrategy(language).containsWhitespacesOnly(node);
+    return CodeStyleInternalHelper.getInstance().containsWhiteSpacesOnly(node);
   }
 
   /**
@@ -280,170 +219,15 @@ public class FormatterUtil {
    * @param whiteSpaceRange   target range which text should be replaced by the given one
    */
   public static void replaceInnerWhiteSpace(@Nonnull final String newWhiteSpaceText, @Nonnull final ASTNode holder, @Nonnull final TextRange whiteSpaceRange) {
-    final CharTable charTable = SharedImplUtil.findCharTableByTree(holder);
-    StringBuilder newText = createNewLeafChars(holder, whiteSpaceRange, newWhiteSpaceText);
-    LeafElement newElement = Factory.createSingleLeafElement(holder.getElementType(), newText, charTable, holder.getPsi().getManager());
-
-    holder.getTreeParent().replaceChild(holder, newElement);
+    CodeStyleInternalHelper.getInstance().replaceInnerWhiteSpace(newWhiteSpaceText, holder, whiteSpaceRange);
   }
 
   public static void replaceWhiteSpace(final String whiteSpace, final ASTNode leafElement, final IElementType whiteSpaceToken, @Nullable final TextRange textRange) {
-    final CharTable charTable = SharedImplUtil.findCharTableByTree(leafElement);
-
-    ASTNode treePrev = findPreviousWhiteSpace(leafElement, whiteSpaceToken);
-    if (treePrev == null) {
-      treePrev = getWsCandidate(leafElement);
-    }
-
-    if (treePrev != null && treePrev.getText().trim().isEmpty() && treePrev.getElementType() != whiteSpaceToken && treePrev.getTextLength() > 0 && !whiteSpace.isEmpty()) {
-      LeafElement whiteSpaceElement = Factory.createSingleLeafElement(treePrev.getElementType(), whiteSpace, charTable, SharedImplUtil.getManagerByTree(leafElement));
-
-      ASTNode treeParent = treePrev.getTreeParent();
-      treeParent.replaceChild(treePrev, whiteSpaceElement);
-    }
-    else {
-      LeafElement whiteSpaceElement = Factory.createSingleLeafElement(whiteSpaceToken, whiteSpace, charTable, SharedImplUtil.getManagerByTree(leafElement));
-
-      if (treePrev == null) {
-        if (!whiteSpace.isEmpty()) {
-          addWhiteSpace(leafElement, whiteSpaceElement);
-        }
-      }
-      else {
-        if (!(treePrev.getElementType() == whiteSpaceToken)) {
-          if (!whiteSpace.isEmpty()) {
-            addWhiteSpace(treePrev, whiteSpaceElement);
-          }
-        }
-        else {
-          if (treePrev.getElementType() == whiteSpaceToken) {
-            final CompositeElement treeParent = (CompositeElement)treePrev.getTreeParent();
-            if (!whiteSpace.isEmpty()) {
-              //          LOG.assertTrue(textRange == null || treeParent.getTextRange().equals(textRange));
-              treeParent.replaceChild(treePrev, whiteSpaceElement);
-            }
-            else {
-              treeParent.removeChild(treePrev);
-            }
-
-            // There is a possible case that more than one PSI element is matched by the target text range.
-            // That is the case, for example, for Python's multi-line expression. It may looks like below:
-            //     import contextlib,\
-            //       math, decimal
-            // Here single range contains two blocks: '\' & '\n  '. So, we may want to replace that range to another text, hence,
-            // we replace last element located there with it ('\n  ') and want to remove any remaining elements ('\').
-            ASTNode removeCandidate = findPreviousWhiteSpace(whiteSpaceElement, whiteSpaceToken);
-            while (textRange != null && removeCandidate != null && removeCandidate.getStartOffset() >= textRange.getStartOffset()) {
-              treePrev = findPreviousWhiteSpace(removeCandidate, whiteSpaceToken);
-              removeCandidate.getTreeParent().removeChild(removeCandidate);
-              removeCandidate = treePrev;
-            }
-            //treeParent.subtreeChanged();
-          }
-        }
-      }
-    }
+    CodeStyleInternalHelper.getInstance().replaceWhiteSpace(whiteSpace, leafElement, whiteSpaceToken, textRange);
   }
-
-  @Nullable
-  private static ASTNode findPreviousWhiteSpace(final ASTNode leafElement, final IElementType whiteSpaceTokenType) {
-    final int offset = leafElement.getTextRange().getStartOffset() - 1;
-    if (offset < 0) return null;
-    final PsiElement psiElement = SourceTreeToPsiMap.treeElementToPsi(leafElement);
-    if (psiElement == null) {
-      return null;
-    }
-    final PsiElement found = psiElement.getContainingFile().findElementAt(offset);
-    if (found == null) return null;
-    final ASTNode treeElement = found.getNode();
-    if (treeElement != null && treeElement.getElementType() == whiteSpaceTokenType) return treeElement;
-    return null;
-  }
-
-  @Nullable
-  private static ASTNode getWsCandidate(@Nullable ASTNode node) {
-    if (node == null) return null;
-    ASTNode treePrev = node.getTreePrev();
-    if (treePrev != null) {
-      if (treePrev.getElementType() == TokenType.WHITE_SPACE) {
-        return treePrev;
-      }
-      else if (treePrev.getTextLength() == 0) {
-        return getWsCandidate(treePrev);
-      }
-      else {
-        return node;
-      }
-    }
-    final ASTNode treeParent = node.getTreeParent();
-
-    if (treeParent == null || treeParent.getTreeParent() == null) {
-      return node;
-    }
-    else {
-      return getWsCandidate(treeParent);
-    }
-  }
-
-  private static StringBuilder createNewLeafChars(final ASTNode leafElement, final TextRange textRange, final String whiteSpace) {
-    final TextRange elementRange = leafElement.getTextRange();
-    final String elementText = leafElement.getText();
-
-    final StringBuilder result = new StringBuilder();
-
-    if (elementRange.getStartOffset() < textRange.getStartOffset()) {
-      result.append(elementText.substring(0, textRange.getStartOffset() - elementRange.getStartOffset()));
-    }
-
-    result.append(whiteSpace);
-
-    if (elementRange.getEndOffset() > textRange.getEndOffset()) {
-      result.append(elementText.substring(textRange.getEndOffset() - elementRange.getStartOffset()));
-    }
-
-    return result;
-  }
-
-  private static void addWhiteSpace(final ASTNode treePrev, final LeafElement whiteSpaceElement) {
-    for (WhiteSpaceFormattingStrategy strategy : WhiteSpaceFormattingStrategyFactory.getAllStrategies()) {
-      if (strategy.addWhitespace(treePrev, whiteSpaceElement)) {
-        return;
-      }
-    }
-
-    final ASTNode treeParent = treePrev.getTreeParent();
-    treeParent.addChild(whiteSpaceElement, treePrev);
-  }
-
 
   public static void replaceLastWhiteSpace(final ASTNode astNode, final String whiteSpace, final TextRange textRange) {
-    ASTNode lastWS = TreeUtil.findLastLeaf(astNode);
-    if (lastWS == null) {
-      return;
-    }
-    if (lastWS.getElementType() != TokenType.WHITE_SPACE) {
-      lastWS = null;
-    }
-    if (lastWS != null && !lastWS.getTextRange().equals(textRange)) {
-      return;
-    }
-    if (whiteSpace.isEmpty() && lastWS == null) {
-      return;
-    }
-    if (lastWS != null && whiteSpace.isEmpty()) {
-      lastWS.getTreeParent().removeRange(lastWS, null);
-      return;
-    }
-
-    LeafElement whiteSpaceElement = ASTFactory.whitespace(whiteSpace);
-
-    if (lastWS == null) {
-      astNode.addChild(whiteSpaceElement, null);
-    }
-    else {
-      ASTNode treeParent = lastWS.getTreeParent();
-      treeParent.replaceChild(lastWS, whiteSpaceElement);
-    }
+    CodeStyleInternalHelper.getInstance().replaceLastWhiteSpace(astNode, whiteSpace, textRange);
   }
 
   /**

@@ -24,7 +24,7 @@ import consulo.language.psi.ElementDescriptionLocation;
 import consulo.language.psi.PsiElement;
 import consulo.usage.UsageViewNodeTextLocation;
 import consulo.usage.UsageViewTypeLocation;
-import com.intellij.codeInsight.highlighting.HighlightUsagesDescriptionLocation;
+import consulo.language.editor.highlight.HighlightUsagesDescriptionLocation;
 import javax.annotation.Nonnull;
 
 /**

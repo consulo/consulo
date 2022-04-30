@@ -11,7 +11,7 @@ import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import com.intellij.ui.components.panels.VerticalBox;
 import consulo.ui.ex.awt.Wrapper;

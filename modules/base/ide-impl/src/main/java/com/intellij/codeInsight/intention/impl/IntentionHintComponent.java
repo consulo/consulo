@@ -30,7 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import com.intellij.refactoring.BaseRefactoringIntentionAction;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.PopupMenuListenerAdapter;
 import consulo.ui.ex.RelativePoint;

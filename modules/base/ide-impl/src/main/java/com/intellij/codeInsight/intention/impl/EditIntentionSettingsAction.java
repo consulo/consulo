@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.intention.impl;
 
-import com.intellij.codeInsight.intention.HighPriorityAction;
+import consulo.language.editor.intention.HighPriorityAction;
 import consulo.language.editor.intention.IntentionAction;
 import com.intellij.codeInsight.intention.impl.config.IntentionSettingsConfigurable;
 import consulo.codeEditor.Editor;

@@ -16,15 +16,15 @@
 package com.intellij.xdebugger.impl.evaluate.quick.common;
 
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.codeInsight.navigation.NavigationImplUtil;
 import com.intellij.ide.TooltipEvent;
 import com.intellij.openapi.editor.impl.EditorComponentImpl;
 import com.intellij.openapi.keymap.KeymapUtil;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import com.intellij.util.IconUtil;
 import com.intellij.xdebugger.impl.actions.XDebuggerActions;
 import consulo.codeEditor.Editor;

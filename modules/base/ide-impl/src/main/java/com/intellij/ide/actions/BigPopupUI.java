@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.ide.actions;
 
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.ui.WindowMoveListener;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.util.registry.Registry;

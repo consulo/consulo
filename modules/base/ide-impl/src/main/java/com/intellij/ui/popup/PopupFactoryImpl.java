@@ -2,13 +2,13 @@
 package com.intellij.ui.popup;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.impl.ActionMenu;
 import com.intellij.openapi.actionSystem.impl.PresentationFactory;
 import com.intellij.openapi.ui.MessageType;
 import consulo.ui.ex.popup.BaseListPopupStep;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.popup.list.ListPopupImpl;
 import com.intellij.ui.popup.mock.MockConfirmation;
 import com.intellij.ui.popup.tree.TreePopupImpl;
@@ -586,7 +586,7 @@ public class PopupFactoryImpl extends JBPopupFactory {
                                                      Color textColor,
                                                      final Color fillColor,
                                                      @Nullable final HyperlinkListener listener) {
-    JEditorPane text = IdeTooltipManager.initPane(htmlContent, new HintHint().setTextFg(textColor).setAwtTooltip(true), null);
+    JEditorPane text = IdeTooltipManagerImpl.initPane(htmlContent, new HintHint().setTextFg(textColor).setAwtTooltip(true), null);
 
     if (listener != null) {
       text.addHyperlinkListener(listener);

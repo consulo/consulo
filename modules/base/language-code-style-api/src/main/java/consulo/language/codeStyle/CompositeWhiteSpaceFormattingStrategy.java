@@ -16,7 +16,6 @@
 package consulo.language.codeStyle;
 
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.ast.LeafElement;
 import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nonnull;
@@ -117,7 +116,7 @@ public class CompositeWhiteSpaceFormattingStrategy implements WhiteSpaceFormatti
   }
 
   @Override
-  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull LeafElement whiteSpaceElement) {
+  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
     return false;
   }
 }

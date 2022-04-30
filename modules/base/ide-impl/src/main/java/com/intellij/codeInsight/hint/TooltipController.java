@@ -15,13 +15,13 @@
  */
 package com.intellij.codeInsight.hint;
 
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import consulo.project.Project;
 import com.intellij.openapi.util.Comparing;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.RelativePoint;
 import jakarta.inject.Singleton;
@@ -62,7 +62,7 @@ public class TooltipController {
     LightweightHint currentTooltip = myCurrentTooltip;
     if (currentTooltip == null || !currentTooltip.isVisible()) {
       if (currentTooltip != null) {
-        if (!IdeTooltipManager.getInstance().isQueuedToShow(currentTooltip.getCurrentIdeTooltip())) {
+        if (!IdeTooltipManagerImpl.getInstanceImpl().isQueuedToShow(currentTooltip.getCurrentIdeTooltip())) {
           myCurrentTooltipObject = null;
         }
       }
@@ -72,7 +72,7 @@ public class TooltipController {
     }
 
     if (Comparing.equal(tooltipObject, myCurrentTooltipObject)) {
-      IdeTooltipManager.getInstance().cancelAutoHide();
+      IdeTooltipManagerImpl.getInstanceImpl().cancelAutoHide();
       return;
     }
     hideCurrentTooltip();
@@ -97,7 +97,7 @@ public class TooltipController {
       myCurrentTooltip = null;
       currentTooltip.hide();
       myCurrentTooltipGroup = null;
-      IdeTooltipManager.getInstance().hide(null);
+      IdeTooltipManagerImpl.getInstanceImpl().hide(null);
     }
   }
 
@@ -117,7 +117,7 @@ public class TooltipController {
   }
 
   public void showTooltip(@Nonnull Editor editor, @Nonnull Point p, @Nonnull TooltipRenderer tooltipRenderer, boolean alignToRight, @Nonnull TooltipGroup group) {
-    showTooltip(editor, p, tooltipRenderer, alignToRight, group, new HintHint(editor, p));
+    showTooltip(editor, p, tooltipRenderer, alignToRight, group, new HintHint(editor.getContentComponent(), p));
   }
 
   public void showTooltip(@Nonnull Editor editor,
@@ -131,7 +131,7 @@ public class TooltipController {
     }
 
     if (Comparing.equal(tooltipRenderer, myCurrentTooltipObject)) {
-      IdeTooltipManager.getInstance().cancelAutoHide();
+      IdeTooltipManagerImpl.getInstanceImpl().cancelAutoHide();
       return;
     }
     if (myCurrentTooltipGroup != null && group.compareTo(myCurrentTooltipGroup) < 0) return;

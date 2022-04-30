@@ -17,7 +17,6 @@
 package consulo.language.impl.ast;
 
 import consulo.application.ApplicationManager;
-import consulo.application.progress.ProgressIndicator;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IStrongWhitespaceHolderElementType;
@@ -30,7 +29,6 @@ import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.Couple;
-import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,20 +47,6 @@ public class TreeUtil {
     if (node != null) {
       node.getFirstChildNode();
     }
-  }
-
-  public static void ensureParsedRecursively(@Nonnull ASTNode node) {
-    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
-    });
-  }
-
-  public static void ensureParsedRecursivelyCheckingProgress(@Nonnull ASTNode node, @Nonnull final ProgressIndicator indicator) {
-    ((TreeElement)node).acceptTree(new RecursiveTreeElementWalkingVisitor() {
-      @Override
-      public void visitLeaf(LeafElement leaf) {
-        indicator.checkCanceled();
-      }
-    });
   }
 
   public static boolean isCollapsedChameleon(ASTNode node) {
@@ -147,26 +131,6 @@ public class TreeUtil {
 
   private static boolean isLeafOrCollapsedChameleon(ASTNode node) {
     return node instanceof LeafElement || isCollapsedChameleon(node);
-  }
-
-  @Nullable
-  public static TreeElement findFirstLeafOrChameleon(final TreeElement element) {
-    if (element == null) return null;
-
-    final SimpleReference<TreeElement> result = SimpleReference.create(null);
-    element.acceptTree(new RecursiveTreeElementWalkingVisitor(false) {
-      @Override
-      protected void visitNode(final TreeElement element) {
-        if (isLeafOrCollapsedChameleon(element)) {
-          result.set(element);
-          stopWalking();
-          return;
-        }
-        super.visitNode(element);
-      }
-    });
-
-    return result.get();
   }
 
   @Nullable
@@ -440,12 +404,6 @@ public class TreeUtil {
     public ASTNode nextLeafBranchStart;
     CompositeElement strongWhiteSpaceHolder;
     boolean isStrongElementOnRisingSlope = true;
-  }
-
-  public static class StubBindingException extends RuntimeException {
-    StubBindingException(String message) {
-      super(message);
-    }
   }
 
   public static boolean containsOuterLanguageElements(@Nonnull ASTNode node) {

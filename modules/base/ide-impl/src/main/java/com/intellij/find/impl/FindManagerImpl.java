@@ -20,7 +20,7 @@ import consulo.language.editor.highlight.HighlightManager;
 import com.intellij.codeInsight.highlighting.HighlightManagerImpl;
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.find.*;
 import com.intellij.find.findUsages.FindUsagesManager;
 import com.intellij.find.impl.livePreview.SearchResults;

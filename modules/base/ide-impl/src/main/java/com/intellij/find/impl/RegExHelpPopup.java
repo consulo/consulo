@@ -15,7 +15,7 @@
  */
 package com.intellij.find.impl;
 
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.ide.BrowserUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.popup.ComponentPopupBuilder;

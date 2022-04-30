@@ -8,13 +8,11 @@ module consulo.language.code.style.api {
 
   requires transitive consulo.language.api;
   requires transitive consulo.color.scheme.api;
+  requires transitive consulo.undo.redo.api;
 
   requires static consulo.ui.ex.api;
   // todo drop this dependency
   requires static consulo.ui.ex.awt.api;
-
-  requires consulo.undo.redo.api;
-  requires consulo.language.impl;
 
   exports consulo.language.codeStyle;
   exports consulo.language.codeStyle.arrangement;
@@ -26,6 +24,9 @@ module consulo.language.code.style.api {
   exports consulo.language.codeStyle.fileSet;
   exports consulo.language.codeStyle.internal;
   exports consulo.language.codeStyle.setting;
+  exports consulo.language.codeStyle.template;
+  exports consulo.language.codeStyle.inject;
 
   opens consulo.language.codeStyle to consulo.util.xml.serializer;
+  opens consulo.language.codeStyle.template to consulo.injecting.pico.impl;
 }

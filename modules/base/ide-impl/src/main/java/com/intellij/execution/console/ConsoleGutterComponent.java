@@ -23,7 +23,7 @@ import consulo.colorScheme.EditorFontType;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.UIUtil;

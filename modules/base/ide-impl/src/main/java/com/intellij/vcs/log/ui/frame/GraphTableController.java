@@ -16,11 +16,11 @@
 package com.intellij.vcs.log.ui.frame;
 
 import com.intellij.ide.IdeTooltip;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import consulo.ui.ex.popup.Balloon;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.TableLinkMouseListener;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.Wrapper;
 import com.intellij.vcs.log.CommitId;
 import com.intellij.vcs.log.VcsShortCommitDetails;
@@ -185,15 +185,15 @@ public class GraphTableController {
     // standard tooltip does not allow to customize its location, and locating tooltip above can obscure some important info
     Point point = new Point(e.getX() + 5, e.getY());
 
-    JEditorPane tipComponent = IdeTooltipManager.initPane(text, new HintHint(myTable, point).setAwtTooltip(true), null);
+    JEditorPane tipComponent = IdeTooltipManagerImpl.initPane(text, new HintHint(myTable, point).setAwtTooltip(true), null);
     IdeTooltip tooltip = new IdeTooltip(myTable, point, new Wrapper(tipComponent)).setPreferredPosition(Balloon.Position.atRight);
-    IdeTooltipManager.getInstance().show(tooltip, false);
+    IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, false);
   }
 
   private void showOrHideCommitTooltip(int row, int column, @Nonnull MouseEvent e) {
     if (!showTooltip(row, column, e.getPoint(), false)) {
-      if (IdeTooltipManager.getInstance().hasCurrent()) {
-        IdeTooltipManager.getInstance().hideCurrent(e);
+      if (IdeTooltipManagerImpl.getInstanceImpl().hasCurrent()) {
+        IdeTooltipManagerImpl.getInstanceImpl().hideCurrent(e);
       }
     }
   }
@@ -205,7 +205,7 @@ public class GraphTableController {
       myTable.getExpandableItemsHandler().setEnabled(false);
       IdeTooltip tooltip =
               new IdeTooltip(myTable, point, new Wrapper(tipComponent)).setPreferredPosition(Balloon.Position.below);
-      IdeTooltipManager.getInstance().show(tooltip, now);
+      IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, now);
       return true;
     }
     return false;

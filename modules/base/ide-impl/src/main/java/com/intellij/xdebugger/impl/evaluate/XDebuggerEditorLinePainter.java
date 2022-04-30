@@ -24,7 +24,7 @@ import consulo.document.FileDocumentManager;
 import consulo.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;

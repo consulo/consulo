@@ -16,13 +16,12 @@
 
 package com.intellij.codeInsight.navigation;
 
+import com.intellij.lang.LanguageStructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.fileEditor.structureView.StructureViewModel;
 import consulo.fileEditor.structureView.StructureViewTreeElement;
 import consulo.fileEditor.structureView.TreeBasedStructureViewBuilder;
 import consulo.fileEditor.structureView.tree.TreeElement;
-import com.intellij.lang.LanguageStructureViewBuilder;
-import consulo.component.extension.Extensions;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import gnu.trove.TIntArrayList;
@@ -36,7 +35,7 @@ public class MethodUpDownUtil {
   }
 
   public static int[] getNavigationOffsets(PsiFile file, final int caretOffset) {
-    for(MethodNavigationOffsetProvider provider: Extensions.getExtensions(MethodNavigationOffsetProvider.EP_NAME)) {
+    for(MethodNavigationOffsetProvider provider: MethodNavigationOffsetProvider.EP_NAME.getExtensionList(file.getProject().getApplication())) {
       final int[] offsets = provider.getMethodNavigationOffsets(file, caretOffset);
       if (offsets != null && offsets.length > 0) {
         return offsets;

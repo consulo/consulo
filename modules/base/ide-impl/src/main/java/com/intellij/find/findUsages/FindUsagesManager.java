@@ -18,7 +18,7 @@ package com.intellij.find.findUsages;
 
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.openapi.keymap.KeymapUtil;
 import com.intellij.openapi.progress.impl.ProgressManagerImpl;
 import consulo.ui.ex.awt.Messages;

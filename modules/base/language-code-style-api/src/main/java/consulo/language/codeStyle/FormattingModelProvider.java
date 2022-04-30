@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
  *
  * @see FormattingModelBuilder#createModel(PsiElement, CodeStyleSettings)
  */
-
 public final class FormattingModelProvider {
   /**
    * Creates an instance of the standard formatting model implementation for the specified file.

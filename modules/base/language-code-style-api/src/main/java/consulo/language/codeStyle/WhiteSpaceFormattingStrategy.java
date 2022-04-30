@@ -17,8 +17,7 @@ package consulo.language.codeStyle;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiElement;
-import consulo.language.codeStyle.CodeStyleSettings;
-import consulo.language.impl.ast.LeafElement;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -113,5 +112,5 @@ public interface WhiteSpaceFormattingStrategy {
    *                           <code>false</code> as an indicator that given white space element has not been inserted during the
    *                           current method call
    */
-  boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull LeafElement whiteSpaceElement);
+  boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement);
 }

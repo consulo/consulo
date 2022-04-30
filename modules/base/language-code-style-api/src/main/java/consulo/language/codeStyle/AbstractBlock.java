@@ -18,6 +18,7 @@ package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.inject.DefaultInjectedLanguageBlockBuilder;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiDocumentManager;

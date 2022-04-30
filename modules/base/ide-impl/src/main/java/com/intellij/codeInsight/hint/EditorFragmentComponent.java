@@ -20,7 +20,7 @@ import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.JBUIScale;
@@ -215,7 +215,7 @@ public class EditorFragmentComponent extends JPanel {
     HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, p, (hideByAnyKey ? HintManager.HIDE_BY_ANY_KEY : 0) |
                                                                       (hideByScrolling ? HintManager.HIDE_BY_SCROLLING : 0) |
                                                                       HintManager.HIDE_BY_TEXT_CHANGE |
-                                                                      HintManager.HIDE_BY_MOUSEOVER, 0, false, new HintHint(editor, p));
+                                                                      HintManager.HIDE_BY_MOUSEOVER, 0, false, new HintHint(editor.getContentComponent(), p));
     editor.putUserData(CURRENT_HINT, new WeakReference<>(hint));
     return hint;
   }

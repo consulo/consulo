@@ -34,7 +34,7 @@ import consulo.document.util.TextRange;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.codeStyle.CodeStyleManager;
-import consulo.ide.impl.psi.formatter.DocumentBasedFormattingModel;
+import consulo.language.codeStyle.DocumentBasedFormattingModel;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;

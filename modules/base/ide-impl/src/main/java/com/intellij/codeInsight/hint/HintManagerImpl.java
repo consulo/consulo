@@ -7,7 +7,9 @@ import consulo.colorScheme.TextAttributes;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.hint.HintManager;
 import consulo.language.editor.hint.QuestionAction;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.Gray;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.JBColor;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.markup.*;
@@ -799,11 +801,11 @@ public class HintManagerImpl extends HintManager {
   public static HintHint createHintHint(Editor editor, Point p, LightweightHint hint, @PositionFlags short constraint, boolean createInEditorComponent) {
     JRootPane rootPane = editor.getComponent().getRootPane();
     if (rootPane == null) {
-      return new HintHint(editor, p);
+      return new HintHint(editor.getContentComponent(), p);
     }
 
     JLayeredPane lp = rootPane.getLayeredPane();
-    HintHint hintInfo = new HintHint(editor, SwingUtilities.convertPoint(lp, p, editor.getContentComponent()));
+    HintHint hintInfo = new HintHint(editor.getContentComponent(), SwingUtilities.convertPoint(lp, p, editor.getContentComponent()));
     boolean showByBalloon = Registry.is("editor.balloonHints");
     if (showByBalloon) {
       if (!createInEditorComponent) {

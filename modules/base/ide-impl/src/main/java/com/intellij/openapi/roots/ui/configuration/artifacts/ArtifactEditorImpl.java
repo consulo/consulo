@@ -16,7 +16,7 @@
 package com.intellij.openapi.roots.ui.configuration.artifacts;
 
 import consulo.language.editor.hint.HintManager;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.compiler.artifact.element.*;

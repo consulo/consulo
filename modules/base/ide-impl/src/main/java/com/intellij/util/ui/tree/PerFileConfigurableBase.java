@@ -6,6 +6,7 @@ import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.LangBundle;
 import com.intellij.lang.LanguagePerFileMappings;
 import com.intellij.lang.PerFileMappingsBase;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.awt.speedSearch.TableSpeedSearch;
 import consulo.virtualFileSystem.util.PerFileMappingsEx;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;

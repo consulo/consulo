@@ -35,7 +35,7 @@ import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
 import consulo.document.util.ProperTextRange;
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUIScale;

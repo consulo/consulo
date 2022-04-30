@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.plaf.ideaOld;
 
 import consulo.application.AllIcons;
-import com.intellij.ui.ColoredSideBorder;
+import consulo.ui.ex.awt.ColoredSideBorder;
 import consulo.ui.ex.awt.JBUIScale;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.awt.ui.plaf.LafManagerImplUtil;

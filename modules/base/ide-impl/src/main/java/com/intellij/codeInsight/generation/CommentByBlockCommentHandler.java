@@ -26,7 +26,7 @@ import com.intellij.codeInsight.CommentUtil;
 import com.intellij.codeInsight.actions.MultiCaretCodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.application.statistic.FeatureUsageTracker;
 import consulo.language.codeStyle.internal.IndentData;
 import com.intellij.ide.highlighter.custom.CustomFileTypeLexer;

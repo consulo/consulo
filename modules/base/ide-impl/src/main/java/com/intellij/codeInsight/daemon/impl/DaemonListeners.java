@@ -7,7 +7,7 @@ import com.intellij.codeInsight.documentation.DocumentationManager;
 import com.intellij.codeInsight.folding.impl.FoldingUtil;
 import com.intellij.codeInsight.hint.TooltipController;
 import com.intellij.ide.AppLifecycleListener;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import consulo.language.editor.scratch.ScratchUtil;
 import com.intellij.ide.todo.TodoConfiguration;
 import consulo.language.editor.CommonDataKeys;
@@ -574,7 +574,7 @@ public final class DaemonListeners implements Disposable {
           int offset = editor.logicalPositionToOffset(logical);
           HighlightInfoImpl info = myDaemonCodeAnalyzer.findHighlightByOffset(editor.getDocument(), offset, false);
           if (info == null || info.getDescription() == null || info.getHighlighter() != null && FoldingUtil.isHighlighterFolded(editor, info.getHighlighter())) {
-            IdeTooltipManager.getInstance().hideCurrent(e.getMouseEvent());
+            IdeTooltipManagerImpl.getInstanceImpl().hideCurrent(e.getMouseEvent());
             return;
           }
           DaemonTooltipUtil.showInfoTooltip(info, editor, offset);

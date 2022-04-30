@@ -58,6 +58,22 @@ public interface Balloon extends Disposable, PositionTracker.Client<Balloon>, Li
 
   void setTitle(String title);
 
+  default boolean isAnimationEnabled() {
+    return false;
+  }
+
+  default boolean isBlockClicks() {
+    return false;
+  }
+
+  default boolean isMovingForward(@Nonnull RelativePoint target) {
+    return false;
+  }
+
+  default boolean isClickProcessor() {
+    return isBlockClicks();
+  }
+
   enum Position {
     below, above, atLeft, atRight
   }

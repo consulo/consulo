@@ -62,7 +62,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.paint.LinePainter2D;
 import consulo.ui.ex.awt.paint.LinePainter2D.StrokeType;
 import consulo.ui.ex.awt.paint.PaintUtil;

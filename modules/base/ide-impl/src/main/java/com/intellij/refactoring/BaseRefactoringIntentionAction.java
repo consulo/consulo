@@ -1,6 +1,6 @@
 package com.intellij.refactoring;
 
-import com.intellij.codeInsight.intention.HighPriorityAction;
+import consulo.language.editor.intention.HighPriorityAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import consulo.application.AllIcons;
 import consulo.component.util.Iconable;

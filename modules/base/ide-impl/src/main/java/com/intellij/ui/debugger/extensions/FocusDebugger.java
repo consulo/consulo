@@ -21,7 +21,7 @@ import consulo.logging.Logger;
 import consulo.ui.ex.awt.Splitter;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.ScrollPaneFactory;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBList;

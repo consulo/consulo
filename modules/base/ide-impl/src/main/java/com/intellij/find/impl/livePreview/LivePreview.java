@@ -6,7 +6,7 @@ import consulo.language.editor.highlight.HighlightManager;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -380,7 +380,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
 
     BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createBalloonBuilder(replacementView);
     balloonBuilder.setFadeoutTime(0);
-    balloonBuilder.setFillColor(IdeTooltipManager.GRAPHITE_COLOR);
+    balloonBuilder.setFillColor(IdeTooltipManagerImpl.GRAPHITE_COLOR);
     balloonBuilder.setAnimationCycle(0);
     balloonBuilder.setHideOnClickOutside(false);
     balloonBuilder.setHideOnKeyOutside(false);

@@ -27,5 +27,7 @@ import javax.annotation.Nonnull;
  */
 
 public interface FormattingModelFactory {
-  FormattingModel createFormattingModelForPsiFile(PsiFile file, @Nonnull Block rootBlock, CodeStyleSettings settings);
+  default FormattingModel createFormattingModelForPsiFile(PsiFile file, @Nonnull Block rootBlock, CodeStyleSettings settings) {
+    return new PsiBasedFormattingModel(file, rootBlock, FormattingDocumentModel.create(file));
+  }
 }

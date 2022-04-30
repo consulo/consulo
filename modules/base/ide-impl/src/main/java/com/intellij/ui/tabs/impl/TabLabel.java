@@ -16,7 +16,7 @@
 package com.intellij.ui.tabs.impl;
 
 import com.intellij.ui.InplaceButton;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import com.intellij.ui.tabs.TabInfo;
 import com.intellij.ui.tabs.TabsUtil;
 import com.intellij.ui.tabs.UiDecorator;

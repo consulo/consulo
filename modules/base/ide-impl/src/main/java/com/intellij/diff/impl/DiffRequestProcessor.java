@@ -17,7 +17,7 @@ package com.intellij.diff.impl;
 
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.diff.*;
 import com.intellij.diff.FrameDiffTool.DiffViewer;
 import com.intellij.diff.actions.impl.*;
@@ -42,7 +42,7 @@ import com.intellij.openapi.actionSystem.ex.ActionUtil;
 import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.dumb.DumbAware;

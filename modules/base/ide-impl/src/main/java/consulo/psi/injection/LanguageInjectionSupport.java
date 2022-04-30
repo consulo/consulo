@@ -16,7 +16,7 @@
 package consulo.psi.injection;
 
 import com.intellij.openapi.util.Factory;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import com.intellij.util.Consumer;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;

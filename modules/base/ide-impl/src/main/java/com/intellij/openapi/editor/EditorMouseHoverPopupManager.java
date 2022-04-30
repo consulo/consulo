@@ -17,7 +17,7 @@ import com.intellij.openapi.editor.ex.TooltipAction;
 import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import com.intellij.ui.MouseMovementTracker;
 import com.intellij.ui.WidthBasedLayout;

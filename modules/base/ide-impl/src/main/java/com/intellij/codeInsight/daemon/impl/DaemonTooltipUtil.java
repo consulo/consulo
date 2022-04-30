@@ -26,7 +26,7 @@ import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.ex.ErrorStripTooltipRendererProvider;
 import com.intellij.openapi.editor.ex.TooltipAction;
 import consulo.application.util.registry.Registry;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 
 import javax.annotation.Nonnull;
@@ -79,7 +79,7 @@ public class DaemonTooltipUtil {
 
     Point p = SwingUtilities.convertPoint(editor.getContentComponent(), bestPoint, editor.getComponent().getRootPane().getLayeredPane());
 
-    HintHint hintHint = new HintHint(editor, bestPoint).setAwtTooltip(true).setHighlighterType(true).setRequestFocus(requestFocus).setCalloutShift(editor.getLineHeight() / 2 - 1)
+    HintHint hintHint = new HintHint(editor.getContentComponent(), bestPoint).setAwtTooltip(true).setHighlighterType(true).setRequestFocus(requestFocus).setCalloutShift(editor.getLineHeight() / 2 - 1)
             .setShowImmediately(showImmediately);
 
     TooltipAction action = TooltipActionProvider.calcTooltipAction(info, editor);

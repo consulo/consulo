@@ -2241,4 +2241,29 @@ public class StringUtil {
 
     return result;
   }
+
+  @Contract(pure = true)
+  public static boolean isLineBreak(char c) {
+    return c == '\n' || c == '\r';
+  }
+
+  @Nonnull
+  @Contract(pure = true)
+  public static String escapeLineBreak(@Nonnull String text) {
+    StringBuilder buffer = new StringBuilder(text.length());
+    for (int i = 0; i < text.length(); i++) {
+      char c = text.charAt(i);
+      switch (c) {
+        case '\n':
+          buffer.append("\\n");
+          break;
+        case '\r':
+          buffer.append("\\r");
+          break;
+        default:
+          buffer.append(c);
+      }
+    }
+    return buffer.toString();
+  }
 }

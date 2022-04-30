@@ -361,7 +361,6 @@ open module consulo.ide.impl {
   exports com.intellij.formatting.alignment;
   exports com.intellij.formatting.blocks;
   exports com.intellij.formatting.engine;
-  exports com.intellij.formatting.templateLanguages;
   exports com.intellij.framework.detection;
   exports com.intellij.history.core;
   exports com.intellij.history.core.changes;
@@ -1118,4 +1117,5 @@ open module consulo.ide.impl {
   exports consulo.application.ui.impl to consulo.desktop.awt.ide.impl;
   exports consulo.options.impl to consulo.desktop.awt.ide.impl, consulo.sand.language.plugin;
   exports consulo.webBrowser.impl to consulo.injecting.pico.impl;
+  exports consulo.language.codeStyle.impl to consulo.injecting.pico.impl;
 }

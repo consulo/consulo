@@ -15,7 +15,7 @@
  */
 package com.intellij.xdebugger.impl.evaluate.quick;
 
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.execution.console.LanguageConsoleView;
 import com.intellij.execution.impl.ConsoleViewImpl;
 import consulo.execution.ui.console.ConsoleView;
@@ -37,7 +37,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vcs.changes.issueLinks.LinkMouseListenerBase;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.SimpleColoredComponent;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import consulo.execution.debug.XDebugSession;

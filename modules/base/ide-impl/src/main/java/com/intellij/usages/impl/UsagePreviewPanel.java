@@ -18,7 +18,7 @@ package com.intellij.usages.impl;
 
 import consulo.find.FindManager;
 import consulo.find.FindModel;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import consulo.colorScheme.TextAttributes;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.editor.CommonDataKeys;
@@ -240,7 +240,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
 
       BalloonBuilder balloonBuilder = JBPopupFactory.getInstance().createBalloonBuilder(replacementView);
       balloonBuilder.setFadeoutTime(0);
-      balloonBuilder.setFillColor(IdeTooltipManager.GRAPHITE_COLOR);
+      balloonBuilder.setFillColor(IdeTooltipManagerImpl.GRAPHITE_COLOR);
       balloonBuilder.setAnimationCycle(0);
       balloonBuilder.setHideOnClickOutside(false);
       balloonBuilder.setHideOnKeyOutside(false);

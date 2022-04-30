@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 
 import javax.annotation.Nonnull;

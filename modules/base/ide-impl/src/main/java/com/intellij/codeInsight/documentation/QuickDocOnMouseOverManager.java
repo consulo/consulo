@@ -1,11 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.documentation;
 
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import com.intellij.openapi.editor.impl.EditorMouseHoverPopupControl;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.reference.SoftReference;
-import com.intellij.ui.popup.PopupFactoryImpl;
 import com.intellij.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -314,7 +313,7 @@ public final class QuickDocOnMouseOverManager {
       ApplicationManager.getApplication().invokeLater(() -> {
         myCurrentRequest = null;
 
-        if (editor.isDisposed() || (IdeTooltipManager.getInstance().hasCurrent() || IdeTooltipManager.getInstance().hasScheduled()) && !docManager.hasActiveDockedDocWindow()) {
+        if (editor.isDisposed() || (IdeTooltipManagerImpl.getInstanceImpl().hasCurrent() || IdeTooltipManagerImpl.getInstanceImpl().hasScheduled()) && !docManager.hasActiveDockedDocWindow()) {
           return;
         }
 

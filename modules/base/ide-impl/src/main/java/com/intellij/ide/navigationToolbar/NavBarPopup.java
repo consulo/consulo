@@ -3,6 +3,7 @@ package com.intellij.ide.navigationToolbar;
 
 import com.intellij.ide.navigationToolbar.ui.NavBarUIManager;
 import consulo.dataContext.DataProvider;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.Queryable;
 import consulo.application.util.SystemInfo;

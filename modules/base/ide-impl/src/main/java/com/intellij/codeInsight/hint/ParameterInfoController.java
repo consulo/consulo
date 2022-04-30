@@ -43,7 +43,7 @@ import consulo.language.ast.IElementType;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.component.messagebus.MessageBusConnection;

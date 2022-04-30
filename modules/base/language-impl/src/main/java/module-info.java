@@ -16,6 +16,7 @@ module consulo.language.impl {
   exports consulo.language.impl.file;
   exports consulo.language.impl.psi;
   exports consulo.language.impl.psi.path;
+  exports consulo.language.impl.psi.template;
 
   // internal implementation
   exports consulo.language.impl.plain to consulo.ide.impl, consulo.injecting.pico.impl, consulo.test.impl;
@@ -40,4 +41,5 @@ module consulo.language.impl {
   opens consulo.language.impl.internal.psi.include to consulo.injecting.pico.impl;
   opens consulo.language.impl.internal.pom to consulo.injecting.pico.impl;
   opens consulo.language.impl.internal.psi.meta to consulo.injecting.pico.impl;
+  opens consulo.language.impl.psi.template to consulo.injecting.pico.impl;
 }

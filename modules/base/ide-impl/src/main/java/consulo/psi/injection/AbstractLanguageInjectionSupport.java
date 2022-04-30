@@ -30,7 +30,7 @@ import consulo.util.lang.ref.Ref;
 import com.intellij.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
 import com.intellij.util.Consumer;
 import consulo.ui.image.Image;

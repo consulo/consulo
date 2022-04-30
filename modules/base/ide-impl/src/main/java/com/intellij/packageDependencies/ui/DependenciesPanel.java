@@ -17,7 +17,7 @@
 package com.intellij.packageDependencies.ui;
 
 import com.intellij.analysis.PerformAnalysisInBackgroundOption;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.ui.ex.action.ExporterToTextFile;
 import consulo.ui.ex.action.ContextHelpAction;

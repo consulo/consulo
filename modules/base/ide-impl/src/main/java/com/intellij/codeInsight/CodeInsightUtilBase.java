@@ -19,7 +19,7 @@ package com.intellij.codeInsight;
 import consulo.language.editor.CodeInsightUtilCore;
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorManager;

@@ -20,7 +20,7 @@ import consulo.codeEditor.FoldingModelEx;
 import consulo.document.Document;
 import consulo.document.DocumentFragment;
 import consulo.document.util.TextRange;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.LightweightHint;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.codeEditor.Editor;

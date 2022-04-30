@@ -20,6 +20,7 @@ import consulo.document.util.TextRange;
 import consulo.language.codeStyle.Block;
 import consulo.language.codeStyle.FormattingDocumentModel;
 import consulo.language.codeStyle.FormattingModel;
+import consulo.language.codeStyle.FormattingModelEx;
 
 import javax.annotation.Nonnull;
 

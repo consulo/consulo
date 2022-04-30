@@ -16,7 +16,7 @@
 package com.intellij.xdebugger.impl.ui.tree.nodes;
 
 import consulo.ui.ex.ColoredTextContainer;
-import com.intellij.ui.SimpleColoredText;
+import consulo.ui.ex.SimpleColoredText;
 import com.intellij.util.ArrayUtilRt;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import consulo.execution.debug.frame.XDebuggerTreeNodeHyperlink;

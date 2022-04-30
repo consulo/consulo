@@ -45,6 +45,7 @@ import com.intellij.openapi.fileEditor.impl.EditorWindowHolder;
 import com.intellij.openapi.ui.MessageType;
 import consulo.language.editor.hint.HintManager;
 import consulo.ui.ex.Gray;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.popup.Balloon;

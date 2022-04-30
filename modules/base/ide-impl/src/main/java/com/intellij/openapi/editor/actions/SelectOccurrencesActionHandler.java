@@ -18,7 +18,7 @@ package com.intellij.openapi.editor.actions;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.language.editor.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.find.FindBundle;
 import consulo.codeEditor.action.EditorActionUtil;
 import consulo.ui.ex.action.IdeActions;

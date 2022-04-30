@@ -16,7 +16,7 @@
 package com.intellij.openapi.wm.impl;
 
 import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import consulo.ui.ex.awt.dnd.DnDAware;
 import com.intellij.openapi.ui.impl.GlassPaneDialogWrapperPeer;
 import com.intellij.ui.BalloonImpl;
@@ -129,7 +129,7 @@ public class IdeGlassPaneImpl extends JPanel implements IdeGlassPaneEx, IdeEvent
 
     if (e.getID() == MouseEvent.MOUSE_DRAGGED) {
       if (ApplicationManager.getApplication() != null) {
-        IdeTooltipManager.getInstance().hideCurrent((MouseEvent)e);
+        IdeTooltipManagerImpl.getInstanceImpl().hideCurrent((MouseEvent)e);
       }
     }
 

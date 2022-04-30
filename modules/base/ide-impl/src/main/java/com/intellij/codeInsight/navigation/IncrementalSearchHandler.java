@@ -19,7 +19,7 @@ package com.intellij.codeInsight.navigation;
 import consulo.codeEditor.event.CaretAdapter;
 import consulo.language.editor.CodeInsightBundle;
 import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.application.statistic.FeatureUsageTracker;
 import consulo.dataContext.DataContext;
@@ -46,7 +46,7 @@ import consulo.colorScheme.TextAttributes;
 import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.JBColor;
 import com.intellij.ui.LightweightHint;
 import com.intellij.util.text.StringSearcher;
@@ -193,7 +193,8 @@ public class IncrementalSearchHandler {
     int y = - hint.getComponent().getPreferredSize().height;
     Point p = SwingUtilities.convertPoint(component,x,y,component.getRootPane().getLayeredPane());
 
-    HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, p, HintManagerImpl.HIDE_BY_ESCAPE | HintManagerImpl.HIDE_BY_TEXT_CHANGE, 0, false, new HintHint(editor, p).setAwtTooltip(false));
+    HintManagerImpl.getInstanceImpl().showEditorHint(hint, editor, p, HintManagerImpl.HIDE_BY_ESCAPE | HintManagerImpl.HIDE_BY_TEXT_CHANGE, 0, false, new HintHint(editor.getContentComponent(), p).setAwtTooltip
+            (false));
 
     PerHintSearchData hintData = new PerHintSearchData(project, label2);
     hintData.searchStart = editor.getCaretModel().getOffset();

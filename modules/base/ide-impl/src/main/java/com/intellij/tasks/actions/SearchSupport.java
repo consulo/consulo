@@ -16,7 +16,7 @@
 
 package com.intellij.tasks.actions;
 
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

@@ -2,9 +2,10 @@
 package com.intellij.codeInsight.hint;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import com.intellij.ide.TooltipEvent;
 import consulo.language.editor.hint.HintManager;
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.action.AnAction;
@@ -198,7 +199,7 @@ public class LineTooltipRenderer extends ComparableObject.Impl implements Toolti
     final JLayeredPane layeredPane = editorComponent.getRootPane().getLayeredPane();
 
     String textToDisplay = newLayout ? colorizeSeparators(dressedText) : dressedText;
-    JEditorPane editorPane = IdeTooltipManager.initPane(new Html(textToDisplay).setKeepFont(true), hintHint, layeredPane, limitWidthToScreen);
+    JEditorPane editorPane = IdeTooltipManagerImpl.initPane(new Html(textToDisplay).setKeepFont(true), hintHint, layeredPane, limitWidthToScreen);
     editorPane.putClientProperty(UIUtil.TEXT_COPY_ROOT, Boolean.TRUE);
     hintHint.setContentActive(isContentAction(dressedText));
     if (!hintHint.isAwtTooltip()) {

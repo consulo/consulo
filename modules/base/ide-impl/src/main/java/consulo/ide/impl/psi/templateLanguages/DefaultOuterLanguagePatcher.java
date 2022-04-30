@@ -1,5 +1,7 @@
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.language.impl.psi.template.TemplateDataElementType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

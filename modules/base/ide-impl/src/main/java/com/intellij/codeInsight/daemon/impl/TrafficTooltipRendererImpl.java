@@ -22,7 +22,7 @@ import com.intellij.codeInsight.hint.TooltipGroup;
 import consulo.codeEditor.Editor;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.impl.TrafficTooltipRenderer;
-import com.intellij.ui.HintHint;
+import consulo.ui.ex.awt.HintHint;
 import com.intellij.ui.HintListener;
 import com.intellij.ui.LightweightHint;
 import consulo.component.util.ComparableObject;

@@ -2105,10 +2105,12 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     myAnimationEnabled = enabled;
   }
 
+  @Override
   public boolean isAnimationEnabled() {
     return myAnimationEnabled && myAnimationCycle > 0 && !RemoteDesktopService.isRemoteSession();
   }
 
+  @Override
   public boolean isBlockClicks() {
     return myBlockClicks;
   }

@@ -18,6 +18,7 @@ package consulo.language.codeStyle;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.internal.CodeStyleInternalHelper;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
@@ -31,6 +32,16 @@ import javax.annotation.Nullable;
  */
 
 public interface FormattingDocumentModel {
+  @Nonnull
+  static FormattingDocumentModel create(@Nonnull PsiFile file) {
+    return CodeStyleInternalHelper.getInstance().createFormattingDocumentModel(file);
+  }
+
+  @Nonnull
+  static FormattingDocumentModel create(@Nonnull final Document document, @Nullable PsiFile file) {
+    return CodeStyleInternalHelper.getInstance().createFormattingDocumentModel(document, file);
+  }
+
   /**
    * Returns the line number corresponding to the specified offset in the document.
    *

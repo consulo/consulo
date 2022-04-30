@@ -1,7 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.intellij.codeInsight.documentation;
 
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import com.intellij.codeInsight.navigation.DocPreviewUtil;
 import consulo.application.impl.internal.progress.SensitiveProgressWrapper;
 import consulo.language.editor.documentation.DocumentationProvider;

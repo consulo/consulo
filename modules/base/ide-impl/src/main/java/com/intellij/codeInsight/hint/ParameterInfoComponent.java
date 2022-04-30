@@ -6,6 +6,7 @@ import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.inject.EditorWindow;
 import com.intellij.lang.parameterInfo.ParameterInfoHandler;
 import com.intellij.lang.parameterInfo.ParameterInfoUIContextEx;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.action.IdeActions;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;

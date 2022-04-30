@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import consulo.dataContext.DataManager;
 import consulo.ide.IdeBundle;
 import com.intellij.ide.IdeTooltip;
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import consulo.application.ui.UISettings;
 import com.intellij.openapi.actionSystem.ex.ActionManagerEx;
 import com.intellij.openapi.actionSystem.ex.ActionUtil;
@@ -141,7 +141,7 @@ class ContentTabLabel extends BaseLabel {
     if (icon != null) {
       if (currentIconTooltip != null) {
         if (currentIconTooltip.icon == icon) {
-          IdeTooltipManager.getInstance().show(currentIconTooltip.currentTooltip, false, false);
+          IdeTooltipManagerImpl.getInstanceImpl().show(currentIconTooltip.currentTooltip, false, false);
           return;
         }
 
@@ -152,7 +152,7 @@ class ContentTabLabel extends BaseLabel {
 
       if (toolText != null && !toolText.isEmpty()) {
         IdeTooltip tooltip = new IdeTooltip(this, icon.getCenterPoint(), new JLabel(toolText));
-        currentIconTooltip = new CurrentTooltip(IdeTooltipManager.getInstance().show(tooltip, false, false), icon);
+        currentIconTooltip = new CurrentTooltip(IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, false, false), icon);
         return;
       }
     }
@@ -160,7 +160,7 @@ class ContentTabLabel extends BaseLabel {
     hideCurrentTooltip();
     if (myText != null && !myText.equals(getText())) {
       IdeTooltip tooltip = new IdeTooltip(this, getMousePosition(), new JLabel(myText));
-      currentIconTooltip = new CurrentTooltip(IdeTooltipManager.getInstance().show(tooltip, false, false), null);
+      currentIconTooltip = new CurrentTooltip(IdeTooltipManagerImpl.getInstanceImpl().show(tooltip, false, false), null);
     }
 
   }

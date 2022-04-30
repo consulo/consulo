@@ -15,10 +15,6 @@
  */
 package com.intellij.util;
 
-import javax.annotation.Nullable;
-
-import java.util.Collection;
-
 /**
  * @author max
  * @author Konstantin Bulenkov
@@ -53,33 +49,4 @@ public interface Function<Param, Result> extends java.util.function.Function<Par
   };
 
   interface Mono<T> extends Function<T, T> {}
-
-  final class InstanceOf<P, R extends P> implements NullableFunction<P, R> {
-
-    private final Class<R> myResultClass;
-
-    public InstanceOf(Class<R> resultClass) {
-      myResultClass = resultClass;
-    }
-
-    @Override
-    @Nullable
-    public R fun(P p) {
-      return p.getClass().isAssignableFrom(myResultClass) ? (R)p : null;
-    }
-  }
-
-  final class First<P, R extends P> implements Function<P[], R> {
-    @Override
-    public R fun(P[] ps) {
-      return (R)ps[0];
-    }
-  }
-
-  final class FirstInCollection<P, R extends P> implements Function<Collection<P>, R> {
-    @Override
-    public R fun(Collection<P> ps) {
-      return (R)ps.iterator().next();
-    }
-  }
 }

@@ -15,7 +15,7 @@
  */
 package com.intellij.ui.popup;
 
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import consulo.disposer.Disposable;
 import com.intellij.openapi.ui.MessageType;
 import consulo.ui.ex.popup.Balloon;
@@ -43,7 +43,7 @@ public class BalloonPopupBuilderImpl implements BalloonBuilder {
 
   private final JComponent myContent;
 
-  private Color myBorder = IdeTooltipManager.getInstance().getBorderColor(true);
+  private Color myBorder = IdeTooltipManagerImpl.getInstanceImpl().getBorderColor(true);
   @Nullable
   private Insets myBorderInsets = null;
   private Color myFill = MessageType.INFO.getPopupBackground();

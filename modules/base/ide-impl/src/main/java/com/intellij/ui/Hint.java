@@ -15,6 +15,7 @@
  */
 package com.intellij.ui;
 
+import consulo.ui.ex.awt.HintHint;
 import consulo.ui.ex.RelativePoint;
 import javax.annotation.Nonnull;
 

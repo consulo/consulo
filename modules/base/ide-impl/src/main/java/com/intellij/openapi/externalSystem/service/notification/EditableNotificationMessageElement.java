@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.externalSystem.service.notification;
 
-import com.intellij.ide.IdeTooltipManager;
+import com.intellij.ide.IdeTooltipManagerImpl;
 import com.intellij.ide.errorTreeView.*;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
@@ -106,7 +106,7 @@ public class EditableNotificationMessageElement extends NotificationMessageEleme
 
     final HTMLDocument htmlDocument = (HTMLDocument)editorPane.getDocument();
     final Style linkStyle = htmlDocument.getStyleSheet().getStyle(LINK_STYLE);
-    StyleConstants.setForeground(linkStyle, IdeTooltipManager.getInstance().getLinkForeground(false));
+    StyleConstants.setForeground(linkStyle, IdeTooltipManagerImpl.getInstanceImpl().getLinkForeground(false));
     StyleConstants.setItalic(linkStyle, true);
     HTMLDocument.Iterator iterator = htmlDocument.getIterator(HTML.Tag.A);
     while (iterator.isValid()) {

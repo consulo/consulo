@@ -123,7 +123,7 @@ public class IdeTooltip extends ComparableObject.Impl {
   }
 
   public void hide() {
-    IdeTooltipManager.getInstance().hide(this);
+    IdeTooltipManagerImpl.getInstanceImpl().hide(this);
   }
 
   public boolean canBeDismissedOnTimeout() {

@@ -28,7 +28,7 @@ import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
-import consulo.ide.impl.psi.formatter.DocumentBasedFormattingModel;
+import consulo.language.codeStyle.DocumentBasedFormattingModel;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;

@@ -16,20 +16,21 @@
 
 package consulo.ide.impl.psi.formatter;
 
-import consulo.language.codeStyle.*;
-import consulo.language.ast.ASTNode;
-import consulo.language.Language;
-import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
-import consulo.project.Project;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
+import consulo.language.Language;
+import consulo.language.ast.ASTNode;
+import consulo.language.codeStyle.*;
+import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.psi.impl.PsiDocumentManagerImpl;
-import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -44,7 +45,7 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
   private static final Logger LOG = Logger.getInstance(FormattingDocumentModelImpl.class);
   private final CodeStyleSettings mySettings;
 
-  public FormattingDocumentModelImpl(@Nonnull final Document document, PsiFile file) {
+  public FormattingDocumentModelImpl(@Nonnull final Document document, @Nullable PsiFile file) {
     myDocument = document;
     myFile = file;
     if (file != null) {
@@ -89,8 +90,7 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
   @Override
   public int getLineNumber(int offset) {
     if (offset > myDocument.getTextLength()) {
-      LOG.error(String.format("Invalid offset detected (%d). Document length: %d. Target file: %s",
-                              offset, myDocument.getTextLength(), myFile));
+      LOG.error(String.format("Invalid offset detected (%d). Document length: %d. Target file: %s", offset, myDocument.getTextLength(), myFile));
     }
     return myDocument.getLineNumber(offset);
   }
@@ -103,11 +103,8 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
   @Override
   public CharSequence getText(final TextRange textRange) {
     if (textRange.getStartOffset() < 0 || textRange.getEndOffset() > myDocument.getTextLength()) {
-      LOG.error(String.format(
-              "Please submit a ticket to the tracker and attach current source file to it!%nInvalid processing detected: given text "
-              + "range (%s) targets non-existing regions (the boundaries are [0; %d)). File's language: %s",
-              textRange, myDocument.getTextLength(), myFile.getLanguage()
-      ));
+      LOG.error(String.format("Please submit a ticket to the tracker and attach current source file to it!%nInvalid processing detected: given text " +
+                              "range (%s) targets non-existing regions (the boundaries are [0; %d)). File's language: %s", textRange, myDocument.getTextLength(), myFile.getLanguage()));
     }
     return myDocument.getCharsSequence().subSequence(textRange.getStartOffset(), textRange.getEndOffset());
   }
@@ -149,12 +146,9 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
 
   @Nonnull
   @Override
-  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, int startOffset, int endOffset,
-                                                  ASTNode nodeAfter, boolean changedViaPsi)
-  {
+  public CharSequence adjustWhiteSpaceIfNecessary(@Nonnull CharSequence whiteSpaceText, int startOffset, int endOffset, ASTNode nodeAfter, boolean changedViaPsi) {
     if (!changedViaPsi) {
-      return myWhiteSpaceStrategy.adjustWhiteSpaceIfNecessary(whiteSpaceText, myDocument.getCharsSequence(), startOffset, endOffset,
-                                                              mySettings, nodeAfter);
+      return myWhiteSpaceStrategy.adjustWhiteSpaceIfNecessary(whiteSpaceText, myDocument.getCharsSequence(), startOffset, endOffset, mySettings, nodeAfter);
     }
 
     final PsiElement element = myFile.findElementAt(startOffset);
@@ -174,8 +168,6 @@ public class FormattingDocumentModelImpl implements FormattingDocumentModel {
 
   public static boolean canUseDocumentModel(@Nonnull Document document, @Nonnull PsiFile file) {
     PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(file.getProject());
-    return !psiDocumentManager.isUncommited(document) &&
-           !psiDocumentManager.isDocumentBlockedByPsi(document) &&
-           file.getText().equals(document.getText());
+    return !psiDocumentManager.isUncommited(document) && !psiDocumentManager.isDocumentBlockedByPsi(document) && file.getText().equals(document.getText());
   }
 }

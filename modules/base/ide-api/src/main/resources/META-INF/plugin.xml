@@ -549,7 +549,7 @@
     </extensionPoint>
 
     <extensionPoint name="lang.unwrapDescriptor" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.unwrap.UnwrapDescriptor"/>
+      <with attribute="implementationClass" implements="consulo.language.editor.refactoring.unwrap.UnwrapDescriptor"/>
     </extensionPoint>
 
     <extensionPoint name="lang.parserDefinition" beanClass="consulo.language.LanguageExtensionPoint">
@@ -567,7 +567,7 @@
     </extensionPoint>
 
     <extensionPoint name="lang.treePatcher" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.ide.impl.psi.templateLanguages.TreePatcher"/>
+      <with attribute="implementationClass" implements="consulo.language.impl.psi.template.TreePatcher"/>
     </extensionPoint>
 
     <extensionPoint name="outerLanguageRangePatcher" beanClass="consulo.language.LanguageExtensionPoint">
@@ -2817,6 +2817,9 @@
     <selectInTarget implementation="consulo.webBrowser.impl.SelectInDefaultBrowserTarget"/>
 
     <webFileFilter implementation="consulo.webBrowser.impl.DefaultHtmlWebFileFilter" order="last"/>
+
+    <applicationService serviceInterface="consulo.ui.ex.awt.internal.IdeTooltipManager" serviceImplementation="com.intellij.ide.IdeTooltipManagerImpl"/>
+    <applicationService serviceInterface="consulo.language.codeStyle.internal.CodeStyleInternalHelper" serviceImplementation="consulo.language.codeStyle.impl.CodeStyleInternalHelperImpl"/>
   </extensions>
 
   <applicationListeners>

@@ -15,7 +15,7 @@
  */
 package com.intellij.openapi.vcs.changes.committed;
 
-import com.intellij.codeInsight.hint.HintUtil;
+import consulo.language.editor.ui.awt.HintUtil;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -17,7 +17,6 @@ package consulo.language.codeStyle;
 
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
-import consulo.language.impl.ast.LeafElement;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
 
@@ -105,7 +104,7 @@ public abstract class AbstractWhiteSpaceFormattingStrategy implements WhiteSpace
   }
 
   @Override
-  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull LeafElement whiteSpaceElement) {
+  public boolean addWhitespace(@Nonnull ASTNode treePrev, @Nonnull ASTNode whiteSpaceElement) {
     return false;
   }
 }
