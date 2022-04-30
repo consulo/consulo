@@ -28,6 +28,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Base super-class for {@link LineWrapPositionStrategy} implementations that want to restrict wrap positions
@@ -60,7 +61,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
 
   @Override
   public int calculateWrapPosition(@Nonnull Document document,
-                                   @javax.annotation.Nullable Project project,
+                                   @Nullable Project project,
                                    int startOffset,
                                    int endOffset,
                                    int maxPreferredOffset,
@@ -135,7 +136,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
    *                                          target line should be wrapped OR <code>-1</code> if no wrapping should be performed
    */
   protected abstract int doCalculateWrapPosition(
-          @Nonnull Document document, @javax.annotation.Nullable Project project, int startOffset, int endOffset, int maxPreferredOffset,
+          @Nonnull Document document, @Nullable Project project, int startOffset, int endOffset, int maxPreferredOffset,
           boolean allowToBeyondMaxPreferredOffset, boolean virtual
   );
 
@@ -160,7 +161,7 @@ public abstract class PsiAwareLineWrapPositionStrategy implements LineWrapPositi
     return false;
   }
   
-  @javax.annotation.Nullable
+  @Nullable
   private static PsiElement getPrevious(@Nonnull PsiElement element) {
     PsiElement result = element.getPrevSibling();
     if (result != null) {

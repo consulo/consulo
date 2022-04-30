@@ -61,7 +61,9 @@ public interface FindUsagesProvider {
    * @return the help topic ID, or null if no help is available.
    */
   @Nullable
-  String getHelpId(@Nonnull PsiElement psiElement);
+  default String getHelpId(@Nonnull PsiElement psiElement) {
+    return "reference.dialogs.findUsages.other";
+  }
 
   /**
    * Returns the user-visible type of the specified element, shown in the "Find Usages"
