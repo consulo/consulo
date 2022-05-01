@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.application.options;
 
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.CollectionListModel;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.UIUtil;

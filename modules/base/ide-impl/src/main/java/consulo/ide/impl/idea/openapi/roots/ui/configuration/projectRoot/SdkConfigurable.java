@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.projectRoots.ui.BaseSdkEditor;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
 import consulo.content.bundle.SdkUtil;
-import consulo.bundle.ui.SdkEditor;
+import consulo.ide.impl.bundle.SdkEditor;
 import consulo.disposer.Disposable;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

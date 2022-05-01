@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.refactoring.safeDelete;
 
-import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.language.editor.refactoring.LanguageRefactoringSupport;
 import consulo.usage.UsageViewManager;
 import consulo.language.psi.ElementDescriptionUtil;

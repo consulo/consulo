@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.JBList;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.UIUtil;

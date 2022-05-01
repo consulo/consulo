@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
-import consulo.project.ui.wm.impl.StatusWidgetBorders;
+import consulo.ide.impl.project.StatusWidgetBorders;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.ClickListener;
 import consulo.ui.ex.awt.UIExAWTDataKey;

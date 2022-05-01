@@ -33,7 +33,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
 import consulo.dataContext.DataContext;
 import consulo.ide.IdeBundle;
-import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;

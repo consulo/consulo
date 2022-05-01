@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
+import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
 import jakarta.inject.Singleton;
 
 /**

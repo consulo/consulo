@@ -34,7 +34,7 @@ import consulo.content.library.LibraryTable;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.disposer.Disposable;
-import consulo.roots.ui.configuration.ExtensionEditor;
+import consulo.ide.impl.roots.ui.configuration.ExtensionEditor;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.dataholder.Key;

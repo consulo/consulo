@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.diagnostic;
 
 import consulo.ide.ServiceManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.external.api.UserAccount;
-import consulo.externalService.ExternalService;
-import consulo.externalService.ExternalServiceConfiguration;
-import consulo.externalService.impl.WebServiceApi;
-import consulo.externalService.impl.WebServiceApiSender;
+import consulo.ide.impl.external.api.UserAccount;
+import consulo.ide.impl.externalService.ExternalService;
+import consulo.ide.impl.externalService.ExternalServiceConfiguration;
+import consulo.ide.impl.externalService.impl.WebServiceApi;
+import consulo.ide.impl.externalService.impl.WebServiceApiSender;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;

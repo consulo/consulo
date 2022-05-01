@@ -22,7 +22,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.internal.ProjectEx;
-import consulo.components.impl.stores.ProjectStorageUtil;
+import consulo.ide.impl.components.impl.stores.ProjectStorageUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 

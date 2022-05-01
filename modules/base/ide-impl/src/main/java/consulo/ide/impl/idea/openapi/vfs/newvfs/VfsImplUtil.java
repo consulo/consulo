@@ -26,7 +26,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.util.collection.Maps;
-import consulo.vfs.impl.archive.ArchiveFileSystemBase;
+import consulo.ide.impl.vfs.impl.archive.ArchiveFileSystemBase;
 import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.*;
 

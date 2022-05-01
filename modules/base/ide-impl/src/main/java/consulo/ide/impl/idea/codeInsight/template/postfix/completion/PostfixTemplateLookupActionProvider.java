@@ -28,7 +28,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.IconUtil;
-import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
+import consulo.ide.impl.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 
 public class PostfixTemplateLookupActionProvider implements LookupActionProvider {
   @Override

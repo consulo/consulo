@@ -27,7 +27,7 @@ import consulo.configurable.Configurable;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.disposer.Disposable;
-import consulo.ide.settings.impl.EditorGeneralConfigurable;
+import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.CheckBox;

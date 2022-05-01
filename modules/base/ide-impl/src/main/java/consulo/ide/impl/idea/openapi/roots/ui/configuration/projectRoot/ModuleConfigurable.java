@@ -40,8 +40,8 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.disposer.Disposable;
 import consulo.ide.setting.module.ModulesConfigurator;
-import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
-import consulo.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
+import consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions.DeleteLayerAction;
+import consulo.ide.impl.roots.ui.configuration.projectRoot.moduleLayerActions.NewLayerAction;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 

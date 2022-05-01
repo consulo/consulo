@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
-import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

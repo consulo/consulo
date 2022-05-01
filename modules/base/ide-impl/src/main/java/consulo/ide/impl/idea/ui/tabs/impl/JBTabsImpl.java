@@ -36,7 +36,7 @@ import consulo.component.util.Weighted;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.ui.laf.JBEditorTabsUI;
+import consulo.ide.impl.ui.laf.JBEditorTabsUI;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.popup.event.JBPopupListener;
 import consulo.ui.ex.popup.event.LightweightWindowEvent;
 

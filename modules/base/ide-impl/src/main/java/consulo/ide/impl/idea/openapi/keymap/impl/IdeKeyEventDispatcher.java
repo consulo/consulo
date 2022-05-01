@@ -46,7 +46,7 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.base.BaseDataManager;
+import consulo.ide.impl.base.BaseDataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.DumbService;
 import consulo.project.Project;

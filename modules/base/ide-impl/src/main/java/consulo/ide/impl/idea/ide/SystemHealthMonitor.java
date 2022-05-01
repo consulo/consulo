@@ -49,7 +49,7 @@ import consulo.container.boot.ContainerPathManager;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.updateSettings.impl.UpdateHistory;
+import consulo.ide.impl.updateSettings.impl.UpdateHistory;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.application.ApplicationPropertiesComponent;

@@ -21,7 +21,7 @@ import consulo.content.library.LibraryTablePresentation;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.configurable.internal.ConfigurableWeight;
-import consulo.roots.ui.configuration.ProjectConfigurableWeights;
+import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.Nls;

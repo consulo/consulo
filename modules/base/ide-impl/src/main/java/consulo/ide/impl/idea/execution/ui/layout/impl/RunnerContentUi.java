@@ -46,7 +46,7 @@ import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
-import consulo.ui.docking.BaseDockManager;
+import consulo.ide.impl.ui.docking.BaseDockManager;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.UIBundle;

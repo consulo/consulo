@@ -29,7 +29,7 @@ import consulo.language.codeStyle.arrangement.model.ArrangementCompositeMatchCon
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchConditionVisitor;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;

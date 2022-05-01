@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.impl.plugins.InstalledPluginsState;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

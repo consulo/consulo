@@ -29,10 +29,10 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.component.util.graph.CachingSemiGraph;
 import consulo.component.util.graph.DFSTBuilder;
 import consulo.component.util.graph.GraphGenerator;
-import consulo.compiler.impl.packagingCompiler.ArchivePackageWriterEx;
+import consulo.ide.impl.compiler.packagingCompiler.ArchivePackageWriterEx;
 import consulo.logging.Logger;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
-import consulo.packaging.impl.util.DeploymentUtilImpl;
+import consulo.ide.impl.packaging.impl.util.DeploymentUtilImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

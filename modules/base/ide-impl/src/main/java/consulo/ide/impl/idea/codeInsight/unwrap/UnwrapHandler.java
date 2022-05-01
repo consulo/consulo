@@ -30,7 +30,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.impl.internal.psi.RecursiveTreeElementWalkingVisitor;
 import consulo.language.impl.ast.TreeElement;
 import consulo.ui.ex.awt.JBList;

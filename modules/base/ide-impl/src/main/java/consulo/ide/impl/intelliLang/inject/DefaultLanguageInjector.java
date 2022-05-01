@@ -21,8 +21,8 @@ import consulo.language.inject.MultiHostRegistrar;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.psi.injection.LanguageInjectionSupport;
-import consulo.psi.injection.impl.ProjectInjectionConfiguration;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.application.options.codeStyle.arrangement.match;
 
 import consulo.ide.impl.idea.application.options.codeStyle.arrangement.ArrangementConstants;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ide.impl.idea.application.options.codeStyle.arrangement.animation.ArrangementAnimationManager;
 import consulo.ide.impl.idea.application.options.codeStyle.arrangement.animation.ArrangementAnimationPanel;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;

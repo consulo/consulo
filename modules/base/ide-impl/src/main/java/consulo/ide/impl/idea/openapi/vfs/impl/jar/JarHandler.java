@@ -38,8 +38,8 @@ import consulo.util.collection.MultiMap;
 import consulo.ide.impl.idea.util.io.*;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
-import consulo.vfs.impl.archive.ArchiveFile;
-import consulo.vfs.impl.archive.ArchiveFileSystemBase;
+import consulo.ide.impl.vfs.impl.archive.ArchiveFile;
+import consulo.ide.impl.vfs.impl.archive.ArchiveFileSystemBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

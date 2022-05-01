@@ -32,8 +32,8 @@ import consulo.ui.ex.awt.BorderLayoutPanel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.ide.plugins.PluginDescriptionPanel;
-import consulo.ide.plugins.PluginIconHolder;
+import consulo.ide.impl.plugins.PluginDescriptionPanel;
+import consulo.ide.impl.plugins.PluginIconHolder;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

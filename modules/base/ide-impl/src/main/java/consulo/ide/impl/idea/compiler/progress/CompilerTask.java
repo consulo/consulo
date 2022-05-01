@@ -41,8 +41,8 @@ import consulo.navigation.Navigatable;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.compiler.impl.BuildViewServiceFactory;
-import consulo.compiler.impl.CompilerManagerImpl;
+import consulo.ide.impl.compiler.BuildViewServiceFactory;
+import consulo.ide.impl.compiler.CompilerManagerImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

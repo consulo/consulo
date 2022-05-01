@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
 import consulo.ide.impl.idea.openapi.actionSystem.impl.actionholder.ActionRef;
 import consulo.ide.impl.idea.ui.plaf.gtk.GtkMenuUI;
-import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.localize.LocalizeValue;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;

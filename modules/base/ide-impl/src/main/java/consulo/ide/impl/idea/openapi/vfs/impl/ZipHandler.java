@@ -23,8 +23,8 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.io.FileAccessorCache;
 import consulo.util.lang.ByteArrayCharSequence;
-import consulo.vfs.impl.archive.ArchiveEntry;
-import consulo.vfs.impl.archive.ArchiveFile;
+import consulo.ide.impl.vfs.impl.archive.ArchiveEntry;
+import consulo.ide.impl.vfs.impl.archive.ArchiveFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

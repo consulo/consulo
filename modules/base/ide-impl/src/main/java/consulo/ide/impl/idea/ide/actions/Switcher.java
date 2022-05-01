@@ -47,7 +47,7 @@ import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorWindow;
-import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ide.impl.VfsIconUtil;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;

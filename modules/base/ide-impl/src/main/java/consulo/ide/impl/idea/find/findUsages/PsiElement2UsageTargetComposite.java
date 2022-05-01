@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.find.FindUsagesHandler;
 import consulo.find.FindUsagesOptions;
-import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;

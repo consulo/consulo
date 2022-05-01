@@ -34,7 +34,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.FList;
 import consulo.application.util.function.Processor;
 import consulo.compiler.CompilerConfiguration;
-import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
+import consulo.ide.impl.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.language.content.ProductionContentFolderTypeProvider;

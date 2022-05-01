@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.ui.impl;
 
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.ImageUtil;
-import consulo.desktop.util.awt.graphics.GraphicsUtilities;
-import consulo.desktop.util.awt.graphics.ShadowRenderer;
+import consulo.ide.impl.desktop.awt.graphics.GraphicsUtilities;
+import consulo.ide.impl.desktop.awt.graphics.ShadowRenderer;
 
 import javax.swing.*;
 import java.awt.*;

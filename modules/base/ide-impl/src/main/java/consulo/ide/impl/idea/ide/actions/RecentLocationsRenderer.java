@@ -26,7 +26,7 @@ import consulo.codeEditor.markup.HighlighterLayer;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.colorScheme.TextAttributes;
 import consulo.ui.ex.util.TextAttributesUtil;
-import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ide.impl.VfsIconUtil;
 import consulo.project.Project;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Gray;

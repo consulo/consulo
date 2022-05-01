@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.tasks.LocalTask;
 import consulo.ide.impl.idea.tasks.TaskManager;
 import consulo.ide.impl.idea.tasks.config.TaskSettings;
-import consulo.actionSystem.ex.ComboBoxButtonImpl;
+import consulo.ide.impl.actionSystem.ex.ComboBoxButtonImpl;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

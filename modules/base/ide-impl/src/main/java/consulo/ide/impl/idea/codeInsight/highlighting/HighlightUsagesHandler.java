@@ -51,7 +51,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ui.wm.WindowManager;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetUtil;
 

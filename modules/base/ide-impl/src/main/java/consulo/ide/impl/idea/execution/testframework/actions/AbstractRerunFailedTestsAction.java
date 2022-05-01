@@ -33,7 +33,7 @@ import consulo.execution.test.AbstractTestProxy;
 import consulo.execution.test.Filter;
 import consulo.execution.test.TestConsoleProperties;
 import consulo.execution.test.TestFrameworkRunningModel;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;

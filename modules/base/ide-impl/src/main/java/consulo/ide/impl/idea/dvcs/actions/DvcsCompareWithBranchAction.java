@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -27,7 +27,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.plugins.PluginsConfigurable;
+import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.logging.Logger;
 import consulo.project.Project;

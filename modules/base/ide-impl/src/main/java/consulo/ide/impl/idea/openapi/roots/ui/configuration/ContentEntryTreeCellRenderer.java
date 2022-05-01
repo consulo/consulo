@@ -24,7 +24,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.roots.ContentFoldersSupportUtil;
+import consulo.ide.impl.roots.ContentFoldersSupportUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.module.extension.ModuleExtension;
 import consulo.language.psi.PsiPackageSupportProvider;

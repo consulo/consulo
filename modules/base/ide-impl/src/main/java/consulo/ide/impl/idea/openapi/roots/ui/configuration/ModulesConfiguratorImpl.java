@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
-import consulo.compiler.impl.ModuleCompilerUtil;
+import consulo.ide.impl.compiler.ModuleCompilerUtil;
 import consulo.ide.impl.idea.ide.impl.util.NewOrImportModuleUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
@@ -41,12 +41,12 @@ import consulo.component.util.graph.GraphGenerator;
 import consulo.compiler.CompilerConfiguration;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.newProject.ui.NewProjectDialog;
-import consulo.ide.newProject.ui.NewProjectPanel;
+import consulo.ide.impl.newProject.ui.NewProjectDialog;
+import consulo.ide.impl.newProject.ui.NewProjectPanel;
 import consulo.logging.Logger;
-import consulo.moduleImport.ModuleImportContext;
-import consulo.moduleImport.ModuleImportProvider;
-import consulo.moduleImport.ui.ModuleImportProcessor;
+import consulo.ide.impl.moduleImport.ModuleImportContext;
+import consulo.ide.impl.moduleImport.ModuleImportProvider;
+import consulo.ide.impl.moduleImport.ui.ModuleImportProcessor;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;

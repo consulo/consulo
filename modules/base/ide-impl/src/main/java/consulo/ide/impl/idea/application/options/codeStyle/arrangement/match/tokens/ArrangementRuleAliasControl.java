@@ -19,7 +19,7 @@ import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
 import consulo.ide.impl.idea.application.options.codeStyle.arrangement.match.ArrangementMatchingRulesControl;
 import consulo.util.dataholder.Key;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

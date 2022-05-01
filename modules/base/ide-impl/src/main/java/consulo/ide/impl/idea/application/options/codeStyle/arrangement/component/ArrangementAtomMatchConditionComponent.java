@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
 import consulo.language.codeStyle.arrangement.std.*;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.RoundedLineBorder;
 import consulo.ui.ex.awt.SimpleColoredComponent;

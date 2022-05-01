@@ -52,7 +52,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.execution.ui.impl.RunToolWindowManager;
+import consulo.ide.impl.execution.RunToolWindowManager;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;

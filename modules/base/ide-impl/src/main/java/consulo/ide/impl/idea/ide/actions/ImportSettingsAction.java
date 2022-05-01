@@ -32,7 +32,7 @@ import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.application.internal.ApplicationEx;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.IdeBundle;
-import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -24,11 +24,11 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.net.HttpConfigurable;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.ide.eap.plugins.ExperimentalPluginsDescriptor;
-import consulo.ide.plugins.PluginJsonNode;
-import consulo.ide.updateSettings.UpdateChannel;
-import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import consulo.externalService.impl.WebServiceApi;
+import consulo.ide.impl.eap.plugins.ExperimentalPluginsDescriptor;
+import consulo.ide.impl.plugins.PluginJsonNode;
+import consulo.ide.impl.updateSettings.UpdateChannel;
+import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.ide.impl.externalService.impl.WebServiceApi;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

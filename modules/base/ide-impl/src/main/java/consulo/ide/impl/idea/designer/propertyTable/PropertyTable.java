@@ -45,7 +45,7 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.util.ui.ToolwindowPaintUtil;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

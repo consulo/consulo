@@ -33,7 +33,7 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.projectView.impl.nodes.PackageElement;
+import consulo.ide.impl.projectView.impl.nodes.PackageElement;
 import consulo.module.extension.ModuleExtension;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;

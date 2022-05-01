@@ -38,8 +38,8 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.ui.ex.toolWindow.ToolWindowInternalDecorator;
 import consulo.ui.ex.toolWindow.ToolWindowType;
-import consulo.util.ui.ToolwindowPaintUtil;
-import consulo.wm.impl.ToolWindowContentUI;
+import consulo.ide.impl.ui.ToolwindowPaintUtil;
+import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

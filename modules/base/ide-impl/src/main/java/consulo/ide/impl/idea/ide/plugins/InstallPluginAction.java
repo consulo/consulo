@@ -29,10 +29,10 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.ide.plugins.InstalledPluginsState;
-import consulo.ide.updateSettings.impl.PlatformOrPluginDialog;
-import consulo.ide.updateSettings.impl.PlatformOrPluginNode;
-import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.ide.impl.plugins.InstalledPluginsState;
+import consulo.ide.impl.updateSettings.impl.PlatformOrPluginDialog;
+import consulo.ide.impl.updateSettings.impl.PlatformOrPluginNode;
+import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;
 

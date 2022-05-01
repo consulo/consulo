@@ -33,7 +33,7 @@ import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import consulo.actionSystem.ex.ComboBoxButton;
+import consulo.ide.impl.actionSystem.ex.ComboBoxButton;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ExecutionLocalize;
 import consulo.ui.annotation.RequiredUIAccess;

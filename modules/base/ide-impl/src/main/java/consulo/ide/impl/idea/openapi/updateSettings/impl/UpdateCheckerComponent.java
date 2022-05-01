@@ -19,9 +19,9 @@ import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.disposer.Disposable;
-import consulo.ide.updateSettings.UpdateSettings;
-import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateChecker;
-import consulo.ide.updateSettings.impl.PlatformOrPluginUpdateResult;
+import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateChecker;
+import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

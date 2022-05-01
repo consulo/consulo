@@ -26,7 +26,7 @@ import consulo.language.codeStyle.arrangement.model.ArrangementMatchConditionVis
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ide.impl.idea.util.ui.GridBag;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;

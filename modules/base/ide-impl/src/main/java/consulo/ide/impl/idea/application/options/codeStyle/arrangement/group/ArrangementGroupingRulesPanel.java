@@ -22,7 +22,7 @@ import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
 import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ide.impl.idea.util.ui.GridBag;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

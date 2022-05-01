@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.execution.actions;
 
 import consulo.execution.ExecutionBundle;
 import consulo.application.AllIcons;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

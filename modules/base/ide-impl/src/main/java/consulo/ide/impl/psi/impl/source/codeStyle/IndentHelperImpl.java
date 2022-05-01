@@ -22,7 +22,6 @@ import consulo.language.ast.ASTNode;
 import consulo.language.impl.internal.psi.IndentHelper;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.psi.impl.source.codeStyle.IndentHelperExtension;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
 

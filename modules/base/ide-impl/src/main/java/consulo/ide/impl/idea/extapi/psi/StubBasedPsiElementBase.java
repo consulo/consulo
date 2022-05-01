@@ -48,7 +48,7 @@ import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.language.impl.internal.psi.SubstrateRefOwner;
-import consulo.security.impl.PrivilegedAction;
+import consulo.ide.impl.security.impl.PrivilegedAction;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;

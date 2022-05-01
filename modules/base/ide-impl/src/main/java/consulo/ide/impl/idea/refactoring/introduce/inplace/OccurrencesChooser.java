@@ -25,7 +25,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.popup.JBPopup;

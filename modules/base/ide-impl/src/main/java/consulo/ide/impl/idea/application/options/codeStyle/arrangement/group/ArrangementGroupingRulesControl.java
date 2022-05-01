@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.application.options.codeStyle.arrangement.ui.Arrang
 import consulo.util.dataholder.Key;
 import consulo.language.codeStyle.arrangement.group.ArrangementGroupingRule;
 import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.codeStyle.arrangement.std.CompositeArrangementSettingsToken;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.table.JBTable;

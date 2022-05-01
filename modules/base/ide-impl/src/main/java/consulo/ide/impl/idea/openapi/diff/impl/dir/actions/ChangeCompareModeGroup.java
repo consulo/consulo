@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.ide.impl.idea.openapi.diff.impl.dir.DirDiffTableModel;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.actionSystem.ex.ComboBoxButton;
+import consulo.ide.impl.actionSystem.ex.ComboBoxButton;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

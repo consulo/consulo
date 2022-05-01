@@ -20,8 +20,8 @@
 package consulo.ide.impl.idea.codeStyle;
 
 import consulo.codeEditor.Editor;
-import consulo.codeStyle.ApplicationCodeStyleFacade;
-import consulo.codeStyle.ProjectCodeStyleFacade;
+import consulo.ide.impl.language.codeStyle.ApplicationCodeStyleFacade;
+import consulo.ide.impl.language.codeStyle.ProjectCodeStyleFacade;
 import consulo.document.Document;
 import consulo.ide.ServiceManager;
 import consulo.language.Language;

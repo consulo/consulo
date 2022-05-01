@@ -20,7 +20,7 @@ import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.find.*;
-import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.find.impl.FindInProjectUtil;
 import consulo.ide.impl.idea.find.replaceInProject.ReplaceInProjectManager;
 import consulo.usage.UsageViewManager;

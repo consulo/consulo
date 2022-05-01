@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.options.ex;
 
-import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.configurable.Configurable;
 import consulo.ide.impl.idea.openapi.options.ConfigurableEP;

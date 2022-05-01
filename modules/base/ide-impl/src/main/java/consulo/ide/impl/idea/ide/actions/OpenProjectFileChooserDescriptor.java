@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.project.impl.ProjectOpenProcessors;
+import consulo.ide.impl.project.ProjectOpenProcessors;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

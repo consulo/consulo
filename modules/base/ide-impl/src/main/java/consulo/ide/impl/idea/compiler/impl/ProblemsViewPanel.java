@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
-import consulo.compiler.impl.CompilerWorkspaceConfiguration;
-import consulo.compiler.impl.HelpID;
+import consulo.ide.impl.compiler.CompilerWorkspaceConfiguration;
+import consulo.ide.impl.compiler.HelpID;
 import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.ActionGroup;

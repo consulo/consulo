@@ -22,7 +22,7 @@ import consulo.application.Application;
 import consulo.fileEditor.FileEditorManager;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ide.plugins.whatsNew.WhatsNewVirtualFile;
+import consulo.ide.impl.plugins.whatsNew.WhatsNewVirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.IdeLocalize;
 import consulo.ui.annotation.RequiredUIAccess;

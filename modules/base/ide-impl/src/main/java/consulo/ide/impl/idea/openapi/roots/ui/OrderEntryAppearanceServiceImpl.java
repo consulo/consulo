@@ -40,7 +40,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;

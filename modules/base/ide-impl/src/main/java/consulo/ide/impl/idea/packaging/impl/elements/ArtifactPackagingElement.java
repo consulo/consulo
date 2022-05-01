@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.packaging.impl.ui.DelegatedPackagingElementPresenta
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPresentation;
 import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl;
+import consulo.ide.impl.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

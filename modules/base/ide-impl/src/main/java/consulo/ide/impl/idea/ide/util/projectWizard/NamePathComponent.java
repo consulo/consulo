@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ide.impl.idea.ui.FieldPanel;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.wizard.newModule.NewModuleWizardContext;
+import consulo.ide.impl.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

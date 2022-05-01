@@ -27,7 +27,7 @@ import java.io.RandomAccessFile;
 class RandomAccessFileWithLengthAndSizeTracking extends RandomAccessFile {
   private static final Logger LOG = Logger.getInstance(RandomAccessFileWithLengthAndSizeTracking.class);
   // SystemProperties.getBooleanProperty("idea.do.random.access.wrapper.assertions", false);
-  // we can't use consulo.security.impl.PrivilegedAction here due util module
+  // we can't use consulo.ide.impl.security.impl.PrivilegedAction here due util module
   private static final boolean doAssertions = false;
 
   private final String myPath;

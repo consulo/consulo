@@ -34,7 +34,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.actions.CreateDirectoryOrPackageType;
+import consulo.ide.impl.actions.CreateDirectoryOrPackageType;
 import consulo.language.psi.PsiPackageManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;

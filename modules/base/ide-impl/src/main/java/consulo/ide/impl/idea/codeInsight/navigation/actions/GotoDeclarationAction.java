@@ -35,7 +35,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.language.editor.TargetElementUtil;
 import consulo.language.editor.TargetElementUtilExtender;
-import consulo.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
+import consulo.ide.impl.codeInsight.navigation.actions.GotoDeclarationHandlerEx;
 import consulo.component.extension.ExtensionException;
 import consulo.component.extension.Extensions;
 import consulo.document.Document;

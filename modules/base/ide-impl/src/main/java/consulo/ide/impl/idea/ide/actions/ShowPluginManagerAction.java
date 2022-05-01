@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.plugins.PluginsConfigurable;
+import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;

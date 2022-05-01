@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
 import consulo.ide.impl.idea.ide.HelpTooltipManager;
-import consulo.project.ui.wm.impl.StatusWidgetBorders;
+import consulo.ide.impl.project.StatusWidgetBorders;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.application.util.SystemInfo;

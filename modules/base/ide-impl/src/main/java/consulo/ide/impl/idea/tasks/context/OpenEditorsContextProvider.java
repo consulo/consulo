@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
-import consulo.ui.docking.BaseDockManager;
+import consulo.ide.impl.ui.docking.BaseDockManager;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

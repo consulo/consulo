@@ -32,7 +32,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;
-import consulo.ide.plugins.PluginsConfigurable;
+import consulo.ide.impl.plugins.PluginsConfigurable;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 

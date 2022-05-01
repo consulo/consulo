@@ -29,7 +29,7 @@ import consulo.util.dataholder.Key;
 import consulo.ide.impl.intelliLang.Configuration;
 import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
-import consulo.psi.injection.LanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
 import consulo.ide.impl.intelliLang.inject.TemporaryPlacesRegistry;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 

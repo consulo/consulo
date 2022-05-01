@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
-import consulo.actionSystem.ex.ComboBoxButton;
-import consulo.actionSystem.ex.ComboBoxButtonImpl;
+import consulo.ide.impl.actionSystem.ex.ComboBoxButton;
+import consulo.ide.impl.actionSystem.ex.ComboBoxButtonImpl;
 import consulo.dataContext.DataContext;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;

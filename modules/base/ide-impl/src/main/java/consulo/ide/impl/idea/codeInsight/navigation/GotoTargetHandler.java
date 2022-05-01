@@ -29,7 +29,7 @@ import consulo.application.statistic.FeatureUsageTracker;
 import consulo.application.util.function.Computable;
 import consulo.codeEditor.Editor;
 import consulo.ide.navigation.GotoTargetRendererProvider;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.ui.popup.HintUpdateSupply;
 import consulo.language.editor.action.CodeInsightActionHandler;
 import consulo.language.editor.hint.HintManager;

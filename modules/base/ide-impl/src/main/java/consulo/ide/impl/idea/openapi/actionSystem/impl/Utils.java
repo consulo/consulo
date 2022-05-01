@@ -9,7 +9,7 @@ import consulo.logging.Logger;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
 import consulo.util.concurrent.CancellablePromise;

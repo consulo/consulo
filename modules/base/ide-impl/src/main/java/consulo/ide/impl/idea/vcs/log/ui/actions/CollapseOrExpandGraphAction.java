@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.vcs.log.impl.VcsLogUtil;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogInternalDataKeys;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogUiImpl;
 import consulo.ui.image.Image;
-import consulo.wm.impl.ToolWindowContentUI;
+import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 
 import javax.annotation.Nonnull;
 

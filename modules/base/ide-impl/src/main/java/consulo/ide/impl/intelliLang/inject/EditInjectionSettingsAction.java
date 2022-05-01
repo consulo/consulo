@@ -29,7 +29,7 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.idea.util.FileContentUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.psi.injection.LanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
 import consulo.ide.impl.intelliLang.InjectionsSettingsUI;
 
 import javax.annotation.Nonnull;

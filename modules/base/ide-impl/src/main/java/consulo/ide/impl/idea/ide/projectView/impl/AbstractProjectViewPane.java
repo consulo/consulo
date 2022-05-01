@@ -38,7 +38,7 @@ import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
-import consulo.ide.projectView.impl.ProjectViewPaneOptionProvider;
+import consulo.ide.impl.projectView.impl.ProjectViewPaneOptionProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.language.file.inject.VirtualFileWindow;

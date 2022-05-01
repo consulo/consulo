@@ -43,7 +43,7 @@ import consulo.ui.ex.awt.Wrapper;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.base.BaseDataManager;
+import consulo.ide.impl.base.BaseDataManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

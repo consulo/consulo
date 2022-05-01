@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl;
 
-import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
-import consulo.module.content.layer.ContentFolder;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.project.Project;
-import consulo.roots.ContentFoldersSupportUtil;
-import consulo.language.content.PackageBasedContentFolderTypeProvider;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
-import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.application.AllIcons;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
+import consulo.ide.impl.roots.ContentFoldersSupportUtil;
+import consulo.language.content.PackageBasedContentFolderTypeProvider;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
-import consulo.content.ContentFolderTypeProvider;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.ContentFolder;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import consulo.virtualFileSystem.VFileProperty;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import jakarta.inject.Inject;
 

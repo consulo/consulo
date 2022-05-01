@@ -56,7 +56,7 @@ import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
 import consulo.project.ui.notification.event.NotificationListener;
-import consulo.task.api.repository.ReconfigureRepository;
+import consulo.ide.impl.task.repository.ReconfigureRepository;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.collection.MultiMap;
 import consulo.util.xml.serializer.XmlSerializationException;

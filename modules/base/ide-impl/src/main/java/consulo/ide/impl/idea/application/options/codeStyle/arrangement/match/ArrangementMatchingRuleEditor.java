@@ -25,7 +25,7 @@ import consulo.language.codeStyle.arrangement.match.StdArrangementEntryMatcher;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.model.ArrangementMatchCondition;
 import consulo.language.codeStyle.arrangement.std.*;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ide.impl.idea.util.ui.GridBag;

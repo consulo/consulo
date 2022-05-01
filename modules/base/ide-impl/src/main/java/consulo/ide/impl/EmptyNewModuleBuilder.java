@@ -16,11 +16,11 @@
 package consulo.ide.impl;
 
 import consulo.application.AllIcons;
-import consulo.ide.newProject.NewModuleBuilder;
-import consulo.ide.newProject.NewModuleBuilderProcessor;
-import consulo.ide.newProject.NewModuleContext;
-import consulo.ide.wizard.newModule.NewModuleWizardContext;
-import consulo.ide.wizard.newModule.NewModuleWizardContextBase;
+import consulo.ide.impl.newProject.NewModuleBuilder;
+import consulo.ide.impl.newProject.NewModuleBuilderProcessor;
+import consulo.ide.impl.newProject.NewModuleContext;
+import consulo.ide.impl.wizard.newModule.NewModuleWizardContext;
+import consulo.ide.impl.wizard.newModule.NewModuleWizardContextBase;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

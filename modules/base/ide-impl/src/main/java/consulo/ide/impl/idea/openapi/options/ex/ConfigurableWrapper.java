@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.options.ProjectConfigurableEP;
+import consulo.ide.impl.options.ProjectConfigurableEP;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;

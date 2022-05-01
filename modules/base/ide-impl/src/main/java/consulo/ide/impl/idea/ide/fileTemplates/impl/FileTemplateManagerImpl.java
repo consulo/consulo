@@ -28,7 +28,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.components.impl.stores.ProjectStorageUtil;
+import consulo.ide.impl.components.impl.stores.ProjectStorageUtil;
 import consulo.fileTemplate.FileTemplate;
 import consulo.fileTemplate.FileTemplateManager;
 import consulo.fileTemplate.FileTemplatesScheme;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot;
 
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
-import consulo.roots.ui.configuration.impl.DefaultLibrariesConfigurator;
+import consulo.ide.impl.roots.ui.configuration.impl.DefaultLibrariesConfigurator;
 
 import javax.annotation.Nonnull;
 

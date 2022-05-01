@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon;
 
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.gutter.GutterIconNavigationHandler;

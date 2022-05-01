@@ -21,7 +21,7 @@ import consulo.navigation.NavigationItem;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiElement;
-import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetProvider;
 

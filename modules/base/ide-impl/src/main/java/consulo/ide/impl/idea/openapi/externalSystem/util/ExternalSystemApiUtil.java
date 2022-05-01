@@ -52,7 +52,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
-import consulo.externalSystem.module.extension.ExternalSystemModuleExtension;
+import consulo.ide.impl.externalSystem.module.extension.ExternalSystemModuleExtension;
 import consulo.logging.Logger;
 import consulo.util.nodep.classloader.UrlClassLoader;
 import consulo.util.rmi.RemoteUtil;

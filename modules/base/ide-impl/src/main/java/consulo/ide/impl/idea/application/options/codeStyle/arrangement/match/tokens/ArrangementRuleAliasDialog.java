@@ -21,7 +21,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

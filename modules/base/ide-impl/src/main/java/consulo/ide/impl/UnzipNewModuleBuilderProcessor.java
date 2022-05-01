@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.io.ZipUtil;
-import consulo.ide.newProject.NewModuleBuilderProcessor;
-import consulo.ide.wizard.newModule.NewModuleWizardContext;
+import consulo.ide.impl.newProject.NewModuleBuilderProcessor;
+import consulo.ide.impl.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

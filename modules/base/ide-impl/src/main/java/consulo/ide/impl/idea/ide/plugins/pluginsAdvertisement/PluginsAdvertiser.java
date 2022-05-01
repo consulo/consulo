@@ -35,9 +35,9 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.SimpleExtension;
-import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
-import consulo.ide.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
+import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 

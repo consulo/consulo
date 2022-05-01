@@ -8,7 +8,7 @@ import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.util.registry.Registry;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
-import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;

@@ -34,7 +34,7 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
 import consulo.execution.coverage.*;
-import consulo.execution.coverage.impl.CoverageLineMarkerRenderer;
+import consulo.ide.impl.execution.coverage.CoverageLineMarkerRenderer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;

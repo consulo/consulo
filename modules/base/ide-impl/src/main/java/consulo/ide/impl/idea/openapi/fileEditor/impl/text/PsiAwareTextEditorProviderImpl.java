@@ -34,7 +34,7 @@ import consulo.project.Project;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
-import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;

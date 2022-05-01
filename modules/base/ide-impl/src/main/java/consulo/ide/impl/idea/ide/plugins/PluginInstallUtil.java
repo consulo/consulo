@@ -24,7 +24,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.util.containers.ArrayListSet;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.impl.plugins.InstalledPluginsState;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

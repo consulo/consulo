@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.UsedInPlugin;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.codeEditor.notifications.EditorNotificationProvider;
+import consulo.ide.impl.codeEditor.EditorNotificationProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

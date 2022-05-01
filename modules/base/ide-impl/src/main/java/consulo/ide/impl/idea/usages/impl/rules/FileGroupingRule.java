@@ -32,7 +32,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.usage.rule.SingleParentUsageGroupingRule;
 import consulo.usage.rule.UsageInFile;
-import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ide.impl.VfsIconUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

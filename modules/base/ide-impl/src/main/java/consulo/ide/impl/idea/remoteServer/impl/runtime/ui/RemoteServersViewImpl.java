@@ -6,7 +6,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ide.impl.idea.remoteServer.runtime.ServerConnection;
 import consulo.ide.impl.idea.remoteServer.runtime.ui.RemoteServersView;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.remoteServer.ui.ServersToolWindowManager;
+import consulo.ide.impl.remoteServer.ui.ServersToolWindowManager;
 
 import javax.annotation.Nonnull;
 import jakarta.inject.Inject;

@@ -21,7 +21,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen;
 
 import consulo.project.ui.wm.IdeFrame;
 import consulo.annotation.DeprecationInfo;
-import consulo.start.WelcomeFrameManager;
+import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nullable;

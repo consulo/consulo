@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.util.Function;
 import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.popup.IconButton;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.ActiveComponent;

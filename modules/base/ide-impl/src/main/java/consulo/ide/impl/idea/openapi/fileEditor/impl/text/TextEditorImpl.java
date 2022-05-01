@@ -33,7 +33,7 @@ import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.disposer.Disposer;
-import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
 import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.UserDataHolderBase;

@@ -20,7 +20,7 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.ExportableOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 

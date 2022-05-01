@@ -23,7 +23,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.start.WelcomeFrameManager;
+import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 

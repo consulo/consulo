@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ide.plugins;
 
 import consulo.container.plugin.*;
-import consulo.ide.plugins.PluginJsonNode;
+import consulo.ide.impl.plugins.PluginJsonNode;
 import consulo.logging.Logger;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.lang.StringUtil;

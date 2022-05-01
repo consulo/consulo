@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.application.options.codeStyle.arrangement.ui.Arrang
 import consulo.ide.impl.idea.application.options.codeStyle.arrangement.util.ArrangementRuleIndexControl;
 import consulo.language.codeStyle.arrangement.ArrangementUtil;
 import consulo.language.codeStyle.arrangement.std.*;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ide.impl.idea.util.ui.GridBag;

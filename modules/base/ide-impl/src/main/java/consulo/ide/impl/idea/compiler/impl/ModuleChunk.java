@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.compiler.impl;
 
 import consulo.application.Application;
 import consulo.compiler.CompilerManager;
-import consulo.compiler.impl.CompileContextEx;
+import consulo.ide.impl.compiler.CompileContextEx;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.content.bundle.Sdk;

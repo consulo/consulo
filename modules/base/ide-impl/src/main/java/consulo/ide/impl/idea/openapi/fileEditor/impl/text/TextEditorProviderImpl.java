@@ -26,7 +26,7 @@ import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.logging.Logger;
 import consulo.ui.Component;

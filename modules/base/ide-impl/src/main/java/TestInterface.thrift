@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace * consulo.execution.testframework.thrift.runner
+namespace * consulo.ide.impl.execution.testframework.thrift.runner
 
 service TestInterface {
   void runStarted();

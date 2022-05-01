@@ -27,7 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.ui.configuration.ContentFolderPropertiesDialog;
+import consulo.ide.impl.roots.ui.configuration.ContentFolderPropertiesDialog;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

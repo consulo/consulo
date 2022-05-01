@@ -24,7 +24,7 @@ import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationBundle;
 import consulo.util.dataholder.Key;
 import consulo.language.codeStyle.arrangement.match.ArrangementSectionRule;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ide.impl.idea.util.ui.GridBag;

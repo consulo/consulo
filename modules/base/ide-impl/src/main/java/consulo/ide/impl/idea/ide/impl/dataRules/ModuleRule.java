@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
-import consulo.ide.base.BaseDataManager;
+import consulo.ide.impl.base.BaseDataManager;
 
 import javax.annotation.Nonnull;
 

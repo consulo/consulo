@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.tipOfDay.TipOfDayManager;
+import consulo.ide.impl.tipOfDay.TipOfDayManager;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

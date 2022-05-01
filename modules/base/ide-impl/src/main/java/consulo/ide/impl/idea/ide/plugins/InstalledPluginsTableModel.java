@@ -23,7 +23,7 @@ import consulo.container.plugin.PluginIds;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
-import consulo.ide.plugins.InstalledPluginsState;
+import consulo.ide.impl.plugins.InstalledPluginsState;
 
 import javax.annotation.Nullable;
 import javax.swing.*;

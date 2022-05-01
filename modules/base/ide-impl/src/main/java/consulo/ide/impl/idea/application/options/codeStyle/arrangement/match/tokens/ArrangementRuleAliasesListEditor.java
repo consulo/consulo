@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.ui.Namer;
 import consulo.ide.impl.idea.openapi.util.Cloner;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.Factory;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.codeStyle.arrangement.std.StdArrangementRuleAliasToken;
 import consulo.util.collection.HashingStrategy;
 import org.jetbrains.annotations.Nls;

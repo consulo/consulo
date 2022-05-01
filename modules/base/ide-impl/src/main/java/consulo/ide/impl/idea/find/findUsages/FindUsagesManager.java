@@ -47,7 +47,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorLocation;
 import consulo.fileEditor.TextEditor;
 import consulo.find.*;
-import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.find.ui.AbstractFindUsagesDialog;
 import consulo.ide.impl.language.psi.IdePsiManagerImpl;
 import consulo.language.psi.*;

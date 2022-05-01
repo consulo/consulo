@@ -38,7 +38,7 @@ import consulo.content.library.LibraryTable;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.ModulePointerManager;
-import consulo.packaging.impl.elements.ZipArchivePackagingElement;
+import consulo.ide.impl.packaging.impl.elements.ZipArchivePackagingElement;
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;

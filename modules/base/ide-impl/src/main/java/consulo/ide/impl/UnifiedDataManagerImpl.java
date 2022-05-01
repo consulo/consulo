@@ -18,7 +18,7 @@ package consulo.ide.impl;
 import consulo.dataContext.AsyncDataContext;
 import consulo.dataContext.DataContext;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.base.BaseDataManager;
+import consulo.ide.impl.base.BaseDataManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

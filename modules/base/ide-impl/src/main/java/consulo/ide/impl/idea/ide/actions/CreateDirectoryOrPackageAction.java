@@ -24,7 +24,7 @@ import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ide.IdeBundle;
-import consulo.ide.actions.CreateDirectoryOrPackageType;
+import consulo.ide.impl.actions.CreateDirectoryOrPackageType;
 import consulo.language.LangBundle;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDirectory;

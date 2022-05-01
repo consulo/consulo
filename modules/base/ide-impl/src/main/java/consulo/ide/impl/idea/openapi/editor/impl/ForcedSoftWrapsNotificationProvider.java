@@ -9,7 +9,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorBundle;
 import consulo.codeEditor.internal.RealEditor;
-import consulo.codeEditor.notifications.EditorNotificationProvider;
+import consulo.ide.impl.codeEditor.EditorNotificationProvider;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.project.Project;

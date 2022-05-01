@@ -19,12 +19,12 @@ import com.google.common.reflect.TypeToken;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.net.HttpConfigurable;
-import consulo.external.api.ErrorReportBean;
-import consulo.externalService.AuthorizationFailedException;
-import consulo.externalService.UpdateAvailableException;
-import consulo.externalService.impl.WebServiceApi;
-import consulo.externalService.impl.WebServiceApiSender;
-import consulo.externalService.impl.WebServiceException;
+import consulo.ide.impl.external.api.ErrorReportBean;
+import consulo.ide.impl.externalService.AuthorizationFailedException;
+import consulo.ide.impl.externalService.UpdateAvailableException;
+import consulo.ide.impl.externalService.impl.WebServiceApi;
+import consulo.ide.impl.externalService.impl.WebServiceApiSender;
+import consulo.ide.impl.externalService.impl.WebServiceException;
 import consulo.platform.base.localize.DiagnosticLocalize;
 
 import javax.annotation.Nonnull;

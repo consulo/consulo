@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ui.popup;
 
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.popup.JWindowPopupFactory;
+import consulo.ide.impl.ui.popup.JWindowPopupFactory;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

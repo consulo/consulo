@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.ide.impl.fileEditor.FileEditorWindowBase;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
@@ -30,11 +31,10 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.ScrollingModel;
 import consulo.dataContext.DataProvider;
-import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.*;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.fileEditor.impl.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;

@@ -25,7 +25,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.UserDataHolderBase;
-import consulo.wm.impl.ContentEx;
+import consulo.ide.impl.wm.impl.ContentEx;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
 

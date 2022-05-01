@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.psi.PsiElement;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.popup.JBPopup;

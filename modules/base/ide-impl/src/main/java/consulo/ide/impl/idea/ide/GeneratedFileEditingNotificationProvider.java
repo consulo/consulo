@@ -22,7 +22,7 @@ import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.codeEditor.notifications.EditorNotificationProvider;
+import consulo.ide.impl.codeEditor.EditorNotificationProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;

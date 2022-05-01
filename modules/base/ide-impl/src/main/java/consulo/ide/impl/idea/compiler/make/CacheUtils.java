@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.compiler.make;
 
 import consulo.ide.impl.idea.util.Function;
 import consulo.compiler.*;
-import consulo.compiler.impl.CompileContextEx;
+import consulo.ide.impl.compiler.CompileContextEx;
 import consulo.logging.Logger;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;

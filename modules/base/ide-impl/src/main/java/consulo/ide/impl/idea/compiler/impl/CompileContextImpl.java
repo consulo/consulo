@@ -21,12 +21,12 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
-import consulo.compiler.impl.CompilerMessageImpl;
+import consulo.ide.impl.compiler.CompilerMessageImpl;
 import consulo.compiler.ProblemsView;
 import consulo.ide.impl.idea.compiler.progress.CompilerTask;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;
-import consulo.compiler.impl.CompileContextEx;
+import consulo.ide.impl.compiler.CompileContextEx;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.compiler.Compiler;
 import consulo.compiler.scope.CompileScope;
@@ -49,8 +49,8 @@ import consulo.util.collection.OrderedSet;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.ui.ex.MessageCategory;
 import consulo.compiler.AdditionalOutputDirectoriesProvider;
-import consulo.compiler.impl.make.CompositeDependencyCache;
-import consulo.compiler.impl.CompilerPathsImpl;
+import consulo.ide.impl.compiler.make.CompositeDependencyCache;
+import consulo.ide.impl.compiler.CompilerPathsImpl;
 import consulo.logging.Logger;
 import consulo.language.content.LanguageContentFolderScopes;
 import consulo.content.ContentFolderTypeProvider;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.plaf.gtk;
 
 import consulo.ui.ex.awt.UIUtil;
-import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
+import consulo.ide.impl.desktop.awt.laf.GTKPlusUIUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.MenuItemUI;

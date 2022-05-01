@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
-import consulo.compiler.impl.setting.CompilerConfigurable;
+import consulo.ide.impl.compiler.setting.CompilerConfigurable;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;

@@ -39,7 +39,7 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
-import consulo.project.impl.ProjectOpenProcessors;
+import consulo.ide.impl.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileChooser.FileChooser;

@@ -28,7 +28,7 @@ import consulo.component.ComponentManager;
 import consulo.component.util.Iconable;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.fileTypes.impl.VfsIconUtil;
+import consulo.ide.impl.VfsIconUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ui.image.Image;

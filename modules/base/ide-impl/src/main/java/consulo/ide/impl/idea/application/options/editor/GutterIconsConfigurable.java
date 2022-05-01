@@ -46,7 +46,7 @@ import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.settings.impl.EditorGeneralConfigurable;
+import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.TestOnly;

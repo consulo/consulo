@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.internal;
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.ide.impl.idea.codeInsight.hint.ImplementationViewComponent;
 import consulo.application.AllIcons;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;

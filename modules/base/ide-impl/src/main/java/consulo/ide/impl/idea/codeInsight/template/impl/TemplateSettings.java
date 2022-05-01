@@ -33,7 +33,7 @@ import consulo.util.collection.SmartList;
 import consulo.util.collection.MultiMap;
 import consulo.util.xml.serializer.Converter;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import consulo.codeInsight.template.impl.BundleLiveTemplateSetEP;
+import consulo.ide.impl.codeInsight.template.impl.BundleLiveTemplateSetEP;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;

@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;
-import consulo.compiler.impl.resourceCompiler.ResourceCompilerConfiguration;
+import consulo.ide.impl.compiler.resourceCompiler.ResourceCompilerConfiguration;
 import consulo.compiler.scope.CompileScope;
 import consulo.logging.Logger;
 import consulo.module.Module;

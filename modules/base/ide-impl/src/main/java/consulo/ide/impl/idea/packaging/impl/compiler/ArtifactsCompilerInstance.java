@@ -46,7 +46,7 @@ import consulo.util.lang.function.ThrowableRunnable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessRule;
 import consulo.logging.Logger;
-import consulo.packaging.impl.util.DeploymentUtilImpl;
+import consulo.ide.impl.packaging.impl.util.DeploymentUtilImpl;
 import consulo.util.collection.Sets;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 

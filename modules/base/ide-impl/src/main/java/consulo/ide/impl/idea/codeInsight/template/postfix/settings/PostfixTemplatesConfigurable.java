@@ -26,7 +26,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
+import consulo.ide.impl.codeInsight.template.postfix.settings.PostfixTemplatesChildConfigurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.configurable.SimpleConfigurable;

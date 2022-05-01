@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.xdebugger.impl.settings;
 
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.configurable.Configurable;
-import consulo.debugger.impl.setting.XDebuggerGeneralConfigurable;
+import consulo.ide.impl.debugger.XDebuggerGeneralConfigurable;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;
 import consulo.execution.debug.setting.XDebuggerSettings;
 import consulo.util.collection.SmartList;

@@ -36,7 +36,7 @@ import consulo.ui.ex.awt.StatusText;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
-import consulo.ide.plugins.PluginsPanel;
+import consulo.ide.impl.plugins.PluginsPanel;
 import consulo.localize.LocalizeValue;
 import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.ui.annotation.RequiredUIAccess;

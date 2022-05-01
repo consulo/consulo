@@ -46,7 +46,7 @@ import consulo.ide.setting.ProjectStructureSettingsUtil;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
-import consulo.roots.ui.configuration.ProjectConfigurableWeights;
+import consulo.ide.impl.roots.ui.configuration.ProjectConfigurableWeights;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import org.jetbrains.annotations.Nls;

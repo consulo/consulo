@@ -40,7 +40,7 @@ import consulo.ui.ex.awt.HighlightedRegion;
 import consulo.usage.UsageTreeColors;
 import consulo.usage.UsageTreeColorsScheme;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.projectView.impl.nodes.PackageElement;
+import consulo.ide.impl.projectView.impl.nodes.PackageElement;
 import consulo.logging.Logger;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;

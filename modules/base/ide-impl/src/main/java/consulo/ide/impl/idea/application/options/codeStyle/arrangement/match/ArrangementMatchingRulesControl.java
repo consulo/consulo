@@ -24,7 +24,7 @@ import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.arrangement.match.StdArrangementEntryMatcher;
 import consulo.language.codeStyle.arrangement.match.StdArrangementMatchRule;
 import consulo.language.codeStyle.arrangement.model.ArrangementAtomMatchCondition;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 import consulo.ui.ex.awt.util.ComponentUtil;

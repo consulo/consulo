@@ -21,7 +21,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.ide.projectView.ProjectViewEx;
+import consulo.ide.impl.projectView.ProjectViewEx;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

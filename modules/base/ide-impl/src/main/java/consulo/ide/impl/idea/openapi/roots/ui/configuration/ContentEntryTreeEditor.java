@@ -48,7 +48,7 @@ import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.disposer.Disposer;
 import consulo.localize.LocalizeValue;
 import consulo.content.ContentFolderTypeProvider;
-import consulo.roots.ContentFoldersSupportUtil;
+import consulo.ide.impl.roots.ContentFoldersSupportUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
 

@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.ui.speedSearch.ListWithFilter;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.dataContext.DataProvider;
 import consulo.ui.ex.popup.ListComponentUpdater;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.util.dataholder.Key;

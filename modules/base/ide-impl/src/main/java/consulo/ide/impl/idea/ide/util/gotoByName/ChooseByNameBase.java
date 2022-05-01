@@ -42,7 +42,7 @@ import consulo.application.util.registry.Registry;
 import consulo.component.ProcessCanceledException;
 import consulo.dataContext.*;
 import consulo.disposer.Disposer;
-import consulo.find.impl.usage.PsiElement2UsageTargetAdapter;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.psi.statistics.StatisticsInfo;
 import consulo.ide.impl.psi.statistics.StatisticsManager;

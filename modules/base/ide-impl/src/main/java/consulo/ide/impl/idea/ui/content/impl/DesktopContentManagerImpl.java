@@ -26,7 +26,7 @@ import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.wm.impl.ContentManagerBase;
+import consulo.ide.impl.wm.impl.ContentManagerBase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.ide;
 
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;
-import consulo.ide.tipOfDay.TipOfDayManager;
+import consulo.ide.impl.tipOfDay.TipOfDayManager;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 

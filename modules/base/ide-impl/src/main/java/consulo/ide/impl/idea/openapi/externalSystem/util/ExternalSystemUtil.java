@@ -101,7 +101,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.wm.impl.ToolWindowBase;
+import consulo.ide.impl.wm.impl.ToolWindowBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

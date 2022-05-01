@@ -21,7 +21,7 @@ import consulo.language.codeStyle.arrangement.std.ArrangementSettingsToken;
 import consulo.language.codeStyle.arrangement.std.ArrangementStandardSettingsManager;
 import consulo.language.codeStyle.arrangement.std.ArrangementUiComponent;
 import consulo.language.codeStyle.arrangement.std.StdArrangementTokenUiRole;
-import consulo.language.codeStyle.impl.arrangement.std.ArrangementStandardSettingsManagerImpl;
+import consulo.ide.impl.language.codeStyle.arrangement.std.ArrangementStandardSettingsManagerImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

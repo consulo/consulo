@@ -37,7 +37,7 @@ import consulo.localize.LocalizeValue;
 import consulo.platform.base.localize.ProjectLocalize;
 import consulo.configurable.internal.ConfigurableWeight;
 import consulo.ide.setting.module.ModulesConfigurator;
-import consulo.roots.ui.configuration.ProjectStructureElementConfigurable;
+import consulo.ide.impl.roots.ui.configuration.ProjectStructureElementConfigurable;
 import consulo.ui.Component;
 import consulo.ui.HtmlLabel;
 import consulo.ui.TextBox;

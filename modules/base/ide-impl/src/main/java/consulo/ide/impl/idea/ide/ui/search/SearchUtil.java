@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.ide.ui.search;
 
 import consulo.ide.impl.idea.application.options.SkipSelfSearchComponent;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.JBColor;
 import consulo.configurable.Configurable;
 import consulo.ui.ex.awt.*;
@@ -31,7 +31,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.ide.impl.base.BaseShowSettingsUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.util.ui.SwingHelper;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.logging.Logger;
-import consulo.packagesView.SearchablePackageManagementService;
+import consulo.ide.impl.packagesView.SearchablePackageManagementService;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.ObjectUtil;
 import org.jetbrains.annotations.Nls;

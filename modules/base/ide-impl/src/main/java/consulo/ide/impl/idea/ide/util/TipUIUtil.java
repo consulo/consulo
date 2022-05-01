@@ -37,7 +37,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.util.URLDictionatyLoader;
+import consulo.ide.impl.util.URLDictionatyLoader;
 import consulo.logging.Logger;
 import consulo.ui.style.StyleManager;
 import consulo.project.ui.wm.IdeFrameUtil;

@@ -54,7 +54,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.language.psi.PsiUtilCore;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.projectView.impl.nodes.PackageElement;
+import consulo.ide.impl.projectView.impl.nodes.PackageElement;
 import consulo.language.psi.PsiPackage;
 import consulo.language.psi.PsiPackageManager;
 import consulo.ui.image.Image;

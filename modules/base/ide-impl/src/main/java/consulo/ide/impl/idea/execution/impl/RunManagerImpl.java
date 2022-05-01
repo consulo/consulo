@@ -45,7 +45,7 @@ import consulo.ui.ex.IconDeferrer;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
-import consulo.execution.impl.ConfigurationTypeCache;
+import consulo.ide.impl.execution.ConfigurationTypeCache;
 import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.project.ProjectPropertiesComponent;

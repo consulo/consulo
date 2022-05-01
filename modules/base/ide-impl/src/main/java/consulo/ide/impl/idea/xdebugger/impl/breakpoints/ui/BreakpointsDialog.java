@@ -47,7 +47,7 @@ import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointsCheck
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
-import consulo.application.impl.WholeWestDialogWrapper;
+import consulo.ide.impl.application.WholeWestDialogWrapper;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.PopupHandler;

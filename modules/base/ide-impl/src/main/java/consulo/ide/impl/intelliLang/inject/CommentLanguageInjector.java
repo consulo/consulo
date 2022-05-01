@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import consulo.psi.injection.AbstractLanguageInjectionSupport;
-import consulo.psi.injection.LanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.AbstractLanguageInjectionSupport;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import consulo.language.inject.MultiHostInjector;
 import consulo.language.inject.MultiHostRegistrar;

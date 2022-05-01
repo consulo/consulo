@@ -1,0 +1,99 @@
+/*
+ * Copyright 2000-2009 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ide.impl.compiler.setting;
+
+import consulo.ide.impl.compiler.CompilerWorkspaceConfiguration;
+import consulo.compiler.CompilerBundle;
+import consulo.configurable.Configurable;
+import consulo.configurable.ConfigurationException;
+import consulo.project.Project;
+import consulo.ide.impl.idea.openapi.util.NotNullComputable;
+import consulo.disposer.Disposable;
+import consulo.configurable.SimpleConfigurable;
+import consulo.ui.CheckBox;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.layout.VerticalLayout;
+import jakarta.inject.Inject;
+
+import javax.annotation.Nonnull;
+
+public class CompilerConfigurable extends SimpleConfigurable<CompilerConfigurable.Root> implements Configurable {
+  protected static class Root implements NotNullComputable<Component> {
+    private CheckBox myCbClearOutputDirectory;
+    private CheckBox myCbAutoShowFirstError;
+
+    private VerticalLayout myLayout;
+
+    @RequiredUIAccess
+    public Root() {
+      myLayout = VerticalLayout.create();
+
+      myCbClearOutputDirectory = CheckBox.create(CompilerBundle.message("label.option.clear.output.directory.on.rebuild"));
+      myLayout.add(myCbClearOutputDirectory);
+
+      myCbAutoShowFirstError = CheckBox.create(CompilerBundle.message("label.option.autoshow.first.error"));
+      myLayout.add(myCbAutoShowFirstError);
+    }
+
+    @Nonnull
+    @Override
+    public Component compute() {
+      return myLayout;
+    }
+  }
+
+  private final CompilerWorkspaceConfiguration myCompilerWorkspaceConfiguration;
+
+  @Inject
+  public CompilerConfigurable(Project project) {
+    myCompilerWorkspaceConfiguration = CompilerWorkspaceConfiguration.getInstance(project);
+  }
+
+  @RequiredUIAccess
+  @Nonnull
+  @Override
+  protected Root createPanel(Disposable uiDisposable) {
+    return new Root();
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected boolean isModified(@Nonnull Root component) {
+    boolean isModified = component.myCbClearOutputDirectory.getValue() != myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY;
+    isModified |= component.myCbAutoShowFirstError.getValue() != myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR;
+    return isModified;
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void reset(@Nonnull Root component) {
+    component.myCbAutoShowFirstError.setValue(myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR);
+    component.myCbClearOutputDirectory.setValue(myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY);
+  }
+
+  @RequiredUIAccess
+  @Override
+  protected void apply(@Nonnull Root component) throws ConfigurationException {
+    myCompilerWorkspaceConfiguration.AUTO_SHOW_ERRORS_IN_EDITOR = component.myCbAutoShowFirstError.getValue();
+    myCompilerWorkspaceConfiguration.CLEAR_OUTPUT_DIRECTORY = component.myCbClearOutputDirectory.getValue();
+  }
+
+  @Override
+  public String getDisplayName() {
+    return CompilerBundle.message("compiler.configurable.display.name");
+  }
+}

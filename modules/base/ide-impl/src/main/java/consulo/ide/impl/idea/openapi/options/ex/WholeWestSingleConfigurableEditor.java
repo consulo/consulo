@@ -26,11 +26,11 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.ide.setting.ConfigurableUIMigrationUtil;
 import consulo.platform.base.localize.CommonLocalize;
-import consulo.application.impl.WholeWestDialogWrapper;
+import consulo.ide.impl.application.WholeWestDialogWrapper;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.NonNls;
 

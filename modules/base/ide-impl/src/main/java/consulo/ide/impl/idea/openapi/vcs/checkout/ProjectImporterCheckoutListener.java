@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
-import consulo.project.impl.ProjectOpenProcessors;
+import consulo.ide.impl.project.ProjectOpenProcessors;
 import consulo.ui.UIAccess;
 
 import java.io.File;

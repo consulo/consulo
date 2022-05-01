@@ -26,8 +26,8 @@ import consulo.ui.ex.awt.Messages;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginIds;
-import consulo.ide.plugins.InstalledPluginsState;
-import consulo.ide.plugins.PluginActionListener;
+import consulo.ide.impl.plugins.InstalledPluginsState;
+import consulo.ide.impl.plugins.PluginActionListener;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

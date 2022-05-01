@@ -9,7 +9,7 @@ import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.wm.impl.ToolWindowBase;
+import consulo.ide.impl.wm.impl.ToolWindowBase;
 import javax.annotation.Nonnull;
 
 import java.util.Collection;

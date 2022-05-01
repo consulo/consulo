@@ -29,7 +29,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
-import consulo.project.impl.ProjectOpenProcessors;
+import consulo.ide.impl.project.ProjectOpenProcessors;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ui.UIAccess;
 import consulo.util.concurrent.AsyncResult;

@@ -17,8 +17,8 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon;
 
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import consulo.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
-import consulo.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings;
+import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ApplicationStructureProblemsSettings;
+import consulo.ide.impl.roots.ui.configuration.projectRoot.daemon.ProjectStructureProblemsSettings;
 
 import javax.annotation.Nonnull;
 

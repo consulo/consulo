@@ -40,7 +40,7 @@ import java.util.function.Function;
  *
  * @since 138.100
  * <p>
- * Only for internal use. For plugin implementation please use {@link consulo.vfs.impl.archive.ArchiveFileSystemBase}
+ * Only for internal use. For plugin implementation please use {@link consulo.ide.impl.vfs.impl.archive.ArchiveFileSystemBase}
  */
 @Deprecated
 public abstract class ArchiveFileSystem extends NewVirtualFileSystem {

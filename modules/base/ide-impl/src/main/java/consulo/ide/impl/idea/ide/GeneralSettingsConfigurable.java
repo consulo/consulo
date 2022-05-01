@@ -20,7 +20,7 @@ import consulo.configurable.SearchableConfigurable;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.disposer.Disposable;
-import consulo.fileChooser.impl.FileOperateDialogSettings;
+import consulo.ide.impl.fileChooser.FileOperateDialogSettings;
 import consulo.ide.IdeBundle;
 import consulo.localize.LocalizeManager;
 import consulo.localize.LocalizeValue;

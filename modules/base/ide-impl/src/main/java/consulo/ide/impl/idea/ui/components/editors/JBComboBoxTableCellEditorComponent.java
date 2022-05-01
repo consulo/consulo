@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ui.components.editors;
 import consulo.application.AllIcons;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBLabel;

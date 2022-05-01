@@ -35,7 +35,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 
 
-public class ProgressDialog implements consulo.progress.util.ProgressDialog {
+public class ProgressDialog implements consulo.ide.impl.progress.util.ProgressDialog {
   private final ProgressWindow myProgressWindow;
   private long myLastTimeDrawn = -1;
   private volatile boolean myShouldShowBackground;

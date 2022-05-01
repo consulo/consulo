@@ -42,7 +42,7 @@ import consulo.language.pom.NavigatableWithText;
 import consulo.content.bundle.SdkUtil;
 import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

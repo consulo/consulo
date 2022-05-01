@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.application.options.editor;
 
 import consulo.application.Application;
 import consulo.configurable.UnnamedConfigurable;
-import consulo.options.ApplicationConfigurableEP;
+import consulo.ide.impl.options.ApplicationConfigurableEP;
 
 import jakarta.inject.Inject;
 

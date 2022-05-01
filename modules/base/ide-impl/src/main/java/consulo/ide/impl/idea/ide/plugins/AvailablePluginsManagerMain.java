@@ -25,7 +25,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.ide.plugins.PluginDescriptionPanel;
+import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.localize.LocalizeValue;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.lang.Pair;

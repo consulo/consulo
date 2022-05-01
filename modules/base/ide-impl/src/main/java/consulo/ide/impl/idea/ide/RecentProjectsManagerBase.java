@@ -40,7 +40,7 @@ import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.annotation.access.RequiredReadAction;
-import consulo.components.impl.stores.ProjectStoreImpl;
+import consulo.ide.impl.components.impl.stores.ProjectStoreImpl;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
 import consulo.module.impl.internal.extension.ModuleExtensionProviders;

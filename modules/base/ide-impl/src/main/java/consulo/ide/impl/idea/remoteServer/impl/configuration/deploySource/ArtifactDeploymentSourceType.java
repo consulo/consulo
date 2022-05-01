@@ -19,7 +19,7 @@ import consulo.execution.configuration.RunConfiguration;
 import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointerUtil;
-import consulo.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider;
+import consulo.ide.impl.packaging.impl.run.BuildArtifactsBeforeRunTaskProvider;
 import consulo.ide.impl.idea.remoteServer.configuration.deployment.ArtifactDeploymentSource;
 import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ide.impl.idea.remoteServer.impl.configuration.deploySource.impl.ArtifactDeploymentSourceImpl;

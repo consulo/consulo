@@ -6,7 +6,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.actions.InvalidateCacheDialog;
+import consulo.ide.impl.actions.InvalidateCacheDialog;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

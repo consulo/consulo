@@ -33,7 +33,7 @@ import consulo.ide.impl.idea.ui.plaf.gtk.GtkMenuItemUI;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;

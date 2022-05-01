@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ide.base.BaseShowSettingsUtil;
+import consulo.ide.impl.base.BaseShowSettingsUtil;
 import consulo.logging.Logger;
 import consulo.ide.setting.ConfigurableUIMigrationUtil;
 import consulo.ui.annotation.RequiredUIAccess;
