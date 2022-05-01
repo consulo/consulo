@@ -15,8 +15,7 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.desktop.awt.action.AboutNewDialog;
-import consulo.ide.actions.AboutManager;
+import consulo.ide.impl.actions.AboutManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
 import jakarta.inject.Singleton;

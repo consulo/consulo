@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.webSocket;
 
-import consulo.builtInServer.websocket.WebSocketAccepter;
-import consulo.builtInServer.websocket.WebSocketConnection;
+import consulo.ide.impl.builtInServer.websocket.WebSocketAccepter;
+import consulo.ide.impl.builtInServer.websocket.WebSocketConnection;
 
 import javax.annotation.Nonnull;
 import java.nio.charset.StandardCharsets;

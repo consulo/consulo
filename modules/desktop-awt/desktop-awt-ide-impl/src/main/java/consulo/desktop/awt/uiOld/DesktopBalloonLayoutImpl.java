@@ -28,11 +28,11 @@ import consulo.desktop.awt.wm.impl.IdeRootPane;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBInsets;
-import consulo.desktop.util.awt.migration.AWTComponentProviderUtil;
+import consulo.ide.impl.desktop.awt.migration.AWTComponentProviderUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ui.ex.impl.BalloonLayoutEx;
-import consulo.ui.ex.impl.ToolWindowPanelImplEx;
+import consulo.ide.impl.ui.impl.BalloonLayoutEx;
+import consulo.ide.impl.ui.impl.ToolWindowPanelImplEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

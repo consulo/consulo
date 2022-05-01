@@ -31,7 +31,7 @@ import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.toolWindow.ToolWindowStripeButton;
-import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 
 import javax.swing.*;
 import javax.swing.border.Border;

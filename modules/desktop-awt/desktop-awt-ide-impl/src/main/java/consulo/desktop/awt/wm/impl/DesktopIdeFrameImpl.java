@@ -28,10 +28,10 @@ import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManag
 import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomeFrame;
 import consulo.ide.impl.idea.ui.mac.MacMainFrameDecorator;
 import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
-import consulo.actionSystem.ex.TopApplicationMenuUtil;
+import consulo.ide.impl.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.FrameTitleUtil;
+import consulo.ide.impl.application.FrameTitleUtil;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.SystemInfo;
 import consulo.dataContext.DataManager;

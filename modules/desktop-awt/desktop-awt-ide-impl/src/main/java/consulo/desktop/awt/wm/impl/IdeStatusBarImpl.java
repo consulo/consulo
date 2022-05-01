@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.TaskInfo;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.project.ui.wm.impl.StatusWidgetBorders;
+import consulo.ide.impl.project.StatusWidgetBorders;
 import consulo.ui.NotificationType;
 import consulo.ui.ex.awt.JBCurrentTheme;
 import consulo.dataContext.DataProvider;

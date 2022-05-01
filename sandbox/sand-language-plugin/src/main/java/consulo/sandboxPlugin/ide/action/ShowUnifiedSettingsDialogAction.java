@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.internal.DefaultProjectFactory;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.options.impl.UnifiedShowSettingsUtil;
+import consulo.ide.impl.options.impl.UnifiedShowSettingsUtil;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

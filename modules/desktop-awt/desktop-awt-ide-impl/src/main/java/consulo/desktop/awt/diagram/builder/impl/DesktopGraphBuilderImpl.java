@@ -19,10 +19,10 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
-import consulo.diagram.builder.GraphBuilder;
-import consulo.diagram.builder.GraphNode;
-import consulo.diagram.builder.GraphPositionStrategy;
-import consulo.diagram.builder.impl.GraphNodeImpl;
+import consulo.ide.impl.diagram.builder.GraphBuilder;
+import consulo.ide.impl.diagram.builder.GraphNode;
+import consulo.ide.impl.diagram.builder.GraphPositionStrategy;
+import consulo.ide.impl.diagram.builder.impl.GraphNodeImpl;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -28,7 +28,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.util.concurrent.AsyncResult;
-import consulo.wm.impl.ToolWindowBase;
+import consulo.ide.impl.wm.impl.ToolWindowBase;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -38,7 +38,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
-import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

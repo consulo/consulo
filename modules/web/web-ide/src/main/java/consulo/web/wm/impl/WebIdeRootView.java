@@ -20,8 +20,8 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFacto
 import consulo.dataContext.DataContext;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
-import consulo.actionSystem.impl.UnifiedActionUtil;
-import consulo.ide.base.BaseDataManager;
+import consulo.ide.impl.actionSystem.impl.UnifiedActionUtil;
+import consulo.ide.impl.base.BaseDataManager;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.ActionGroup;
@@ -29,7 +29,7 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.web.internal.WebRootPaneImpl;
-import consulo.wm.impl.UnifiedStatusBarImpl;
+import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 
 /**
  * @author VISTALL

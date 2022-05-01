@@ -30,9 +30,9 @@ import consulo.ide.impl.idea.ui.components.labels.ActionLink;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;
-import consulo.ide.welcomeScreen.WelcomeScreenConstants;
-import consulo.ide.welcomeScreen.WelcomeScreenSlideAction;
-import consulo.ide.welcomeScreen.WelcomeScreenSlider;
+import consulo.ide.impl.welcomeScreen.WelcomeScreenConstants;
+import consulo.ide.impl.welcomeScreen.WelcomeScreenSlideAction;
+import consulo.ide.impl.welcomeScreen.WelcomeScreenSlider;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

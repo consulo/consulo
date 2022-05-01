@@ -45,7 +45,7 @@ import java.awt.event.KeyEvent;
  *
  * Code extract from {@link consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton}
  */
-public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.impl.ActionButtonUI {
+public class ActionButtonUI extends ComponentUI implements consulo.ide.impl.actionSystem.impl.ActionButtonUI {
   private static final Color ALPHA_20 = Gray._0.withAlpha(20);
   private static final Color ALPHA_30 = Gray._0.withAlpha(30);
   private static final Color ALPHA_40 = Gray._0.withAlpha(40);

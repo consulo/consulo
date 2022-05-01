@@ -27,7 +27,7 @@ import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.logging.LoggerLevel;
 import consulo.platform.Platform;
-import consulo.actionSystem.impl.LastActionTracker;
+import consulo.ide.impl.actionSystem.impl.LastActionTracker;
 import consulo.util.lang.ControlFlowException;
 import consulo.util.lang.ThreeState;
 import consulo.util.lang.reflect.ReflectionUtil;

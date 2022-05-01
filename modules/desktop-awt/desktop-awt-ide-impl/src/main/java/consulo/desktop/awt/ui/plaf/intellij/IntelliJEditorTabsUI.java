@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.ui.tabs.impl.TabLabel;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.ui.laf.JBEditorTabsUI;
+import consulo.ide.impl.ui.laf.JBEditorTabsUI;
 
 import javax.swing.*;
 import java.awt.*;

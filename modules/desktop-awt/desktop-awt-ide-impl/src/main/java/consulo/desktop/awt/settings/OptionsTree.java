@@ -37,7 +37,7 @@ import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.TextItemPresentation;
 import consulo.ui.TreeNode;
-import consulo.ui.app.impl.settings.UnifiedConfigurableComparator;
+import consulo.ide.impl.ui.app.impl.settings.UnifiedConfigurableComparator;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
 import consulo.util.concurrent.AsyncResult;
 import consulo.util.lang.Pair;

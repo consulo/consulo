@@ -15,22 +15,22 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="customPortServerManager" interface="consulo.builtInServer.custom.CustomPortServerManager"/>
-    <extensionPoint name="binaryRequestHandler" interface="consulo.builtInServer.binary.BinaryRequestHandler"/>
-    <extensionPoint name="webSocketAccepter" interface="consulo.builtInServer.websocket.WebSocketAccepter"/>
+    <extensionPoint name="customPortServerManager" interface="consulo.ide.impl.builtInServer.custom.CustomPortServerManager"/>
+    <extensionPoint name="binaryRequestHandler" interface="consulo.ide.impl.builtInServer.binary.BinaryRequestHandler"/>
+    <extensionPoint name="webSocketAccepter" interface="consulo.ide.impl.builtInServer.websocket.WebSocketAccepter"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceImplementation="consulo.builtInServer.impl.ide.BuiltInServerOptions"/>
-    <applicationService serviceInterface="consulo.builtInServer.BuiltInServerManager" serviceImplementation="consulo.builtInServer.impl.BuiltInServerManagerImpl" lazy="false" />
-    <applicationService serviceInterface="consulo.builtInServer.xml.XmlRpcServer" serviceImplementation="consulo.builtInServer.impl.net.xml.XmlRpcServerImpl"/>
+    <applicationService serviceImplementation="consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions"/>
+    <applicationService serviceInterface="consulo.ide.impl.builtInServer.BuiltInServerManager" serviceImplementation="consulo.ide.impl.builtInServer.impl.BuiltInServerManagerImpl" lazy="false" />
+    <applicationService serviceInterface="consulo.ide.impl.builtInServer.xml.XmlRpcServer" serviceImplementation="consulo.ide.impl.builtInServer.impl.net.xml.XmlRpcServerImpl"/>
 
-    <xdebugger.settings implementation="consulo.builtInServer.impl.ide.BuiltInServerOptions$BuiltInServerDebuggerConfigurableProvider"/>
+    <xdebugger.settings implementation="consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions$BuiltInServerDebuggerConfigurableProvider"/>
 
-    <httpRequestHandler implementation="consulo.builtInServer.impl.net.xml.XmlRpcServerImpl$XmlRpcRequestHandler"/>
-    <httpRequestHandler implementation="consulo.builtInServer.impl.net.json.RequestFocusHttpRequestHandler"/>
-    <httpRequestHandler implementation="consulo.builtInServer.impl.net.json.AboutRestHandler" />
+    <httpRequestHandler implementation="consulo.ide.impl.builtInServer.impl.net.xml.XmlRpcServerImpl$XmlRpcRequestHandler"/>
+    <httpRequestHandler implementation="consulo.ide.impl.builtInServer.impl.net.json.RequestFocusHttpRequestHandler"/>
+    <httpRequestHandler implementation="consulo.ide.impl.builtInServer.impl.net.json.AboutRestHandler" />
 
-    <customPortServerManager implementation="consulo.builtInServer.impl.ide.BuiltInServerOptions$MyCustomPortServerManager"/>
+    <customPortServerManager implementation="consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions$MyCustomPortServerManager"/>
   </extensions>
 </consulo-plugin>

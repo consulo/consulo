@@ -29,7 +29,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.Window;
 import consulo.ui.WindowOptions;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.wm.impl.UnifiedStatusBarImpl;
+import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

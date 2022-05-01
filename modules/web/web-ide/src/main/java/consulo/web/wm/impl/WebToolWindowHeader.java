@@ -24,7 +24,7 @@ import consulo.ui.border.BorderStyle;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.style.ComponentColors;
-import consulo.wm.impl.UnifiedToolWindowImpl;
+import consulo.ide.impl.wm.impl.UnifiedToolWindowImpl;
 
 import javax.annotation.Nonnull;
 

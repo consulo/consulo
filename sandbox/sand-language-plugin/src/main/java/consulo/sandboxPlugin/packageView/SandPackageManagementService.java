@@ -20,7 +20,7 @@ import consulo.util.collection.MultiMap;
 import consulo.ide.impl.idea.webcore.packaging.InstalledPackage;
 import consulo.ide.impl.idea.webcore.packaging.PackageManagementServiceEx;
 import consulo.ide.impl.idea.webcore.packaging.RepoPackage;
-import consulo.packagesView.SearchablePackageManagementService;
+import consulo.ide.impl.packagesView.SearchablePackageManagementService;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

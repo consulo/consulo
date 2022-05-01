@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;
-import consulo.fileEditor.impl.text.TextEditorComponentContainer;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
 
 import javax.swing.*;
 import java.awt.*;

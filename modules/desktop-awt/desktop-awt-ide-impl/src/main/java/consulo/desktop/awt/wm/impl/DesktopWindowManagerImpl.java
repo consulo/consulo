@@ -47,7 +47,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.awt.hacking.AWTAccessorHacking;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.start.WelcomeFrameManager;
+import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

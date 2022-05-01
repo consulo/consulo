@@ -62,7 +62,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.desktop.awt.ui.LookAndFeelProvider;
 import consulo.ui.ex.UIModificationTracker;
-import consulo.desktop.util.awt.laf.GTKPlusUIUtil;
+import consulo.ide.impl.desktop.awt.laf.GTKPlusUIUtil;
 import consulo.disposer.Disposable;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJEditorTabsUI;

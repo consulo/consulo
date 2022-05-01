@@ -46,7 +46,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 05-Feb-17
  * <p>
- * Cross-Platform version of {@link consulo.roots.ui.configuration.SdkComboBox}
+ * Cross-Platform version of {@link consulo.ide.impl.roots.ui.configuration.SdkComboBox}
  */
 public class BundleBox implements PseudoComponent {
   /**

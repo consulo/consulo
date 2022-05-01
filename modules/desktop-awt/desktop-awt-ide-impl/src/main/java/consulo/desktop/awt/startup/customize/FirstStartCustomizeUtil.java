@@ -27,7 +27,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.desktop.awt.ui.plaf.darcula.DarculaLaf;
 import consulo.desktop.awt.ui.plaf.intellij.IntelliJLaf;
 import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.ide.updateSettings.UpdateSettings;
+import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.DialogWrapper;

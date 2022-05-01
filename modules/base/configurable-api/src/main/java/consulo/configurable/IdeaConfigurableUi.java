@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 
 @Deprecated
-@DeprecationInfo("Use consulo.options.SimpleConfigurable")
+@DeprecationInfo("Use consulo.ide.impl.options.SimpleConfigurable")
 public interface IdeaConfigurableUi<S> {
   void reset(@Nonnull S settings);
 

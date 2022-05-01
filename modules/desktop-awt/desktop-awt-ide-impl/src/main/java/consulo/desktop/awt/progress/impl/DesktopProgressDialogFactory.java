@@ -18,8 +18,8 @@ package consulo.desktop.awt.progress.impl;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
-import consulo.progress.util.ProgressDialog;
-import consulo.progress.util.ProgressDialogFactory;
+import consulo.ide.impl.progress.util.ProgressDialog;
+import consulo.ide.impl.progress.util.ProgressDialogFactory;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

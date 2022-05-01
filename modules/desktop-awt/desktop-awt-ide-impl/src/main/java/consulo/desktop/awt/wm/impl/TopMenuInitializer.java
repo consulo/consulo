@@ -25,7 +25,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.actions.AboutManager;
+import consulo.ide.impl.actions.AboutManager;
 import consulo.application.impl.internal.start.CommandLineArgs;
 import consulo.ui.Window;
 

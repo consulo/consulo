@@ -19,16 +19,16 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <eapDescriptor implementation="consulo.diagram.actions.ShowDiagramAction$DiagramSupport"/>
+    <eapDescriptor implementation="consulo.ide.impl.diagram.actions.ShowDiagramAction$DiagramSupport"/>
     <eapDescriptor implementation="consulo.ui.ex.awt.internal.ModalityPerProjectEAPDescriptor"/>
-    <eapDescriptor implementation="consulo.ide.eap.plugins.ExperimentalPluginsDescriptor"/>
+    <eapDescriptor implementation="consulo.ide.impl.eap.plugins.ExperimentalPluginsDescriptor"/>
     <eapDescriptor implementation="consulo.application.impl.internal.start.PluginPermissionEarlyAccessProgramDescriptor"/>
 
     <applicationConfigurable parentId="platformAndPlugins"
                              id="eap"
                              bundle="consulo.ide.IdeBundle"
                              key="eap.configurable.name"
-                             instance="consulo.ide.eap.EarlyAccessProgramConfigurable"/>
+                             instance="consulo.ide.impl.eap.EarlyAccessProgramConfigurable"/>
     <applicationService serviceImplementation="consulo.application.eap.EarlyAccessProgramManager"/>
   </extensions>
 </consulo-plugin>

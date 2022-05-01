@@ -28,7 +28,7 @@ import consulo.ui.web.servlet.WebImageMapper;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonRpc;
 import consulo.web.gwt.shared.ui.ex.state.toolWindow.ToolWindowStripeButtonState;
 import consulo.web.wm.impl.WebToolWindowInternalDecorator;
-import consulo.wm.impl.ToolWindowBase;
+import consulo.ide.impl.wm.impl.ToolWindowBase;
 
 import javax.annotation.Nonnull;
 

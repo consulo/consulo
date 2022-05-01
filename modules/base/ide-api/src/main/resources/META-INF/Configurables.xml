@@ -35,7 +35,7 @@
                              parentId="general"
                              key="title.customizations" bundle="consulo.ide.IdeBundle"/>
 
-    <applicationConfigurable instance="consulo.options.AppearanceConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.options.AppearanceConfigurable"
                              id="appearance"
                              parentId="general"
                              displayName="Appearance"/>
@@ -98,7 +98,7 @@
                              parentId="execution"
                              instance="consulo.ide.impl.idea.xdebugger.impl.settings.DebuggerConfigurable"/>
 
-    <applicationConfigurable instance="consulo.ide.settings.impl.EditorGeneralConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.settings.impl.EditorGeneralConfigurable"
                              id="editor.general"
                              parentId="editor"
                              key="title.editor"
@@ -112,7 +112,7 @@
                              key="title.colors.and.fonts"
                              bundle="consulo.application.ApplicationBundle"/>
 
-    <applicationConfigurable instance="consulo.ide.settings.impl.EditorTabsConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.settings.impl.EditorTabsConfigurable"
                              id="editor.preferences.tabs"
                              parentId="editor"
                              displayName="Tabs"/>
@@ -172,14 +172,14 @@
 
     <applicationConfigurable displayName="Notifications" id="notifications" parentId="general" instance="consulo.ide.impl.idea.notification.impl.NotificationsConfigurable"/>
 
-    <applicationConfigurable instance="consulo.ide.plugins.PluginsConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.plugins.PluginsConfigurable"
                              id="platformAndPlugins"
                              bundle="consulo.ide.IdeBundle"
                              key="title.plugins"/>
 
     <applicationConfigurable id="updateSettings"
                              parentId="platformAndPlugins"
-                             instance="consulo.ide.updateSettings.UpdatesConfigurable"
+                             instance="consulo.ide.impl.updateSettings.UpdatesConfigurable"
                              displayName="Update Settings"/>
 
     <applicationConfigurable parentId="general" instance="consulo.ide.impl.idea.util.net.HttpProxyConfigurable" id="http.proxy" displayName="HTTP Proxy"/>
@@ -191,7 +191,7 @@
 
     <applicationConfigurable displayName="System" parentId="general" instance="consulo.ide.impl.idea.ide.GeneralSettingsConfigurable"/>
 
-    <applicationConfigurable parentId="editor" instance="consulo.fileTypes.ui.impl.FileTypeConfigurable" id="preferences.fileTypes"
+    <applicationConfigurable parentId="editor" instance="consulo.ide.impl.ui.FileTypeConfigurable" id="preferences.fileTypes"
                              key="filetype.settings.title" bundle="messages.FileTypesBundle"/>
 
     <applicationConfigurable instance="consulo.ide.impl.idea.ide.browsers.BrowserSettings"
@@ -209,9 +209,9 @@
     <applicationConfigurable id="diff.base"
                              displayName="Diff &amp; Merge"
                              parentId="vcs"
-                             instance="consulo.diff.preferences.impl.DiffSettingsConfigurable">
+                             instance="consulo.ide.impl.diff.DiffSettingsConfigurable">
       <configurable id="diff.external" displayName="External Diff Tools"
-                    instance="consulo.diff.preferences.impl.ExternalDiffSettingsConfigurable"/>
+                    instance="consulo.ide.impl.diff.ExternalDiffSettingsConfigurable"/>
     </applicationConfigurable>
 
     <applicationConfigurable id="sdks.list" bundle="consulo.project.ProjectBundle" key="global.bundles.display.name"

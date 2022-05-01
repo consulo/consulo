@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.popup.impl;
 
 import consulo.ui.Window;
 import consulo.desktop.awt.ui.impl.window.JWindowAsUIWindow;
-import consulo.ui.popup.JWindowPopupFactory;
+import consulo.ide.impl.ui.popup.JWindowPopupFactory;
 
 import javax.swing.*;
 

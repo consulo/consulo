@@ -25,7 +25,7 @@ import consulo.container.util.StatCollector;
 import consulo.desktop.swt.application.impl.DesktopSwtApplicationImpl;
 import consulo.logging.Logger;
 import consulo.application.impl.internal.start.CommandLineArgs;
-import consulo.start.WelcomeFrameManager;
+import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;

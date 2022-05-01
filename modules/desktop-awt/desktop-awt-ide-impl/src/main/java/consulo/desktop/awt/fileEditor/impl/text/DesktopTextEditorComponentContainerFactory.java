@@ -18,8 +18,8 @@ package consulo.desktop.awt.fileEditor.impl.text;
 import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
-import consulo.fileEditor.impl.text.TextEditorComponentContainer;
-import consulo.fileEditor.impl.text.TextEditorComponentContainerFactory;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
+import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
 import jakarta.inject.Singleton;
 
 /**

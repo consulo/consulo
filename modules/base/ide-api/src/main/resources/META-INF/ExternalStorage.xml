@@ -15,14 +15,14 @@
   -->
 <consulo-plugin>
   <extensions defaultExtensionNs="consulo">
-    <applicationLoadListener implementation="consulo.externalStorage.ExternalStorageAppListener"/>
+    <applicationLoadListener implementation="consulo.ide.impl.externalStorage.ExternalStorageAppListener"/>
 
-    <settingsEntryPointActionProvider implementation="consulo.externalService.impl.action.ServiceAuthSettingsEntryPointProvider"/>
+    <settingsEntryPointActionProvider implementation="consulo.ide.impl.externalService.impl.action.ServiceAuthSettingsEntryPointProvider"/>
 
-    <httpRequestHandler implementation="consulo.externalService.impl.RedirectAuthHttpHandler"/>
+    <httpRequestHandler implementation="consulo.ide.impl.externalService.impl.RedirectAuthHttpHandler"/>
 
-    <applicationService serviceInterface="consulo.externalService.ExternalServiceConfiguration" serviceImplementation="consulo.externalService.impl.ExternalServiceConfigurationImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.externalService.ExternalServiceConfiguration" serviceImplementation="consulo.ide.impl.externalService.impl.ExternalServiceConfigurationImpl"/>
 
-    <applicationConfigurable id="externalServices" parentId="platformAndPlugins" displayName="External Services" instance="consulo.externalService.impl.ui.ExternalServiceConfigurable"/>
+    <applicationConfigurable id="externalServices" parentId="platformAndPlugins" displayName="External Services" instance="consulo.ide.impl.externalService.impl.ui.ExternalServiceConfigurable"/>
   </extensions>
 </consulo-plugin>

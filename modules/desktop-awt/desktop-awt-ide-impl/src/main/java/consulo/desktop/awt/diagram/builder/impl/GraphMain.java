@@ -16,10 +16,10 @@
 package consulo.desktop.awt.diagram.builder.impl;
 
 import consulo.application.AllIcons;
-import consulo.diagram.builder.GraphBuilder;
-import consulo.diagram.builder.GraphBuilderFactory;
-import consulo.diagram.builder.GraphNode;
-import consulo.diagram.builder.GraphPositionStrategy;
+import consulo.ide.impl.diagram.builder.GraphBuilder;
+import consulo.ide.impl.diagram.builder.GraphBuilderFactory;
+import consulo.ide.impl.diagram.builder.GraphNode;
+import consulo.ide.impl.diagram.builder.GraphPositionStrategy;
 
 import javax.swing.*;
 import java.awt.*;

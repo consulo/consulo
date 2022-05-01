@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.diagram.builder.impl;
 
-import consulo.diagram.builder.GraphBuilder;
-import consulo.diagram.builder.GraphBuilderFactory;
+import consulo.ide.impl.diagram.builder.GraphBuilder;
+import consulo.ide.impl.diagram.builder.GraphBuilderFactory;
 import jakarta.inject.Singleton;
 
 /**

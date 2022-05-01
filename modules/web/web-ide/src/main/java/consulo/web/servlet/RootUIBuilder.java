@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposer;
-import consulo.start.WelcomeFrameManager;
+import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Window;

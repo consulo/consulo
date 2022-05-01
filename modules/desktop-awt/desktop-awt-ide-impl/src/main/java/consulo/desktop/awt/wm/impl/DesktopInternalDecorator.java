@@ -49,8 +49,8 @@ import consulo.ui.ex.awt.util.IdeGlassPaneUtil;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.toolWindow.*;
 import consulo.util.dataholder.Key;
-import consulo.wm.impl.ToolWindowAnchorUtil;
-import consulo.wm.impl.ToolWindowManagerBase;
+import consulo.ide.impl.wm.impl.ToolWindowAnchorUtil;
+import consulo.ide.impl.wm.impl.ToolWindowManagerBase;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

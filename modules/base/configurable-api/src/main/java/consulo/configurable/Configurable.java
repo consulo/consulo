@@ -47,7 +47,7 @@ import javax.swing.*;
  * </ul>
  *
  * @see SearchableConfigurable
- * @see consulo.options.SimpleConfigurable
+ * @see consulo.ide.impl.options.SimpleConfigurable
  */
 public interface Configurable extends UnnamedConfigurable {
   Configurable[] EMPTY_ARRAY = new Configurable[0];

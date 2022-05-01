@@ -25,7 +25,7 @@ import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
-import consulo.wm.impl.UnifiedContentImpl;
+import consulo.ide.impl.wm.impl.UnifiedContentImpl;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

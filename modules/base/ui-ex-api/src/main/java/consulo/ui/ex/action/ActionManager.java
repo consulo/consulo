@@ -59,7 +59,7 @@ public abstract class ActionManager {
   public abstract ActionPopupMenu createActionPopupMenu(String place, @Nonnull ActionGroup group);
 
   /**
-   * @see consulo.actionSystem.ActionToolbarFactory
+   * @see consulo.ide.impl.actionSystem.ActionToolbarFactory
    */
   public abstract ActionToolbar createActionToolbar(String place, ActionGroup group, boolean horizontal);
 

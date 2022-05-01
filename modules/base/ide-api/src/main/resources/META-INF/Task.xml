@@ -121,7 +121,7 @@
                 canCloseContents="false"
                 conditionClass="consulo.ide.impl.idea.tasks.timeTracking.TasksToolWindowFactory"/>
 
-    <changeListDecorator implementation="consulo.tasks.impl.TaskChangeListDecorator"/>
+    <changeListDecorator implementation="consulo.ide.impl.task.TaskChangeListDecorator"/>
 
     <projectService serviceImplementation="consulo.ide.impl.idea.tasks.timeTracking.TimeTrackingManager" lazy="false"/>
     <projectService serviceInterface="consulo.ide.impl.idea.tasks.TaskManager" serviceImplementation="consulo.ide.impl.idea.tasks.impl.TaskManagerImpl"/>

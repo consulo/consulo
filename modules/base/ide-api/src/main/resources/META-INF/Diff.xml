@@ -47,7 +47,7 @@
     <editorTabTitleProvider implementation="consulo.ide.impl.idea.diff.editor.DiffEditorTabTitleProvider"/>
     <editorTabColorProvider implementation="consulo.ide.impl.idea.diff.editor.VcsEditorTabColorProvider"/>
 
-    <iconDescriptorUpdater implementation="consulo.diff.editor.impl.DiffIconDescriptorUpdater" order="last"/>
+    <iconDescriptorUpdater implementation="consulo.ide.impl.diff.DiffIconDescriptorUpdater" order="last"/>
 
     <diff.merge.MergeTool implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeTool"/>
     <diff.DiffTool implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffTool"/>

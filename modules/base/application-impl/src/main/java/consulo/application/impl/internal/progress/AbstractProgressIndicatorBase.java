@@ -38,7 +38,7 @@ public class AbstractProgressIndicatorBase extends UserDataHolderBase implements
   private volatile boolean myRunning;
   private volatile boolean myFinished;
 
-  private volatile boolean myIndeterminate = Boolean.parseBoolean(System.getProperty("consulo.progress.indeterminate.by.default", "true"));
+  private volatile boolean myIndeterminate = Boolean.parseBoolean(System.getProperty("consulo.ide.impl.progress.indeterminate.by.default", "true"));
   private volatile Runnable myActivity;
   private volatile boolean myShouldStartActivity = true;
 

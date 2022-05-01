@@ -31,11 +31,11 @@
     <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.FileCopyElementType"/>
     <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.DirectoryCopyElementType"/>
     <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.ExtractedDirectoryElementType"/>
-    <packaging.elementType implementation="consulo.packaging.impl.elements.ZipArchiveElementType" id="zip-archive-element"/>
+    <packaging.elementType implementation="consulo.ide.impl.packaging.impl.elements.ZipArchiveElementType" id="zip-archive-element"/>
     <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType"/>
-    <packaging.elementType implementation="consulo.packaging.impl.elements.moduleContent.ProductionResourceModuleOutputElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.packaging.impl.elements.moduleContent.ProductionResourceModuleOutputElementType"/>
     <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.moduleContent.TestModuleOutputElementType"/>
-    <packaging.elementType implementation="consulo.packaging.impl.elements.moduleContent.TestResourceModuleOutputElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.packaging.impl.elements.moduleContent.TestResourceModuleOutputElementType"/>
     <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.LibraryElementType"/>
     <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.ArtifactElementType"/>
 
@@ -43,7 +43,7 @@
                     serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactManagerImpl"/>
 
     <projectService serviceInterface="consulo.compiler.artifact.ArtifactPointerManager"
-                    serviceImplementation="consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl"/>
+                    serviceImplementation="consulo.ide.impl.packaging.impl.artifacts.ArtifactPointerManagerImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinder"
                     serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinderImpl"/>
@@ -52,21 +52,21 @@
     <applicationService serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.InvalidArtifactType"/>
 
     <projectService serviceInterface="consulo.compiler.CompilerManager"
-                    serviceImplementation="consulo.compiler.impl.CompilerManagerImpl"/>
+                    serviceImplementation="consulo.ide.impl.compiler.CompilerManagerImpl"/>
 
-    <applicationService serviceInterface="consulo.compiler.impl.BuildViewServiceFactory" serviceImplementation="consulo.compiler.impl.build.BuildViewServiceFactoryImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.compiler.BuildViewServiceFactory" serviceImplementation="consulo.ide.impl.compiler.build.BuildViewServiceFactoryImpl"/>
 
     <projectService serviceInterface="consulo.compiler.CompilerConfiguration"
-                    serviceImplementation="consulo.compiler.impl.CompilerConfigurationImpl"/>
+                    serviceImplementation="consulo.ide.impl.compiler.CompilerConfigurationImpl"/>
 
     <projectService serviceInterface="consulo.compiler.CompilerEncodingService"
-                    serviceImplementation="consulo.compiler.impl.CompilerEncodingServiceImpl"/>
+                    serviceImplementation="consulo.ide.impl.compiler.CompilerEncodingServiceImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings"
                     serviceImplementation="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings"/>
 
-    <projectService serviceInterface="consulo.compiler.impl.CompilerWorkspaceConfiguration"
-                    serviceImplementation="consulo.compiler.impl.CompilerWorkspaceConfiguration"/>
+    <projectService serviceInterface="consulo.ide.impl.compiler.CompilerWorkspaceConfiguration"
+                    serviceImplementation="consulo.ide.impl.compiler.CompilerWorkspaceConfiguration"/>
 
     <macro implementation="consulo.ide.impl.idea.ide.macro.OutputPathMacro"/>
 

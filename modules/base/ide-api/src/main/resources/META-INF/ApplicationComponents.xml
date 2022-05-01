@@ -52,7 +52,7 @@
 
     <component>
       <interface-class>consulo.undoRedo.ApplicationUndoManager</interface-class>
-      <implementation-class>consulo.command.undo.impl.ApplicationUndoManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.command.ApplicationUndoManagerImpl</implementation-class>
     </component>
 
     <component>

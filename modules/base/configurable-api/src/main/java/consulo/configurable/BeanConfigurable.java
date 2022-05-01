@@ -36,7 +36,7 @@ import java.util.Objects;
  * @author yole
  */
 @Deprecated
-@DeprecationInfo("Use 'consulo.options.SimpleConfigurableByProperties'")
+@DeprecationInfo("Use 'consulo.ide.impl.options.SimpleConfigurableByProperties'")
 public abstract class BeanConfigurable<T> implements UnnamedConfigurable {
   private final T myInstance;
 

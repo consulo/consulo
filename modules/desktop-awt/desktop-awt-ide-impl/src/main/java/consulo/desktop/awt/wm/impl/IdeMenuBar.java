@@ -39,7 +39,7 @@ import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.Animator;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ide.base.BaseDataManager;
+import consulo.ide.impl.base.BaseDataManager;
 import consulo.ui.ex.action.*;
 
 import javax.annotation.Nonnull;

@@ -34,7 +34,7 @@ import consulo.ui.web.internal.TargetVaddin;
 import consulo.ui.web.internal.WebFocusManagerImpl;
 import consulo.ui.web.internal.WebRootPaneImpl;
 import consulo.web.application.WebApplication;
-import consulo.wm.impl.UnifiedStatusBarImpl;
+import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

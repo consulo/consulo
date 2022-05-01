@@ -3,7 +3,7 @@ package consulo.web.application.impl;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
-import consulo.application.impl.UnifiedTransactionGuardImpl;
+import consulo.ide.impl.application.UnifiedTransactionGuardImpl;
 import consulo.application.impl.internal.BaseApplication;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.ReadMostlyRWLock;

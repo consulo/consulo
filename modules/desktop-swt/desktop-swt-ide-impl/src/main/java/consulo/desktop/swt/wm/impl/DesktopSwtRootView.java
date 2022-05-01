@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFacto
 import consulo.project.Project;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.wm.impl.UnifiedStatusBarImpl;
+import consulo.ide.impl.wm.impl.UnifiedStatusBarImpl;
 
 /**
  * @author VISTALL

@@ -38,7 +38,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ide.impl.idea.ui.components.JBLayeredPane;
 import consulo.ui.ex.awt.JBPanel;
 import consulo.ui.ex.awt.JBUI;
-import consulo.desktop.wm.impl.DesktopIdeFrameUtil;
+import consulo.ide.impl.desktop.DesktopIdeFrameUtil;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;

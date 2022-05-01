@@ -58,7 +58,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposer;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
-import consulo.wm.impl.ToolWindowContentUI;
+import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
 import org.jetbrains.annotations.NonNls;

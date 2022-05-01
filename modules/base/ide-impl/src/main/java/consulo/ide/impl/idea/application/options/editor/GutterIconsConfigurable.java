@@ -130,7 +130,7 @@ public class GutterIconsConfigurable implements SearchableConfigurable, Configur
     new ListSpeedSearch(myList, o -> o instanceof JCheckBox ? ((JCheckBox)o).getText() : null);
     panel.add(ScrollPaneFactory.createScrollPane(myList), BorderLayout.CENTER);
 
-    ExtensionPoint<LanguageExtensionPoint<LineMarkerProvider>> point = Application.get().getExtensionPoint(ExtensionPointName.create("consulo.ide.impl.idea.codeInsight.lineMarkerProvider"));
+    ExtensionPoint<LanguageExtensionPoint<LineMarkerProvider>> point = Application.get().getExtensionPoint(ExtensionPointName.create("consulo.codeInsight.lineMarkerProvider"));
     List<LanguageExtensionPoint<LineMarkerProvider>> extensions = point.getExtensionList();
     NullableFunction<LanguageExtensionPoint<LineMarkerProvider>, PluginDescriptor> function = point1 -> {
       LineMarkerProvider instance = point1.getInstance();

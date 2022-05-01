@@ -290,7 +290,7 @@
             <action id="ImportSettings" class="consulo.ide.impl.idea.ide.actions.ImportSettingsAction"/>
             <action id="ExportSettings" class="consulo.ide.impl.idea.ide.actions.ExportSettingsAction"/>
           </group>
-          <action id="ShowStartupManagerAction" class="consulo.ide.actions.ShowStartupManagerAction" text="Customize Manager"/>
+          <action id="ShowStartupManagerAction" class="consulo.ide.impl.actions.ShowStartupManagerAction" text="Customize Manager"/>
         </group>
         <separator/>
         <action id="SaveAll" class="consulo.ide.impl.idea.ide.actions.SaveAllAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_saveall"/>
@@ -548,7 +548,7 @@
         <action id="OnlineDocAction" class="consulo.ide.impl.idea.ide.actions.OnlineDocAction"/>
         <action id="Help.KeymapReference" class="consulo.ide.impl.idea.ide.actions.RefCardAction"/>
         <action id="Help.Youtube" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"/>
-        <action id="Help.JoinDiscordChannel" class="consulo.wm.impl.welcomeScreen.JoinDiscordChannelAction" icon="consulo.platform.base.PlatformIconGroup@providers.discord"/>
+        <action id="Help.JoinDiscordChannel" class="consulo.ide.impl.wm.impl.welcomeScreen.JoinDiscordChannelAction" icon="consulo.platform.base.PlatformIconGroup@providers.discord"/>
         <separator/>
         <action id="CheckForUpdate" class="consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction"/>
         <action id="About" class="consulo.ide.impl.idea.ide.actions.AboutAction"/>
@@ -990,7 +990,7 @@
     </group>
 
     <group id="WelcomeScreen.QuickStart.IDEA">
-      <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.newProject.actions.NewProjectAction" icon="consulo.platform.base.PlatformIconGroup@welcome.createnewproject"/>
+      <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.impl.newProject.actions.NewProjectAction" icon="consulo.platform.base.PlatformIconGroup@welcome.createnewproject"/>
       <action id="WelcomeScreen.OpenProject" class="consulo.ide.impl.idea.ide.actions.OpenFileAction" icon="consulo.platform.base.PlatformIconGroup@welcome.openproject"/>
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </group>
@@ -1974,7 +1974,7 @@
     <!-- File -->
     <group id="OpenProjectGroup">
       <group id="NewElementInMenuGroup" text="New" popup="true">
-        <action id="NewProject" class="consulo.ide.newProject.actions.NewProjectAction"/>
+        <action id="NewProject" class="consulo.ide.impl.newProject.actions.NewProjectAction"/>
         <separator/>
         <action id="NewModule" class="consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.NewModuleAction"/>
         <action id="ImportModule" class="consulo.ide.impl.idea.ide.actions.ImportModuleAction" text="Import Module..."/>
@@ -2335,7 +2335,7 @@
               text="Open"/>
       <action id="WelcomeScreen.RemoveSelected" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RemoveSelectedProjectsAction"
               text="Remove" icon="consulo.platform.base.PlatformIconGroup@general.remove"/>
-      <action id="WelcomeScreen.RevealRecentProjectDirectory" class="consulo.wm.impl.welcomeScreen.RevealRecentProjectDirectoryAction"/>
+      <action id="WelcomeScreen.RevealRecentProjectDirectory" class="consulo.ide.impl.wm.impl.welcomeScreen.RevealRecentProjectDirectoryAction"/>
       <separator/>
       <action id="WelcomeScreen.NewGroup" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.CreateNewProjectGroupAction"
               text="New Group" icon="consulo.platform.base.PlatformIconGroup@nodes.folder"/>

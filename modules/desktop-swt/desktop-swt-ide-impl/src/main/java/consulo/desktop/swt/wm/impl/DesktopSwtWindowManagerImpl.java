@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.wm.impl.UnifiedWindowManagerImpl;
+import consulo.ide.impl.wm.impl.UnifiedWindowManagerImpl;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 

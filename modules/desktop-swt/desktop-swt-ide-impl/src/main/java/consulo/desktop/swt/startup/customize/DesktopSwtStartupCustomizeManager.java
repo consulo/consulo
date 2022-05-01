@@ -15,7 +15,7 @@
  */
 package consulo.desktop.swt.startup.customize;
 
-import consulo.startup.customize.StartupCustomizeManager;
+import consulo.ide.impl.startup.customize.StartupCustomizeManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Singleton;
 

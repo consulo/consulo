@@ -15,7 +15,7 @@
   -->
 <consulo-plugin>
   <actions>
-    <action id="ShowDiagram" class="consulo.diagram.actions.ShowDiagramAction" icon="consulo.platform.base.PlatformIconGroup@filetypes.diagram">
+    <action id="ShowDiagram" class="consulo.ide.impl.diagram.actions.ShowDiagramAction" icon="consulo.platform.base.PlatformIconGroup@filetypes.diagram">
       <keyboard-shortcut first-keystroke="control shift alt U" keymap="$default"/>
       <add-to-group group-id="EditorPopupMenu" anchor="last" />
       <add-to-group group-id="ProjectViewPopupMenu" anchor="last" />
@@ -25,6 +25,6 @@
   </actions>
 
   <extensionPoints>
-    <extensionPoint name="graphProvider" interface="consulo.diagram.provider.GraphProvider" />
+    <extensionPoint name="graphProvider" interface="consulo.ide.impl.diagram.provider.GraphProvider" />
   </extensionPoints>
 </consulo-plugin>

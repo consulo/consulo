@@ -20,7 +20,7 @@ import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
 import consulo.language.content.TestResourceContentFolderTypeProvider;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.roots.impl.*;
+import consulo.ide.impl.roots.impl.*;
 import javax.annotation.Nonnull;
 import consulo.module.content.layer.ContentFolderSupportPatcher;
 import consulo.content.ContentFolderTypeProvider;

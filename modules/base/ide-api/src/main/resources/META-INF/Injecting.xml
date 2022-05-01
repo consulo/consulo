@@ -1,6 +1,6 @@
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="injectionLanguageSupport" interface="consulo.psi.injection.LanguageInjectionSupport"/>
+    <extensionPoint name="injectionLanguageSupport" interface="consulo.ide.impl.psi.injection.LanguageInjectionSupport"/>
     <extensionPoint name="injectionConfig" beanClass="consulo.ide.impl.intelliLang.inject.LanguageInjectionConfigBean"/>
   </extensionPoints>
 
@@ -18,7 +18,7 @@
       <category>Language Injection</category>
     </intentionAction>
 
-    <applicationService serviceImplementation="consulo.psi.injection.LanguageSupportCache"/>
+    <applicationService serviceImplementation="consulo.ide.impl.psi.injection.LanguageSupportCache"/>
 
     <highlightErrorFilter implementation="consulo.ide.impl.intelliLang.inject.CustomErrorElementFilter"/>
 
@@ -35,9 +35,9 @@
     <projectService serviceInterface="consulo.ide.impl.intelliLang.inject.TemporaryPlacesRegistry"
                     serviceImplementation="consulo.ide.impl.intelliLang.inject.TemporaryPlacesRegistry"/>
 
-    <applicationService serviceImplementation="consulo.psi.injection.impl.ApplicationInjectionConfiguration"/>
+    <applicationService serviceImplementation="consulo.ide.impl.psi.injection.impl.ApplicationInjectionConfiguration"/>
 
-    <projectService serviceImplementation="consulo.psi.injection.impl.ProjectInjectionConfiguration"/>
+    <projectService serviceImplementation="consulo.ide.impl.psi.injection.impl.ProjectInjectionConfiguration"/>
 
     <psi.referenceContributor implementation="consulo.ide.impl.intelliLang.references.InjectedReferencesContributor"/>
     <referenceInjector implementation="consulo.ide.impl.intelliLang.references.FileReferenceInjector"/>

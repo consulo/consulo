@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileTextField;
 import consulo.disposer.Disposable;
-import consulo.fileChooser.impl.FileChooserFactoryImpl;
+import consulo.ide.impl.fileChooser.FileChooserFactoryImpl;
 import consulo.ui.TextBox;
 import consulo.desktop.awt.ui.impl.textBox.TextBoxWithTextField;
 import jakarta.inject.Singleton;

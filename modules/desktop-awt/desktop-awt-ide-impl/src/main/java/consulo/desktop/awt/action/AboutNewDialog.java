@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.application.impl.WholeWestDialogWrapper;
+import consulo.ide.impl.application.WholeWestDialogWrapper;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
 import consulo.platform.Platform;
