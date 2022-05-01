@@ -16,8 +16,8 @@
 package consulo.builtInServer.http.util;
 
 import com.google.common.net.InetAddresses;
-import com.intellij.openapi.util.ThrowableNotNullFunction;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.ThrowableNotNullFunction;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.io.Url;
 import consulo.util.io.Urls;
 import consulo.util.io.NetUtil;

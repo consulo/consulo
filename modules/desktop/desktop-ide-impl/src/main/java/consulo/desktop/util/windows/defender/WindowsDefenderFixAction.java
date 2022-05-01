@@ -15,9 +15,9 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import com.intellij.diagnostic.DiagnosticBundle;
-import com.intellij.ide.BrowserUtil;
-import com.intellij.notification.NotificationAction;
+import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
+import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

@@ -43,7 +43,7 @@ public interface ComponentPopupBuilder {
   ComponentPopupBuilder setRequestFocusCondition(@Nonnull ComponentManager project, @Nonnull Condition<? super ComponentManager> condition);
 
   /**
-   * @see com.intellij.openapi.util.DimensionService
+   * @see consulo.ide.impl.idea.openapi.util.DimensionService
    */
   @Nonnull
   ComponentPopupBuilder setDimensionServiceKey(@Nullable ComponentManager project, @NonNls String key, boolean useForXYLocation);

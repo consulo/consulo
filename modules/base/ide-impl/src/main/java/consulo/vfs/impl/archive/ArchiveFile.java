@@ -15,7 +15,7 @@
  */
 package consulo.vfs.impl.archive;
 
-import com.intellij.util.containers.EmptyIterator;
+import consulo.ide.impl.idea.util.containers.EmptyIterator;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

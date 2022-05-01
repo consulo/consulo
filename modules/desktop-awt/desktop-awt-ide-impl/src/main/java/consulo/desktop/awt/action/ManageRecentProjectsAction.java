@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.action;
 
-import com.intellij.ide.RecentProjectsManager;
+import consulo.ide.impl.idea.ide.RecentProjectsManager;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;

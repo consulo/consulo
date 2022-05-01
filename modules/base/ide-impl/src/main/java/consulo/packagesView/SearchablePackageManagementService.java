@@ -15,8 +15,8 @@
  */
 package consulo.packagesView;
 
-import com.intellij.webcore.packaging.PackageManagementService;
-import com.intellij.webcore.packaging.RepoPackage;
+import consulo.ide.impl.idea.webcore.packaging.PackageManagementService;
+import consulo.ide.impl.idea.webcore.packaging.RepoPackage;
 
 import javax.annotation.Nonnull;
 import java.util.List;

@@ -24,7 +24,7 @@ import org.jdom.Element;
 import javax.annotation.Nullable;
 
 /**
- * Common base class that should be used for configurations that can be created from context by a {@link com.intellij.execution.actions.RunConfigurationProducer}}.
+ * Common base class that should be used for configurations that can be created from context by a {@link consulo.ide.impl.idea.execution.actions.RunConfigurationProducer}}.
  * It supports automatically generating a name for a configuration from its settings and keeping track of whether the name was changed by
  * the user.
  *

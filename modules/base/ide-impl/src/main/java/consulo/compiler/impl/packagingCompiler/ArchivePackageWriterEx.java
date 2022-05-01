@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl.packagingCompiler;
 
-import com.intellij.compiler.impl.packagingCompiler.ArchivePackageInfo;
+import consulo.ide.impl.idea.compiler.impl.packagingCompiler.ArchivePackageInfo;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
 import javax.annotation.Nonnull;
 

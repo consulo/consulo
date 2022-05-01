@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * An element in a generic tree control displayed in the IDEA user interface.
  *
- * @see com.intellij.ide.util.treeView.smartTree.TreeModel#getRoot()
+ * @see consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeModel#getRoot()
  */
 
 public interface TreeElement {

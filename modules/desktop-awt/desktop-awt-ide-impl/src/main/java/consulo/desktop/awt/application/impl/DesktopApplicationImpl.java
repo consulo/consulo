@@ -15,17 +15,17 @@
  */
 package consulo.desktop.awt.application.impl;
 
-import com.intellij.diagnostic.LogEventException;
-import com.intellij.ide.*;
-import com.intellij.openapi.diagnostic.Attachment;
-import com.intellij.openapi.progress.util.PotemkinProgress;
-import com.intellij.openapi.progress.util.ProgressWindow;
-import com.intellij.openapi.project.impl.ProjectManagerImpl;
-import com.intellij.openapi.ui.MessageDialogBuilder;
+import consulo.ide.impl.idea.diagnostic.LogEventException;
+import consulo.ide.impl.idea.ide.*;
+import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
+import consulo.ide.impl.idea.openapi.progress.util.PotemkinProgress;
+import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.ide.impl.idea.openapi.project.impl.ProjectManagerImpl;
+import consulo.ide.impl.idea.openapi.ui.MessageDialogBuilder;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.AppIcon;
-import com.intellij.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.*;
 import consulo.application.impl.internal.*;
@@ -559,7 +559,7 @@ public class DesktopApplicationImpl extends BaseApplication {
   @Override
   public void assertReadAccessAllowed() {
     if (!isReadAccessAllowed()) {
-      LOG.error("Read access is allowed from event dispatch thread or inside read-action only" + " (see com.intellij.openapi.application.Application.runReadAction())",
+      LOG.error("Read access is allowed from event dispatch thread or inside read-action only" + " (see consulo.ide.impl.idea.openapi.application.Application.runReadAction())",
                 "Current thread: " + describe(Thread.currentThread()), "; dispatch thread: " + EventQueue.isDispatchThread() + "; isDispatchThread(): " + isDispatchThread(),
                 "SystemEventQueueThread: " + describe(getEventQueueThread()));
     }

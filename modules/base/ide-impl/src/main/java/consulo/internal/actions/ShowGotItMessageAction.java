@@ -20,7 +20,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.popup.Balloon;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.ui.GotItMessage;
+import consulo.ide.impl.idea.ui.GotItMessage;
 import consulo.ui.ex.RelativePoint;
 
 import java.awt.*;

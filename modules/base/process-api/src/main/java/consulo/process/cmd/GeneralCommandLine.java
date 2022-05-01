@@ -420,7 +420,7 @@ public class GeneralCommandLine implements UserDataHolder {
    * But some commands (e.g. {@code 'cmd /c start "title" ...'}) should get they quotes non-escaped.
    * Wrapping a parameter by this method (instead of using quotes) will do exactly this.
    *
-   * @see com.intellij.execution.util.ExecUtil#getTerminalCommand(String, String)
+   * @see consulo.ide.impl.idea.execution.util.ExecUtil#getTerminalCommand(String, String)
    */
   @Nonnull
   public static String inescapableQuote(@Nonnull String parameter) {

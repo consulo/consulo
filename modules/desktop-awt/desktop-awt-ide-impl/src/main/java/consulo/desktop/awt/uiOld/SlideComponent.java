@@ -19,10 +19,10 @@ import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.awt.HintHint;
-import com.intellij.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.RelativePoint;
-import com.intellij.util.Consumer;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.Consumer;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 

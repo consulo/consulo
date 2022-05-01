@@ -21,16 +21,16 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.test.TestConsoleProperties;
-import com.intellij.execution.testframework.sm.SMTestRunnerConnectionUtil;
-import com.intellij.execution.testframework.sm.runner.*;
-import com.intellij.execution.testframework.sm.runner.ui.AttachToProcessListener;
-import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
-import com.intellij.execution.testframework.sm.runner.ui.SMTRunnerUIActionsHandler;
-import com.intellij.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm;
-import com.intellij.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
+import consulo.ide.impl.idea.execution.testframework.sm.SMTestRunnerConnectionUtil;
+import consulo.ide.impl.idea.execution.testframework.sm.runner.*;
+import consulo.ide.impl.idea.execution.testframework.sm.runner.ui.AttachToProcessListener;
+import consulo.ide.impl.idea.execution.testframework.sm.runner.ui.SMTRunnerConsoleView;
+import consulo.ide.impl.idea.execution.testframework.sm.runner.ui.SMTRunnerUIActionsHandler;
+import consulo.ide.impl.idea.execution.testframework.sm.runner.ui.SMTestRunnerResultsForm;
+import consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.StatisticsPanel;
 import consulo.execution.test.ui.BaseTestsOutputConsoleView;
 import consulo.application.ApplicationManager;
-import com.intellij.testIntegration.TestLocationProvider;
+import consulo.ide.impl.idea.testIntegration.TestLocationProvider;
 import consulo.disposer.Disposer;
 import consulo.util.io.NetUtil;
 import consulo.util.dataholder.Key;
@@ -94,7 +94,7 @@ public class ThriftTestExecutionUtil {
                                              final StatisticsPanel statisticsPane,
                                              final ProcessHandler processHandler,
                                              @Nonnull final String testFrameworkName,
-                                             @javax.annotation.Nullable final com.intellij.testIntegration.TestLocationProvider locator,
+                                             @javax.annotation.Nullable final consulo.ide.impl.idea.testIntegration.TestLocationProvider locator,
                                              ThriftTestHandlerFactory factory,
                                              @Nullable TestProxyPrinterProvider printerProvider) {
     //build messages consumer

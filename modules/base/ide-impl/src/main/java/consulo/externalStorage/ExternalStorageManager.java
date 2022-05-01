@@ -15,8 +15,8 @@
  */
 package consulo.externalStorage;
 
-import com.intellij.ide.plugins.PluginInstallUtil;
-import com.intellij.ide.startup.StartupActionScriptManager;
+import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
 import consulo.application.AccessToken;
@@ -29,12 +29,12 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.util.io.StreamUtil;
+import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.store.IApplicationStore;
 import consulo.component.store.impl.internal.StoreUtil;

@@ -15,11 +15,11 @@
  */
 package consulo.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.InstallPluginAction;
-import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.ide.plugins.PluginTable;
+import consulo.ide.impl.idea.ide.plugins.InstallPluginAction;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.ide.plugins.PluginTable;
 import consulo.project.Project;
-import com.intellij.openapi.util.Couple;
+import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.CustomLineBorder;

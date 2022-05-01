@@ -374,7 +374,7 @@ public final class LaterInvocator {
    * {@link EventQueue#peekEvent()} default implementation would return null, and {@link UIUtil#dispatchAllInvocationEvents()} would
    * stop processing events too early and lead to spurious test failures.
    *
-   * @see com.intellij.ide.IdeEventQueue#peekEvent()
+   * @see consulo.ide.impl.idea.ide.IdeEventQueue#peekEvent()
    */
   public static boolean ensureFlushRequested() {
     if (ourEdtQueue.getNextEvent(false) != null) {

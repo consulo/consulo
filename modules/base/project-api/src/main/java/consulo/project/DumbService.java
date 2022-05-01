@@ -36,7 +36,7 @@ import java.util.function.Function;
  * A service managing the IDE's 'dumb' mode: when indexes are updated in the background, and the functionality is very much limited.
  * Only the explicitly allowed functionality is available. Usually, it's allowed by implementing {@link DumbAware} interface.<p></p>
  * <p>
- * "Dumb" mode starts and ends in a {@link com.intellij.openapi.application.WriteAction}, so if you're inside a {@link ReadAction}
+ * "Dumb" mode starts and ends in a {@link consulo.ide.impl.idea.openapi.application.WriteAction}, so if you're inside a {@link ReadAction}
  * on a background thread, it won't suddenly begin in the middle of your operation. But note that whenever you start
  * a top-level read action on a background thread, you should be prepared to anything being changed, including "dumb"
  * mode being suddenly on and off. To avoid executing a read action in "dumb" mode, please use {@link #runReadActionInSmartMode} or

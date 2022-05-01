@@ -32,6 +32,6 @@ public class UsagePreviewPanelFactoryImpl implements UsagePreviewPanelFactory {
   @Nonnull
   @Override
   public UsagePreviewPanel createPreviewPanel(@Nonnull Project project, @Nonnull UsageViewPresentation presentation, boolean isEditor) {
-    return new com.intellij.usages.impl.UsagePreviewPanel(project, presentation, isEditor);
+    return new consulo.ide.impl.idea.usages.impl.UsagePreviewPanel(project, presentation, isEditor);
   }
 }

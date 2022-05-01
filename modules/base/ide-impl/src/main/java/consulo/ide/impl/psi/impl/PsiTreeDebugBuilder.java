@@ -19,7 +19,7 @@ package consulo.ide.impl.psi.impl;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.PsiErrorElement;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 
 
 public class PsiTreeDebugBuilder {

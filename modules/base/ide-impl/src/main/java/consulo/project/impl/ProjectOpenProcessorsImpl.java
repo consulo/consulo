@@ -15,9 +15,9 @@
  */
 package consulo.project.impl;
 
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.platform.DefaultProjectOpenProcessor;
-import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.platform.DefaultProjectOpenProcessor;
+import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 import consulo.moduleImport.ImportProjectOpenProcessor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

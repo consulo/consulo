@@ -15,8 +15,8 @@
  */
 package consulo.vfs.newvfs.persistent;
 
-import com.intellij.ide.caches.CachesInvalidator;
-import com.intellij.openapi.vfs.newvfs.persistent.FSRecords;
+import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;

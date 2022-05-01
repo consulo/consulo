@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.pathMacro;
 
-import com.intellij.ide.macro.MacrosDialog;
+import consulo.ide.impl.idea.ide.macro.MacrosDialog;
 import consulo.module.Module;
 import consulo.pathMacro.Macro;
 import consulo.pathMacro.MacroSelector;

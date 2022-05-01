@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.GeneralSettings;
+import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -32,13 +32,13 @@ import consulo.application.util.SystemInfo;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.event.WindowManagerListener;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.ProjectFrameBounds;
-import com.intellij.openapi.wm.impl.ToolWindowLayout;
-import com.intellij.openapi.wm.impl.X11UiUtil;
+import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
 import consulo.ui.ex.awt.util.ScreenUtil;
-import com.intellij.util.EventDispatcher;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

@@ -1,9 +1,9 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.ui.plaf.intellij;
 
-import com.intellij.openapi.actionSystem.impl.ActionMenu;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
 import consulo.ui.ex.awt.JBPopupMenu;
-import com.intellij.openapi.util.SystemInfoRt;
+import consulo.ide.impl.idea.openapi.util.SystemInfoRt;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBValue;

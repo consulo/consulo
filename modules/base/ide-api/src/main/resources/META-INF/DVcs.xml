@@ -16,15 +16,15 @@
 <consulo-plugin>
   <extensionPoints>
     <extensionPoint name="pushSupport"
-                    interface="com.intellij.dvcs.push.PushSupport" area="PROJECT"/>
+					interface="consulo.ide.impl.idea.dvcs.push.PushSupport" area="PROJECT"/>
     <extensionPoint name="cherryPicker"
-                    interface="com.intellij.dvcs.cherrypick.VcsCherryPicker" area="PROJECT"/>
-    <extensionPoint name="vcsRepositoryCreator" interface="com.intellij.dvcs.repo.VcsRepositoryCreator" area="PROJECT"/>
+					interface="consulo.ide.impl.idea.dvcs.cherrypick.VcsCherryPicker" area="PROJECT"/>
+    <extensionPoint name="vcsRepositoryCreator" interface="consulo.ide.impl.idea.dvcs.repo.VcsRepositoryCreator" area="PROJECT"/>
   </extensionPoints>
 
   <actions>
-    <action id="Vcs.CherryPick" class="com.intellij.dvcs.cherrypick.VcsCherryPickAction" icon="consulo.platform.base.PlatformIconGroup@dvcs.cherrypick"/>
-    <action id="Vcs.Push" class="com.intellij.dvcs.push.VcsPushAction" icon="consulo.platform.base.PlatformIconGroup@actions.commit" text="Push...">
+    <action id="Vcs.CherryPick" class="consulo.ide.impl.idea.dvcs.cherrypick.VcsCherryPickAction" icon="consulo.platform.base.PlatformIconGroup@dvcs.cherrypick"/>
+    <action id="Vcs.Push" class="consulo.ide.impl.idea.dvcs.push.VcsPushAction" icon="consulo.platform.base.PlatformIconGroup@actions.commit" text="Push...">
       <keyboard-shortcut first-keystroke="control shift K" keymap="$default"/>
     </action>
     <group id="Dvcs.Log.ContextMenu">
@@ -40,38 +40,38 @@
   </actions>
 
   <extensionPoints>
-    <extensionPoint name="vcsStartupActivity" interface="com.intellij.openapi.vcs.impl.VcsStartupActivity"/>
+    <extensionPoint name="vcsStartupActivity" interface="consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity"/>
   </extensionPoints>
 
   <applicationListeners>
-    <listener class="com.intellij.openapi.vcs.impl.VcsInitialization$ShutDownProjectListener"
+    <listener class="consulo.ide.impl.idea.openapi.vcs.impl.VcsInitialization$ShutDownProjectListener"
               topic="consulo.project.event.ProjectManagerListener"/>
   </applicationListeners>
 
   <extensions defaultExtensionNs="consulo">
     <applicationService serviceInterface="consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor"
-                        serviceImplementation="com.intellij.vfs.AsyncVfsEventsPostProcessorImpl"/>
-    <vcsStartupActivity implementation="com.intellij.openapi.vcs.roots.VcsRootScanner$DetectRootsStartupActivity"/>
+                        serviceImplementation="consulo.ide.impl.idea.vfs.AsyncVfsEventsPostProcessorImpl"/>
+    <vcsStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.roots.VcsRootScanner$DetectRootsStartupActivity"/>
 
-    <vcsStartupActivity implementation="com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl$ActivateVcsesStartupActivity"/>
+    <vcsStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl$ActivateVcsesStartupActivity"/>
 
-    <projectService serviceInterface="com.intellij.openapi.vcs.ProjectLevelVcsManager" serviceImplementation="com.intellij.openapi.vcs.impl.ProjectLevelVcsManagerImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager" serviceImplementation="consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl"/>
 
-    <projectService serviceImplementation="com.intellij.openapi.vcs.roots.VcsRootScanner"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.roots.VcsRootScanner"/>
 
-    <projectService serviceImplementation="com.intellij.dvcs.repo.VcsRepositoryManager"/>
-    <projectService serviceImplementation="com.intellij.dvcs.push.PushSettings"/>
-    <projectService serviceImplementation="com.intellij.dvcs.cherrypick.VcsCherryPickManager"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.dvcs.repo.VcsRepositoryManager"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.dvcs.push.PushSettings"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.dvcs.cherrypick.VcsCherryPickManager"/>
 
-    <projectService serviceImplementation="com.intellij.openapi.vcs.impl.VcsInitialization"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.impl.VcsInitialization"/>
 
-    <postStartupActivity implementation="com.intellij.openapi.vcs.impl.VcsInitialization$StartUpActivity"/>
+    <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.impl.VcsInitialization$StartUpActivity"/>
 
-    <projectService serviceInterface="com.intellij.openapi.vcs.changes.ui.ChangesViewContentI" serviceImplementation="com.intellij.openapi.vcs.changes.ui.ChangesViewContentManager"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentI" serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager"/>
 
     <vcsStartupActivity implementation="consulo.vcs.changes.ui.VcsToolWindowFactory$UpdateVcsStartupActivity"/>
 
-    <vcsStartupActivity implementation="com.intellij.dvcs.repo.VcsRepositoryManager$MyStartupActivity"/>
+    <vcsStartupActivity implementation="consulo.ide.impl.idea.dvcs.repo.VcsRepositoryManager$MyStartupActivity"/>
 
     <toolWindow id="Version Control"
                 icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowchanges"

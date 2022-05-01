@@ -18,9 +18,9 @@ package consulo.copyright.impl;
 
 import consulo.component.persist.*;
 import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.packageDependencies.DependencyValidationManager;
+import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.language.psi.PsiFile;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;

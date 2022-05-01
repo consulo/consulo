@@ -48,7 +48,7 @@ import javax.annotation.Nullable;
  * Base implementation of {@link RunProfileState}. Takes care of putting together a process and a console and wrapping them into an
  * {@link ExecutionResult}. Does not contain any logic for actually starting the process.
  *
- * @see com.intellij.execution.configurations.JavaCommandLineState
+ * @see consulo.ide.impl.idea.execution.configurations.JavaCommandLineState
  * @see GeneralCommandLine
  */
 public abstract class CommandLineState implements RunProfileState {

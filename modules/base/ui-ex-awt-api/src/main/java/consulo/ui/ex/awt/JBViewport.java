@@ -104,7 +104,7 @@ public class JBViewport extends JViewport implements ZoomableViewport {
       if (parent2 instanceof JPanel) {
         Container parent3 = parent2.getParent();
         if (parent3 instanceof JPanel) {
-          return parent3.getClass().getName().startsWith("com.intellij.notification.EventLogToolWindowFactory");
+          return parent3.getClass().getName().startsWith("consulo.ide.impl.idea.notification.EventLogToolWindowFactory");
         }
       }
     }

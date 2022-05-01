@@ -2,23 +2,23 @@
 // Copyright 2000-2021 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.compiler.impl.build;
 
-import com.intellij.build.*;
-import com.intellij.build.events.MessageEvent;
-import com.intellij.build.issue.BuildIssue;
-import com.intellij.build.progress.BuildProgress;
-import com.intellij.build.progress.BuildProgressDescriptor;
-import com.intellij.compiler.impl.CompilerPropertiesAction;
+import consulo.ide.impl.idea.build.*;
+import consulo.ide.impl.idea.build.events.MessageEvent;
+import consulo.ide.impl.idea.build.issue.BuildIssue;
+import consulo.ide.impl.idea.build.progress.BuildProgress;
+import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
+import consulo.ide.impl.idea.compiler.impl.CompilerPropertiesAction;
 import consulo.compiler.ExitStatus;
-import com.intellij.compiler.progress.BuildViewService;
-import com.intellij.compiler.progress.ModuleLinkFilter;
-import com.intellij.execution.filters.RegexpFilter;
-import com.intellij.execution.filters.UrlFilter;
+import consulo.ide.impl.idea.compiler.progress.BuildViewService;
+import consulo.ide.impl.idea.compiler.progress.ModuleLinkFilter;
+import consulo.ide.impl.idea.execution.filters.RegexpFilter;
+import consulo.ide.impl.idea.execution.filters.UrlFilter;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.navigation.Navigatable;
@@ -35,7 +35,7 @@ import java.util.*;
  * @author VISTALL
  * @since 28/11/2021
  * <p>
- * Based on com.intellij.compiler.progress.BuildOutputService idea version but in our platform
+ * Based on consulo.ide.impl.idea.compiler.progress.BuildOutputService idea version but in our platform
  */
 public class BuildViewServiceImpl implements BuildViewService {
   private static class ConsolePrinter {
@@ -49,10 +49,10 @@ public class BuildViewServiceImpl implements BuildViewService {
 
     private void print(@Nonnull @Nls String message, @Nonnull MessageEvent.Kind kind) {
       String text = wrapWithAnsiColor(kind, message);
-      if (!isNewLinePosition && !com.intellij.openapi.util.text.StringUtil.startsWithChar(message, '\r')) {
+      if (!isNewLinePosition && !consulo.ide.impl.idea.openapi.util.text.StringUtil.startsWithChar(message, '\r')) {
         text = '\n' + text;
       }
-      isNewLinePosition = com.intellij.openapi.util.text.StringUtil.endsWithLineBreak(message);
+      isNewLinePosition = consulo.ide.impl.idea.openapi.util.text.StringUtil.endsWithLineBreak(message);
       progress.output(text, kind != MessageEvent.Kind.ERROR);
     }
 
@@ -200,11 +200,11 @@ public class BuildViewServiceImpl implements BuildViewService {
   public void onEnd(Object sessionId, ExitStatus exitStatus, long endBuildStamp) {
     String message;
     if (exitStatus == ExitStatus.ERRORS) {
-      message = BuildBundle.message("build.messages.failed", com.intellij.openapi.util.text.StringUtil.wordsToBeginFromLowerCase(myContentName));
+      message = BuildBundle.message("build.messages.failed", consulo.ide.impl.idea.openapi.util.text.StringUtil.wordsToBeginFromLowerCase(myContentName));
       myBuildProgress.fail(endBuildStamp, message);
     }
     else if (exitStatus == ExitStatus.CANCELLED) {
-      message = BuildBundle.message("build.messages.cancelled", com.intellij.openapi.util.text.StringUtil.wordsToBeginFromLowerCase(myContentName));
+      message = BuildBundle.message("build.messages.cancelled", consulo.ide.impl.idea.openapi.util.text.StringUtil.wordsToBeginFromLowerCase(myContentName));
       myBuildProgress.cancel(endBuildStamp, message);
     }
     else {
@@ -217,7 +217,7 @@ public class BuildViewServiceImpl implements BuildViewService {
       //    myConsolePrinter.print(CompilerBundle.message("compiler.build.messages.classes.check.outdated"), MessageEvent.Kind.SIMPLE);
       //  }
       //}
-      message = BuildBundle.message("build.messages.finished", com.intellij.openapi.util.text.StringUtil.wordsToBeginFromLowerCase(myContentName));
+      message = BuildBundle.message("build.messages.finished", consulo.ide.impl.idea.openapi.util.text.StringUtil.wordsToBeginFromLowerCase(myContentName));
       myBuildProgress.finish(endBuildStamp, isUpToDate, message);
     }
   }
@@ -257,7 +257,7 @@ public class BuildViewServiceImpl implements BuildViewService {
 
   private static String getMessageTitle(@Nonnull CompilerMessage compilerMessage) {
     String message = null;
-    String[] messages = com.intellij.openapi.util.text.StringUtil.splitByLines(compilerMessage.getMessage());
+    String[] messages = consulo.ide.impl.idea.openapi.util.text.StringUtil.splitByLines(compilerMessage.getMessage());
     if (messages.length > 1) {
       final String line0 = messages[0];
       final String line1 = messages[1];
@@ -277,7 +277,7 @@ public class BuildViewServiceImpl implements BuildViewService {
     if (message == null) {
       message = messages[0];
     }
-    return com.intellij.openapi.util.text.StringUtil.trimEnd(com.intellij.openapi.util.text.StringUtil.trimStart(message, "java: "), '.'); //NON-NLS
+    return consulo.ide.impl.idea.openapi.util.text.StringUtil.trimEnd(consulo.ide.impl.idea.openapi.util.text.StringUtil.trimStart(message, "java: "), '.'); //NON-NLS
   }
 
   @Nullable

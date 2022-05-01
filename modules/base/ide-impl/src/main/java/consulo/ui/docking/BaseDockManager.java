@@ -15,12 +15,12 @@
  */
 package consulo.ui.docking;
 
-import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockContainerFactory;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.project.ui.wm.dock.DockableContent;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;

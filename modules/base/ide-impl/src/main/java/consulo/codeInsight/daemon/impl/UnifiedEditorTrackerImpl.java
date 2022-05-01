@@ -15,7 +15,7 @@
  */
 package consulo.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.impl.EditorTracker;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.project.Project;

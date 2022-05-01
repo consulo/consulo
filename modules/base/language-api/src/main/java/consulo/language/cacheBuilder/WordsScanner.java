@@ -22,7 +22,7 @@ import consulo.application.util.function.Processor;
  * broken into words. Used to build a word index which is later used for Find Usages.
  *
  * @author max
- * @see com.intellij.lang.findUsages.FindUsagesProvider#getWordsScanner()
+ * @see consulo.ide.impl.idea.lang.findUsages.FindUsagesProvider#getWordsScanner()
  * @see SimpleWordsScanner
  * @see DefaultWordsScanner
  */

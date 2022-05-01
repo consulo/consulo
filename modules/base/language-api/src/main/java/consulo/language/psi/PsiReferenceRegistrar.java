@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Allows to register reference providers for specific locations. The locations are described by
- * {@link com.intellij.patterns.ElementPattern}s. If a pattern matches some PSI element, then the corresponding
+ * {@link consulo.ide.impl.idea.patterns.ElementPattern}s. If a pattern matches some PSI element, then the corresponding
  * {@link PsiReferenceProvider#getReferencesByElement(PsiElement, ProcessingContext)} is executed, from
  * which one can return the references whose {@link PsiReference#getElement()} is the same as the first parameter of
  * {@link PsiReferenceProvider#getReferencesByElement(PsiElement, ProcessingContext)}.
@@ -36,7 +36,7 @@ public abstract class PsiReferenceRegistrar {
 
   /**
    * Register reference provider with default priority ({@link #DEFAULT_PRIORITY})
-   * @param pattern reference place description. See {@link com.intellij.patterns.StandardPatterns}, {@link com.intellij.patterns.PlatformPatterns} and their extenders
+   * @param pattern reference place description. See {@link consulo.ide.impl.idea.patterns.StandardPatterns}, {@link consulo.ide.impl.idea.patterns.PlatformPatterns} and their extenders
    * @param provider provider to be registered
    */
   public void registerReferenceProvider(@Nonnull ElementPattern<? extends PsiElement> pattern, @Nonnull PsiReferenceProvider provider) {
@@ -46,7 +46,7 @@ public abstract class PsiReferenceRegistrar {
 
   /**
    * Register reference provider
-   * @param pattern reference place description. See {@link com.intellij.patterns.StandardPatterns}, {@link com.intellij.patterns.PlatformPatterns} and their extenders
+   * @param pattern reference place description. See {@link consulo.ide.impl.idea.patterns.StandardPatterns}, {@link consulo.ide.impl.idea.patterns.PlatformPatterns} and their extenders
    * @param provider provider to be registered
    * @param priority @see DEFAULT_PRIORITY, HIGHER_PRIORITY, LOWER_PRIORITY
    */

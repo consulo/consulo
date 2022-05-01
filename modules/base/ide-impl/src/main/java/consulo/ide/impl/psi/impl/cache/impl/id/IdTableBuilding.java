@@ -16,21 +16,21 @@
 
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
-import com.intellij.ide.highlighter.custom.CustomFileTypeLexer;
+import consulo.ide.impl.idea.ide.highlighter.custom.CustomFileTypeLexer;
 import consulo.language.Language;
 import consulo.language.findUsage.FindUsagesProvider;
 import consulo.language.internal.LanguageFindUsages;
 import consulo.language.cacheBuilder.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
-import com.intellij.openapi.fileTypes.impl.CustomSyntaxTableFileType;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import consulo.ide.impl.psi.CustomHighlighterTokenType;
 import consulo.language.psi.search.UsageSearchContext;
 import consulo.language.ast.TokenSet;
 import consulo.application.util.function.Processor;
 import consulo.language.psi.stub.FileContent;
-import com.intellij.util.indexing.IdDataConsumer;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.indexing.IdDataConsumer;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

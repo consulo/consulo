@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.progress;
 
-import com.intellij.ui.mac.foundation.MacUtil;
+import consulo.ide.impl.idea.ui.mac.foundation.MacUtil;
 import consulo.application.impl.internal.progress.ProgressActivityFactory;
 import consulo.application.util.SystemInfo;
 

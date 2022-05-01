@@ -16,7 +16,7 @@
 package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.ex.awt.JBUIScale;
-import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.ui.ex.awt.internal.EDT;
 import consulo.ui.ex.awt.update.UiNotifyConnector;
 import com.kitfox.svg.SVGDiagram;

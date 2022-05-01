@@ -111,7 +111,7 @@ public interface PlatformDataKeys extends CommonDataKeys {
    * Current key allows to specify custom actions sorter to use if any. I.e. every component can define it's custom
    * sorting rule in order to define priorities for target actions (classes of actions).
    *
-   * @deprecated use com.intellij.openapi.actionSystem.ActionPromoter
+   * @deprecated use consulo.ide.impl.idea.openapi.actionSystem.ActionPromoter
    */
   @Deprecated
   Key<Comparator<? super AnAction>> ACTIONS_SORTER = Key.create("actionsSorter");

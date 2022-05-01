@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.uiOld.content;
 
-import com.intellij.ui.content.TabbedPaneContentUI;
-import com.intellij.ui.content.impl.ContentImpl;
-import com.intellij.ui.content.impl.DesktopContentManagerImpl;
+import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
+import consulo.ide.impl.idea.ui.content.impl.ContentImpl;
+import consulo.ide.impl.idea.ui.content.impl.DesktopContentManagerImpl;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
 import consulo.ui.Component;

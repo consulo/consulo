@@ -29,7 +29,7 @@ public class LibraryKind {
   private static final Map<String, LibraryKind> ourAllKinds = new HashMap<String, LibraryKind>();
 
   /**
-   * @param kindId must be unique among all {@link com.intellij.openapi.roots.libraries.LibraryType} and {@link com.intellij.openapi.roots.libraries.LibraryPresentationProvider} implementations
+   * @param kindId must be unique among all {@link consulo.ide.impl.idea.openapi.roots.libraries.LibraryType} and {@link consulo.ide.impl.idea.openapi.roots.libraries.LibraryPresentationProvider} implementations
    */
   public LibraryKind(@Nonnull @NonNls String kindId) {
     myKindId = kindId;

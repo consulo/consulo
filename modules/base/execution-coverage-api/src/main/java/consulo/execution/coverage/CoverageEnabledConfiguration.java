@@ -25,7 +25,7 @@ import java.io.File;
 public abstract class CoverageEnabledConfiguration implements JDOMExternalizable {
   private static final Logger LOG = Logger.getInstance(CoverageEnabledConfiguration.class);
 
-  public static final Key<CoverageEnabledConfiguration> COVERAGE_KEY = Key.create("com.intellij.coverage");
+  public static final Key<CoverageEnabledConfiguration> COVERAGE_KEY = Key.create("consulo.ide.impl.idea.coverage");
 
   @NonNls protected static final String COVERAGE_ENABLED_ATTRIBUTE_NAME = "enabled";
   @NonNls protected static final String COVERAGE_RUNNER = "runner";

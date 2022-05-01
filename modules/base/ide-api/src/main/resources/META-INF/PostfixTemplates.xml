@@ -17,21 +17,21 @@
   <extensionPoints>
     <extensionPoint name="codeInsight.template.postfixTemplateProvider"
                     beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider"/>
+      <with attribute="implementationClass" implements="consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplateProvider"/>
     </extensionPoint>
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
     <!-- Postfix templates -->
-    <applicationService id="postfixCompletionSettings" serviceImplementation="com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings"/>
-    <customLiveTemplate implementation="com.intellij.codeInsight.template.postfix.templates.PostfixLiveTemplate"/>
-    <lookup.actionProvider implementation="com.intellij.codeInsight.template.postfix.completion.PostfixTemplateLookupActionProvider"/>
+    <applicationService id="postfixCompletionSettings" serviceImplementation="consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesSettings"/>
+    <customLiveTemplate implementation="consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixLiveTemplate"/>
+    <lookup.actionProvider implementation="consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateLookupActionProvider"/>
     <applicationConfigurable
         id="editing.postfixCompletion"
         parentId="editor.preferences.completion"
         displayName="Postfix Completion"
         dynamic="true"
-        instance="com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable"/>
-    <completion.contributor language="any" implementationClass="com.intellij.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor" order="last"/>
+        instance="consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesConfigurable"/>
+    <completion.contributor language="any" implementationClass="consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateCompletionContributor" order="last"/>
   </extensions>
 </consulo-plugin>

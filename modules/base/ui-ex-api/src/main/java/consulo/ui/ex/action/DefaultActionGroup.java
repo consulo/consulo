@@ -22,10 +22,10 @@ import java.util.function.Supplier;
  * to implement your own {@code ActionGroup}.
  *
  * @see Constraints
- * @see com.intellij.openapi.actionSystem.ComputableActionGroup
- * @see com.intellij.ide.actions.NonEmptyActionGroup
- * @see com.intellij.ide.actions.NonTrivialActionGroup
- * @see com.intellij.ide.actions.SmartPopupActionGroup
+ * @see consulo.ide.impl.idea.openapi.actionSystem.ComputableActionGroup
+ * @see consulo.ide.impl.idea.ide.actions.NonEmptyActionGroup
+ * @see consulo.ide.impl.idea.ide.actions.NonTrivialActionGroup
+ * @see consulo.ide.impl.idea.ide.actions.SmartPopupActionGroup
  */
 public class DefaultActionGroup extends ActionGroup {
   public static DefaultActionGroup createFlatGroup(@Nonnull Supplier< String> shortName) {

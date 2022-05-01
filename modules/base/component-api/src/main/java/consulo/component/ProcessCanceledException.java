@@ -26,9 +26,9 @@ import javax.annotation.Nullable;
  * It should be rethrown so that the infrastructure could handle it correctly.
  * This exception can happen during almost any IDE activity, e.g. any PSI query,
  * {@link ExtensionPointName#getExtensions},
- * {@link com.intellij.openapi.actionSystem.AnAction#update}, etc.<p></p>
+ * {@link consulo.ide.impl.idea.openapi.actionSystem.AnAction#update}, etc.<p></p>
  *
- * @see com.intellij.openapi.progress.ProgressIndicator#checkCanceled()
+ * @see consulo.ide.impl.idea.openapi.progress.ProgressIndicator#checkCanceled()
  * @see <a href="https://www.jetbrains.org/intellij/sdk/docs/basics/architectural_overview/general_threading_rules.html">General Threading Rules</a>
  */
 public class ProcessCanceledException extends RuntimeException implements ControlFlowException {

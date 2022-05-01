@@ -15,8 +15,8 @@
  */
 package consulo.web.codeInsight.daemon.impl;
 
-import com.intellij.codeInsight.daemon.impl.IntentionsUI;
-import com.intellij.codeInsight.intention.impl.CachedIntentions;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
+import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

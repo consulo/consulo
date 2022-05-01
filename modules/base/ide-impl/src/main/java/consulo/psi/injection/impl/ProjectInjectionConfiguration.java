@@ -18,11 +18,11 @@ package consulo.psi.injection.impl;
 
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.intellij.plugins.intelliLang.Configuration;
-import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
+import consulo.ide.impl.intelliLang.Configuration;
+import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

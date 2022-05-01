@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import com.intellij.ui.SizedIcon;
+import consulo.ide.impl.idea.ui.SizedIcon;
 import consulo.ui.image.Image;
 
 import javax.swing.*;

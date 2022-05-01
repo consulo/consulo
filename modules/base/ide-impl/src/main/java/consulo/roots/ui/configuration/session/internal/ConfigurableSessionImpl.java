@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.session.internal;
 
-import com.intellij.util.EventDispatcher;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.component.ComponentManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.configurable.ConfigurableSession;

@@ -17,7 +17,7 @@
 package consulo.copyright.impl.ui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
-import com.intellij.util.ObjectUtil;
+import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.copyright.impl.CopyrightManager;
 import consulo.copyright.impl.CopyrightProfile;
 import consulo.copyright.impl.CopyrightUpdaters;

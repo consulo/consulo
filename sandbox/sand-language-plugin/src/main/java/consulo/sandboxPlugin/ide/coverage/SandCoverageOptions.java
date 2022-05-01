@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.coverage;
 
-import com.intellij.coverage.CoverageOptions;
+import consulo.ide.impl.idea.coverage.CoverageOptions;
 import consulo.configurable.Configurable;
 
 import javax.annotation.Nullable;

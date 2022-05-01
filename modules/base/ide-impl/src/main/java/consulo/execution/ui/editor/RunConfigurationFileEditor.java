@@ -15,11 +15,11 @@
  */
 package consulo.execution.ui.editor;
 
-import com.intellij.execution.impl.RunConfigurable;
+import consulo.ide.impl.idea.execution.impl.RunConfigurable;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;

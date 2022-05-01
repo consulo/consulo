@@ -752,7 +752,7 @@ public final class TreeUtil {
   @SuppressWarnings("HardCodedStringLiteral")
   public static void installActions(@Nonnull final JTree tree) {
     TreeUI ui = tree.getUI();
-    if (ui != null && ui.getClass().getName().equals("com.intellij.ui.tree.ui.DefaultTreeUI")) return;
+    if (ui != null && ui.getClass().getName().equals("consulo.ide.impl.idea.ui.tree.ui.DefaultTreeUI")) return;
     tree.getActionMap().put("scrollUpChangeSelection", new AbstractAction() {
       @Override
       public void actionPerformed(final ActionEvent e) {

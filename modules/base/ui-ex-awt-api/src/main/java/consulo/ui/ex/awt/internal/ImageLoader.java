@@ -56,7 +56,7 @@ public class ImageLoader implements Serializable {
   public static final long CACHED_IMAGE_MAX_SIZE = (long)(SystemProperties.getFloatProperty("ide.cached.image.max.size", 1.5f) * 1024 * 1024);
   private static final ConcurrentMap<String, Image> ourCache = ContainerUtil.createConcurrentSoftValueMap();
 
-  @SuppressWarnings({"UnusedDeclaration"}) // set from com.intellij.internal.IconsLoadTime
+  @SuppressWarnings({"UnusedDeclaration"}) // set from consulo.ide.impl.idea.internal.IconsLoadTime
   private static LoadFunction measureLoad;
 
   /**

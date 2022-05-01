@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.http;
 
-import com.intellij.util.io.CharSequenceBackedByChars;
+import consulo.ide.impl.idea.util.io.CharSequenceBackedByChars;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import javax.annotation.Nonnull;

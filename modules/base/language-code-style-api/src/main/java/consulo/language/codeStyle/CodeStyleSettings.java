@@ -54,7 +54,7 @@ import java.util.regex.PatternSyntaxException;
  * you need {@link #getIndentOptionsByFile(PsiFile)}.
  * </p>
  * <p>
- * Consider also using an utility {@link com.intellij.application.options.CodeStyle} class which encapsulates the above methods where possible.
+ * Consider also using an utility {@link consulo.ide.impl.idea.application.options.CodeStyle} class which encapsulates the above methods where possible.
  * </p>
  * <p>
  * <b>Note:</b> A direct use of any non-final public fields from {@code CodeStyleSettings} class is strongly discouraged. These fields,

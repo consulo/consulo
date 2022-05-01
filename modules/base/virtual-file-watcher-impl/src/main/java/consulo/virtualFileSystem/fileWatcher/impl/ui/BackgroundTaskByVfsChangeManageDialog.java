@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ui.ex.awt.CheckBoxList;
-import com.intellij.ui.EditorNotifications;
+import consulo.ide.impl.idea.ui.EditorNotifications;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.awt.JBUI;

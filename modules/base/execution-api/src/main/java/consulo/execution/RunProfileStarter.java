@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Internal use only. Please use {@link com.intellij.execution.runners.GenericProgramRunner} or {@link com.intellij.execution.runners.AsyncProgramRunner}.
+ * Internal use only. Please use {@link consulo.ide.impl.idea.execution.runners.GenericProgramRunner} or {@link consulo.ide.impl.idea.execution.runners.AsyncProgramRunner}.
  *
  * The callback used to execute a process from the {@link ExecutionManager#startRunProfile(RunProfileStarter, RunProfileState, ExecutionEnvironment)}*
  * @author nik

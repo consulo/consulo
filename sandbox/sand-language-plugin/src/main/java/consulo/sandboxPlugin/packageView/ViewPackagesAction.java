@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.intellij.webcore.packaging.ManagePackagesDialog;
+import consulo.ide.impl.idea.webcore.packaging.ManagePackagesDialog;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

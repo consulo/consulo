@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.psi.impl.search;
 
-import com.intellij.ide.todo.TodoIndexPatternProvider;
+import consulo.ide.impl.idea.ide.todo.TodoIndexPatternProvider;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;

@@ -23,8 +23,8 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.ui.tree.PerFileConfigurableBase;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.ui.tree.PerFileConfigurableBase;
 import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.Nls;
 

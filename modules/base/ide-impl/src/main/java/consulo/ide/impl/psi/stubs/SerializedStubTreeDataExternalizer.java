@@ -1,11 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.stubs;
 
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.CompressionUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.CompressionUtil;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.DataInputOutputUtil;
-import com.intellij.util.io.PersistentHashMapValueStorage;
+import consulo.ide.impl.idea.util.io.PersistentHashMapValueStorage;
 import javax.annotation.Nonnull;
 
 import java.io.DataInput;

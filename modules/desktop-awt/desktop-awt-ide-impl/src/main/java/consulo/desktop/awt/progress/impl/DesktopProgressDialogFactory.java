@@ -16,7 +16,7 @@
 package consulo.desktop.awt.progress.impl;
 
 import consulo.application.Application;
-import com.intellij.openapi.progress.util.ProgressWindow;
+import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 import consulo.progress.util.ProgressDialog;
 import consulo.progress.util.ProgressDialogFactory;
@@ -49,7 +49,7 @@ public class DesktopProgressDialogFactory implements ProgressDialogFactory {
     }
 
     return parent == null
-           ? new com.intellij.openapi.progress.util.ProgressDialog(progressWindow, shouldShowBackground, project, cancelText)
-           : new com.intellij.openapi.progress.util.ProgressDialog(progressWindow, shouldShowBackground, parent, cancelText);
+           ? new consulo.ide.impl.idea.openapi.progress.util.ProgressDialog(progressWindow, shouldShowBackground, project, cancelText)
+           : new consulo.ide.impl.idea.openapi.progress.util.ProgressDialog(progressWindow, shouldShowBackground, parent, cancelText);
   }
 }

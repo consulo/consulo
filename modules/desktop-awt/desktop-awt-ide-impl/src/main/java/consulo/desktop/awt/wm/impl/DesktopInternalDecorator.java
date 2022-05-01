@@ -15,17 +15,17 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.ide.actions.ResizeToolWindowAction;
-import com.intellij.ide.actions.ToggleToolbarAction;
+import consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction;
+import consulo.ide.impl.idea.ide.actions.ToggleToolbarAction;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.language.editor.PlatformDataKeys;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.toolWindow.WindowInfo;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import com.intellij.openapi.wm.impl.WindowInfoImpl;
+import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
 import consulo.ui.ex.UIBundle;
-import com.intellij.util.EventDispatcher;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.application.util.Queryable;

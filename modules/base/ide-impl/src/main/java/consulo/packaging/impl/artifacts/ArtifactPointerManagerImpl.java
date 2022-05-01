@@ -18,7 +18,7 @@ package consulo.packaging.impl.artifacts;
 import consulo.compiler.artifact.*;
 import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.project.Project;
-import com.intellij.packaging.impl.artifacts.ArtifactPointerImpl;
+import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactPointerImpl;
 import consulo.component.impl.util.NamedPointerImpl;
 import consulo.component.impl.util.NamedPointerManagerImpl;
 
@@ -78,7 +78,7 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
   /**
    * Special method for serialization, while target artifact manager did not provide recursion.
    *
-   * It will be called from com.intellij.packaging.impl.elements.ArtifactPackagingElement, while ArtifactManager#loadState()
+   * It will be called from consulo.ide.impl.idea.packaging.impl.elements.ArtifactPackagingElement, while ArtifactManager#loadState()
    */
   @Nonnull
   public ArtifactPointer create(@Nonnull ArtifactManager artifactManager, @Nonnull String name) {

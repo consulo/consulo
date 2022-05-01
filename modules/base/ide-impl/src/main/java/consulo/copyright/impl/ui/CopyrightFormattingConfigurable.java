@@ -26,7 +26,7 @@ import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.copyright.impl.CopyrightUpdaters;
 import consulo.copyright.impl.psi.UpdateCopyrightsProvider;
 import consulo.ui.annotation.RequiredUIAccess;

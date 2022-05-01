@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
  *
  * @apiNote in case you getting a {@link StackOverflowError}, with your builder, most likely you haven't implemented any model building
  * methods. Please, implement {@link #createModel(FormattingContext)}
- * @see com.intellij.lang.LanguageFormatting
+ * @see consulo.ide.impl.idea.lang.LanguageFormatting
  * @see FormattingModelProvider#createFormattingModelForPsiFile(PsiFile, Block, CodeStyleSettings)
  */
 public interface FormattingModelBuilder {

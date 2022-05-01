@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal.ex;
 
-import com.intellij.openapi.fileEditor.ex.IdeDocumentHistory;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.codeEditor.*;
@@ -229,7 +229,7 @@ public class WebEditorImpl extends CodeEditorBase {
         boolean wasConsumed = event.isConsumed();
         mouseListener.mousePressed(event);
         //noinspection deprecation
-        if (!wasConsumed && event.isConsumed() && mouseListener instanceof com.intellij.util.EditorPopupHandler) {
+        if (!wasConsumed && event.isConsumed() && mouseListener instanceof consulo.ide.impl.idea.util.EditorPopupHandler) {
           // compatibility with legacy code, this logic should be removed along with EditorPopupHandler
           forceProcessing = true;
         }

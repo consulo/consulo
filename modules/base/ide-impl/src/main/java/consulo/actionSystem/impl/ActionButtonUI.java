@@ -15,7 +15,7 @@
  */
 package consulo.actionSystem.impl;
 
-import com.intellij.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 
 import java.awt.*;
 

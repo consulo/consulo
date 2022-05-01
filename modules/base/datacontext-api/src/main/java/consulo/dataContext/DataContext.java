@@ -27,9 +27,9 @@ import java.util.Map;
  * Allows an action to retrieve information about the context in which it was invoked.
  *
  * @see AnActionEvent#getDataContext()
- * @see com.intellij.openapi.actionSystem.PlatformDataKeys
+ * @see consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys
  * @see Key
- * @see com.intellij.ide.DataManager
+ * @see consulo.ide.impl.idea.ide.DataManager
  * @see DataProvider
  */
 public interface DataContext {
@@ -42,7 +42,7 @@ public interface DataContext {
 
   /**
    * Returns the value corresponding to the specified data key. Some of the supported
-   * data identifiers are defined in the {@link com.intellij.openapi.actionSystem.PlatformDataKeys} class.
+   * data identifiers are defined in the {@link consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys} class.
    *
    * @param key the data key for which the value is requested.
    * @return the value, or null if no value is available in the current context for this identifier.

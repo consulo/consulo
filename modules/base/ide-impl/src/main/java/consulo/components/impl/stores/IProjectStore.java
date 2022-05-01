@@ -16,7 +16,7 @@
 package consulo.components.impl.stores;
 
 import consulo.project.internal.ProjectEx;
-import com.intellij.openapi.project.impl.ProjectImpl;
+import consulo.ide.impl.idea.openapi.project.impl.ProjectImpl;
 import consulo.component.store.impl.internal.IComponentStore;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
 import consulo.virtualFileSystem.VirtualFile;

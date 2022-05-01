@@ -15,75 +15,75 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="logProvider" interface="com.intellij.vcs.log.VcsLogProvider" area="PROJECT"/>
-    <extensionPoint name="logHighlighterFactory" interface="com.intellij.vcs.log.ui.VcsLogHighlighterFactory" area="PROJECT"/>
+    <extensionPoint name="logProvider" interface="consulo.ide.impl.idea.vcs.log.VcsLogProvider" area="PROJECT"/>
+    <extensionPoint name="logHighlighterFactory" interface="consulo.ide.impl.idea.vcs.log.ui.VcsLogHighlighterFactory" area="PROJECT"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <changesViewContent tabName="Log" className="com.intellij.vcs.log.impl.VcsLogContentProvider"
-                        predicateClassName="com.intellij.vcs.log.impl.VcsLogContentProvider$VcsLogVisibilityPredicate"/>
+    <changesViewContent tabName="Log" className="consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider"
+                        predicateClassName="consulo.ide.impl.idea.vcs.log.impl.VcsLogContentProvider$VcsLogVisibilityPredicate"/>
 
-    <applicationService serviceInterface="com.intellij.vcs.log.graph.PermanentGraphBuilder"
-                        serviceImplementation="com.intellij.vcs.log.graph.PermanentGraphBuilderImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.vcs.log.graph.PermanentGraphBuilder"
+                        serviceImplementation="consulo.ide.impl.idea.vcs.log.graph.PermanentGraphBuilderImpl"/>
 
-    <projectService serviceImplementation="com.intellij.vcs.log.impl.VcsProjectLog"/>
-    <projectService serviceInterface="com.intellij.vcs.log.VcsLogObjectsFactory"
-                    serviceImplementation="com.intellij.vcs.log.impl.VcsLogObjectsFactoryImpl"/>
-    <projectService serviceInterface="com.intellij.vcs.log.data.VcsLogTabsProperties"
-                    serviceImplementation="com.intellij.vcs.log.data.VcsLogTabsProperties"/>
-    <projectService serviceInterface="com.intellij.vcs.log.VcsUserRegistry"
-                    serviceImplementation="com.intellij.vcs.log.data.VcsUserRegistryImpl"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.vcs.log.VcsLogObjectsFactory"
+                    serviceImplementation="consulo.ide.impl.idea.vcs.log.impl.VcsLogObjectsFactoryImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.vcs.log.data.VcsLogTabsProperties"
+                    serviceImplementation="consulo.ide.impl.idea.vcs.log.data.VcsLogTabsProperties"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.vcs.log.VcsUserRegistry"
+                    serviceImplementation="consulo.ide.impl.idea.vcs.log.data.VcsUserRegistryImpl"/>
 
-    <statistics.usagesCollector implementation="com.intellij.vcs.log.statistics.VcsLogRepoSizeCollector"/>
-    <statistics.usagesCollector implementation="com.intellij.vcs.log.statistics.VcsLogFeaturesCollector"/>
+    <statistics.usagesCollector implementation="consulo.ide.impl.idea.vcs.log.statistics.VcsLogRepoSizeCollector"/>
+    <statistics.usagesCollector implementation="consulo.ide.impl.idea.vcs.log.statistics.VcsLogFeaturesCollector"/>
 
-    <logHighlighterFactory implementation="com.intellij.vcs.log.ui.MyCommitsHighlighter$Factory"/>
-    <logHighlighterFactory implementation="com.intellij.vcs.log.ui.MergeCommitsHighlighter$Factory"/>
-    <logHighlighterFactory implementation="com.intellij.vcs.log.ui.CurrentBranchHighlighter$Factory"/>
+    <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.MyCommitsHighlighter$Factory"/>
+    <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.MergeCommitsHighlighter$Factory"/>
+    <logHighlighterFactory implementation="consulo.ide.impl.idea.vcs.log.ui.CurrentBranchHighlighter$Factory"/>
 
-    <postStartupActivity implementation="com.intellij.vcs.log.impl.VcsProjectLog$InitLogStartupActivity"/>
+    <postStartupActivity implementation="consulo.ide.impl.idea.vcs.log.impl.VcsProjectLog$InitLogStartupActivity"/>
 
-    <cachesInvalidator implementation="com.intellij.vcs.log.impl.VcsLogCachesInvalidator" />
+    <cachesInvalidator implementation="consulo.ide.impl.idea.vcs.log.impl.VcsLogCachesInvalidator" />
   </extensions>
 
   <actions>
-    <action class="com.intellij.vcs.log.ui.actions.VcsLogCreatePatchAction" id="Vcs.Log.CreatePatch"
-            use-shortcut-of="ChangesView.CreatePatch"/>
-    <action class="com.intellij.vcs.log.ui.actions.GoToHashOrRefAction" id="Vcs.Log.GoToRef" icon="consulo.platform.base.PlatformIconGroup@actions.menu_find"
-            use-shortcut-of="Find"
-            text="Go To Hash/Branch/Tag" description="Specify hash or name of a branch or a tag to navigate to the commit it points"/>
-    <action class="com.intellij.vcs.log.ui.actions.VcsLogQuickSettingsActions" id="Vcs.Log.QuickSettings"
-            icon="consulo.platform.base.PlatformIconGroup@general.gearplain" text="Quick Settings" description="Quick Settings"/>
-    <action class="com.intellij.vcs.log.ui.actions.VcsLogTextFilterSettingsActions" id="Vcs.Log.QuickTextFilterSettings"
-            icon="consulo.platform.base.PlatformIconGroup@general.gearplain" text="Text Filter Settings" description="Text Filter Settings"/>
-    <action class="com.intellij.vcs.log.ui.actions.IntelliSortChooserToggleAction" id="Vcs.Log.IntelliSortChooser"/>
-    <action class="com.intellij.vcs.log.ui.actions.VcsShowLogAction" id="Vcs.Show.Log" text="Show VCS Log">
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsLogCreatePatchAction" id="Vcs.Log.CreatePatch"
+			use-shortcut-of="ChangesView.CreatePatch"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.GoToHashOrRefAction" id="Vcs.Log.GoToRef" icon="consulo.platform.base.PlatformIconGroup@actions.menu_find"
+			use-shortcut-of="Find"
+			text="Go To Hash/Branch/Tag" description="Specify hash or name of a branch or a tag to navigate to the commit it points"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsLogQuickSettingsActions" id="Vcs.Log.QuickSettings"
+			icon="consulo.platform.base.PlatformIconGroup@general.gearplain" text="Quick Settings" description="Quick Settings"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsLogTextFilterSettingsActions" id="Vcs.Log.QuickTextFilterSettings"
+			icon="consulo.platform.base.PlatformIconGroup@general.gearplain" text="Text Filter Settings" description="Text Filter Settings"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.IntelliSortChooserToggleAction" id="Vcs.Log.IntelliSortChooser"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.VcsShowLogAction" id="Vcs.Show.Log" text="Show VCS Log">
       <add-to-group group-id="Vcs.Show.Toolwindow.Tab"/>
     </action>
-    <action class="com.intellij.vcs.log.ui.actions.CompactReferencesViewAction" id="Vcs.Log.CompactReferencesView"/>
-    <action class="com.intellij.vcs.log.ui.actions.ShowTagNamesAction" id="Vcs.Log.ShowTagNames"/>
-    <action class="com.intellij.vcs.log.ui.actions.CollapseGraphAction" id="Vcs.Log.CollapseAll"/>
-    <action class="com.intellij.vcs.log.ui.actions.ExpandGraphAction" id="Vcs.Log.ExpandAll"/>
-    <action class="com.intellij.vcs.log.ui.actions.ShowLongEdgesAction" id="Vcs.Log.ShowLongEdges"/>
-    <action class="com.intellij.vcs.log.ui.actions.ShowDetailsAction" id="Vcs.Log.ShowDetailsAction"/>
-    <action class="com.intellij.vcs.log.ui.actions.ShowRootsColumnAction" id="Vcs.Log.ShowRootsColumnAction"/>
-    <action class="com.intellij.vcs.log.ui.actions.FocusTextFilterAction" id="Vcs.Log.FocusTextFilter">
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.CompactReferencesViewAction" id="Vcs.Log.CompactReferencesView"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowTagNamesAction" id="Vcs.Log.ShowTagNames"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.CollapseGraphAction" id="Vcs.Log.CollapseAll"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ExpandGraphAction" id="Vcs.Log.ExpandAll"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowLongEdgesAction" id="Vcs.Log.ShowLongEdges"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowDetailsAction" id="Vcs.Log.ShowDetailsAction"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowRootsColumnAction" id="Vcs.Log.ShowRootsColumnAction"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.FocusTextFilterAction" id="Vcs.Log.FocusTextFilter">
       <keyboard-shortcut first-keystroke="control L" keymap="$default"/>
       <keyboard-shortcut first-keystroke="control L" keymap="Visual Studio" remove="true"/>
     </action>
-    <group class="com.intellij.vcs.log.ui.actions.HighlightersActionGroup" id="Vcs.Log.HighlightersActionGroup"/>
-    <action class="com.intellij.vcs.log.ui.actions.OpenAnotherLogTabAction" id="Vcs.Log.OpenAnotherTab"/>
-    <action class="com.intellij.vcs.log.ui.actions.CloseLogTabAction" id="Vcs.Log.CloseLogTabAction"/>
-    <action class="com.intellij.vcs.log.ui.actions.RefreshLogAction" id="Vcs.Log.Refresh" use-shortcut-of="Refresh"/>
-    <action class="com.intellij.vcs.log.ui.actions.ShowGraphHistoryAction" id="Vcs.Show.Graph.History"
-            text="Show History as Graph" description="Show History as Graph" internal="true"/>
-    <action class="com.intellij.vcs.log.ui.actions.ShowCommitTooltipAction" id="Vcs.Log.ShowTooltip"
-            text="Show Commit Tooltip" description="Show tooltip for currently selected commit in the Log"
-            use-shortcut-of="QuickJavaDoc"/>
-    <action class="com.intellij.vcs.log.ui.actions.EnableFilterByRegexAction" id="Vcs.Log.EnableFilterByRegexAction"
-            text="Regex"/>
-    <action class="com.intellij.vcs.log.ui.actions.EnableMatchCaseAction" id="Vcs.Log.MatchCaseAction"
-            text="Match Case"/>
+    <group class="consulo.ide.impl.idea.vcs.log.ui.actions.HighlightersActionGroup" id="Vcs.Log.HighlightersActionGroup"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.OpenAnotherLogTabAction" id="Vcs.Log.OpenAnotherTab"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.CloseLogTabAction" id="Vcs.Log.CloseLogTabAction"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.RefreshLogAction" id="Vcs.Log.Refresh" use-shortcut-of="Refresh"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowGraphHistoryAction" id="Vcs.Show.Graph.History"
+			text="Show History as Graph" description="Show History as Graph" internal="true"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.ShowCommitTooltipAction" id="Vcs.Log.ShowTooltip"
+			text="Show Commit Tooltip" description="Show tooltip for currently selected commit in the Log"
+			use-shortcut-of="QuickJavaDoc"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.EnableFilterByRegexAction" id="Vcs.Log.EnableFilterByRegexAction"
+			text="Regex"/>
+    <action class="consulo.ide.impl.idea.vcs.log.ui.actions.EnableMatchCaseAction" id="Vcs.Log.MatchCaseAction"
+			text="Match Case"/>
 
     <group id="Vcs.Log.Settings">
       <reference id="Vcs.Log.ShowRootsColumnAction"/>

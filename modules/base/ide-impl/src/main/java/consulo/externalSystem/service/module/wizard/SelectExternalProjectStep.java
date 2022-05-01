@@ -15,11 +15,11 @@
  */
 package consulo.externalSystem.service.module.wizard;
 
-import com.intellij.openapi.externalSystem.ExternalSystemManager;
-import com.intellij.openapi.externalSystem.model.ProjectSystemId;
-import com.intellij.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
-import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettings;
-import com.intellij.openapi.externalSystem.util.*;
+import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
+import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
+import consulo.ide.impl.idea.openapi.externalSystem.service.settings.AbstractImportFromExternalSystemControl;
+import consulo.ide.impl.idea.openapi.externalSystem.settings.AbstractExternalSystemSettings;
+import consulo.ide.impl.idea.openapi.externalSystem.util.*;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;

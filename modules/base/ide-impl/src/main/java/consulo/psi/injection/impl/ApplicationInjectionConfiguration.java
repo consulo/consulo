@@ -20,8 +20,8 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.intellij.plugins.intelliLang.Configuration;
-import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
+import consulo.ide.impl.intelliLang.Configuration;
+import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import org.jdom.Element;
 
 import java.util.List;

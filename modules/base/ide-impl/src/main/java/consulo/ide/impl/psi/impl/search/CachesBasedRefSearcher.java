@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.impl.search;
 
 import consulo.project.util.query.QueryExecutorBase;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;

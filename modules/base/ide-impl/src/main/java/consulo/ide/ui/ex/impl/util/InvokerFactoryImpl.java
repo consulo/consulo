@@ -15,7 +15,7 @@
  */
 package consulo.ide.ui.ex.impl.util;
 
-import com.intellij.util.concurrency.InvokerImpl;
+import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.util.Invoker;
 import consulo.ui.ex.util.InvokerFactory;

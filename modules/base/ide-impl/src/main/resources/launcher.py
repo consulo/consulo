@@ -6,7 +6,7 @@ import sys
 import os
 import time
 
-# see com.intellij.idea.SocketLock for the server side of this interface
+# see consulo.ide.impl.idea.idea.SocketLock for the server side of this interface
 
 RUN_PATH = '$RUN_PATH$'
 CONFIG_PATH = '$CONFIG_PATH$'

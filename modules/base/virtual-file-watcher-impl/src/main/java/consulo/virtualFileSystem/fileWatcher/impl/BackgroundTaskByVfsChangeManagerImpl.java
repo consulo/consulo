@@ -16,11 +16,11 @@
 package consulo.virtualFileSystem.fileWatcher.impl;
 
 import consulo.component.macro.ReplacePathToMacroMap;
-import com.intellij.build.BuildViewManager;
-import com.intellij.build.DefaultBuildDescriptor;
-import com.intellij.build.progress.BuildProgress;
-import com.intellij.build.progress.BuildProgressDescriptor;
-import com.intellij.execution.filters.UrlFilter;
+import consulo.ide.impl.idea.build.BuildViewManager;
+import consulo.ide.impl.idea.build.DefaultBuildDescriptor;
+import consulo.ide.impl.idea.build.progress.BuildProgress;
+import consulo.ide.impl.idea.build.progress.BuildProgressDescriptor;
+import consulo.ide.impl.idea.execution.filters.UrlFilter;
 import consulo.component.macro.ExpandMacroToPathMap;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.Task;

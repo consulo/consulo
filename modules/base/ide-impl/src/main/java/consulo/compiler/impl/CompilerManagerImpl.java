@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl;
 
-import com.intellij.compiler.impl.*;
+import consulo.ide.impl.idea.compiler.impl.*;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;
 import consulo.compiler.scope.CompileModuleScopeFactory;
@@ -34,11 +34,11 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.Chunk;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.util.graph.Graph;
 import consulo.component.util.graph.GraphGenerator;
 import consulo.component.util.graph.InboundSemiGraph;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl.cache.impl;
 
 import consulo.language.psi.search.IndexPattern;
-import com.intellij.util.indexing.IdDataConsumer;
+import consulo.ide.impl.idea.util.indexing.IdDataConsumer;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
 

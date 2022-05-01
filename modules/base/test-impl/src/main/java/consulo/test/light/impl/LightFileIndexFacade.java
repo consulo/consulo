@@ -19,7 +19,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.language.content.FileIndexFacade;
 import consulo.component.util.ModificationTracker;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

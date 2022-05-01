@@ -25,20 +25,20 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.DialogBuilder;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.Factory;
+import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.util.lang.ref.Ref;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.ui.ex.SimpleColoredText;
 import consulo.ui.ex.SimpleTextAttributes;
-import com.intellij.util.Consumer;
+import consulo.ide.impl.idea.util.Consumer;
 import consulo.ui.image.Image;
-import org.intellij.plugins.intelliLang.Configuration;
-import org.intellij.plugins.intelliLang.inject.EditInjectionSettingsAction;
-import org.intellij.plugins.intelliLang.inject.InjectorUtils;
-import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
-import org.intellij.plugins.intelliLang.inject.config.ui.BaseInjectionPanel;
+import consulo.ide.impl.intelliLang.Configuration;
+import consulo.ide.impl.intelliLang.inject.EditInjectionSettingsAction;
+import consulo.ide.impl.intelliLang.inject.InjectorUtils;
+import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
+import consulo.ide.impl.intelliLang.inject.config.ui.BaseInjectionPanel;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -146,7 +146,7 @@ public abstract class AbstractLanguageInjectionSupport extends LanguageInjection
     }
     builder.addOkAction();
     builder.addCancelAction();
-    builder.setDimensionServiceKey("#org.intellij.plugins.intelliLang.inject.config.ui.BaseInjectionDialog");
+    builder.setDimensionServiceKey("#consulo.ide.impl.intelliLang.inject.config.ui.BaseInjectionDialog");
     builder.setCenterPanel(panel.getComponent());
     builder.setTitle(EditInjectionSettingsAction.EDIT_INJECTION_TITLE);
     builder.setOkOperation(new Runnable() {

@@ -12,7 +12,7 @@ import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBList;
-import com.intellij.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
 import consulo.ui.ex.awt.JBUI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

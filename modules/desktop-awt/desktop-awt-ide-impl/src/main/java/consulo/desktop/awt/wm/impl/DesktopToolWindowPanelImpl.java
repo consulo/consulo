@@ -15,11 +15,11 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.openapi.ui.ThreeComponentsSplitter;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.reference.SoftReference;
-import com.intellij.ui.components.JBLayeredPane;
+import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
+import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.ui.components.JBLayeredPane;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;

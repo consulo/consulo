@@ -15,9 +15,9 @@
  */
 package consulo.psi.injection;
 
-import com.intellij.openapi.util.Factory;
+import consulo.ide.impl.idea.openapi.util.Factory;
 import consulo.ui.ex.SimpleColoredText;
-import com.intellij.util.Consumer;
+import consulo.ide.impl.idea.util.Consumer;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.language.Language;
@@ -27,10 +27,10 @@ import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ref.Ref;
-import org.intellij.plugins.intelliLang.Configuration;
-import org.intellij.plugins.intelliLang.inject.InjectedLanguage;
-import org.intellij.plugins.intelliLang.inject.LanguageInjectionConfigBean;
-import org.intellij.plugins.intelliLang.inject.config.BaseInjection;
+import consulo.ide.impl.intelliLang.Configuration;
+import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
+import consulo.ide.impl.intelliLang.inject.LanguageInjectionConfigBean;
+import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

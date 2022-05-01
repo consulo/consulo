@@ -15,7 +15,7 @@
  */
 package consulo.desktop.util.awt;
 
-import com.intellij.util.NotNullProducer;
+import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ui.ex.UIModificationTracker;
 
 import javax.annotation.Nonnull;

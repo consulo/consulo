@@ -15,11 +15,11 @@
  */
 package consulo.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.plugins.RepositoryHelper;
+import consulo.ide.impl.idea.ide.plugins.PluginManager;
+import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.application.Application;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.ide.plugins.InstalledPluginsState;

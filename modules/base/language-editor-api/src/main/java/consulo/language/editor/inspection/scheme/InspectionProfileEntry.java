@@ -107,9 +107,9 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   protected volatile DefaultNameProvider myNameProvider = null;
 
   /**
-   * @see com.intellij.codeInspection.InspectionEP#groupDisplayName
-   * @see com.intellij.codeInspection.InspectionEP#groupKey
-   * @see com.intellij.codeInspection.InspectionEP#groupBundle
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#groupDisplayName
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#groupKey
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#groupBundle
    */
   @Nls
   @Nonnull
@@ -125,7 +125,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   }
 
   /**
-   * @see com.intellij.codeInspection.InspectionEP#groupPath
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#groupPath
    */
   @Nonnull
   public String[] getGroupPath() {
@@ -137,9 +137,9 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   }
 
   /**
-   * @see com.intellij.codeInspection.InspectionEP#displayName
-   * @see com.intellij.codeInspection.InspectionEP#key
-   * @see com.intellij.codeInspection.InspectionEP#bundle
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#displayName
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#key
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#bundle
    */
   @Nls
   @Nonnull
@@ -157,7 +157,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   /**
    * DO NOT OVERRIDE this method.
    *
-   * @see com.intellij.codeInspection.InspectionEP#shortName
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#shortName
    */
   @NonNls
   @Nonnull
@@ -179,7 +179,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   /**
    * DO NOT OVERRIDE this method.
    *
-   * @see com.intellij.codeInspection.InspectionEP#level
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#level
    */
   @Nonnull
   public HighlightDisplayLevel getDefaultLevel() {
@@ -189,7 +189,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
   /**
    * DO NOT OVERRIDE this method.
    *
-   * @see com.intellij.codeInspection.InspectionEP#enabledByDefault
+   * @see consulo.ide.impl.idea.codeInspection.InspectionEP#enabledByDefault
    */
   public boolean isEnabledByDefault() {
     return false;
@@ -308,7 +308,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
    * Initialize inspection with project. Is called on project opened for all profiles as well as on profile creation.
    *
    * @param project to be associated with this entry
-   * @deprecated this won't work for inspections configured via {@link com.intellij.codeInspection.InspectionEP}
+   * @deprecated this won't work for inspections configured via {@link consulo.ide.impl.idea.codeInspection.InspectionEP}
    */
   public void projectOpened(@Nonnull Project project) {
   }
@@ -317,7 +317,7 @@ public abstract class InspectionProfileEntry implements BatchSuppressableTool {
    * Cleanup inspection settings corresponding to the project. Is called on project closed for all profiles as well as on profile deletion.
    *
    * @param project to be disassociated from this entry
-   * @deprecated this won't work for inspections configured via {@link com.intellij.codeInspection.InspectionEP}
+   * @deprecated this won't work for inspections configured via {@link consulo.ide.impl.idea.codeInspection.InspectionEP}
    */
   public void projectClosed(@Nonnull Project project) {
   }

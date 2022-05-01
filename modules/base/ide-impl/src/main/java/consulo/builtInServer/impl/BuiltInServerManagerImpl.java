@@ -1,8 +1,8 @@
 package consulo.builtInServer.impl;
 
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.net.NetUtils;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.net.NetUtils;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.application.impl.internal.start.ImportantFolderLocker;

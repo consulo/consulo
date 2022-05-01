@@ -3,7 +3,7 @@ package consulo.desktop.awt.ui.impl.image.libraryImage;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.internal.JBHiDPIScaledImage;
 import consulo.ui.ex.awt.internal.RetinaImage;
-import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.ui.ex.awt.ImageUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.logging.Logger;

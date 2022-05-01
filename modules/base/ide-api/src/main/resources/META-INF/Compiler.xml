@@ -27,29 +27,29 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.FileCopyElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.DirectoryCopyElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.ExtractedDirectoryElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.DirectoryElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.FileCopyElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.DirectoryCopyElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.ExtractedDirectoryElementType"/>
     <packaging.elementType implementation="consulo.packaging.impl.elements.ZipArchiveElementType" id="zip-archive-element"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType"/>
     <packaging.elementType implementation="consulo.packaging.impl.elements.moduleContent.ProductionResourceModuleOutputElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.moduleContent.TestModuleOutputElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.moduleContent.TestModuleOutputElementType"/>
     <packaging.elementType implementation="consulo.packaging.impl.elements.moduleContent.TestResourceModuleOutputElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.LibraryElementType"/>
-    <packaging.elementType implementation="com.intellij.packaging.impl.elements.ArtifactElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.LibraryElementType"/>
+    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.ArtifactElementType"/>
 
     <projectService serviceInterface="consulo.compiler.artifact.ArtifactManager"
-                    serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactManagerImpl"/>
+                    serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactManagerImpl"/>
 
     <projectService serviceInterface="consulo.compiler.artifact.ArtifactPointerManager"
                     serviceImplementation="consulo.packaging.impl.artifacts.ArtifactPointerManagerImpl"/>
 
-    <projectService serviceInterface="com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinder"
-                    serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactBySourceFileFinderImpl"/>
-    <projectService serviceInterface="com.intellij.packaging.impl.artifacts.ArtifactSortingUtil"
-                    serviceImplementation="com.intellij.packaging.impl.artifacts.ArtifactSortingUtilImpl"/>
-    <applicationService serviceImplementation="com.intellij.packaging.impl.artifacts.InvalidArtifactType"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinder"
+                    serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinderImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactSortingUtil"
+                    serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactSortingUtilImpl"/>
+    <applicationService serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.InvalidArtifactType"/>
 
     <projectService serviceInterface="consulo.compiler.CompilerManager"
                     serviceImplementation="consulo.compiler.impl.CompilerManagerImpl"/>
@@ -62,14 +62,14 @@
     <projectService serviceInterface="consulo.compiler.CompilerEncodingService"
                     serviceImplementation="consulo.compiler.impl.CompilerEncodingServiceImpl"/>
 
-    <projectService serviceInterface="com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings"
-                    serviceImplementation="com.intellij.packaging.impl.compiler.ArtifactsWorkspaceSettings"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings"
+                    serviceImplementation="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings"/>
 
     <projectService serviceInterface="consulo.compiler.impl.CompilerWorkspaceConfiguration"
                     serviceImplementation="consulo.compiler.impl.CompilerWorkspaceConfiguration"/>
 
-    <macro implementation="com.intellij.ide.macro.OutputPathMacro"/>
+    <macro implementation="consulo.ide.impl.idea.ide.macro.OutputPathMacro"/>
 
-    <projectService serviceImplementation="com.intellij.compiler.impl.CompilerCacheManager"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.compiler.impl.CompilerCacheManager"/>
   </extensions>
 </consulo-plugin>

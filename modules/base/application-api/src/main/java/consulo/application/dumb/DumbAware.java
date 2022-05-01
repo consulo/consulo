@@ -20,22 +20,22 @@ package consulo.application.dumb;
  * Implementors must take care of handling and/or not calling non-DumbAware parts of system
  * <p>
  * Known implementors are:
- * <li> {@link com.intellij.openapi.actionSystem.AnAction}s
- * <li> {@link com.intellij.openapi.fileEditor.FileEditorProvider}s
- * <li> post-startup activities ({@link com.intellij.openapi.startup.StartupManager#registerPostStartupActivity(Runnable)})
- * <li> Stacktrace {@link com.intellij.execution.filters.Filter}s
- * <li> {@link com.intellij.ide.SelectInTarget}s
- * <li> {@link com.intellij.codeInsight.completion.CompletionContributor}s
- * <li> {@link com.intellij.lang.annotation.Annotator}s
- * <li> {@link com.intellij.codeInsight.daemon.LineMarkerProvider}s
- * <li> {@link com.intellij.codeHighlighting.TextEditorHighlightingPass}es
- * <li> {@link com.intellij.codeInspection.LocalInspectionTool}s
- * <li> {@link com.intellij.openapi.wm.ToolWindowFactory}s
- * <li> {@link com.intellij.lang.injection.MultiHostInjector}s
+ * <li> {@link consulo.ide.impl.idea.openapi.actionSystem.AnAction}s
+ * <li> {@link consulo.ide.impl.idea.openapi.fileEditor.FileEditorProvider}s
+ * <li> post-startup activities ({@link consulo.ide.impl.idea.openapi.startup.StartupManager#registerPostStartupActivity(Runnable)})
+ * <li> Stacktrace {@link consulo.ide.impl.idea.execution.filters.Filter}s
+ * <li> {@link consulo.ide.impl.idea.ide.SelectInTarget}s
+ * <li> {@link consulo.ide.impl.idea.codeInsight.completion.CompletionContributor}s
+ * <li> {@link consulo.ide.impl.idea.lang.annotation.Annotator}s
+ * <li> {@link consulo.ide.impl.idea.codeInsight.daemon.LineMarkerProvider}s
+ * <li> {@link consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass}es
+ * <li> {@link consulo.ide.impl.idea.codeInspection.LocalInspectionTool}s
+ * <li> {@link consulo.ide.impl.idea.openapi.wm.ToolWindowFactory}s
+ * <li> {@link consulo.ide.impl.idea.lang.injection.MultiHostInjector}s
  *
  * @author peter
- * @see com.intellij.openapi.project.DumbService
- * @see com.intellij.openapi.project.DumbAwareRunnable
+ * @see consulo.ide.impl.idea.openapi.project.DumbService
+ * @see consulo.ide.impl.idea.openapi.project.DumbAwareRunnable
  * @see PossiblyDumbAware
  */
 public interface DumbAware {

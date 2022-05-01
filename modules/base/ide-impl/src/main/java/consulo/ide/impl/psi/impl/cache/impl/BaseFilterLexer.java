@@ -21,7 +21,7 @@ import consulo.language.lexer.Lexer;
 import consulo.ide.impl.psi.impl.cache.impl.id.IdTableBuilding;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.UsageSearchContext;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 

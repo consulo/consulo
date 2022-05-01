@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.textBox;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

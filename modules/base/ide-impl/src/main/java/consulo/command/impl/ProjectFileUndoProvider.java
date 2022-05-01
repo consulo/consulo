@@ -15,7 +15,7 @@
  */
 package consulo.command.impl;
 
-import com.intellij.openapi.command.impl.FileUndoProvider;
+import consulo.ide.impl.idea.openapi.command.impl.FileUndoProvider;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 

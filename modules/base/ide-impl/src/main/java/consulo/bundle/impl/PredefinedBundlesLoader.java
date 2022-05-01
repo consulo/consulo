@@ -15,15 +15,15 @@
  */
 package consulo.bundle.impl;
 
-import com.intellij.openapi.application.PreloadingActivity;
+import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkTable;
 import consulo.content.bundle.SdkType;
-import com.intellij.openapi.projectRoots.impl.SdkConfigurationUtil;
+import consulo.ide.impl.idea.openapi.projectRoots.impl.SdkConfigurationUtil;
 import consulo.content.impl.internal.bundle.SdkImpl;
 import consulo.content.impl.internal.bundle.SdkTableImpl;
-import com.intellij.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.lang.SystemProperties;
 import consulo.content.bundle.PredefinedBundlesProvider;
 import consulo.content.bundle.SdkPointerManager;

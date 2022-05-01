@@ -19,8 +19,8 @@ import consulo.application.CommonBundle;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
-import com.intellij.openapi.keymap.ex.KeymapManagerEx;
-import com.intellij.openapi.keymap.impl.DefaultKeymap;
+import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
+import consulo.ide.impl.idea.openapi.keymap.impl.DefaultKeymap;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import javax.annotation.Nonnull;
 

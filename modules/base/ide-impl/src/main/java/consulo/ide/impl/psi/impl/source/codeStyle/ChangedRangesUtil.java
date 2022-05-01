@@ -6,7 +6,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.ChangedRangesInfo;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import org.jetbrains.annotations.Contract;
 import javax.annotation.Nonnull;
 

@@ -28,7 +28,7 @@ public interface NonBlockingReadAction<T> {
    * @return a copy of this builder that runs read actions only when index is available in the given project.
    * The operation is canceled if the project is closed before either the background computation or {@link #finishOnUiThread} runnable
    * are completed.
-   * @see com.intellij.openapi.project.DumbService
+   * @see consulo.ide.impl.idea.openapi.project.DumbService
    */
   @Contract(pure = true)
   NonBlockingReadAction<T> inSmartMode(@Nonnull ComponentManager project);
@@ -88,9 +88,9 @@ public interface NonBlockingReadAction<T> {
    * is completed on the same thread (in the same read action), or on UI thread if {@link #finishOnUiThread} has been called.
    *
    * @param backgroundThreadExecutor an executor to actually run the computation. Common examples are
-   *                                 {@link com.intellij.util.concurrency.NonUrgentExecutor#getInstance()} or
+   *                                 {@link consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor#getInstance()} or
    *                                 {@link AppExecutorUtil#getAppExecutorService()} or
-   *                                 {@link com.intellij.util.concurrency.BoundedTaskExecutor} on top of that.
+   *                                 {@link consulo.ide.impl.idea.util.concurrency.BoundedTaskExecutor} on top of that.
    */
   CancellablePromise<T> submit(@Nonnull Executor backgroundThreadExecutor);
 }

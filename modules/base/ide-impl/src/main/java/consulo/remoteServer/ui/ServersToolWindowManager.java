@@ -19,10 +19,10 @@ import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import com.intellij.remoteServer.configuration.RemoteServer;
-import com.intellij.remoteServer.configuration.RemoteServerListener;
-import com.intellij.remoteServer.configuration.RemoteServersManager;
-import com.intellij.remoteServer.impl.runtime.ui.RemoteServersViewContributor;
+import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
+import consulo.ide.impl.idea.remoteServer.configuration.RemoteServerListener;
+import consulo.ide.impl.idea.remoteServer.configuration.RemoteServersManager;
+import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.RemoteServersViewContributor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

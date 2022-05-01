@@ -2,9 +2,9 @@
 
 package consulo.ide.ui.impl;
 
-import com.intellij.ui.popup.PopupListAdapter;
-import com.intellij.ui.popup.PopupTableAdapter;
-import com.intellij.ui.popup.PopupTreeAdapter;
+import consulo.ide.impl.idea.ui.popup.PopupListAdapter;
+import consulo.ide.impl.idea.ui.popup.PopupTableAdapter;
+import consulo.ide.impl.idea.ui.popup.PopupTreeAdapter;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;

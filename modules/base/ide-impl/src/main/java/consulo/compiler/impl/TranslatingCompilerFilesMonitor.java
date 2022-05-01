@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl;
 
-import com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl;
+import consulo.ide.impl.idea.compiler.impl.TranslatingCompilerFilesMonitorImpl;
 import consulo.compiler.CompileContext;
 import consulo.compiler.TranslatingCompiler;
 import consulo.ide.ServiceManager;

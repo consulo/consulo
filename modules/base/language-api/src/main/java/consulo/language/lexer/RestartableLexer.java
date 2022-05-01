@@ -2,7 +2,6 @@
 package consulo.language.lexer;
 
 import consulo.document.event.DocumentEvent;
-import consulo.language.lexer.Lexer;
 
 import javax.annotation.Nonnull;
 
@@ -15,7 +14,7 @@ import javax.annotation.Nonnull;
  * In some cases some additional information is needed to restart from non-trivial state.
  * {@link #start(CharSequence, int, int, int, TokenIterator)} implementation helps quickly retrieve information from preceding part of the file
  * to restore lexer properly.
- * {@link com.intellij.openapi.editor.ex.util.LexerEditorHighlighter#documentChanged(DocumentEvent)}
+ * {@link consulo.ide.impl.idea.openapi.editor.ex.util.LexerEditorHighlighter#documentChanged(DocumentEvent)}
  */
 public interface RestartableLexer {
 
@@ -37,7 +36,7 @@ public interface RestartableLexer {
 
   /**
    * Extended form of {@link Lexer#start(CharSequence, int, int, int)} which provides an Iterable
-   * based on {@link com.intellij.openapi.editor.ex.util.LexerEditorHighlighter#mySegments}.
+   * based on {@link consulo.ide.impl.idea.openapi.editor.ex.util.LexerEditorHighlighter#mySegments}.
    * Iteration starts from current token and goes in reverse order. This iterable can be used for getting some additional data needed for context
    * dependent restart.
    *

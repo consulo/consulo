@@ -15,8 +15,8 @@
  */
 package consulo.sandboxPlugin.ide.codeInsight.template.postfix.templates;
 
-import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
-import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
+import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplate;
+import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import consulo.codeEditor.Editor;
 import consulo.language.psi.PsiFile;
 import java.util.HashSet;

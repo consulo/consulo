@@ -15,7 +15,7 @@
  */
 package consulo.test.light.impl;
 
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.util.collection.Maps;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;

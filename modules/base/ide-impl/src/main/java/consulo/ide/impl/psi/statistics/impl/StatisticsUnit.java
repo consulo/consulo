@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.statistics.impl;
 
 import consulo.ide.impl.psi.statistics.StatisticsManager;
-import com.intellij.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 
 import java.io.*;
 import java.util.*;

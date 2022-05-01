@@ -21,7 +21,7 @@ import consulo.disposer.Disposable;
 import consulo.language.icon.IconDescriptorUpdaters;
 import consulo.ide.ServiceManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;

@@ -15,7 +15,7 @@
  */
 package consulo.packaging.impl.elements.moduleContent;
 
-import com.intellij.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
+import consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
 import consulo.language.content.TestResourceContentFolderTypeProvider;
 
 /**

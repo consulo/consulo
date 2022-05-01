@@ -16,7 +16,7 @@
 package consulo.desktop.swt.wm.impl;
 
 import consulo.language.editor.CommonDataKeys;
-import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.project.Project;
 import consulo.ui.MenuBar;
 import consulo.ui.annotation.RequiredUIAccess;

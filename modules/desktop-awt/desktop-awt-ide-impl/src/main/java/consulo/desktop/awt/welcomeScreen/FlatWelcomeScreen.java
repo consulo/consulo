@@ -16,7 +16,7 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.dataContext.DataManager;
-import com.intellij.internal.statistic.UsageTrigger;
+import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -24,9 +24,9 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomePopupAction;
-import com.intellij.ui.JBCardLayout;
-import com.intellij.ui.components.labels.ActionLink;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomePopupAction;
+import consulo.ide.impl.idea.ui.JBCardLayout;
+import consulo.ide.impl.idea.ui.components.labels.ActionLink;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.JBUI;
 import consulo.disposer.Disposable;

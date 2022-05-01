@@ -17,7 +17,7 @@ package consulo.desktop.awt.actionSystem;
 
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
-import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.actionSystem.ActionToolbarFactory;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;

@@ -1,11 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.source;
 
-import com.intellij.openapi.util.NullableComputable;
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.openapi.util.NullableComputable;
+import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.event.ApplicationListener;

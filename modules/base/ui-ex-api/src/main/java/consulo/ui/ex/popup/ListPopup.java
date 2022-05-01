@@ -23,8 +23,8 @@ import java.awt.event.InputEvent;
  * A popup window displaying a list of items (or other actions).
  *
  * @author mike
- * @see com.intellij.openapi.ui.popup.JBPopupFactory#createActionGroupPopup
- * @see com.intellij.openapi.ui.popup.JBPopupFactory#createWizardStep
+ * @see consulo.ide.impl.idea.openapi.ui.popup.JBPopupFactory#createActionGroupPopup
+ * @see consulo.ide.impl.idea.openapi.ui.popup.JBPopupFactory#createWizardStep
  * @since 6.0
  */
 public interface ListPopup extends JBPopup {

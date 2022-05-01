@@ -84,7 +84,7 @@ import javax.annotation.Nullable;
  * </ul>
  * <p/>
  *
- * Q: What's the difference between transactions and read/write actions and commands ({@link com.intellij.openapi.command.CommandProcessor})?<br/>
+ * Q: What's the difference between transactions and read/write actions and commands ({@link consulo.ide.impl.idea.openapi.command.CommandProcessor})?<br/>
  * A: Read actions in background threads ensure that no one will modify the model while you're working with it.<br/>
  * Write actions (in Swing thread only) allow to modify the model, but ensure that no background thread is reading it in the meantime.<br/>
  * Read action in Swing thread is special: it allows to perform a write action inside. This can lead to troubles

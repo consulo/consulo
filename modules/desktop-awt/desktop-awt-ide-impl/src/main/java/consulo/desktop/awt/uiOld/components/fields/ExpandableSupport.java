@@ -22,7 +22,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.function.Function;
 
-import static com.intellij.openapi.keymap.KeymapUtil.createTooltipText;
+import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.createTooltipText;
 import static java.awt.event.InputEvent.CTRL_MASK;
 import static java.beans.EventHandler.create;
 import static java.util.Collections.singletonList;

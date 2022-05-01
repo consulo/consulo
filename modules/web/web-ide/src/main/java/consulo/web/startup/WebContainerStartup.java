@@ -15,12 +15,12 @@
  */
 package consulo.web.startup;
 
-import com.intellij.ide.plugins.PluginManager;
+import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.StartupUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import com.intellij.util.ReflectionUtil;
+import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.boot.ContainerStartup;

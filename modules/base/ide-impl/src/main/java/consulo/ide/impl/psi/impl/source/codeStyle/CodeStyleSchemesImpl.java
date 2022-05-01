@@ -17,10 +17,10 @@ package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StoragePathMacros;
-import com.intellij.openapi.options.BaseSchemeProcessor;
-import com.intellij.openapi.options.SchemeProcessor;
-import com.intellij.openapi.options.SchemesManager;
-import com.intellij.openapi.options.SchemesManagerFactory;
+import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
+import consulo.ide.impl.idea.openapi.options.SchemeProcessor;
+import consulo.ide.impl.idea.openapi.options.SchemesManager;
+import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;

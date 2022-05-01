@@ -17,7 +17,7 @@ package consulo.builtInServer.impl;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import java.util.concurrent.TimeUnit;
 

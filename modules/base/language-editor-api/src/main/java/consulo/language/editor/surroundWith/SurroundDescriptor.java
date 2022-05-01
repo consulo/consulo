@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * is prompted to choose a specific surrounder for that surround descriptor.
  *
  * @author ven
- * @see com.intellij.lang.LanguageSurrounders
+ * @see consulo.ide.impl.idea.lang.LanguageSurrounders
  */
 public interface SurroundDescriptor {
   /**

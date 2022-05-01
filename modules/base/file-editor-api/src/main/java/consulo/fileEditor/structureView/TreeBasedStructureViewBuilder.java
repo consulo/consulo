@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  *
  * @see StructureViewModel
  * @see TextEditorBasedStructureViewModel
- * @see com.intellij.lang.LanguageStructureViewBuilder#getStructureViewBuilder(PsiFile)
+ * @see consulo.ide.impl.idea.lang.LanguageStructureViewBuilder#getStructureViewBuilder(PsiFile)
  */
 public abstract class TreeBasedStructureViewBuilder implements StructureViewBuilder {
   /**

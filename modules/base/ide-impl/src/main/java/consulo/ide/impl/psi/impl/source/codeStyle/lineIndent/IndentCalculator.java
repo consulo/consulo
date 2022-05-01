@@ -27,7 +27,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.ide.impl.psi.impl.source.codeStyle.SemanticEditorPosition;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

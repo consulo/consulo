@@ -15,8 +15,8 @@
  */
 package consulo.options;
 
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.util.NotNullComputable;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.application.ui.UIFontManager;
 import consulo.application.ui.UISettings;
 import consulo.colorScheme.EditorColorsManager;

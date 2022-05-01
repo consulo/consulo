@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.application;
 
-import com.intellij.ide.*;
+import consulo.ide.impl.idea.ide.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -23,17 +23,17 @@ import consulo.application.TransactionGuard;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.ManagingFS;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.openapi.vfs.newvfs.RefreshSession;
-import com.intellij.util.SingleAlarm;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshSession;
+import consulo.ide.impl.idea.util.SingleAlarm;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
 import jakarta.inject.Inject;

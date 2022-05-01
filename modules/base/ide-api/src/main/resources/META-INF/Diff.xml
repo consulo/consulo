@@ -15,57 +15,57 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="diff.DiffTool" interface="com.intellij.diff.DiffTool"/>
-    <extensionPoint name="diff.merge.MergeTool" interface="com.intellij.diff.merge.MergeTool"/>
+    <extensionPoint name="diff.DiffTool" interface="consulo.ide.impl.idea.diff.DiffTool"/>
+    <extensionPoint name="diff.merge.MergeTool" interface="consulo.ide.impl.idea.diff.merge.MergeTool"/>
     <extensionPoint name="openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider"
-                    interface="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider"/>
+                    interface="consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProvider"/>
     <extensionPoint name="openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"
-                    interface="com.intellij.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"/>
-    <extensionPoint name="diff.DiffExtension" interface="com.intellij.diff.DiffExtension"/>
+                    interface="consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffViewerWrapperProvider"/>
+    <extensionPoint name="diff.DiffExtension" interface="consulo.ide.impl.idea.diff.DiffExtension"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceInterface="com.intellij.diff.impl.DiffSettingsHolder"
-                        serviceImplementation="com.intellij.diff.impl.DiffSettingsHolder"/>
-    <applicationService serviceInterface="com.intellij.diff.tools.util.base.TextDiffSettingsHolder"
-                        serviceImplementation="com.intellij.diff.tools.util.base.TextDiffSettingsHolder"/>
-    <applicationService serviceInterface="com.intellij.diff.tools.external.ExternalDiffSettings"
-                        serviceImplementation="com.intellij.diff.tools.external.ExternalDiffSettings"/>
-    <applicationService serviceInterface="com.intellij.diff.DiffManager"
-                        serviceImplementation="com.intellij.diff.DiffManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.diff.DiffContentFactory"
-                        serviceImplementation="com.intellij.diff.DiffContentFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.diff.DiffRequestFactory"
-                        serviceImplementation="com.intellij.diff.DiffRequestFactoryImpl"/>
-    <applicationService serviceInterface="com.intellij.diff.comparison.ComparisonManager"
-                        serviceImplementation="com.intellij.diff.comparison.ComparisonManagerImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.diff.impl.DiffSettingsHolder"
+                        serviceImplementation="consulo.ide.impl.idea.diff.impl.DiffSettingsHolder"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.diff.tools.util.base.TextDiffSettingsHolder"
+                        serviceImplementation="consulo.ide.impl.idea.diff.tools.util.base.TextDiffSettingsHolder"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.diff.tools.external.ExternalDiffSettings"
+                        serviceImplementation="consulo.ide.impl.idea.diff.tools.external.ExternalDiffSettings"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.diff.DiffManager"
+                        serviceImplementation="consulo.ide.impl.idea.diff.DiffManagerImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.diff.DiffContentFactory"
+                        serviceImplementation="consulo.ide.impl.idea.diff.DiffContentFactoryImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.diff.DiffRequestFactory"
+                        serviceImplementation="consulo.ide.impl.idea.diff.DiffRequestFactoryImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.diff.comparison.ComparisonManager"
+                        serviceImplementation="consulo.ide.impl.idea.diff.comparison.ComparisonManagerImpl"/>
 
-    <projectService serviceInterface="com.intellij.diff.editor.DiffEditorTabFilesManager" serviceImplementation="com.intellij.diff.editor.DefaultDiffTabFilesManager"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.diff.editor.DiffEditorTabFilesManager" serviceImplementation="consulo.ide.impl.idea.diff.editor.DefaultDiffTabFilesManager"/>
 
-    <fileEditorProvider implementation="com.intellij.diff.editor.DiffEditorProvider"/>
+    <fileEditorProvider implementation="consulo.ide.impl.idea.diff.editor.DiffEditorProvider"/>
 
-    <editorTabTitleProvider implementation="com.intellij.diff.editor.DiffEditorTabTitleProvider"/>
-    <editorTabColorProvider implementation="com.intellij.diff.editor.VcsEditorTabColorProvider"/>
+    <editorTabTitleProvider implementation="consulo.ide.impl.idea.diff.editor.DiffEditorTabTitleProvider"/>
+    <editorTabColorProvider implementation="consulo.ide.impl.idea.diff.editor.VcsEditorTabColorProvider"/>
 
     <iconDescriptorUpdater implementation="consulo.diff.editor.impl.DiffIconDescriptorUpdater" order="last"/>
 
-    <diff.merge.MergeTool implementation="com.intellij.openapi.vcs.changes.patch.tool.ApplyPatchMergeTool"/>
-    <diff.DiffTool implementation="com.intellij.openapi.vcs.changes.patch.tool.ApplyPatchDiffTool"/>
+    <diff.merge.MergeTool implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchMergeTool"/>
+    <diff.DiffTool implementation="consulo.ide.impl.idea.openapi.vcs.changes.patch.tool.ApplyPatchDiffTool"/>
 
-    <daemon.highlightInfoFilter implementation="com.intellij.diff.contents.DiffPsiFileSupport$HighlightFilter"/>
-    <daemon.intentionActionFilter implementation="com.intellij.diff.contents.DiffPsiFileSupport$IntentionFilter"/>
+    <daemon.highlightInfoFilter implementation="consulo.ide.impl.idea.diff.contents.DiffPsiFileSupport$HighlightFilter"/>
+    <daemon.intentionActionFilter implementation="consulo.ide.impl.idea.diff.contents.DiffPsiFileSupport$IntentionFilter"/>
     <defaultHighlightingSettingProvider id="GeneratedSourcesHighlightingSettingProvider"
-                                        implementation="com.intellij.diff.contents.DiffPsiFileSupport$HighlightingSettingProvider"/>
+                                        implementation="consulo.ide.impl.idea.diff.contents.DiffPsiFileSupport$HighlightingSettingProvider"/>
 
-    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="com.intellij.openapi.vcs.actions.AnnotateLocalFileAction$Provider"/>
-    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="com.intellij.openapi.vcs.actions.AnnotateVcsVirtualFileAction$Provider"/>
-    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="com.intellij.openapi.vcs.actions.AnnotateDiffViewerAction$Provider" order="first"/>
+    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateLocalFileAction$Provider"/>
+    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateVcsVirtualFileAction$Provider"/>
+    <openapi.vcs.actions.AnnotateToggleAction.Provider implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateDiffViewerAction$Provider" order="first"/>
 
-    <getDataRule implementation="com.intellij.diff.actions.impl.DiffNavigatableArrayRule"/>
+    <getDataRule implementation="consulo.ide.impl.idea.diff.actions.impl.DiffNavigatableArrayRule"/>
 
-    <colorAndFontPanelFactory implementation="com.intellij.openapi.diff.impl.settings.DiffColorsPageFactory"/>
-    <colorAndFontDescriptorProvider implementation="com.intellij.openapi.diff.impl.settings.DiffColorsPageFactory"/>
+    <colorAndFontPanelFactory implementation="consulo.ide.impl.idea.openapi.diff.impl.settings.DiffColorsPageFactory"/>
+    <colorAndFontDescriptorProvider implementation="consulo.ide.impl.idea.openapi.diff.impl.settings.DiffColorsPageFactory"/>
 
-    <diff.DiffExtension implementation="com.intellij.openapi.vcs.actions.AnnotateDiffViewerAction$MyDiffExtension"/>
+    <diff.DiffExtension implementation="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateDiffViewerAction$MyDiffExtension"/>
   </extensions>
 </consulo-plugin>

@@ -23,7 +23,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
 import consulo.ui.ex.InputValidatorEx;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ui.ex.awt.*;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.Nls;

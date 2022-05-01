@@ -17,7 +17,7 @@ package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
 import consulo.project.ui.notification.NotificationType;
-import com.intellij.notification.impl.NotificationsManagerImpl;
+import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
 import consulo.ui.ex.JBColor;
 import consulo.desktop.awt.uiOld.DesktopBalloonLayoutImpl;
 import consulo.disposer.Disposable;
@@ -25,7 +25,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
 import consulo.application.util.SystemInfo;
-import com.intellij.ui.*;
+import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.NonOpaquePanel;
 import consulo.ui.ex.awt.AbstractLayoutManager;
 import consulo.ui.ex.awt.JBUI;
@@ -41,8 +41,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static com.intellij.notification.impl.NotificationsManagerImpl.BORDER_COLOR;
-import static com.intellij.notification.impl.NotificationsManagerImpl.FILL_COLOR;
+import static consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl.BORDER_COLOR;
+import static consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl.FILL_COLOR;
 
 /**
  * @author Alexander Lobas
@@ -120,7 +120,7 @@ public class WelcomeDesktopBalloonLayoutImpl extends DesktopBalloonLayoutImpl {
         @Nonnull
         @Override
         public List<BalloonImpl.ActionButton> createActions() {
-          myAction = myPopupBalloon.new ActionButton(AllIcons.Ide.Notification.Close, null, null, com.intellij.util.Consumer.EMPTY_CONSUMER);
+          myAction = myPopupBalloon.new ActionButton(AllIcons.Ide.Notification.Close, null, null, consulo.ide.impl.idea.util.Consumer.EMPTY_CONSUMER);
           return Collections.singletonList(myAction);
         }
 

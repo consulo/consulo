@@ -18,11 +18,11 @@ package consulo.packaging.impl.util;
 import consulo.compiler.CompileContext;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessageCategory;
-import com.intellij.openapi.deployment.DeploymentUtil;
+import consulo.ide.impl.idea.openapi.deployment.DeploymentUtil;
 import consulo.logging.Logger;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.util.ExceptionUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.ExceptionUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

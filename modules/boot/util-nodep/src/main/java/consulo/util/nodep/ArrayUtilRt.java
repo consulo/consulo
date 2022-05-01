@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.Collection;
 
 /**
- * Stripped-down version of {@code com.intellij.util.ArrayUtil}.
+ * Stripped-down version of {@code consulo.ide.impl.idea.util.ArrayUtil}.
  * Intended to use by external (out-of-IDE-process) runners and helpers so it should not contain any library dependencies.
  *
  * @since 12.0

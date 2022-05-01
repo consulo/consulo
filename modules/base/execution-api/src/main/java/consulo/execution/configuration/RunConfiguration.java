@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * Interface for run configurations which can be managed by a user and displayed in the UI.
  *
- * @see com.intellij.execution.RunManager
+ * @see consulo.ide.impl.idea.execution.RunManager
  * @see RunConfigurationBase
  * @see RefactoringListenerProvider
  */
@@ -59,8 +59,8 @@ public interface RunConfiguration extends RunProfile, JDOMExternalizable, Clonea
 
   /**
    * Returns the UI control for editing the run configuration settings. If additional control over validation is required, the object
-   * returned from this method may also implement {@link com.intellij.execution.impl.CheckableRunConfigurationEditor}. The returned object
-   * can also implement {@link com.intellij.openapi.options.SettingsEditorGroup} if the settings it provides need to be displayed in
+   * returned from this method may also implement {@link consulo.ide.impl.idea.execution.impl.CheckableRunConfigurationEditor}. The returned object
+   * can also implement {@link consulo.ide.impl.idea.openapi.options.SettingsEditorGroup} if the settings it provides need to be displayed in
    * multiple tabs.
    *
    * @return the settings editor component.

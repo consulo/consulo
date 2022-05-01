@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @author peter
- * @see com.intellij.pom.references.PomService#convertToPsi(PomTarget)
+ * @see consulo.ide.impl.idea.pom.references.PomService#convertToPsi(PomTarget)
  */
 public interface PomTargetPsiElement extends PsiElement {
 

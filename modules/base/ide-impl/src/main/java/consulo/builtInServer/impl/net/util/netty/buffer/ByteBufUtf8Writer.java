@@ -1,7 +1,7 @@
 package consulo.builtInServer.impl.net.util.netty.buffer;
 
 import consulo.builtInServer.impl.net.util.netty.NettyKt;
-import com.intellij.util.text.CharArrayCharSequence;
+import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 

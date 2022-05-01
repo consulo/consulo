@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.image.libraryImage;
 
-import com.intellij.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.DarkThemeCalculator;

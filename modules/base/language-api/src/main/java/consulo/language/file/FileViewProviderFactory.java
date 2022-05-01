@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 
 /**
  * Register in extension point {@code com.intellij.fileType.fileViewProviderFactory}
- * or {@code com.intellij.lang.fileViewProviderFactory}.
+ * or {@code consulo.ide.impl.idea.lang.fileViewProviderFactory}.
  *
  * @author yole
  */

@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl;
 
-import com.intellij.ide.impl.DataValidator;
+import consulo.ide.impl.idea.ide.impl.DataValidator;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;

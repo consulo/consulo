@@ -15,12 +15,12 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.ide.plugins.PluginManager;
+import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import consulo.container.plugin.PluginId;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import jakarta.inject.Singleton;
 
@@ -33,7 +33,7 @@ import java.util.TreeSet;
  * @author VISTALL
  * @since 14-Jun-17
  * <p>
- * Main idea from IDEA version com.intellij.ide.plugins.InstalledPluginsState
+ * Main idea from IDEA version consulo.ide.impl.idea.ide.plugins.InstalledPluginsState
  * <p>
  * A service to hold a state of plugin changes in a current session (i.e. before the changes are applied on restart).
  */

@@ -50,7 +50,7 @@ public abstract class IntervalTreeImpl<T> extends RedBlackTree<T> implements Int
 
     private volatile long cachedDeltaUpToRoot; // field (packed to long for atomicity) containing deltaUpToRoot, node modCount and allDeltasUpAreNull flag
     // fields are packed as following
-    //  private int modCount; // if it equals to the com.intellij.openapi.editor.impl.RedBlackTree.modCount then deltaUpToRoot can be used, otherwise it is expired
+    //  private int modCount; // if it equals to the consulo.ide.impl.idea.openapi.editor.impl.RedBlackTree.modCount then deltaUpToRoot can be used, otherwise it is expired
     //  private int deltaUpToRoot; // sum of all deltas up to the root (including this node' delta). Has valid value only if modCount == IntervalTreeImpl.this.modCount
     //  private boolean allDeltasUpAreNull;  // true if all deltas up the tree (including this node) are 0. Has valid value only if modCount == IntervalTreeImpl.this.modCount
 

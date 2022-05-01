@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.spi;
 
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import org.apache.commons.imaging.*;
 import org.apache.commons.imaging.common.bytesource.ByteSource;
 

@@ -18,7 +18,7 @@ package consulo.copyright.impl.pattern;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiFile;
 import consulo.copyright.impl.CopyrightManager;
 import org.apache.velocity.VelocityContext;

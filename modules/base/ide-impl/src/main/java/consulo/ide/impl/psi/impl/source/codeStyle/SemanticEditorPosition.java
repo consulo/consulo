@@ -20,7 +20,7 @@ import consulo.codeEditor.EditorEx;
 import consulo.language.editor.highlight.HighlighterIteratorWrapper;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.language.ast.IElementType;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

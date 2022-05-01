@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Like {@link com.intellij.openapi.Disposable}, you register instance of this class in {@link Disposer}.
+ * Like {@link consulo.ide.impl.idea.openapi.Disposable}, you register instance of this class in {@link Disposer}.
  * Call {@link #add(Disposable)} to request automatic disposal of additional objects.
  * Comparing to registering these additional disposables with Disposer one by one,
  * this class improves on the memory usage by not creating temporary objects inside Disposer.

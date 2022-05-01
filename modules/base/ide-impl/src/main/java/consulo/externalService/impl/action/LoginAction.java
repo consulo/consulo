@@ -16,13 +16,13 @@
 package consulo.externalService.impl.action;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.BrowserUtil;
+import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.actionSystem.RightAlignedToolbarAction;
+import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
 import consulo.application.dumb.DumbAware;
-import com.intellij.util.ObjectUtil;
+import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.builtInServer.BuiltInServerManager;
 import consulo.externalService.ExternalServiceConfiguration;
 import consulo.externalService.impl.ExternalServiceConfigurationImpl;

@@ -21,7 +21,7 @@ import consulo.util.nodep.function.Function;
 import java.util.*;
 
 /**
- * Stripped-down version of {@code com.intellij.util.containers.ContainerUtil}.
+ * Stripped-down version of {@code consulo.ide.impl.idea.util.containers.ContainerUtil}.
  * Intended to use by external (out-of-IDE-process) runners and helpers so it should not contain any library dependencies.
  *
  * @since 12.0

@@ -148,7 +148,7 @@ public class IElementType {
    *  [whitespace]
    *  [next_element]
    * </pre>
-   * <p>See com.intellij.lang.impl.PsiBuilderImpl.prepareLightTree() for details.
+   * <p>See consulo.ide.impl.idea.lang.impl.PsiBuilderImpl.prepareLightTree() for details.
    *
    * @return true if empty elements of this type should be bound to the left.
    */

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Describes a single block in the {@link FormattingModel}.
  *
- * @see com.intellij.formatting.FormattingModel#getRootBlock()
+ * @see consulo.ide.impl.idea.formatting.FormattingModel#getRootBlock()
  */
 
 public interface Block {
@@ -64,7 +64,7 @@ public interface Block {
    * to its parent block.
    *
    * @return the indent object, or null if the default indent ("continuation without first") should be used.
-   * @see com.intellij.formatting.Indent#getContinuationWithoutFirstIndent()
+   * @see consulo.ide.impl.idea.formatting.Indent#getContinuationWithoutFirstIndent()
    */
   @Nullable
   Indent getIndent();

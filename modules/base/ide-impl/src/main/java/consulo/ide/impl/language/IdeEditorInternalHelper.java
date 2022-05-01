@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.language;
 
-import com.intellij.codeStyle.CodeStyleFacade;
-import com.intellij.openapi.editor.impl.EditorHighlighterCache;
-import com.intellij.ui.EditorNotifications;
+import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
+import consulo.ide.impl.idea.ui.EditorNotifications;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;

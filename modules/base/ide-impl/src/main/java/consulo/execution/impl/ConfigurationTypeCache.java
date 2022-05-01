@@ -17,7 +17,7 @@ package consulo.execution.impl;
 
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
-import com.intellij.execution.configurations.UnknownConfigurationType;
+import consulo.ide.impl.idea.execution.configurations.UnknownConfigurationType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

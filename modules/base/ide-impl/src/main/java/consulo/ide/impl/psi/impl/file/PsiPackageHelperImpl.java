@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.psi.impl.file;
 
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
 import consulo.language.psi.PsiPackageHelper;

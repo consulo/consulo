@@ -1,13 +1,13 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.stubs;
 
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.stub.FileContent;
-import com.intellij.util.indexing.StorageException;
-import com.intellij.util.indexing.UpdatableIndex;
-import com.intellij.util.indexing.impl.InputData;
-import com.intellij.util.indexing.impl.InputDataDiffBuilder;
-import com.intellij.util.indexing.impl.forward.ForwardIndexAccessor;
+import consulo.ide.impl.idea.util.indexing.StorageException;
+import consulo.ide.impl.idea.util.indexing.UpdatableIndex;
+import consulo.ide.impl.idea.util.indexing.impl.InputData;
+import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
+import consulo.ide.impl.idea.util.indexing.impl.forward.ForwardIndexAccessor;
 import consulo.application.progress.ProgressManager;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.lang.ref.Ref;

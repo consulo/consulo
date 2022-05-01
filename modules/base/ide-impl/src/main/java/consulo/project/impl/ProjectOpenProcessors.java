@@ -16,7 +16,7 @@
 package consulo.project.impl;
 
 import consulo.application.Application;
-import com.intellij.projectImport.ProjectOpenProcessor;
+import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

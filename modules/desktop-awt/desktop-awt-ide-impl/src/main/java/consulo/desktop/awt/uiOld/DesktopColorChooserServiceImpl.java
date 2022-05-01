@@ -17,8 +17,8 @@ package consulo.desktop.awt.uiOld;
 
 import javax.annotation.Nonnull;
 
-import com.intellij.ui.ColorChooserService;
-import com.intellij.ui.ColorPickerListener;
+import consulo.ide.impl.idea.ui.ColorChooserService;
+import consulo.ide.impl.idea.ui.ColorPickerListener;
 import jakarta.inject.Singleton;
 import java.awt.*;
 import java.util.function.Consumer;

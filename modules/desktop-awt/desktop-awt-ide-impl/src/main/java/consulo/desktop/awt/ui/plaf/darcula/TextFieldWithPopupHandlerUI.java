@@ -2,7 +2,7 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.util.lang.function.Condition;
 import consulo.application.util.registry.Registry;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent;
@@ -30,7 +30,7 @@ import java.beans.PropertyChangeListener;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
-import static com.intellij.openapi.util.text.StringUtil.isEmpty;
+import static consulo.ide.impl.idea.openapi.util.text.StringUtil.isEmpty;
 import static consulo.ui.ex.awt.JBUI.scale;
 
 /**

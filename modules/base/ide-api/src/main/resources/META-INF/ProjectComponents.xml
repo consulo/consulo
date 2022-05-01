@@ -27,28 +27,28 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.ui.EditorNotifications</interface-class>
-      <implementation-class>com.intellij.ui.EditorNotificationsImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.ui.EditorNotifications</interface-class>
+      <implementation-class>consulo.ide.impl.idea.ui.EditorNotificationsImpl</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.notification.impl.NotificationsManagerImpl$ProjectNotificationsComponent</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl$ProjectNotificationsComponent</implementation-class>
       <skipForDefaultProject/>
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.fileEditor.ex.IdeDocumentHistory</interface-class>
-      <implementation-class>com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.language.editor.highlight.HighlightManager</interface-class>
-      <implementation-class>com.intellij.codeInsight.highlighting.HighlightManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.codeInsight.highlighting.HighlightManagerImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.module.content.ProjectRootManager</interface-class>
-      <implementation-class>com.intellij.openapi.roots.impl.ProjectRootManagerComponent</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.roots.impl.ProjectRootManagerComponent</implementation-class>
       <loadForDefaultProject/>
     </component>
 
@@ -72,106 +72,106 @@
 
     <component>
       <interface-class>consulo.language.editor.DaemonCodeAnalyzer</interface-class>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>
     <component>
-      <implementation-class>com.intellij.codeInsight.daemon.impl.DaemonListeners</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonListeners</implementation-class>
       <option name="workspace" value="true"/>
       <!--<loadForDefaultProject/>-->
     </component>
 
     <component>
-      <implementation-class>com.intellij.util.indexing.FileBasedIndexProjectHandler</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.util.indexing.FileBasedIndexProjectHandler</implementation-class>
     </component>
 
     <component>
-      <interface-class>com.intellij.codeInsight.navigation.CtrlMouseHandler</interface-class>
-      <implementation-class>com.intellij.codeInsight.navigation.CtrlMouseHandler</implementation-class>
+      <interface-class>consulo.ide.impl.idea.codeInsight.navigation.CtrlMouseHandler</interface-class>
+      <implementation-class>consulo.ide.impl.idea.codeInsight.navigation.CtrlMouseHandler</implementation-class>
       <skipForDefaultProject/>
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.vcs.changes.VcsEventWatcher</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.VcsEventWatcher</implementation-class>
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater</interface-class>
-      <implementation-class>com.intellij.openapi.roots.impl.PushedFilePropertiesUpdaterImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.vcs.impl.ModuleVcsDetector</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.ModuleVcsDetector</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.language.editor.inspection.scheme.InspectionProjectProfileManager</interface-class>
-      <implementation-class>com.intellij.profile.codeInspection.InspectionProjectProfileManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManagerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.vcs.impl.VcsDirectoryMappingStorage</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.VcsDirectoryMappingStorage</implementation-class>
       <skipForDefaultProject/>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.vcs.impl.LineStatusTrackerManagerI</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.impl.LineStatusTrackerManager</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManagerI</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager</implementation-class>
       <option name="workspace" value="true"/>
       <skipForDefaultProject/>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.vcs.changes.ChangeListManager</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.changes.ChangeListManagerImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl</implementation-class>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.vcs.changes.VcsDirtyScopeManager</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.changes.VcsDirtyScopeManagerImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManagerImpl</implementation-class>
       <option name="workspace" value="true"/>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.vcs.changes.patch.CreatePatchCommitExecutor</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor</implementation-class>
       <option name="workspace" value="true"/>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.vcs.changes.shelf.ShelveChangesManager</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager</implementation-class>
       <option name="workspace" value="true"/>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.vcs.changes.shelf.ShelvedChangesViewManager</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelvedChangesViewManager</implementation-class>
       <headless-implementation-class></headless-implementation-class>
       <option name="workspace" value="true"/>
       <skipForDefaultProject/>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.vcs.changes.committed.CommittedChangesCache</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache</implementation-class>
       <skipForDefaultProject/>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.vcs.impl.VcsFileStatusProvider</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.VcsFileStatusProvider</implementation-class>
       <skipForDefaultProject/>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.vcs.impl.VcsBaseContentProvider</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.impl.VcsFileStatusProvider</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.vcs.impl.VcsBaseContentProvider</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.VcsFileStatusProvider</implementation-class>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotation</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.contentAnnotation.VcsContentAnnotationImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.vcs.contentAnnotation.VcsContentAnnotation</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.contentAnnotation.VcsContentAnnotationImpl</implementation-class>
     </component>
     <component>
-      <interface-class>com.intellij.openapi.vcs.contentAnnotation.ContentAnnotationCache</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.contentAnnotation.ContentAnnotationCacheImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.vcs.contentAnnotation.ContentAnnotationCache</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.contentAnnotation.ContentAnnotationCacheImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.execution.ExecutionTargetManager</interface-class>
-      <implementation-class>com.intellij.execution.ExecutionTargetManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.execution.ExecutionTargetManagerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>
     <component>
       <interface-class>consulo.execution.ExecutionManager</interface-class>
-      <implementation-class>com.intellij.execution.impl.ExecutionManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl</implementation-class>
     </component>
   </project-components>
 </consulo-plugin>

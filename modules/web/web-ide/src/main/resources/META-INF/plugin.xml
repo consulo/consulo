@@ -26,8 +26,8 @@
 
   <project-components>
     <component>
-      <interface-class>com.intellij.openapi.vcs.changes.ChangesViewI</interface-class>
-      <implementation-class>com.intellij.openapi.vcs.changes.DummyChangesView</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangesViewI</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.DummyChangesView</implementation-class>
       <skipForDefaultProject/>
     </component>
   </project-components>
@@ -40,12 +40,12 @@
     <applicationService serviceInterface="consulo.ui.ex.content.ContentFactory"
                         serviceImplementation="consulo.wm.impl.UnifiedContentFactoryImpl"/>
 
-    <projectService serviceInterface="com.intellij.ide.projectView.ProjectView" serviceImplementation="consulo.projectView.impl.UnifiedProjectViewImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.ide.projectView.ProjectView" serviceImplementation="consulo.projectView.impl.UnifiedProjectViewImpl"/>
 
     <applicationService serviceInterface="consulo.ui.ex.IconDeferrer"
-                        serviceImplementation="com.intellij.ui.DummyIconDeferrer"/>
+                        serviceImplementation="consulo.ide.impl.idea.ui.DummyIconDeferrer"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.vfs.newvfs.RefreshQueue"
+    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue"
                         serviceImplementation="consulo.vfs.newvfs.AsyncRefreshQueueImpl"/>
 
     <applicationService serviceInterface="consulo.ide.setting.ShowSettingsUtil"
@@ -57,7 +57,7 @@
     <applicationService serviceInterface="consulo.fileChooser.FileChooserFactory"
                         serviceImplementation="consulo.fileChooser.impl.FileChooserFactoryImpl"/>
 
-    <applicationService serviceInterface="com.intellij.openapi.wm.impl.SystemDock" serviceImplementation="consulo.web.wm.impl.WebSystemDockImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.wm.impl.SystemDock" serviceImplementation="consulo.web.wm.impl.WebSystemDockImpl"/>
     <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.web.wm.impl.WebRemoteDesktopServiceImpl"/>
 
     <fileChooseDialogProvider implementation="consulo.fileChooser.impl.UnifiedFileChooseDialogProvider" order="last"/>
@@ -77,8 +77,8 @@
     <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.project.ui.wm.dock.DockManager" serviceImplementation="consulo.ui.docking.impl.UnifiedDockManagerImpl"/>
 
-    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.IntentionsUI" serviceImplementation="consulo.web.codeInsight.daemon.impl.WebIntentionsUIImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI" serviceImplementation="consulo.web.codeInsight.daemon.impl.WebIntentionsUIImpl"/>
 
-    <projectService serviceInterface="com.intellij.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
   </extensions>
 </consulo-plugin>

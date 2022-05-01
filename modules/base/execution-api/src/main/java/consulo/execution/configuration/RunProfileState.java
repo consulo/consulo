@@ -37,7 +37,7 @@ public interface RunProfileState {
    *
    * @param executor the executor used to start up the process.
    * @param runner   the program runner used to start up the process.
-   * @return the result (normally an instance of {@link com.intellij.execution.DefaultExecutionResult}), containing a process handler
+   * @return the result (normally an instance of {@link consulo.ide.impl.idea.execution.DefaultExecutionResult}), containing a process handler
    * and a console attached to it.
    * @throws ExecutionException if the execution has failed.
    */

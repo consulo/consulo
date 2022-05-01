@@ -27,7 +27,7 @@
 		<key>ClassPath</key>
 		<string>$APP_PACKAGE</string>
 		<key>MainClass</key>
-		<string>com.intellij.idea.Main</string>
+		<string>consulo.ide.impl.idea.idea.Main</string>
 		<key>Properties</key>
 		<dict>
 			<key>CVS_PASSFILE</key>

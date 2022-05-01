@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  * <li>Cached arrays or lists should have the same number of elements, and they also should be equivalent and come in the same order.</li>
  * <li>If the result object's class has a meaningful {@link #equals} method, it should hold.</li>
  * </ul>
- * This is enforced at runtime by occasional checks in {@link com.intellij.util.IdempotenceChecker#checkEquivalence(Object, Object, Class)}.
+ * This is enforced at runtime by occasional checks in {@link consulo.ide.impl.idea.util.IdempotenceChecker#checkEquivalence(Object, Object, Class)}.
  * See that method's documentation for further information and advice, when a failure happens.<p></p>
  *
  * <b>Context-independence</b>: if you store the CachedValue in a field or user data of some object {@code X}, then its {@link CachedValueProvider}
@@ -61,13 +61,13 @@ import java.util.function.Supplier;
  *   </pre>
  * </ul>
  * </ul>
- * This is enforced at runtime by occasional checks in {@link com.intellij.util.CachedValueStabilityChecker}.
+ * This is enforced at runtime by occasional checks in {@link consulo.ide.impl.idea.util.CachedValueStabilityChecker}.
  * See that class's documentation for further information and advice, when a failure happens.<p></p>
  *
  * <b>Recursion prevention</b>: The same cached value provider can be re-entered recursively on the same thread,
  * if the computation is inherently cyclic. Note that this is likely to result in {@link StackOverflowError},
  * so avoid such situations at all cost. If there's no other way, use
- * {@link com.intellij.openapi.util.RecursionManager#doPreventingRecursion} instead of custom thread-locals to help get out of the endless loop. Please ensure this call happens inside
+ * {@link consulo.ide.impl.idea.openapi.util.RecursionManager#doPreventingRecursion} instead of custom thread-locals to help get out of the endless loop. Please ensure this call happens inside
  * the {@link CachedValueProvider}, not outside {@link CachedValue#getValue()} call. Otherwise you might get no caching at all, because
  * CachedValue uses {@link RecursionGuard.StackStamp#mayCacheNow()} to prevent caching incomplete values, and even the top-level
  * call would be considered incomplete if it happens inside {@code doPreventingRecursion}.

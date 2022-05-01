@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.stubs;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.PsiFile;
 import consulo.language.impl.DebugUtil;
@@ -24,7 +24,7 @@ import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.psi.stub.IStubFileElementType;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.file.light.LightVirtualFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
 import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.PsiFileStubImpl;

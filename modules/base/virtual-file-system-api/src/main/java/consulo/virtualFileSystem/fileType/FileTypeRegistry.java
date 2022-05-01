@@ -20,7 +20,7 @@ import java.util.Collection;
  * such methods is as long as the sum of all possible matching checks in the worst case. That includes reading file contents to
  * feed to all {@link FileTypeDetector} instances, checking {@link FileTypeIdentifiableByVirtualFile} and so on. Such actions
  * may lead to considerable slowdowns if used on large {@code VirtualFile} collections, e.g. in
- * {@link com.intellij.openapi.vfs.newvfs.BulkFileListener} implementations.
+ * {@link consulo.ide.impl.idea.openapi.vfs.newvfs.BulkFileListener} implementations.
  *
  * <p> If it is possible and correct to restrict file type matching by particular means (e.g. match only by file name),
  * it is advised to do so, in order to improve the performance of the check, e.g. use

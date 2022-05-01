@@ -15,21 +15,21 @@
  */
 package consulo.desktop.awt.uiOld.docking.impl;
 
-import com.intellij.ide.IdeEventQueue;
-import com.intellij.openapi.fileEditor.impl.DesktopDockableEditorTabbedContainer;
-import com.intellij.openapi.fileEditor.impl.DockableEditorContainerFactory;
-import com.intellij.openapi.fileEditor.impl.EditorTabbedContainer;
-import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopDockableEditorTabbedContainer;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorTabbedContainer;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ui.ex.awt.FrameWrapper;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.awt.RelativeRectangle;
-import com.intellij.ui.components.panels.VerticalBox;
+import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockContainerFactory;
 import consulo.project.ui.wm.dock.DockableContent;
 import consulo.project.ui.wm.dock.DragSession;
-import com.intellij.ui.tabs.impl.JBTabsImpl;
-import com.intellij.util.IconUtil;
+import consulo.ide.impl.idea.ui.tabs.impl.JBTabsImpl;
+import consulo.ide.impl.idea.util.IconUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.UISettings;
 import consulo.component.persist.State;

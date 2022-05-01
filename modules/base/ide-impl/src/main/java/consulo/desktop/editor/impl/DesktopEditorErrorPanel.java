@@ -15,9 +15,9 @@
  */
 package consulo.desktop.editor.impl;
 
-import com.intellij.codeInsight.hint.TooltipController;
-import com.intellij.codeInsight.hint.TooltipGroup;
-import com.intellij.codeInsight.hint.TooltipRenderer;
+import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
+import consulo.ide.impl.idea.codeInsight.hint.TooltipGroup;
+import consulo.ide.impl.idea.codeInsight.hint.TooltipRenderer;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.undoRedo.CommandProcessor;
@@ -30,9 +30,9 @@ import consulo.document.DocCommandGroupId;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.codeEditor.FoldingModelEx;
-import com.intellij.openapi.editor.impl.DesktopEditorImpl;
-import com.intellij.openapi.editor.impl.DesktopEditorMarkupModelImpl;
-import com.intellij.openapi.editor.markup.ErrorStripeRenderer;
+import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
+import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorMarkupModelImpl;
+import consulo.ide.impl.idea.openapi.editor.markup.ErrorStripeRenderer;
 import consulo.document.util.ProperTextRange;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.HintHint;

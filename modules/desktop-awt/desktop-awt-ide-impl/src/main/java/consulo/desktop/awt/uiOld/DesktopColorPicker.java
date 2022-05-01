@@ -16,17 +16,17 @@
 package consulo.desktop.awt.uiOld;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ui.ex.awt.DialogWrapper;
-import com.intellij.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.ui.ColorPickerListener;
+import consulo.ide.impl.idea.ui.ColorPickerListener;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.util.Alarm;
-import com.intellij.util.Consumer;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.Consumer;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

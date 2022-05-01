@@ -4,7 +4,7 @@ package consulo.desktop.awt.fileChooser.impl;
 import consulo.application.ReadAction;
 import consulo.desktop.awt.fileChooser.impl.FileLookup.Finder;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.util.matcher.MinusculeMatcher;
 import consulo.application.util.matcher.NameUtil;
 import consulo.util.lang.function.ThrowableRunnable;

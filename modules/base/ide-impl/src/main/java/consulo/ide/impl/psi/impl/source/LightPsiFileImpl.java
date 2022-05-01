@@ -37,7 +37,7 @@ import consulo.language.impl.internal.psi.FileContextUtil;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.content.scope.SearchScope;
 import consulo.language.util.IncorrectOperationException;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.psi.PsiElementWithSubtreeChangeNotifier;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

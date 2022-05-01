@@ -16,8 +16,8 @@
 package consulo.desktop.container.impl;
 
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;

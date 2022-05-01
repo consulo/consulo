@@ -16,12 +16,12 @@
 package consulo.ide.newProject.ui;
 
 import consulo.ide.IdeBundle;
-import com.intellij.ide.util.projectWizard.NamePathComponent;
-import com.intellij.ide.util.projectWizard.ProjectWizardUtil;
+import consulo.ide.impl.idea.ide.util.projectWizard.NamePathComponent;
+import consulo.ide.impl.idea.ide.util.projectWizard.ProjectWizardUtil;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;

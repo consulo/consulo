@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.file;
 
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.Project;
 import javax.annotation.Nonnull;

@@ -15,11 +15,11 @@
  */
 package consulo.externalService.impl.ui;
 
-import com.intellij.internal.statistic.configurable.SendPeriod;
-import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
+import consulo.ide.impl.idea.internal.statistic.configurable.SendPeriod;
+import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
 import consulo.application.Application;
 import consulo.configurable.Configurable;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposable;
 import consulo.externalService.ExternalService;
 import consulo.externalService.ExternalServiceConfiguration;

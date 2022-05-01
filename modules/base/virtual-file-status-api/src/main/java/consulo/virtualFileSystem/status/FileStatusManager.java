@@ -61,8 +61,8 @@ public abstract class FileStatusManager {
 
   /**
    * @See VcsConfiguration#SHOW_DIRTY_RECURSIVELY
-   * @See com.intellij.openapi.vcs.FileStatus#NOT_CHANGED_IMMEDIATE
-   * @See com.intellij.openapi.vcs.FileStatus#NOT_CHANGED_RECURSIVE
+   * @See consulo.ide.impl.idea.openapi.vcs.FileStatus#NOT_CHANGED_IMMEDIATE
+   * @See consulo.ide.impl.idea.openapi.vcs.FileStatus#NOT_CHANGED_RECURSIVE
    */
   @Nonnull
   public FileStatus getRecursiveStatus(@Nonnull VirtualFile file) {

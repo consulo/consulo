@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import com.intellij.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.application.util.mac.foundation.Foundation;
 import consulo.application.util.mac.foundation.ID;

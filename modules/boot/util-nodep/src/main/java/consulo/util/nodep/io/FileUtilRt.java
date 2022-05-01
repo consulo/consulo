@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * A stripped-down version of {@link com.intellij.openapi.util.io.FileUtil}.
+ * A stripped-down version of {@link consulo.ide.impl.idea.openapi.util.io.FileUtil}.
  * Intended to use by external (out-of-IDE-process) runners and helpers, so it should not contain any library dependencies.
  */
 @SuppressWarnings("UtilityClassWithoutPrivateConstructor")
@@ -204,7 +204,7 @@ public class FileUtilRt {
    * Converts given path to canonical representation by eliminating '.'s, traversing '..'s, and omitting duplicate separators.
    * Please note that this method is symlink-unfriendly (i.e. result of "/path/to/link/../next" most probably will differ from
    * what {@link File#getCanonicalPath()} will return), so if the path may contain symlinks,
-   * consider using {@link com.intellij.openapi.util.io.FileUtil#toCanonicalPath(String, boolean)} instead.
+   * consider using {@link consulo.ide.impl.idea.openapi.util.io.FileUtil#toCanonicalPath(String, boolean)} instead.
    */
   public static String toCanonicalPath(String path, char separatorChar, boolean removeLastSlash) {
     return toCanonicalPath(path, separatorChar, removeLastSlash, null);
@@ -684,7 +684,7 @@ public class FileUtilRt {
   }
 
   /**
-   * @deprecated not needed in 'util-rt'; use {@link com.intellij.openapi.util.io.FileUtil} or {@link File} methods; for removal in IDEA 2020
+   * @deprecated not needed in 'util-rt'; use {@link consulo.ide.impl.idea.openapi.util.io.FileUtil} or {@link File} methods; for removal in IDEA 2020
    */
   @Deprecated
   @SuppressWarnings("ALL")
@@ -1058,6 +1058,6 @@ public class FileUtilRt {
   }
 
   private static LoggerRt logger() {
-    return LoggerRt.getInstance("#com.intellij.openapi.util.io.FileUtilRt");
+    return LoggerRt.getInstance("#consulo.ide.impl.idea.openapi.util.io.FileUtilRt");
   }
 }

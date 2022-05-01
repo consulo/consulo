@@ -25,7 +25,7 @@ public abstract class Filter<T extends AbstractTestProxy> {
   /**
    * All instances (and subclasses's instances) should be singletons.
    *
-   * @see com.intellij.execution.junit2.TestProxy#selectChildren
+   * @see consulo.ide.impl.idea.execution.junit2.TestProxy#selectChildren
    */
   protected Filter() {
   }

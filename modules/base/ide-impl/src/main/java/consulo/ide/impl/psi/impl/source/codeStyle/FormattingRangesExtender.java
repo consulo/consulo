@@ -8,8 +8,8 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.ast.IElementType;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

@@ -26,7 +26,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @see com.intellij.openapi.ui.popup.JBPopupFactory
+ * @see consulo.ide.impl.idea.openapi.ui.popup.JBPopupFactory
  */
 public interface Balloon extends Disposable, PositionTracker.Client<Balloon>, LightweightWindow {
 

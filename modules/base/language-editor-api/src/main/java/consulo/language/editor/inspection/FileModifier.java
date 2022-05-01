@@ -30,7 +30,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * An interface that {@link IntentionAction} and {@link com.intellij.codeInspection.LocalQuickFix} share.
+ * An interface that {@link IntentionAction} and {@link consulo.ide.impl.idea.codeInspection.LocalQuickFix} share.
  *
  * @author peter
  */
@@ -44,9 +44,9 @@ public interface FileModifier extends WriteActionAware {
    * By default, as a heuristic, returns the same as {@link #startInWriteAction()}.<p/>
    * <p>
    * If the action is going to modify multiple files, or the set of the files is unknown in advance, please
-   * don't bother overriding this method, return {@code false} from {@link #startInWriteAction()}, and call {@link com.intellij.codeInsight.FileModificationService} methods in the implementation, and take write actions yourself as needed.
+   * don't bother overriding this method, return {@code false} from {@link #startInWriteAction()}, and call {@link consulo.ide.impl.idea.codeInsight.FileModificationService} methods in the implementation, and take write actions yourself as needed.
    *
-   * @param currentFile the same file where intention would be invoked (for {@link com.intellij.codeInspection.LocalQuickFix} it would be the containing file of {@link com.intellij.codeInspection.ProblemDescriptor#getPsiElement})
+   * @param currentFile the same file where intention would be invoked (for {@link consulo.ide.impl.idea.codeInspection.LocalQuickFix} it would be the containing file of {@link consulo.ide.impl.idea.codeInspection.ProblemDescriptor#getPsiElement})
    */
   @Nullable
   default PsiElement getElementToMakeWritable(@Nonnull PsiFile currentFile) {

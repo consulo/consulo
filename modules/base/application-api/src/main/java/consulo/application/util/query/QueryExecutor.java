@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
 /**
  * A generic extension to enable plugging into various searches.<p/>
  * <p>
- * Consider extending {@link com.intellij.openapi.application.QueryExecutorBase} instead unless you know what you're doing.
+ * Consider extending {@link consulo.ide.impl.idea.openapi.application.QueryExecutorBase} instead unless you know what you're doing.
  *
  * @author max
  */

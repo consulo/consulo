@@ -5,7 +5,7 @@ import consulo.application.AllIcons;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
-import com.intellij.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.JBTextField;
@@ -92,8 +92,8 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
   //public void setUI(TextUI ui) {
   //  TextUI suggested = ui;
   //  try {
-  //    if (ui == null || !Class.forName("com.intellij.ide.ui.laf.darcula.ui.TextFieldWithPopupHandlerUI_New").isAssignableFrom(ui.getClass())) {
-  //      ui = (TextUI)Class.forName("com.intellij.ide.ui.laf.darcula.ui.DarculaTextFieldUI_New").getDeclaredMethod("createUI", JComponent.class).invoke(null, this);
+  //    if (ui == null || !Class.forName("consulo.ide.impl.idea.ide.ui.laf.darcula.ui.TextFieldWithPopupHandlerUI_New").isAssignableFrom(ui.getClass())) {
+  //      ui = (TextUI)Class.forName("consulo.ide.impl.idea.ide.ui.laf.darcula.ui.DarculaTextFieldUI_New").getDeclaredMethod("createUI", JComponent.class).invoke(null, this);
   //    }
   //  }
   //  catch (Exception ignore) {
@@ -102,7 +102,7 @@ public class ExtendableTextField extends JBTextField implements ExtendableTextCo
   //  super.setUI(ui);
   //  if (ui != suggested) {
   //    try {
-  //      setBorder((Border)Class.forName("com.intellij.ide.ui.laf.darcula.ui.DarculaTextBorder_New").newInstance());
+  //      setBorder((Border)Class.forName("consulo.ide.impl.idea.ide.ui.laf.darcula.ui.DarculaTextBorder_New").newInstance());
   //    }
   //    catch (Exception ignore) {
   //    }

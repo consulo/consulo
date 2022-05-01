@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
  * after the regular annotator has completed its work.
  *
  * @author ven
- * @see com.intellij.lang.ExternalLanguageAnnotators
+ * @see consulo.ide.impl.idea.lang.ExternalLanguageAnnotators
  */
 public abstract class ExternalAnnotator<InitialInfoType, AnnotationResultType> {
   /**

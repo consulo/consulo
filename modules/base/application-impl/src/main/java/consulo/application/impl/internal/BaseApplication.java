@@ -613,7 +613,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   @RequiredWriteAction
   @Override
   public void assertWriteAccessAllowed() {
-    LOG.assertTrue(isWriteAccessAllowed(), "Write access is allowed inside write-action only (see com.intellij.openapi.application.Application.runWriteAction())");
+    LOG.assertTrue(isWriteAccessAllowed(), "Write access is allowed inside write-action only (see consulo.ide.impl.idea.openapi.application.Application.runWriteAction())");
   }
 
   @Override

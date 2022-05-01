@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * Invitation-only service for running short-lived computing-intensive IO-free tasks on all available CPU cores.
  * DO NOT USE for your tasks, IO-bound or long tasks, there are
  * {@link Application#executeOnPooledThread},
- * {@link com.intellij.execution.process.ProcessIOExecutorService} and {@link com.intellij.util.concurrency.NonUrgentExecutor} for that.
+ * {@link consulo.ide.impl.idea.execution.process.ProcessIOExecutorService} and {@link consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor} for that.
  */
 public abstract class JobLauncher {
   public static JobLauncher getInstance() {

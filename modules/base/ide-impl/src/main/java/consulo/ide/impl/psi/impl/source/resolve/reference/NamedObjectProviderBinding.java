@@ -21,9 +21,9 @@ import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceService;
-import com.intellij.util.ConcurrencyUtil;
+import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.language.util.ProcessingContext;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

@@ -16,8 +16,8 @@
 package consulo.start;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.RecentProjectsManager;
-import com.intellij.ide.ReopenProjectAction;
+import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.application.Application;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.ProjectManager;

@@ -16,21 +16,21 @@
 package consulo.ide.updateSettings.impl;
 
 import consulo.ide.IdeBundle;
-import com.intellij.ide.actions.SettingsEntryPointAction;
-import com.intellij.ide.plugins.*;
+import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
+import consulo.ide.impl.idea.ide.plugins.*;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.updateSettings.impl.PluginDownloader;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

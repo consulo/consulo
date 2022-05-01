@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.psi.impl.cache.impl.id;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 
 /**
  * @author Eugene Zhuravlev

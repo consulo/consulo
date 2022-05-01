@@ -17,7 +17,7 @@ package consulo.desktop.awt.uiOld;
 
 import consulo.application.Application;
 import consulo.desktop.awt.uiOld.mac.growl.Growl;
-import com.intellij.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

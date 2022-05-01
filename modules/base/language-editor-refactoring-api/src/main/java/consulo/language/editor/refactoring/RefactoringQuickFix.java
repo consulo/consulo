@@ -38,8 +38,8 @@ public interface RefactoringQuickFix extends LocalQuickFix {
   }
 
   /**
-   * Usually a call to com.intellij.refactoring.RefactoringActionHandlerFactory or a language specific factory like
-   * com.intellij.refactoring.JavaRefactoringActionHandlerFactory.
+   * Usually a call to consulo.ide.impl.idea.refactoring.RefactoringActionHandlerFactory or a language specific factory like
+   * consulo.ide.impl.idea.refactoring.JavaRefactoringActionHandlerFactory.
    */
   @Nonnull
   RefactoringActionHandler getHandler();
@@ -68,7 +68,7 @@ public interface RefactoringQuickFix extends LocalQuickFix {
   }
 
   /**
-   * @see com.intellij.openapi.actionSystem.impl.SimpleDataContext
+   * @see consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext
    */
   @Nonnull
   default DataContext enhanceDataContext(@NonNls DataContext context) {

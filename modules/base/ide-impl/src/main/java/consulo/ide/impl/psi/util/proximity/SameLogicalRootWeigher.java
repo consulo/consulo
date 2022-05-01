@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.psi.util.proximity;
 
-import com.intellij.openapi.util.NullableLazyKey;
+import consulo.ide.impl.idea.openapi.util.NullableLazyKey;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.util.ProximityLocation;
-import com.intellij.util.LogicalRoot;
-import com.intellij.util.LogicalRootsManager;
-import com.intellij.util.NullableFunction;
+import consulo.ide.impl.idea.util.LogicalRoot;
+import consulo.ide.impl.idea.util.LogicalRootsManager;
+import consulo.ide.impl.idea.util.NullableFunction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

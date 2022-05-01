@@ -16,9 +16,9 @@
 package consulo.desktop.awt.ui.plaf.intellij;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.impl.ActionButton;
-import com.intellij.openapi.actionSystem.impl.ActionButtonWithText;
-import com.intellij.openapi.actionSystem.impl.ActionToolbarImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;
@@ -43,7 +43,7 @@ import java.awt.event.KeyEvent;
  * @author VISTALL
  * @since 27-Nov-16.
  *
- * Code extract from {@link com.intellij.openapi.actionSystem.impl.ActionButton}
+ * Code extract from {@link consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton}
  */
 public class ActionButtonUI extends ComponentUI implements consulo.actionSystem.impl.ActionButtonUI {
   private static final Color ALPHA_20 = Gray._0.withAlpha(20);

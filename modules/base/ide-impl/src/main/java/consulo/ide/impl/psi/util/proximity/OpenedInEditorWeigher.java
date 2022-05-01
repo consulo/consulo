@@ -21,8 +21,8 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.psi.util.ProximityLocation;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.NotNullFunction;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.NotNullFunction;
 import javax.annotation.Nonnull;
 
 /**

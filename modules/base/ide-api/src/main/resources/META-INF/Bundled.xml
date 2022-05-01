@@ -15,10 +15,10 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="additionalTextAttributes" beanClass="com.intellij.openapi.editor.colors.impl.AdditionalTextAttributesEP"/>
-    <extensionPoint name="bundledColorScheme" beanClass="com.intellij.openapi.editor.colors.impl.BundledColorSchemeEP"/>
-    <extensionPoint name="bundledQuickListsProvider" interface="com.intellij.openapi.actionSystem.impl.BundledQuickListsProvider"/>
-    <extensionPoint name="bundledKeymap" beanClass="com.intellij.openapi.keymap.impl.BundledKeymapEP"/>
+    <extensionPoint name="additionalTextAttributes" beanClass="consulo.ide.impl.idea.openapi.editor.colors.impl.AdditionalTextAttributesEP"/>
+    <extensionPoint name="bundledColorScheme" beanClass="consulo.ide.impl.idea.openapi.editor.colors.impl.BundledColorSchemeEP"/>
+    <extensionPoint name="bundledQuickListsProvider" interface="consulo.ide.impl.idea.openapi.actionSystem.impl.BundledQuickListsProvider"/>
+    <extensionPoint name="bundledKeymap" beanClass="consulo.ide.impl.idea.openapi.keymap.impl.BundledKeymapEP"/>
     <extensionPoint name="bundleLiveTemplateSet" beanClass="consulo.codeInsight.template.impl.BundleLiveTemplateSetEP"/>
   </extensionPoints>
 

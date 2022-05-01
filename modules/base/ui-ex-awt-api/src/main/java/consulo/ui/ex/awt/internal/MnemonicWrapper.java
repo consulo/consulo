@@ -19,7 +19,7 @@ import java.beans.PropertyChangeListener;
  */
 abstract class MnemonicWrapper<T extends JComponent> implements Runnable, PropertyChangeListener {
   public static MnemonicWrapper getWrapper(Component component) {
-    if (component == null || component.getClass().getName().equals("com.intellij.openapi.wm.impl.StripeButton")) {
+    if (component == null || component.getClass().getName().equals("consulo.ide.impl.idea.openapi.wm.impl.StripeButton")) {
       return null;
     }
     for (PropertyChangeListener listener : component.getPropertyChangeListeners()) {

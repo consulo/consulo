@@ -17,9 +17,9 @@ package consulo.vfs.newvfs;
 
 import consulo.application.Application;
 import consulo.application.impl.internal.IdeaModalityState;
-import com.intellij.openapi.vfs.newvfs.RefreshQueue;
-import com.intellij.openapi.vfs.newvfs.RefreshQueueImpl;
-import com.intellij.openapi.vfs.newvfs.RefreshSession;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueueImpl;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshSession;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.disposer.Disposable;
 import jakarta.inject.Inject;

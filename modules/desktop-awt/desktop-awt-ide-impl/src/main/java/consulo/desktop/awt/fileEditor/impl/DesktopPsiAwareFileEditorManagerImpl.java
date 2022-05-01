@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.fileEditor.impl.DesktopFileEditorWithProviderComposite;
-import com.intellij.openapi.fileEditor.impl.DesktopFileEditorsSplitters;
-import com.intellij.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorWithProviderComposite;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorsSplitters;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.PsiAwareFileEditorManagerImpl;
 import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.disposer.Disposer;

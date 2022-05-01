@@ -204,7 +204,7 @@ public abstract class FileEditorManager {
    *
    * @param file                 a file to switch the file editor tab for. The function does nothing if the file is not currently open in the editor.
    * @param fileEditorProviderId the ID of the file editor to open; matches the return value of
-   *                             {@link com.intellij.openapi.fileEditor.FileEditorProvider#getEditorTypeId()}
+   *                             {@link consulo.ide.impl.idea.openapi.fileEditor.FileEditorProvider#getEditorTypeId()}
    */
   public abstract void setSelectedEditor(@Nonnull VirtualFile file, @Nonnull String fileEditorProviderId);
 
@@ -225,7 +225,7 @@ public abstract class FileEditorManager {
    * @return preferred focused component inside myEditor tabbed container.
    * This method does similar things like {@link FileEditor#getPreferredFocusedComponent()}
    * but it also tracks (and remember) focus movement inside tabbed container.
-   * @see com.intellij.openapi.fileEditor.impl.DesktopEditorComposite#getPreferredFocusedComponent()
+   * @see consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopEditorComposite#getPreferredFocusedComponent()
    */
   @Nullable
   public abstract javax.swing.JComponent getPreferredFocusedComponent();
@@ -292,8 +292,8 @@ public abstract class FileEditorManager {
   /**
    * Closes all files IN ACTIVE SPLITTER (window).
    *
-   * @see com.intellij.ui.docking.DockManager#getContainers()
-   * @see com.intellij.ui.docking.DockContainer#closeAll()
+   * @see consulo.ide.impl.idea.ui.docking.DockManager#getContainers()
+   * @see consulo.ide.impl.idea.ui.docking.DockContainer#closeAll()
    */
   public abstract void closeAllFiles();
 

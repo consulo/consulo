@@ -16,7 +16,7 @@
 package consulo.progress.util;
 
 import consulo.ide.ServiceManager;
-import com.intellij.openapi.progress.util.ProgressWindow;
+import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.language.editor.refactoring;
 
-import com.intellij.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;

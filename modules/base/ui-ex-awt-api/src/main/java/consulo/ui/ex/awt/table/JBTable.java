@@ -927,7 +927,7 @@ public class JBTable extends JTable implements ComponentWithEmptyText, Component
      *
      * <p>
      * There are a few derived classes of {@link JBTable}, e.g.
-     * {@link com.intellij.ui.dualView.TreeTableView} that depend on the ability to
+     * {@link consulo.ide.impl.idea.ui.dualView.TreeTableView} that depend on the ability to
      * override {@link JTable#getCellRenderer(int, int)} method to behave correctly,
      * so we need to ensure we go through the same code path to ensure correct
      * accessibility behavior.

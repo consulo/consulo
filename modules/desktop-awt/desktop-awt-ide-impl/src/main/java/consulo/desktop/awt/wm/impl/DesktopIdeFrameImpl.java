@@ -15,19 +15,19 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.ide.AppLifecycleListener;
-import com.intellij.ide.impl.ProjectUtil;
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
-import com.intellij.openapi.wm.impl.IdeFrameDecorator;
-import com.intellij.openapi.wm.impl.ProjectFrameBounds;
-import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
-import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
-import com.intellij.openapi.wm.impl.welcomeScreen.WelcomeFrame;
-import com.intellij.ui.mac.MacMainFrameDecorator;
-import com.intellij.util.ui.accessibility.AccessibleContextAccessor;
+import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.ide.impl.idea.openapi.wm.impl.IdeFrameDecorator;
+import consulo.ide.impl.idea.openapi.wm.impl.ProjectFrameBounds;
+import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup;
+import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.WelcomeFrame;
+import consulo.ide.impl.idea.ui.mac.MacMainFrameDecorator;
+import consulo.ide.impl.idea.util.ui.accessibility.AccessibleContextAccessor;
 import consulo.actionSystem.ex.TopApplicationMenuUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

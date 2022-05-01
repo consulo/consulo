@@ -47,7 +47,7 @@ public interface TreeStructureProvider {
    *
    * @param selected the list of nodes currently selected in the project view.
    * @param dataKey the identifier of the requested data object (for example, as defined in
-   *                 {@link com.intellij.openapi.actionSystem.PlatformDataKeys})
+   *                 {@link consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys})
    * @return the data object, or null if no data object can be returned by this provider.
    * @see DataProvider
    */

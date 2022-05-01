@@ -20,7 +20,7 @@ import consulo.desktop.awt.ui.plaf.LafManagerImplUtil;
 import consulo.desktop.awt.ui.plaf.ideaOld.IntelliJMetalLookAndFeel;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;

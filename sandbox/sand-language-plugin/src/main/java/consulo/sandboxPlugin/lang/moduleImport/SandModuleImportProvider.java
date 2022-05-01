@@ -22,7 +22,7 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.ModuleRootManager;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;

@@ -20,7 +20,7 @@
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.language.codeStyle.CodeStyle;
-import com.intellij.codeStyle.CodeStyleFacade;
+import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.language.Language;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;

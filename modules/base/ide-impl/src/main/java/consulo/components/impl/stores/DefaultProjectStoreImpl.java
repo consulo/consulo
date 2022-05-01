@@ -15,9 +15,9 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.project.impl.DefaultProjectImpl;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.ide.impl.idea.openapi.project.impl.DefaultProjectImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.component.impl.macro.BasePathMacroManager;
 import consulo.component.persist.RoamingType;
@@ -34,7 +34,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

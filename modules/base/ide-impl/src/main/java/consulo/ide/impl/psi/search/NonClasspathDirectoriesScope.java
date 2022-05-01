@@ -18,11 +18,11 @@ package consulo.ide.impl.psi.search;
 
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.Function;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.UsedInPlugin;
 
 import javax.annotation.Nonnull;

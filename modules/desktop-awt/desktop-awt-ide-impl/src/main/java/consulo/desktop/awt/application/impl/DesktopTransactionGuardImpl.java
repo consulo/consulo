@@ -21,7 +21,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.ProcessCanceledException;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.Semaphore;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

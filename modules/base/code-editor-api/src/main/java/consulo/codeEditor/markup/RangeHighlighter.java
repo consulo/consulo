@@ -29,7 +29,7 @@ import java.util.Comparator;
  * line marker, gutter icon, error stripe marker or line separator).
  *
  * @see MarkupModel#addRangeHighlighter(int, int, int, TextAttributes, HighlighterTargetArea)
- * @see com.intellij.lang.annotation.Annotation
+ * @see consulo.ide.impl.idea.lang.annotation.Annotation
  */
 public interface RangeHighlighter extends RangeMarker {
   RangeHighlighter[] EMPTY_ARRAY = new RangeHighlighter[0];

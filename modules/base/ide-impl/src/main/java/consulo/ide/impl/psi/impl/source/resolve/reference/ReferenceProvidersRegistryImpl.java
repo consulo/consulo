@@ -21,10 +21,10 @@ import consulo.language.LanguageExtension;
 import consulo.language.psi.*;
 import consulo.language.psi.ReferenceProvidersRegistry;
 import consulo.application.dumb.IndexNotReadyException;
-import com.intellij.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.util.ProcessingContext;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.FactoryMap;
 import jakarta.inject.Singleton;
 

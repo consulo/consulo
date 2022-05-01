@@ -15,15 +15,15 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
-import com.intellij.ide.actions.SynchronizeAction;
+import consulo.ide.impl.idea.ide.actions.SynchronizeAction;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.IdeActions;
 import consulo.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileSystemTree;
-import com.intellij.openapi.fileChooser.FileSystemTreeFactory;
-import com.intellij.openapi.fileChooser.ex.FileSystemTreeImpl;
+import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
+import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTreeFactory;
+import consulo.ide.impl.idea.openapi.fileChooser.ex.FileSystemTreeImpl;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 

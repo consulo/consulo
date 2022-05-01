@@ -15,9 +15,9 @@
  */
 package consulo.ide.plugins.pluginsAdvertisement;
 
-import com.intellij.ide.plugins.PluginManagerColumnInfo;
-import com.intellij.ide.plugins.PluginTableModel;
-import com.intellij.ide.plugins.PluginsTableRenderer;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerColumnInfo;
+import consulo.ide.impl.idea.ide.plugins.PluginTableModel;
+import consulo.ide.impl.idea.ide.plugins.PluginsTableRenderer;
 import consulo.container.plugin.PluginId;
 import consulo.ui.ex.awt.table.BooleanTableCellEditor;
 import consulo.ui.ex.awt.BooleanTableCellRenderer;

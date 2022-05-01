@@ -18,7 +18,7 @@ package consulo.virtualFileSystem;
 /**
  * A marker interface for {@link VirtualFile#getOutputStream(Object)} to not assert file content size.
  *
- * @see com.intellij.openapi.util.io.FileUtilRt#isTooLarge
+ * @see consulo.ide.impl.idea.openapi.util.io.FileUtilRt#isTooLarge
  */
 public interface LargeFileWriteRequestor {
 }

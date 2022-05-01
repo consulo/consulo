@@ -15,24 +15,24 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
-import com.intellij.ide.ProjectGroup;
-import com.intellij.ide.ProjectGroupActionGroup;
-import com.intellij.ide.RecentProjectsManager;
-import com.intellij.ide.ReopenProjectAction;
+import consulo.ide.impl.idea.ide.ProjectGroup;
+import consulo.ide.impl.idea.ide.ProjectGroupActionGroup;
+import consulo.ide.impl.idea.ide.RecentProjectsManager;
+import consulo.ide.impl.idea.ide.ReopenProjectAction;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.util.io.UniqueNameBuilder;
+import consulo.ide.impl.idea.openapi.util.io.UniqueNameBuilder;
 import consulo.application.ui.wm.IdeFocusManager;
-import com.intellij.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBList;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import com.intellij.ui.speedSearch.NameFilteringListModel;
+import consulo.ide.impl.idea.ui.speedSearch.NameFilteringListModel;
 import consulo.ui.ex.awt.JBDimension;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

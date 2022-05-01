@@ -2,13 +2,13 @@
 package consulo.ide.impl.psi.stubs.provided;
 
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.psi.stubs.SerializationManagerImpl;
 import consulo.ide.impl.psi.stubs.SerializedStubTree;
 import consulo.ide.impl.psi.stubs.SerializedStubTreeDataExternalizer;
 import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
 import consulo.index.io.ID;
-import com.intellij.util.indexing.provided.ProvidedIndexExtension;
+import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtension;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.EnumeratorIntegerDescriptor;
 import consulo.index.io.KeyDescriptor;

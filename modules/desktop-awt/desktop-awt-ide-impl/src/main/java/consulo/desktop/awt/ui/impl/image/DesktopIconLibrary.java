@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGUniverse;
 import consulo.logging.Logger;

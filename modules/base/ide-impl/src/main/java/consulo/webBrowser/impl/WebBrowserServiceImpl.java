@@ -15,7 +15,7 @@
  */
 package consulo.webBrowser.impl;
 
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.project.DumbService;

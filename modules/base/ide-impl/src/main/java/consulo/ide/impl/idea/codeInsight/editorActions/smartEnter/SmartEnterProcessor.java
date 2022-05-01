@@ -1,0 +1,83 @@
+/*
+ * Copyright 2000-2009 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package consulo.ide.impl.idea.codeInsight.editorActions.smartEnter;
+
+import consulo.document.Document;
+import consulo.codeEditor.Editor;
+import consulo.document.RangeMarker;
+import consulo.project.Project;
+import consulo.document.util.TextRange;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.codeStyle.CodeStyleManager;
+import consulo.language.util.IncorrectOperationException;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * @author max
+ */
+public abstract class SmartEnterProcessor {
+  public abstract boolean process(@Nonnull final Project project, @Nonnull final Editor editor, @Nonnull final PsiFile psiFile);
+
+  public boolean processAfterCompletion(@Nonnull final Editor editor, @Nonnull final PsiFile psiFile) {
+    return process(psiFile.getProject(), editor, psiFile);
+  }
+
+  protected void reformat(PsiElement atCaret) throws IncorrectOperationException {
+    final TextRange range = atCaret.getTextRange();
+    final PsiFile file = atCaret.getContainingFile();
+    final PsiFile baseFile = file.getViewProvider().getPsi(file.getViewProvider().getBaseLanguage());
+    CodeStyleManager.getInstance(atCaret.getProject()).reformatText(baseFile, range.getStartOffset(), range.getEndOffset());
+  }
+
+  protected RangeMarker createRangeMarker(final PsiElement elt) {
+    final PsiFile psiFile = elt.getContainingFile();
+    final PsiDocumentManager instance = PsiDocumentManager.getInstance(elt.getProject());
+    final Document document = instance.getDocument(psiFile);
+    return document.createRangeMarker(elt.getTextRange());
+  }
+
+  @Nullable
+  protected PsiElement getStatementAtCaret(Editor editor, PsiFile psiFile) {
+    int caret = editor.getCaretModel().getOffset();
+
+    final Document doc = editor.getDocument();
+    CharSequence chars = doc.getCharsSequence();
+    int offset = caret == 0 ? 0 : CharArrayUtil.shiftBackward(chars, caret - 1, " \t");
+    if (doc.getLineNumber(offset) < doc.getLineNumber(caret)) {
+      offset = CharArrayUtil.shiftForward(chars, caret, " \t");
+    }
+
+    return psiFile.findElementAt(offset);
+  }
+
+  protected static boolean isUncommited(@Nonnull final Project project) {
+    return PsiDocumentManager.getInstance(project).hasUncommitedDocuments();
+  }
+
+  protected void commit(@Nonnull final Editor editor) {
+    final Project project = editor.getProject();
+    PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+
+    //some psi operations may block the document, unblock here
+    PsiDocumentManager.getInstance(project).doPostponedOperationsAndUnblockDocument(editor.getDocument());
+  }
+
+}

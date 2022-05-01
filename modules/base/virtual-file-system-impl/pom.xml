@@ -41,7 +41,9 @@
             <arg>-h</arg>
             <arg>${project.build.directory}/headers</arg>
           </compilerArgs>
-        </configuration>
+			<source>16</source>
+			<target>16</target>
+		</configuration>
       </plugin>
     </plugins>
   </build>

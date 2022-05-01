@@ -15,15 +15,15 @@
  */
 package consulo.desktop.awt.ui.impl.validableComponent;
 
-import com.intellij.openapi.ui.ComponentValidator;
+import consulo.ide.impl.idea.openapi.ui.ComponentValidator;
 import consulo.ui.ex.awt.ValidationInfo;
 import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ref.Ref;
-import com.intellij.reference.SoftReference;
+import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.JBUIScale;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.disposer.Disposable;
 import consulo.ui.ValidableComponent;

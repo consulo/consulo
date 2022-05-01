@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.codeEditor;
 
-import com.intellij.ui.popup.AbstractPopup;
-import com.intellij.ui.popup.PopupFactoryImpl;
+import consulo.ide.impl.idea.ui.popup.AbstractPopup;
+import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorPopupHelper;
 import consulo.ui.ex.RelativePoint;

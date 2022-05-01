@@ -7,7 +7,7 @@ import consulo.language.codeStyle.FormattingContext;
 import consulo.language.codeStyle.FormattingModel;
 import consulo.language.codeStyle.FormattingModelBuilder;
 import consulo.language.codeStyle.LanguageFormatting;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.Document;

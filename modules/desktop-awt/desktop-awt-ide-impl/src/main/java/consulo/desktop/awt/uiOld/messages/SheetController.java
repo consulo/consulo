@@ -21,7 +21,7 @@ import consulo.application.util.SystemInfo;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import com.intellij.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.desktop.util.awt.graphics.GraphicsUtilities;

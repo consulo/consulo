@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 /**
- * Extract part of com.intellij.openapi.vfs.VfsUtilCore
+ * Extract part of consulo.ide.impl.idea.openapi.vfs.VfsUtilCore
  */
 public final class VirtualFileUtil {
   private static final Logger LOG = Logger.getInstance(VirtualFileUtil.class);

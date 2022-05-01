@@ -17,37 +17,37 @@
   <application-components>
     <component>
       <interface-class>consulo.language.file.FileTypeManager</interface-class>
-      <implementation-class>com.intellij.openapi.fileTypes.impl.FileTypeManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.virtualFileSystem.VirtualFileManager</interface-class>
-      <implementation-class>com.intellij.openapi.vfs.PlatformVirtualFileManager</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vfs.PlatformVirtualFileManager</implementation-class>
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.vfs.newvfs.ManagingFS</interface-class>
-      <implementation-class>com.intellij.openapi.vfs.newvfs.persistent.PersistentFSImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFSImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.ui.ex.keymap.KeymapManager</interface-class>
-      <implementation-class>com.intellij.openapi.keymap.impl.KeymapManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.ui.ex.action.ActionManager</interface-class>
-      <implementation-class>com.intellij.openapi.actionSystem.impl.ActionManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.document.FileDocumentManager</interface-class>
-      <implementation-class>com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.localHistory.LocalHistory</interface-class>
-      <implementation-class>com.intellij.history.integration.LocalHistoryImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.history.integration.LocalHistoryImpl</implementation-class>
     </component>
 
     <component>
@@ -60,59 +60,59 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.application.Preloader</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.application.Preloader</implementation-class>
     </component>
 
     <component>
-      <interface-class>com.intellij.notification.NotificationsConfiguration</interface-class>
-      <implementation-class>com.intellij.notification.impl.NotificationsConfigurationImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.notification.NotificationsConfiguration</interface-class>
+      <implementation-class>consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.project.ui.notification.NotificationsManager</interface-class>
-      <implementation-class>com.intellij.notification.impl.NotificationsManagerImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl</implementation-class>
     </component>
 
     <component>
-      <interface-class>com.intellij.ide.ClipboardSynchronizer</interface-class>
-      <implementation-class>com.intellij.ide.ClipboardSynchronizer</implementation-class>
+      <interface-class>consulo.ide.impl.idea.ide.ClipboardSynchronizer</interface-class>
+      <implementation-class>consulo.ide.impl.idea.ide.ClipboardSynchronizer</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.util.FoundationLoader</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.util.FoundationLoader</implementation-class>
       <headless-implementation-class/>
     </component>
 
     <component>
-      <implementation-class>com.intellij.notification.EventLog</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.notification.EventLog</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.util.net.HttpConfigurable</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.util.net.HttpConfigurable</implementation-class>
     </component>
 
     <component>
-      <interface-class>com.intellij.ide.FrameStateManager</interface-class>
-      <implementation-class>com.intellij.ide.FrameStateManagerImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.ide.FrameStateManager</interface-class>
+      <implementation-class>consulo.ide.impl.idea.ide.FrameStateManagerImpl</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.updateSettings.impl.UpdateCheckerComponent</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.updateSettings.impl.UpdateCheckerComponent</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.ide.actionMacro.ActionMacroManager</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager</implementation-class>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.actionSystem.ex.QuickListsManager</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager</implementation-class>
     </component>
     <component>
-      <implementation-class>com.intellij.openapi.keymap.impl.ModifierKeyDoubleClickHandler</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.language.psi.stub.FileBasedIndex</interface-class>
-      <implementation-class>com.intellij.util.indexing.FileBasedIndexImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl</implementation-class>
     </component>
     <component>
       <interface-class>consulo.language.psi.stub.StubIndex</interface-class>
@@ -120,8 +120,8 @@
     </component>
 
     <component>
-      <interface-class>com.intellij.tools.ToolManager</interface-class>
-      <implementation-class>com.intellij.tools.ToolManager</implementation-class>
+      <interface-class>consulo.ide.impl.idea.tools.ToolManager</interface-class>
+      <implementation-class>consulo.ide.impl.idea.tools.ToolManager</implementation-class>
     </component>
 
     <component>
@@ -130,25 +130,25 @@
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.roots.impl.libraries.LibraryKindLoader</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.roots.impl.libraries.LibraryKindLoader</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter</implementation-class>
     </component>
 
     <component>
       <interface-class>consulo.execution.executor.ExecutorRegistry</interface-class>
-      <implementation-class>com.intellij.execution.ExecutorRegistryImpl</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.execution.ExecutorRegistryImpl</implementation-class>
     </component>
 
     <component>
-      <interface-class>com.intellij.openapi.editor.EditorLastActionTracker</interface-class>
-      <implementation-class>com.intellij.openapi.editor.impl.EditorLastActionTrackerImpl</implementation-class>
+      <interface-class>consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker</interface-class>
+      <implementation-class>consulo.ide.impl.idea.openapi.editor.impl.EditorLastActionTrackerImpl</implementation-class>
     </component>
 
     <component>
-      <implementation-class>com.intellij.codeInsight.preview.ImageOrColorPreviewManager</implementation-class>
+      <implementation-class>consulo.ide.impl.idea.codeInsight.preview.ImageOrColorPreviewManager</implementation-class>
     </component>
   </application-components>
 </consulo-plugin>

@@ -134,7 +134,7 @@ public interface FileDocumentManager extends SavingRequestor {
    * @param document document
    * @param project  project
    * @return true if writing access allowed
-   * @see com.intellij.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(Project, VirtualFile...)
+   * @see consulo.ide.impl.idea.openapi.vfs.ReadonlyStatusHandler#ensureFilesWritable(Project, VirtualFile...)
    */
   public abstract boolean requestWriting(@Nonnull Document document, @Nullable ComponentManager project);
 

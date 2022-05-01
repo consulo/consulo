@@ -16,8 +16,8 @@
 
 package consulo.desktop.awt.ui.plaf;
 
-import com.intellij.ide.ui.LafManager;
-import com.intellij.ide.ui.LafManagerListener;
+import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.ide.impl.idea.ide.ui.LafManagerListener;
 import consulo.disposer.Disposable;
 import consulo.ui.style.Style;
 

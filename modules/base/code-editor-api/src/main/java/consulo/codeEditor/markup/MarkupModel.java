@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
  * gutter and so on, and for retrieving information about highlighted ranges.
  *
  * @see Editor#getMarkupModel()
- * @see com.intellij.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
+ * @see consulo.ide.impl.idea.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
  */
 public interface MarkupModel extends UserDataHolder {
   /**

@@ -15,7 +15,7 @@
  */
 package consulo.vfs.impl.zip;
 
-import com.intellij.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ZipArchiveFileType;
 import consulo.vfs.impl.archive.ArchiveFile;

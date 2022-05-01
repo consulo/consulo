@@ -15,7 +15,7 @@
  */
 package consulo.codeStyle;
 
-import com.intellij.codeStyle.CodeStyleFacade;
+import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 
 /**
  * @author VISTALL

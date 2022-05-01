@@ -18,7 +18,7 @@ package consulo.ide.impl.psi.impl.source.codeStyle;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import com.intellij.openapi.options.SchemesManagerFactory;
+import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.util.xml.serializer.Accessor;
 import consulo.util.xml.serializer.SerializationFilter;

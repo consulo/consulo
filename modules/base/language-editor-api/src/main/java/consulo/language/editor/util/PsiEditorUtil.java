@@ -52,7 +52,7 @@ public class PsiEditorUtil {
    *
    * @param element target element
    * @return editor that works with a given element if the one is found; <code>null</code> otherwise
-   * @see {@link com.intellij.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement}
+   * @see {@link consulo.ide.impl.idea.codeInspection.LocalQuickFixAndIntentionActionOnPsiElement}
    */
   @Nullable
   @RequiredUIAccess

@@ -15,7 +15,7 @@
  */
 package consulo.builtInServer.impl.net.json;
 
-import com.intellij.util.BitUtil;
+import consulo.ide.impl.idea.util.BitUtil;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.builtInServer.json.JsonGetRequestHandler;

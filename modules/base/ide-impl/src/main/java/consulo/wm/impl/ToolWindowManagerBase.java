@@ -15,18 +15,18 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.ide.actions.ActivateToolWindowAction;
-import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.openapi.wm.ToolWindowEP;
-import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
+import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
+import consulo.ide.impl.idea.openapi.wm.ToolWindowEP;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.project.ui.wm.ToolWindowManagerListener;
-import com.intellij.openapi.wm.impl.ToolWindowActiveStack;
-import com.intellij.openapi.wm.impl.ToolWindowLayout;
-import com.intellij.openapi.wm.impl.ToolWindowSideStack;
-import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.EventDispatcher;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowActiveStack;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowSideStack;
+import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.CallChain;

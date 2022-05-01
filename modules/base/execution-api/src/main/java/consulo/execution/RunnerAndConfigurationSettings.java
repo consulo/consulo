@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  * settings.
  *
  * @author anna
- * @see RunManager#createRunConfiguration(String, com.intellij.execution.configurations.ConfigurationFactory)
+ * @see RunManager#createRunConfiguration(String, consulo.ide.impl.idea.execution.configurations.ConfigurationFactory)
  */
 public interface RunnerAndConfigurationSettings {
   /**
@@ -68,7 +68,7 @@ public interface RunnerAndConfigurationSettings {
    * Marks the configuration as temporary or permanent.
    *
    * @param temporary true if the configuration is temporary, false if it's permanent.
-   * @see RunManager#makeStable(com.intellij.execution.configurations.RunConfiguration)
+   * @see RunManager#makeStable(consulo.ide.impl.idea.execution.configurations.RunConfiguration)
    */
   void setTemporary(boolean temporary);
 

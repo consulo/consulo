@@ -50,7 +50,7 @@ public abstract class ActionManager {
    *
    * @param place Determines the place that will be set for {@link AnActionEvent} passed
    *  when an action from the group is either performed or updated
-   *  See {@link com.intellij.openapi.actionSystem.ActionPlaces}
+   *  See {@link consulo.ide.impl.idea.openapi.actionSystem.ActionPlaces}
    *
    * @param group Group from which the actions for the menu are taken.
    *
@@ -75,7 +75,7 @@ public abstract class ActionManager {
    *
    * @exception java.lang.IllegalArgumentException if <code>actionId</code> is <code>null</code>
    *
-   * @see com.intellij.openapi.actionSystem.IdeActions
+   * @see consulo.ide.impl.idea.openapi.actionSystem.IdeActions
    */
   public abstract AnAction getAction(@Nonnull String actionId);
 

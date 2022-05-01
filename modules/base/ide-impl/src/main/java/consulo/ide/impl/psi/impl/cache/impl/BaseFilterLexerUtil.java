@@ -23,7 +23,7 @@ import consulo.ide.impl.psi.impl.cache.impl.id.LexerBasedIdIndexer;
 import consulo.ide.impl.psi.impl.cache.impl.todo.TodoIndexEntry;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.stub.FileContent;
-import com.intellij.util.indexing.IdDataConsumer;
+import consulo.ide.impl.idea.util.indexing.IdDataConsumer;
 import consulo.util.dataholder.Key;
 
 import java.util.Collections;

@@ -23,7 +23,7 @@ import consulo.injecting.InjectingContainer;
  * @author yole
  */
 @Deprecated
-@DeprecationInfo("Use com.intellij.openapi.extensions.AbstractExtensionPointBean")
+@DeprecationInfo("Use consulo.ide.impl.idea.openapi.extensions.AbstractExtensionPointBean")
 public class CustomLoadingExtensionPointBean extends AbstractExtensionPointBean {
   @SuppressWarnings("unchecked")
   protected <T> T instantiateExtension(final String implementationClass, final InjectingContainer injectingContainer) throws ClassNotFoundException {

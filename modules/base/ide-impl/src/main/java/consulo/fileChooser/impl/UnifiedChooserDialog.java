@@ -15,7 +15,7 @@
  */
 package consulo.fileChooser.impl;
 
-import com.intellij.openapi.fileChooser.FileElement;
+import consulo.ide.impl.idea.openapi.fileChooser.FileElement;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;

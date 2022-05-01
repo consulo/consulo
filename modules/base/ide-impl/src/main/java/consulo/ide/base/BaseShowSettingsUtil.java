@@ -15,12 +15,12 @@
  */
 package consulo.ide.base;
 
-import com.intellij.openapi.options.ConfigurableEP;
+import consulo.ide.impl.idea.openapi.options.ConfigurableEP;
 import consulo.ide.setting.ShowSettingsUtil;
-import com.intellij.openapi.options.ex.ConfigurableExtensionPointUtil;
-import com.intellij.openapi.options.ex.ConfigurableWrapper;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.openapi.options.ex.ConfigurableExtensionPointUtil;
+import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;

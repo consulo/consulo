@@ -16,9 +16,9 @@
 
 package consulo.find.impl.usage;
 
-import com.intellij.codeInsight.highlighting.HighlightUsagesHandler;
-import com.intellij.find.findUsages.FindUsagesManager;
-import com.intellij.find.impl.FindManagerImpl;
+import consulo.ide.impl.idea.codeInsight.highlighting.HighlightUsagesHandler;
+import consulo.ide.impl.idea.find.findUsages.FindUsagesManager;
+import consulo.ide.impl.idea.find.impl.FindManagerImpl;
 import consulo.codeEditor.Editor;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataSink;

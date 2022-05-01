@@ -18,7 +18,7 @@ package consulo.desktop.awt.settings;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.util.collection.MultiValuesMap;
-import com.intellij.ui.speedSearch.ElementFilter;
+import consulo.ide.impl.idea.ui.speedSearch.ElementFilter;
 import consulo.util.concurrent.AsyncResult;
 
 import javax.annotation.Nonnull;

@@ -16,17 +16,17 @@
 package consulo.moduleImport.ui;
 
 import consulo.ide.IdeBundle;
-import com.intellij.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogBuilder;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.moduleImport.ModuleImportContext;

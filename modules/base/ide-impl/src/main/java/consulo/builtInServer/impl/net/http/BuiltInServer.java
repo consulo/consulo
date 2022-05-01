@@ -17,9 +17,9 @@ package consulo.builtInServer.impl.net.http;
 
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.NotNullProducer;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.util.lang.SystemProperties;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;

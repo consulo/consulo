@@ -4,10 +4,10 @@ import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 
 import consulo.project.Project;
-import com.intellij.openapi.vcs.changes.ChangeListDecorator;
-import com.intellij.openapi.vcs.changes.LocalChangeList;
-import com.intellij.tasks.LocalTask;
-import com.intellij.tasks.TaskManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListDecorator;
+import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
+import consulo.ide.impl.idea.tasks.LocalTask;
+import consulo.ide.impl.idea.tasks.TaskManager;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 
 /**

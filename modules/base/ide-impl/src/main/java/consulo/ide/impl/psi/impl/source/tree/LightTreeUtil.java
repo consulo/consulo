@@ -23,7 +23,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.util.collection.SmartList;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

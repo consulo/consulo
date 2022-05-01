@@ -24,8 +24,8 @@ import consulo.document.util.TextRange;
 import consulo.language.psi.PsiComment;
 import consulo.language.codeStyle.AbstractBlock;
 import consulo.ide.impl.psi.formatter.common.NewLineBlocksIterator;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

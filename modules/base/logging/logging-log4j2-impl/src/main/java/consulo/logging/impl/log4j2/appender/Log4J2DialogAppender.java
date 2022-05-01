@@ -15,14 +15,14 @@
  */
 package consulo.logging.impl.log4j2.appender;
 
-import com.intellij.diagnostic.DefaultIdeaErrorLogger;
-import com.intellij.diagnostic.LogEventException;
-import com.intellij.diagnostic.LogMessageEx;
+import consulo.ide.impl.idea.diagnostic.DefaultIdeaErrorLogger;
+import consulo.ide.impl.idea.diagnostic.LogEventException;
+import consulo.ide.impl.idea.diagnostic.LogMessageEx;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.logging.IdeaLoggingEvent;
-import com.intellij.util.ExceptionUtil;
+import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.logging.attachment.ExceptionWithAttachments;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;

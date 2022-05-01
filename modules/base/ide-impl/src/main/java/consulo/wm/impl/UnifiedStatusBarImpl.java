@@ -15,11 +15,10 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.util.Pair;
-import com.intellij.openapi.wm.ex.StatusBarEx;
-import com.intellij.openapi.wm.impl.status.ToolWindowsWidget;
-import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
+import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
+import consulo.ide.impl.idea.openapi.wm.impl.status.ToolWindowsWidget;
+import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorEx;

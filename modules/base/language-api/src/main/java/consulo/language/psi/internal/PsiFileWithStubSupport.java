@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  * A base interface for PSI files that may contain not only text-based syntactic trees as their content,
  * but also a more lightweight representation called stubs.
  *
- * @see com.intellij.extapi.psi.StubBasedPsiElementBase
+ * @see consulo.ide.impl.idea.extapi.psi.StubBasedPsiElementBase
  */
 public interface PsiFileWithStubSupport extends PsiFile {
   /**

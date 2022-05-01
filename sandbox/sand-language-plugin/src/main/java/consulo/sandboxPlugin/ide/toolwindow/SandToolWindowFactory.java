@@ -16,14 +16,14 @@
 package consulo.sandboxPlugin.ide.toolwindow;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.actions.ToolWindowTabRenameActionBase;
+import consulo.ide.impl.idea.ide.actions.ToolWindowTabRenameActionBase;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
-import com.intellij.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.localize.LocalizeValue;

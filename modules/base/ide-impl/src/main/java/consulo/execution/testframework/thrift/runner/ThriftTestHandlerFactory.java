@@ -15,7 +15,7 @@
  */
 package consulo.execution.testframework.thrift.runner;
 
-import com.intellij.execution.testframework.sm.runner.GeneralTestEventsProcessor;
+import consulo.ide.impl.idea.execution.testframework.sm.runner.GeneralTestEventsProcessor;
 
 /**
  * @author VISTALL

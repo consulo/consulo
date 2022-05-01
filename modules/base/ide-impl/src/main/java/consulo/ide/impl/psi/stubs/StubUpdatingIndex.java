@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.psi.stubs;
 
-import com.intellij.openapi.vfs.newvfs.FileAttribute;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
-import com.intellij.util.BitUtil;
-import com.intellij.util.indexing.*;
-import com.intellij.util.indexing.impl.DebugAssertions;
-import com.intellij.util.indexing.impl.IndexStorage;
-import com.intellij.util.indexing.impl.InputDataDiffBuilder;
-import com.intellij.util.indexing.impl.forward.EmptyForwardIndex;
-import com.intellij.util.io.PersistentHashMapValueStorage;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.ide.impl.idea.util.BitUtil;
+import consulo.ide.impl.idea.util.indexing.*;
+import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
+import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
+import consulo.ide.impl.idea.util.indexing.impl.InputDataDiffBuilder;
+import consulo.ide.impl.idea.util.indexing.impl.forward.EmptyForwardIndex;
+import consulo.ide.impl.idea.util.io.PersistentHashMapValueStorage;
 import consulo.application.ReadAction;
 import consulo.component.ProcessCanceledException;
 import consulo.index.io.ID;

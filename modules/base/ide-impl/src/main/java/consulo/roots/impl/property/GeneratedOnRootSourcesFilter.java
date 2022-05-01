@@ -15,7 +15,7 @@
  */
 package consulo.roots.impl.property;
 
-import com.intellij.ide.projectView.impl.ProjectRootsUtil;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
 import consulo.project.Project;
 import consulo.module.content.layer.ContentFolder;
 import consulo.project.content.GeneratedSourcesFilter;

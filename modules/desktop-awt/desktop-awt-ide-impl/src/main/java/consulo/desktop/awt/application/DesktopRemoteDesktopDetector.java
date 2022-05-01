@@ -70,7 +70,7 @@ public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
           myRemoteDesktopConnected = newValue;
           if (myRemoteDesktopConnected) {
             // We postpone notification to avoid recursive initialization of RemoteDesktopDetector
-            // (in case it's initialized by request from com.intellij.notification.EventLog)
+            // (in case it's initialized by request from consulo.ide.impl.idea.notification.EventLog)
             ApplicationManager.getApplication().invokeLater(() -> Notifications.Bus
                     .notify(NOTIFICATION_GROUP.createNotification(ApplicationBundle.message("remote.desktop.detected.message"), NotificationType.INFORMATION)
                                     .setTitle(ApplicationBundle.message("remote.desktop.detected.title"))));

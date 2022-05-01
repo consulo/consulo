@@ -150,7 +150,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   /**
    * Gets the path of this file. Path is a string which uniquely identifies file within given
    * <code>{@link VirtualFileSystem}</code>. Format of the path depends on the concrete file system.
-   * For <code>{@link com.intellij.openapi.vfs.LocalFileSystem}</code> it is an absolute file path with file separator characters
+   * For <code>{@link consulo.ide.impl.idea.openapi.vfs.LocalFileSystem}</code> it is an absolute file path with file separator characters
    * (File.separatorChar) replaced to the forward slash ('/').
    *
    * @return the path
@@ -350,7 +350,7 @@ public abstract class VirtualFile extends UserDataHolderBase implements Modifica
   /**
    * @return the {@link FileType} of this file.
    * When IDEA has no idea what the file type is (i.e. file type is not registered via {@link FileTypeRegistry}),
-   * it returns {@link com.intellij.openapi.fileTypes.FileTypes#UNKNOWN}
+   * it returns {@link consulo.ide.impl.idea.openapi.fileTypes.FileTypes#UNKNOWN}
    */
   @SuppressWarnings("JavadocReference")
   @Nonnull

@@ -25,8 +25,8 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.JBList;
-import com.intellij.util.Function;
-import com.intellij.util.IconUtil;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.IconUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
 import javax.annotation.Nullable;

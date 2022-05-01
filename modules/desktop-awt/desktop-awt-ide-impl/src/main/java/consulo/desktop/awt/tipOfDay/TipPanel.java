@@ -15,16 +15,16 @@
  */
 package consulo.desktop.awt.tipOfDay;
 
-import com.intellij.ide.GeneralSettings;
+import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.ide.IdeBundle;
-import com.intellij.ide.util.TipAndTrickBean;
-import com.intellij.ide.util.TipUIUtil;
+import consulo.ide.impl.idea.ide.util.TipAndTrickBean;
+import consulo.ide.impl.idea.ide.util.TipUIUtil;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.JBLabel;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.JBDimension;
 
 import javax.swing.*;

@@ -127,7 +127,7 @@ public interface PsiReference {
   @Nonnull
   @RequiredReadAction
   @Deprecated
-  @DeprecationInfo(value = "Use com.intellij.codeInsight.completion.CompletionContributor")
+  @DeprecationInfo(value = "Use consulo.ide.impl.idea.codeInsight.completion.CompletionContributor")
   default Object[] getVariants() {
     return ArrayUtil.EMPTY_OBJECT_ARRAY;
   }

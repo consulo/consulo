@@ -16,7 +16,7 @@
 package consulo.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
-import com.intellij.openapi.options.ex.ConfigurableWrapper;
+import consulo.ide.impl.idea.openapi.options.ex.ConfigurableWrapper;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;

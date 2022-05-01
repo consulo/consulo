@@ -16,10 +16,10 @@
 package consulo.ide.impl;
 
 import consulo.module.content.layer.ModifiableRootModel;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.io.ZipUtil;
+import consulo.ide.impl.idea.util.io.ZipUtil;
 import consulo.ide.newProject.NewModuleBuilderProcessor;
 import consulo.ide.wizard.newModule.NewModuleWizardContext;
 import consulo.logging.Logger;

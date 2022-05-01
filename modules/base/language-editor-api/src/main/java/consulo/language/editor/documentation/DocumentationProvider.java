@@ -15,7 +15,7 @@ import java.util.List;
  * <p>
  * Extend {@link AbstractDocumentationProvider}.
  *
- * @see com.intellij.lang.LanguageDocumentation
+ * @see consulo.ide.impl.idea.lang.LanguageDocumentation
  * @see DocumentationProviderEx
  * @see ExternalDocumentationProvider
  * @see ExternalDocumentationHandler
@@ -23,7 +23,7 @@ import java.util.List;
 public interface DocumentationProvider {
 
   /**
-   * Please use {@link com.intellij.lang.LanguageDocumentation} instead of this for language-specific documentation
+   * Please use {@link consulo.ide.impl.idea.lang.LanguageDocumentation} instead of this for language-specific documentation
    */
   ExtensionPointName<DocumentationProvider> EP_NAME = ExtensionPointName.create("consulo.documentationProvider");
 

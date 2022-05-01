@@ -16,12 +16,12 @@
 package consulo.desktop.awt.startup;
 
 import com.google.gson.Gson;
-import com.intellij.ide.*;
-import com.intellij.internal.statistic.UsageTrigger;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.openapi.wm.impl.SystemDock;
-import com.intellij.openapi.wm.impl.X11UiUtil;
-import com.intellij.ui.AppUIUtil;
+import consulo.ide.impl.idea.ide.*;
+import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
+import consulo.ide.impl.idea.openapi.wm.impl.X11UiUtil;
+import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.IdeaModalityState;

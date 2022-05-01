@@ -15,7 +15,7 @@
  */
 package consulo.options.impl;
 
-import com.intellij.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.DefaultSdksModel;
 import consulo.configurable.Configurable;
 import consulo.configurable.UnnamedConfigurable;
 import consulo.ide.setting.bundle.SettingsSdksModel;

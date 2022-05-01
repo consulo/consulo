@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl;
 
 import consulo.application.util.TypePresentationService;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.pom.PomDescriptionProvider;
 import consulo.language.pom.PomNamedTarget;
 import consulo.language.pom.PomTarget;

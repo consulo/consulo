@@ -32,7 +32,7 @@ import consulo.language.codeStyle.DocumentBasedFormattingModel;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.psi.*;
 
 import javax.annotation.Nonnull;

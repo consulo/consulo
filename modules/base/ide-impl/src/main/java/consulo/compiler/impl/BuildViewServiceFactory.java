@@ -15,7 +15,7 @@
  */
 package consulo.compiler.impl;
 
-import com.intellij.compiler.progress.BuildViewService;
+import consulo.ide.impl.idea.compiler.progress.BuildViewService;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;

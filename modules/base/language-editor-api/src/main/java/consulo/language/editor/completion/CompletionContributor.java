@@ -67,7 +67,7 @@ import java.util.Set;
  * Q: What does the {@link CompletionParameters#getPosition()} return?<br>
  * A: When completion is invoked, the file being edited is first copied (the original file can be accessed from {@link PsiFile#getOriginalFile()}
  * and {@link CompletionParameters#getOriginalFile()}. Then a special 'dummy identifier' string is inserted to the copied file at caret offset (removing the selection).
- * Most often this string is an identifier (see {@link com.intellij.codeInsight.completion.CompletionInitializationContext#DUMMY_IDENTIFIER}).
+ * Most often this string is an identifier (see {@link consulo.ide.impl.idea.codeInsight.completion.CompletionInitializationContext#DUMMY_IDENTIFIER}).
  * This is usually done to guarantee that there'll always be some non-empty element there, which will be easy to describe via {@link ElementPattern}s.
  * Also a reference can suddenly appear in that position, which will certainly help invoking its {@link PsiReference#getVariants()}.
  * Dummy identifier string can be easily changed in {@link #beforeCompletion(CompletionInitializationContext)} method.<p>
@@ -76,10 +76,10 @@ import java.util.Set;
  * A: When you return variants from reference ({@link PsiReference#getVariants()}), the filtering will be done
  * automatically, with prefix taken as the reference text from its start ({@link PsiReference#getRangeInElement()}) to
  * the caret position.
- * In {@link CompletionContributor} you will be given a {@link com.intellij.codeInsight.completion.CompletionResultSet}
+ * In {@link CompletionContributor} you will be given a {@link consulo.ide.impl.idea.codeInsight.completion.CompletionResultSet}
  * which will match {@link LookupElement}s against its prefix matcher {@link CompletionResultSet#getPrefixMatcher()}.
  * If the default prefix calculated by IntelliJ IDEA doesn't satisfy you, you can obtain another result set via
- * {@link com.intellij.codeInsight.completion.CompletionResultSet#withPrefixMatcher(PrefixMatcher)} and feed your lookup elements to the latter.
+ * {@link consulo.ide.impl.idea.codeInsight.completion.CompletionResultSet#withPrefixMatcher(PrefixMatcher)} and feed your lookup elements to the latter.
  * It's one of the item's lookup strings ({@link LookupElement#getAllLookupStrings()} that is matched against prefix matcher.<p>
  * <p>
  * Q: How do I plug into those funny texts below the items in shown lookup?<br>
@@ -98,13 +98,13 @@ import java.util.Set;
  * Q: What if I select item with a Tab key?<br>
  * A: Semantics is, that the identifier that you're standing inside gets removed completely, and then the lookup string is inserted. You can change
  * the deleting range end offset, do it in {@link CompletionContributor#beforeCompletion(CompletionInitializationContext)}
- * by putting new offset to {@link CompletionInitializationContext#getOffsetMap()} as {@link com.intellij.codeInsight.completion.CompletionInitializationContext#IDENTIFIER_END_OFFSET}.<p>
+ * by putting new offset to {@link CompletionInitializationContext#getOffsetMap()} as {@link consulo.ide.impl.idea.codeInsight.completion.CompletionInitializationContext#IDENTIFIER_END_OFFSET}.<p>
  * <p>
  * Q: I know about my environment more than IDEA does, and I can swear that those 239 variants that IDEA suggest me in some place aren't all that relevant,
  * so I'd be happy to filter out 42 of them. How do I do this?<br>
  * A: This is a bit harder than just adding variants. First, you should invoke
- * {@link com.intellij.codeInsight.completion.CompletionResultSet#runRemainingContributors(CompletionParameters, com.intellij.util.Consumer)}.
- * The consumer you provide should pass all the lookup elements to the {@link com.intellij.codeInsight.completion.CompletionResultSet}
+ * {@link consulo.ide.impl.idea.codeInsight.completion.CompletionResultSet#runRemainingContributors(CompletionParameters, consulo.ide.impl.idea.util.Consumer)}.
+ * The consumer you provide should pass all the lookup elements to the {@link consulo.ide.impl.idea.codeInsight.completion.CompletionResultSet}
  * given to you, except for the ones you wish to filter out. Be careful: it's too easy to break completion this way. Since you've
  * ordered to invoke remaining contributors yourself, they won't be invoked automatically after yours finishes (see
  * {@link CompletionResultSet#stopHere()} and {@link CompletionResultSet#isStopped()}).
@@ -126,7 +126,7 @@ import java.util.Set;
  * is the 'final' consumer, it will pass your lookup elements directly to the lookup.<br>
  * If your contributor isn't even invoked, probably there was another contributor that said 'stop' to the system, and yours happened to be ordered after
  * that contributor. To test this hypothesis, put a breakpoint to
- * {@link CompletionService#getVariantsFromContributors(CompletionParameters, CompletionContributor, com.intellij.util.Consumer)},
+ * {@link CompletionService#getVariantsFromContributors(CompletionParameters, CompletionContributor, consulo.ide.impl.idea.util.Consumer)},
  * to the 'return false' line.<p>
  *
  * @author peter
@@ -187,7 +187,7 @@ public abstract class CompletionContributor {
   /**
    * @param parameters
    * @return text to be shown at the bottom of lookup list
-   * @deprecated use {@link com.intellij.codeInsight.completion.CompletionResultSet#addLookupAdvertisement(String)}
+   * @deprecated use {@link consulo.ide.impl.idea.codeInsight.completion.CompletionResultSet#addLookupAdvertisement(String)}
    */
   @Nullable
   public String advertise(@Nonnull CompletionParameters parameters) {
@@ -221,7 +221,7 @@ public abstract class CompletionContributor {
 
   /**
    * Invoked in a read action in parallel to the completion process. Used to calculate the replacement offset
-   * (see {@link com.intellij.codeInsight.completion.CompletionInitializationContext#setReplacementOffset(int)})
+   * (see {@link consulo.ide.impl.idea.codeInsight.completion.CompletionInitializationContext#setReplacementOffset(int)})
    * if it takes too much time to spend it in {@link #beforeCompletion(CompletionInitializationContext)},
    * e.g. doing {@link PsiFile#findReferenceAt(int)}
    * <p>

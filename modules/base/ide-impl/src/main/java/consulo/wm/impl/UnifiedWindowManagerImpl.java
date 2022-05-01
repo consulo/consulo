@@ -17,7 +17,7 @@ package consulo.wm.impl;
 
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeFrame;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.Window;
 
 import javax.annotation.Nonnull;

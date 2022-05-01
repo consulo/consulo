@@ -2,10 +2,10 @@
 package consulo.desktop.awt.wm.impl.content;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.disposer.Disposer;
-import com.intellij.reference.SoftReference;
-import com.intellij.ui.content.TabbedContent;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.ui.content.TabbedContent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;

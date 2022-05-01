@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl.welcomeScreen;
 
-import com.intellij.ide.BrowserUtil;
+import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.annotation.RequiredUIAccess;

@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.psi.search;
 
-import com.intellij.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.index.io.DataIndexer;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;

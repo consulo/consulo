@@ -15,7 +15,7 @@
  */
 package consulo.desktop.swt.ui.impl.image;
 
-import com.intellij.util.io.UnsyncByteArrayInputStream;
+import consulo.ide.impl.idea.util.io.UnsyncByteArrayInputStream;
 import consulo.ui.image.Image;
 import consulo.ui.impl.image.BaseIconLibraryImpl;
 import consulo.ui.impl.image.BaseIconLibraryManager;

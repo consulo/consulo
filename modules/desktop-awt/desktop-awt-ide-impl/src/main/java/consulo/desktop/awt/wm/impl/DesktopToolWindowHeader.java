@@ -16,8 +16,8 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.impl.ActionManagerImpl;
-import com.intellij.openapi.actionSystem.impl.MenuItemPresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.MenuItemPresentationFactory;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ui.ex.awt.VerticalFlowLayout;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -25,10 +25,10 @@ import consulo.desktop.awt.wm.impl.content.DesktopToolWindowContentUi;
 import consulo.ui.ex.awt.event.DoubleClickListener;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.UIBundle;
-import com.intellij.ui.components.panels.HorizontalLayout;
+import consulo.ide.impl.idea.ui.components.panels.HorizontalLayout;
 import consulo.ui.ex.awt.NonOpaquePanel;
-import com.intellij.ui.tabs.TabsUtil;
-import com.intellij.util.NotNullProducer;
+import consulo.ide.impl.idea.ui.tabs.TabsUtil;
+import consulo.ide.impl.idea.util.NotNullProducer;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.MorphColor;

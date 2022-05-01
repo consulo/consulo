@@ -16,8 +16,8 @@
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.options.ExternalInfo;
-import com.intellij.openapi.options.ExternalizableScheme;
+import consulo.ide.impl.idea.openapi.options.ExternalInfo;
+import consulo.ide.impl.idea.openapi.options.ExternalizableScheme;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;

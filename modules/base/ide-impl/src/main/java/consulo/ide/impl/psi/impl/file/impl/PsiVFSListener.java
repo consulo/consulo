@@ -3,14 +3,14 @@ package consulo.ide.impl.psi.impl.file.impl;
 
 import consulo.ide.impl.AppTopics;
 import consulo.document.event.FileDocumentManagerListener;
-import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.language.file.FileTypeManager;
-import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdater;
-import com.intellij.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
+import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
+import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
 import consulo.language.psi.internal.ExternalChangeAction;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.component.messagebus.MessageBusConnection;

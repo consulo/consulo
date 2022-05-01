@@ -39,7 +39,7 @@ public abstract class ExpirableConstrainedExecution<E extends ConstrainedExecuti
    * Wraps an expirable context constraint so that the [schedule] method guarantees to execute runnables, regardless the [expiration] state.
    * <p>
    * This is used in combination with execution services that might refuse to run a submitted task due to disposal of an associated
-   * Disposable. For example, the DumbService used in [com.intellij.openapi.application.AppUIExecutor.inSmartMode] doesn't run any task once
+   * Disposable. For example, the DumbService used in [consulo.ide.impl.idea.openapi.application.AppUIExecutor.inSmartMode] doesn't run any task once
    * the project is closed. The [ExpirableContextConstraint] workarounds that limitation, ensuring that even if the corresponding disposable
    * is expired, the task runs eventually, which in turn is crucial for Kotlin Coroutines to work properly.
    */

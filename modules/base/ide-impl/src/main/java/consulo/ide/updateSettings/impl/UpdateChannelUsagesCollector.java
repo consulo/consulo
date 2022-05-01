@@ -1,8 +1,8 @@
 package consulo.ide.updateSettings.impl;
 
-import com.intellij.internal.statistic.CollectUsagesException;
-import com.intellij.internal.statistic.UsagesCollector;
-import com.intellij.internal.statistic.beans.UsageDescriptor;
+import consulo.ide.impl.idea.internal.statistic.CollectUsagesException;
+import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
+import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
 import consulo.project.Project;
 import consulo.ide.updateSettings.UpdateChannel;
 import consulo.ide.updateSettings.UpdateSettings;

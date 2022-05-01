@@ -51,7 +51,7 @@ public interface ModuleRootLayer {
    * lexicographical order of their paths.
    *
    * @return list of content entries for this module
-   * @see com.intellij.openapi.roots.ContentEntry
+   * @see consulo.ide.impl.idea.openapi.roots.ContentEntry
    */
   ContentEntry[] getContentEntries();
 
@@ -175,15 +175,15 @@ public interface ModuleRootLayer {
    * @param policy       the visitor to accept.
    * @param initialValue the default value to be returned by the visit process.
    * @return the value returned by the visitor.
-   * @see OrderEntry#accept(com.intellij.openapi.roots.RootPolicy, Object)
+   * @see OrderEntry#accept(consulo.ide.impl.idea.openapi.roots.RootPolicy, Object)
    */
   <R> R processOrder(RootPolicy<R> policy, R initialValue);
 
   /**
-   * Returns {@link com.intellij.openapi.roots.OrderEnumerator} instance which can be used to process order entries of the module (with or without dependencies) and
+   * Returns {@link consulo.ide.impl.idea.openapi.roots.OrderEnumerator} instance which can be used to process order entries of the module (with or without dependencies) and
    * collect classes or source roots
    *
-   * @return {@link com.intellij.openapi.roots.OrderEnumerator} instance
+   * @return {@link consulo.ide.impl.idea.openapi.roots.OrderEnumerator} instance
    * @since 10.0
    */
   @Nonnull

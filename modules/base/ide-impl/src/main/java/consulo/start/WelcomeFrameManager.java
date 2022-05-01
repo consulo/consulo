@@ -26,7 +26,7 @@ import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.UIAccess;
 import consulo.ui.Size;

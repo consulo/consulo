@@ -16,7 +16,7 @@
 package consulo.util.nodep.text;
 
 /**
- * Stripped-down version of {@code com.intellij.openapi.util.text.StringUtil}.
+ * Stripped-down version of {@code consulo.ide.impl.idea.openapi.util.text.StringUtil}.
  * Intended to use by external (out-of-IDE-process) runners and helpers so it should not contain any library dependencies.
  *
  * @since 12.0

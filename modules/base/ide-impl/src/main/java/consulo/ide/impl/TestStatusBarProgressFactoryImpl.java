@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl;
 
-import com.intellij.openapi.progress.util.StatusBarProgress;
+import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
 import consulo.application.progress.ProgressIndicator;
 import consulo.execution.test.internal.TestStatusBarProgressFactory;
 import jakarta.inject.Singleton;

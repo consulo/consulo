@@ -15,11 +15,11 @@
  */
 package consulo.desktop.awt.data.impl;
 
-import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.ProhibitAWTEvents;
-import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
-import com.intellij.openapi.keymap.impl.IdeKeyEventDispatcher;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
+import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.ide.impl.idea.openapi.keymap.impl.IdeKeyEventDispatcher;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.application.AccessToken;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.FocusableFrame;

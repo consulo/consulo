@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.intellij.ui.tabs.TabInfo;
+import consulo.ide.impl.idea.ui.tabs.TabInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Component;

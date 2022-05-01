@@ -4,7 +4,7 @@ package consulo.ide.impl.psi.search;
 import consulo.language.editor.scratch.RootType;
 import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.module.content.DirectoryInfo;
-import com.intellij.openapi.roots.impl.ProjectFileIndexImpl;
+import consulo.ide.impl.idea.openapi.roots.impl.ProjectFileIndexImpl;
 import consulo.language.content.FileIndexFacade;
 import consulo.language.psi.PsiBundle;
 import consulo.language.psi.scope.GlobalSearchScope;

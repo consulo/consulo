@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.container.impl;
 
-import com.intellij.ide.plugins.PluginManager;
-import com.intellij.ide.startup.StartupActionScriptManager;
+import consulo.ide.impl.idea.ide.plugins.PluginManager;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.application.impl.internal.start.ApplicationStarter;
 import consulo.application.impl.internal.start.StartupAbortedException;
 import consulo.desktop.startup.DesktopImportantFolderLocker;

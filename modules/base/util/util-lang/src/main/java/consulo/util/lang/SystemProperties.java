@@ -80,7 +80,7 @@ public class SystemProperties {
 
   /**
    * Returns the value of the java.version system property. If you need to compare java version with some value use
-   * {@link com.intellij.openapi.util.SystemInfo#isJavaVersionAtLeast(int, int, int)} instead
+   * {@link consulo.ide.impl.idea.openapi.util.SystemInfo#isJavaVersionAtLeast(int, int, int)} instead
    *
    * @return the property value
    */

@@ -28,7 +28,7 @@ import consulo.content.ContentIterator;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;

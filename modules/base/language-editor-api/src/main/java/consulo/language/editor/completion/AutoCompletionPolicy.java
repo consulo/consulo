@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
  * What to do if there's only one element in completion lookup? Should IDEA show lookup or just insert this element? Call
  * {@link #applyPolicy(LookupElement)} to decorate {@link LookupElement} with correct policy.
  *
- * Use this only in simple cases, use {@link CompletionContributor#handleAutoCompletionPossibility(com.intellij.codeInsight.completion.AutoCompletionContext)}
+ * Use this only in simple cases, use {@link CompletionContributor#handleAutoCompletionPossibility(consulo.ide.impl.idea.codeInsight.completion.AutoCompletionContext)}
  * for finer tuning.
  *
  * @author peter

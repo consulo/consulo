@@ -1,12 +1,12 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.language.editor.rawHighlight;
 
-import com.intellij.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection;
-import com.intellij.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import com.intellij.codeInspection.CustomSuppressableInspectionTool;
-import com.intellij.codeInspection.ex.GlobalInspectionToolWrapper;
-import com.intellij.profile.codeInspection.InspectionProjectProfileManager;
-import com.intellij.xml.util.XmlStringUtil;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultHighlightVisitorBasedInspection;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.ide.impl.idea.codeInspection.CustomSuppressableInspectionTool;
+import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionToolWrapper;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.Editor;

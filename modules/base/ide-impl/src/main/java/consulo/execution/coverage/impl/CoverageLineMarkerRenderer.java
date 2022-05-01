@@ -16,19 +16,19 @@
 
 package consulo.execution.coverage.impl;
 
-import com.intellij.application.options.colors.ColorAndFontOptions;
-import com.intellij.application.options.colors.ColorAndFontPanelFactory;
-import com.intellij.application.options.colors.NewColorAndFontPanel;
-import com.intellij.application.options.colors.SimpleEditorPreview;
-import com.intellij.codeInsight.hint.EditorFragmentComponent;
-import com.intellij.codeInsight.hint.HintManagerImpl;
-import com.intellij.coverage.actions.ShowCoveringTestsAction;
-import com.intellij.openapi.options.colors.pages.GeneralColorsPage;
+import consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions;
+import consulo.ide.impl.idea.application.options.colors.ColorAndFontPanelFactory;
+import consulo.ide.impl.idea.application.options.colors.NewColorAndFontPanel;
+import consulo.ide.impl.idea.application.options.colors.SimpleEditorPreview;
+import consulo.ide.impl.idea.codeInsight.hint.EditorFragmentComponent;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.coverage.actions.ShowCoveringTestsAction;
+import consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import consulo.ui.ex.awt.ColoredSideBorder;
 import consulo.ui.ex.awt.HintHint;
-import com.intellij.ui.LightweightHint;
+import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.application.AllIcons;
 import consulo.codeEditor.*;
 import consulo.codeEditor.markup.ActiveGutterRenderer;

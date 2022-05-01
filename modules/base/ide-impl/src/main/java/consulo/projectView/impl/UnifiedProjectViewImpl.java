@@ -16,10 +16,10 @@
 package consulo.projectView.impl;
 
 import consulo.ide.IdeBundle;
-import com.intellij.ide.SelectInTarget;
-import com.intellij.ide.projectView.HelpID;
-import com.intellij.ide.projectView.impl.*;
-import com.intellij.ide.projectView.impl.nodes.*;
+import consulo.ide.impl.idea.ide.SelectInTarget;
+import consulo.ide.impl.idea.ide.projectView.HelpID;
+import consulo.ide.impl.idea.ide.projectView.impl.*;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.tree.NodeDescriptor;
 import consulo.language.editor.CommonDataKeys;

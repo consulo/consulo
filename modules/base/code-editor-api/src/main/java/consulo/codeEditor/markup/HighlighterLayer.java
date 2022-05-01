@@ -27,7 +27,7 @@ public interface HighlighterLayer {
 
   /**
    * The default layer for console filters highlighters
-   * Ref: com.intellij.execution.filters.Filter
+   * Ref: consulo.ide.impl.idea.execution.filters.Filter
    * */
   int CONSOLE_FILTER = 5800;
 

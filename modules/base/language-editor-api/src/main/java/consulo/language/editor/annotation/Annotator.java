@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * If you absolutely must, clear the state upon exit from the {@link #annotate(PsiElement, AnnotationHolder)} method.
  *
  * @author max
- * @see com.intellij.lang.LanguageAnnotators
+ * @see consulo.ide.impl.idea.lang.LanguageAnnotators
  */
 public interface Annotator {
   /**

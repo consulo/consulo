@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * the standard implementation of this interface - {@link TreeBasedStructureViewBuilder} -
  * should be used.
  *
- * @see com.intellij.lang.LanguageStructureViewBuilder#getStructureViewBuilder(PsiFile)
+ * @see consulo.ide.impl.idea.lang.LanguageStructureViewBuilder#getStructureViewBuilder(PsiFile)
  */
 
 public interface StructureViewBuilder {

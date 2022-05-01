@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import com.intellij.ide.startup.StartupActionScriptManager;
-import com.intellij.ui.JBCardLayout;
+import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
+import consulo.ide.impl.idea.ui.JBCardLayout;
 import consulo.application.Application;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.container.plugin.PluginDescriptor;

@@ -12,7 +12,7 @@ import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
-import com.intellij.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.language.util.IncorrectOperationException;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.logging.Logger;

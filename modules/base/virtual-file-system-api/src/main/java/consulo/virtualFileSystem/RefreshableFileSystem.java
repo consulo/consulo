@@ -19,7 +19,7 @@ package consulo.virtualFileSystem;
  * @author VISTALL
  * @since 2018-08-19
  *
- * Marker for file system, which need refresh by methods com.intellij.openapi.vfs.VirtualFileManager#syncRefresh()
+ * Marker for file system, which need refresh by methods consulo.ide.impl.idea.openapi.vfs.VirtualFileManager#syncRefresh()
  */
 public interface RefreshableFileSystem {
 }

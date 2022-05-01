@@ -46,7 +46,7 @@ public class OSProcessHandler extends BaseOSProcessHandler {
   private Set<File> myFilesToDelete = null;
 
   @Deprecated
-  @DeprecationInfo("Use com.intellij.execution.process.ProcessHandlerFactory")
+  @DeprecationInfo("Use consulo.ide.impl.idea.execution.process.ProcessHandlerFactory")
   public OSProcessHandler(@Nonnull GeneralCommandLine commandLine) throws ExecutionException {
     this(startProcess(commandLine), commandLine.getCommandLineString(), commandLine.getCharset());
     myHasErrorStream = !commandLine.isRedirectErrorStream();

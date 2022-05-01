@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal;
 
-import com.intellij.util.EventDispatcher;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.Component;
 import consulo.disposer.Disposable;

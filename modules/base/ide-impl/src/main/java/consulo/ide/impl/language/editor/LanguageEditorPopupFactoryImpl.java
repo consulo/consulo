@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.language.editor;
 
-import com.intellij.find.FindUtil;
-import com.intellij.ide.PsiCopyPasteManager;
-import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.ui.popup.list.ListPopupImpl;
-import com.intellij.ui.popup.list.PopupListElementRenderer;
+import consulo.ide.impl.idea.find.FindUtil;
+import consulo.ide.impl.idea.ide.PsiCopyPasteManager;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.ui.popup.list.ListPopupImpl;
+import consulo.ide.impl.idea.ui.popup.list.PopupListElementRenderer;
 import consulo.ide.ui.impl.PopupChooserBuilder;
 import consulo.language.editor.ui.DefaultPsiElementCellRenderer;
 import consulo.language.editor.ui.PsiElementListCellRenderer;

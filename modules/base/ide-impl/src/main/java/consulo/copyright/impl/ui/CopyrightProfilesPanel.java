@@ -17,7 +17,7 @@
 package consulo.copyright.impl.ui;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.actions.OpenProjectFileChooserDescriptor;
+import consulo.ide.impl.idea.ide.actions.OpenProjectFileChooserDescriptor;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
@@ -36,9 +36,9 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.util.lang.function.Conditions;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.util.IconUtil;
+import consulo.ide.impl.idea.util.IconUtil;
 import consulo.copyright.impl.CopyrightManager;
 import consulo.copyright.impl.CopyrightProfile;
 import consulo.copyright.impl.options.ExternalOptionHelper;

@@ -2,9 +2,9 @@
 package consulo.ide.impl;
 
 import consulo.project.Project;
-import com.intellij.openapi.roots.impl.FilePropertyPusher;
+import consulo.ide.impl.idea.openapi.roots.impl.FilePropertyPusher;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.newvfs.FileAttribute;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
 import consulo.index.io.data.DataInputOutputUtil;
 import javax.annotation.Nonnull;
 

@@ -406,7 +406,7 @@ public abstract class SoftWrapApplianceManager implements Dumpable {
     int placeholderWidthInPixels = 0;
     for (int i = 0; i < placeholder.length(); i++) {
       char c = placeholder.charAt(i);
-      if (c == '\n') c = ' '; // we display \n as space (see com.intellij.openapi.editor.impl.view.EditorView.getFoldRegionLayout)
+      if (c == '\n') c = ' '; // we display \n as space (see consulo.ide.impl.idea.openapi.editor.impl.view.EditorView.getFoldRegionLayout)
       placeholderWidthInPixels += CodeEditorSoftWrapModelBase.getEditorTextRepresentationHelper(myEditor).charWidth(c, myContext.fontType);
     }
 

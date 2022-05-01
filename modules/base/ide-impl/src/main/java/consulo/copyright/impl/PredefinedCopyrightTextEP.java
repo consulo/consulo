@@ -18,8 +18,8 @@ package consulo.copyright.impl;
 import consulo.logging.Logger;
 import consulo.component.extension.AbstractExtensionPointBean;
 import consulo.component.extension.ExtensionPointName;
-import com.intellij.openapi.util.NotNullLazyValue;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import javax.annotation.Nonnull;
 

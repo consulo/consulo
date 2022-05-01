@@ -29,7 +29,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * Use {@code com.intellij.execution.process.OSProcessUtil} wherever possible.
+ * Use {@code consulo.ide.impl.idea.execution.process.OSProcessUtil} wherever possible.
  *
  * @author traff
  */

@@ -1,8 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.search;
 
-import com.intellij.ide.favoritesTreeView.FavoritesManager;
-import com.intellij.ide.projectView.impl.AbstractUrl;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ide.projectView.impl.AbstractUrl;
 import consulo.component.util.WeighedItem;
 import consulo.application.ReadAction;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
@@ -13,12 +13,12 @@ import consulo.content.scope.SearchScopeProvider;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.application.util.ColoredItem;
-import com.intellij.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import com.intellij.ui.FileColorManager;
-import com.intellij.util.TreeItem;
+import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.ide.impl.idea.util.TreeItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

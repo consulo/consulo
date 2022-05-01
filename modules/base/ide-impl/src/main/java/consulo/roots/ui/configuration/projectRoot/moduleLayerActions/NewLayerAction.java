@@ -19,10 +19,10 @@ import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.module.content.layer.ModifiableRootModel;
-import com.intellij.openapi.roots.ui.configuration.ModuleEditor;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleEditor;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
 

@@ -15,11 +15,11 @@
  */
 package consulo.components.impl.stores;
 
-import com.intellij.openapi.components.impl.ProjectPathMacroManager;
-import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.ide.impl.idea.openapi.project.impl.ProjectImpl;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

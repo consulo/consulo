@@ -20,7 +20,7 @@ import consulo.compiler.artifact.ArtifactType;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementOutputKind;
-import com.intellij.packaging.impl.artifacts.ArtifactUtil;
+import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
 import consulo.packaging.impl.elements.ZipArchivePackagingElement;
 import consulo.ui.image.Image;
 

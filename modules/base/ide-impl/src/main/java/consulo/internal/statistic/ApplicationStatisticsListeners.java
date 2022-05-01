@@ -15,9 +15,9 @@
  */
 package consulo.internal.statistic;
 
-import com.intellij.ide.AppLifecycleListener;
-import com.intellij.internal.statistic.AbstractApplicationUsagesCollector;
-import com.intellij.internal.statistic.UsagesCollector;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.internal.statistic.AbstractApplicationUsagesCollector;
+import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.project.DumbService;

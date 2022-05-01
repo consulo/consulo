@@ -19,7 +19,7 @@ import consulo.language.psi.PsiFile;
 /**
  * Contains fields which are left for compatibility with earlier versions. These fields shouldn't be used anymore. Every language must have
  * its own settings which can be retrieved using {@link CodeStyleSettings#getCommonSettings(Language)} or
- * {@link com.intellij.application.options.CodeStyle#getLanguageSettings(PsiFile)}.
+ * {@link consulo.ide.impl.idea.application.options.CodeStyle#getLanguageSettings(PsiFile)}.
  *
  * @see LanguageCodeStyleSettingsProvider
  */

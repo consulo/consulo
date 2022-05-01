@@ -16,12 +16,12 @@
 package consulo.desktop.swt.wm.impl;
 
 import consulo.component.persist.StoragePathMacros;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
-import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import com.intellij.openapi.wm.impl.WindowInfoImpl;
+import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.RoamingType;

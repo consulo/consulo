@@ -16,9 +16,9 @@
 
 package consulo.compiler.impl;
 
-import com.intellij.openapi.util.Pair;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.graph.GraphAlgorithms;
+import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.graph.GraphAlgorithms;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

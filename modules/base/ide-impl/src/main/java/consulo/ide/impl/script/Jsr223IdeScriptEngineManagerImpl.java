@@ -16,9 +16,9 @@
 package consulo.ide.impl.script;
 
 import consulo.util.lang.ClassLoaderUtil;
-import com.intellij.util.Function;
-import com.intellij.util.ObjectUtils;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.container.plugin.PluginDescriptor;

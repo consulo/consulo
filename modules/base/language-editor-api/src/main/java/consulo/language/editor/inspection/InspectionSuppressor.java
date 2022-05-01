@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 
 public interface InspectionSuppressor {
   /**
-   * @see com.intellij.codeInspection.CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
+   * @see consulo.ide.impl.idea.codeInspection.CustomSuppressableInspectionTool#isSuppressedFor(PsiElement)
    */
   boolean isSuppressedFor(@Nonnull PsiElement element, String toolId);
 

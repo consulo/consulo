@@ -1,11 +1,11 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.awt.data.impl;
 
-import com.intellij.ide.ProhibitAWTEvents;
-import com.intellij.openapi.actionSystem.BackgroundableDataProvider;
-import com.intellij.openapi.actionSystem.impl.ActionUpdateEdtExecutor;
-import com.intellij.reference.SoftReference;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
+import consulo.ide.impl.idea.openapi.actionSystem.BackgroundableDataProvider;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionUpdateEdtExecutor;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.AccessToken;
 import consulo.application.ApplicationManager;
 import consulo.application.util.ConcurrentFactoryMap;

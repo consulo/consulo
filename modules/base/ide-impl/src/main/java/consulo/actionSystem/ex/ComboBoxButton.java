@@ -15,7 +15,7 @@
  */
 package consulo.actionSystem.ex;
 
-import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -36,7 +36,7 @@ public class TestDiffRequestProcessor {
     SimpleDiffRequestChain chain = SimpleDiffRequestChain.fromProducers(producers.getList(), producers.getSelectedIndex());
     chain.putUserData(DiffUserDataKeys.PLACE, DiffPlaces.TESTS_FAILED_ASSERTIONS);
     chain.putUserData(DiffUserDataKeys.DO_NOT_IGNORE_WHITESPACES, true);
-    chain.putUserData(DiffUserDataKeys.DIALOG_GROUP_KEY, "#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog");  // NON-NLS
+    chain.putUserData(DiffUserDataKeys.DIALOG_GROUP_KEY, "#consulo.ide.impl.idea.execution.junit2.states.ComparisonFailureState$DiffDialog");  // NON-NLS
     return chain;
   }
 

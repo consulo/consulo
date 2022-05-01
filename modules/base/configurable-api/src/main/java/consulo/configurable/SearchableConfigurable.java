@@ -42,7 +42,7 @@ public interface SearchableConfigurable extends Configurable {
    * It often happens that the configurable is created based on a provider from an arbitrary extension point.
    * In such a case, the provider's class should be returned from this method.
    * <br/>
-   * When the configurable is based on several providers consider extending {@link com.intellij.openapi.options.CompositeConfigurable}.
+   * When the configurable is based on several providers consider extending {@link consulo.ide.impl.idea.openapi.options.CompositeConfigurable}.
    * <br/>
    * Keep in mind that this method can be expensive as it can load previously unloaded class.
    *

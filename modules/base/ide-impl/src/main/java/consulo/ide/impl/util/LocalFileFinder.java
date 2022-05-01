@@ -4,7 +4,7 @@ package consulo.ide.impl.util;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 

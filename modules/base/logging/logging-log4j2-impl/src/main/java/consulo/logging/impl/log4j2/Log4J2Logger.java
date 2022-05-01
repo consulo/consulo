@@ -20,7 +20,7 @@ import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.application.util.logging.IdeaLoggingEvent;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginIds;
 import consulo.container.plugin.PluginManager;

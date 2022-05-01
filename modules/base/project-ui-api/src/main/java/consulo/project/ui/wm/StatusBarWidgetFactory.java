@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
  * Extension point for adding user-configurable widgets to the status bar.
  * <p>
  * By default, a widget would be available only in the main IDE, but not in Light Edit.
- * In order to make the widget available in Light Edit, the factory should implement {@link com.intellij.ide.lightEdit.LightEditCompatible}.
+ * In order to make the widget available in Light Edit, the factory should implement {@link consulo.ide.impl.idea.ide.lightEdit.LightEditCompatible}.
  * Prohibiting the widget for the main IDE could be done in the {@link StatusBarWidgetFactory#isAvailable(Project)} method.
  */
 public interface StatusBarWidgetFactory {
@@ -38,7 +38,7 @@ public interface StatusBarWidgetFactory {
   /**
    * Returns availability of widget.
    * <p>
-   * `False` means that IDE won't try to create a widget or will dispose it on {@link com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget} call.
+   * `False` means that IDE won't try to create a widget or will dispose it on {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget} call.
    * <p>
    * E.g. `false` can be returned for
    * <ul>
@@ -47,7 +47,7 @@ public interface StatusBarWidgetFactory {
    * <li>git widget if there are no git repos in a project</li>
    * </ul>
    * <p>
-   * Whenever availability is changed, you need to call {@link com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
+   * Whenever availability is changed, you need to call {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
    * explicitly to get status bar updated.
    */
   boolean isAvailable(@Nonnull Project project);
@@ -60,10 +60,10 @@ public interface StatusBarWidgetFactory {
    * You may need to recreate it if:
    * <ul>
    * <li>its availability has changed. See {@link #isAvailable(Project)}</li>
-   * <li>its visibility has changed. See {@link com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetSettings}</li>
+   * <li>its visibility has changed. See {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetSettings}</li>
    * </ul>
    * <p>
-   * To do this, you need to explicitly invoke {@link com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
+   * To do this, you need to explicitly invoke {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsManager#updateWidget(StatusBarWidgetFactory)}
    * to recreate the widget and re-add it to the status bar.
    */
   @Nonnull
@@ -75,13 +75,13 @@ public interface StatusBarWidgetFactory {
    * @return Returns whether the widget can be enabled on the given status bar right now.
    * Status bar's context menu with enable/disable action depends on the result of this method.
    * <p>
-   * It's better to have this method aligned with {@link com.intellij.openapi.wm.impl.status.EditorBasedStatusBarPopup.WidgetState#HIDDEN},
+   * It's better to have this method aligned with {@link consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedStatusBarPopup.WidgetState#HIDDEN},
    * whenever state is {@code HIDDEN}, this method should return {@code false}.
    * Otherwise, enabling widget via context menu will not have any visual effect.
    * <p>
-   * E.g. {@link com.intellij.openapi.wm.impl.status.EditorBasedWidget} are available if editor is opened in a frame that given status bar is attached to
+   * E.g. {@link consulo.ide.impl.idea.openapi.wm.impl.status.EditorBasedWidget} are available if editor is opened in a frame that given status bar is attached to
    * <p>
-   * For creating editor based widgets see also {@link com.intellij.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory}
+   * For creating editor based widgets see also {@link consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory}
    */
   boolean canBeEnabledOn(@Nonnull StatusBar statusBar);
 

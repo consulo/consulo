@@ -105,7 +105,7 @@ public final class EnvironmentVariablesData {
     Element envsElement = new Element(ENVS);
     if (!myPassParentEnvs) {
       // Avoid writing pass-parent-envs="true" to minimize changes in xml comparing it to xml written by
-      // com.intellij.execution.configuration.EnvironmentVariablesComponent.writeExternal
+      // consulo.ide.impl.idea.execution.configuration.EnvironmentVariablesComponent.writeExternal
       envsElement.setAttribute(PASS_PARENT_ENVS, Boolean.FALSE.toString());
     }
     for (Map.Entry<String, String> entry : myEnvs.entrySet()) {

@@ -15,28 +15,28 @@
  */
 package consulo.desktop.awt.ui.dialog;
 
-import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.impl.TypeSafeDataProviderAdapter;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.impl.internal.LaterInvocator;
-import com.intellij.openapi.command.CommandProcessorEx;
+import consulo.ide.impl.idea.openapi.command.CommandProcessorEx;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.internal.*;
-import com.intellij.openapi.ui.impl.AbstractDialog;
-import com.intellij.openapi.ui.impl.HeadlessDialog;
+import consulo.ide.impl.idea.openapi.ui.impl.AbstractDialog;
+import consulo.ide.impl.idea.openapi.ui.impl.HeadlessDialog;
 import consulo.ui.ex.popup.StackingPopupDispatcher;
 import consulo.application.ui.WindowStateService;
-import com.intellij.openapi.wm.impl.IdeGlassPaneImpl;
-import com.intellij.reference.SoftReference;
+import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
+import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ui.ex.AppIcon;
 import consulo.ui.ex.awt.speedSearch.SpeedSearchBase;
-import com.intellij.ui.components.JBLayeredPane;
+import consulo.ide.impl.idea.ui.components.JBLayeredPane;
 import consulo.ui.ex.awt.IJSwingUtilities;
-import com.intellij.util.ui.OwnerOptional;
+import consulo.ide.impl.idea.util.ui.OwnerOptional;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;

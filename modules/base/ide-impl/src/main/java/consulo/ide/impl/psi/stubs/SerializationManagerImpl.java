@@ -3,7 +3,7 @@ package consulo.ide.impl.psi.stubs;
 
 import consulo.util.lang.ShutDownTracker;
 import consulo.index.io.data.IOUtil;
-import com.intellij.util.io.PersistentStringEnumerator;
+import consulo.ide.impl.idea.util.io.PersistentStringEnumerator;
 import consulo.application.util.function.Computable;
 import consulo.container.boot.ContainerPathManager;
 import consulo.disposer.Disposable;

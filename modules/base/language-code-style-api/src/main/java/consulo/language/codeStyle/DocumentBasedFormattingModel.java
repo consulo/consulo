@@ -112,7 +112,7 @@ public class DocumentBasedFormattingModel implements FormattingModelEx {
     String marker;
 
     // When processing injection in cdata / comment we need not remove start / end markers that present as whitespace during check in
-    // com.intellij.formatting.WhiteSpace and during building formatter model = blocks in e.g. com.intellij.psi.formatter.xml.XmlTagBlock
+    // consulo.ide.impl.idea.formatting.WhiteSpace and during building formatter model = blocks in e.g. com.intellij.psi.formatter.xml.XmlTagBlock
     if ((removesStartMarker = removesPattern(textRange, whiteSpace, marker = "<![CDATA[") || removesPattern(textRange, whiteSpace, marker = "<!--[")) ||
         removesPattern(textRange, whiteSpace, marker = "]]>") ||
         removesPattern(textRange, whiteSpace, marker = "]-->")) {

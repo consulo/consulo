@@ -15,7 +15,7 @@
  */
 package consulo.ui.web.internal;
 
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import com.vaadin.shared.Connector;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HasComponents;

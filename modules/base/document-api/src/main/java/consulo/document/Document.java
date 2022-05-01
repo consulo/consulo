@@ -65,7 +65,7 @@ public interface Document extends UserDataHolder {
 
   /**
    * @return a char sequence representing document content that's guaranteed to be immutable. No read- or write-action is necessary.
-   * @see com.intellij.util.text.ImmutableCharSequence
+   * @see consulo.ide.impl.idea.util.text.ImmutableCharSequence
    */
   @Nonnull
   @Contract(pure = true)
@@ -280,7 +280,7 @@ public interface Document extends UserDataHolder {
    * @return the marker instance.
    * @see #removeGuardedBlock(RangeMarker)
    * @see #startGuardedBlockChecking()
-   * @see com.intellij.openapi.editor.actionSystem.EditorActionManager#setReadonlyFragmentModificationHandler(com.intellij.openapi.editor.actionSystem.ReadonlyFragmentModificationHandler)
+   * @see consulo.ide.impl.idea.openapi.editor.actionSystem.EditorActionManager#setReadonlyFragmentModificationHandler(consulo.ide.impl.idea.openapi.editor.actionSystem.ReadonlyFragmentModificationHandler)
    */
   @Nonnull
   RangeMarker createGuardedBlock(int startOffset, int endOffset);
@@ -381,7 +381,7 @@ public interface Document extends UserDataHolder {
    * <p>
    * Bulk mode shouldn't span more than one thread or EDT event. Typically it should turned on/off in a try/finally statement.
    *
-   * @see com.intellij.util.DocumentUtil#executeInBulk(Document, boolean, Runnable)
+   * @see consulo.ide.impl.idea.util.DocumentUtil#executeInBulk(Document, boolean, Runnable)
    * @see BulkAwareDocumentListener
    */
   default void setInBulkUpdate(boolean value) {

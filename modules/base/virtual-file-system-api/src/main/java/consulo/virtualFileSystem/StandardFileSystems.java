@@ -43,7 +43,7 @@ public class StandardFileSystems {
   @Deprecated
   public static String JAR_SEPARATOR = "!/";
   @Deprecated
-  @DeprecationInfo("use com.intellij.util.io.URLUtil#HTTP_PROTOCOL")
+  @DeprecationInfo("use consulo.ide.impl.idea.util.io.URLUtil#HTTP_PROTOCOL")
   public static final String HTTP_PROTOCOL = URLUtil.HTTP_PROTOCOL;
 
   private static final Supplier<VirtualFileSystem> ourLocal = LazyValue.notNull(() -> {

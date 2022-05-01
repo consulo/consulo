@@ -15,9 +15,9 @@
  */
 package consulo.compiler.impl;
 
-import com.intellij.compiler.impl.TranslatingCompilerFilesMonitorImpl;
-import com.intellij.compiler.impl.TranslationOutputFileInfo;
-import com.intellij.compiler.impl.TranslationSourceFileInfo;
+import consulo.ide.impl.idea.compiler.impl.TranslatingCompilerFilesMonitorImpl;
+import consulo.ide.impl.idea.compiler.impl.TranslationOutputFileInfo;
+import consulo.ide.impl.idea.compiler.impl.TranslationSourceFileInfo;
 import consulo.application.ApplicationManager;
 import consulo.compiler.CompilerManager;
 import consulo.compiler.TranslatingCompiler;
@@ -27,11 +27,11 @@ import consulo.project.ProjectCoreUtil;
 import consulo.project.ProjectManager;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import com.intellij.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.ref.Ref;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.vfs.*;
-import com.intellij.openapi.vfs.newvfs.NewVirtualFile;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.*;
+import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.logging.Logger;
 import consulo.util.collection.Sets;
 import consulo.util.collection.primitive.ints.IntList;

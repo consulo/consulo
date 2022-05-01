@@ -20,7 +20,7 @@ import consulo.compiler.CompilerBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import com.intellij.openapi.util.NotNullComputable;
+import consulo.ide.impl.idea.openapi.util.NotNullComputable;
 import consulo.disposer.Disposable;
 import consulo.configurable.SimpleConfigurable;
 import consulo.ui.CheckBox;

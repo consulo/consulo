@@ -16,9 +16,9 @@
 package consulo.ide.projectView;
 
 import consulo.ide.IdeBundle;
-import com.intellij.ide.projectView.ProjectView;
-import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
-import com.intellij.ide.projectView.impl.ProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.DefaultActionGroup;

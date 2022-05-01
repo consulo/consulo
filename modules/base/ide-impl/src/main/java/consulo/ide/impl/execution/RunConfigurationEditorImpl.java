@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.execution;
 
-import com.intellij.execution.impl.RunDialog;
+import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.Executor;

@@ -21,11 +21,11 @@ package consulo.ide.impl.psi.util;
 
 import consulo.language.psi.PsiModificationTracker;
 import consulo.util.dataholder.Key;
-import com.intellij.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.reference.SoftReference;
-import com.intellij.util.Function;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.util.Function;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

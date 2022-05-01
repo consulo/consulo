@@ -15,8 +15,8 @@
  */
 package consulo.ide.projectView.impl.nodes;
 
-import com.intellij.ide.projectView.RootsProvider;
-import com.intellij.ide.projectView.impl.nodes.PackageNodeUtil;
+import consulo.ide.impl.idea.ide.projectView.RootsProvider;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.PackageNodeUtil;
 import consulo.module.Module;
 import consulo.application.util.Queryable;
 import consulo.util.dataholder.Key;

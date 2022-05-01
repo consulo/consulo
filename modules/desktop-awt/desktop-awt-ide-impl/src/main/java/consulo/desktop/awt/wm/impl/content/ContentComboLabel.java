@@ -18,7 +18,7 @@ package consulo.desktop.awt.wm.impl.content;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.content.Content;
-import com.intellij.ui.popup.PopupState;
+import consulo.ide.impl.idea.ui.popup.PopupState;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.accessibility.ScreenReader;

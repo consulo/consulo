@@ -19,18 +19,18 @@
                              displayName="Execution"
                              instance="consulo.configurable.ConfigurableAdapter"/>
 
-    <applicationConfigurable instance="com.intellij.tools.ToolConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.tools.ToolConfigurable"
                              id="preferences.externalTools"
                              key="tools.settings.title"
                              parentId="execution"
                              bundle="messages.ToolsBundle"/>
 
-    <applicationConfigurable instance="com.intellij.execution.console.ConsoleFoldingConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.execution.console.ConsoleFoldingConfigurable"
                              id="execution.console.folding"
                              parentId="execution"
                              displayName="Console Folding"/>
 
-    <applicationConfigurable instance="com.intellij.ide.ui.customization.CustomizationConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.ide.ui.customization.CustomizationConfigurable"
                              id="preferences.customizations"
                              parentId="general"
                              key="title.customizations" bundle="consulo.ide.IdeBundle"/>
@@ -47,13 +47,13 @@
 
     <applicationConfigurable parentId="editor" id="editor.breadcrumbs"
                              key="configurable.breadcrumbs" bundle="consulo.application.ApplicationBundle"
-                             instance="com.intellij.ui.breadcrumbs.BreadcrumbsConfigurable"/>
+                             instance="consulo.ide.impl.idea.ui.breadcrumbs.BreadcrumbsConfigurable"/>
 
     <applicationConfigurable displayName="Code Intentions" parentId="editor"
-                             instance="com.intellij.codeInsight.intention.impl.config.IntentionSettingsConfigurable" id="editor.code.intentions"/>
+							 instance="consulo.ide.impl.idea.codeInsight.intention.impl.config.IntentionSettingsConfigurable" id="editor.code.intentions"/>
 
     <projectConfigurable displayName="Code Inspections"
-                         provider="com.intellij.profile.codeInspection.ui.ProjectInspectionToolsConfigurableProvider"
+                         provider="consulo.ide.impl.idea.profile.codeInspection.ui.ProjectInspectionToolsConfigurableProvider"
                          parentId="editor"
                          id="editor.code.inspections"/>
 
@@ -66,27 +66,27 @@
     <projectConfigurable displayName="Code Style"
                          parentId="editor"
                          dynamic="true"
-                         instance="com.intellij.application.options.CodeStyleSchemesConfigurable"/>
+                         instance="consulo.ide.impl.idea.application.options.CodeStyleSchemesConfigurable"/>
 
-    <applicationConfigurable instance="com.intellij.ide.todo.configurable.TodoConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.ide.todo.configurable.TodoConfigurable"
                              id="preferences.toDoOptions"
                              key="title.todo"
                              parentId="editor"
                              bundle="consulo.ide.IdeBundle"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.editor.CodeFoldingConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.CodeFoldingConfigurable"
                              id="editor.preferences.folding"
                              parentId="editor"
                              key="group.code.folding"
                              bundle="consulo.application.ApplicationBundle"/>
 
-    <projectConfigurable instance="com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable"
+    <projectConfigurable instance="consulo.ide.impl.idea.ide.fileTemplates.impl.AllFileTemplatesConfigurable"
                          id="fileTemplates"
                          parentId="editor"
                          key="title.file.templates"
                          bundle="consulo.ide.IdeBundle"/>
 
-    <applicationConfigurable instance="com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.codeInsight.template.impl.LiveTemplatesConfigurable"
                              id="editing.templates"
                              parentId="editor.preferences.completion"
                              key="templates.settings.page.title"
@@ -96,7 +96,7 @@
                              key="debugger.configurable.display.name"
                              bundle="consulo.execution.debug.XDebuggerBundle"
                              parentId="execution"
-                             instance="com.intellij.xdebugger.impl.settings.DebuggerConfigurable"/>
+                             instance="consulo.ide.impl.idea.xdebugger.impl.settings.DebuggerConfigurable"/>
 
     <applicationConfigurable instance="consulo.ide.settings.impl.EditorGeneralConfigurable"
                              id="editor.general"
@@ -105,7 +105,7 @@
                              bundle="consulo.application.ApplicationBundle"
                              order="after appearance"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.colors.ColorAndFontOptions"
+    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.colors.ColorAndFontOptions"
                              parentId="editor"
                              id="editor.preferences.colors.and.fonts"
                              dynamic="true"
@@ -117,39 +117,39 @@
                              parentId="editor"
                              displayName="Tabs"/>
 
-    <applicationConfigurable instance="com.intellij.ide.passwordSafe.config.PasswordSafeConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.ide.passwordSafe.config.PasswordSafeConfigurable"
                              id="application.passwordSafe"
                              parentId="general"
                              displayName="Passwords"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.pathMacros.PathMacroConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.pathMacros.PathMacroConfigurable"
                              id="preferences.pathVariables"
                              parentId="general"
                              key="title.path.variables" bundle="consulo.application.ApplicationBundle"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.CodeCompletionOptions"
+    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.CodeCompletionOptions"
                              id="editor.preferences.completion"
                              parentId="editor"
                              key="title.code.completion"
                              bundle="consulo.application.ApplicationBundle"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.editor.AutoImportOptionsConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.AutoImportOptionsConfigurable"
                              id="editor.preferences.import"
                              parentId="editor"
                              key="auto.import"
                              bundle="consulo.application.ApplicationBundle"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.editor.EditorSmartKeysConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.EditorSmartKeysConfigurable"
                              id="editor.preferences.smartKeys"
                              parentId="editor"
                              displayName="Smart Keys"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.editor.EditorAppearanceConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.EditorAppearanceConfigurable"
                              id="editor.preferences.appearance"
                              parentId="editor"
                              displayName="Appearance"/>
 
-    <applicationConfigurable instance="com.intellij.application.options.editor.GutterIconsConfigurable"
+    <applicationConfigurable instance="consulo.ide.impl.idea.application.options.editor.GutterIconsConfigurable"
                              id="editor.gutterIcons"
                              parentId="editor"
                              displayName="Gutter Icons"/>
@@ -158,9 +158,9 @@
                          bundle="consulo.ide.IdeBundle"
                          key="file.encodings.configurable"
                          parentId="editor"
-                         instance="com.intellij.openapi.vfs.encoding.FileEncodingConfigurable"/>
+                         instance="consulo.ide.impl.idea.openapi.vfs.encoding.FileEncodingConfigurable"/>
 
-    <projectConfigurable instance="com.intellij.ui.tabs.FileColorsConfigurable"
+    <projectConfigurable instance="consulo.ide.impl.idea.ui.tabs.FileColorsConfigurable"
                          parentId="editor"
                          id="fileColors"
                          displayName="File Colors"/>
@@ -170,7 +170,7 @@
                              instance="consulo.configurable.ConfigurableAdapter"/>
 
 
-    <applicationConfigurable displayName="Notifications" id="notifications" parentId="general" instance="com.intellij.notification.impl.NotificationsConfigurable"/>
+    <applicationConfigurable displayName="Notifications" id="notifications" parentId="general" instance="consulo.ide.impl.idea.notification.impl.NotificationsConfigurable"/>
 
     <applicationConfigurable instance="consulo.ide.plugins.PluginsConfigurable"
                              id="platformAndPlugins"
@@ -182,25 +182,25 @@
                              instance="consulo.ide.updateSettings.UpdatesConfigurable"
                              displayName="Update Settings"/>
 
-    <applicationConfigurable parentId="general" instance="com.intellij.util.net.HttpProxyConfigurable" id="http.proxy" displayName="HTTP Proxy"/>
+    <applicationConfigurable parentId="general" instance="consulo.ide.impl.idea.util.net.HttpProxyConfigurable" id="http.proxy" displayName="HTTP Proxy"/>
 
-    <applicationConfigurable parentId="general" instance="com.intellij.openapi.keymap.impl.ui.KeymapPanel" id="preferences.keymap" key="keymap.display.name"
-                             bundle="consulo.ui.ex.keymap.KeyMapBundle"/>
-    <applicationConfigurable parentId="general" instance="com.intellij.openapi.keymap.impl.ui.QuickListsPanel" id="reference.idesettings.quicklists"
-                             displayName="Quick Lists"/>
+    <applicationConfigurable parentId="general" instance="consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel" id="preferences.keymap" key="keymap.display.name"
+							 bundle="consulo.ui.ex.keymap.KeyMapBundle"/>
+    <applicationConfigurable parentId="general" instance="consulo.ide.impl.idea.openapi.keymap.impl.ui.QuickListsPanel" id="reference.idesettings.quicklists"
+							 displayName="Quick Lists"/>
 
-    <applicationConfigurable displayName="System" parentId="general" instance="com.intellij.ide.GeneralSettingsConfigurable"/>
+    <applicationConfigurable displayName="System" parentId="general" instance="consulo.ide.impl.idea.ide.GeneralSettingsConfigurable"/>
 
     <applicationConfigurable parentId="editor" instance="consulo.fileTypes.ui.impl.FileTypeConfigurable" id="preferences.fileTypes"
                              key="filetype.settings.title" bundle="messages.FileTypesBundle"/>
 
-    <applicationConfigurable instance="com.intellij.ide.browsers.BrowserSettings"
+    <applicationConfigurable instance="consulo.ide.impl.idea.ide.browsers.BrowserSettings"
                              id="web.browsers"
                              parentId="general"
                              key="browsers.settings"
                              bundle="consulo.ide.IdeBundle"/>
 
-    <projectConfigurable instance="com.intellij.openapi.vcs.configurable.VcsManagerConfigurable"
+    <projectConfigurable instance="consulo.ide.impl.idea.openapi.vcs.configurable.VcsManagerConfigurable"
                          displayName="consulo.vcs.api.VcsApiLocalize@version.control.main.configurable.name"
                          dynamic="true"
                          id="vcs"/>
@@ -215,17 +215,17 @@
     </applicationConfigurable>
 
     <applicationConfigurable id="sdks.list" bundle="consulo.project.ProjectBundle" key="global.bundles.display.name"
-                             instance="com.intellij.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
+                             instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.SdkListConfigurable"/>
 
-    <projectConfigurable id="project" nonDefaultProject="true" displayName="Project" instance="com.intellij.openapi.roots.ui.configuration.ProjectConfigurable"/>
+    <projectConfigurable id="project" nonDefaultProject="true" displayName="Project" instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.ProjectConfigurable"/>
 
     <projectConfigurable id="project.modules" parentId="project" nonDefaultProject="true" displayName="Modules"
-                         instance="com.intellij.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable"/>
+                         instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ModuleStructureConfigurable"/>
 
     <projectConfigurable id="project.libraries" parentId="project" nonDefaultProject="true" displayName="Libraries"
-                         instance="com.intellij.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
+                         instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.ProjectLibrariesConfigurable"/>
 
     <projectConfigurable id="project.artifacts" parentId="project" nonDefaultProject="true" displayName="Artifacts"
-                         instance="com.intellij.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable"/>
+                         instance="consulo.ide.impl.idea.openapi.roots.ui.configuration.artifacts.ArtifactsStructureConfigurable"/>
   </extensions>
 </consulo-plugin>

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.errorTreeView;
 
-import com.intellij.ide.errorTreeView.NewErrorTreeViewPanelImpl;
+import consulo.ide.impl.idea.ide.errorTreeView.NewErrorTreeViewPanelImpl;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
 import consulo.ui.ex.errorTreeView.NewErrorTreeViewPanel;

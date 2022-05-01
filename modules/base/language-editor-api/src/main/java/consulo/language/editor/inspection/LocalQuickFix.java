@@ -32,8 +32,8 @@ import consulo.util.collection.ArrayFactory;
  * Implement {@link Iconable Iconable} interface to
  * change icon in quick fix popup menu.
  * <p/>
- * Implement {@link com.intellij.codeInsight.intention.HighPriorityAction HighPriorityAction} or
- * {@link com.intellij.codeInsight.intention.LowPriorityAction LowPriorityAction} to change ordering.
+ * Implement {@link consulo.ide.impl.idea.codeInsight.intention.HighPriorityAction HighPriorityAction} or
+ * {@link consulo.ide.impl.idea.codeInsight.intention.LowPriorityAction LowPriorityAction} to change ordering.
  *
  * @author max
  * @see LocalQuickFixBase

@@ -15,10 +15,10 @@
  */
 package consulo.webBrowser.impl;
 
-import com.intellij.ide.SelectInContext;
-import com.intellij.ide.SelectInTargetBase;
-import com.intellij.ide.StandardTargetWeights;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.ide.impl.idea.ide.SelectInContext;
+import consulo.ide.impl.idea.ide.SelectInTargetBase;
+import consulo.ide.impl.idea.ide.StandardTargetWeights;
+import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.ide.IdeBundle;
 import consulo.language.psi.PsiElement;

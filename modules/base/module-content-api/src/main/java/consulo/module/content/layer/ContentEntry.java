@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 
 /**
  * Represents a module content root.
- * You can get existing entries with {@link com.intellij.openapi.roots.ModuleRootModel#getContentEntries()} or
+ * You can get existing entries with {@link consulo.ide.impl.idea.openapi.roots.ModuleRootModel#getContentEntries()} or
  * create a new one with {@link ModifiableRootModel#addContentEntry(VirtualFile)}.
  *
  * @author dsl

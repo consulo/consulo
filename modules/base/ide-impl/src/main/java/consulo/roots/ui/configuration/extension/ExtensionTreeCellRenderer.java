@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.extension;
 
-import com.intellij.ui.CheckboxTree;
+import consulo.ide.impl.idea.ui.CheckboxTree;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;

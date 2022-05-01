@@ -32,7 +32,7 @@ import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.language.psi.stub.internal.StubbedSpine;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.application.util.function.Processor;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

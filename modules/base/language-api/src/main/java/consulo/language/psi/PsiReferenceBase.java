@@ -205,7 +205,7 @@ public abstract class PsiReferenceBase<T extends PsiElement> implements PsiRefer
       myResolveTo = resolveTo;
     }
 
-    //do nothing. the element will be renamed via PsiMetaData (com.intellij.refactoring.rename.RenameUtil.doRenameGenericNamedElement())
+    //do nothing. the element will be renamed via PsiMetaData (consulo.ide.impl.idea.refactoring.rename.RenameUtil.doRenameGenericNamedElement())
     @Override
     public PsiElement handleElementRename(final String newElementName) throws IncorrectOperationException {
       return getElement();

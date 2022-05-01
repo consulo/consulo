@@ -15,13 +15,11 @@
  */
 package consulo.execution.configuration;
 
-import consulo.execution.configuration.RunConfiguration;
-
 import javax.annotation.Nullable;
 
 /**
  * Base interface that should be used for configurations that can be created from context (a location in a file) by implementations of
- * {@link com.intellij.execution.actions.RunConfigurationProducer}
+ * {@link consulo.ide.impl.idea.execution.actions.RunConfigurationProducer}
  *
  * @author anna
  * @see LocatableConfigurationBase

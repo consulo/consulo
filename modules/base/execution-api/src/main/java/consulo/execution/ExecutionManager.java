@@ -77,7 +77,7 @@ public abstract class ExecutionManager {
 
   /**
    * currentDescriptor is null for toolbar/popup action and not null for actions in run/debug toolwindows
-   * @deprecated use {@link #restartRunProfile(com.intellij.execution.runners.ExecutionEnvironment)}
+   * @deprecated use {@link #restartRunProfile(consulo.ide.impl.idea.execution.runners.ExecutionEnvironment)}
    * to remove in IDEA 15
    */
   public abstract void restartRunProfile(@Nonnull Project project,
@@ -88,7 +88,7 @@ public abstract class ExecutionManager {
 
   /**
    * currentDescriptor is null for toolbar/popup action and not null for actions in run/debug toolwindows
-   * @deprecated use {@link #restartRunProfile(com.intellij.execution.runners.ExecutionEnvironment)}
+   * @deprecated use {@link #restartRunProfile(consulo.ide.impl.idea.execution.runners.ExecutionEnvironment)}
    * to remove in IDEA 15
    */
   public abstract void restartRunProfile(@Nullable ProgramRunner runner,

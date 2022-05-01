@@ -15,11 +15,11 @@
  */
 package consulo.sandboxPlugin.packageView;
 
-import com.intellij.util.CatchingConsumer;
+import consulo.ide.impl.idea.util.CatchingConsumer;
 import consulo.util.collection.MultiMap;
-import com.intellij.webcore.packaging.InstalledPackage;
-import com.intellij.webcore.packaging.PackageManagementServiceEx;
-import com.intellij.webcore.packaging.RepoPackage;
+import consulo.ide.impl.idea.webcore.packaging.InstalledPackage;
+import consulo.ide.impl.idea.webcore.packaging.PackageManagementServiceEx;
+import consulo.ide.impl.idea.webcore.packaging.RepoPackage;
 import consulo.packagesView.SearchablePackageManagementService;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,7 @@
 package consulo.virtualFileSystem.fileWatcher.impl.ui;
 
 import consulo.project.ui.view.tree.ViewSettings;
-import com.intellij.ide.projectView.impl.nodes.PsiFileNode;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiFileNode;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;

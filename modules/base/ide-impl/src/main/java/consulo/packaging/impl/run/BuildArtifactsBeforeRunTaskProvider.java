@@ -16,9 +16,9 @@
 package consulo.packaging.impl.run;
 
 import consulo.execution.BeforeRunTask;
-import com.intellij.execution.RunManagerEx;
+import consulo.ide.impl.idea.execution.RunManagerEx;
 import consulo.execution.configuration.RunConfiguration;
-import com.intellij.execution.impl.ConfigurationSettingsEditorWrapper;
+import consulo.ide.impl.idea.execution.impl.ConfigurationSettingsEditorWrapper;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataContext;
@@ -30,11 +30,11 @@ import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
-import com.intellij.packaging.impl.compiler.ArtifactAwareCompiler;
-import com.intellij.packaging.impl.compiler.ArtifactCompileScope;
-import com.intellij.packaging.impl.compiler.ArtifactsCompiler;
-import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTask;
-import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTaskProvider;
+import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactAwareCompiler;
+import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactCompileScope;
+import consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsCompiler;
+import consulo.ide.impl.idea.packaging.impl.run.AbstractArtifactsBeforeRunTask;
+import consulo.ide.impl.idea.packaging.impl.run.AbstractArtifactsBeforeRunTaskProvider;
 import consulo.application.AccessRule;
 import consulo.ui.UIAccess;
 import consulo.util.collection.ContainerUtil;

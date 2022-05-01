@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.codeStyle.presentation;
 
 import consulo.application.ApplicationBundle;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

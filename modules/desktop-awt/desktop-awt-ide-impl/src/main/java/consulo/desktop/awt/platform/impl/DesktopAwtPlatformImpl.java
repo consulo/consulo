@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.platform.impl;
 
-import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.actions.ShowFilePathAction;
+import consulo.ide.impl.idea.ide.BrowserUtil;
+import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.WinReg;
 import consulo.application.util.mac.foundation.Foundation;

@@ -15,7 +15,6 @@
  */
 package consulo.dataContext;
 
-import consulo.dataContext.DataContext;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
@@ -34,7 +33,7 @@ import javax.annotation.Nullable;
 public interface DataProvider {
   /**
    * Returns the object corresponding to the specified data identifier. Some of the supported
-   * data identifiers are defined in the {@link com.intellij.openapi.actionSystem.PlatformDataKeys} class.
+   * data identifiers are defined in the {@link consulo.ide.impl.idea.openapi.actionSystem.PlatformDataKeys} class.
    *
    * @param dataId the data identifier for which the value is requested.
    * @return the value, or null if no value is available in the current context for this identifier.

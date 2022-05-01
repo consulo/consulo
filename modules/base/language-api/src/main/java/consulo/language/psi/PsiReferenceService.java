@@ -42,7 +42,7 @@ public abstract class PsiReferenceService {
    * extensions.
    * @param element PSI element to which the references will be bound
    * @param hints optional hints which are passed to {@link com.intellij.psi.PsiReferenceProvider#acceptsHints(PsiElement, PsiReferenceService.Hints)} and
-   * {@link com.intellij.psi.PsiReferenceProvider#acceptsTarget(PsiElement)} before the {@link com.intellij.patterns.ElementPattern} is matched, for performing
+   * {@link com.intellij.psi.PsiReferenceProvider#acceptsTarget(PsiElement)} before the {@link consulo.ide.impl.idea.patterns.ElementPattern} is matched, for performing
    * fail-fast checks in case the pattern takes long to match.
    * @return the references
    */

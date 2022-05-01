@@ -15,7 +15,7 @@
  */
 package consulo.ui.app;
 
-import com.intellij.openapi.util.Couple;
+import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.layout.DockLayout;

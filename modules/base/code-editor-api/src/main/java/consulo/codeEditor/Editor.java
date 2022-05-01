@@ -144,8 +144,8 @@ public interface Editor extends UserDataHolder {
    * (for example, highlighters added by "Highlight usages in file"), which are painted in addition
    * to the highlighters contained in the markup model for the document.
    * <p>
-   * See also {@link com.intellij.openapi.editor.impl.DocumentMarkupModel.forDocument(Document, Project, boolean)}
-   * {@link com.intellij.openapi.editor.ex.EditorEx#getFilteredDocumentMarkupModel()}.
+   * See also {@link consulo.ide.impl.idea.openapi.editor.impl.DocumentMarkupModel.forDocument(Document, Project, boolean)}
+   * {@link consulo.ide.impl.idea.openapi.editor.ex.EditorEx#getFilteredDocumentMarkupModel()}.
    *
    * @return the markup model instance.
    */

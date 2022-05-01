@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
-import com.intellij.openapi.actionSystem.impl.ButtonToolbarImpl;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ButtonToolbarImpl;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;

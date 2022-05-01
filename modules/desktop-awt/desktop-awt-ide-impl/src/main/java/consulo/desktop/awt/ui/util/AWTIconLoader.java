@@ -15,18 +15,18 @@
  */
 package consulo.desktop.awt.ui.util;
 
-import com.intellij.openapi.util.Couple;
-import com.intellij.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ui.ex.awt.ScalableIcon;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.reference.SoftReference;
-import com.intellij.ui.RetrievableIcon;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.ui.RetrievableIcon;
 import consulo.ui.ex.awt.paint.PaintUtil;
 import consulo.ui.ex.awt.internal.ImageLoader;
-import com.intellij.util.ReflectionUtil;
+import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ui.ex.awt.internal.RetinaImage;
 import consulo.ui.ex.awt.ImageUtil;
-import com.intellij.util.ui.JBImageIcon;
+import consulo.ide.impl.idea.util.ui.JBImageIcon;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.UIModificationTracker;

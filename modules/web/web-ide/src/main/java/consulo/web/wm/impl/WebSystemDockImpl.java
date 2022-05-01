@@ -15,7 +15,7 @@
  */
 package consulo.web.wm.impl;
 
-import com.intellij.openapi.wm.impl.SystemDock;
+import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import jakarta.inject.Singleton;
 
 /**

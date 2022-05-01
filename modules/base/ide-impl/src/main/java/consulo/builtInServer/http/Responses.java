@@ -18,7 +18,7 @@ package consulo.builtInServer.http;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.ApplicationNamesInfo;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;

@@ -76,7 +76,7 @@ public abstract class LibraryType<P extends LibraryProperties> extends LibraryPr
 
   /**
    * Override this method to customize the library roots editor
-   * @return {@link com.intellij.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor} instance
+   * @return {@link consulo.ide.impl.idea.openapi.roots.libraries.ui.LibraryRootsComponentDescriptor} instance
    */
   @Nullable
   public LibraryRootsComponentDescriptor createLibraryRootsComponentDescriptor() {

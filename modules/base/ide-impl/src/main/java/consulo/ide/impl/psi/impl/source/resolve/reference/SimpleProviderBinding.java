@@ -22,7 +22,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReferenceProvider;
 import consulo.language.psi.PsiReferenceService;
 import consulo.language.util.ProcessingContext;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;

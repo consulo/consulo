@@ -51,8 +51,8 @@ public interface ApplicationWithIntentWriteLock extends Application {
    * if no write-intent action is currently running, or blocked until the currently running write-intent action completes.
    * <p>
    * This method is used to implement higher-level API. Please do not use it directly.
-   * Use {@link #invokeLaterOnWriteThread}, {@link com.intellij.openapi.application.WriteThread} or
-   * {@link com.intellij.openapi.application.AppUIExecutor#onWriteThread()} to run code under the write-intent lock asynchronously.
+   * Use {@link #invokeLaterOnWriteThread}, {@link consulo.ide.impl.idea.openapi.application.WriteThread} or
+   * {@link consulo.ide.impl.idea.openapi.application.AppUIExecutor#onWriteThread()} to run code under the write-intent lock asynchronously.
    *
    * @param action the action to run
    */

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import com.intellij.ui.AppUIUtil;
+import consulo.ide.impl.idea.ui.AppUIUtil;
 import consulo.logging.Logger;
 
 import java.awt.*;

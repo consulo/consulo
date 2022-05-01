@@ -21,7 +21,7 @@ import java.util.function.Predicate;
 
 /**
  * @param <T> Input value type.
- * @see com.intellij.util.CommonProcessors
+ * @see consulo.ide.impl.idea.util.CommonProcessors
  */
 @Deprecated
 @DeprecationInfo("Use Predicate")

@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.impl.util;
 
-import com.intellij.util.BitUtil;
+import consulo.ide.impl.idea.util.BitUtil;
 import consulo.ui.Component;
 import consulo.ui.event.KeyListener;
 

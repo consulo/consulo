@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
 /**
  * @author Anton Katilin
  * @author Vladimir Kondratyev
- * @see com.intellij.openapi.fileEditor.TextEditor
+ * @see consulo.ide.impl.idea.openapi.fileEditor.TextEditor
  */
 public interface FileEditor extends UserDataHolder, Disposable {
   Key<FileEditor> KEY = Key.create(FileEditor.class);

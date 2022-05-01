@@ -20,7 +20,7 @@ import consulo.language.codeStyle.Block;
 import consulo.document.Document;
 import consulo.application.progress.ProgressIndicator;
 import consulo.document.util.TextRange;
-import com.intellij.util.text.CharArrayUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

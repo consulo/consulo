@@ -15,7 +15,7 @@
  */
 package consulo.ide.projectView.impl;
 
-import com.intellij.ide.projectView.impl.AbstractProjectViewPane;
+import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.dataholder.KeyWithDefaultValue;

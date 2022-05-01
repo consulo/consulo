@@ -18,7 +18,7 @@ package consulo.language.pom;
 import consulo.navigation.Navigatable;
 
 /**
- * Accompanied by a PSI element via {@link com.intellij.pom.references.PomService#convertToPsi(PomTarget)}. All references to this target
+ * Accompanied by a PSI element via {@link consulo.ide.impl.idea.pom.references.PomService#convertToPsi(PomTarget)}. All references to this target
  * should resolve to that PSI element.
  *
  * @author peter

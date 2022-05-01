@@ -16,7 +16,7 @@
 <consulo-plugin>
   <actions>
     <group id="XDebugger.AttachGroup">
-      <action id="XDebugger.AttachToProcess" class="com.intellij.xdebugger.impl.actions.AttachToProcessAction"/>
+      <action id="XDebugger.AttachToProcess" class="consulo.ide.impl.idea.xdebugger.impl.actions.AttachToProcessAction"/>
       <add-to-group group-id="RunMenu" anchor="before" relative-to-action="editRunConfigurations"/>
     </group>
   </actions>
@@ -24,7 +24,7 @@
   <extensionPoints>
     <extensionPoint name="xdebugger.settings" interface="consulo.execution.debug.setting.XDebuggerSettings"/>
     <extensionPoint name="xdebugger.breakpointType" interface="consulo.execution.debug.breakpoint.XBreakpointType"/>
-    <extensionPoint name="xdebugger.debuggerSupport" interface="com.intellij.xdebugger.impl.DebuggerSupport"/>
+    <extensionPoint name="xdebugger.debuggerSupport" interface="consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport"/>
     <extensionPoint name="xdebugger.lineBreakpointTypeResolver" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver"/>
     </extensionPoint>
@@ -34,36 +34,36 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <projectService serviceInterface="consulo.execution.debug.XDebuggerManager" serviceImplementation="com.intellij.xdebugger.impl.XDebuggerManagerImpl" lazy="false"/>
+    <projectService serviceInterface="consulo.execution.debug.XDebuggerManager" serviceImplementation="consulo.ide.impl.idea.xdebugger.impl.XDebuggerManagerImpl" lazy="false"/>
     
-    <keymapExtension implementation="com.intellij.xdebugger.impl.actions.DebuggerKeymapExtension"/>
+    <keymapExtension implementation="consulo.ide.impl.idea.xdebugger.impl.actions.DebuggerKeymapExtension"/>
 
-    <favoritesListProvider implementation="com.intellij.xdebugger.impl.breakpoints.BreakpointsFavoriteListProvider"/>
+    <favoritesListProvider implementation="consulo.ide.impl.idea.xdebugger.impl.breakpoints.BreakpointsFavoriteListProvider"/>
 
     <executor implementation="consulo.execution.debug.DefaultDebugExecutor" order="first,after run"/>
 
-    <colorSettingsPage implementation="com.intellij.xdebugger.impl.ui.DebuggerColorsPage"/>
+    <colorSettingsPage implementation="consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerColorsPage"/>
 
     <applicationService serviceInterface="consulo.execution.debug.setting.XDebuggerSettingsManager"
-                        serviceImplementation="com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl"/>
+                        serviceImplementation="consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl"/>
 
     <applicationService serviceInterface="consulo.execution.debug.XDebuggerUtil"
-                        serviceImplementation="com.intellij.xdebugger.impl.XDebuggerUtilImpl"/>
+                        serviceImplementation="consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl"/>
 
-    <projectService serviceImplementation="com.intellij.xdebugger.impl.evaluate.quick.common.ValueLookupManager"/>
+    <projectService serviceImplementation="consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueLookupManager"/>
 
-    <projectService serviceInterface="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory"
-                    serviceImplementation="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory"
+                    serviceImplementation="consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory"/>
 
-    <projectService serviceInterface="com.intellij.xdebugger.impl.XDebuggerHistoryManager"
-                    serviceImplementation="com.intellij.xdebugger.impl.XDebuggerHistoryManager"/>
+    <projectService serviceInterface="consulo.ide.impl.idea.xdebugger.impl.XDebuggerHistoryManager"
+                    serviceImplementation="consulo.ide.impl.idea.xdebugger.impl.XDebuggerHistoryManager"/>
 
-    <customizableActionGroupProvider implementation="com.intellij.xdebugger.impl.ui.XDebugTabCustomizableActionGroupProvider"/>
+    <customizableActionGroupProvider implementation="consulo.ide.impl.idea.xdebugger.impl.ui.XDebugTabCustomizableActionGroupProvider"/>
 
-    <xdebugger.debuggerSupport implementation="com.intellij.xdebugger.impl.XDebuggerSupport" order="first"/>
+    <xdebugger.debuggerSupport implementation="consulo.ide.impl.idea.xdebugger.impl.XDebuggerSupport" order="first"/>
 
-    <editor.linePainter implementation="com.intellij.xdebugger.impl.evaluate.XDebuggerEditorLinePainter"/>
+    <editor.linePainter implementation="consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEditorLinePainter"/>
 
-    <copyPastePreProcessor implementation="com.intellij.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
+    <copyPastePreProcessor implementation="consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
   </extensions>
 </consulo-plugin>

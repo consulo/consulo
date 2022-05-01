@@ -962,7 +962,7 @@ public class UIUtil {
   }
 
   /**
-   * @deprecated use com.intellij.util.ui.UIUtil#getTextFieldBackground()
+   * @deprecated use consulo.ide.impl.idea.util.ui.UIUtil#getTextFieldBackground()
    */
   public static Color getActiveTextFieldBackgroundColor() {
     return getTextFieldBackground();
@@ -1014,7 +1014,7 @@ public class UIUtil {
   }
 
   /**
-   * @deprecated use com.intellij.util.ui.UIUtil#getInactiveTextColor()
+   * @deprecated use consulo.ide.impl.idea.util.ui.UIUtil#getInactiveTextColor()
    */
   public static Color getTextInactiveTextColor() {
     return getInactiveTextColor();
@@ -1314,7 +1314,7 @@ public class UIUtil {
   }
 
   /**
-   * @deprecated use com.intellij.util.ui.UIUtil#getPanelBackground() instead
+   * @deprecated use consulo.ide.impl.idea.util.ui.UIUtil#getPanelBackground() instead
    */
   public static Color getPanelBackgound() {
     return getPanelBackground();

@@ -1,8 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
-import com.intellij.application.options.CodeStyleSchemesConfigurable;
-import com.intellij.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
+import consulo.ide.impl.idea.application.options.CodeStyleSchemesConfigurable;
+import consulo.ide.impl.idea.application.options.codeStyle.OtherFileTypesCodeStyleConfigurable;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.Language;
 import consulo.application.ApplicationBundle;
@@ -12,7 +12,7 @@ import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBarWidget;
-import com.intellij.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory;
+import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarEditorBasedWidgetFactory;
 import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.setting.LanguageCodeStyleSettingsProvider;
 import consulo.ui.ex.UIBundle;

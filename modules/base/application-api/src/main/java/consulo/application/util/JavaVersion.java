@@ -180,7 +180,7 @@ public final class JavaVersion implements Comparable<JavaVersion> {
    * - a second line of the above command (something like to "Java(TM) SE Runtime Environment (build $VERSION)")<br>
    * - output of "{@code java --full-version}" ("java $VERSION")</p>
    * <p/>
-   * <p>See com.intellij.util.lang.JavaVersionTest for examples.</p>
+   * <p>See consulo.ide.impl.idea.util.lang.JavaVersionTest for examples.</p>
    *
    * @throws IllegalArgumentException if failed to recognize the number.
    */

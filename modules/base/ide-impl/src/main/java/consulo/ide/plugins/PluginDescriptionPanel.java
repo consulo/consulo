@@ -15,20 +15,20 @@
  */
 package consulo.ide.plugins;
 
-import com.intellij.ide.BrowserUtil;
+import consulo.ide.impl.idea.ide.BrowserUtil;
 import consulo.dataContext.DataManager;
-import com.intellij.ide.plugins.PluginHeaderPanel;
-import com.intellij.ide.plugins.PluginManagerColumnInfo;
-import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.ide.plugins.PluginNode;
-import com.intellij.ide.ui.search.SearchUtil;
+import consulo.ide.impl.idea.ide.plugins.PluginHeaderPanel;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerColumnInfo;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.ide.plugins.PluginNode;
+import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
 import consulo.dataContext.DataContext;
 import consulo.ide.setting.Settings;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.JBHtmlEditorKit;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import com.intellij.xml.util.XmlStringUtil;
+import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.container.plugin.*;
 import consulo.ui.ex.awt.MorphColor;
 import consulo.util.collection.ArrayUtil;

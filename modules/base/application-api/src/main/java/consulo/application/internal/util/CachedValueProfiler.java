@@ -165,17 +165,17 @@ public final class CachedValueProfiler {
       String className = stackTrace[idx].getClassName();
       if ("doCompute".equals(method) &&
           (className.endsWith("CachedValueImpl") || className.endsWith("CachedValue")) &&
-          (className.startsWith("com.intellij.util.") || className.startsWith("com.intellij.psi."))) {
+          (className.startsWith("consulo.ide.impl.idea.util.") || className.startsWith("com.intellij.psi."))) {
         break;
       }
     }
     if (idx >= len) return null;
     for (--idx; idx > 0; idx--) {
       String className = stackTrace[idx].getClassName();
-      if (className.startsWith("com.intellij.util.CachedValue")) continue;
+      if (className.startsWith("consulo.ide.impl.idea.util.CachedValue")) continue;
       if (className.startsWith("com.intellij.psi.util.CachedValue")) continue;
       if (className.startsWith("com.intellij.psi.impl.PsiCachedValue")) continue;
-      if (className.startsWith("com.intellij.openapi.util.Recursion")) continue;
+      if (className.startsWith("consulo.ide.impl.idea.openapi.util.Recursion")) continue;
       break;
 
     }
@@ -190,10 +190,10 @@ public final class CachedValueProfiler {
     StackTraceElement[] stackTrace = stackTraceHolder.getStackTrace();
     for (int idx = 2, len = stackTrace.length; idx < len; idx++) {
       String className = stackTrace[idx].getClassName();
-      if (className.startsWith("com.intellij.util.CachedValue")) continue;
+      if (className.startsWith("consulo.ide.impl.idea.util.CachedValue")) continue;
       if (className.startsWith("com.intellij.psi.util.CachedValue")) continue;
       if (className.startsWith("com.intellij.psi.impl.PsiCachedValue")) continue;
-      if (className.startsWith("com.intellij.openapi.util.Recursion")) continue;
+      if (className.startsWith("consulo.ide.impl.idea.openapi.util.Recursion")) continue;
       if (className.startsWith("com.intellij.psi.impl.PsiParameterizedCachedValue")) continue;
       return stackTrace[idx];
     }

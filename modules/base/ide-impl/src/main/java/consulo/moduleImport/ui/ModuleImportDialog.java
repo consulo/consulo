@@ -20,7 +20,7 @@ import consulo.ide.IdeBundle;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.ui.JBCardLayout;
+import consulo.ide.impl.idea.ui.JBCardLayout;
 import consulo.moduleImport.ModuleImportContext;
 import consulo.moduleImport.ModuleImportProvider;
 import consulo.start.WelcomeFrameManager;

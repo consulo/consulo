@@ -110,7 +110,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
     public void documentChanged(DocumentEvent event) {
       if (myDocumentSavingInProgress) {
         /* When {@link FileDocumentManager#saveAllDocuments} is called,
-           {@link com.intellij.openapi.editor.impl.TrailingSpacesStripper} can change a document.
+           {@link consulo.ide.impl.idea.openapi.editor.impl.TrailingSpacesStripper} can change a document.
            These needless 'documentChanged' events should be filtered out.
          */
         return;

@@ -16,8 +16,8 @@
 package consulo.compiler.impl;
 
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
-import com.intellij.openapi.vfs.encoding.EncodingProjectManagerImpl;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingProjectManagerImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.compiler.CompilerEncodingService;
 import consulo.compiler.CompilerManager;
 import consulo.application.util.CachedValue;

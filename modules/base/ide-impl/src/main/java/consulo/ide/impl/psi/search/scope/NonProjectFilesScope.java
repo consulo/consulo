@@ -23,8 +23,7 @@ import consulo.project.content.scope.ProjectScopes;
 import consulo.content.scope.AbstractPackageSet;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ui.ex.Colored;
-import com.intellij.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

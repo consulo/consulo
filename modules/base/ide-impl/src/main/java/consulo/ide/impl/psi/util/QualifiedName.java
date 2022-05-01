@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.util;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
 import consulo.index.io.StringRef;

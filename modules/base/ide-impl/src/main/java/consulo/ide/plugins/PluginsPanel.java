@@ -16,18 +16,18 @@
 package consulo.ide.plugins;
 
 import consulo.dataContext.DataManager;
-import com.intellij.ide.plugins.AvailablePluginsManagerMain;
-import com.intellij.ide.plugins.InstalledPluginsManagerMain;
-import com.intellij.ide.plugins.PluginInstallUtil;
-import com.intellij.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.ide.plugins.AvailablePluginsManagerMain;
+import consulo.ide.impl.idea.ide.plugins.InstalledPluginsManagerMain;
+import consulo.ide.impl.idea.ide.plugins.PluginInstallUtil;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.Application;
 import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.Wrapper;
-import com.intellij.ui.tabs.TabInfo;
-import com.intellij.ui.tabs.impl.JBEditorTabs;
+import consulo.ide.impl.idea.ui.tabs.TabInfo;
+import consulo.ide.impl.idea.ui.tabs.impl.JBEditorTabs;
 import consulo.container.plugin.PluginId;
 import consulo.container.plugin.PluginManager;
 import consulo.disposer.Disposable;

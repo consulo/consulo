@@ -29,7 +29,7 @@ public abstract class PatternCompilerFactory {
   }
 
   /**
-   * Retrieves pattern classes registered via com.intellij.patterns.patternClass extension.
+   * Retrieves pattern classes registered via consulo.ide.impl.idea.patterns.patternClass extension.
    * @param alias or null
    * @return pattern classes
    */

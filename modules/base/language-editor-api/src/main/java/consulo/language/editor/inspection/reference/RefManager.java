@@ -122,7 +122,7 @@ public abstract class RefManager {
   public abstract PsiManager getPsiManager();
 
   /**
-   * @return false if no {@link com.intellij.codeInspection.lang.RefManagerExtension} was registered for language and is not covered by default implementation for PsiClassOwner
+   * @return false if no {@link consulo.ide.impl.idea.codeInspection.lang.RefManagerExtension} was registered for language and is not covered by default implementation for PsiClassOwner
    * true, otherwise
    */
   public boolean isInGraph(VirtualFile file) {

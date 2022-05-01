@@ -23,7 +23,7 @@ import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.LightColors;
 import consulo.ui.ex.awt.ScrollPaneFactory;

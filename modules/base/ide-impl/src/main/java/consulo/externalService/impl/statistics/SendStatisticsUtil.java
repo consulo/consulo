@@ -15,14 +15,14 @@
  */
 package consulo.externalService.impl.statistics;
 
-import com.intellij.internal.statistic.StatisticsUploadAssistant;
-import com.intellij.internal.statistic.beans.PatchedUsage;
-import com.intellij.internal.statistic.beans.UsageDescriptor;
-import com.intellij.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
-import com.intellij.openapi.application.PermanentInstallationID;
+import consulo.ide.impl.idea.internal.statistic.StatisticsUploadAssistant;
+import consulo.ide.impl.idea.internal.statistic.beans.PatchedUsage;
+import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
+import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
+import consulo.ide.impl.idea.openapi.application.PermanentInstallationID;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.external.api.StatisticsBean;
 import consulo.logging.Logger;
 

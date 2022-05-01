@@ -19,7 +19,7 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBTextField;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextComponent;
 import consulo.desktop.awt.uiOld.components.fields.ExtendableTextField;
-import com.intellij.ui.roots.ScalableIconComponent;
+import consulo.ide.impl.idea.ui.roots.ScalableIconComponent;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

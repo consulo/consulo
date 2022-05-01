@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.impl.cache.impl.id;
 
 import consulo.language.psi.search.UsageSearchContext;
 import consulo.language.psi.stub.FileContent;
-import com.intellij.util.indexing.IdDataConsumer;
+import consulo.ide.impl.idea.util.indexing.IdDataConsumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

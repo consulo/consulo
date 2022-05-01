@@ -15,9 +15,9 @@
  */
 package consulo.desktop.util.windows.defender;
 
-import com.intellij.diagnostic.DiagnosticBundle;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.project.startup.IdeaStartupActivity;

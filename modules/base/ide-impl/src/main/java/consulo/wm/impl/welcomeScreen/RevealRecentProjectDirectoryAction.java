@@ -15,13 +15,13 @@
  */
 package consulo.wm.impl.welcomeScreen;
 
-import com.intellij.ide.ReopenProjectAction;
-import com.intellij.ide.actions.RevealFileAction;
-import com.intellij.ide.actions.ShowFilePathAction;
+import consulo.ide.impl.idea.ide.ReopenProjectAction;
+import consulo.ide.impl.idea.ide.actions.RevealFileAction;
+import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
-import com.intellij.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
+import consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RecentProjectsWelcomeScreenActionBase;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

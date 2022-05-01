@@ -15,8 +15,8 @@
  */
 package consulo.diff.preferences.impl;
 
-import com.intellij.diff.impl.DiffSettingsHolder;
-import com.intellij.diff.tools.util.base.TextDiffSettingsHolder;
+import consulo.ide.impl.idea.diff.impl.DiffSettingsHolder;
+import consulo.ide.impl.idea.diff.tools.util.base.TextDiffSettingsHolder;
 import consulo.configurable.Configurable;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;

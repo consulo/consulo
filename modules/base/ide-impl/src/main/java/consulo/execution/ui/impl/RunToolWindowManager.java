@@ -16,7 +16,7 @@
 package consulo.execution.ui.impl;
 
 import consulo.execution.executor.Executor;
-import com.intellij.execution.dashboard.RunDashboardManager;
+import consulo.ide.impl.idea.execution.dashboard.RunDashboardManager;
 import consulo.execution.ui.RunContentManager;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.toolWindow.ContentManagerWatcher;
@@ -48,8 +48,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.intellij.execution.ui.RunContentManagerImpl.getExecutorByContent;
-import static com.intellij.execution.ui.RunContentManagerImpl.getRunContentDescriptorByContent;
+import static consulo.ide.impl.idea.execution.ui.RunContentManagerImpl.getExecutorByContent;
+import static consulo.ide.impl.idea.execution.ui.RunContentManagerImpl.getRunContentDescriptorByContent;
 
 /**
  * @author VISTALL

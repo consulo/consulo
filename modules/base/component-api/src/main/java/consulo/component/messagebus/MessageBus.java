@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  * </ul>
  * </pre>
  * <p/>
- * Use {@code 'com.intellij.openapi.components.ComponentManager#getMessageBus()'} to obtain one.
+ * Use {@code 'consulo.ide.impl.idea.openapi.components.ComponentManager#getMessageBus()'} to obtain one.
  * <p/>
  * Please see <a href="docs">https://www.jetbrains.org/intellij/sdk/docs/reference_guide/messaging_infrastructure.html</a>.
  */

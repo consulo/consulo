@@ -15,8 +15,8 @@
  */
 package consulo.remoteServer.configuration.deployment;
 
-import com.intellij.remoteServer.configuration.deployment.DeploymentSource;
-import com.intellij.remoteServer.configuration.deployment.DeploymentSourceType;
+import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSource;
+import consulo.ide.impl.idea.remoteServer.configuration.deployment.DeploymentSourceType;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.fileEditor;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
 import consulo.project.Project;

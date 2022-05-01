@@ -1,0 +1,79 @@
+/*
+ * Copyright 2000-2009 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.ide.impl.idea.ide.actions;
+
+import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.application.dumb.DumbAware;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.project.Project;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.fileEditor.FileEditorWindow;
+import javax.annotation.Nonnull;
+
+public class CloseAllEditorsButActiveAction extends AnAction implements DumbAware {
+  @RequiredUIAccess
+  @Override
+  public void actionPerformed(@Nonnull AnActionEvent e) {
+    Project project = e.getData(CommonDataKeys.PROJECT);
+    FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+    VirtualFile selectedFile;
+    final FileEditorWindow window = e.getData(FileEditorWindow.DATA_KEY);
+    if (window != null) {
+      window.closeAllExcept(e.getData(PlatformDataKeys.VIRTUAL_FILE));
+      return;
+    }
+    selectedFile = fileEditorManager.getSelectedFiles()[0];
+    final VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
+    for (final VirtualFile sibling : siblings) {
+      if (!Comparing.equal(selectedFile, sibling)) {
+        fileEditorManager.closeFile(sibling);
+      }
+    }
+  }
+
+  @RequiredUIAccess
+  @Override
+  public void update(@Nonnull AnActionEvent event) {
+    Presentation presentation = event.getPresentation();
+    Project project = event.getData(CommonDataKeys.PROJECT);
+    if (project == null) {
+      presentation.setEnabled(false);
+      return;
+    }
+    FileEditorManagerEx fileEditorManager = FileEditorManagerEx.getInstanceEx(project);
+    VirtualFile selectedFile;
+    final FileEditorWindow window = event.getData(FileEditorWindow.DATA_KEY);
+    if (window != null) {
+      presentation.setEnabled(window.getFiles().length > 1);
+      return;
+    }
+    else {
+      if (fileEditorManager.getSelectedFiles().length == 0) {
+        presentation.setEnabled(false);
+        return;
+      }
+      selectedFile = fileEditorManager.getSelectedFiles()[0];
+    }
+    VirtualFile[] siblings = fileEditorManager.getSiblings(selectedFile);
+    presentation.setEnabled(siblings.length > 1);
+  }
+}

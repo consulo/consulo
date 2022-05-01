@@ -82,7 +82,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
   }
 
   /**
-   * @deprecated, use {@link com.intellij.execution.runners.ExecutionEnvironmentBuilder} instead
+   * @deprecated, use {@link consulo.ide.impl.idea.execution.runners.ExecutionEnvironmentBuilder} instead
    * to remove in IDEA 14
    */
   @TestOnly
@@ -95,7 +95,7 @@ public class ExecutionEnvironment extends UserDataHolderBase implements Disposab
   }
 
   /**
-   * @deprecated, use {@link com.intellij.execution.runners.ExecutionEnvironmentBuilder} instead
+   * @deprecated, use {@link consulo.ide.impl.idea.execution.runners.ExecutionEnvironmentBuilder} instead
    * to remove in IDEA 15
    */
   public ExecutionEnvironment(@Nonnull RunProfile runProfile, @Nonnull Executor executor, @Nonnull Project project, @Nullable RunnerSettings runnerSettings) {

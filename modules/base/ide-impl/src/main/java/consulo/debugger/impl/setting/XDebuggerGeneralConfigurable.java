@@ -17,8 +17,8 @@ package consulo.debugger.impl.setting;
 
 import consulo.configurable.Configurable;
 import consulo.execution.debug.XDebuggerBundle;
-import com.intellij.xdebugger.impl.settings.XDebuggerGeneralSettings;
-import com.intellij.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
+import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerGeneralSettings;
+import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
 import consulo.disposer.Disposable;
 import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.ui.CheckBox;

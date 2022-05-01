@@ -15,7 +15,7 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.ui.content.TabbedPaneContentUI;
+import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
 import consulo.ui.Component;

@@ -15,7 +15,7 @@
  */
 package consulo.execution.ui.editor;
 
-import com.intellij.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.virtualFileSystem.VirtualFileWithoutContent;
 import consulo.language.file.light.LightVirtualFile;
 

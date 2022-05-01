@@ -15,7 +15,7 @@
  */
 package consulo.ide.projectView;
 
-import com.intellij.ide.projectView.ProjectView;
+import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;

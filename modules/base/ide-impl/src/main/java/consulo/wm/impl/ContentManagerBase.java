@@ -15,8 +15,8 @@
  */
 package consulo.wm.impl;
 
-import com.intellij.openapi.util.Comparing;
-import com.intellij.util.EventDispatcher;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.util.ActiveRunnable;
@@ -52,7 +52,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 15-Oct-17
  * <p>
- * Extracted base part of IDEA com.intellij.ui.content.impl.ContentManagerImpl
+ * Extracted base part of IDEA consulo.ide.impl.idea.ui.content.impl.ContentManagerImpl
  */
 public abstract class ContentManagerBase implements ContentManager, PropertyChangeListener, Disposable.Parent {
   private static final Logger LOG = Logger.getInstance(ContentManagerBase.class);

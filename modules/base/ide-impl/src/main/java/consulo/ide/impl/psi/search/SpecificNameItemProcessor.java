@@ -19,7 +19,7 @@
  */
 package consulo.ide.impl.psi.search;
 
-import com.intellij.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.psi.resolve.PsiFileSystemItemProcessor;
 
 public abstract class SpecificNameItemProcessor implements PsiFileSystemItemProcessor {

@@ -23,7 +23,7 @@ import consulo.document.Document;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.virtualFileSystem.fileType.FileType;
-import com.intellij.openapi.progress.DumbProgressIndicator;
+import consulo.ide.impl.idea.openapi.progress.DumbProgressIndicator;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
@@ -34,7 +34,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import consulo.ide.impl.psi.codeStyle.autodetect.IndentOptionsAdjuster;
 import consulo.ide.impl.psi.codeStyle.autodetect.IndentOptionsDetectorImpl;
-import com.intellij.util.Time;
+import consulo.ide.impl.idea.util.Time;
 import consulo.application.util.concurrent.SequentialTaskExecutor;
 import consulo.logging.Logger;
 

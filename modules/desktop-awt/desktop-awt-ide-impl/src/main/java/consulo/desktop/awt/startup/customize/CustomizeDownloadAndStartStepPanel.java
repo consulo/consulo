@@ -20,7 +20,7 @@ import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.VerticalFlowLayout;
-import com.intellij.openapi.updateSettings.impl.PluginDownloader;
+import consulo.ide.impl.idea.openapi.updateSettings.impl.PluginDownloader;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.application.Application;

@@ -1,0 +1,78 @@
+/*
+ * Copyright 2000-2009 JetBrains s.r.o.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package consulo.ide.impl.idea.lang.cacheBuilder;
+
+import consulo.application.Application;
+import consulo.component.extension.ExtensionPointName;
+import consulo.language.cacheBuilder.WordsScanner;
+import consulo.util.xml.serializer.annotation.Attribute;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.component.extension.PluginAware;
+import consulo.logging.Logger;
+
+/**
+ * @author yole
+ */
+public class CacheBuilderEP implements PluginAware {
+  private static final Logger LOG = Logger.getInstance(CacheBuilderEP.class);
+
+  public static final ExtensionPointName<CacheBuilderEP> EP_NAME = ExtensionPointName.create("consulo.cacheBuilder");
+
+
+  @Attribute("fileType")
+  public String fileType;
+  @Attribute("wordsScannerClass")
+  public String wordsScannerClass;
+  private WordsScanner myWordsScanner;
+  private PluginDescriptor myPluginDescriptor;
+
+  public String getFileType() {
+    return fileType;
+  }
+
+  public void setFileType(final String fileType) {
+    this.fileType = fileType;
+  }
+
+  @Override
+  public void setPluginDescriptor(PluginDescriptor pluginDescriptor) {
+    myPluginDescriptor = pluginDescriptor;
+  }
+
+  public String getWordsScannerClass() {
+    return wordsScannerClass;
+  }
+
+  public void setWordsScannerClass(final String wordsScannerClass) {
+    this.wordsScannerClass = wordsScannerClass;
+  }
+
+  public WordsScanner getWordsScanner() {
+    if (myWordsScanner == null) {
+      try {
+        final Class<?> aClass = Class.forName(wordsScannerClass, true,
+                                              myPluginDescriptor == null ? getClass().getClassLoader()  : myPluginDescriptor.getPluginClassLoader());
+        myWordsScanner = (WordsScanner)Application.get().getInjectingContainer().getUnbindedInstance(aClass);
+      }
+      catch(Exception e) {
+        LOG.error(e);
+        return null;
+      }
+    }
+    return myWordsScanner;
+  }
+}

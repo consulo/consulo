@@ -10,7 +10,7 @@ import consulo.language.psi.stub.ScalarIndexExtension;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.project.Project;
-import com.intellij.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.KeyDescriptor;

@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * Due to the fact that the colors are animated, the constants given in the class
  * represent some key points for drawing scrollbars in different modes.
  *
- * @see com.intellij.openapi.options.colors.pages.GeneralColorsPage
+ * @see consulo.ide.impl.idea.openapi.options.colors.pages.GeneralColorsPage
  */
 public abstract class ScrollBarPainter implements RegionPainter<Float> {
   public final Rectangle bounds = new Rectangle();

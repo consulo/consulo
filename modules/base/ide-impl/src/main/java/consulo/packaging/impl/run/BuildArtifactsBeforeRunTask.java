@@ -16,7 +16,7 @@
 package consulo.packaging.impl.run;
 
 import consulo.project.Project;
-import com.intellij.packaging.impl.run.AbstractArtifactsBeforeRunTask;
+import consulo.ide.impl.idea.packaging.impl.run.AbstractArtifactsBeforeRunTask;
 
 /**
  * @author VISTALL

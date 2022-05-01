@@ -18,7 +18,6 @@ package consulo.language.template;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.ast.IElementType;
-import consulo.language.template.TemplateLanguage;
 
 import javax.annotation.Nonnull;
 
@@ -39,7 +38,7 @@ public interface TemplateLanguageFileViewProvider extends FileViewProvider {
   /**
    * e.g. HTML for JSP files
    *
-   * @return not instanceof {@link com.intellij.lang.DependentLanguage}
+   * @return not instanceof {@link consulo.ide.impl.idea.lang.DependentLanguage}
    */
   @Nonnull
   Language getTemplateDataLanguage();

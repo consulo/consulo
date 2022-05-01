@@ -20,7 +20,7 @@ import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.LanguageFileType;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.copyright.impl.CopyrightUpdaters;
 import consulo.copyright.impl.psi.UpdateCopyrightsProvider;
 import javax.annotation.Nonnull;

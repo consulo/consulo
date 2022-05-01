@@ -15,11 +15,11 @@
  */
 package consulo.codeInsight.template.postfix.settings;
 
-import com.intellij.codeInsight.template.postfix.settings.PostfixDescriptionPanel;
-import com.intellij.codeInsight.template.postfix.settings.PostfixTemplateMetaData;
-import com.intellij.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
-import com.intellij.codeInsight.template.postfix.templates.PostfixTemplate;
-import com.intellij.codeInsight.template.postfix.templates.PostfixTemplateProvider;
+import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixDescriptionPanel;
+import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplateMetaData;
+import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
+import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplate;
+import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplateProvider;
 import consulo.language.Language;
 import consulo.language.LanguageExtensionPoint;
 import consulo.configurable.Configurable;

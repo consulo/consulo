@@ -29,7 +29,7 @@ import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;

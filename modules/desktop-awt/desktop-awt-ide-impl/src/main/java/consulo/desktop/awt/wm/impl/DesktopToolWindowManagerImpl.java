@@ -15,23 +15,23 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.ide.FrameStateManager;
-import com.intellij.ide.IdeEventQueue;
-import com.intellij.ide.ui.LafManager;
-import com.intellij.ide.ui.LafManagerListener;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
-import com.intellij.openapi.ui.MessageType;
+import consulo.ide.impl.idea.ide.FrameStateManager;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.ide.impl.idea.ide.ui.LafManagerListener;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.ui.MessageType;
 import consulo.ui.ex.popup.JBPopupFactory;
-import com.intellij.openapi.util.EdtRunnable;
-import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.openapi.util.EdtRunnable;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.ui.ex.toolWindow.InternalDecoratorListener;
-import com.intellij.openapi.wm.impl.ToolWindowLayout;
-import com.intellij.openapi.wm.impl.WindowInfoImpl;
-import com.intellij.ui.BalloonImpl;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.ui.ex.awt.IJSwingUtilities;
-import com.intellij.util.ObjectUtil;
+import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.wm.ExpirableRunnable;

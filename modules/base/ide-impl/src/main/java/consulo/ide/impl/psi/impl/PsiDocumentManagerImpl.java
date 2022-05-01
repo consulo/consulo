@@ -2,14 +2,14 @@
 
 package consulo.ide.impl.psi.impl;
 
-import com.intellij.openapi.editor.impl.event.EditorEventMulticasterImpl;
-import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
-import com.intellij.openapi.project.impl.ProjectImpl;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.pom.core.impl.PomModelImpl;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.FileContentUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import consulo.ide.impl.idea.openapi.project.impl.ProjectImpl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.pom.core.impl.PomModelImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.FileContentUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.progress.ProgressIndicator;

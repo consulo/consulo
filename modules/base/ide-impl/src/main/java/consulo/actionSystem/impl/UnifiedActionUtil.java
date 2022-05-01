@@ -16,7 +16,7 @@
 package consulo.actionSystem.impl;
 
 import consulo.dataContext.DataManager;
-import com.intellij.openapi.actionSystem.impl.PresentationFactory;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.PresentationFactory;
 import consulo.dataContext.DataContext;
 import consulo.ui.Menu;
 import consulo.ui.MenuItem;

@@ -23,8 +23,8 @@ import javax.annotation.Nullable;
 /**
  * The presentation of an item in a tree, list or similar view.
  *
- * @see com.intellij.ide.util.treeView.smartTree.TreeElement#getPresentation()
- * @see com.intellij.ide.projectView.PresentationData
+ * @see consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeElement#getPresentation()
+ * @see consulo.ide.impl.idea.ide.projectView.PresentationData
  */
 public interface ItemPresentation {
   /**

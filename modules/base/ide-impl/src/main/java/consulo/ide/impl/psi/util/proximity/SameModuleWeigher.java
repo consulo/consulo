@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.util.proximity;
 
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.psi.util.ProximityLocation;
 import javax.annotation.Nonnull;

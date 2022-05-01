@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.application.impl;
 
-import com.intellij.ide.IdeEventQueue;
+import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.application.Application;
 import consulo.application.event.ApplicationListener;
 import consulo.logging.Logger;

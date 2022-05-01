@@ -71,7 +71,7 @@ public abstract class XValue extends XValueContainer {
   }
 
   /**
-   * @return {@link com.intellij.xdebugger.frame.XValueModifier} instance which can be used to modify the value
+   * @return {@link consulo.ide.impl.idea.xdebugger.frame.XValueModifier} instance which can be used to modify the value
    */
   @Nullable
   public XValueModifier getModifier() {

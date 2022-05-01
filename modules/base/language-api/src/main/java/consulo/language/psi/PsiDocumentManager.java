@@ -122,7 +122,7 @@ public abstract class PsiDocumentManager {
   /**
    * @return the document text that PSI should be based upon. For changed documents, it's their old text until the document is committed.
    * This sequence is immutable.
-   * @see com.intellij.util.text.ImmutableCharSequence
+   * @see consulo.ide.impl.idea.util.text.ImmutableCharSequence
    */
   @Nonnull
   public abstract CharSequence getLastCommittedText(@Nonnull Document document);

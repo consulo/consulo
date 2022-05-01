@@ -39,7 +39,7 @@ public class TextRange implements Segment, Serializable {
 
   /**
    * @param checkForProperTextRange <code>true</code> if offsets should be checked by {@link #assertProperRange(int, int, Object)}
-   * @see com.intellij.openapi.util.UnfairTextRange
+   * @see consulo.ide.impl.idea.openapi.util.UnfairTextRange
    */
   protected TextRange(int startOffset, int endOffset, boolean checkForProperTextRange) {
     myStartOffset = startOffset;

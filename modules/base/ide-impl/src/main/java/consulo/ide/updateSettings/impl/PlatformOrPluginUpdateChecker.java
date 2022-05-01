@@ -16,17 +16,17 @@
 package consulo.ide.updateSettings.impl;
 
 import consulo.ide.IdeBundle;
-import com.intellij.ide.actions.SettingsEntryPointAction;
-import com.intellij.ide.plugins.PluginManagerMain;
-import com.intellij.ide.plugins.PluginNode;
-import com.intellij.ide.plugins.RepositoryHelper;
-import com.intellij.notification.NotificationAction;
+import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
+import consulo.ide.impl.idea.ide.plugins.PluginNode;
+import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
+import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.DateFormatUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.application.progress.ProgressIndicator;

@@ -18,7 +18,7 @@ package consulo.compiler.impl;
 import consulo.compiler.CompilerBundle;
 import consulo.compiler.CompilerMessage;
 import consulo.compiler.CompilerMessageCategory;
-import com.intellij.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;

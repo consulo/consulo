@@ -16,8 +16,8 @@
 package consulo.desktop.awt.settings;
 
 import consulo.application.CommonBundle;
-import com.intellij.ide.ui.search.SearchUtil;
-import com.intellij.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.ide.ui.search.SearchUtil;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.dataContext.DataProvider;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
@@ -27,7 +27,7 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.ide.setting.Settings;
 import consulo.project.Project;
-import com.intellij.openapi.util.Couple;
+import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.ui.ex.awt.CustomLineBorder;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.BorderLayoutPanel;

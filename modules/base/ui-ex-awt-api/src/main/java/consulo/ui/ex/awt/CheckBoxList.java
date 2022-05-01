@@ -115,7 +115,7 @@ public class CheckBoxList<T> extends JBList {
       icon = ui.getDefaultIcon();
     }
     if (icon == null) {
-      // com.intellij.ide.ui.laf.darcula.ui.DarculaCheckBoxUI.getDefaultIcon()
+      // consulo.ide.impl.idea.ide.ui.laf.darcula.ui.DarculaCheckBoxUI.getDefaultIcon()
       icon = JBUI.scale(EmptyIcon.create(20));
     }
     Insets margin = checkBox.getMargin();

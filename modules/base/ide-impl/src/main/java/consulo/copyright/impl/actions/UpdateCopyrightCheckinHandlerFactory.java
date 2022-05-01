@@ -21,17 +21,17 @@
 package consulo.copyright.impl.actions;
 
 import consulo.document.FileDocumentManager;
-import com.intellij.openapi.vcs.CheckinProjectPanel;
-import com.intellij.openapi.vcs.changes.CommitContext;
-import com.intellij.openapi.vcs.changes.CommitExecutor;
-import com.intellij.openapi.vcs.checkin.CheckinHandler;
-import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory;
-import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
+import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
+import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
+import consulo.ide.impl.idea.openapi.vcs.changes.CommitExecutor;
+import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandler;
+import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandlerFactory;
+import consulo.ide.impl.idea.openapi.vcs.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.PairConsumer;
+import consulo.ide.impl.idea.util.PairConsumer;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

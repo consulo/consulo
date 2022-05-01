@@ -12,12 +12,12 @@ import javax.annotation.Nullable;
  * A colored stdout/stderr output type corresponds to an unique ANSI color attributes info passed as
  * {@code name} constructor parameter, and base stream output type (stdout/stderr) - {@code streamType} parameter.
  * <p/>
- * Use {@link com.intellij.execution.ui.ConsoleViewContentType#getConsoleViewType} to get TextAttributes for an instance
+ * Use {@link consulo.ide.impl.idea.execution.ui.ConsoleViewContentType#getConsoleViewType} to get TextAttributes for an instance
  * of this class.
  * <p/>
  *
- * @see com.intellij.execution.process.ColoredOutputTypeRegistry
- * @see com.intellij.execution.ui.ConsoleViewContentType#registerNewConsoleViewType
+ * @see consulo.ide.impl.idea.execution.process.ColoredOutputTypeRegistry
+ * @see consulo.ide.impl.idea.execution.ui.ConsoleViewContentType#registerNewConsoleViewType
  */
 public class ProcessOutputType extends Key<Object> {
   public static final ProcessOutputType SYSTEM = new ProcessOutputType("system");

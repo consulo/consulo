@@ -7,7 +7,7 @@ import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.configurable.Configurable;
-import com.intellij.openapi.util.Getter;
+import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.execution.debug.setting.DebuggerSettingsCategory;

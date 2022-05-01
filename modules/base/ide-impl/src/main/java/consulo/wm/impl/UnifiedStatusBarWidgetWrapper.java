@@ -16,7 +16,7 @@
 package consulo.wm.impl;
 
 import consulo.project.ui.wm.StatusBarWidget;
-import com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
+import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.PseudoComponent;

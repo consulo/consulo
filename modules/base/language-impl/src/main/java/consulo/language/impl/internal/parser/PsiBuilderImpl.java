@@ -1740,7 +1740,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
                             StartMarker parent) {
       final int start = builder.myLexStarts[startLexemeIndex];
       final int end = builder.myLexStarts[endLexemeIndex];
-      /* Corresponding code for heavy tree is located in {@link com.intellij.lang.impl.PsiBuilderImpl#insertLeaves}
+      /* Corresponding code for heavy tree is located in {@link consulo.ide.impl.idea.lang.impl.PsiBuilderImpl#insertLeaves}
          and is applied only to plain lexemes */
       if (start > end || !forceInsertion && start == end && !(type instanceof ILeafElementType)) {
         return;

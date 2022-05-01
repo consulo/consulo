@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
-import com.intellij.openapi.wm.WeakFocusStackManager;
+import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;

@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * <p>
  * To associate a thread with a progress, use {@link ProgressManager#runProcess} methods. This is mostly
  * used with invisible progress indicators for cancellation handling. A common case is to take a read action that's interrupted by a write action
- * about to occur in the UI thread, to avoid UI freezes (see {@link com.intellij.openapi.application.ReadAction#nonBlocking(Runnable)}).
+ * about to occur in the UI thread, to avoid UI freezes (see {@link consulo.ide.impl.idea.openapi.application.ReadAction#nonBlocking(Runnable)}).
  * Another common case is wrapping main thread's to parallelize the associated computation by forking additional threads.<p></p>
  * <p>
  * Current thread's progress indicator, visible or not, can be retrieved with {@link ProgressManager#getGlobalProgressIndicator()}.<p></p>
@@ -45,12 +45,12 @@ import javax.annotation.Nullable;
  * <ul>
  * <li>{@link EmptyProgressIndicator}: invisible (ignores text/fraction-related methods), used only for cancellation tracking.
  * Remembers its creation modality state.</li>
- * <li>{@link com.intellij.openapi.progress.util.ProgressIndicatorBase}: invisible, but can be made visible by subclassing:
+ * <li>{@link consulo.ide.impl.idea.openapi.progress.util.ProgressIndicatorBase}: invisible, but can be made visible by subclassing:
  * remembers text/fraction inside and allows to retrieve them and possibly show in the UI. Non-modal by default.</li>
- * <li>{@link com.intellij.openapi.progress.util.ProgressWindow}: visible progress, either modal or background. Usually not created directly,
+ * <li>{@link consulo.ide.impl.idea.openapi.progress.util.ProgressWindow}: visible progress, either modal or background. Usually not created directly,
  * instantiated internally inside {@link ProgressManager#run}.</li>
- * <li>{@link com.intellij.openapi.progress.util.ProgressWrapper}: wraps an existing progress indicator, usually to fork another thread
- * with the same cancellation policy. Use {@link com.intellij.concurrency.SensitiveProgressWrapper} to allow
+ * <li>{@link consulo.ide.impl.idea.openapi.progress.util.ProgressWrapper}: wraps an existing progress indicator, usually to fork another thread
+ * with the same cancellation policy. Use {@link consulo.ide.impl.idea.concurrency.SensitiveProgressWrapper} to allow
  * that separate thread's indicator to be canceled independently from the main thread.</li>
  * </ul>
  */

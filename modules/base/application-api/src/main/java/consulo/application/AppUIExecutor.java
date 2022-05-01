@@ -74,7 +74,7 @@ public interface AppUIExecutor extends BaseExpirableExecutor<AppUIExecutor> {
 
   /**
    * @return an executor that invokes runnables only when indices have been built and are available to use. Automatically expires when the project is disposed.
-   * @see com.intellij.openapi.project.DumbService#isDumb(Project)
+   * @see consulo.ide.impl.idea.openapi.project.DumbService#isDumb(Project)
    */
   @Nonnull
   @Contract(pure = true)

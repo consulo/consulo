@@ -18,7 +18,7 @@ package consulo.wm.impl;
 import consulo.project.Project;
 import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.project.ui.wm.StatusBar;
-import com.intellij.openapi.wm.ex.IdeFrameEx;
+import consulo.ide.impl.idea.openapi.wm.ex.IdeFrameEx;
 import consulo.project.ui.wm.BalloonLayout;
 import consulo.ui.Window;
 import consulo.ui.Rectangle2D;

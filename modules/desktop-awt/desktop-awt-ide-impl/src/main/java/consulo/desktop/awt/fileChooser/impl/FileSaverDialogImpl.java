@@ -17,7 +17,7 @@ package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
-import com.intellij.openapi.fileChooser.FileSystemTree;
+import consulo.ide.impl.idea.openapi.fileChooser.FileSystemTree;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.VirtualFile;

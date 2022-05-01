@@ -2,10 +2,10 @@
 package consulo.desktop.awt.ui.plaf.darcula;
 
 import consulo.application.AllIcons;
-import com.intellij.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.ObjectUtils;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.MacUIUtil;

@@ -15,7 +15,7 @@
  */
 package consulo.codeInsight.navigation.actions;
 
-import com.intellij.codeInsight.navigation.actions.GotoDeclarationHandler;
+import consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationHandler;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;

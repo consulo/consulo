@@ -17,9 +17,8 @@ package consulo.fileEditor.impl;
 
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.fileEditor.FileEditorWithProvider;
-import com.intellij.openapi.fileEditor.impl.HistoryEntry;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.Component;

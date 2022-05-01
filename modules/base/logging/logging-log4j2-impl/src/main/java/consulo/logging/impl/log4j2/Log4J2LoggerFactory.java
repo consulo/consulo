@@ -16,8 +16,8 @@
 package consulo.logging.impl.log4j2;
 
 import consulo.application.impl.internal.start.StartupUtil;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ApplicationProperties;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;

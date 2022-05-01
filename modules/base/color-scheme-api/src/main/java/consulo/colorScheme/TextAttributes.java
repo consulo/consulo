@@ -247,7 +247,7 @@ public class TextAttributes implements Cloneable {
     if (!(obj instanceof TextAttributes)) {
       return false;
     }
-    // myAttrs are interned, see com.intellij.openapi.editor.markup.AttributesFlyweight.create()
+    // myAttrs are interned, see consulo.ide.impl.idea.openapi.editor.markup.AttributesFlyweight.create()
     return myAttrs == ((TextAttributes)obj).myAttrs;
   }
 

@@ -15,8 +15,8 @@
  */
 package consulo.logging.impl.log4j2.attachment;
 
-import com.intellij.util.ExceptionUtil;
-import com.intellij.util.PathUtil;
+import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.ide.impl.idea.util.PathUtil;
 import consulo.logging.attachment.Attachment;
 
 import javax.annotation.Nonnull;

@@ -21,9 +21,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Determines how a value is shown in debugger trees. Use one of the standard implementations (for {@link com.intellij.xdebugger.frame.presentation.XStringValuePresentation strings},
- * {@link com.intellij.xdebugger.frame.presentation.XNumericValuePresentation numbers}, {@link com.intellij.xdebugger.frame.presentation.XKeywordValuePresentation keywords}
- * and for {@link com.intellij.xdebugger.frame.presentation.XRegularValuePresentation other values}) or override this class if you need something special
+ * Determines how a value is shown in debugger trees. Use one of the standard implementations (for {@link consulo.ide.impl.idea.xdebugger.frame.presentation.XStringValuePresentation strings},
+ * {@link consulo.ide.impl.idea.xdebugger.frame.presentation.XNumericValuePresentation numbers}, {@link consulo.ide.impl.idea.xdebugger.frame.presentation.XKeywordValuePresentation keywords}
+ * and for {@link consulo.ide.impl.idea.xdebugger.frame.presentation.XRegularValuePresentation other values}) or override this class if you need something special
  *
  * @see XValueNode#setPresentation(consulo.ui.image.Image, XValuePresentation, boolean)
  */

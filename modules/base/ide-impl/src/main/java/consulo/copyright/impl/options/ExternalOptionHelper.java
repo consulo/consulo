@@ -18,7 +18,7 @@ package consulo.copyright.impl.options;
 
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.copyright.impl.CopyrightProfile;
 import org.jdom.Document;
 import org.jdom.Element;

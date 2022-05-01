@@ -16,10 +16,10 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.application.impl.internal.IdeaModalityState;
-import com.intellij.openapi.project.NoAccessDuringPsiEvents;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.indexing.FileBasedIndexImpl;
-import com.intellij.util.indexing.SingleEntryFileBasedIndexExtension;
+import consulo.ide.impl.idea.openapi.project.NoAccessDuringPsiEvents;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
+import consulo.ide.impl.idea.util.indexing.SingleEntryFileBasedIndexExtension;
 import consulo.application.ApplicationManager;
 import consulo.application.util.RecursionManager;
 import consulo.document.Document;

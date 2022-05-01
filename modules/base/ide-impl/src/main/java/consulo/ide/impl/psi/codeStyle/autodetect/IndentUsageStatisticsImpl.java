@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.psi.codeStyle.autodetect;
 
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.Stack;
 import consulo.util.collection.primitive.ints.IntIntMap;
 import consulo.util.collection.primitive.ints.IntMaps;

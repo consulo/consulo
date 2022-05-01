@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.debugger.attach;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.execution.debug.attach.*;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessInfo;

@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 
 /**
  * This class is responsible for running a task in a proper context defined using various builder methods of this class and it's
- * implementations, like [com.intellij.openapi.application.AppUIExecutor.later], or generic [withConstraint].
+ * implementations, like [consulo.ide.impl.idea.openapi.application.AppUIExecutor.later], or generic [withConstraint].
  * <p>
  * ## Implementation notes: ##
  * <p>

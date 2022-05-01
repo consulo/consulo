@@ -15,7 +15,7 @@
  */
 package consulo.roots.ui.configuration.projectRoot.daemon;
 
-import com.intellij.openapi.roots.ui.configuration.projectRoot.daemon.StructureProblemsSettings;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.StructureProblemsSettings;
 
 /**
  * @author VISTALL

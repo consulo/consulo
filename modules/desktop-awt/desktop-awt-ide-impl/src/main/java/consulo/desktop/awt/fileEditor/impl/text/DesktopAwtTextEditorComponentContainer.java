@@ -18,7 +18,7 @@ package consulo.desktop.awt.fileEditor.impl.text;
 import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
 import consulo.codeEditor.Editor;
-import com.intellij.ui.components.JBLoadingPanel;
+import consulo.ide.impl.idea.ui.components.JBLoadingPanel;
 import consulo.ui.ex.awt.util.JBSwingUtilities;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.disposer.Disposable;

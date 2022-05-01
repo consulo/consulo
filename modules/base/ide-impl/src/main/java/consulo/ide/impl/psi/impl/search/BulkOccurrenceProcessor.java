@@ -16,7 +16,7 @@
 package consulo.ide.impl.psi.impl.search;
 
 import consulo.language.psi.PsiElement;
-import com.intellij.util.text.StringSearcher;
+import consulo.ide.impl.idea.util.text.StringSearcher;
 import javax.annotation.Nonnull;
 
 @FunctionalInterface

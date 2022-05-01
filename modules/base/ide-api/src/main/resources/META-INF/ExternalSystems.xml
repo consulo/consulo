@@ -16,18 +16,18 @@
 <consulo-plugin>
   <actions>
     <action id="ExternalSystem.RefreshAllProjects"
-            class="com.intellij.openapi.externalSystem.action.RefreshAllExternalProjectsAction"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.RefreshAllExternalProjectsAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
     <action id="ExternalSystem.RefreshProject"
-            class="com.intellij.openapi.externalSystem.action.RefreshExternalProjectAction"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.RefreshExternalProjectAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
     <action id="ExternalSystem.AttachProject"
-            class="com.intellij.openapi.externalSystem.action.AttachExternalProjectAction"/>
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.AttachExternalProjectAction"/>
     <action id="ExternalSystem.DetachProject"
-            class="com.intellij.openapi.externalSystem.action.DetachExternalProjectAction"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.DetachExternalProjectAction"
             use-shortcut-of="$Delete"/>
     <action id="ExternalSystem.OpenConfig"
-            class="com.intellij.openapi.externalSystem.action.OpenExternalConfigAction"
+            class="consulo.ide.impl.idea.openapi.externalSystem.action.OpenExternalConfigAction"
             use-shortcut-of="EditSource"/>
 
     <!--Tool window actions-->
@@ -48,48 +48,48 @@
   </actions>
 
   <extensionPoints>
-    <extensionPoint name="externalSystemManager" interface="com.intellij.openapi.externalSystem.ExternalSystemManager"/>
+    <extensionPoint name="externalSystemManager" interface="consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager"/>
     <extensionPoint name="externalProjectDataService"
-                    interface="com.intellij.openapi.externalSystem.service.project.manage.ProjectDataService"/>
+                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataService"/>
     <extensionPoint name="externalSystemNotificationExtension"
-                    interface="com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationExtension"/>
+                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemNotificationExtension"/>
     <extensionPoint name="externalSystemConfigLocator"
-                    interface="com.intellij.openapi.externalSystem.service.settings.ExternalSystemConfigLocator"/>
+                    interface="consulo.ide.impl.idea.openapi.externalSystem.service.settings.ExternalSystemConfigLocator"/>
     <extensionPoint name="externalSystemTaskNotificationListener"
-                    interface="com.intellij.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener"/>
+                    interface="consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
 
-    <backgroundPostStartupActivity implementation="com.intellij.openapi.externalSystem.service.ExternalSystemStartupActivity"/>
+    <backgroundPostStartupActivity implementation="consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemStartupActivity"/>
 
     <!--Generic services-->
-    <applicationService serviceImplementation="com.intellij.openapi.externalSystem.service.ExternalSystemFacadeManager"/>
-    <applicationService serviceImplementation="com.intellij.openapi.externalSystem.service.RemoteExternalSystemCommunicationManager"/>
-    <applicationService serviceImplementation="com.intellij.openapi.externalSystem.service.InProcessExternalSystemCommunicationManager"/>
+    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager"/>
+    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemCommunicationManager"/>
+    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.InProcessExternalSystemCommunicationManager"/>
     <applicationService
-        serviceInterface="com.intellij.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager"
-        serviceImplementation="com.intellij.openapi.externalSystem.service.remote.ExternalSystemProgressNotificationManagerImpl"/>
-    <applicationService serviceInterface="com.intellij.openapi.externalSystem.service.project.ExternalLibraryPathTypeMapper"
-                        serviceImplementation="com.intellij.openapi.externalSystem.service.project.ExternalLibraryPathTypeMapperImpl"/>
-    <applicationService serviceImplementation="com.intellij.openapi.externalSystem.service.internal.ExternalSystemProcessingManager"/>
+        serviceInterface="consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager"
+        serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.remote.ExternalSystemProgressNotificationManagerImpl"/>
+    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalLibraryPathTypeMapper"
+                        serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalLibraryPathTypeMapperImpl"/>
+    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager"/>
     <projectService
-        serviceImplementation="com.intellij.openapi.externalSystem.service.notification.ExternalSystemNotificationManager"/>
+        serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemNotificationManager"/>
 
     <!--Project structure management services-->
-    <applicationService serviceImplementation="com.intellij.openapi.externalSystem.service.project.manage.ProjectDataManager"/>
-    <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.project.manage.ProjectDataServiceImpl"/>
-    <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.project.manage.LibraryDataService"/>
-    <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.project.manage.ModuleDataService"/>
-    <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.project.manage.ContentRootDataService"/>
-    <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.project.manage.LibraryDependencyDataService"/>
-    <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.project.manage.ModuleDependencyDataService"/>
+    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataServiceImpl"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.LibraryDataService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDataService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ContentRootDataService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.LibraryDependencyDataService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDependencyDataService"/>
 
     <!--Tool window services-->
-    <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.task.ToolWindowModuleService"/>
-    <externalProjectDataService implementation="com.intellij.openapi.externalSystem.service.task.ToolWindowTaskService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.task.ToolWindowModuleService"/>
+    <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.task.ToolWindowTaskService"/>
 
     <!--Execution-->
-    <programRunner implementation="com.intellij.openapi.externalSystem.service.execution.ExternalSystemTaskRunner"/>
+    <programRunner implementation="consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemTaskRunner"/>
   </extensions>
 </consulo-plugin>

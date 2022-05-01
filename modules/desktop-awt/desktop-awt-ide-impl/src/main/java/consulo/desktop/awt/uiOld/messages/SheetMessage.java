@@ -20,7 +20,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
-import com.intellij.ui.mac.MacMainFrameDecorator;
+import consulo.ide.impl.idea.ui.mac.MacMainFrameDecorator;
 import consulo.ui.ex.awt.IJSwingUtilities;
 import consulo.ui.ex.awt.Animator;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

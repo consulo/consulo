@@ -28,154 +28,154 @@
 
     <group id="LookupActions">
       <!-- these must be declared before standard EnterAction and TabAction -->
-      <action id="EditorChooseLookupItem" class="com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction$FocusedOnly"/>
-      <action id="EditorChooseLookupItemReplace" class="com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction$Replacing"/>
-      <action id="EditorChooseLookupItemCompleteStatement" class="com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction$CompletingStatement"/>
-      <action id="EditorChooseLookupItemDot" class="com.intellij.codeInsight.lookup.impl.actions.ChooseItemAction$ChooseWithDot"/>
+      <action id="EditorChooseLookupItem" class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$FocusedOnly"/>
+      <action id="EditorChooseLookupItemReplace" class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$Replacing"/>
+      <action id="EditorChooseLookupItemCompleteStatement" class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$CompletingStatement"/>
+      <action id="EditorChooseLookupItemDot" class="consulo.ide.impl.idea.codeInsight.lookup.impl.actions.ChooseItemAction$ChooseWithDot"/>
 
-      <action id="ExpandLiveTemplateByTab" class="com.intellij.codeInsight.template.impl.editorActions.ExpandLiveTemplateByTabAction"
+      <action id="ExpandLiveTemplateByTab" class="consulo.ide.impl.idea.codeInsight.template.impl.editorActions.ExpandLiveTemplateByTabAction"
               use-shortcut-of="EditorTab"/>
 
-      <action id="NextTemplateVariable" class="com.intellij.codeInsight.template.impl.actions.NextVariableAction"/>
-      <action id="PreviousTemplateVariable" class="com.intellij.codeInsight.template.impl.actions.PreviousVariableAction"/>
+      <action id="NextTemplateVariable" class="consulo.ide.impl.idea.codeInsight.template.impl.actions.NextVariableAction"/>
+      <action id="PreviousTemplateVariable" class="consulo.ide.impl.idea.codeInsight.template.impl.actions.PreviousVariableAction"/>
 
-      <action id="NextParameter" class="com.intellij.codeInsight.hint.actions.NextParameterAction"/>
-      <action id="PrevParameter" class="com.intellij.codeInsight.hint.actions.PrevParameterAction"/>
+      <action id="NextParameter" class="consulo.ide.impl.idea.codeInsight.hint.actions.NextParameterAction"/>
+      <action id="PrevParameter" class="consulo.ide.impl.idea.codeInsight.hint.actions.PrevParameterAction"/>
     </group>
 
-    <action id="EditorIndentSelection" class="com.intellij.openapi.editor.actions.LangIndentSelectionAction"/>
+    <action id="EditorIndentSelection" class="consulo.ide.impl.idea.openapi.editor.actions.LangIndentSelectionAction"/>
 
     <action id="ContextHelp" class="consulo.ui.ex.action.ContextHelpAction"/>
-    <action id="RunGc" class="com.intellij.ide.actions.RunGcAction"/>
-    <action id="ShowPopupMenu" class="com.intellij.ide.actions.ShowPopupMenuAction"/>
-    <action id="ShowColorPicker" class="com.intellij.ui.ShowColorPickerAction" text="Show Color Picker"/>
+    <action id="RunGc" class="consulo.ide.impl.idea.ide.actions.RunGcAction"/>
+    <action id="ShowPopupMenu" class="consulo.ide.impl.idea.ide.actions.ShowPopupMenuAction"/>
+    <action id="ShowColorPicker" class="consulo.ide.impl.idea.ui.ShowColorPickerAction" text="Show Color Picker"/>
 
-    <action id="NextEditorTab" class="com.intellij.openapi.fileEditor.impl.SelectNextEditorTabAction"/>
-    <action id="PreviousEditorTab" class="com.intellij.openapi.fileEditor.impl.SelectPreviousEditorTabAction"/>
+    <action id="NextEditorTab" class="consulo.ide.impl.idea.openapi.fileEditor.impl.SelectNextEditorTabAction"/>
+    <action id="PreviousEditorTab" class="consulo.ide.impl.idea.openapi.fileEditor.impl.SelectPreviousEditorTabAction"/>
 
-    <action id="TextComponent.ClearAction" class="com.intellij.ui.ClearTextAction"/>
-    <action id="Switcher" class="com.intellij.ide.actions.Switcher" text="Switcher"/>
-    <action id="QuickDocCopy" class="com.intellij.codeInsight.documentation.actions.CopyQuickDocAction" use-shortcut-of="$Copy"/>
-    <action id="EditSourceInNewWindow" class="com.intellij.ide.actions.EditSourceInNewWindowAction"/>
-    <action id="SearchEverywhere" class="com.intellij.ide.actions.SearchEverywhereAction" icon="consulo.platform.base.PlatformIconGroup@actions.find"/>
-    <action id="RunAnything" icon="consulo.platform.base.PlatformIconGroup@actions.run_anything" class="com.intellij.ide.actions.runAnything.RunAnythingAction" text="Run anything"
-            description="Allows to execute any command"/>
-    <action id="SettingsEntryPoint" class="com.intellij.ide.actions.SettingsEntryPointAction" icon="consulo.platform.base.PlatformIconGroup@general.gearplain"/>
+    <action id="TextComponent.ClearAction" class="consulo.ide.impl.idea.ui.ClearTextAction"/>
+    <action id="Switcher" class="consulo.ide.impl.idea.ide.actions.Switcher" text="Switcher"/>
+    <action id="QuickDocCopy" class="consulo.ide.impl.idea.codeInsight.documentation.actions.CopyQuickDocAction" use-shortcut-of="$Copy"/>
+    <action id="EditSourceInNewWindow" class="consulo.ide.impl.idea.ide.actions.EditSourceInNewWindowAction"/>
+    <action id="SearchEverywhere" class="consulo.ide.impl.idea.ide.actions.SearchEverywhereAction" icon="consulo.platform.base.PlatformIconGroup@actions.find"/>
+    <action id="RunAnything" icon="consulo.platform.base.PlatformIconGroup@actions.run_anything" class="consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingAction" text="Run anything"
+			description="Allows to execute any command"/>
+    <action id="SettingsEntryPoint" class="consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction" icon="consulo.platform.base.PlatformIconGroup@general.gearplain"/>
 
     <group id="TemplateParametersNavigation">
-      <action id="NextTemplateParameter" class="com.intellij.codeInsight.completion.NextPrevParameterAction$Next" text="Next Parameter">
+      <action id="NextTemplateParameter" class="consulo.ide.impl.idea.codeInsight.completion.NextPrevParameterAction$Next" text="Next Parameter">
         <keyboard-shortcut first-keystroke="TAB" keymap="$default"/>
       </action>
-      <action id="PrevTemplateParameter" class="com.intellij.codeInsight.completion.NextPrevParameterAction$Prev" text="Previous Parameter">
+      <action id="PrevTemplateParameter" class="consulo.ide.impl.idea.codeInsight.completion.NextPrevParameterAction$Prev" text="Previous Parameter">
         <keyboard-shortcut first-keystroke="shift TAB" keymap="$default"/>
       </action>
     </group>
 
     <group id="EditorActions">
-      <action id="EditorPageUp" class="com.intellij.openapi.editor.actions.PageUpAction"/>
-      <action id="EditorPageDown" class="com.intellij.openapi.editor.actions.PageDownAction"/>
-      <action id="EditorPageUpWithSelection" class="com.intellij.openapi.editor.actions.PageUpWithSelectionAction"/>
-      <action id="EditorPageDownWithSelection" class="com.intellij.openapi.editor.actions.PageDownWithSelectionAction"/>
-      <action id="EditorCopy" class="com.intellij.openapi.editor.actions.CopyAction" use-shortcut-of="$Copy"/>
-      <action id="EditorCut" class="com.intellij.openapi.editor.actions.CutAction" use-shortcut-of="$Cut"/>
-      <action id="EditorPaste" class="com.intellij.openapi.editor.actions.PasteAction" use-shortcut-of="$Paste"/>
-      <action id="EditorPasteSimple" class="com.intellij.openapi.editor.actions.SimplePasteAction"/>
-      <action id="EditorPasteFromX11" class="com.intellij.openapi.editor.actions.PasteFromX11Action"/>
-      <action id="EditorDelete" class="com.intellij.openapi.editor.actions.DeleteAction" use-shortcut-of="$Delete"/>
-      <action id="EditorBackSpace" class="com.intellij.openapi.editor.actions.BackspaceAction"/>
-      <action id="EditorHungryBackSpace" class="com.intellij.openapi.editor.actions.HungryBackspaceAction"/>
-      <action id="EditorMoveToPageTop" class="com.intellij.openapi.editor.actions.PageTopAction"/>
-      <action id="EditorMoveToPageBottom" class="com.intellij.openapi.editor.actions.PageBottomAction"/>
-      <action id="EditorMoveToPageTopWithSelection" class="com.intellij.openapi.editor.actions.PageTopWithSelectionAction"/>
-      <action id="EditorMoveToPageBottomWithSelection" class="com.intellij.openapi.editor.actions.PageBottomWithSelectionAction"/>
-      <action id="EditorEnter" class="com.intellij.openapi.editor.actions.EnterAction"/>
-      <action id="EditorEscape" class="com.intellij.openapi.editor.actions.EscapeAction"/>
-      <action id="EditorUp" class="com.intellij.openapi.editor.actions.MoveCaretUpAction"/>
-      <action id="EditorDown" class="com.intellij.openapi.editor.actions.MoveCaretDownAction"/>
-      <action id="EditorLeft" class="com.intellij.openapi.editor.actions.MoveCaretLeftAction"/>
-      <action id="EditorRight" class="com.intellij.openapi.editor.actions.MoveCaretRightAction"/>
-      <action id="EditorUpWithSelection" class="com.intellij.openapi.editor.actions.MoveCaretUpWithSelectionAction"/>
-      <action id="EditorDownWithSelection" class="com.intellij.openapi.editor.actions.MoveCaretDownWithSelectionAction"/>
-      <action id="EditorLeftWithSelection" class="com.intellij.openapi.editor.actions.MoveCaretLeftWithSelectionAction"/>
-      <action id="EditorRightWithSelection" class="com.intellij.openapi.editor.actions.MoveCaretRightWithSelectionAction"/>
-      <action id="EditorUnindentSelection" class="com.intellij.openapi.editor.actions.UnindentSelectionAction"/>
-      <action id="EditorTab" class="com.intellij.openapi.editor.actions.TabAction"/>
-      <action id="EditorResetFontSize" class="com.intellij.openapi.editor.actions.ResetFontSizeAction"/>
-      <action id="EditorScrollUp" class="com.intellij.openapi.editor.actions.ScrollUpAction"/>
-      <action id="EditorScrollDown" class="com.intellij.openapi.editor.actions.ScrollDownAction"/>
-      <action id="EditorScrollUpAndMove" class="com.intellij.openapi.editor.actions.ScrollUpAndMoveAction"/>
-      <action id="EditorScrollDownAndMove" class="com.intellij.openapi.editor.actions.ScrollDownAndMoveAction"/>
-      <action id="EditorScrollRight" class="com.intellij.openapi.editor.actions.ScrollRightAction"/>
-      <action id="EditorScrollLeft" class="com.intellij.openapi.editor.actions.ScrollLeftAction"/>
-      <action id="EditorScrollTop" class="com.intellij.openapi.editor.actions.ScrollToTopAction"/>
-      <action id="EditorScrollBottom" class="com.intellij.openapi.editor.actions.ScrollToBottomAction"/>
-      <action id="EditorMoveUpAndScroll" class="com.intellij.openapi.editor.actions.MoveUpAndScrollAction"/>
-      <action id="EditorMoveDownAndScroll" class="com.intellij.openapi.editor.actions.MoveDownAndScrollAction"/>
-      <action id="EditorMoveUpAndScrollWithSelection" class="com.intellij.openapi.editor.actions.MoveUpWithSelectionAndScrollAction"/>
-      <action id="EditorMoveDownAndScrollWithSelection" class="com.intellij.openapi.editor.actions.MoveDownWithSelectionAndScrollAction"/>
-      <action id="EditorAddOrRemoveCaret" class="com.intellij.openapi.editor.actions.AddOrRemoveCaretDummyAction"/>
-      <action id="EditorCloneCaretBelow" class="com.intellij.openapi.editor.actions.CloneCaretBelow"/>
-      <action id="EditorCloneCaretAbove" class="com.intellij.openapi.editor.actions.CloneCaretAbove"/>
-      <action id="EditorToggleStickySelection" class="com.intellij.openapi.editor.actions.ToggleStickySelectionModeAction"/>
-      <action id="EditorSwapSelectionBoundaries" class="com.intellij.openapi.editor.actions.SwapSelectionBoundariesAction"/>
-      <action id="EditorLineStart" class="com.intellij.openapi.editor.actions.LineStartAction"/>
-      <action id="EditorLineEnd" class="com.intellij.openapi.editor.actions.LineEndAction"/>
-      <action id="EditorCutLineBackward" class="com.intellij.openapi.editor.actions.CutLineBackwardAction"/>
-      <action id="EditorCutLineEnd" class="com.intellij.openapi.editor.actions.CutLineEndAction"/>
-      <action id="EditorDeleteToLineStart" class="com.intellij.openapi.editor.actions.DeleteToLineStartAction"/>
-      <action id="EditorDeleteToLineEnd" class="com.intellij.openapi.editor.actions.DeleteToLineEndAction"/>
-      <action id="EditorTextStart" class="com.intellij.openapi.editor.actions.TextStartAction"/>
-      <action id="EditorTextEnd" class="com.intellij.openapi.editor.actions.TextEndAction"/>
-      <action id="EditorLineStartWithSelection" class="com.intellij.openapi.editor.actions.LineStartWithSelectionAction"/>
-      <action id="EditorLineEndWithSelection" class="com.intellij.openapi.editor.actions.LineEndWithSelectionAction"/>
-      <action id="EditorTextStartWithSelection" class="com.intellij.openapi.editor.actions.TextStartWithSelectionAction"/>
-      <action id="EditorTextEndWithSelection" class="com.intellij.openapi.editor.actions.TextEndWithSelectionAction"/>
-      <action id="EditorNextWord" class="com.intellij.openapi.editor.actions.NextWordAction"/>
-      <action id="EditorNextWordInDifferentHumpsMode" class="com.intellij.openapi.editor.actions.NextWordInDifferentHumpsModeAction"/>
-      <action id="EditorNextWordWithSelection" class="com.intellij.openapi.editor.actions.NextWordWithSelectionAction"/>
+      <action id="EditorPageUp" class="consulo.ide.impl.idea.openapi.editor.actions.PageUpAction"/>
+      <action id="EditorPageDown" class="consulo.ide.impl.idea.openapi.editor.actions.PageDownAction"/>
+      <action id="EditorPageUpWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.PageUpWithSelectionAction"/>
+      <action id="EditorPageDownWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.PageDownWithSelectionAction"/>
+      <action id="EditorCopy" class="consulo.ide.impl.idea.openapi.editor.actions.CopyAction" use-shortcut-of="$Copy"/>
+      <action id="EditorCut" class="consulo.ide.impl.idea.openapi.editor.actions.CutAction" use-shortcut-of="$Cut"/>
+      <action id="EditorPaste" class="consulo.ide.impl.idea.openapi.editor.actions.PasteAction" use-shortcut-of="$Paste"/>
+      <action id="EditorPasteSimple" class="consulo.ide.impl.idea.openapi.editor.actions.SimplePasteAction"/>
+      <action id="EditorPasteFromX11" class="consulo.ide.impl.idea.openapi.editor.actions.PasteFromX11Action"/>
+      <action id="EditorDelete" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteAction" use-shortcut-of="$Delete"/>
+      <action id="EditorBackSpace" class="consulo.ide.impl.idea.openapi.editor.actions.BackspaceAction"/>
+      <action id="EditorHungryBackSpace" class="consulo.ide.impl.idea.openapi.editor.actions.HungryBackspaceAction"/>
+      <action id="EditorMoveToPageTop" class="consulo.ide.impl.idea.openapi.editor.actions.PageTopAction"/>
+      <action id="EditorMoveToPageBottom" class="consulo.ide.impl.idea.openapi.editor.actions.PageBottomAction"/>
+      <action id="EditorMoveToPageTopWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.PageTopWithSelectionAction"/>
+      <action id="EditorMoveToPageBottomWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.PageBottomWithSelectionAction"/>
+      <action id="EditorEnter" class="consulo.ide.impl.idea.openapi.editor.actions.EnterAction"/>
+      <action id="EditorEscape" class="consulo.ide.impl.idea.openapi.editor.actions.EscapeAction"/>
+      <action id="EditorUp" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretUpAction"/>
+      <action id="EditorDown" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretDownAction"/>
+      <action id="EditorLeft" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretLeftAction"/>
+      <action id="EditorRight" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretRightAction"/>
+      <action id="EditorUpWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretUpWithSelectionAction"/>
+      <action id="EditorDownWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretDownWithSelectionAction"/>
+      <action id="EditorLeftWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretLeftWithSelectionAction"/>
+      <action id="EditorRightWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveCaretRightWithSelectionAction"/>
+      <action id="EditorUnindentSelection" class="consulo.ide.impl.idea.openapi.editor.actions.UnindentSelectionAction"/>
+      <action id="EditorTab" class="consulo.ide.impl.idea.openapi.editor.actions.TabAction"/>
+      <action id="EditorResetFontSize" class="consulo.ide.impl.idea.openapi.editor.actions.ResetFontSizeAction"/>
+      <action id="EditorScrollUp" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollUpAction"/>
+      <action id="EditorScrollDown" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollDownAction"/>
+      <action id="EditorScrollUpAndMove" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollUpAndMoveAction"/>
+      <action id="EditorScrollDownAndMove" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollDownAndMoveAction"/>
+      <action id="EditorScrollRight" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollRightAction"/>
+      <action id="EditorScrollLeft" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollLeftAction"/>
+      <action id="EditorScrollTop" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollToTopAction"/>
+      <action id="EditorScrollBottom" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollToBottomAction"/>
+      <action id="EditorMoveUpAndScroll" class="consulo.ide.impl.idea.openapi.editor.actions.MoveUpAndScrollAction"/>
+      <action id="EditorMoveDownAndScroll" class="consulo.ide.impl.idea.openapi.editor.actions.MoveDownAndScrollAction"/>
+      <action id="EditorMoveUpAndScrollWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveUpWithSelectionAndScrollAction"/>
+      <action id="EditorMoveDownAndScrollWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.MoveDownWithSelectionAndScrollAction"/>
+      <action id="EditorAddOrRemoveCaret" class="consulo.ide.impl.idea.openapi.editor.actions.AddOrRemoveCaretDummyAction"/>
+      <action id="EditorCloneCaretBelow" class="consulo.ide.impl.idea.openapi.editor.actions.CloneCaretBelow"/>
+      <action id="EditorCloneCaretAbove" class="consulo.ide.impl.idea.openapi.editor.actions.CloneCaretAbove"/>
+      <action id="EditorToggleStickySelection" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleStickySelectionModeAction"/>
+      <action id="EditorSwapSelectionBoundaries" class="consulo.ide.impl.idea.openapi.editor.actions.SwapSelectionBoundariesAction"/>
+      <action id="EditorLineStart" class="consulo.ide.impl.idea.openapi.editor.actions.LineStartAction"/>
+      <action id="EditorLineEnd" class="consulo.ide.impl.idea.openapi.editor.actions.LineEndAction"/>
+      <action id="EditorCutLineBackward" class="consulo.ide.impl.idea.openapi.editor.actions.CutLineBackwardAction"/>
+      <action id="EditorCutLineEnd" class="consulo.ide.impl.idea.openapi.editor.actions.CutLineEndAction"/>
+      <action id="EditorDeleteToLineStart" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToLineStartAction"/>
+      <action id="EditorDeleteToLineEnd" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToLineEndAction"/>
+      <action id="EditorTextStart" class="consulo.ide.impl.idea.openapi.editor.actions.TextStartAction"/>
+      <action id="EditorTextEnd" class="consulo.ide.impl.idea.openapi.editor.actions.TextEndAction"/>
+      <action id="EditorLineStartWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.LineStartWithSelectionAction"/>
+      <action id="EditorLineEndWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.LineEndWithSelectionAction"/>
+      <action id="EditorTextStartWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.TextStartWithSelectionAction"/>
+      <action id="EditorTextEndWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.TextEndWithSelectionAction"/>
+      <action id="EditorNextWord" class="consulo.ide.impl.idea.openapi.editor.actions.NextWordAction"/>
+      <action id="EditorNextWordInDifferentHumpsMode" class="consulo.ide.impl.idea.openapi.editor.actions.NextWordInDifferentHumpsModeAction"/>
+      <action id="EditorNextWordWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.NextWordWithSelectionAction"/>
       <action id="EditorNextWordInDifferentHumpsModeWithSelection"
-              class="com.intellij.openapi.editor.actions.NextWordInDifferentHumpsModeWithSelectionAction"/>
-      <action id="EditorPreviousWord" class="com.intellij.openapi.editor.actions.PreviousWordAction"/>
+              class="consulo.ide.impl.idea.openapi.editor.actions.NextWordInDifferentHumpsModeWithSelectionAction"/>
+      <action id="EditorPreviousWord" class="consulo.ide.impl.idea.openapi.editor.actions.PreviousWordAction"/>
       <action id="EditorPreviousWordInDifferentHumpsMode"
-              class="com.intellij.openapi.editor.actions.PreviousWordInDifferentHumpsModeAction"/>
-      <action id="EditorPreviousWordWithSelection" class="com.intellij.openapi.editor.actions.PreviousWordWithSelectionAction"/>
+              class="consulo.ide.impl.idea.openapi.editor.actions.PreviousWordInDifferentHumpsModeAction"/>
+      <action id="EditorPreviousWordWithSelection" class="consulo.ide.impl.idea.openapi.editor.actions.PreviousWordWithSelectionAction"/>
       <action id="EditorPreviousWordInDifferentHumpsModeWithSelection"
-              class="com.intellij.openapi.editor.actions.PreviousWordInDifferentHumpsModeWithSelectionAction"/>
-      <action id="EditorDeleteToWordStart" class="com.intellij.openapi.editor.actions.DeleteToWordStartAction"/>
+              class="consulo.ide.impl.idea.openapi.editor.actions.PreviousWordInDifferentHumpsModeWithSelectionAction"/>
+      <action id="EditorDeleteToWordStart" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToWordStartAction"/>
       <action id="EditorDeleteToWordStartInDifferentHumpsMode"
-              class="com.intellij.openapi.editor.actions.DeleteToWordStartInDifferentHumpsModeAction"/>
-      <action id="EditorDeleteToWordEnd" class="com.intellij.openapi.editor.actions.DeleteToWordEndAction"/>
+              class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToWordStartInDifferentHumpsModeAction"/>
+      <action id="EditorDeleteToWordEnd" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToWordEndAction"/>
       <action id="EditorDeleteToWordEndInDifferentHumpsMode"
-              class="com.intellij.openapi.editor.actions.DeleteToWordEndInDifferentHumpsModeAction"/>
-      <action id="EditorDeleteLine" class="com.intellij.openapi.editor.actions.DeleteLineAction"/>
-      <action id="EditorKillToWordStart" class="com.intellij.openapi.editor.actions.KillToWordStartAction"/>
-      <action id="EditorKillToWordEnd" class="com.intellij.openapi.editor.actions.KillToWordEndAction"/>
-      <action id="EditorKillRegion" class="com.intellij.openapi.editor.actions.KillRegionAction"/>
-      <action id="EditorKillRingSave" class="com.intellij.openapi.editor.actions.KillRingSaveAction"/>
-      <action id="EditorDuplicate" class="com.intellij.openapi.editor.actions.DuplicateAction"/>
-      <action id="EditorDuplicateLines" class="com.intellij.openapi.editor.actions.DuplicateLinesAction"/>
-      <action id="EditorToggleInsertState" class="com.intellij.openapi.editor.actions.ToggleInsertStateAction"/>
-      <action id="EditorToggleColumnMode" class="com.intellij.openapi.editor.actions.ToggleColumnModeAction"/>
-      <action id="EditorIncreaseFontSize" class="com.intellij.openapi.editor.actions.ChangeEditorFontSizeAction$IncreaseEditorFontSize"/>
-      <action id="EditorDecreaseFontSize" class="com.intellij.openapi.editor.actions.ChangeEditorFontSizeAction$DecreaseEditorFontSize"/>
+              class="consulo.ide.impl.idea.openapi.editor.actions.DeleteToWordEndInDifferentHumpsModeAction"/>
+      <action id="EditorDeleteLine" class="consulo.ide.impl.idea.openapi.editor.actions.DeleteLineAction"/>
+      <action id="EditorKillToWordStart" class="consulo.ide.impl.idea.openapi.editor.actions.KillToWordStartAction"/>
+      <action id="EditorKillToWordEnd" class="consulo.ide.impl.idea.openapi.editor.actions.KillToWordEndAction"/>
+      <action id="EditorKillRegion" class="consulo.ide.impl.idea.openapi.editor.actions.KillRegionAction"/>
+      <action id="EditorKillRingSave" class="consulo.ide.impl.idea.openapi.editor.actions.KillRingSaveAction"/>
+      <action id="EditorDuplicate" class="consulo.ide.impl.idea.openapi.editor.actions.DuplicateAction"/>
+      <action id="EditorDuplicateLines" class="consulo.ide.impl.idea.openapi.editor.actions.DuplicateLinesAction"/>
+      <action id="EditorToggleInsertState" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleInsertStateAction"/>
+      <action id="EditorToggleColumnMode" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleColumnModeAction"/>
+      <action id="EditorIncreaseFontSize" class="consulo.ide.impl.idea.openapi.editor.actions.ChangeEditorFontSizeAction$IncreaseEditorFontSize"/>
+      <action id="EditorDecreaseFontSize" class="consulo.ide.impl.idea.openapi.editor.actions.ChangeEditorFontSizeAction$DecreaseEditorFontSize"/>
 
-      <action id="EditorScrollToCenter" class="com.intellij.openapi.editor.actions.ScrollToCenterAction"/>
-      <action id="EditorToggleCase" class="com.intellij.openapi.editor.actions.ToggleCaseAction"/>
-      <action id="EditorJoinLines" class="com.intellij.openapi.editor.actions.JoinLinesAction"/>
-      <action id="FillParagraph" class="com.intellij.codeInsight.editorActions.fillParagraph.FillParagraphAction"/>
-      <action id="EditorSelectLine" class="com.intellij.openapi.editor.actions.SelectLineAction"/>
-      <action id="EditorSplitLine" class="com.intellij.openapi.editor.actions.SplitLineAction"/>
-      <action id="EditorStartNewLine" class="com.intellij.openapi.editor.actions.StartNewLineAction"/>
-      <action id="EditorStartNewLineBefore" class="com.intellij.openapi.editor.actions.StartNewLineBeforeAction"/>
+      <action id="EditorScrollToCenter" class="consulo.ide.impl.idea.openapi.editor.actions.ScrollToCenterAction"/>
+      <action id="EditorToggleCase" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleCaseAction"/>
+      <action id="EditorJoinLines" class="consulo.ide.impl.idea.openapi.editor.actions.JoinLinesAction"/>
+      <action id="FillParagraph" class="consulo.ide.impl.idea.codeInsight.editorActions.fillParagraph.FillParagraphAction"/>
+      <action id="EditorSelectLine" class="consulo.ide.impl.idea.openapi.editor.actions.SelectLineAction"/>
+      <action id="EditorSplitLine" class="consulo.ide.impl.idea.openapi.editor.actions.SplitLineAction"/>
+      <action id="EditorStartNewLine" class="consulo.ide.impl.idea.openapi.editor.actions.StartNewLineAction"/>
+      <action id="EditorStartNewLineBefore" class="consulo.ide.impl.idea.openapi.editor.actions.StartNewLineBeforeAction"/>
     </group>
 
     <!-- grouping for Settings -> Keymap -> Version Control Systems -->
     <group id="Diff.KeymapGroup" text="Diff &amp;&amp; Merge">
       <action id="Diff.ShowDiff" class="consulo.ui.ex.action.EmptyAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
       <!-- CommonShortcuts.getDiff() -->
-      <action id="CompareTwoFiles" class="com.intellij.diff.actions.CompareFilesAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
-      <action id="CompareFileWithEditor" class="com.intellij.diff.actions.CompareFileWithEditorAction"/>
-      <action id="CompareClipboardWithSelection" class="com.intellij.diff.actions.CompareClipboardWithSelectionAction"/>
+      <action id="CompareTwoFiles" class="consulo.ide.impl.idea.diff.actions.CompareFilesAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
+      <action id="CompareFileWithEditor" class="consulo.ide.impl.idea.diff.actions.CompareFileWithEditorAction"/>
+      <action id="CompareClipboardWithSelection" class="consulo.ide.impl.idea.diff.actions.CompareClipboardWithSelectionAction"/>
 
       <separator/>
       <action id="Diff.FocusOppositePane" class="consulo.ui.ex.action.EmptyAction"/>
@@ -215,22 +215,22 @@
       <action id="Diff.CompareWithBase.Right" class="consulo.ui.ex.action.EmptyAction"/>
       <separator/>
 
-      <action id="CompareDirs" class="com.intellij.diff.actions.CompareFilesAction" text="Compare Directories" use-shortcut-of="CompareTwoFiles"/>
+      <action id="CompareDirs" class="consulo.ide.impl.idea.diff.actions.CompareFilesAction" text="Compare Directories" use-shortcut-of="CompareTwoFiles"/>
 
       <separator/>
       <add-to-group group-id="Vcs.KeymapGroup"/>
     </group>
 
     <group id="DirDiffMenu">
-      <action id="DirDiffMenu.SetCopyToRight" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetCopyToRight" text="Set Copy to Right"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
-      <action id="DirDiffMenu.SetCopyToLeft" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetCopyToLeft" text="Set Copy to Left"
-              icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
-      <action id="DirDiffMenu.SetDelete" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetDelete" text="Set Delete" icon="consulo.platform.base.PlatformIconGroup@vcs.remove"/>
-      <action id="DirDiffMenu.SetNoOperation" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetNoOperation" text="Set Do Nothing"/>
+      <action id="DirDiffMenu.SetCopyToRight" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetCopyToRight" text="Set Copy to Right"
+			  icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
+      <action id="DirDiffMenu.SetCopyToLeft" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetCopyToLeft" text="Set Copy to Left"
+			  icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_left"/>
+      <action id="DirDiffMenu.SetDelete" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetDelete" text="Set Delete" icon="consulo.platform.base.PlatformIconGroup@vcs.remove"/>
+      <action id="DirDiffMenu.SetNoOperation" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetNoOperation" text="Set Do Nothing"/>
       <separator/>
-      <action id="DirDiffMenu.SetDefault" class="com.intellij.openapi.diff.impl.dir.actions.popup.SetDefault" text="Set Default"/>
-      <action id="DirDiffMenu.WarnOnDeletion" class="com.intellij.openapi.diff.impl.dir.actions.popup.WarnOnDeletion" text="Warn When Delete"/>
+      <action id="DirDiffMenu.SetDefault" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.SetDefault" text="Set Default"/>
+      <action id="DirDiffMenu.WarnOnDeletion" class="consulo.ide.impl.idea.openapi.diff.impl.dir.actions.popup.WarnOnDeletion" text="Warn When Delete"/>
       <separator/>
       <action id="DirDiffMenu.EnableLeft" class="consulo.ui.ex.action.EmptyAction" text="Show new files on left side"
               icon="consulo.platform.base.PlatformIconGroup@vcs.arrow_right"/>
@@ -243,125 +243,125 @@
       <add-to-group group-id="Diff.KeymapGroup" anchor="last"/>
     </group>
 
-    <action id="ExpandAll" class="com.intellij.ide.actions.ExpandAllAction" icon="consulo.platform.base.PlatformIconGroup@general.expandall"/>
-    <action id="CollapseAll" class="com.intellij.ide.actions.CollapseAllAction" icon="consulo.platform.base.PlatformIconGroup@general.collapseall"/>
-    <action id="ExportToTextFile" class="com.intellij.ide.actions.ExportToTextFileAction" icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
-    <action id="ExpandTreeNode" class="com.intellij.ide.actions.tree.ExpandTreeNodeAction"/>
-    <action id="CollapseTreeNode" class="com.intellij.ide.actions.tree.CollapseTreeNodeAction"/>
-    <action id="FullyExpandTreeNode" class="com.intellij.ide.actions.tree.FullyExpandTreeNodeAction"/>
-    <action id="Refresh" class="com.intellij.ide.actions.RefreshAction"/>
-    <action id="ScrollTreeToCenter" class="com.intellij.ide.actions.ScrollTreeToCenterAction" use-shortcut-of="EditorScrollToCenter"/>
-    <action id="PinToolwindowTab" class="com.intellij.ui.content.tabs.PinToolwindowTabAction"/>
-    <action id="CloseEditor" class="com.intellij.ide.actions.CloseEditorAction"/>
+    <action id="ExpandAll" class="consulo.ide.impl.idea.ide.actions.ExpandAllAction" icon="consulo.platform.base.PlatformIconGroup@general.expandall"/>
+    <action id="CollapseAll" class="consulo.ide.impl.idea.ide.actions.CollapseAllAction" icon="consulo.platform.base.PlatformIconGroup@general.collapseall"/>
+    <action id="ExportToTextFile" class="consulo.ide.impl.idea.ide.actions.ExportToTextFileAction" icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
+    <action id="ExpandTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.ExpandTreeNodeAction"/>
+    <action id="CollapseTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.CollapseTreeNodeAction"/>
+    <action id="FullyExpandTreeNode" class="consulo.ide.impl.idea.ide.actions.tree.FullyExpandTreeNodeAction"/>
+    <action id="Refresh" class="consulo.ide.impl.idea.ide.actions.RefreshAction"/>
+    <action id="ScrollTreeToCenter" class="consulo.ide.impl.idea.ide.actions.ScrollTreeToCenterAction" use-shortcut-of="EditorScrollToCenter"/>
+    <action id="PinToolwindowTab" class="consulo.ide.impl.idea.ui.content.tabs.PinToolwindowTabAction"/>
+    <action id="CloseEditor" class="consulo.ide.impl.idea.ide.actions.CloseEditorAction"/>
 
     <group id="MainMenu">
       <group id="FileMenu" popup="true">
         <group id="FileOpenGroup">
-          <action id="OpenFile" class="com.intellij.ide.actions.OpenFileAction" icon="consulo.platform.base.PlatformIconGroup@nodes.folderopened"/>
+          <action id="OpenFile" class="consulo.ide.impl.idea.ide.actions.OpenFileAction" icon="consulo.platform.base.PlatformIconGroup@nodes.folderopened"/>
           <group id="$LRU" popup="true">
-            <group id="RecentProjectListGroup" class="com.intellij.ide.actions.RecentProjectsGroup" popup="false"/>
+            <group id="RecentProjectListGroup" class="consulo.ide.impl.idea.ide.actions.RecentProjectsGroup" popup="false"/>
           </group>
-          <action id="CloseProject" class="com.intellij.ide.actions.CloseProjectAction"/>
+          <action id="CloseProject" class="consulo.ide.impl.idea.ide.actions.CloseProjectAction"/>
         </group>
         <separator/>
         <group id="FileMainSettingsGroup">
-          <action id="ShowSettings" class="com.intellij.ide.actions.ShowSettingsAction"/>
-          <action id="ShowProjectStructureSettings" class="com.intellij.ide.actions.ShowStructureSettingsAction"
+          <action id="ShowSettings" class="consulo.ide.impl.idea.ide.actions.ShowSettingsAction"/>
+          <action id="ShowProjectStructureSettings" class="consulo.ide.impl.idea.ide.actions.ShowStructureSettingsAction"
                   icon="consulo.platform.base.PlatformIconGroup@general.projectstructure"/>
-          <group id="FileOtherSettingsGroup" class="com.intellij.ide.actions.SmartPopupActionGroup">
-            <action id="TemplateProjectProperties" class="com.intellij.ide.actions.TemplateProjectPropertiesAction"/>
-            <action id="TemplateProjectStructure" class="com.intellij.ide.actions.TemplateProjectStructureAction"/>
+          <group id="FileOtherSettingsGroup" class="consulo.ide.impl.idea.ide.actions.SmartPopupActionGroup">
+            <action id="TemplateProjectProperties" class="consulo.ide.impl.idea.ide.actions.TemplateProjectPropertiesAction"/>
+            <action id="TemplateProjectStructure" class="consulo.ide.impl.idea.ide.actions.TemplateProjectStructureAction"/>
             <group id="FileSettingsGroup"/>
           </group>
           <group id="FilePropertiesGroup" popup="true">
-            <action id="ChangeFileEncodingAction" class="com.intellij.openapi.vfs.encoding.ChangeFileEncodingAction"/>
-            <action id="AssociateWithFileType" class="com.intellij.ide.actions.AssociateFileTypeAction"/>
-            <action id="ToggleReadOnlyAttribute" class="com.intellij.ide.actions.ToggleReadOnlyAttributeAction"/>
+            <action id="ChangeFileEncodingAction" class="consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction"/>
+            <action id="AssociateWithFileType" class="consulo.ide.impl.idea.ide.actions.AssociateFileTypeAction"/>
+            <action id="ToggleReadOnlyAttribute" class="consulo.ide.impl.idea.ide.actions.ToggleReadOnlyAttributeAction"/>
 
-            <group id="ChangeLineSeparators" popup="true" class="com.intellij.ide.actions.NonTrivialActionGroup">
-              <action id="ConvertToWindowsLineSeparators" class="com.intellij.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
-              <action id="ConvertToUnixLineSeparators" class="com.intellij.codeStyle.ConvertToUnixLineSeparatorsAction"/>
-              <action id="ConvertToMacLineSeparators" class="com.intellij.codeStyle.ConvertToMacLineSeparatorsAction"/>
+            <group id="ChangeLineSeparators" popup="true" class="consulo.ide.impl.idea.ide.actions.NonTrivialActionGroup">
+              <action id="ConvertToWindowsLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
+              <action id="ConvertToUnixLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToUnixLineSeparatorsAction"/>
+              <action id="ConvertToMacLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToMacLineSeparatorsAction"/>
             </group>
 
           </group>
           <separator/>
           <group id="ExportImportGroup">
-            <action id="ImportSettings" class="com.intellij.ide.actions.ImportSettingsAction"/>
-            <action id="ExportSettings" class="com.intellij.ide.actions.ExportSettingsAction"/>
+            <action id="ImportSettings" class="consulo.ide.impl.idea.ide.actions.ImportSettingsAction"/>
+            <action id="ExportSettings" class="consulo.ide.impl.idea.ide.actions.ExportSettingsAction"/>
           </group>
           <action id="ShowStartupManagerAction" class="consulo.ide.actions.ShowStartupManagerAction" text="Customize Manager"/>
         </group>
         <separator/>
-        <action id="SaveAll" class="com.intellij.ide.actions.SaveAllAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_saveall"/>
-        <action id="Synchronize" class="com.intellij.ide.actions.SynchronizeAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-        <action id="InvalidateCaches" class="com.intellij.ide.actions.InvalidateCachesAction"/>
+        <action id="SaveAll" class="consulo.ide.impl.idea.ide.actions.SaveAllAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_saveall"/>
+        <action id="Synchronize" class="consulo.ide.impl.idea.ide.actions.SynchronizeAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
+        <action id="InvalidateCaches" class="consulo.ide.impl.idea.ide.actions.InvalidateCachesAction"/>
 
-        <action id="ChangeFileEncodingAction" class="com.intellij.openapi.vfs.encoding.ChangeFileEncodingAction"/>
+        <action id="ChangeFileEncodingAction" class="consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction"/>
 
         <group id="ChangeLineSeparators" text="Line Separators" popup="true">
-          <action id="ConvertToWindowsLineSeparators" class="com.intellij.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
-          <action id="ConvertToUnixLineSeparators" class="com.intellij.codeStyle.ConvertToUnixLineSeparatorsAction"/>
-          <action id="ConvertToMacLineSeparators" class="com.intellij.codeStyle.ConvertToMacLineSeparatorsAction"/>
+          <action id="ConvertToWindowsLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToWindowsLineSeparatorsAction"/>
+          <action id="ConvertToUnixLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToUnixLineSeparatorsAction"/>
+          <action id="ConvertToMacLineSeparators" class="consulo.ide.impl.idea.codeStyle.ConvertToMacLineSeparatorsAction"/>
         </group>
 
-        <action id="ToggleReadOnlyAttribute" class="com.intellij.ide.actions.ToggleReadOnlyAttributeAction"/>
+        <action id="ToggleReadOnlyAttribute" class="consulo.ide.impl.idea.ide.actions.ToggleReadOnlyAttributeAction"/>
         <separator/>
-        <action id="Exit" class="com.intellij.ide.actions.ExitAction"/>
+        <action id="Exit" class="consulo.ide.impl.idea.ide.actions.ExitAction"/>
       </group>
 
       <!-- Edit -->
       <group id="EditMenu" popup="true">
-        <action id="$Undo" class="com.intellij.ide.actions.UndoAction" icon="consulo.platform.base.PlatformIconGroup@actions.undo" text="Undo"/>
-        <action id="$Redo" class="com.intellij.ide.actions.RedoAction" icon="consulo.platform.base.PlatformIconGroup@actions.redo" text="Redo"/>
+        <action id="$Undo" class="consulo.ide.impl.idea.ide.actions.UndoAction" icon="consulo.platform.base.PlatformIconGroup@actions.undo" text="Undo"/>
+        <action id="$Redo" class="consulo.ide.impl.idea.ide.actions.RedoAction" icon="consulo.platform.base.PlatformIconGroup@actions.redo" text="Redo"/>
         <separator/>
         <group id="CutCopyPasteGroup">
-          <action id="$Cut" class="com.intellij.ide.actions.CutAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_cut"/>
-          <action id="$Copy" class="com.intellij.ide.actions.CopyAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy"/>
-          <action id="CopyPaths" class="com.intellij.ide.actions.CopyPathsAction"/>
-          <group id="PasteGroup" popup="true" class="com.intellij.ide.actions.PopupInMainMenuActionGroup">
-            <action id="$Paste" class="com.intellij.ide.actions.PasteAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_paste"/>
-            <action id="PasteMultiple" class="com.intellij.openapi.editor.actions.MultiplePasteAction"/>
+          <action id="$Cut" class="consulo.ide.impl.idea.ide.actions.CutAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_cut"/>
+          <action id="$Copy" class="consulo.ide.impl.idea.ide.actions.CopyAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy"/>
+          <action id="CopyPaths" class="consulo.ide.impl.idea.ide.actions.CopyPathsAction"/>
+          <group id="PasteGroup" popup="true" class="consulo.ide.impl.idea.ide.actions.PopupInMainMenuActionGroup">
+            <action id="$Paste" class="consulo.ide.impl.idea.ide.actions.PasteAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_paste"/>
+            <action id="PasteMultiple" class="consulo.ide.impl.idea.openapi.editor.actions.MultiplePasteAction"/>
             <reference ref="EditorPasteSimple"/>
           </group>
         </group>
         <group id="EditCreateDeleteGroup">
-          <action id="$Delete" class="com.intellij.ide.actions.DeleteAction"/>
+          <action id="$Delete" class="consulo.ide.impl.idea.ide.actions.DeleteAction"/>
         </group>
         <separator/>
         <group id="FindMenuGroup" popup="true">
-          <action id="Find" class="com.intellij.openapi.editor.actions.IncrementalFindAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_find"/>
-          <action id="Replace" class="com.intellij.openapi.editor.actions.ReplaceAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_replace"/>
-          <action id="FindNext" class="com.intellij.ide.actions.SearchAgainAction"/>
-          <action id="FindPrevious" class="com.intellij.ide.actions.SearchBackAction"/>
-          <action id="FindWordAtCaret" class="com.intellij.openapi.editor.actions.FindWordAtCaretAction"/>
-          <action id="SelectAllOccurrences" class="com.intellij.openapi.editor.actions.SelectAllOccurrencesAction"/>
-          <action id="SelectNextOccurrence" class="com.intellij.openapi.editor.actions.SelectNextOccurrenceAction"/>
-          <action id="UnselectPreviousOccurrence" class="com.intellij.openapi.editor.actions.UnselectPreviousOccurrenceAction"/>
+          <action id="Find" class="consulo.ide.impl.idea.openapi.editor.actions.IncrementalFindAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_find"/>
+          <action id="Replace" class="consulo.ide.impl.idea.openapi.editor.actions.ReplaceAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_replace"/>
+          <action id="FindNext" class="consulo.ide.impl.idea.ide.actions.SearchAgainAction"/>
+          <action id="FindPrevious" class="consulo.ide.impl.idea.ide.actions.SearchBackAction"/>
+          <action id="FindWordAtCaret" class="consulo.ide.impl.idea.openapi.editor.actions.FindWordAtCaretAction"/>
+          <action id="SelectAllOccurrences" class="consulo.ide.impl.idea.openapi.editor.actions.SelectAllOccurrencesAction"/>
+          <action id="SelectNextOccurrence" class="consulo.ide.impl.idea.openapi.editor.actions.SelectNextOccurrenceAction"/>
+          <action id="UnselectPreviousOccurrence" class="consulo.ide.impl.idea.openapi.editor.actions.UnselectPreviousOccurrenceAction"/>
           <separator/>
-          <action id="FindInPath" class="com.intellij.find.actions.FindInPathAction"/>
-          <action id="ReplaceInPath" class="com.intellij.find.actions.ReplaceInPathAction"/>
+          <action id="FindInPath" class="consulo.ide.impl.idea.find.actions.FindInPathAction"/>
+          <action id="ReplaceInPath" class="consulo.ide.impl.idea.find.actions.ReplaceInPathAction"/>
           <separator/>
-          <action id="FindUsages" class="com.intellij.find.actions.FindUsagesAction"/>
-          <action id="ShowSettingsAndFindUsages" class="com.intellij.find.actions.FindUsagesAction$ShowSettingsAndFindUsages"/>
-          <action id="ShowUsages" class="com.intellij.find.actions.ShowUsagesAction"/>
-          <action id="FindUsagesInFile" class="com.intellij.find.actions.FindUsagesInFileAction"/>
-          <action id="HighlightUsagesInFile" class="com.intellij.codeInsight.highlighting.actions.HighlightUsagesAction"/>
-          <group id="ShowRecentFindUsagesGroup" class="com.intellij.find.impl.ShowRecentFindUsagesGroup" popup="true"/>
+          <action id="FindUsages" class="consulo.ide.impl.idea.find.actions.FindUsagesAction"/>
+          <action id="ShowSettingsAndFindUsages" class="consulo.ide.impl.idea.find.actions.FindUsagesAction$ShowSettingsAndFindUsages"/>
+          <action id="ShowUsages" class="consulo.ide.impl.idea.find.actions.ShowUsagesAction"/>
+          <action id="FindUsagesInFile" class="consulo.ide.impl.idea.find.actions.FindUsagesInFileAction"/>
+          <action id="HighlightUsagesInFile" class="consulo.ide.impl.idea.codeInsight.highlighting.actions.HighlightUsagesAction"/>
+          <group id="ShowRecentFindUsagesGroup" class="consulo.ide.impl.idea.find.impl.ShowRecentFindUsagesGroup" popup="true"/>
         </group>
         <group id="Macros" popup="true">
           <group id="StandardMacroActions">
-            <action id="PlaybackLastMacro" class="com.intellij.ide.actionMacro.actions.PlaybackLastMacroAction"/>
-            <action id="StartStopMacroRecording" class="com.intellij.ide.actionMacro.actions.StartStopMacroRecordingAction"/>
-            <action id="EditMacros" class="com.intellij.ide.actionMacro.actions.EditMacrosAction"/>
-            <action id="PlaySavedMacrosAction" class="com.intellij.ide.actionMacro.actions.PlaySavedMacros"/>
+            <action id="PlaybackLastMacro" class="consulo.ide.impl.idea.ide.actionMacro.actions.PlaybackLastMacroAction"/>
+            <action id="StartStopMacroRecording" class="consulo.ide.impl.idea.ide.actionMacro.actions.StartStopMacroRecordingAction"/>
+            <action id="EditMacros" class="consulo.ide.impl.idea.ide.actionMacro.actions.EditMacrosAction"/>
+            <action id="PlaySavedMacrosAction" class="consulo.ide.impl.idea.ide.actionMacro.actions.PlaySavedMacros"/>
           </group>
           <separator/>
-          <group id="MacrosGroup" class="com.intellij.ide.actionMacro.actions.MacrosGroup"/>
+          <group id="MacrosGroup" class="consulo.ide.impl.idea.ide.actionMacro.actions.MacrosGroup"/>
         </group>
         <reference ref="EditorToggleColumnMode"/>
         <group id="EditSelectGroup">
-          <action id="$SelectAll" class="com.intellij.ide.actions.SelectAllAction"/>
+          <action id="$SelectAll" class="consulo.ide.impl.idea.ide.actions.SelectAllAction"/>
         </group>
         <separator/>
         <group id="EditSmartGroup">
@@ -372,8 +372,8 @@
           <reference ref="EditorUnindentSelection"/>
           <reference ref="EditorToggleCase"/>
           <group id="ConvertIndentsGroup" popup="true">
-            <action id="ConvertIndentsToSpaces" class="com.intellij.openapi.editor.actions.ConvertIndentsToSpacesAction"/>
-            <action id="ConvertIndentsToTabs" class="com.intellij.openapi.editor.actions.ConvertIndentsToTabsAction"/>
+            <action id="ConvertIndentsToSpaces" class="consulo.ide.impl.idea.openapi.editor.actions.ConvertIndentsToSpacesAction"/>
+            <action id="ConvertIndentsToTabs" class="consulo.ide.impl.idea.openapi.editor.actions.ConvertIndentsToTabsAction"/>
           </group>
         </group>
         <reference ref="TemplateParametersNavigation"/>
@@ -381,18 +381,18 @@
 
       <!-- View -->
       <group id="ViewMenu" popup="true">
-        <group id="ToolWindowsGroup" class="com.intellij.ide.actions.ToolWindowsGroup" popup="true"/>
+        <group id="ToolWindowsGroup" class="consulo.ide.impl.idea.ide.actions.ToolWindowsGroup" popup="true"/>
 
-        <action id="EditSource" class="com.intellij.ide.actions.EditSourceAction"/>
-        <action id="OpenInRightSplit" class="com.intellij.ide.actions.OpenInRightSplitAction" icon="consulo.platform.base.PlatformIconGroup@actions.splitvertically"/>
-        <action id="ViewSource" class="com.intellij.ide.actions.ViewSourceAction"/>
+        <action id="EditSource" class="consulo.ide.impl.idea.ide.actions.EditSourceAction"/>
+        <action id="OpenInRightSplit" class="consulo.ide.impl.idea.ide.actions.OpenInRightSplitAction" icon="consulo.platform.base.PlatformIconGroup@actions.splitvertically"/>
+        <action id="ViewSource" class="consulo.ide.impl.idea.ide.actions.ViewSourceAction"/>
         <separator/>
         <group id="ViewRecentActions">
-          <action id="RecentFiles" class="com.intellij.ide.actions.ShowRecentFilesAction"/>
-          <action id="SwitcherRecentEditedChangedToggleCheckBox" class="com.intellij.ide.actions.Switcher$ToggleCheckBoxAction"
+          <action id="RecentFiles" class="consulo.ide.impl.idea.ide.actions.ShowRecentFilesAction"/>
+          <action id="SwitcherRecentEditedChangedToggleCheckBox" class="consulo.ide.impl.idea.ide.actions.Switcher$ToggleCheckBoxAction"
                   text="Toggle Changed Only Files"/>
-          <action id="RecentChangedFiles" class="com.intellij.ide.actions.ShowRecentlyEditedFilesAction"/>
-          <action id="RecentLocations" class="com.intellij.ide.actions.RecentLocationsAction"/>
+          <action id="RecentChangedFiles" class="consulo.ide.impl.idea.ide.actions.ShowRecentlyEditedFilesAction"/>
+          <action id="RecentLocations" class="consulo.ide.impl.idea.ide.actions.RecentLocationsAction"/>
         </group>
         <separator/>
         <group id="CompareActions">
@@ -403,28 +403,28 @@
           <reference ref="CompareClipboardWithSelection"/>
         </group>
         <separator/>
-        <action id="QuickChangeScheme" class="com.intellij.ide.actions.QuickChangeSchemesAction"/>
+        <action id="QuickChangeScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeSchemesAction"/>
         <group id="UIToggleActions">
           <separator/>
-          <action id="ViewToolBar" class="com.intellij.ide.actions.ViewToolbarAction"/>
-          <action id="ViewToolButtons" class="com.intellij.ide.actions.ViewToolWindowButtonsAction"/>
-          <action id="ViewStatusBar" class="com.intellij.ide.actions.ViewStatusBarAction"/>
-          <group id="ViewStatusBarWidgetsGroup" class="com.intellij.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup" popup="true"/>
+          <action id="ViewToolBar" class="consulo.ide.impl.idea.ide.actions.ViewToolbarAction"/>
+          <action id="ViewToolButtons" class="consulo.ide.impl.idea.ide.actions.ViewToolWindowButtonsAction"/>
+          <action id="ViewStatusBar" class="consulo.ide.impl.idea.ide.actions.ViewStatusBarAction"/>
+          <group id="ViewStatusBarWidgetsGroup" class="consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetsActionGroup" popup="true"/>
         </group>
 
         <group id="EditorToggleActions" popup="true">
-          <action id="EditorToggleShowWhitespaces" class="com.intellij.openapi.editor.actions.ToggleShowWhitespacesAction"/>
-          <action id="EditorToggleShowLineNumbers" class="com.intellij.openapi.editor.actions.ToggleShowLineNumbersAction"/>
-          <action id="EditorToggleShowIndentLines" class="com.intellij.openapi.editor.actions.ToggleShowIndentLinesAction"/>
-          <action id="EditorToggleUseSoftWraps" class="com.intellij.openapi.editor.actions.ToggleUseSoftWrapsMenuAction"
+          <action id="EditorToggleShowWhitespaces" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowWhitespacesAction"/>
+          <action id="EditorToggleShowLineNumbers" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowLineNumbersAction"/>
+          <action id="EditorToggleShowIndentLines" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowIndentLinesAction"/>
+          <action id="EditorToggleUseSoftWraps" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsMenuAction"
                   icon="consulo.platform.base.PlatformIconGroup@actions.togglesoftwrap"/>
         </group>
 
         <separator/>
         <group id="EditorBidiTextDirection" popup="true">
-          <action id="EditorSetContentBasedBidiTextDirection" class="com.intellij.openapi.editor.actions.SetEditorBidiTextDirectionAction$ContentBased"/>
-          <action id="EditorSetLtrBidiTextDirection" class="com.intellij.openapi.editor.actions.SetEditorBidiTextDirectionAction$Ltr"/>
-          <action id="EditorSetRtlBidiTextDirection" class="com.intellij.openapi.editor.actions.SetEditorBidiTextDirectionAction$Rtl"/>
+          <action id="EditorSetContentBasedBidiTextDirection" class="consulo.ide.impl.idea.openapi.editor.actions.SetEditorBidiTextDirectionAction$ContentBased"/>
+          <action id="EditorSetLtrBidiTextDirection" class="consulo.ide.impl.idea.openapi.editor.actions.SetEditorBidiTextDirectionAction$Ltr"/>
+          <action id="EditorSetRtlBidiTextDirection" class="consulo.ide.impl.idea.openapi.editor.actions.SetEditorBidiTextDirectionAction$Rtl"/>
         </group>
 
         <separator/>
@@ -432,126 +432,126 @@
         <!-- Mac OS Lion: In native apps toggle full screen mode is the last action in "View" menu -->
         <group id="ToggleFullScreenGroup">
           <separator/>
-          <action id="TogglePresentationMode" class="com.intellij.ide.actions.TogglePresentationModeAction"/>
-          <action id="ToggleFullScreen" class="com.intellij.ide.actions.ToggleFullScreenAction"/>
+          <action id="TogglePresentationMode" class="consulo.ide.impl.idea.ide.actions.TogglePresentationModeAction"/>
+          <action id="ToggleFullScreen" class="consulo.ide.impl.idea.ide.actions.ToggleFullScreenAction"/>
         </group>
       </group>
 
       <!-- Go to -->
       <group id="GoToMenu" popup="true">
-        <action id="GotoLine" class="com.intellij.ide.actions.GotoLineAction"/>
+        <action id="GotoLine" class="consulo.ide.impl.idea.ide.actions.GotoLineAction"/>
         <separator/>
-        <action id="Back" class="com.intellij.ide.actions.BackAction" icon="consulo.platform.base.PlatformIconGroup@actions.back"/>
-        <action id="Forward" class="com.intellij.ide.actions.ForwardAction" icon="consulo.platform.base.PlatformIconGroup@actions.forward"/>
-        <action id="JumpToLastChange" class="com.intellij.ide.actions.JumpToLastEditAction"/>
+        <action id="Back" class="consulo.ide.impl.idea.ide.actions.BackAction" icon="consulo.platform.base.PlatformIconGroup@actions.back"/>
+        <action id="Forward" class="consulo.ide.impl.idea.ide.actions.ForwardAction" icon="consulo.platform.base.PlatformIconGroup@actions.forward"/>
+        <action id="JumpToLastChange" class="consulo.ide.impl.idea.ide.actions.JumpToLastEditAction"/>
         <separator/>
-        <action id="PreviousOccurence" class="com.intellij.ide.actions.PreviousOccurenceAction" icon="consulo.platform.base.PlatformIconGroup@actions.previousoccurence"/>
-        <action id="NextOccurence" class="com.intellij.ide.actions.NextOccurenceAction" icon="consulo.platform.base.PlatformIconGroup@actions.nextoccurence"/>
+        <action id="PreviousOccurence" class="consulo.ide.impl.idea.ide.actions.PreviousOccurenceAction" icon="consulo.platform.base.PlatformIconGroup@actions.previousoccurence"/>
+        <action id="NextOccurence" class="consulo.ide.impl.idea.ide.actions.NextOccurenceAction" icon="consulo.platform.base.PlatformIconGroup@actions.nextoccurence"/>
         <separator/>
       </group>
 
       <!-- Tools -->
       <group id="ToolsMenu" popup="true">
-        <action id="PsiViewer" class="com.intellij.internal.psiView.PsiViewerAction"/>
-        <action id="PsiViewerForContext" class="com.intellij.internal.psiView.PsiViewerForContextAction"/>
+        <action id="PsiViewer" class="consulo.ide.impl.idea.internal.psiView.PsiViewerAction"/>
+        <action id="PsiViewerForContext" class="consulo.ide.impl.idea.internal.psiView.PsiViewerForContextAction"/>
         <separator/>
-        <action id="CreateLauncherScript" class="com.intellij.ide.actions.CreateLauncherScriptAction"/>
-        <action id="CreateDesktopEntry" class="com.intellij.ide.actions.CreateDesktopEntryAction"/>
+        <action id="CreateLauncherScript" class="consulo.ide.impl.idea.ide.actions.CreateLauncherScriptAction"/>
+        <action id="CreateDesktopEntry" class="consulo.ide.impl.idea.ide.actions.CreateDesktopEntryAction"/>
         <separator/>
       </group>
 
       <group id="WindowMenu" popup="true">
-        <action id="MinimizeCurrentWindow" class="com.intellij.ide.actions.MinimizeCurrentWindowAction"/>
-        <action id="StoreDefaultLayout" class="com.intellij.ide.actions.StoreDefaultLayoutAction"/>
-        <action id="RestoreDefaultLayout" class="com.intellij.ide.actions.RestoreDefaultLayoutAction"/>
+        <action id="MinimizeCurrentWindow" class="consulo.ide.impl.idea.ide.actions.MinimizeCurrentWindowAction"/>
+        <action id="StoreDefaultLayout" class="consulo.ide.impl.idea.ide.actions.StoreDefaultLayoutAction"/>
+        <action id="RestoreDefaultLayout" class="consulo.ide.impl.idea.ide.actions.RestoreDefaultLayoutAction"/>
         <separator/>
         <group id="ActiveToolwindowGroup" popup="true">
-          <action id="HideActiveWindow" class="com.intellij.ide.actions.HideToolWindowAction"/>
-          <action id="HideSideWindows" class="com.intellij.ide.actions.HideSideWindowsAction"/>
-          <action id="HideAllWindows" class="com.intellij.ide.actions.HideAllToolWindowsAction"/>
-          <action id="CloseActiveTab" class="com.intellij.ide.actions.CloseActiveTabAction"/>
-          <action id="JumpToLastWindow" class="com.intellij.ide.actions.JumpToLastWindowAction"/>
-          <action id="MaximizeToolWindow" class="com.intellij.openapi.wm.impl.MaximizeToolWindowAction"/>
+          <action id="HideActiveWindow" class="consulo.ide.impl.idea.ide.actions.HideToolWindowAction"/>
+          <action id="HideSideWindows" class="consulo.ide.impl.idea.ide.actions.HideSideWindowsAction"/>
+          <action id="HideAllWindows" class="consulo.ide.impl.idea.ide.actions.HideAllToolWindowsAction"/>
+          <action id="CloseActiveTab" class="consulo.ide.impl.idea.ide.actions.CloseActiveTabAction"/>
+          <action id="JumpToLastWindow" class="consulo.ide.impl.idea.ide.actions.JumpToLastWindowAction"/>
+          <action id="MaximizeToolWindow" class="consulo.ide.impl.idea.openapi.wm.impl.MaximizeToolWindowAction"/>
           <separator/>
-          <action id="TogglePinnedMode" class="com.intellij.ide.actions.TogglePinnedModeAction"/>
-          <action id="ToggleDockMode" class="com.intellij.ide.actions.ToggleDockModeAction"/>
-          <action id="ToggleFloatingMode" class="com.intellij.ide.actions.ToggleFloatingModeAction"/>
-          <action id="ToggleWindowedMode" class="com.intellij.ide.actions.ToggleWindowedModeAction"/>
-          <action id="ToggleSideMode" class="com.intellij.ide.actions.ToggleSideModeAction"/>
-          <action id="ToggleContentUiTypeMode" class="com.intellij.ide.actions.ToggleContentUiTypeAction"/>
-          <action id="ShowContent" class="com.intellij.ide.actions.ShowContentAction"/>
+          <action id="TogglePinnedMode" class="consulo.ide.impl.idea.ide.actions.TogglePinnedModeAction"/>
+          <action id="ToggleDockMode" class="consulo.ide.impl.idea.ide.actions.ToggleDockModeAction"/>
+          <action id="ToggleFloatingMode" class="consulo.ide.impl.idea.ide.actions.ToggleFloatingModeAction"/>
+          <action id="ToggleWindowedMode" class="consulo.ide.impl.idea.ide.actions.ToggleWindowedModeAction"/>
+          <action id="ToggleSideMode" class="consulo.ide.impl.idea.ide.actions.ToggleSideModeAction"/>
+          <action id="ToggleContentUiTypeMode" class="consulo.ide.impl.idea.ide.actions.ToggleContentUiTypeAction"/>
+          <action id="ShowContent" class="consulo.ide.impl.idea.ide.actions.ShowContentAction"/>
           <group id="ResizeToolWindowGroup" popup="true">
-            <action id="ResizeToolWindowLeft" class="com.intellij.ide.actions.ResizeToolWindowAction$Left"/>
-            <action id="ResizeToolWindowRight" class="com.intellij.ide.actions.ResizeToolWindowAction$Right"/>
-            <action id="ResizeToolWindowUp" class="com.intellij.ide.actions.ResizeToolWindowAction$Up"/>
-            <action id="ResizeToolWindowDown" class="com.intellij.ide.actions.ResizeToolWindowAction$Down"/>
+            <action id="ResizeToolWindowLeft" class="consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction$Left"/>
+            <action id="ResizeToolWindowRight" class="consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction$Right"/>
+            <action id="ResizeToolWindowUp" class="consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction$Up"/>
+            <action id="ResizeToolWindowDown" class="consulo.ide.impl.idea.ide.actions.ResizeToolWindowAction$Down"/>
           </group>
         </group>
 
         <group id="EditorTabsGroup" popup="true">
-          <action id="NextTab" class="com.intellij.ide.actions.NextTabAction"/>
-          <action id="PreviousTab" class="com.intellij.ide.actions.PreviousTabAction"/>
-          <action id="PinActiveTab" class="com.intellij.ide.actions.PinActiveTabAction"/>
-          <action id="TabList" class="com.intellij.ide.actions.TabListAction"/>
+          <action id="NextTab" class="consulo.ide.impl.idea.ide.actions.NextTabAction"/>
+          <action id="PreviousTab" class="consulo.ide.impl.idea.ide.actions.PreviousTabAction"/>
+          <action id="PinActiveTab" class="consulo.ide.impl.idea.ide.actions.PinActiveTabAction"/>
+          <action id="TabList" class="consulo.ide.impl.idea.ide.actions.TabListAction"/>
           <separator/>
           <group id="CloseEditorsGroup">
-            <action id="CloseContent" class="com.intellij.ide.actions.CloseAction"/>
-            <action id="CloseAllEditorsButActive" class="com.intellij.ide.actions.CloseAllEditorsButActiveAction"/>
-            <action id="CloseAllEditors" class="com.intellij.ide.actions.CloseAllEditorsAction"/>
-            <action id="CloseAllUnpinnedEditors" class="com.intellij.ide.actions.CloseAllUnpinnedEditorsAction"/>
+            <action id="CloseContent" class="consulo.ide.impl.idea.ide.actions.CloseAction"/>
+            <action id="CloseAllEditorsButActive" class="consulo.ide.impl.idea.ide.actions.CloseAllEditorsButActiveAction"/>
+            <action id="CloseAllEditors" class="consulo.ide.impl.idea.ide.actions.CloseAllEditorsAction"/>
+            <action id="CloseAllUnpinnedEditors" class="consulo.ide.impl.idea.ide.actions.CloseAllUnpinnedEditorsAction"/>
           </group>
           <separator/>
-          <action id="ReopenClosedTab" class="com.intellij.openapi.fileEditor.impl.ReopenClosedTabAction"/>
-          <action id="SplitVertically" class="com.intellij.ide.actions.SplitVerticallyAction" icon="consulo.platform.base.PlatformIconGroup@actions.splitvertically"/>
-          <action id="SplitHorizontally" class="com.intellij.ide.actions.SplitHorizontallyAction"
+          <action id="ReopenClosedTab" class="consulo.ide.impl.idea.openapi.fileEditor.impl.ReopenClosedTabAction"/>
+          <action id="SplitVertically" class="consulo.ide.impl.idea.ide.actions.SplitVerticallyAction" icon="consulo.platform.base.PlatformIconGroup@actions.splitvertically"/>
+          <action id="SplitHorizontally" class="consulo.ide.impl.idea.ide.actions.SplitHorizontallyAction"
                   icon="consulo.platform.base.PlatformIconGroup@actions.splithorizontally"/>
-          <action id="ChangeSplitOrientation" class="com.intellij.ide.actions.ChangeSplitterOrientationAction"/>
-          <action id="Unsplit" class="com.intellij.ide.actions.UnsplitAction"/>
-          <action id="UnsplitAll" class="com.intellij.ide.actions.UnsplitAllAction"/>
-          <action id="NextSplitter" class="com.intellij.ide.actions.NextSplitAction"/>
-          <action id="PrevSplitter" class="com.intellij.ide.actions.PrevSplitAction"/>
+          <action id="ChangeSplitOrientation" class="consulo.ide.impl.idea.ide.actions.ChangeSplitterOrientationAction"/>
+          <action id="Unsplit" class="consulo.ide.impl.idea.ide.actions.UnsplitAction"/>
+          <action id="UnsplitAll" class="consulo.ide.impl.idea.ide.actions.UnsplitAllAction"/>
+          <action id="NextSplitter" class="consulo.ide.impl.idea.ide.actions.NextSplitAction"/>
+          <action id="PrevSplitter" class="consulo.ide.impl.idea.ide.actions.PrevSplitAction"/>
           <group id="TabsPlacementGroup" popup="true" text="Tabs Placement">
-            <action id="TabsPlacementTop" text="Top" class="com.intellij.ide.actions.TabsPlacementAction$Top"/>
-            <action id="TabsPlacementBottom" text="Bottom" class="com.intellij.ide.actions.TabsPlacementAction$Bottom"/>
-            <action id="TabsPlacementLeft" text="Left" class="com.intellij.ide.actions.TabsPlacementAction$Left"/>
-            <action id="TabsPlacementRight" text="Right" class="com.intellij.ide.actions.TabsPlacementAction$Right"/>
-            <action id="TabsPlacementNone" text="None" class="com.intellij.ide.actions.TabsPlacementAction$None"/>
+            <action id="TabsPlacementTop" text="Top" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$Top"/>
+            <action id="TabsPlacementBottom" text="Bottom" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$Bottom"/>
+            <action id="TabsPlacementLeft" text="Left" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$Left"/>
+            <action id="TabsPlacementRight" text="Right" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$Right"/>
+            <action id="TabsPlacementNone" text="None" class="consulo.ide.impl.idea.ide.actions.TabsPlacementAction$None"/>
           </group>
-          <action id="TabsAlphabeticalMode" class="com.intellij.ide.actions.TabsAlphabeticalModeSwitcher" text="Alphabetical Mode"/>
+          <action id="TabsAlphabeticalMode" class="consulo.ide.impl.idea.ide.actions.TabsAlphabeticalModeSwitcher" text="Alphabetical Mode"/>
         </group>
 
         <group id="BackgroundTasks" popup="true">
-          <action id="ShowProcessWindow" class="com.intellij.openapi.wm.impl.status.ShowProcessWindowAction"/>
-          <action id="AutoShowProcessWindow" class="com.intellij.openapi.wm.impl.status.AutoShowProcessPopupAction"/>
+          <action id="ShowProcessWindow" class="consulo.ide.impl.idea.openapi.wm.impl.status.ShowProcessWindowAction"/>
+          <action id="AutoShowProcessWindow" class="consulo.ide.impl.idea.openapi.wm.impl.status.AutoShowProcessPopupAction"/>
         </group>
 
         <separator/>
-        <group id="OpenProjectWindows" class="com.intellij.openapi.wm.impl.ProjectWindowActionGroup">
-          <action id="NextProjectWindow" class="com.intellij.openapi.wm.impl.NextProjectWindow"/>
-          <action id="PreviousProjectWindow" class="com.intellij.openapi.wm.impl.PreviousProjectWindow"/>
+        <group id="OpenProjectWindows" class="consulo.ide.impl.idea.openapi.wm.impl.ProjectWindowActionGroup">
+          <action id="NextProjectWindow" class="consulo.ide.impl.idea.openapi.wm.impl.NextProjectWindow"/>
+          <action id="PreviousProjectWindow" class="consulo.ide.impl.idea.openapi.wm.impl.PreviousProjectWindow"/>
           <separator/>
         </group>
       </group>
 
       <!-- Help -->
       <group id="HelpMenu" popup="true">
-        <action id="GotoAction" class="com.intellij.ide.actions.GotoActionAction"/>
+        <action id="GotoAction" class="consulo.ide.impl.idea.ide.actions.GotoActionAction"/>
         <separator/>
-        <action id="HelpTopics" class="com.intellij.ide.actions.HelpTopicsAction" icon="consulo.platform.base.PlatformIconGroup@actions.help"/>
-        <action id="ShowTips" class="com.intellij.ide.actions.ShowTipsAction"/>
-        <action id="ProductivityGude" class="com.intellij.featureStatistics.actions.ShowFeatureUsageStatisticsAction"/>
+        <action id="HelpTopics" class="consulo.ide.impl.idea.ide.actions.HelpTopicsAction" icon="consulo.platform.base.PlatformIconGroup@actions.help"/>
+        <action id="ShowTips" class="consulo.ide.impl.idea.ide.actions.ShowTipsAction"/>
+        <action id="ProductivityGude" class="consulo.ide.impl.idea.featureStatistics.actions.ShowFeatureUsageStatisticsAction"/>
         <separator/>
-        <action id="TechnicalSupport" class="com.intellij.ide.actions.TechnicalSupportAction"/>
-        <action id="SendFeedback" class="com.intellij.ide.actions.SendFeedbackAction"/>
-        <action id="ShowLog" class="com.intellij.ide.actions.ShowLogAction"/>
+        <action id="TechnicalSupport" class="consulo.ide.impl.idea.ide.actions.TechnicalSupportAction"/>
+        <action id="SendFeedback" class="consulo.ide.impl.idea.ide.actions.SendFeedbackAction"/>
+        <action id="ShowLog" class="consulo.ide.impl.idea.ide.actions.ShowLogAction"/>
         <separator/>
-        <action id="OnlineDocAction" class="com.intellij.ide.actions.OnlineDocAction"/>
-        <action id="Help.KeymapReference" class="com.intellij.ide.actions.RefCardAction"/>
-        <action id="Help.Youtube" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"/>
+        <action id="OnlineDocAction" class="consulo.ide.impl.idea.ide.actions.OnlineDocAction"/>
+        <action id="Help.KeymapReference" class="consulo.ide.impl.idea.ide.actions.RefCardAction"/>
+        <action id="Help.Youtube" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"/>
         <action id="Help.JoinDiscordChannel" class="consulo.wm.impl.welcomeScreen.JoinDiscordChannelAction" icon="consulo.platform.base.PlatformIconGroup@providers.discord"/>
         <separator/>
-        <action id="CheckForUpdate" class="com.intellij.openapi.updateSettings.impl.CheckForUpdateAction"/>
-        <action id="About" class="com.intellij.ide.actions.AboutAction"/>
+        <action id="CheckForUpdate" class="consulo.ide.impl.idea.openapi.updateSettings.impl.CheckForUpdateAction"/>
+        <action id="About" class="consulo.ide.impl.idea.ide.actions.AboutAction"/>
       </group>
     </group>
 
@@ -589,7 +589,7 @@
         <reference ref="PasteMultiple"/>
       </group>
       <reference ref="EditorToggleColumnMode"/>
-      <action id="$SearchWeb" class="com.intellij.ide.actions.SearchWebAction"/>
+      <action id="$SearchWeb" class="consulo.ide.impl.idea.ide.actions.SearchWebAction"/>
       <separator/>
       <reference ref="CompareClipboardWithSelection"/>
       <reference ref="ChangeFileEncodingAction"/>
@@ -609,7 +609,7 @@
       <separator/>
       <reference ref="SplitVertically"/>
       <reference ref="SplitHorizontally"/>
-      <action id="MoveEditorToOppositeTabGroup" class="com.intellij.openapi.fileEditor.impl.MoveEditorToOppositeTabGroupAction"/>
+      <action id="MoveEditorToOppositeTabGroup" class="consulo.ide.impl.idea.openapi.fileEditor.impl.MoveEditorToOppositeTabGroupAction"/>
       <reference ref="ChangeSplitOrientation"/>
       <reference ref="PinActiveTab"/>
       <reference ref="TabsPlacementGroup"/>
@@ -627,24 +627,24 @@
     </group>
 
     <group id="WelcomeScreen.Documentation">
-      <action id="WelcomeScreen.ReadHelp" class="com.intellij.ide.actions.HelpTopicsAction"
+      <action id="WelcomeScreen.ReadHelp" class="consulo.ide.impl.idea.ide.actions.HelpTopicsAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.help"/>
-      <action id="WelcomeScreen.ShowTips" class="com.intellij.ide.actions.ShowTipsAction"/>
+      <action id="WelcomeScreen.ShowTips" class="consulo.ide.impl.idea.ide.actions.ShowTipsAction"/>
       <reference ref="Help.KeymapReference"/>
 
-      <action id="WelcomeScreen.Youtube" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"
+      <action id="WelcomeScreen.Youtube" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenYoutubeAction"
               icon="consulo.platform.base.PlatformIconGroup@general.youtube"/>
       <reference id="Help.JoinDiscordChannel"/>
-      <action id="WelcomeScreen.DevelopPlugins" class="com.intellij.openapi.wm.impl.welcomeScreen.DevelopPluginsAction"
+      <action id="WelcomeScreen.DevelopPlugins" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.DevelopPluginsAction"
               icon="consulo.platform.base.PlatformIconGroup@nodes.plugin"/>
     </group>
 
     <group id="WelcomeScreen.Configure">
-      <action id="WelcomeScreen.Settings" class="com.intellij.ide.actions.ShowSettingsAction"/>
-      <action id="WelcomeScreen.Plugins" class="com.intellij.ide.actions.ShowPluginManagerAction"/>
+      <action id="WelcomeScreen.Settings" class="consulo.ide.impl.idea.ide.actions.ShowSettingsAction"/>
+      <action id="WelcomeScreen.Plugins" class="consulo.ide.impl.idea.ide.actions.ShowPluginManagerAction"/>
 
-      <action id="WelcomeScreen.Configure.Import" class="com.intellij.ide.actions.ImportSettingsAction"/>
-      <action id="WelcomeScreen.Configure.Export" class="com.intellij.ide.actions.ExportSettingsAction"/>
+      <action id="WelcomeScreen.Configure.Import" class="consulo.ide.impl.idea.ide.actions.ImportSettingsAction"/>
+      <action id="WelcomeScreen.Configure.Export" class="consulo.ide.impl.idea.ide.actions.ExportSettingsAction"/>
 
       <reference id="CreateDesktopEntry"/>
       <reference id="CheckForUpdate"/>
@@ -659,24 +659,24 @@
     </group>
 
     <group id="FileChooserToolbar">
-      <action id="FileChooser.GotoHome" class="com.intellij.openapi.fileChooser.actions.GotoHomeAction"
+      <action id="FileChooser.GotoHome" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoHomeAction"
               icon="consulo.platform.base.PlatformIconGroup@nodes.homefolder"/>
-      <action id="FileChooser.GotoDesktop" class="com.intellij.openapi.fileChooser.actions.GotoDesktopDirAction"
+      <action id="FileChooser.GotoDesktop" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoDesktopDirAction"
               icon="consulo.platform.base.PlatformIconGroup@nodes.desktop"/>
-      <action id="FileChooser.GotoProject" class="com.intellij.openapi.fileChooser.actions.GotoProjectDirectory"
+      <action id="FileChooser.GotoProject" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoProjectDirectory"
               icon="consulo.platform.base.PlatformIconGroup@icon16"/>
       <separator/>
-      <action id="FileChooser.NewFile" class="com.intellij.openapi.fileChooser.actions.NewFileAction"
+      <action id="FileChooser.NewFile" class="consulo.ide.impl.idea.openapi.fileChooser.actions.NewFileAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.new"/>
-      <action id="FileChooser.NewFolder" class="com.intellij.openapi.fileChooser.actions.NewFolderAction"
+      <action id="FileChooser.NewFolder" class="consulo.ide.impl.idea.openapi.fileChooser.actions.NewFolderAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.newfolder"/>
-      <action id="FileChooser.Delete" class="com.intellij.openapi.fileChooser.actions.FileDeleteAction"
+      <action id="FileChooser.Delete" class="consulo.ide.impl.idea.openapi.fileChooser.actions.FileDeleteAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
       <separator/>
-      <action id="FileChooser.Refresh" class="com.intellij.openapi.fileChooser.actions.RefreshFileChooserAction"
+      <action id="FileChooser.Refresh" class="consulo.ide.impl.idea.openapi.fileChooser.actions.RefreshFileChooserAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
       <separator/>
-      <action id="FileChooser.ShowHiddens" class="com.intellij.openapi.fileChooser.actions.ShowHiddensAction"
+      <action id="FileChooser.ShowHiddens" class="consulo.ide.impl.idea.openapi.fileChooser.actions.ShowHiddensAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.showhiddens"/>
     </group>
 
@@ -687,15 +687,15 @@
     </group>
 
     <group id="ChangeScheme">
-      <action id="ChangeColorScheme" class="com.intellij.ide.actions.QuickChangeColorSchemeAction"/>
-      <action id="ChangeKeymap" class="com.intellij.ide.actions.QuickChangeKeymapAction"/>
-      <action id="ChangeLaf" class="com.intellij.ide.actions.QuickChangeLookAndFeel"/>
+      <action id="ChangeColorScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeColorSchemeAction"/>
+      <action id="ChangeKeymap" class="consulo.ide.impl.idea.ide.actions.QuickChangeKeymapAction"/>
+      <action id="ChangeLaf" class="consulo.ide.impl.idea.ide.actions.QuickChangeLookAndFeel"/>
     </group>
 
-    <action id="MaintenanceAction" class="com.intellij.ide.actions.MaintenanceAction"/>
+    <action id="MaintenanceAction" class="consulo.ide.impl.idea.ide.actions.MaintenanceAction"/>
 
     <group id="MaintenanceGroup">
-      <action id="UiDebugger" class="com.intellij.ui.debugger.ShowUiDebuggerAction"/>
+      <action id="UiDebugger" class="consulo.ide.impl.idea.ui.debugger.ShowUiDebuggerAction"/>
     </group>
 
     <action id="Console.Open" class="consulo.ui.ex.action.EmptyAction"/>
@@ -709,47 +709,47 @@
     </group>
 
     <group id="EditorContextBarMenu">
-      <action id="EditorToggleUseSoftWrapsInPreview" class="com.intellij.openapi.editor.actions.ToggleUseSoftWrapsInPreviewAction"
+      <action id="EditorToggleUseSoftWrapsInPreview" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsInPreviewAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.togglesoftwrap"/>
       <separator/>
     </group>
-    <action id="Rerun" class="com.intellij.execution.runners.FakeRerunAction" text="Rerun"/>
+    <action id="Rerun" class="consulo.ide.impl.idea.execution.runners.FakeRerunAction" text="Rerun"/>
 
-    <action id="IncrementWindowWidth" class="com.intellij.ide.actions.WindowAction$IncrementWidth" use-shortcut-of="ResizeToolWindowRight"/>
-    <action id="DecrementWindowWidth" class="com.intellij.ide.actions.WindowAction$DecrementWidth" use-shortcut-of="ResizeToolWindowLeft"/>
-    <action id="IncrementWindowHeight" class="com.intellij.ide.actions.WindowAction$IncrementHeight"
+    <action id="IncrementWindowWidth" class="consulo.ide.impl.idea.ide.actions.WindowAction$IncrementWidth" use-shortcut-of="ResizeToolWindowRight"/>
+    <action id="DecrementWindowWidth" class="consulo.ide.impl.idea.ide.actions.WindowAction$DecrementWidth" use-shortcut-of="ResizeToolWindowLeft"/>
+    <action id="IncrementWindowHeight" class="consulo.ide.impl.idea.ide.actions.WindowAction$IncrementHeight"
             use-shortcut-of="ResizeToolWindowDown"/>
-    <action id="DecrementWindowHeight" class="com.intellij.ide.actions.WindowAction$DecrementHeight" use-shortcut-of="ResizeToolWindowUp"/>
+    <action id="DecrementWindowHeight" class="consulo.ide.impl.idea.ide.actions.WindowAction$DecrementHeight" use-shortcut-of="ResizeToolWindowUp"/>
 
     <action id="ExportTestResults" class="consulo.execution.test.export.ExportTestResultsAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.export"/>
 
-    <action id="SaveDocument" class="com.intellij.ide.actions.SaveDocumentAction"/>
+    <action id="SaveDocument" class="consulo.ide.impl.idea.ide.actions.SaveDocumentAction"/>
 
-    <action id="MarkNotificationsAsRead" class="com.intellij.notification.impl.actions.MarkAllNotificationsAsReadAction"/>
+    <action id="MarkNotificationsAsRead" class="consulo.ide.impl.idea.notification.impl.actions.MarkAllNotificationsAsReadAction"/>
 
-    <action id="Vcs.ShowTabbedFileHistory" class="com.intellij.openapi.vcs.actions.TabbedShowHistoryAction"
+    <action id="Vcs.ShowTabbedFileHistory" class="consulo.ide.impl.idea.openapi.vcs.actions.TabbedShowHistoryAction"
             icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
 
-    <action id="CheckinProject" class="com.intellij.openapi.vcs.actions.CommonCheckinProjectAction" icon="consulo.platform.base.PlatformIconGroup@actions.commit">
+    <action id="CheckinProject" class="consulo.ide.impl.idea.openapi.vcs.actions.CommonCheckinProjectAction" icon="consulo.platform.base.PlatformIconGroup@actions.commit">
       <keyboard-shortcut first-keystroke="control K" keymap="$default"/>
     </action>
-    <action id="CheckinFiles" class="com.intellij.openapi.vcs.actions.CommonCheckinFilesAction"/>
-    <action id="UpdateFiles" class="com.intellij.openapi.vcs.update.CommonUpdateFileOrDirectoryAction"/>
-    <action id="CheckStatusForFiles" class="com.intellij.openapi.vcs.update.CommonStatusFileOrDirectoryAction"/>
-    <action id="IntegrateFiles" class="com.intellij.openapi.vcs.update.CommonIntegrateFileOrDirectoryAction"/>
-    <action id="Annotate" class="com.intellij.openapi.vcs.actions.AnnotateToggleAction"/>
-    <action id="Show.Current.Revision" class="com.intellij.openapi.vcs.actions.ShowBaseRevisionAction" text="Show Current Revision"/>
-    <action id="Compare.SameVersion" class="com.intellij.openapi.vcs.actions.CompareWithTheSameVersionAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
-    <action id="Compare.LastVersion" class="com.intellij.openapi.vcs.actions.CompareWithLastVersion"/>
-    <action id="Compare.Selected" class="com.intellij.openapi.vcs.actions.CompareWithSelectedRevisionAction" popup="true"/>
-    <action id="Compare.Specified" class="com.intellij.openapi.vcs.actions.SelectAndCompareWithSelectedRevisionAction"
+    <action id="CheckinFiles" class="consulo.ide.impl.idea.openapi.vcs.actions.CommonCheckinFilesAction"/>
+    <action id="UpdateFiles" class="consulo.ide.impl.idea.openapi.vcs.update.CommonUpdateFileOrDirectoryAction"/>
+    <action id="CheckStatusForFiles" class="consulo.ide.impl.idea.openapi.vcs.update.CommonStatusFileOrDirectoryAction"/>
+    <action id="IntegrateFiles" class="consulo.ide.impl.idea.openapi.vcs.update.CommonIntegrateFileOrDirectoryAction"/>
+    <action id="Annotate" class="consulo.ide.impl.idea.openapi.vcs.actions.AnnotateToggleAction"/>
+    <action id="Show.Current.Revision" class="consulo.ide.impl.idea.openapi.vcs.actions.ShowBaseRevisionAction" text="Show Current Revision"/>
+    <action id="Compare.SameVersion" class="consulo.ide.impl.idea.openapi.vcs.actions.CompareWithTheSameVersionAction" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
+    <action id="Compare.LastVersion" class="consulo.ide.impl.idea.openapi.vcs.actions.CompareWithLastVersion"/>
+    <action id="Compare.Selected" class="consulo.ide.impl.idea.openapi.vcs.actions.CompareWithSelectedRevisionAction" popup="true"/>
+    <action id="Compare.Specified" class="consulo.ide.impl.idea.openapi.vcs.actions.SelectAndCompareWithSelectedRevisionAction"
             text="Com_pare with Specified Revision..." popup="true"/>
-    <action id="Vcs.ShowHistoryForBlock" class="com.intellij.openapi.vcs.actions.SelectedBlockHistoryAction"/>
+    <action id="Vcs.ShowHistoryForBlock" class="consulo.ide.impl.idea.openapi.vcs.actions.SelectedBlockHistoryAction"/>
 
-    <group class="com.intellij.openapi.vcs.actions.VcsActionGroup" id="VcsGroup"/>
+    <group class="consulo.ide.impl.idea.openapi.vcs.actions.VcsActionGroup" id="VcsGroup"/>
 
-    <group class="com.intellij.openapi.vcs.actions.VcsGroupsWrapper" id="VcsFileGroupPopup" popup="true"/>
+    <group class="consulo.ide.impl.idea.openapi.vcs.actions.VcsGroupsWrapper" id="VcsFileGroupPopup" popup="true"/>
 
     <group id="VersionControlsGroup">
       <reference ref="VcsFileGroupPopup"/>
@@ -757,42 +757,42 @@
 
     <group id="GoToChangeMarkerGroup">
       <separator/>
-      <action id="VcsShowNextChangeMarker" class="com.intellij.openapi.vcs.actions.ShowNextChangeMarkerAction"
+      <action id="VcsShowNextChangeMarker" class="consulo.ide.impl.idea.openapi.vcs.actions.ShowNextChangeMarkerAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.nextoccurence"/>
-      <action id="VcsShowPrevChangeMarker" class="com.intellij.openapi.vcs.actions.ShowPrevChangeMarkerAction"
+      <action id="VcsShowPrevChangeMarker" class="consulo.ide.impl.idea.openapi.vcs.actions.ShowPrevChangeMarkerAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.previousoccurence"/>
 
       <add-to-group group-id="GoToMenu" anchor="last"/>
     </group>
 
-    <action id="Vcs.UpdateProject" class="com.intellij.openapi.vcs.update.CommonUpdateProjectAction" icon="consulo.platform.base.PlatformIconGroup@actions.checkout">
+    <action id="Vcs.UpdateProject" class="consulo.ide.impl.idea.openapi.vcs.update.CommonUpdateProjectAction" icon="consulo.platform.base.PlatformIconGroup@actions.checkout">
       <keyboard-shortcut first-keystroke="control T" keymap="$default"/>
     </action>
 
-    <action id="Vcs.IntegrateProject" class="com.intellij.openapi.vcs.update.CommonIntegrateProjectAction"/>
+    <action id="Vcs.IntegrateProject" class="consulo.ide.impl.idea.openapi.vcs.update.CommonIntegrateProjectAction"/>
 
-    <action id="Vcs.RefreshStatuses" class="com.intellij.openapi.vcs.actions.RefreshStatuses"/>
-    <action id="ChangesView.Refresh" class="com.intellij.openapi.vcs.changes.actions.RefreshAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-    <action id="ChangesView.CreatePatch" class="com.intellij.openapi.vcs.changes.actions.CreatePatchAction" icon="consulo.platform.base.PlatformIconGroup@filetypes.patch"/>
-    <action id="ChangesView.Revert" class="com.intellij.openapi.vcs.changes.actions.RollbackAction"
+    <action id="Vcs.RefreshStatuses" class="consulo.ide.impl.idea.openapi.vcs.actions.RefreshStatuses"/>
+    <action id="ChangesView.Refresh" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RefreshAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
+    <action id="ChangesView.CreatePatch" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchAction" icon="consulo.platform.base.PlatformIconGroup@filetypes.patch"/>
+    <action id="ChangesView.Revert" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.rollback" text="_Revert..." description="Revert selected changes"/>
-    <action id="ChangesView.Shelve" class="com.intellij.openapi.vcs.changes.shelf.ShelveChangesAction" icon="consulo.platform.base.PlatformIconGroup@vcs.shelvesilent"/>
+    <action id="ChangesView.Shelve" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesAction" icon="consulo.platform.base.PlatformIconGroup@vcs.shelvesilent"/>
 
     <group id="ChangesViewToolbar">
       <reference ref="ChangesView.Refresh"/>
-      <action id="ChangesView.Commit" class="com.intellij.openapi.vcs.actions.CommonCheckinProjectAction"
+      <action id="ChangesView.Commit" class="consulo.ide.impl.idea.openapi.vcs.actions.CommonCheckinProjectAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.commit"/>
-      <action id="ChangesView.Rollback" class="com.intellij.openapi.vcs.changes.actions.RollbackAction"
+      <action id="ChangesView.Rollback" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RollbackAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.rollback"/>
-      <action id="ChangesView.NewChangeList" class="com.intellij.openapi.vcs.changes.actions.AddChangeListAction"
+      <action id="ChangesView.NewChangeList" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.AddChangeListAction"
               icon="consulo.platform.base.PlatformIconGroup@general.add"/>
-      <action id="ChangesView.RemoveChangeList" class="com.intellij.openapi.vcs.changes.actions.RemoveChangeListAction"
+      <action id="ChangesView.RemoveChangeList" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RemoveChangeListAction"
               icon="consulo.platform.base.PlatformIconGroup@general.remove"/>
-      <action id="ChangesView.SetDefault" class="com.intellij.openapi.vcs.changes.actions.SetDefaultChangeListAction"
+      <action id="ChangesView.SetDefault" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.SetDefaultChangeListAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.selectall"/>
-      <action id="ChangesView.Move" class="com.intellij.openapi.vcs.changes.actions.MoveChangesToAnotherListAction"
+      <action id="ChangesView.Move" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.MoveChangesToAnotherListAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.movetoanotherchangelist"/>
-      <action id="ChangesView.Diff" class="com.intellij.openapi.vcs.changes.actions.diff.ShowDiffAction"
+      <action id="ChangesView.Diff" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ShowDiffAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
     </group>
 
@@ -805,20 +805,20 @@
       <reference ref="ChangesView.Diff"/>
       <reference ref="EditSource"/>
       <separator/>
-      <action id="ChangesView.DeleteUnversioned" class="com.intellij.openapi.vcs.changes.actions.DeleteUnversionedFilesAction"
+      <action id="ChangesView.DeleteUnversioned" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.DeleteUnversionedFilesAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
-      <action id="ChangesView.AddUnversioned" class="com.intellij.openapi.vcs.changes.actions.ScheduleForAdditionAction">
+      <action id="ChangesView.AddUnversioned" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionAction">
         <keyboard-shortcut first-keystroke="control alt A" keymap="$default"/>
       </action>
-      <action id="ChangesView.Ignore" class="com.intellij.openapi.vcs.changes.actions.IgnoreUnversionedAction" icon="consulo.platform.base.PlatformIconGroup@actions.properties"/>
-      <action id="ChangesView.RemoveDeleted" class="com.intellij.openapi.vcs.changes.actions.ScheduleForRemovalAction"
+      <action id="ChangesView.Ignore" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.IgnoreUnversionedAction" icon="consulo.platform.base.PlatformIconGroup@actions.properties"/>
+      <action id="ChangesView.RemoveDeleted" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForRemovalAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
-      <action id="ChangesView.Edit" class="com.intellij.openapi.vcs.changes.actions.EditAction"/>
+      <action id="ChangesView.Edit" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.EditAction"/>
       <separator/>
       <reference ref="ChangesView.NewChangeList"/>
       <reference ref="ChangesView.RemoveChangeList"/>
       <reference ref="ChangesView.SetDefault"/>
-      <action id="ChangesView.Rename" class="com.intellij.openapi.vcs.changes.actions.RenameChangeListAction"/>
+      <action id="ChangesView.Rename" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RenameChangeListAction"/>
       <reference ref="ChangesView.CreatePatch"/>
       <reference ref="ChangesView.Shelve"/>
       <separator/>
@@ -829,46 +829,46 @@
 
     <!-- There are alternative action presentations for the UnversionedViewDialog. Icon is the difference.  -->
     <group id="Unversioned.Files.Dialog">
-      <action id="ChangesView.AddUnversioned.From.Dialog" class="com.intellij.openapi.vcs.changes.actions.ScheduleForAdditionAction"
+      <action id="ChangesView.AddUnversioned.From.Dialog" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.ScheduleForAdditionAction"
               icon="consulo.platform.base.PlatformIconGroup@general.add" use-shortcut-of="ChangesView.AddUnversioned"/>
       <reference ref="ChangesView.Move"/>
-      <action id="ChangesView.DeleteUnversioned.From.Dialog" class="com.intellij.openapi.vcs.changes.actions.DeleteUnversionedFilesAction"/>
+      <action id="ChangesView.DeleteUnversioned.From.Dialog" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.DeleteUnversionedFilesAction"/>
       <reference ref="ChangesView.Ignore"/>
     </group>
 
     <group id="ShelvedChangesPopupMenu">
-      <action id="ShelveChanges.UnshelveWithDialog" class="com.intellij.openapi.vcs.changes.shelf.UnshelveWithDialogAction"
+      <action id="ShelveChanges.UnshelveWithDialog" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.UnshelveWithDialogAction"
               text="Unshelve..." description="Correct paths where to apply patches and unshelve"/>
-      <action id="ShelvedChanges.Restore" class="com.intellij.openapi.vcs.changes.shelf.RestoreShelvedChange"/>
-      <action id="ShelvedChanges.Diff" class="com.intellij.openapi.vcs.changes.shelf.DiffShelvedChangesAction"
+      <action id="ShelvedChanges.Restore" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.RestoreShelvedChange"/>
+      <action id="ShelvedChanges.Diff" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.DiffShelvedChangesAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.diff" use-shortcut-of="Diff.ShowDiff"/>
-      <action id="ChangesView.CreatePatchFromChanges" class="com.intellij.openapi.vcs.changes.actions.CreatePatchFromChangesAction"
+      <action id="ChangesView.CreatePatchFromChanges" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.CreatePatchFromChangesAction"
               icon="consulo.platform.base.PlatformIconGroup@filetypes.patch"/>
-      <action id="ShelvedChanges.ImportPatches" class="com.intellij.openapi.vcs.changes.shelf.ImportIntoShelfAction"/>
+      <action id="ShelvedChanges.ImportPatches" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.ImportIntoShelfAction"/>
       <separator/>
-      <action id="ShelvedChanges.Rename" class="com.intellij.openapi.vcs.changes.shelf.RenameShelvedChangeListAction"
+      <action id="ShelvedChanges.Rename" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.RenameShelvedChangeListAction"
               use-shortcut-of="RenameElement"/>
       <reference ref="$Delete"/>
       <separator/>
-      <action id="ShelvedChanges.ShowHideDeleted" class="com.intellij.openapi.vcs.changes.shelf.ShowHideRecycledAction"
+      <action id="ShelvedChanges.ShowHideDeleted" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShowHideRecycledAction"
               description="Show/Hide Already Unshelved"/>
-      <action id="ShelvedChanges.CleanMarkedToDelete" class="com.intellij.openapi.vcs.changes.shelf.CleanUnshelvedAction"
+      <action id="ShelvedChanges.CleanMarkedToDelete" class="consulo.ide.impl.idea.openapi.vcs.changes.shelf.CleanUnshelvedAction"
               description="Delete unshelved changelists" text="Clean Already Unshelved..." icon="consulo.platform.base.PlatformIconGroup@actions.gc"/>
     </group>
 
     <group id="VcsHistoryActionsGroup"/>
 
     <group id="CommittedChangesToolbar">
-      <action id="CommittedChanges.Refresh" class="com.intellij.openapi.vcs.changes.committed.RefreshCommittedAction"
+      <action id="CommittedChanges.Refresh" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshCommittedAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
-      <action id="CommittedChanges.Filter" class="com.intellij.openapi.vcs.changes.committed.FilterCommittedAction"
+      <action id="CommittedChanges.Filter" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.FilterCommittedAction"
               icon="consulo.platform.base.PlatformIconGroup@general.filter"/>
-      <action id="CommittedChanges.Details" class="com.intellij.openapi.vcs.changes.committed.ChangeListDetailsAction"
+      <action id="CommittedChanges.Details" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.ChangeListDetailsAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.showchangesonly"/>
       <reference ref="ChangesView.CreatePatchFromChanges"/>
-      <action id="CommittedChanges.Revert" class="com.intellij.openapi.vcs.changes.actions.RevertChangeListAction"
+      <action id="CommittedChanges.Revert" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.RevertChangeListAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.rollback"/>
-      <action id="CommittedChanges.Clear" class="com.intellij.openapi.vcs.changes.committed.ClearCommittedAction"
+      <action id="CommittedChanges.Clear" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.ClearCommittedAction"
               icon="consulo.platform.base.PlatformIconGroup@vcs.remove"/>
     </group>
 
@@ -876,22 +876,22 @@
     </group>
 
     <group id="IncomingChangesToolbar">
-      <action id="IncomingChanges.Refresh" class="com.intellij.openapi.vcs.changes.committed.RefreshIncomingChangesAction"
+      <action id="IncomingChanges.Refresh" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.RefreshIncomingChangesAction"
               icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
       <reference ref="CommittedChanges.Details"/>
       <!--
-      <action id="IncomingChanges.Get" class="com.intellij.openapi.vcs.changes.committed.GetCommittedChangelistAction"
+      <action id="IncomingChanges.Get" class="consulo.ide.impl.idea.openapi.vcs.changes.committed.GetCommittedChangelistAction"
               icon="/actions/get.png"/>
       -->
       <reference ref="Vcs.UpdateProject"/>
     </group>
 
     <group id="Vcs.History">
-      <action id="VcsHistory.ShowAllAffected" class="com.intellij.openapi.vcs.annotate.ShowAllAffectedGenericAction"
+      <action id="VcsHistory.ShowAllAffected" class="consulo.ide.impl.idea.openapi.vcs.annotate.ShowAllAffectedGenericAction"
               icon="consulo.platform.base.PlatformIconGroup@vcs.allrevisions"/>
     </group>
 
-    <action id="ChangesView.Browse" class="com.intellij.openapi.vcs.changes.actions.BrowseChangesAction"/>
+    <action id="ChangesView.Browse" class="consulo.ide.impl.idea.openapi.vcs.changes.actions.BrowseChangesAction"/>
 
     <action id="Diff.PrevChange" class="consulo.ui.ex.action.EmptyAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.prevfile" use-shortcut-of="PreviousTab"/>
@@ -915,11 +915,11 @@
     <group id="UpdateActionGroup">
       <reference ref="EditSource"/>
       <reference ref="$Delete"/>
-      <action id="Diff.UpdatedFiles" class="com.intellij.openapi.vcs.update.ShowUpdatedDiffAction"
+      <action id="Diff.UpdatedFiles" class="consulo.ide.impl.idea.openapi.vcs.update.ShowUpdatedDiffAction"
               use-shortcut-of="CompareDirs" icon="consulo.platform.base.PlatformIconGroup@actions.diff"/>
     </group>
 
-    <action class="com.intellij.openapi.vcs.actions.VcsToolbarLabelAction" id="VcsToolbarLabelAction" text="VCS Label"/>
+    <action class="consulo.ide.impl.idea.openapi.vcs.actions.VcsToolbarLabelAction" id="VcsToolbarLabelAction" text="VCS Label"/>
     <group id="VcsNavBarToobarActions">
       <reference ref="VcsToolbarLabelAction"/>
       <reference ref="Vcs.UpdateProject"/>
@@ -932,7 +932,7 @@
 
     <group id="Vcs.MessageActionGroup">
       <action id="Vcs.ShowMessageHistory"
-              class="com.intellij.openapi.vcs.actions.ShowMessageHistoryAction"
+              class="consulo.ide.impl.idea.openapi.vcs.actions.ShowMessageHistoryAction"
               icon="consulo.platform.base.PlatformIconGroup@vcs.history"/>
     </group>
 
@@ -948,23 +948,23 @@
     </group>
 
     <!-- Window -->
-    <action id="CloseAllUnmodifiedEditors" class="com.intellij.ide.actions.CloseAllUnmodifiedEditorsAction">
+    <action id="CloseAllUnmodifiedEditors" class="consulo.ide.impl.idea.ide.actions.CloseAllUnmodifiedEditorsAction">
       <add-to-group group-id="CloseEditorsGroup" anchor="before" relative-to-action="CloseAllUnpinnedEditors"/>
     </action>
 
-    <action id="Vcs.ShowDiffWithLocal" class="com.intellij.openapi.vcs.history.ShowDiffWithLocalAction"
+    <action id="Vcs.ShowDiffWithLocal" class="consulo.ide.impl.idea.openapi.vcs.history.ShowDiffWithLocalAction"
             text="Compare with Local" description="Compare version from selected revision with current version"
             icon="consulo.platform.base.PlatformIconGroup@actions.diffwithcurrent"/>
 
-    <action id="Vcs.RollbackChangedLines" class="com.intellij.openapi.vcs.ex.RollbackLineStatusAction" icon="consulo.platform.base.PlatformIconGroup@general.reset">
+    <action id="Vcs.RollbackChangedLines" class="consulo.ide.impl.idea.openapi.vcs.ex.RollbackLineStatusAction" icon="consulo.platform.base.PlatformIconGroup@general.reset">
     </action>
 
-    <action id="WelcomeScreen.GetFromVcs" class="com.intellij.openapi.wm.impl.welcomeScreen.GetFromVcsAction"
+    <action id="WelcomeScreen.GetFromVcs" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.GetFromVcsAction"
             icon="consulo.platform.base.PlatformIconGroup@general.getprojectfromvcs">
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </action>
 
-    <action id="Vcs.CopyRevisionNumberAction" class="com.intellij.openapi.vcs.history.CopyRevisionNumberAction"
+    <action id="Vcs.CopyRevisionNumberAction" class="consulo.ide.impl.idea.openapi.vcs.history.CopyRevisionNumberAction"
             text="Copy Revision Number" description="Copy short revision numbers of selected commits to the clipboard"
             icon="consulo.platform.base.PlatformIconGroup@actions.copy"/>
 
@@ -991,22 +991,22 @@
 
     <group id="WelcomeScreen.QuickStart.IDEA">
       <action id="WelcomeScreen.CreateNewProject" class="consulo.ide.newProject.actions.NewProjectAction" icon="consulo.platform.base.PlatformIconGroup@welcome.createnewproject"/>
-      <action id="WelcomeScreen.OpenProject" class="com.intellij.ide.actions.OpenFileAction" icon="consulo.platform.base.PlatformIconGroup@welcome.openproject"/>
+      <action id="WelcomeScreen.OpenProject" class="consulo.ide.impl.idea.ide.actions.OpenFileAction" icon="consulo.platform.base.PlatformIconGroup@welcome.openproject"/>
       <add-to-group group-id="WelcomeScreen.QuickStart" anchor="first"/>
     </group>
 
-    <action id="IncrementalSearch" class="com.intellij.codeInsight.navigation.actions.IncrementalSearchAction"/>
-    <action id="AddToFavoritesPopup" class="com.intellij.ide.favoritesTreeView.actions.AddToFavoritesPopupAction"/>
-    <group id="AddToFavorites" class="com.intellij.ide.favoritesTreeView.actions.AddToFavoritesActionGroup" popup="true"/>
-    <group id="AddAllToFavorites" class="com.intellij.ide.favoritesTreeView.actions.AddAllToFavoritesActionGroup" popup="true"/>
-    <action id="AddNewFavoritesList" class="com.intellij.ide.favoritesTreeView.actions.AddNewFavoritesListAction"/>
-    <group id="SendToFavoritesGroup" class="com.intellij.ide.favoritesTreeView.actions.SendToFavoritesGroup" popup="true"/>
+    <action id="IncrementalSearch" class="consulo.ide.impl.idea.codeInsight.navigation.actions.IncrementalSearchAction"/>
+    <action id="AddToFavoritesPopup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesPopupAction"/>
+    <group id="AddToFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddToFavoritesActionGroup" popup="true"/>
+    <group id="AddAllToFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddAllToFavoritesActionGroup" popup="true"/>
+    <action id="AddNewFavoritesList" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.AddNewFavoritesListAction"/>
+    <group id="SendToFavoritesGroup" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.SendToFavoritesGroup" popup="true"/>
 
-    <action id="RunConfiguration" class="com.intellij.execution.actions.RunConfigurationsComboBoxAction"/>
-    <action id="ChooseRunConfiguration" class="com.intellij.execution.actions.ChooseRunConfigurationPopupAction" text="Run..."
-            description="Choose and run configuration" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowrun"/>
-    <action id="ChooseDebugConfiguration" class="com.intellij.execution.actions.ChooseDebugConfigurationPopupAction" text="Debug..."
-            description="Choose and debug configuration" icon="consulo.platform.base.PlatformIconGroup@actions.startdebugger"/>
+    <action id="RunConfiguration" class="consulo.ide.impl.idea.execution.actions.RunConfigurationsComboBoxAction"/>
+    <action id="ChooseRunConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseRunConfigurationPopupAction" text="Run..."
+			description="Choose and run configuration" icon="consulo.platform.base.PlatformIconGroup@toolwindows.toolwindowrun"/>
+    <action id="ChooseDebugConfiguration" class="consulo.ide.impl.idea.execution.actions.ChooseDebugConfigurationPopupAction" text="Debug..."
+			description="Choose and debug configuration" icon="consulo.platform.base.PlatformIconGroup@actions.startdebugger"/>
 
     <group id="RunContextGroup" popup="false">
       <!-- A dynamic group filled with executor actions -->
@@ -1019,22 +1019,22 @@
     </group>
 
     <group id="LangCodeInsightActions">
-      <action id="EditorSelectWord" class="com.intellij.openapi.editor.actions.SelectWordAtCaretAction"/>
-      <action id="EditorUnSelectWord" class="com.intellij.openapi.editor.actions.UnselectWordAtCaretAction"/>
+      <action id="EditorSelectWord" class="consulo.ide.impl.idea.openapi.editor.actions.SelectWordAtCaretAction"/>
+      <action id="EditorUnSelectWord" class="consulo.ide.impl.idea.openapi.editor.actions.UnselectWordAtCaretAction"/>
 
       <add-to-group group-id="EditorActions" anchor="last"/>
     </group>
 
-    <action id="ClassNameCompletion" class="com.intellij.codeInsight.completion.actions.ClassNameCompletionAction"/>
+    <action id="ClassNameCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.ClassNameCompletionAction"/>
 
     <group id="GenerateGroup">
-      <action id="OverrideMethods" class="com.intellij.codeInsight.generation.actions.OverrideMethodsAction"/>
-      <action id="ImplementMethods" class="com.intellij.codeInsight.generation.actions.ImplementMethodsAction"/>
-      <action id="DelegateMethods" class="com.intellij.codeInsight.generation.actions.DelegateMethodsAction"/>
-      <action id="GeneratePattern" class="com.intellij.codeInsight.generation.GenerateByPatternAction" text="Generate by Pattern..."/>
+      <action id="OverrideMethods" class="consulo.ide.impl.idea.codeInsight.generation.actions.OverrideMethodsAction"/>
+      <action id="ImplementMethods" class="consulo.ide.impl.idea.codeInsight.generation.actions.ImplementMethodsAction"/>
+      <action id="DelegateMethods" class="consulo.ide.impl.idea.codeInsight.generation.actions.DelegateMethodsAction"/>
+      <action id="GeneratePattern" class="consulo.ide.impl.idea.codeInsight.generation.GenerateByPatternAction" text="Generate by Pattern..."/>
     </group>
 
-    <action id="ShowIntentionActions" class="com.intellij.codeInsight.intention.actions.ShowIntentionActionsAction" icon="consulo.platform.base.PlatformIconGroup@actions.intentionbulb"/>
+    <action id="ShowIntentionActions" class="consulo.ide.impl.idea.codeInsight.intention.actions.ShowIntentionActionsAction" icon="consulo.platform.base.PlatformIconGroup@actions.intentionbulb"/>
 
     <group id="ShowIntentionsGroup" compact="true">
       <reference ref="ShowIntentionActions"/>
@@ -1042,29 +1042,29 @@
       <add-to-group group-id="EditorPopupMenu" anchor="first"/>
     </group>
 
-    <action id="TogglePopupHints" class="com.intellij.codeInsight.daemon.impl.TogglePopupHintsAction"/>
-    <action id="FindModal" class="com.intellij.openapi.editor.actions.FindAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_find"/>
+    <action id="TogglePopupHints" class="consulo.ide.impl.idea.codeInsight.daemon.impl.TogglePopupHintsAction"/>
+    <action id="FindModal" class="consulo.ide.impl.idea.openapi.editor.actions.FindAction" icon="consulo.platform.base.PlatformIconGroup@actions.menu_find"/>
 
-    <action id="CodeInspection.OnEditor" class="com.intellij.codeInspection.actions.CodeInspectionOnEditorAction"/>
+    <action id="CodeInspection.OnEditor" class="consulo.ide.impl.idea.codeInspection.actions.CodeInspectionOnEditorAction"/>
 
-    <action id="ActivateNavBar" class="com.intellij.ide.navigationToolbar.ActivateNavigationBarAction" popup="true"/>
+    <action id="ActivateNavBar" class="consulo.ide.impl.idea.ide.navigationToolbar.ActivateNavigationBarAction" popup="true"/>
 
     <group id="CodeInsightEditorActions">
       <reference ref="LookupActions"/>
-      <action id="EmacsStyleIndent" class="com.intellij.codeInsight.editorActions.EmacsStyleIndentAction"/>
-      <action id="EditorCodeBlockStart" class="com.intellij.codeInsight.editorActions.CodeBlockStartAction"/>
-      <action id="EditorCodeBlockEnd" class="com.intellij.codeInsight.editorActions.CodeBlockEndAction"/>
-      <action id="EditorMatchBrace" class="com.intellij.codeInsight.editorActions.MatchBraceAction"/>
-      <action id="EditorCodeBlockStartWithSelection" class="com.intellij.codeInsight.editorActions.CodeBlockStartWithSelectionAction"/>
-      <action id="EditorCodeBlockEndWithSelection" class="com.intellij.codeInsight.editorActions.CodeBlockEndWithSelectionAction"/>
-      <action id="EditorCompleteStatement" class="com.intellij.codeInsight.editorActions.smartEnter.SmartEnterAction"/>
+      <action id="EmacsStyleIndent" class="consulo.ide.impl.idea.codeInsight.editorActions.EmacsStyleIndentAction"/>
+      <action id="EditorCodeBlockStart" class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockStartAction"/>
+      <action id="EditorCodeBlockEnd" class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockEndAction"/>
+      <action id="EditorMatchBrace" class="consulo.ide.impl.idea.codeInsight.editorActions.MatchBraceAction"/>
+      <action id="EditorCodeBlockStartWithSelection" class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockStartWithSelectionAction"/>
+      <action id="EditorCodeBlockEndWithSelection" class="consulo.ide.impl.idea.codeInsight.editorActions.CodeBlockEndWithSelectionAction"/>
+      <action id="EditorCompleteStatement" class="consulo.ide.impl.idea.codeInsight.editorActions.smartEnter.SmartEnterAction"/>
 
       <add-to-group group-id="EditorActions" anchor="last"/>
     </group>
 
     <!-- File -->
 
-    <action id="ReloadFromDisk" class="com.intellij.ide.actions.ReloadFromDiskAction">
+    <action id="ReloadFromDisk" class="consulo.ide.impl.idea.ide.actions.ReloadFromDiskAction">
       <!--
       <add-to-group group-id="FileMenu" anchor="after" relative-to-action="Synchronize"/>
       -->
@@ -1073,8 +1073,8 @@
 
     <group id="PrintExportGroup">
       <separator/>
-      <action id="ExportToHTML" class="com.intellij.codeEditor.printing.ExportToHTMLAction"/>
-      <action id="Print" class="com.intellij.codeEditor.printing.PrintAction" icon="consulo.platform.base.PlatformIconGroup@general.print"/>
+      <action id="ExportToHTML" class="consulo.ide.impl.idea.codeEditor.printing.ExportToHTMLAction"/>
+      <action id="Print" class="consulo.ide.impl.idea.codeEditor.printing.PrintAction" icon="consulo.platform.base.PlatformIconGroup@general.print"/>
       <reference ref="AddToFavorites"/>
 
       <add-to-group group-id="FileMenu" anchor="after" relative-to-action="InvalidateCaches"/>
@@ -1086,17 +1086,17 @@
 
     <group id="PowerSaveGroup">
       <separator/>
-      <action id="TogglePowerSave" class="com.intellij.ide.actions.TogglePowerSaveAction"/>
+      <action id="TogglePowerSave" class="consulo.ide.impl.idea.ide.actions.TogglePowerSaveAction"/>
       <add-to-group group-id="FileMenu" anchor="after" relative-to-action="ToggleReadOnlyAttribute"/>
     </group>
 
-    <action id="CopyAbsolutePath" class="com.intellij.ide.actions.CopyAbsolutePathProvider" use-shortcut-of="CopyPaths"/>
-    <action id="CopyFileName" class="com.intellij.ide.actions.CopyFileNameProvider"/>
-    <action id="CopyPathWithLineNumber" class="com.intellij.ide.actions.CopyFileWithLineNumberPathProvider"/>
-    <action id="CopyContentRootPath" class="com.intellij.ide.actions.CopyContentRootPathProvider"/>
-    <action id="CopySourceRootPath" class="com.intellij.ide.actions.CopySourceRootPathProvider"/>
+    <action id="CopyAbsolutePath" class="consulo.ide.impl.idea.ide.actions.CopyAbsolutePathProvider" use-shortcut-of="CopyPaths"/>
+    <action id="CopyFileName" class="consulo.ide.impl.idea.ide.actions.CopyFileNameProvider"/>
+    <action id="CopyPathWithLineNumber" class="consulo.ide.impl.idea.ide.actions.CopyFileWithLineNumberPathProvider"/>
+    <action id="CopyContentRootPath" class="consulo.ide.impl.idea.ide.actions.CopyContentRootPathProvider"/>
+    <action id="CopySourceRootPath" class="consulo.ide.impl.idea.ide.actions.CopySourceRootPathProvider"/>
 
-    <group id="CopyReferencePopupGroup" class="com.intellij.ide.actions.CopyReferencePopup" popup="true">
+    <group id="CopyReferencePopupGroup" class="consulo.ide.impl.idea.ide.actions.CopyReferencePopup" popup="true">
       <group id="CopyFileReference">
         <reference ref="CopyAbsolutePath"/>
         <reference ref="CopyFileName"/>
@@ -1113,7 +1113,7 @@
     </group>
 
     <!-- Edit -->
-    <action id="CopyReference" class="com.intellij.ide.actions.CopyReferenceAction">
+    <action id="CopyReference" class="consulo.ide.impl.idea.ide.actions.CopyReferenceAction">
       <add-to-group group-id="CopyReferencePopupGroup" anchor="after" relative-to-action="CopyExternalReferenceGroup"/>
       <add-to-group group-id="EditorTabPopupMenu" anchor="after" relative-to-action="CopyPaths"/>
       <add-to-group group-id="Copy.Paste.Special" anchor="first"/>
@@ -1127,11 +1127,11 @@
     </group>
 
     <group id="EditBookmarksGroup" popup="true">
-      <action id="ToggleBookmark" class="com.intellij.ide.bookmarks.actions.ToggleBookmarkAction"/>
-      <action id="ToggleBookmarkWithMnemonic" class="com.intellij.ide.bookmarks.actions.ToggleBookmarkWithMnemonicAction"/>
-      <action id="ShowBookmarks" class="com.intellij.ide.bookmarks.actions.BookmarksAction"/>
-      <action id="GotoNextBookmark" class="com.intellij.ide.bookmarks.actions.NextBookmarkAction"/>
-      <action id="GotoPreviousBookmark" class="com.intellij.ide.bookmarks.actions.PreviousBookmarkAction"/>
+      <action id="ToggleBookmark" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmarkAction"/>
+      <action id="ToggleBookmarkWithMnemonic" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmarkWithMnemonicAction"/>
+      <action id="ShowBookmarks" class="consulo.ide.impl.idea.ide.bookmarks.actions.BookmarksAction"/>
+      <action id="GotoNextBookmark" class="consulo.ide.impl.idea.ide.bookmarks.actions.NextBookmarkAction"/>
+      <action id="GotoPreviousBookmark" class="consulo.ide.impl.idea.ide.bookmarks.actions.PreviousBookmarkAction"/>
       <separator/>
 
       <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="JumpToLastChange"/>
@@ -1139,21 +1139,21 @@
 
     <group id="GoToCodeGroup">
       <separator/>
-      <action id="SelectIn" class="com.intellij.ide.actions.SelectInAction"/>
-      <action id="ShowNavBar" class="com.intellij.ide.navigationToolbar.ShowNavBarAction"/>
-      <action id="GotoDeclaration" class="com.intellij.codeInsight.navigation.actions.GotoDeclarationAction"/>
-      <action id="GotoImplementation" class="com.intellij.codeInsight.navigation.actions.GotoImplementationAction"/>
-      <action id="GotoTypeDeclaration" class="com.intellij.codeInsight.navigation.actions.GotoTypeDeclarationAction"/>
-      <action id="GotoSuperMethod" class="com.intellij.codeInsight.navigation.actions.GotoSuperAction"/>
-      <action id="GotoTest" class="com.intellij.testIntegration.GotoTestOrCodeAction"/>
-      <action id="GotoRelated" class="com.intellij.ide.actions.GotoRelatedFileAction"/>
+      <action id="SelectIn" class="consulo.ide.impl.idea.ide.actions.SelectInAction"/>
+      <action id="ShowNavBar" class="consulo.ide.impl.idea.ide.navigationToolbar.ShowNavBarAction"/>
+      <action id="GotoDeclaration" class="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoDeclarationAction"/>
+      <action id="GotoImplementation" class="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoImplementationAction"/>
+      <action id="GotoTypeDeclaration" class="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoTypeDeclarationAction"/>
+      <action id="GotoSuperMethod" class="consulo.ide.impl.idea.codeInsight.navigation.actions.GotoSuperAction"/>
+      <action id="GotoTest" class="consulo.ide.impl.idea.testIntegration.GotoTestOrCodeAction"/>
+      <action id="GotoRelated" class="consulo.ide.impl.idea.ide.actions.GotoRelatedFileAction"/>
       <separator/>
-      <action id="FileStructurePopup" class="com.intellij.ide.actions.ViewStructureAction"/>
-      <action id="ShowFilePath" class="com.intellij.ide.actions.ShowFilePathAction"/>
+      <action id="FileStructurePopup" class="consulo.ide.impl.idea.ide.actions.ViewStructureAction"/>
+      <action id="ShowFilePath" class="consulo.ide.impl.idea.ide.actions.ShowFilePathAction"/>
       <group id="HierarchyGroup">
-        <action id="TypeHierarchy" class="com.intellij.ide.hierarchy.actions.BrowseTypeHierarchyAction"/>
-        <action id="MethodHierarchy" class="com.intellij.ide.hierarchy.actions.BrowseMethodHierarchyAction"/>
-        <action id="CallHierarchy" class="com.intellij.ide.hierarchy.actions.BrowseCallHierarchyAction"/>
+        <action id="TypeHierarchy" class="consulo.ide.impl.idea.ide.hierarchy.actions.BrowseTypeHierarchyAction"/>
+        <action id="MethodHierarchy" class="consulo.ide.impl.idea.ide.hierarchy.actions.BrowseMethodHierarchyAction"/>
+        <action id="CallHierarchy" class="consulo.ide.impl.idea.ide.hierarchy.actions.BrowseCallHierarchyAction"/>
       </group>
       <separator/>
 
@@ -1162,8 +1162,8 @@
 
     <group id="GoToErrorGroup">
       <separator/>
-      <action id="GotoNextError" class="com.intellij.codeInsight.daemon.impl.actions.GotoNextErrorAction"/>
-      <action id="GotoPreviousError" class="com.intellij.codeInsight.daemon.impl.actions.GotoPreviousErrorAction"/>
+      <action id="GotoNextError" class="consulo.ide.impl.idea.codeInsight.daemon.impl.actions.GotoNextErrorAction"/>
+      <action id="GotoPreviousError" class="consulo.ide.impl.idea.codeInsight.daemon.impl.actions.GotoPreviousErrorAction"/>
 
       <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="GoToCodeGroup"/>
     </group>
@@ -1171,56 +1171,56 @@
     <!-- View -->
     <group id="QuickActions">
       <separator/>
-      <action id="QuickImplementations" class="com.intellij.codeInsight.hint.actions.ShowImplementationsAction"/>
-      <action id="QuickJavaDoc" class="com.intellij.codeInsight.documentation.actions.ShowQuickDocInfoAction"/>
+      <action id="QuickImplementations" class="consulo.ide.impl.idea.codeInsight.hint.actions.ShowImplementationsAction"/>
+      <action id="QuickJavaDoc" class="consulo.ide.impl.idea.codeInsight.documentation.actions.ShowQuickDocInfoAction"/>
 
       <add-to-group group-id="ViewMenu" anchor="after" relative-to-action="ToolWindowsGroup"/>
     </group>
 
     <group id="CodeEditorBaseGroup">
       <group id="CodeEditorViewGroup">
-        <action id="ExternalJavaDoc" class="com.intellij.ide.actions.ExternalJavaDocAction"/>
-        <action id="ParameterInfo" class="com.intellij.codeInsight.hint.actions.ShowParameterInfoAction"/>
-        <action id="ExpressionTypeInfo" class="com.intellij.codeInsight.hint.actions.ShowExpressionTypeAction"/>
-        <action id="EditorContextInfo" class="com.intellij.codeInsight.hint.actions.ShowContainerInfoAction"/>
-        <action id="ShowErrorDescription" class="com.intellij.codeInsight.daemon.impl.actions.ShowErrorDescriptionAction"/>
+        <action id="ExternalJavaDoc" class="consulo.ide.impl.idea.ide.actions.ExternalJavaDocAction"/>
+        <action id="ParameterInfo" class="consulo.ide.impl.idea.codeInsight.hint.actions.ShowParameterInfoAction"/>
+        <action id="ExpressionTypeInfo" class="consulo.ide.impl.idea.codeInsight.hint.actions.ShowExpressionTypeAction"/>
+        <action id="EditorContextInfo" class="consulo.ide.impl.idea.codeInsight.hint.actions.ShowContainerInfoAction"/>
+        <action id="ShowErrorDescription" class="consulo.ide.impl.idea.codeInsight.daemon.impl.actions.ShowErrorDescriptionAction"/>
       </group>
       <separator/>
 
       <add-to-group group-id="ViewMenu" relative-to-action="QuickActions" anchor="after"/>
     </group>
 
-    <action id="FixDocComment" class="com.intellij.codeInsight.editorActions.FixDocCommentAction"/>
+    <action id="FixDocComment" class="consulo.ide.impl.idea.codeInsight.editorActions.FixDocCommentAction"/>
 
-    <action id="ViewNavigationBar" class="com.intellij.ide.actions.ViewNavigationBarAction">
+    <action id="ViewNavigationBar" class="consulo.ide.impl.idea.ide.actions.ViewNavigationBarAction">
       <add-to-group group-id="UIToggleActions" relative-to-action="ViewStatusBar" anchor="after"/>
     </action>
 
-    <action id="ViewImportPopups" class="com.intellij.openapi.editor.actions.ToggleShowImportPopupsAction">
+    <action id="ViewImportPopups" class="consulo.ide.impl.idea.openapi.editor.actions.ToggleShowImportPopupsAction">
       <add-to-group group-id="EditorToggleActions"/>
     </action>
 
-    <action id="ProjectViewChangeView" class="com.intellij.ide.projectView.actions.ChangeProjectViewAction"/>
+    <action id="ProjectViewChangeView" class="consulo.ide.impl.idea.ide.projectView.actions.ChangeProjectViewAction"/>
 
-    <action id="RecentChanges" class="com.intellij.history.integration.ui.actions.RecentChangesAction">
+    <action id="RecentChanges" class="consulo.ide.impl.idea.history.integration.ui.actions.RecentChangesAction">
       <keyboard-shortcut first-keystroke="alt shift C" keymap="$default"/>
       <add-to-group group-id="ViewRecentActions" anchor="last"/>
     </action>
 
     <!-- Go To -->
     <group id="GoToTargetEx">
-      <action id="GotoClass" class="com.intellij.ide.actions.GotoClassAction"/>
-      <action id="GotoFile" class="com.intellij.ide.actions.GotoFileAction"/>
-      <action id="GotoSymbol" class="com.intellij.ide.actions.GotoSymbolAction"/>
-      <action id="GotoCustomRegion" class="com.intellij.lang.customFolding.GotoCustomRegionAction"/>
+      <action id="GotoClass" class="consulo.ide.impl.idea.ide.actions.GotoClassAction"/>
+      <action id="GotoFile" class="consulo.ide.impl.idea.ide.actions.GotoFileAction"/>
+      <action id="GotoSymbol" class="consulo.ide.impl.idea.ide.actions.GotoSymbolAction"/>
+      <action id="GotoCustomRegion" class="consulo.ide.impl.idea.lang.customFolding.GotoCustomRegionAction"/>
 
       <add-to-group group-id="GoToMenu" anchor="first"/>
     </group>
 
     <group id="GoToMenuEx">
       <separator/>
-      <action id="MethodDown" class="com.intellij.codeInsight.navigation.actions.MethodDownAction"/>
-      <action id="MethodUp" class="com.intellij.codeInsight.navigation.actions.MethodUpAction"/>
+      <action id="MethodDown" class="consulo.ide.impl.idea.codeInsight.navigation.actions.MethodDownAction"/>
+      <action id="MethodUp" class="consulo.ide.impl.idea.codeInsight.navigation.actions.MethodUpAction"/>
       <separator/>
       <add-to-group group-id="GoToMenu" anchor="after" relative-to-action="GoToPreviousError"/>
     </group>
@@ -1230,60 +1230,60 @@
     <group id="CodeMenu" popup="true">
       <reference ref="OverrideMethods"/>
       <reference ref="ImplementMethods"/>
-      <action id="Generate" class="com.intellij.codeInsight.generation.actions.GenerateAction"/>
+      <action id="Generate" class="consulo.ide.impl.idea.codeInsight.generation.actions.GenerateAction"/>
       <separator/>
-      <action id="SurroundWith" class="com.intellij.codeInsight.generation.actions.SurroundWithAction"/>
-      <action id="Unwrap" class="com.intellij.codeInsight.unwrap.UnwrapAction"/>
+      <action id="SurroundWith" class="consulo.ide.impl.idea.codeInsight.generation.actions.SurroundWithAction"/>
+      <action id="Unwrap" class="consulo.ide.impl.idea.codeInsight.unwrap.UnwrapAction"/>
       <separator/>
 
-      <group id="CodeCompletionGroup" class="com.intellij.codeInsight.completion.actions.CodeCompletionGroup" popup="true">
-        <action id="CodeCompletion" class="com.intellij.codeInsight.completion.actions.CodeCompletionAction"/>
-        <action id="SmartTypeCompletion" class="com.intellij.codeInsight.completion.actions.SmartCodeCompletionAction"/>
+      <group id="CodeCompletionGroup" class="consulo.ide.impl.idea.codeInsight.completion.actions.CodeCompletionGroup" popup="true">
+        <action id="CodeCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.CodeCompletionAction"/>
+        <action id="SmartTypeCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.SmartCodeCompletionAction"/>
         <separator/>
-        <action id="HippieCompletion" class="com.intellij.codeInsight.completion.actions.HippieCompletionAction"/>
-        <action id="HippieBackwardCompletion" class="com.intellij.codeInsight.completion.actions.HippieBackwardCompletionAction"/>
+        <action id="HippieCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.HippieCompletionAction"/>
+        <action id="HippieBackwardCompletion" class="consulo.ide.impl.idea.codeInsight.completion.actions.HippieBackwardCompletionAction"/>
       </group>
 
       <group id="FoldingGroup" popup="true">
-        <action id="ExpandRegion" class="com.intellij.codeInsight.folding.impl.actions.ExpandRegionAction"/>
-        <action id="CollapseRegion" class="com.intellij.codeInsight.folding.impl.actions.CollapseRegionAction"/>
+        <action id="ExpandRegion" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandRegionAction"/>
+        <action id="CollapseRegion" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseRegionAction"/>
         <separator/>
-        <action id="ExpandAllRegions" class="com.intellij.codeInsight.folding.impl.actions.ExpandAllRegionsAction"/>
-        <action id="CollapseAllRegions" class="com.intellij.codeInsight.folding.impl.actions.CollapseAllRegionsAction"/>
+        <action id="ExpandAllRegions" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandAllRegionsAction"/>
+        <action id="CollapseAllRegions" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseAllRegionsAction"/>
         <separator/>
         <group id="LanguageSpecificFoldingGroup">
-          <action id="ExpandDocComments" class="com.intellij.codeInsight.folding.impl.actions.ExpandDocCommentsAction"/>
-          <action id="CollapseDocComments" class="com.intellij.codeInsight.folding.impl.actions.CollapseDocCommentsAction"/>
+          <action id="ExpandDocComments" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.ExpandDocCommentsAction"/>
+          <action id="CollapseDocComments" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseDocCommentsAction"/>
         </group>
         <separator/>
-        <action id="CollapseSelection" class="com.intellij.codeInsight.folding.impl.actions.CollapseSelectionAction"/>
+        <action id="CollapseSelection" class="consulo.ide.impl.idea.codeInsight.folding.impl.actions.CollapseSelectionAction"/>
       </group>
 
       <separator/>
 
-      <action id="InsertLiveTemplate" class="com.intellij.codeInsight.template.impl.actions.ListTemplatesAction"/>
-      <action id="SurroundWithLiveTemplate" class="com.intellij.codeInsight.template.impl.actions.SurroundWithTemplateAction"/>
+      <action id="InsertLiveTemplate" class="consulo.ide.impl.idea.codeInsight.template.impl.actions.ListTemplatesAction"/>
+      <action id="SurroundWithLiveTemplate" class="consulo.ide.impl.idea.codeInsight.template.impl.actions.SurroundWithTemplateAction"/>
       <separator/>
 
       <group id="CommentGroup">
-        <action id="CommentByLineComment" class="com.intellij.codeInsight.generation.actions.CommentByLineCommentAction"/>
-        <action id="CommentByBlockComment" class="com.intellij.codeInsight.generation.actions.CommentByBlockCommentAction"/>
+        <action id="CommentByLineComment" class="consulo.ide.impl.idea.codeInsight.generation.actions.CommentByLineCommentAction"/>
+        <action id="CommentByBlockComment" class="consulo.ide.impl.idea.codeInsight.generation.actions.CommentByBlockCommentAction"/>
       </group>
 
       <group id="CodeFormatGroup">
-        <action id="ReformatCode" class="com.intellij.codeInsight.actions.ReformatCodeAction"/>
-        <action id="AutoIndentLines" class="com.intellij.codeInsight.generation.actions.AutoIndentLinesAction"/>
-        <action id="OptimizeImports" class="com.intellij.codeInsight.actions.OptimizeImportsAction"/>
-        <action id="RearrangeCode" class="com.intellij.application.options.codeStyle.arrangement.action.RearrangeCodeAction"/>
+        <action id="ReformatCode" class="consulo.ide.impl.idea.codeInsight.actions.ReformatCodeAction"/>
+        <action id="AutoIndentLines" class="consulo.ide.impl.idea.codeInsight.generation.actions.AutoIndentLinesAction"/>
+        <action id="OptimizeImports" class="consulo.ide.impl.idea.codeInsight.actions.OptimizeImportsAction"/>
+        <action id="RearrangeCode" class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.RearrangeCodeAction"/>
       </group>
 
       <separator/>
-      <action id="MoveStatementDown" class="com.intellij.codeInsight.editorActions.moveUpDown.MoveStatementDownAction"/>
-      <action id="MoveStatementUp" class="com.intellij.codeInsight.editorActions.moveUpDown.MoveStatementUpAction"/>
-      <action id="MoveElementLeft" class="com.intellij.codeInsight.editorActions.moveLeftRight.MoveElementLeftAction"/>
-      <action id="MoveElementRight" class="com.intellij.codeInsight.editorActions.moveLeftRight.MoveElementRightAction"/>
-      <action id="MoveLineDown" class="com.intellij.codeInsight.editorActions.moveUpDown.MoveLineDownAction"/>
-      <action id="MoveLineUp" class="com.intellij.codeInsight.editorActions.moveUpDown.MoveLineUpAction"/>
+      <action id="MoveStatementDown" class="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveStatementDownAction"/>
+      <action id="MoveStatementUp" class="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveStatementUpAction"/>
+      <action id="MoveElementLeft" class="consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight.MoveElementLeftAction"/>
+      <action id="MoveElementRight" class="consulo.ide.impl.idea.codeInsight.editorActions.moveLeftRight.MoveElementRightAction"/>
+      <action id="MoveLineDown" class="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveLineDownAction"/>
+      <action id="MoveLineUp" class="consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown.MoveLineUpAction"/>
       <separator/>
       <add-to-group group-id="MainMenu" anchor="after" relative-to-action="GoToMenu"/>
     </group>
@@ -1291,35 +1291,35 @@
     <!-- Refactor -->
     <group id="RefactoringMenu" popup="true">
       <action id="Refactorings.QuickListPopupAction"
-              class="com.intellij.refactoring.actions.RefactoringQuickListPopupAction"
+              class="consulo.ide.impl.idea.refactoring.actions.RefactoringQuickListPopupAction"
               text="Refactor This..." description="Context aware popup with list of refactoring actions"/>
       <action id="RenameElement" class="consulo.language.editor.refactoring.rename.RenameElementAction"/>
-      <action id="ChangeSignature" class="com.intellij.refactoring.actions.ChangeSignatureAction"/>
+      <action id="ChangeSignature" class="consulo.ide.impl.idea.refactoring.actions.ChangeSignatureAction"/>
       <separator/>
-      <action id="Move" class="com.intellij.refactoring.actions.MoveAction"/>
-      <action id="CopyElement" class="com.intellij.ide.actions.CopyElementAction"/>
-      <action id="CloneElement" class="com.intellij.ide.actions.CloneElementAction"/>
-      <action id="SafeDelete" class="com.intellij.refactoring.actions.SafeDeleteAction"/>
+      <action id="Move" class="consulo.ide.impl.idea.refactoring.actions.MoveAction"/>
+      <action id="CopyElement" class="consulo.ide.impl.idea.ide.actions.CopyElementAction"/>
+      <action id="CloneElement" class="consulo.ide.impl.idea.ide.actions.CloneElementAction"/>
+      <action id="SafeDelete" class="consulo.ide.impl.idea.refactoring.actions.SafeDeleteAction"/>
       <separator/>
       <group id="IntroduceActionsGroup" popup="true">
-        <action id="IntroduceVariable" class="com.intellij.refactoring.actions.IntroduceVariableAction"/>
-        <action id="IntroduceConstant" class="com.intellij.refactoring.actions.IntroduceConstantAction"/>
-        <action id="IntroduceField" class="com.intellij.refactoring.actions.IntroduceFieldAction"/>
-        <action id="IntroduceParameter" class="com.intellij.refactoring.actions.IntroduceParameterAction"/>
+        <action id="IntroduceVariable" class="consulo.ide.impl.idea.refactoring.actions.IntroduceVariableAction"/>
+        <action id="IntroduceConstant" class="consulo.ide.impl.idea.refactoring.actions.IntroduceConstantAction"/>
+        <action id="IntroduceField" class="consulo.ide.impl.idea.refactoring.actions.IntroduceFieldAction"/>
+        <action id="IntroduceParameter" class="consulo.ide.impl.idea.refactoring.actions.IntroduceParameterAction"/>
         <separator/>
-        <action id="ExtractMethod" class="com.intellij.refactoring.actions.ExtractMethodAction"/>
+        <action id="ExtractMethod" class="consulo.ide.impl.idea.refactoring.actions.ExtractMethodAction"/>
         <separator/>
-        <action id="ExtractClass" class="com.intellij.refactoring.actions.ExtractClassAction"/>
-        <action id="ExtractInclude" class="com.intellij.refactoring.actions.ExtractIncludeAction"/>
-        <action id="ExtractInterface" class="com.intellij.refactoring.actions.ExtractInterfaceAction"/>
-        <action id="ExtractSuperclass" class="com.intellij.refactoring.actions.ExtractSuperclassAction"/>
-        <action id="ExtractModule" class="com.intellij.refactoring.actions.ExtractModuleAction"/>
+        <action id="ExtractClass" class="consulo.ide.impl.idea.refactoring.actions.ExtractClassAction"/>
+        <action id="ExtractInclude" class="consulo.ide.impl.idea.refactoring.actions.ExtractIncludeAction"/>
+        <action id="ExtractInterface" class="consulo.ide.impl.idea.refactoring.actions.ExtractInterfaceAction"/>
+        <action id="ExtractSuperclass" class="consulo.ide.impl.idea.refactoring.actions.ExtractSuperclassAction"/>
+        <action id="ExtractModule" class="consulo.ide.impl.idea.refactoring.actions.ExtractModuleAction"/>
       </group>
 
-      <action id="Inline" class="com.intellij.refactoring.actions.InlineAction"/>
+      <action id="Inline" class="consulo.ide.impl.idea.refactoring.actions.InlineAction"/>
       <separator/>
-      <action id="MembersPullUp" class="com.intellij.refactoring.actions.PullUpAction"/>
-      <action id="MemberPushDown" class="com.intellij.refactoring.actions.PushDownAction"/>
+      <action id="MembersPullUp" class="consulo.ide.impl.idea.refactoring.actions.PullUpAction"/>
+      <action id="MemberPushDown" class="consulo.ide.impl.idea.refactoring.actions.PushDownAction"/>
       <add-to-group group-id="MainMenu" anchor="after" relative-to-action="CodeMenu"/>
     </group>
 
@@ -1328,10 +1328,10 @@
       <group id="RunnerActions"/>
       <reference ref="ChooseRunConfiguration"/>
       <reference ref="ChooseDebugConfiguration"/>
-      <action id="editRunConfigurations" class="com.intellij.execution.actions.EditRunConfigurationsAction"/>
-      <action id="Stop" class="com.intellij.execution.actions.StopAction" icon="consulo.platform.base.PlatformIconGroup@actions.suspend"/>
-      <action id="StopBackgroundProcesses" class="com.intellij.execution.actions.StopBackgroundProcessesAction"/>
-      <action id="ShowLiveRunConfigurations" class="com.intellij.execution.actions.ShowRunningListAction"/>
+      <action id="editRunConfigurations" class="consulo.ide.impl.idea.execution.actions.EditRunConfigurationsAction"/>
+      <action id="Stop" class="consulo.ide.impl.idea.execution.actions.StopAction" icon="consulo.platform.base.PlatformIconGroup@actions.suspend"/>
+      <action id="StopBackgroundProcesses" class="consulo.ide.impl.idea.execution.actions.StopBackgroundProcessesAction"/>
+      <action id="ShowLiveRunConfigurations" class="consulo.ide.impl.idea.execution.actions.ShowRunningListAction"/>
 
       <add-to-group group-id="MainMenu" anchor="after" relative-to-action="RefactoringMenu"/>
     </group>
@@ -1339,43 +1339,43 @@
 
     <!-- Tools -->
     <group id="ToolsBasicGroup">
-      <action id="SaveAsTemplate" class="com.intellij.codeInsight.template.actions.SaveAsTemplateAction"/>
-      <action id="SaveFileAsTemplate" class="com.intellij.ide.actions.SaveFileAsTemplateAction"/>
+      <action id="SaveAsTemplate" class="consulo.ide.impl.idea.codeInsight.template.actions.SaveAsTemplateAction"/>
+      <action id="SaveFileAsTemplate" class="consulo.ide.impl.idea.ide.actions.SaveFileAsTemplateAction"/>
       <separator/>
 
       <add-to-group group-id="ToolsMenu" anchor="first"/>
 
-      <action id="IdeScriptingConsole" class="com.intellij.execution.console.RunIdeConsoleAction"/>
+      <action id="IdeScriptingConsole" class="consulo.ide.impl.idea.execution.console.RunIdeConsoleAction"/>
     </group>
 
-    <action id="NewScratchBuffer" class="com.intellij.ide.scratch.ScratchFileActions$NewBufferAction"/>
-    <action id="Scratch.ChangeLanguage" class="com.intellij.ide.scratch.ScratchFileActions$LanguageAction">
+    <action id="NewScratchBuffer" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$NewBufferAction"/>
+    <action id="Scratch.ChangeLanguage" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$LanguageAction">
       <add-to-group group-id="EditorPopupMenu"/>
     </action>
 
-    <group id="ExternalToolsGroup" class="com.intellij.tools.ExternalToolsGroup">
+    <group id="ExternalToolsGroup" class="consulo.ide.impl.idea.tools.ExternalToolsGroup">
       <add-to-group group-id="ToolsMenu" anchor="last"/>
     </group>
 
     <group id="NewGroup" popup="true">
-      <action id="NewFile" class="com.intellij.ide.actions.CreateFileAction"/>
-      <action id="NewScratchFile" class="com.intellij.ide.scratch.ScratchFileActions$NewFileAction"/>
-      <action id="NewDir" class="com.intellij.ide.actions.CreateDirectoryOrPackageAction"/>
+      <action id="NewFile" class="consulo.ide.impl.idea.ide.actions.CreateFileAction"/>
+      <action id="NewScratchFile" class="consulo.ide.impl.idea.ide.scratch.ScratchFileActions$NewFileAction"/>
+      <action id="NewDir" class="consulo.ide.impl.idea.ide.actions.CreateDirectoryOrPackageAction"/>
       <separator/>
-      <action id="NewFromTemplate" class="com.intellij.ide.fileTemplates.actions.CreateFromTemplateGroup"/>
+      <action id="NewFromTemplate" class="consulo.ide.impl.idea.ide.fileTemplates.actions.CreateFromTemplateGroup"/>
     </group>
 
     <group id="NewGroup1">
       <add-to-group group-id="NewGroup" anchor="first"/>
     </group>
 
-    <group id="WeighingNewGroup" class="com.intellij.ide.actions.WeighingNewActionGroup"/>
+    <group id="WeighingNewGroup" class="consulo.ide.impl.idea.ide.actions.WeighingNewActionGroup"/>
 
 
     <!-- Toolbar -->
     <!--
     <group id="ToolbarNewElement">
-      <action id="NewElementToolbarAction" class="com.intellij.ide.actions.NewElementToolbarAction" icon="/general/add.png"/>
+      <action id="NewElementToolbarAction" class="consulo.ide.impl.idea.ide.actions.NewElementToolbarAction" icon="/general/add.png"/>
       <add-to-group group-id="MainToolBar" anchor="first"/>
     </group>
     -->
@@ -1418,27 +1418,27 @@
       <reference ref="GotoNextBookmark"/>
       <reference ref="GotoPreviousBookmark"/>
 
-      <action id="GotoBookmark0" class="com.intellij.ide.bookmarks.actions.GotoBookmark0Action"/>
-      <action id="GotoBookmark1" class="com.intellij.ide.bookmarks.actions.GotoBookmark1Action"/>
-      <action id="GotoBookmark2" class="com.intellij.ide.bookmarks.actions.GotoBookmark2Action"/>
-      <action id="GotoBookmark3" class="com.intellij.ide.bookmarks.actions.GotoBookmark3Action"/>
-      <action id="GotoBookmark4" class="com.intellij.ide.bookmarks.actions.GotoBookmark4Action"/>
-      <action id="GotoBookmark5" class="com.intellij.ide.bookmarks.actions.GotoBookmark5Action"/>
-      <action id="GotoBookmark6" class="com.intellij.ide.bookmarks.actions.GotoBookmark6Action"/>
-      <action id="GotoBookmark7" class="com.intellij.ide.bookmarks.actions.GotoBookmark7Action"/>
-      <action id="GotoBookmark8" class="com.intellij.ide.bookmarks.actions.GotoBookmark8Action"/>
-      <action id="GotoBookmark9" class="com.intellij.ide.bookmarks.actions.GotoBookmark9Action"/>
+      <action id="GotoBookmark0" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark0Action"/>
+      <action id="GotoBookmark1" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark1Action"/>
+      <action id="GotoBookmark2" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark2Action"/>
+      <action id="GotoBookmark3" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark3Action"/>
+      <action id="GotoBookmark4" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark4Action"/>
+      <action id="GotoBookmark5" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark5Action"/>
+      <action id="GotoBookmark6" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark6Action"/>
+      <action id="GotoBookmark7" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark7Action"/>
+      <action id="GotoBookmark8" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark8Action"/>
+      <action id="GotoBookmark9" class="consulo.ide.impl.idea.ide.bookmarks.actions.GotoBookmark9Action"/>
 
-      <action id="ToggleBookmark0" class="com.intellij.ide.bookmarks.actions.ToggleBookmark0Action"/>
-      <action id="ToggleBookmark1" class="com.intellij.ide.bookmarks.actions.ToggleBookmark1Action"/>
-      <action id="ToggleBookmark2" class="com.intellij.ide.bookmarks.actions.ToggleBookmark2Action"/>
-      <action id="ToggleBookmark3" class="com.intellij.ide.bookmarks.actions.ToggleBookmark3Action"/>
-      <action id="ToggleBookmark4" class="com.intellij.ide.bookmarks.actions.ToggleBookmark4Action"/>
-      <action id="ToggleBookmark5" class="com.intellij.ide.bookmarks.actions.ToggleBookmark5Action"/>
-      <action id="ToggleBookmark6" class="com.intellij.ide.bookmarks.actions.ToggleBookmark6Action"/>
-      <action id="ToggleBookmark7" class="com.intellij.ide.bookmarks.actions.ToggleBookmark7Action"/>
-      <action id="ToggleBookmark8" class="com.intellij.ide.bookmarks.actions.ToggleBookmark8Action"/>
-      <action id="ToggleBookmark9" class="com.intellij.ide.bookmarks.actions.ToggleBookmark9Action"/>
+      <action id="ToggleBookmark0" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark0Action"/>
+      <action id="ToggleBookmark1" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark1Action"/>
+      <action id="ToggleBookmark2" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark2Action"/>
+      <action id="ToggleBookmark3" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark3Action"/>
+      <action id="ToggleBookmark4" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark4Action"/>
+      <action id="ToggleBookmark5" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark5Action"/>
+      <action id="ToggleBookmark6" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark6Action"/>
+      <action id="ToggleBookmark7" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark7Action"/>
+      <action id="ToggleBookmark8" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark8Action"/>
+      <action id="ToggleBookmark9" class="consulo.ide.impl.idea.ide.bookmarks.actions.ToggleBookmark9Action"/>
 
     </group>
 
@@ -1449,8 +1449,8 @@
     <group id="ProjectViewPopupMenuModifyGroup">
       <reference ref="$Delete"/>
       <group id="MarkFileAs">
-        <action id="OverrideFileTypeAction" class="com.intellij.openapi.file.exclude.OverrideFileTypeAction"/>
-        <action id="ReverteOverrideFileTypeAction" class="com.intellij.openapi.file.exclude.ReverteOverrideFileTypeAction"/>
+        <action id="OverrideFileTypeAction" class="consulo.ide.impl.idea.openapi.file.exclude.OverrideFileTypeAction"/>
+        <action id="ReverteOverrideFileTypeAction" class="consulo.ide.impl.idea.openapi.file.exclude.ReverteOverrideFileTypeAction"/>
       </group>
     </group>
 
@@ -1459,7 +1459,7 @@
     </group>
 
     <group id="ProjectViewPopupMenuSettingsGroup">
-      <group id="MarkRootGroup" class="com.intellij.ide.projectView.actions.MarkRootGroup" popup="true">
+      <group id="MarkRootGroup" class="consulo.ide.impl.idea.ide.projectView.actions.MarkRootGroup" popup="true">
       </group>
     </group>
 
@@ -1468,7 +1468,7 @@
       <reference ref="AssociateWithFileType"/>
       <separator/>
       <reference ref="CutCopyPasteGroup"/>
-      <action id="ProjectViewEditSource" use-shortcut-of="EditSource" class="com.intellij.ide.actions.ProjectViewEditSourceAction"/>
+      <action id="ProjectViewEditSource" use-shortcut-of="EditSource" class="consulo.ide.impl.idea.ide.actions.ProjectViewEditSourceAction"/>
       <separator/>
       <reference ref="FindUsages"/>
       <reference ref="FindInPath"/>
@@ -1483,9 +1483,9 @@
       <reference ref="ProjectViewPopupMenuRunGroup"/>
       <separator/>
       <reference ref="VersionControlsGroup"/>
-      <action id="SynchronizeCurrentFile" class="com.intellij.ide.actions.SynchronizeCurrentFileAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
+      <action id="SynchronizeCurrentFile" class="consulo.ide.impl.idea.ide.actions.SynchronizeCurrentFileAction" icon="consulo.platform.base.PlatformIconGroup@actions.refresh"/>
       <separator/>
-      <action id="GoToLinkTarget" class="com.intellij.ide.actions.GoToLinkTargetAction"/>
+      <action id="GoToLinkTarget" class="consulo.ide.impl.idea.ide.actions.GoToLinkTargetAction"/>
       <separator/>
       <reference ref="CompareTwoFiles"/>
       <reference ref="CompareFileWithEditor"/>
@@ -1494,19 +1494,19 @@
       <separator/>
       <reference ref="ProjectViewPopupMenuSettingsGroup"/>
       <group id="RemoveBom.Group">
-        <action id="RemoveBom" class="com.intellij.openapi.editor.actions.RemoveBomAction"/>
+        <action id="RemoveBom" class="consulo.ide.impl.idea.openapi.editor.actions.RemoveBomAction"/>
         <add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="ChangeFileEncodingAction"/>
         <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="ChangeFileEncodingAction"/>
       </group>
       <group id="AddBom.Group">
-        <action id="AddBom" class="com.intellij.openapi.editor.actions.AddBomAction"/>
+        <action id="AddBom" class="consulo.ide.impl.idea.openapi.editor.actions.AddBomAction"/>
         <add-to-group group-id="FilePropertiesGroup" anchor="after" relative-to-action="RemoveBom"/>
         <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="RemoveBom"/>
       </group>
     </group>
 
     <group id="RevealGroup" popup="true">
-      <action id="RevealIn" class="com.intellij.ide.actions.RevealFileAction"/>
+      <action id="RevealIn" class="consulo.ide.impl.idea.ide.actions.RevealFileAction"/>
       <reference ref="ShowFilePath"/>
 
       <add-to-group group-id="RunContextPopupGroup" anchor="last"/>
@@ -1552,10 +1552,10 @@
       <separator/>
       <reference ref="ProjectViewPopupMenuRefactoringGroup"/>
       <separator/>
-      <action id="RenameFavoritesList" class="com.intellij.ide.favoritesTreeView.actions.RenameFavoritesListAction"
+      <action id="RenameFavoritesList" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.RenameFavoritesListAction"
               use-shortcut-of="RenameElement"/>
-      <action id="RemoveFromFavorites" class="com.intellij.ide.favoritesTreeView.actions.DeleteFromFavoritesAction"/>
-      <action id="EditFavorites" class="com.intellij.ide.favoritesTreeView.actions.EditFavoritesAction"/>
+      <action id="RemoveFromFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.DeleteFromFavoritesAction"/>
+      <action id="EditFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.actions.EditFavoritesAction"/>
       <reference ref="AddToFavorites"/>
       <reference ref="SendToFavoritesGroup"/>
       <separator/>
@@ -1580,7 +1580,7 @@
     <group id="ScopeViewPopupMenu">
       <reference ref="ProjectViewPopupMenu"/>
       <separator/>
-      <action id="ScopeView.EditScopes" class="com.intellij.ide.scopeView.EditScopesAction"/>
+      <action id="ScopeView.EditScopes" class="consulo.ide.impl.idea.ide.scopeView.EditScopesAction"/>
     </group>
 
     <group id="StructureViewPopupMenu">
@@ -1652,64 +1652,64 @@
     </reference>
 
     <group id="UsageView.Popup">
-      <action id="UsageView.Rerun" class="com.intellij.usages.actions.RerunSearchAction" icon="consulo.platform.base.PlatformIconGroup@actions.rerun" use-shortcut-of="Rerun"/>
+      <action id="UsageView.Rerun" class="consulo.ide.impl.idea.usages.actions.RerunSearchAction" icon="consulo.platform.base.PlatformIconGroup@actions.rerun" use-shortcut-of="Rerun"/>
       <separator/>
       <reference ref="EditSource"/>
       <reference ref="OpenInRightSplit"/>
-      <action id="UsageView.Include" class="com.intellij.usages.actions.IncludeUsageAction"/>
-      <action id="UsageView.Exclude" class="com.intellij.usages.actions.ExcludeUsageAction" use-shortcut-of="$Delete"/>
+      <action id="UsageView.Include" class="consulo.ide.impl.idea.usages.actions.IncludeUsageAction"/>
+      <action id="UsageView.Exclude" class="consulo.ide.impl.idea.usages.actions.ExcludeUsageAction" use-shortcut-of="$Delete"/>
       <separator/>
-      <action id="UsageView.ShowRecentFindUsages" class="com.intellij.find.impl.ShowRecentFindUsagesAction" icon="consulo.platform.base.PlatformIconGroup@actions.back"
-              use-shortcut-of="RecentFiles"/>
+      <action id="UsageView.ShowRecentFindUsages" class="consulo.ide.impl.idea.find.impl.ShowRecentFindUsagesAction" icon="consulo.platform.base.PlatformIconGroup@actions.back"
+			  use-shortcut-of="RecentFiles"/>
     </group>
 
-    <!-- <action id="UsageView.ImportToFavorites" class="com.intellij.ide.favoritesTreeView.ImportUsagesAction"/> -->
-    <action id="NewElementSamePlace" class="com.intellij.ide.actions.NewElementSamePlaceAction"/>
+    <!-- <action id="UsageView.ImportToFavorites" class="consulo.ide.impl.idea.ide.favoritesTreeView.ImportUsagesAction"/> -->
+    <action id="NewElementSamePlace" class="consulo.ide.impl.idea.ide.actions.NewElementSamePlaceAction"/>
 
-    <action id="ChangeCodeStyleScheme" class="com.intellij.ide.actions.QuickChangeCodeStyleSchemeAction">
+    <action id="ChangeCodeStyleScheme" class="consulo.ide.impl.idea.ide.actions.QuickChangeCodeStyleSchemeAction">
       <add-to-group group-id="ChangeScheme" anchor="after" relative-to-action="ChangeColorScheme"/>
     </action>
 
     <action id="TypeHierarchyBase.BaseOnThisType" text="Base on This Type"
-            class="com.intellij.ide.hierarchy.TypeHierarchyBrowserBase$BaseOnThisTypeAction"/>
-    <action id="TypeHierarchy.Class" class="com.intellij.ide.hierarchy.ViewClassHierarchyAction"/>
-    <action id="TypeHierarchy.Subtypes" class="com.intellij.ide.hierarchy.ViewSubtypesHierarchyAction"/>
-    <action id="TypeHierarchy.Supertypes" class="com.intellij.ide.hierarchy.ViewSupertypesHierarchyAction"/>
+            class="consulo.ide.impl.idea.ide.hierarchy.TypeHierarchyBrowserBase$BaseOnThisTypeAction"/>
+    <action id="TypeHierarchy.Class" class="consulo.ide.impl.idea.ide.hierarchy.ViewClassHierarchyAction"/>
+    <action id="TypeHierarchy.Subtypes" class="consulo.ide.impl.idea.ide.hierarchy.ViewSubtypesHierarchyAction"/>
+    <action id="TypeHierarchy.Supertypes" class="consulo.ide.impl.idea.ide.hierarchy.ViewSupertypesHierarchyAction"/>
 
-    <action id="EditBreakpoint" class="com.intellij.xdebugger.impl.actions.EditBreakpointAction"/>
+    <action id="EditBreakpoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.EditBreakpointAction"/>
     <group id="DebugMainMenu">
       <separator/>
-      <action id="StepOver" class="com.intellij.xdebugger.impl.actions.StepOverAction" icon="consulo.platform.base.PlatformIconGroup@actions.traceover"/>
-      <action id="ForceStepOver" class="com.intellij.xdebugger.impl.actions.ForceStepOverAction"
+      <action id="StepOver" class="consulo.ide.impl.idea.xdebugger.impl.actions.StepOverAction" icon="consulo.platform.base.PlatformIconGroup@actions.traceover"/>
+      <action id="ForceStepOver" class="consulo.ide.impl.idea.xdebugger.impl.actions.ForceStepOverAction"
               icon="consulo.platform.base.PlatformIconGroup@debugger.actions.force_step_over"/>
-      <action id="StepInto" class="com.intellij.xdebugger.impl.actions.StepIntoAction" icon="consulo.platform.base.PlatformIconGroup@actions.traceinto"/>
-      <action id="ForceStepInto" class="com.intellij.xdebugger.impl.actions.ForceStepIntoAction"
+      <action id="StepInto" class="consulo.ide.impl.idea.xdebugger.impl.actions.StepIntoAction" icon="consulo.platform.base.PlatformIconGroup@actions.traceinto"/>
+      <action id="ForceStepInto" class="consulo.ide.impl.idea.xdebugger.impl.actions.ForceStepIntoAction"
               icon="consulo.platform.base.PlatformIconGroup@debugger.actions.force_step_into"/>
-      <action id="SmartStepInto" class="com.intellij.xdebugger.impl.actions.SmartStepIntoAction" icon="consulo.platform.base.PlatformIconGroup@actions.traceinto"/>
-      <action id="StepOut" class="com.intellij.xdebugger.impl.actions.StepOutAction" icon="consulo.platform.base.PlatformIconGroup@actions.stepout"/>
-      <action id="RunToCursor" class="com.intellij.xdebugger.impl.actions.RunToCursorAction" icon="consulo.platform.base.PlatformIconGroup@actions.runtocursor"/>
-      <action id="ForceRunToCursor" class="com.intellij.xdebugger.impl.actions.ForceRunToCursorAction"
+      <action id="SmartStepInto" class="consulo.ide.impl.idea.xdebugger.impl.actions.SmartStepIntoAction" icon="consulo.platform.base.PlatformIconGroup@actions.traceinto"/>
+      <action id="StepOut" class="consulo.ide.impl.idea.xdebugger.impl.actions.StepOutAction" icon="consulo.platform.base.PlatformIconGroup@actions.stepout"/>
+      <action id="RunToCursor" class="consulo.ide.impl.idea.xdebugger.impl.actions.RunToCursorAction" icon="consulo.platform.base.PlatformIconGroup@actions.runtocursor"/>
+      <action id="ForceRunToCursor" class="consulo.ide.impl.idea.xdebugger.impl.actions.ForceRunToCursorAction"
               icon="consulo.platform.base.PlatformIconGroup@debugger.actions.force_run_to_cursor"/>
-      <action id="Pause" class="com.intellij.xdebugger.impl.actions.PauseAction" icon="consulo.platform.base.PlatformIconGroup@actions.pause"/>
-      <action id="Resume" class="com.intellij.xdebugger.impl.actions.ResumeAction" icon="consulo.platform.base.PlatformIconGroup@actions.resume"/>
+      <action id="Pause" class="consulo.ide.impl.idea.xdebugger.impl.actions.PauseAction" icon="consulo.platform.base.PlatformIconGroup@actions.pause"/>
+      <action id="Resume" class="consulo.ide.impl.idea.xdebugger.impl.actions.ResumeAction" icon="consulo.platform.base.PlatformIconGroup@actions.resume"/>
       <separator/>
-      <action id="EvaluateExpression" class="com.intellij.xdebugger.impl.actions.EvaluateAction"
+      <action id="EvaluateExpression" class="consulo.ide.impl.idea.xdebugger.impl.actions.EvaluateAction"
               icon="consulo.platform.base.PlatformIconGroup@debugger.evaluateexpression"/>
-      <action id="QuickEvaluateExpression" class="com.intellij.xdebugger.impl.actions.QuickEvaluateAction"/>
-      <action id="ShowExecutionPoint" class="com.intellij.xdebugger.impl.actions.ShowExecutionPointAction"
+      <action id="QuickEvaluateExpression" class="consulo.ide.impl.idea.xdebugger.impl.actions.QuickEvaluateAction"/>
+      <action id="ShowExecutionPoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.ShowExecutionPointAction"
               icon="consulo.platform.base.PlatformIconGroup@debugger.showcurrentframe"/>
       <separator/>
-      <action id="ToggleLineBreakpoint" class="com.intellij.xdebugger.impl.actions.ToggleLineBreakpointAction"/>
-      <action id="ToggleTemporaryLineBreakpoint" class="com.intellij.xdebugger.impl.actions.ToggleTemporaryLineBreakpointAction"/>
-      <action id="ViewBreakpoints" class="com.intellij.xdebugger.impl.actions.ViewBreakpointsAction"
+      <action id="ToggleLineBreakpoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.ToggleLineBreakpointAction"/>
+      <action id="ToggleTemporaryLineBreakpoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.ToggleTemporaryLineBreakpointAction"/>
+      <action id="ViewBreakpoints" class="consulo.ide.impl.idea.xdebugger.impl.actions.ViewBreakpointsAction"
               icon="consulo.platform.base.PlatformIconGroup@debugger.viewbreakpoints"/>
       <separator/>
 
       <add-to-group group-id="RunMenu" anchor="last"/>
     </group>
 
-    <action id="Debugger.AddToWatch" class="com.intellij.xdebugger.impl.actions.AddToWatchesAction" icon="consulo.platform.base.PlatformIconGroup@debugger.addtowatch"/>
-    <action id="Debugger.EvaluateInConsole" class="com.intellij.xdebugger.impl.actions.EvaluateInConsoleAction"/>
+    <action id="Debugger.AddToWatch" class="consulo.ide.impl.idea.xdebugger.impl.actions.AddToWatchesAction" icon="consulo.platform.base.PlatformIconGroup@debugger.addtowatch"/>
+    <action id="Debugger.EvaluateInConsole" class="consulo.ide.impl.idea.xdebugger.impl.actions.EvaluateInConsoleAction"/>
 
     <group id="EditorPopupMenuDebug">
       <separator/>
@@ -1725,29 +1725,29 @@
 
 
     <group id="XDebugger.Actions">
-      <action id="XDebugger.SetValue" class="com.intellij.xdebugger.impl.ui.tree.actions.XSetValueAction"/>
-      <action id="XDebugger.CopyValue" class="com.intellij.xdebugger.impl.ui.tree.actions.XCopyValueAction"/>
-      <action id="XDebugger.CompareValueWithClipboard" class="com.intellij.xdebugger.impl.ui.tree.actions.XCompareWithClipboardAction"/>
-      <action id="XDebugger.CopyName" class="com.intellij.xdebugger.impl.ui.tree.actions.XCopyNameAction"/>
-      <action id="XDebugger.Inspect" class="com.intellij.xdebugger.impl.ui.tree.actions.XInspectAction"/>
-      <action id="XDebugger.JumpToSource" class="com.intellij.xdebugger.impl.ui.tree.actions.XJumpToSourceAction"/>
-      <action id="XDebugger.JumpToTypeSource" class="com.intellij.xdebugger.impl.ui.tree.actions.XJumpToTypeSourceAction"/>
+      <action id="XDebugger.SetValue" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XSetValueAction"/>
+      <action id="XDebugger.CopyValue" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XCopyValueAction"/>
+      <action id="XDebugger.CompareValueWithClipboard" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XCompareWithClipboardAction"/>
+      <action id="XDebugger.CopyName" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XCopyNameAction"/>
+      <action id="XDebugger.Inspect" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XInspectAction"/>
+      <action id="XDebugger.JumpToSource" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XJumpToSourceAction"/>
+      <action id="XDebugger.JumpToTypeSource" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XJumpToTypeSourceAction"/>
 
-      <action id="Debugger.Tree.AddToWatches" class="com.intellij.xdebugger.impl.ui.tree.actions.XAddToWatchesTreeAction" icon="consulo.platform.base.PlatformIconGroup@debugger.addtowatch"/>
-      <action id="Debugger.Tree.EvaluateInConsole" class="com.intellij.xdebugger.impl.ui.tree.actions.EvaluateInConsoleFromTreeAction"/>
+      <action id="Debugger.Tree.AddToWatches" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.XAddToWatchesTreeAction" icon="consulo.platform.base.PlatformIconGroup@debugger.addtowatch"/>
+      <action id="Debugger.Tree.EvaluateInConsole" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.EvaluateInConsoleFromTreeAction"/>
 
-      <action id="XDebugger.NewWatch" class="com.intellij.xdebugger.impl.frame.actions.XNewWatchAction" icon="consulo.platform.base.PlatformIconGroup@general.add"/>
-      <action id="XDebugger.EditWatch" class="com.intellij.xdebugger.impl.frame.actions.XEditWatchAction"/>
-      <action id="XDebugger.CopyWatch" class="com.intellij.xdebugger.impl.frame.actions.XCopyWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
-      <action id="XDebugger.RemoveWatch" class="com.intellij.xdebugger.impl.frame.actions.XRemoveWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
-      <action id="XDebugger.SwitchWatchesInVariables" class="com.intellij.xdebugger.impl.frame.actions.XSwitchWatchesInVariables" icon="consulo.platform.base.PlatformIconGroup@debugger.watch"/>
-      <action id="XDebugger.RemoveAllWatches" class="com.intellij.xdebugger.impl.frame.actions.XRemoveAllWatchesAction"/>
-      <action id="XDebugger.MuteBreakpoints" class="com.intellij.xdebugger.impl.actions.MuteBreakpointAction"
+      <action id="XDebugger.NewWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XNewWatchAction" icon="consulo.platform.base.PlatformIconGroup@general.add"/>
+      <action id="XDebugger.EditWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XEditWatchAction"/>
+      <action id="XDebugger.CopyWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XCopyWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.copy" text="Copy Watch"/>
+      <action id="XDebugger.RemoveWatch" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XRemoveWatchAction" icon="consulo.platform.base.PlatformIconGroup@actions.cancel"/>
+      <action id="XDebugger.SwitchWatchesInVariables" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XSwitchWatchesInVariables" icon="consulo.platform.base.PlatformIconGroup@debugger.watch"/>
+      <action id="XDebugger.RemoveAllWatches" class="consulo.ide.impl.idea.xdebugger.impl.frame.actions.XRemoveAllWatchesAction"/>
+      <action id="XDebugger.MuteBreakpoints" class="consulo.ide.impl.idea.xdebugger.impl.actions.MuteBreakpointAction"
               icon="consulo.platform.base.PlatformIconGroup@debugger.mutebreakpoints"/>
-      <action id="XDebugger.ToggleSortValues" class="com.intellij.xdebugger.impl.ui.tree.actions.SortValuesToggleAction" icon="consulo.platform.base.PlatformIconGroup@objectbrowser.sorted"/>
-      <action id="Debugger.MarkObject" class="com.intellij.xdebugger.impl.actions.MarkObjectAction"/>
-      <action id="Debugger.FocusOnBreakpoint" class="com.intellij.xdebugger.impl.actions.FocusOnBreakpointAction"/>
-      <action id="Debugger.ShowReferring" class="com.intellij.xdebugger.impl.ui.tree.actions.ShowReferringObjectsAction"/>
+      <action id="XDebugger.ToggleSortValues" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.SortValuesToggleAction" icon="consulo.platform.base.PlatformIconGroup@objectbrowser.sorted"/>
+      <action id="Debugger.MarkObject" class="consulo.ide.impl.idea.xdebugger.impl.actions.MarkObjectAction"/>
+      <action id="Debugger.FocusOnBreakpoint" class="consulo.ide.impl.idea.xdebugger.impl.actions.FocusOnBreakpointAction"/>
+      <action id="Debugger.ShowReferring" class="consulo.ide.impl.idea.xdebugger.impl.ui.tree.actions.ShowReferringObjectsAction"/>
     </group>
 
     <group id="XDebugger.ToolWindow.TopToolbar">
@@ -1798,7 +1798,7 @@
     </group>
 
     <group id="XDebugger.Frames.TopToolbar">
-      <action id="Debugger.ShowLibraryFrames" class="com.intellij.xdebugger.impl.actions.ShowLibraryFramesAction"/>
+      <action id="Debugger.ShowLibraryFrames" class="consulo.ide.impl.idea.xdebugger.impl.actions.ShowLibraryFramesAction"/>
     </group>
 
     <group id="XDebugger.Variables.Tree.Popup">
@@ -1830,33 +1830,33 @@
     </group>
 
     <group id="XDebugger.Settings" icon="consulo.platform.base.PlatformIconGroup@general.gearplain" popup="true">
-      <action id="XDebugger.Inline" class="com.intellij.xdebugger.impl.actions.UseInlineDebuggerAction"/>
+      <action id="XDebugger.Inline" class="consulo.ide.impl.idea.xdebugger.impl.actions.UseInlineDebuggerAction"/>
       <separator/>
       <reference ref="XDebugger.ToggleSortValues"/>
-      <!--<action id="XDebugger.AutoTooltip" class="com.intellij.xdebugger.impl.actions.ValueTooltipAutoShowAction"/>-->
-      <!--<action id="XDebugger.AutoTooltipOnSelection" class="com.intellij.xdebugger.impl.actions.ValueTooltipAutoShowOnSelectionAction"/>-->
+      <!--<action id="XDebugger.AutoTooltip" class="consulo.ide.impl.idea.xdebugger.impl.actions.ValueTooltipAutoShowAction"/>-->
+      <!--<action id="XDebugger.AutoTooltipOnSelection" class="consulo.ide.impl.idea.xdebugger.impl.actions.ValueTooltipAutoShowOnSelectionAction"/>-->
       <separator/>
-      <action id="XDebugger.UnmuteOnStop" class="com.intellij.xdebugger.impl.actions.UnmuteOnStopAction"/>
+      <action id="XDebugger.UnmuteOnStop" class="consulo.ide.impl.idea.xdebugger.impl.actions.UnmuteOnStopAction"/>
     </group>
 
     <group id="RunnerLayoutActions">
       <group id="Runner.Layout">
-        <action id="Runner.RestoreLayout" class="com.intellij.execution.ui.layout.actions.RestoreLayoutAction"
+        <action id="Runner.RestoreLayout" class="consulo.ide.impl.idea.execution.ui.layout.actions.RestoreLayoutAction"
                 icon="consulo.platform.base.PlatformIconGroup@debugger.restorelayout"/>
       </group>
 
       <group id="Runner.View.Popup">
-        <action id="Runner.MinimizeView" class="com.intellij.execution.ui.layout.actions.MinimizeViewAction"
+        <action id="Runner.MinimizeView" class="consulo.ide.impl.idea.execution.ui.layout.actions.MinimizeViewAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.minimize"/>
         <separator/>
-        <action id="Runner.CloseView" class="com.intellij.execution.ui.layout.actions.CloseViewAction" icon="consulo.platform.base.PlatformIconGroup@actions.cross"/>
-        <action id="Runner.CloseOtherViews" class="com.intellij.execution.ui.layout.actions.CloseOtherViewsAction"
+        <action id="Runner.CloseView" class="consulo.ide.impl.idea.execution.ui.layout.actions.CloseViewAction" icon="consulo.platform.base.PlatformIconGroup@actions.cross"/>
+        <action id="Runner.CloseOtherViews" class="consulo.ide.impl.idea.execution.ui.layout.actions.CloseOtherViewsAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.cross"/>
-        <action id="Runner.CloseAllViews" class="com.intellij.execution.ui.layout.actions.CloseAllViewsAction"
+        <action id="Runner.CloseAllViews" class="consulo.ide.impl.idea.execution.ui.layout.actions.CloseAllViewsAction"
                 icon="consulo.platform.base.PlatformIconGroup@actions.cross"/>
         <separator/>
         <group id="Runner.Focus">
-          <action id="Runner.FocusOnStartup" class="com.intellij.execution.ui.actions.FocusOnStartAction"/>
+          <action id="Runner.FocusOnStartup" class="consulo.ide.impl.idea.execution.ui.actions.FocusOnStartAction"/>
         </group>
       </group>
 
@@ -1867,10 +1867,10 @@
       </group>
     </group>
 
-    <group id="LocalHistory" class="com.intellij.history.integration.ui.actions.LocalHistoryGroup" popup="true">
-      <action id="LocalHistory.ShowHistory" class="com.intellij.history.integration.ui.actions.ShowHistoryAction"/>
-      <action id="LocalHistory.ShowSelectionHistory" class="com.intellij.history.integration.ui.actions.ShowSelectionHistoryAction"/>
-      <action id="LocalHistory.PutLabel" class="com.intellij.history.integration.ui.actions.PutLabelAction"/>
+    <group id="LocalHistory" class="consulo.ide.impl.idea.history.integration.ui.actions.LocalHistoryGroup" popup="true">
+      <action id="LocalHistory.ShowHistory" class="consulo.ide.impl.idea.history.integration.ui.actions.ShowHistoryAction"/>
+      <action id="LocalHistory.ShowSelectionHistory" class="consulo.ide.impl.idea.history.integration.ui.actions.ShowSelectionHistoryAction"/>
+      <action id="LocalHistory.PutLabel" class="consulo.ide.impl.idea.history.integration.ui.actions.PutLabelAction"/>
 
       <add-to-group group-id="VersionControlsGroup" anchor="first"/>
     </group>
@@ -1893,7 +1893,7 @@
     <group id="ConsoleView.PopupMenu">
       <reference ref="ConsoleEditorPopupMenu"/>
       <separator/>
-      <action id="ConsoleView.ClearAll" class="com.intellij.execution.impl.ConsoleViewImpl$ClearAllAction"/>
+      <action id="ConsoleView.ClearAll" class="consulo.ide.impl.idea.execution.impl.ConsoleViewImpl$ClearAllAction"/>
     </group>
 
     <group>
@@ -1905,39 +1905,39 @@
     <!-- SM Test Runner Actions -->
     <group id="SMTestRunnerTestsTree">
       <separator/>
-      <action id="com.intellij.execution.testframework.sm.runner.ui.statistics.ShowStatisticsAction"
-              class="com.intellij.execution.testframework.sm.runner.ui.statistics.ShowStatisticsAction"
+      <action id="consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowStatisticsAction"
+              class="consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowStatisticsAction"
               text="Show Statistics"/>
       <add-to-group group-id="TestTreePopupMenu" anchor="last"/>
     </group>
     <group id="SMTestRunnerStatistics">
       <separator/>
-      <action id="com.intellij.execution.testframework.sm.runner.ui.statistics.ShowTestProxy"
-              class="com.intellij.execution.testframework.sm.runner.ui.statistics.ShowTestProxy"
+      <action id="consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowTestProxy"
+              class="consulo.ide.impl.idea.execution.testframework.sm.runner.ui.statistics.ShowTestProxy"
               text="Navigate to Test"/>
       <add-to-group group-id="TestTreePopupMenu" anchor="last"/>
     </group>
 
-    <action id="DumpLookupElementWeights" class="com.intellij.internal.DumpLookupElementWeights" text="Dump lookup element weights to log">
+    <action id="DumpLookupElementWeights" class="consulo.ide.impl.idea.internal.DumpLookupElementWeights" text="Dump lookup element weights to log">
       <add-to-group group-id="MaintenanceGroup" anchor="last"/>
     </action>
 
-    <action id="Arrangement.Rule.Add" class="com.intellij.application.options.codeStyle.arrangement.action.AddArrangementRuleAction"/>
-    <action id="Arrangement.Rule.Remove" class="com.intellij.application.options.codeStyle.arrangement.action.RemoveArrangementRuleAction"/>
+    <action id="Arrangement.Rule.Add" class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.AddArrangementRuleAction"/>
+    <action id="Arrangement.Rule.Remove" class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.RemoveArrangementRuleAction"/>
     <action id="Arrangement.Rule.Edit"
-            class="com.intellij.application.options.codeStyle.arrangement.action.EditArrangementRuleAction"
+            class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.EditArrangementRuleAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.edit"/>
     <action id="Arrangement.Rule.Match.Condition.Move.Up"
-            class="com.intellij.application.options.codeStyle.arrangement.action.MoveArrangementMatchingRuleUpAction"
+            class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.MoveArrangementMatchingRuleUpAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.moveup"/>
     <action id="Arrangement.Rule.Match.Condition.Move.Down"
-            class="com.intellij.application.options.codeStyle.arrangement.action.MoveArrangementMatchingRuleDownAction"
+            class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.MoveArrangementMatchingRuleDownAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.movedown"/>
     <action id="Arrangement.Rule.Group.Condition.Move.Up"
-            class="com.intellij.application.options.codeStyle.arrangement.action.MoveArrangementGroupingRuleUpAction"
+            class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.MoveArrangementGroupingRuleUpAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.moveup"/>
     <action id="Arrangement.Rule.Group.Condition.Move.Down"
-            class="com.intellij.application.options.codeStyle.arrangement.action.MoveArrangementGroupingRuleDownAction"
+            class="consulo.ide.impl.idea.application.options.codeStyle.arrangement.action.MoveArrangementGroupingRuleDownAction"
             icon="consulo.platform.base.PlatformIconGroup@actions.movedown"/>
 
     <group id="Arrangement.Rule.Match.Control.Context.Menu">
@@ -1959,13 +1959,13 @@
     </group>
 
 
-    <action id="EditorLookupUp" class="com.intellij.codeInsight.lookup.impl.LookupActionHandler$UpAction"/>
-    <action id="EditorLookupDown" class="com.intellij.codeInsight.lookup.impl.LookupActionHandler$DownAction"/>
+    <action id="EditorLookupUp" class="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$UpAction"/>
+    <action id="EditorLookupDown" class="consulo.ide.impl.idea.codeInsight.lookup.impl.LookupActionHandler$DownAction"/>
 
-    <action id="RerunFailedTests" class="com.intellij.execution.testframework.actions.RerunFailedTestsAction"
+    <action id="RerunFailedTests" class="consulo.ide.impl.idea.execution.testframework.actions.RerunFailedTestsAction"
             icon="consulo.platform.base.PlatformIconGroup@runconfigurations.rerunfailedtests"/>
 
-    <action id="FileChooser.GotoModule" class="com.intellij.openapi.fileChooser.actions.GotoModuleDirectory"
+    <action id="FileChooser.GotoModule" class="consulo.ide.impl.idea.openapi.fileChooser.actions.GotoModuleDirectory"
             icon="consulo.platform.base.PlatformIconGroup@nodes.module">
       <add-to-group group-id="FileChooserToolbar" anchor="after" relative-to-action="FileChooser.GotoProject"/>
     </action>
@@ -1976,16 +1976,16 @@
       <group id="NewElementInMenuGroup" text="New" popup="true">
         <action id="NewProject" class="consulo.ide.newProject.actions.NewProjectAction"/>
         <separator/>
-        <action id="NewModule" class="com.intellij.openapi.roots.ui.configuration.actions.NewModuleAction"/>
-        <action id="ImportModule" class="com.intellij.ide.actions.ImportModuleAction" text="Import Module..."/>
+        <action id="NewModule" class="consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.NewModuleAction"/>
+        <action id="ImportModule" class="consulo.ide.impl.idea.ide.actions.ImportModuleAction" text="Import Module..."/>
         <separator/>
-        <group class="com.intellij.ide.actions.NewActionGroup" text="New" popup="false"/>
+        <group class="consulo.ide.impl.idea.ide.actions.NewActionGroup" text="New" popup="false"/>
       </group>
 
       <add-to-group group-id="FileOpenGroup" anchor="first"/>
     </group>
 
-    <action id="NewElement" class="com.intellij.ide.actions.NewElementAction"/>
+    <action id="NewElement" class="consulo.ide.impl.idea.ide.actions.NewElementAction"/>
 
     <group>
       <add-to-group group-id="ExportImportGroup" anchor="first"/>
@@ -2012,27 +2012,27 @@
     </group>
 
     <group id="InspectCodeGroup" text="Inspect Code Actions">
-      <action id="InspectCode" class="com.intellij.codeInspection.actions.CodeInspectionAction"/>
-      <action id="RunInspection" class="com.intellij.codeInspection.actions.RunInspectionAction"/>
-      <action id="PopupHector" class="com.intellij.codeInsight.daemon.impl.PopupHectorAction"/>
-      <action id="ViewOfflineInspection" class="com.intellij.codeInspection.actions.ViewOfflineResultsAction"/>
+      <action id="InspectCode" class="consulo.ide.impl.idea.codeInspection.actions.CodeInspectionAction"/>
+      <action id="RunInspection" class="consulo.ide.impl.idea.codeInspection.actions.RunInspectionAction"/>
+      <action id="PopupHector" class="consulo.ide.impl.idea.codeInsight.daemon.impl.PopupHectorAction"/>
+      <action id="ViewOfflineInspection" class="consulo.ide.impl.idea.codeInspection.actions.ViewOfflineResultsAction"/>
       <add-to-group group-id="AnalyzeMenu" anchor="first"/>
     </group>
 
     <group id="BuildMenu" popup="true">
-      <action id="CompileDirty" class="com.intellij.compiler.actions.CompileDirtyAction" icon="consulo.platform.base.PlatformIconGroup@actions.compile"/>
-      <action id="MakeModule" class="com.intellij.compiler.actions.MakeModuleAction"/>
-      <action id="Compile" class="com.intellij.compiler.actions.CompileAction"/>
+      <action id="CompileDirty" class="consulo.ide.impl.idea.compiler.actions.CompileDirtyAction" icon="consulo.platform.base.PlatformIconGroup@actions.compile"/>
+      <action id="MakeModule" class="consulo.ide.impl.idea.compiler.actions.MakeModuleAction"/>
+      <action id="Compile" class="consulo.ide.impl.idea.compiler.actions.CompileAction"/>
 
       <action id="RunAPT" class="consulo.ui.ex.action.EmptyAction"/>
-      <!--com.intellij.compiler.actions.ProcessAnnotationsAction-->
+      <!--consulo.ide.impl.idea.compiler.actions.ProcessAnnotationsAction-->
       <separator/>
-      <action id="CompileProject" class="com.intellij.compiler.actions.CompileProjectAction"/>
+      <action id="CompileProject" class="consulo.ide.impl.idea.compiler.actions.CompileProjectAction"/>
       <separator/>
-      <!--<action id="GenerateAntBuild" class="com.intellij.compiler.actions.GenerateAntBuildAction"/>
+      <!--<action id="GenerateAntBuild" class="consulo.ide.impl.idea.compiler.actions.GenerateAntBuildAction"/>
 
       <separator/>  -->
-      <action id="BuildArtifact" class="com.intellij.compiler.actions.BuildArtifactAction"/>
+      <action id="BuildArtifact" class="consulo.ide.impl.idea.compiler.actions.BuildArtifactAction"/>
       <add-to-group group-id="MainMenu" anchor="before" relative-to-action="RunMenu"/>
     </group>
 
@@ -2040,12 +2040,12 @@
     </group>
 
     <!-- Tools -->
-    <action id="ConsoleView.FoldLinesLikeThis" class="com.intellij.execution.console.FoldLinesLikeThis" text="Fold Lines Like This">
+    <action id="ConsoleView.FoldLinesLikeThis" class="consulo.ide.impl.idea.execution.console.FoldLinesLikeThis" text="Fold Lines Like This">
       <add-to-group group-id="ConsoleEditorPopupMenu" anchor="after" relative-to-action="$SearchWeb"/>
     </action>
 
     <!-- Help -->
-    <action id="WhatsNewAction" class="com.intellij.ide.actions.WhatsNewAction">
+    <action id="WhatsNewAction" class="consulo.ide.impl.idea.ide.actions.WhatsNewAction">
       <add-to-group group-id="HelpMenu" anchor="after" relative-to-action="OnlineDocAction"/>
     </action>
 
@@ -2058,7 +2058,7 @@
     </group>
 
 
-    <action id="AnalyzeStacktraceOnError" class="com.intellij.unscramble.AnalyzeStacktraceOnErrorAction" text="Analyze _Stacktrace"/>
+    <action id="AnalyzeStacktraceOnError" class="consulo.ide.impl.idea.unscramble.AnalyzeStacktraceOnErrorAction" text="Analyze _Stacktrace"/>
 
     <reference ref="Compile">
       <add-to-group group-id="EditorPopupMenu.Run" anchor="first"/>
@@ -2074,9 +2074,9 @@
       <add-to-group group-id="EditorTabPopupMenuEx" anchor="before" relative-to-action="RunContextPopupGroup"/>
     </group>
 
-    <action id="ModuleSettings" class="com.intellij.ide.actions.ShowModulePropertiesAction"/>
-    <action id="OpenModuleSettings" class="com.intellij.ide.actions.OpenModuleSettingsAction" use-shortcut-of="EditSource"/>
-    <group id="MoveModuleToGroup" class="com.intellij.ide.projectView.impl.MoveModuleToGroupTopLevel" popup="true"/>
+    <action id="ModuleSettings" class="consulo.ide.impl.idea.ide.actions.ShowModulePropertiesAction"/>
+    <action id="OpenModuleSettings" class="consulo.ide.impl.idea.ide.actions.OpenModuleSettingsAction" use-shortcut-of="EditSource"/>
+    <group id="MoveModuleToGroup" class="consulo.ide.impl.idea.ide.projectView.impl.MoveModuleToGroupTopLevel" popup="true"/>
 
     <reference ref="AnalyzeMenu">
       <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="ReplaceInPath"/>
@@ -2101,7 +2101,7 @@
       <add-to-group group-id="ProjectViewPopupMenuRunGroup" anchor="first"/>
     </group>
 
-    <action id="PackageFile" class="com.intellij.packaging.impl.ui.actions.PackageFileAction" use-shortcut-of="Compile">
+    <action id="PackageFile" class="consulo.ide.impl.idea.packaging.impl.ui.actions.PackageFileAction" use-shortcut-of="Compile">
       <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="Compile"/>
       <add-to-group group-id="ProjectViewPopupMenu" anchor="before" relative-to-action="MakeModule"/>
       <add-to-group group-id="FavoritesViewPopupMenu" anchor="before" relative-to-action="MakeModule"/>
@@ -2246,12 +2246,12 @@
     <!--  TODO: fix
       <group id="UsageView.Popup">-->
     <!--<reference ref="EditSource"/>-->
-    <!--<action id="UsageView.Include" class="com.intellij.usages.actions.IncludeUsageAction"/>-->
-    <!--<action id="UsageView.Exclude" class="com.intellij.usages.actions.ExcludeUsageAction"/>-->
+    <!--<action id="UsageView.Include" class="consulo.ide.impl.idea.usages.actions.IncludeUsageAction"/>-->
+    <!--<action id="UsageView.Exclude" class="consulo.ide.impl.idea.usages.actions.ExcludeUsageAction"/>-->
     <!--<separator/>-->
     <!--<reference ref="AddToFavorites"/>-->
     <!--<reference ref="FindUsages"/>-->
-    <!--<action id="UsageView.ShowRecentFindUsages" class="com.intellij.find.impl.ShowRecentFindUsagesAction" icon="/actions/back.png"/>-->
+    <!--<action id="UsageView.ShowRecentFindUsages" class="consulo.ide.impl.idea.find.impl.ShowRecentFindUsagesAction" icon="/actions/back.png"/>-->
     <!--<separator/>-->
     <!--<reference ref="VersionControlsGroup"/>-->
     <!--<separator/>-->
@@ -2268,29 +2268,29 @@
 
     <group>
       <action id="CreateLibraryFromFile" class="consulo.ui.ex.action.EmptyAction"/>
-      <!--com.intellij.ide.projectView.actions.MarkLibraryRootAction-->
+      <!--consulo.ide.impl.idea.ide.projectView.actions.MarkLibraryRootAction-->
       <add-to-group group-id="ProjectViewPopupMenuSettingsGroup" relative-to-action="MarkRootGroup" anchor="after"/>
     </group>
 
     <group>
       <action id="SaveProjectAsTemplateAction" class="consulo.ui.ex.action.EmptyAction" text="Save Project as Template..."/>
-      <!--com.intellij.platform.templates.SaveProjectAsTemplateAction-->
+      <!--consulo.ide.impl.idea.platform.templates.SaveProjectAsTemplateAction-->
       <action id="ManageProjectTemplatesAction" class="consulo.ui.ex.action.EmptyAction" text="Manage Project Templates..."/>
-      <!--com.intellij.platform.templates.ManageProjectTemplatesAction-->
+      <!--consulo.ide.impl.idea.platform.templates.ManageProjectTemplatesAction-->
       <add-to-group group-id="ToolsBasicGroup" anchor="after" relative-to-action="SaveFileAsTemplate"/>
     </group>
 
-    <action id="ShowPackageDeps" class="com.intellij.packageDependencies.actions.AnalyzeDependenciesAction">
+    <action id="ShowPackageDeps" class="consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesAction">
       <add-to-group group-id="ShowPackageDepsGroup" anchor="first"/>
       <add-to-group group-id="AnalyzeActions" anchor="first"/>
     </action>
-    <action id="ShowBackwardPackageDeps" class="com.intellij.packageDependencies.actions.BackwardDependenciesAction">
+    <action id="ShowBackwardPackageDeps" class="consulo.ide.impl.idea.packageDependencies.actions.BackwardDependenciesAction">
       <add-to-group group-id="AnalyzeActions" relative-to-action="ShowPackageDeps" anchor="after"/>
     </action>
-    <action id="ShowDependenciesOnTarget" class="com.intellij.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetAction">
+    <action id="ShowDependenciesOnTarget" class="consulo.ide.impl.idea.packageDependencies.actions.AnalyzeDependenciesOnSpecifiedTargetAction">
       <add-to-group group-id="AnalyzeActions" relative-to-action="ShowBackwardPackageDeps" anchor="after"/>
     </action>
-    <action id="ShowModulesDependencies" class="com.intellij.moduleDependencies.ShowModuleDependenciesAction">
+    <action id="ShowModulesDependencies" class="consulo.ide.impl.idea.moduleDependencies.ShowModuleDependenciesAction">
       <add-to-group group-id="AnalyzeActions" anchor="last"/>
     </action>
 
@@ -2298,14 +2298,14 @@
       <add-to-group group-id="MainToolBarSettings" anchor="after" relative-to-action="ShowSettings"/>
     </reference>
 
-    <action id="SendEOF" class="com.intellij.execution.actions.EOFAction" text="Send EOF"/>
+    <action id="SendEOF" class="consulo.ide.impl.idea.execution.actions.EOFAction" text="Send EOF"/>
 
-    <action id="ShowReformatFileDialog" class="com.intellij.codeInsight.actions.ShowReformatFileDialog"/>
+    <action id="ShowReformatFileDialog" class="consulo.ide.impl.idea.codeInsight.actions.ShowReformatFileDialog"/>
 
     <group id="Vcs.Show.Toolwindow.Tab">
       <add-to-group group-id="VcsGeneral.KeymapGroup"/>
-      <action id="Vcs.Show.Local.Changes" class="com.intellij.vcs.VcsShowLocalChangesAction" text="Show Local Changes"/>
-      <action id="Vcs.Show.Shelf" class="com.intellij.vcs.VcsShowShelfAction" text="Show Shelf"/>
+      <action id="Vcs.Show.Local.Changes" class="consulo.ide.impl.idea.vcs.VcsShowLocalChangesAction" text="Show Local Changes"/>
+      <action id="Vcs.Show.Shelf" class="consulo.ide.impl.idea.vcs.VcsShowShelfAction" text="Show Shelf"/>
     </group>
 
     <group id="Internal" text="Internal Actions" internal="true" popup="true">
@@ -2314,57 +2314,57 @@
 
     <group id="TodoMainGroup" text="TODO">
       <add-to-group group-id="Other.KeymapGroup"/>
-      <group id="TodoViewGroupByGroup" class="com.intellij.ide.todo.TodoPanel$GroupByActionGroup">
+      <group id="TodoViewGroupByGroup" class="consulo.ide.impl.idea.ide.todo.TodoPanel$GroupByActionGroup">
         <separator text="Group By"/>
-        <action class="com.intellij.ide.todo.TodoPanel$MyShowModulesAction" id="TodoViewGroupByShowModules">
+        <action class="consulo.ide.impl.idea.ide.todo.TodoPanel$MyShowModulesAction" id="TodoViewGroupByShowModules">
           <keyboard-shortcut first-keystroke="control M" keymap="$default"/>
         </action>
 
-        <action class="com.intellij.ide.todo.TodoPanel$MyShowPackagesAction" id="TodoViewGroupByShowPackages">
+        <action class="consulo.ide.impl.idea.ide.todo.TodoPanel$MyShowPackagesAction" id="TodoViewGroupByShowPackages">
           <keyboard-shortcut first-keystroke="control P" keymap="$default"/>
         </action>
 
-        <action class="com.intellij.ide.todo.TodoPanel$MyFlattenPackagesAction" id="TodoViewGroupByFlattenPackage">
+        <action class="consulo.ide.impl.idea.ide.todo.TodoPanel$MyFlattenPackagesAction" id="TodoViewGroupByFlattenPackage">
           <keyboard-shortcut first-keystroke="control F" keymap="$default"/>
         </action>
       </group>
     </group>
 
     <group id="WelcomeScreenRecentProjectActionGroup">
-      <action id="WelcomeScreen.OpenSelected" class="com.intellij.openapi.wm.impl.welcomeScreen.OpenSelectedProjectsAction"
+      <action id="WelcomeScreen.OpenSelected" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.OpenSelectedProjectsAction"
               text="Open"/>
-      <action id="WelcomeScreen.RemoveSelected" class="com.intellij.openapi.wm.impl.welcomeScreen.RemoveSelectedProjectsAction"
+      <action id="WelcomeScreen.RemoveSelected" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.RemoveSelectedProjectsAction"
               text="Remove" icon="consulo.platform.base.PlatformIconGroup@general.remove"/>
       <action id="WelcomeScreen.RevealRecentProjectDirectory" class="consulo.wm.impl.welcomeScreen.RevealRecentProjectDirectoryAction"/>
       <separator/>
-      <action id="WelcomeScreen.NewGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.CreateNewProjectGroupAction"
+      <action id="WelcomeScreen.NewGroup" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.CreateNewProjectGroupAction"
               text="New Group" icon="consulo.platform.base.PlatformIconGroup@nodes.folder"/>
-      <action id="WelcomeScreen.EditGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.EditProjectGroupAction" text="Edit..."/>
-      <group id="WelcomeScreen.MoveToGroup" class="com.intellij.openapi.wm.impl.welcomeScreen.MoveProjectToGroupActionGroup"
+      <action id="WelcomeScreen.EditGroup" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.EditProjectGroupAction" text="Edit..."/>
+      <group id="WelcomeScreen.MoveToGroup" class="consulo.ide.impl.idea.openapi.wm.impl.welcomeScreen.MoveProjectToGroupActionGroup"
              text="Move To Group" popup="true"/>
     </group>
 
     <group id="SearchEverywhereActions" text="Search Everywhere">
-      <action id="SearchEverywhere.NextTab" class="com.intellij.ide.actions.searcheverywhere.SEActionStub" text="Next tab"
-              description="Switch to next tab in Search Everywhere dialog"/>
-      <action id="SearchEverywhere.PrevTab" class="com.intellij.ide.actions.searcheverywhere.SEActionStub" text="Prev tab"
-              description="Switch to previous tab in Search Everywhere dialog"/>
-      <action id="SearchEverywhere.CompleteCommand" class="com.intellij.ide.actions.searcheverywhere.SEActionStub"
+      <action id="SearchEverywhere.NextTab" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub" text="Next tab"
+			  description="Switch to next tab in Search Everywhere dialog"/>
+      <action id="SearchEverywhere.PrevTab" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub" text="Prev tab"
+			  description="Switch to previous tab in Search Everywhere dialog"/>
+      <action id="SearchEverywhere.CompleteCommand" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub"
               text="Complete Command" description="Autocomplete command in Search Everywhere dialog"/>
-      <action id="SearchEverywhere.SelectItem" class="com.intellij.ide.actions.searcheverywhere.SEActionStub" text="Select item"
-              description="Select item in Search Everywhere dialog"/>
-      <action id="SearchEverywhere.NavigateToNextGroup" class="com.intellij.ide.actions.searcheverywhere.SEActionStub"
+      <action id="SearchEverywhere.SelectItem" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub" text="Select item"
+			  description="Select item in Search Everywhere dialog"/>
+      <action id="SearchEverywhere.NavigateToNextGroup" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub"
               text="Next group element" description="Navigate to next group in Search Everywhere dialog"/>
-      <action id="SearchEverywhere.NavigateToPrevGroup" class="com.intellij.ide.actions.searcheverywhere.SEActionStub"
+      <action id="SearchEverywhere.NavigateToPrevGroup" class="consulo.ide.impl.idea.ide.actions.searcheverywhere.SEActionStub"
               text="Prev group element" description="Navigate to prev group in Search Everywhere dialog"/>
 
       <add-to-group group-id="Other.KeymapGroup"/>
     </group>
 
-    <action id="ShowFilterPopup" class="com.intellij.find.editorHeaderActions.ShowMoreOptions" text="Show Filter Popup"/>
-    <action id="ShowSearchHistory" class="com.intellij.find.actions.ShowSearchHistoryAction" text="Show Search History"/>
+    <action id="ShowFilterPopup" class="consulo.ide.impl.idea.find.editorHeaderActions.ShowMoreOptions" text="Show Filter Popup"/>
+    <action id="ShowSearchHistory" class="consulo.ide.impl.idea.find.actions.ShowSearchHistoryAction" text="Show Search History"/>
 
-    <action id="SelectInProjectView" icon="consulo.platform.base.PlatformIconGroup@general.locate" class="com.intellij.ide.projectView.impl.SelectFileAction"/>
+    <action id="SelectInProjectView" icon="consulo.platform.base.PlatformIconGroup@general.locate" class="consulo.ide.impl.idea.ide.projectView.impl.SelectFileAction"/>
 
     <group id="ProjectViewToolbar">
       <reference ref="SelectInProjectView"/>
@@ -2383,39 +2383,39 @@
       <reference id="ChangeKeymap"/>
     </group>
 
-    <action id="ChangesView.ApplyPatch" class="com.intellij.openapi.vcs.changes.patch.ApplyPatchAction">
+    <action id="ChangesView.ApplyPatch" class="consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchAction">
       <add-to-group group-id="ProjectViewPopupMenu" relative-to-action="ProjectViewEditSource" anchor="after"/>
       <add-to-group group-id="NavbarPopupMenu" relative-to-action="EditSource" anchor="after"/>
       <add-to-group group-id="FavoritesViewPopupMenu" relative-to-action="EditSource" anchor="after"/>
     </action>
 
     <!-- Main menu | Version Control -->
-    <group id="VcsGroups" class="com.intellij.openapi.vcs.actions.VcsGroupsActionGroup" popup="true">
-      <group id="Vcs.MainMenu" class="com.intellij.openapi.vcs.actions.VcsMainMenuActionGroup">
-        <action id="Start.Use.Vcs" class="com.intellij.ide.actions.StartUseVcsAction"/>
+    <group id="VcsGroups" class="consulo.ide.impl.idea.openapi.vcs.actions.VcsGroupsActionGroup" popup="true">
+      <group id="Vcs.MainMenu" class="consulo.ide.impl.idea.openapi.vcs.actions.VcsMainMenuActionGroup">
+        <action id="Start.Use.Vcs" class="consulo.ide.impl.idea.ide.actions.StartUseVcsAction"/>
         <separator/>
-        <group class="com.intellij.openapi.vcs.actions.VcsActionGroup" id="VcsGlobalGroup">
+        <group class="consulo.ide.impl.idea.openapi.vcs.actions.VcsActionGroup" id="VcsGlobalGroup">
 
           <action id="Vcs.QuickListPopupAction"
-                  class="com.intellij.openapi.vcs.actions.VcsQuickListPopupAction"/>
+                  class="consulo.ide.impl.idea.openapi.vcs.actions.VcsQuickListPopupAction"/>
           <reference ref="CheckinProject"/>
           <reference ref="Vcs.UpdateProject"/>
-          <action id="Vcs.IntegrateProject" class="com.intellij.openapi.vcs.update.CommonIntegrateProjectAction"/>
+          <action id="Vcs.IntegrateProject" class="consulo.ide.impl.idea.openapi.vcs.update.CommonIntegrateProjectAction"/>
           <reference ref="ChangesView.Refresh"/>
           <separator/>
-          <group id="Vcs.Specific" class="com.intellij.ide.actions.NonEmptyActionGroup"/>
+          <group id="Vcs.Specific" class="consulo.ide.impl.idea.ide.actions.NonEmptyActionGroup"/>
           <separator/>
           <reference ref="ChangesView.CreatePatch"/>
           <reference ref="ChangesView.ApplyPatch"/>
-          <action id="ChangesView.ApplyPatchFromClipboard" class="com.intellij.openapi.vcs.changes.patch.ApplyPatchFromClipboardAction"/>
+          <action id="ChangesView.ApplyPatchFromClipboard" class="consulo.ide.impl.idea.openapi.vcs.changes.patch.ApplyPatchFromClipboardAction"/>
           <reference ref="ChangesView.Shelve"/>
         </group>
 
         <separator/>
-        <group id="Vcs.Checkout" class="com.intellij.openapi.vcs.checkout.CheckoutActionGroup" popup="true"/>
-        <group id="Vcs.Browse" class="com.intellij.ide.actions.NonEmptyActionGroup" popup="true"/>
+        <group id="Vcs.Checkout" class="consulo.ide.impl.idea.openapi.vcs.checkout.CheckoutActionGroup" popup="true"/>
+        <group id="Vcs.Browse" class="consulo.ide.impl.idea.ide.actions.NonEmptyActionGroup" popup="true"/>
         <separator/>
-        <group id="Vcs.Import" class="com.intellij.ide.actions.NonEmptyActionGroup"/>
+        <group id="Vcs.Import" class="consulo.ide.impl.idea.ide.actions.NonEmptyActionGroup"/>
       </group>
 
       <add-to-group group-id="MainMenu" anchor="after" relative-to-action="ToolsMenu"/>

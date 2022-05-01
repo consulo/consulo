@@ -118,7 +118,7 @@ public class AutomaticRenamingDialog extends DialogWrapper {
 
   @Override
   protected String getDimensionServiceKey() {
-    return "#com.intellij.refactoring.rename.AutomaticRenamingDialog";
+    return "#consulo.ide.impl.idea.refactoring.rename.AutomaticRenamingDialog";
   }
 
   @Override

@@ -74,8 +74,8 @@ public interface EditorEx extends Editor {
    *
    * @return the markup model instance.
    * @see MarkupEditorFilter
-   * @see com.intellij.openapi.editor.impl.DesktopEditorImpl#setHighlightingFilter(Condition<RangeHighlighter>)
-   * @see com.intellij.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
+   * @see consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl#setHighlightingFilter(Condition<RangeHighlighter>)
+   * @see consulo.ide.impl.idea.openapi.editor.impl.DocumentMarkupModel#forDocument(Document, Project, boolean)
    */
   @Nonnull
   MarkupModelEx getFilteredDocumentMarkupModel();
@@ -292,7 +292,7 @@ public interface EditorEx extends Editor {
 
   /**
    * Registers a function which will be applied to a line number to obtain additional text fragments. The fragments returned by the
-   * function will be drawn in the editor after end of the line (together with fragments returned by {@link com.intellij.openapi.editor.EditorLinePainter} extensions).
+   * function will be drawn in the editor after end of the line (together with fragments returned by {@link consulo.ide.impl.idea.openapi.editor.EditorLinePainter} extensions).
    */
   void registerLineExtensionPainter(IntFunction<Collection<LineExtensionInfo>> lineExtensionPainter);
 

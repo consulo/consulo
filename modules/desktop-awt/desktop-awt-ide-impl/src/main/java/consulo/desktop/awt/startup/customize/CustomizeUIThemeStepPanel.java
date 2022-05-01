@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.startup.customize;
 
-import com.intellij.ide.ui.LafManager;
+import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.application.CommonBundle;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;

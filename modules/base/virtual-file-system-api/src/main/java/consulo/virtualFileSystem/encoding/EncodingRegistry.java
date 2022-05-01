@@ -48,7 +48,7 @@ public abstract class EncodingRegistry {
   }
 
   /**
-   * @return encoding used by default in {@link com.intellij.execution.configurations.GeneralCommandLine}
+   * @return encoding used by default in {@link consulo.ide.impl.idea.execution.configurations.GeneralCommandLine}
    */
   @Nonnull
   public abstract Charset getDefaultConsoleEncoding();

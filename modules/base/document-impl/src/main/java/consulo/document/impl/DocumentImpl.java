@@ -366,7 +366,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     }
     int finalTargetOffsetPos = targetOffsetPos;
     // document must be unblocked by now. If not, some Save handler attempted to modify PSI
-    // which should have been caught by assertion in com.intellij.pom.core.impl.PomModelImpl.runTransaction
+    // which should have been caught by assertion in consulo.ide.impl.idea.pom.core.impl.PomModelImpl.runTransaction
     DocumentImpUtil.writeInRunUndoTransparentAction(new DocumentRunnable(this, project) {
       @Override
       public void run() {
@@ -865,7 +865,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
     CommandProcessor commandProcessor = CommandProcessor.getInstance();
     if (!commandProcessor.isUndoTransparentActionInProgress() && commandProcessor.getCurrentCommand() == null) {
       throw new UnsupportedOperationException(
-              "Must not change document outside command or undo-transparent action. See com.intellij.openapi.command.WriteCommandAction or com.intellij.openapi.command.CommandProcessor");
+              "Must not change document outside command or undo-transparent action. See consulo.ide.impl.idea.openapi.command.WriteCommandAction or consulo.ide.impl.idea.openapi.command.CommandProcessor");
     }
   }
 

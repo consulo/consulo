@@ -23,7 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.WritingAccessProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import com.intellij.util.BitUtil;
+import consulo.ide.impl.idea.util.BitUtil;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 

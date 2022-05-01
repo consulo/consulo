@@ -16,11 +16,11 @@
 
 package consulo.ide.impl.psi.impl.search;
 
-import com.intellij.openapi.progress.util.TooManyUsagesStatus;
-import com.intellij.openapi.util.Comparing;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
-import com.intellij.util.text.StringSearcher;
+import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.text.StringSearcher;
 import consulo.application.AccessRule;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;

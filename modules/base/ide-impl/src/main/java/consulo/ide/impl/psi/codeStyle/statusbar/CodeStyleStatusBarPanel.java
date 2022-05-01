@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.codeStyle.statusbar;
 
 import consulo.application.util.SystemInfo;
-import com.intellij.openapi.wm.impl.status.TextPanel;
+import consulo.ide.impl.idea.openapi.wm.impl.status.TextPanel;
 import consulo.ui.ex.awt.JBFont;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

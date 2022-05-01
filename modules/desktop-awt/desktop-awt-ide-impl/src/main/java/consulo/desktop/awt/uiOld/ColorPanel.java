@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.uiOld;
 
-import com.intellij.ui.ColorChooser;
+import consulo.ide.impl.idea.ui.ColorChooser;
 import consulo.ui.ex.awt.util.ColorUtil;
-import com.intellij.ui.RelativeFont;
+import consulo.ide.impl.idea.ui.RelativeFont;
 import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.JBInsets;
 import consulo.ui.ex.awt.JBUI;

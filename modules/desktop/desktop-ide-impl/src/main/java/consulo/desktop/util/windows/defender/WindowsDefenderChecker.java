@@ -1,22 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.util.windows.defender;
 
-import com.intellij.diagnostic.DiagnosticBundle;
+import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.ProcessOutput;
-import com.intellij.execution.util.ExecUtil;
-import com.intellij.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.execution.util.ExecUtil;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.project.ui.notification.Notification;
-import com.intellij.notification.NotificationAction;
+import consulo.ide.impl.idea.notification.NotificationAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.Application;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.impl.local.NativeFileWatcherImpl;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.impl.local.NativeFileWatcherImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;

@@ -76,7 +76,7 @@ public abstract class XDebugProcess {
 
   /**
    * Called when {@link XDebugSession} is initialized and breakpoints are registered in
-   * {@link com.intellij.xdebugger.breakpoints.XBreakpointHandler}
+   * {@link consulo.ide.impl.idea.xdebugger.breakpoints.XBreakpointHandler}
    */
   public void sessionInitialized() {
   }
@@ -164,8 +164,8 @@ public abstract class XDebugProcess {
   }
 
   /**
-   * Implement {@link com.intellij.xdebugger.stepping.XSmartStepIntoHandler} and return its instance from this method to enable Smart Step Into action
-   * @return {@link com.intellij.xdebugger.stepping.XSmartStepIntoHandler} instance
+   * Implement {@link consulo.ide.impl.idea.xdebugger.stepping.XSmartStepIntoHandler} and return its instance from this method to enable Smart Step Into action
+   * @return {@link consulo.ide.impl.idea.xdebugger.stepping.XSmartStepIntoHandler} instance
    */
   @Nullable
   public XSmartStepIntoHandler<?> getSmartStepIntoHandler() {

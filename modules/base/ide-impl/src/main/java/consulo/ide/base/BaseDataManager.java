@@ -15,11 +15,11 @@
  */
 package consulo.ide.base;
 
-import com.intellij.ide.impl.dataRules.*;
-import com.intellij.openapi.wm.ex.WindowManagerEx;
-import com.intellij.reference.SoftReference;
-import com.intellij.util.ObjectUtil;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.ide.impl.dataRules.*;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.util.ObjectUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Editor;

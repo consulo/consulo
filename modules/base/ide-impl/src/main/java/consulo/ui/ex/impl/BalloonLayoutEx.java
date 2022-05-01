@@ -17,7 +17,7 @@ package consulo.ui.ex.impl;
 
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.wm.BalloonLayout;
-import com.intellij.ui.BalloonLayoutData;
+import consulo.ide.impl.idea.ui.BalloonLayoutData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

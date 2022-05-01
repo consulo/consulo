@@ -24,7 +24,7 @@ import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import com.intellij.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 
 import java.util.LinkedHashSet;
