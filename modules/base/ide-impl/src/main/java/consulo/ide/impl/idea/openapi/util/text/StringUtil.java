@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util.text;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -36,8 +37,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//TeamCity inherits StringUtil: do not add private constructors!!!
 @SuppressWarnings({"UtilityClassWithoutPrivateConstructor", "MethodOverridesStaticMethodOfSuperclass"})
+@Deprecated
+@DeprecationInfo("Use consulo.util.lang.StringUtil")
 public class StringUtil extends StringUtilRt {
   private static final Logger LOG = Logger.getInstance(StringUtil.class);
 
