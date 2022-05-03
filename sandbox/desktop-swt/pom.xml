@@ -64,15 +64,7 @@
           </execution>
         </configuration>
       </plugin>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<configuration>
-				<source>16</source>
-				<target>16</target>
-			</configuration>
-		</plugin>
-	</plugins>
+    </plugins>
   </build>
 
   <dependencies>
@@ -223,7 +215,7 @@
       <version>${project.version}</version>
       <optional>true</optional>
     </dependency>
-    
+
     <!--optional dependency-->
     <dependency>
       <groupId>org.eclipse.platform</groupId>

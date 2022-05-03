@@ -24,19 +24,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>consulo-find-api</artifactId>
   <version>3-SNAPSHOT</version>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>16</source>
-					<target>16</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<packaging>jar</packaging>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>

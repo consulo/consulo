@@ -28,8 +28,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <compilerId>javi</compilerId>
-          <source>16</source>
-          <target>16</target>
+          <source>17</source>
+          <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
         </configuration>

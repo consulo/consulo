@@ -56,9 +56,7 @@
             <compilerArg>--add-exports=java.desktop/sun.awt.datatransfer=consulo.ide.impl</compilerArg>
             <compilerArg>--add-exports=java.desktop/java.awt.peer=consulo.ide.impl</compilerArg>
           </compilerArgs>
-			<source>16</source>
-			<target>16</target>
-		</configuration>
+        </configuration>
       </plugin>
     </plugins>
   </build>

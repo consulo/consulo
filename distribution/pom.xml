@@ -31,7 +31,7 @@
                 <descriptor>${project.basedir}/src/assembly/desktop-awt-win.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/desktop-awt-linux.xml</descriptor>
                 <descriptor>${project.basedir}/src/assembly/desktop-awt-mac-x86-64.xml</descriptor>
-                
+
                 <descriptor>${project.basedir}/src/assembly/web.xml</descriptor>
               </descriptors>
             </configuration>
@@ -42,15 +42,7 @@
           </execution>
         </executions>
       </plugin>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-compiler-plugin</artifactId>
-			<configuration>
-				<source>16</source>
-				<target>16</target>
-			</configuration>
-		</plugin>
-	</plugins>
+    </plugins>
   </build>
 
   <dependencies>
@@ -231,7 +223,7 @@
       <artifactId>javazoom.mp3</artifactId>
       <version>2-SNAPSHOT</version>
     </dependency>
-    
+
     <!--optional dependency-->
     <dependency>
       <groupId>net.java.dev.jna</groupId>

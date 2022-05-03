@@ -54,6 +54,8 @@
     <maven.compile.plugin>3.9.0</maven.compile.plugin>
     <maven.surefire.plugin>3.0.0-M6</maven.surefire.plugin>
     <maven.source.plugin>3.2.0</maven.source.plugin>
+
+    <java.level>17</java.level>
   </properties>
 
   <dependencyManagement>
@@ -603,8 +605,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compile.plugin}</version>
         <configuration>
-          <source>16</source>
-          <target>16</target>
+          <source>${java.level}</source>
+          <target>${java.level}</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
         </configuration>

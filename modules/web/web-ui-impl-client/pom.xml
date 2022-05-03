@@ -40,8 +40,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven.compile.plugin}</version>
         <configuration>
-          <source>16</source>
-          <target>16</target>
+          <source>${java.level}</source>
+          <target>${java.level}</target>
           <skip>true</skip>
           <skipMain>true</skipMain>
         </configuration>
