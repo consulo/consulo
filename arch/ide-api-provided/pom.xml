@@ -26,7 +26,7 @@
     <relativePath>../managment/pom.xml</relativePath>
   </parent>
 
-  <artifactId>arch.ide-provided</artifactId>
+  <artifactId>arch.ide-api-provided</artifactId>
   <version>3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -52,12 +52,6 @@
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
       <artifactId>consulo-virtual-file-system-api</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.parent.groupId}</groupId>
-      <artifactId>consulo-virtual-file-system-impl</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
@@ -160,18 +154,6 @@
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
       <artifactId>consulo-file-template-api</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.parent.groupId}</groupId>
-      <artifactId>consulo-language-editor-impl</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.parent.groupId}</groupId>
-      <artifactId>consulo-language-impl</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>

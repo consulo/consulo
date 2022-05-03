@@ -30,6 +30,8 @@
   <version>3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <!--obsolete module - use arch.managment-->
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
