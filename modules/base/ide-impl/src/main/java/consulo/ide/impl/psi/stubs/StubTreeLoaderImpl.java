@@ -15,25 +15,28 @@
  */
 package consulo.ide.impl.psi.stubs;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.RecursionManager;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.project.NoAccessDuringPsiEvents;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl;
 import consulo.ide.impl.idea.util.indexing.SingleEntryFileBasedIndexExtension;
-import consulo.application.ApplicationManager;
-import consulo.application.util.RecursionManager;
-import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.file.FileViewProvider;
+import consulo.language.impl.DebugUtil;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
-import consulo.language.impl.internal.psi.stub.IndexingStampInfo;
-import consulo.language.impl.internal.psi.stub.StubTreeLoader;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.psi.*;
+import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
+import consulo.logging.attachment.Attachment;
+import consulo.logging.attachment.AttachmentFactory;
+import consulo.logging.attachment.RuntimeExceptionWithAttachments;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
@@ -45,6 +48,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +57,18 @@ import java.util.Map;
  */
 @Singleton
 public class StubTreeLoaderImpl extends StubTreeLoader {
+  public static class UpToDateStubIndexMismatch extends RuntimeExceptionWithAttachments {
+    public UpToDateStubIndexMismatch(String message, Throwable cause, Attachment... attachments) {
+      super(message, cause, attachments);
+    }
+  }
+
+  public static class ManyProjectsStubIndexMismatch extends RuntimeExceptionWithAttachments {
+    public ManyProjectsStubIndexMismatch(String message, Throwable cause, Attachment... attachments) {
+      super(message, cause, attachments);
+    }
+  }
+
   private static final Logger LOG = Logger.getInstance(StubTreeLoaderImpl.class);
   private static volatile boolean ourStubReloadingProhibited;
 
@@ -277,4 +293,108 @@ public class StubTreeLoaderImpl extends StubTreeLoader {
   //  }
   //  return canBePrebuilt;
   //}
+
+  @RequiredReadAction
+  @Nonnull
+  public RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, @Nullable Throwable cause) {
+    VirtualFile file = psiFile.getViewProvider().getVirtualFile();
+    StubTree stubTreeFromIndex = (StubTree)readFromVFile(psiFile.getProject(), file);
+    boolean compiled = psiFile instanceof PsiCompiledElement;
+    Document document = compiled ? null : FileDocumentManager.getInstance().getDocument(file);
+    IndexingStampInfo indexingStampInfo = getIndexingStampInfo(file);
+    boolean upToDate = indexingStampInfo != null && indexingStampInfo.isUpToDate(document, file, psiFile);
+
+    boolean canBePrebuilt = isPrebuilt(psiFile.getVirtualFile());
+
+    String msg = "PSI and index do not match.\nPlease report the problem to JetBrains with the files attached\n";
+
+    if (canBePrebuilt) {
+      msg += "This stub can have pre-built origin\n";
+    }
+
+    if (upToDate) {
+      msg += "INDEXED VERSION IS THE CURRENT ONE";
+    }
+
+    msg += " file=" + psiFile;
+    msg += ", file.class=" + psiFile.getClass();
+    msg += ", file.lang=" + psiFile.getLanguage();
+    msg += ", modStamp=" + psiFile.getModificationStamp();
+
+    if (!compiled) {
+      String text = psiFile.getText();
+      PsiFile fromText = PsiFileFactory.getInstance(psiFile.getProject()).createFileFromText(psiFile.getName(), psiFile.getFileType(), text);
+      if (fromText.getLanguage().equals(psiFile.getLanguage())) {
+        boolean consistent = DebugUtil.psiToString(psiFile, true).equals(DebugUtil.psiToString(fromText, true));
+        if (consistent) {
+          msg += "\n tree consistent";
+        }
+        else {
+          msg += "\n AST INCONSISTENT, perhaps after incremental reparse; " + fromText;
+        }
+      }
+    }
+
+    if (stubTree != null) {
+      msg += "\n stub debugInfo=" + stubTree.getDebugInfo();
+    }
+
+    msg += "\nlatestIndexedStub=" + stubTreeFromIndex;
+    if (stubTreeFromIndex != null) {
+      if (stubTree != null) {
+        msg += "\n   same size=" + (stubTree.getPlainList().size() == stubTreeFromIndex.getPlainList().size());
+      }
+      msg += "\n   debugInfo=" + stubTreeFromIndex.getDebugInfo();
+    }
+
+    FileViewProvider viewProvider = psiFile.getViewProvider();
+    msg += "\n viewProvider=" + viewProvider;
+    msg += "\n viewProvider stamp: " + viewProvider.getModificationStamp();
+
+    msg += "; file stamp: " + file.getModificationStamp();
+    msg += "; file modCount: " + file.getModificationCount();
+    msg += "; file length: " + file.getLength();
+
+    if (document != null) {
+      msg += "\n doc saved: " + !FileDocumentManager.getInstance().isDocumentUnsaved(document);
+      msg += "; doc stamp: " + document.getModificationStamp();
+      msg += "; doc size: " + document.getTextLength();
+      msg += "; committed: " + PsiDocumentManager.getInstance(psiFile.getProject()).isCommitted(document);
+    }
+
+    msg += "\nindexing info: " + indexingStampInfo;
+
+    Attachment[] attachments = createAttachments(stubTree, psiFile, file, stubTreeFromIndex);
+
+    // separate methods and separate exception classes for EA to treat these situations differently
+    return hasPsiInManyProjects(file)
+           ? handleManyProjectsMismatch(msg, attachments, cause)
+           : upToDate ? handleUpToDateMismatch(msg, attachments, cause) : new RuntimeExceptionWithAttachments(msg, cause, attachments);
+  }
+
+  protected boolean isPrebuilt(@Nonnull VirtualFile virtualFile) {
+    return false;
+  }
+
+  private static RuntimeExceptionWithAttachments handleManyProjectsMismatch(@Nonnull String message, Attachment[] attachments, @Nullable Throwable cause) {
+    return new ManyProjectsStubIndexMismatch(message, cause, attachments);
+  }
+
+  private static RuntimeExceptionWithAttachments handleUpToDateMismatch(@Nonnull String message, Attachment[] attachments, @Nullable Throwable cause) {
+    return new UpToDateStubIndexMismatch(message, cause, attachments);
+  }
+
+  @Nonnull
+  private static Attachment[] createAttachments(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, VirtualFile file, @Nullable StubTree stubTreeFromIndex) {
+    List<Attachment> attachments = new ArrayList<>();
+    attachments.add(AttachmentFactory.get().create(file.getPath() + "_file.txt", psiFile instanceof PsiCompiledElement ? "compiled" : psiFile.getText()));
+    if (stubTree != null) {
+      attachments.add(AttachmentFactory.get().create("stubTree.txt", ((PsiFileStubImpl)stubTree.getRoot()).printTree()));
+    }
+    if (stubTreeFromIndex != null) {
+      attachments.add(AttachmentFactory.get().create("stubTreeFromIndex.txt", ((PsiFileStubImpl)stubTreeFromIndex.getRoot()).printTree()));
+    }
+    return attachments.toArray(Attachment.EMPTY_ARRAY);
+  }
+
 }

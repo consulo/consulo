@@ -40,7 +40,7 @@ import consulo.language.pom.PomModelAspect;
 import consulo.language.pom.PomTransaction;
 import consulo.language.pom.event.PomModelEvent;
 import consulo.language.pom.event.PomModelListener;
-import consulo.language.impl.internal.pom.PomTransactionBase;
+import consulo.language.pom.PomTransactionBase;
 import consulo.language.pom.TreeAspect;
 import consulo.language.pom.TreeAspectEvent;
 import consulo.language.codeStyle.CodeStyleManager;

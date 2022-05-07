@@ -11,7 +11,7 @@ import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
-import consulo.language.impl.internal.pom.PomTransactionBase;
+import consulo.language.pom.PomTransactionBase;
 import consulo.language.impl.internal.pom.TreeChangeEventImpl;
 import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.psi.PsiFileImpl;

@@ -7,7 +7,7 @@ import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.*;
-import consulo.language.impl.internal.ast.SharedImplUtil;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.psi.template.TemplateDataElementType.OuterLanguageRangePatcher;
 import consulo.language.util.CharTable;
 import consulo.logging.Logger;

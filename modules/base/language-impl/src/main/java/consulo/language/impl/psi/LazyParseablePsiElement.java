@@ -29,7 +29,7 @@ import consulo.language.impl.ast.ChangeUtil;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.LazyParseableElement;
 import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.internal.ast.SharedImplUtil;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.internal.psi.SharedPsiElementImplUtil;
 import consulo.language.psi.*;
 import consulo.language.psi.resolve.PsiScopeProcessor;

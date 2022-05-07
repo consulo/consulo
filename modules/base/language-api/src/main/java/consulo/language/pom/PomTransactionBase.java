@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.pom;
+package consulo.language.pom;
 
-import consulo.language.pom.PomManager;
-import consulo.language.pom.PomModelAspect;
-import consulo.language.pom.PomTransaction;
 import consulo.language.pom.event.PomModelEvent;
 import consulo.language.psi.PsiElement;
 import consulo.language.util.IncorrectOperationException;
+
 import javax.annotation.Nullable;
 
 public abstract class PomTransactionBase implements PomTransaction{

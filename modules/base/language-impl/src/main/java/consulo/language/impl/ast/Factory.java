@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.language.impl.internal.ast;
+package consulo.language.impl.ast;
 
 import consulo.language.ast.IElementType;
-import consulo.language.impl.ast.ASTFactory;
-import consulo.language.impl.ast.CompositeElement;
-import consulo.language.impl.ast.FileElement;
-import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.psi.CodeEditUtil;
 import consulo.language.impl.psi.DummyHolder;
 import consulo.language.impl.psi.DummyHolderFactory;

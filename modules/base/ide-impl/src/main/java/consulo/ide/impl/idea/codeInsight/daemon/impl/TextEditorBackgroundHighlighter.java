@@ -26,7 +26,7 @@ import consulo.project.Project;
 import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.internal.PsiFileEx;
+import consulo.language.psi.PsiFileEx;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.logging.Logger;
 

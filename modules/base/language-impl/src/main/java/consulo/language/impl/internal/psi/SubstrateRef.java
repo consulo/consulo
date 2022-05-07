@@ -24,7 +24,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.StubBasedPsiElement;
-import consulo.language.impl.internal.ast.SharedImplUtil;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.psi.stub.PsiFileStub;
 import consulo.language.psi.stub.PsiFileStubImpl;
 import consulo.language.psi.stub.Stub;

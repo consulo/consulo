@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package consulo.language.internal;
+package consulo.language.psi;
 
-import consulo.language.psi.PsiFile;
 import consulo.util.dataholder.Key;
 
 public interface PsiFileEx extends PsiFile {

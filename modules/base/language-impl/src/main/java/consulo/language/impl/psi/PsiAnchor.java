@@ -1,6 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 
-package consulo.language.impl.internal.psi;
+package consulo.language.impl.psi;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
@@ -11,7 +11,7 @@ import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
-import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.internal.psi.WrappedElementAnchor;
 import consulo.language.impl.internal.psi.pointer.Identikit;
 import consulo.language.impl.internal.psi.pointer.SelfElementInfo;
 import consulo.language.psi.*;
@@ -109,7 +109,7 @@ public abstract class PsiAnchor {
 
   @Nonnull
   private static PsiAnchor wrapperOrHardReference(@Nonnull PsiElement element) {
-    for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensions()) {
+    for (SmartPointerAnchorProvider provider : SmartPointerAnchorProvider.EP_NAME.getExtensionList()) {
       PsiElement anchorElement = provider.getAnchor(element);
       if (anchorElement != null && anchorElement != element) {
         PsiAnchor wrappedAnchor = create(anchorElement);

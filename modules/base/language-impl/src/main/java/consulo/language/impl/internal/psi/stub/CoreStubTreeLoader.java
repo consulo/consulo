@@ -22,11 +22,13 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiFile;
+import consulo.language.psi.internal.PsiFileWithStubSupport;
 import consulo.language.psi.stub.*;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
@@ -82,4 +84,10 @@ public class CoreStubTreeLoader extends StubTreeLoader {
     return false;
   }
 
+  @RequiredReadAction
+  @Nonnull
+  @Override
+  public RuntimeException stubTreeAndIndexDoNotMatch(@Nullable ObjectStubTree stubTree, @Nonnull PsiFileWithStubSupport psiFile, @Nullable Throwable cause) {
+    return new RuntimeException();
+  }
 }

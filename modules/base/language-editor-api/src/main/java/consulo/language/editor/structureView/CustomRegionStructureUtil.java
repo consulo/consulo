@@ -11,7 +11,7 @@ import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.internal.LanguageFolding;
-import consulo.language.internal.PsiFileEx;
+import consulo.language.psi.PsiFileEx;
 import consulo.language.psi.*;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.SmartList;

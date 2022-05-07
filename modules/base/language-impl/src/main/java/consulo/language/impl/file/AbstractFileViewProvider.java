@@ -17,7 +17,7 @@ import consulo.language.impl.internal.file.FileManagerImpl;
 import consulo.language.impl.internal.psi.*;
 import consulo.language.impl.plain.PsiPlainTextFileImpl;
 import consulo.language.impl.psi.*;
-import consulo.language.internal.PsiFileEx;
+import consulo.language.psi.PsiFileEx;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.*;

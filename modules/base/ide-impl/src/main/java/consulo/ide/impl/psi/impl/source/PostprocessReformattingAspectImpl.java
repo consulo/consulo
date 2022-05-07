@@ -29,7 +29,7 @@ import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.internal.ast.SharedImplUtil;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.internal.file.FileManager;
 import consulo.language.impl.internal.pom.ChangeInfoImpl;

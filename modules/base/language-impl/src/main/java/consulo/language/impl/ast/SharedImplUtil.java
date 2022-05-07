@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.language.impl.internal.ast;
+package consulo.language.impl.ast;
 
 import consulo.application.ApplicationManager;
 import consulo.language.ast.ASTNode;
@@ -22,10 +22,6 @@ import consulo.language.ast.FileASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenType;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.ast.ChangeUtil;
-import consulo.language.impl.ast.CompositeElement;
-import consulo.language.impl.ast.FileElement;
-import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.psi.CheckUtil;
 import consulo.language.impl.psi.CodeEditUtil;
 import consulo.language.impl.psi.SourceTreeToPsiMap;

@@ -16,7 +16,7 @@ import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.TreeUtil;
 import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.language.impl.internal.ast.SharedImplUtil;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.LanguageParserDefinitions;

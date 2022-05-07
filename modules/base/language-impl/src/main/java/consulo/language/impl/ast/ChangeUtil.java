@@ -20,7 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.TreeCopyHandler;
 import consulo.language.ast.TreeGenerator;
 import consulo.language.impl.DebugUtil;
-import consulo.language.impl.internal.pom.PomTransactionBase;
+import consulo.language.pom.PomTransactionBase;
 import consulo.language.impl.internal.pom.TreeChangeEventImpl;
 import consulo.language.impl.psi.CodeEditUtil;
 import consulo.language.impl.psi.DummyHolder;

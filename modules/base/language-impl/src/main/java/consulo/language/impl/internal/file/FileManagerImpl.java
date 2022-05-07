@@ -21,7 +21,7 @@ import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
 import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.impl.psi.PsiDirectoryImpl;
-import consulo.language.internal.PsiFileEx;
+import consulo.language.psi.PsiFileEx;
 import consulo.language.impl.internal.psi.PsiModificationTrackerImpl;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;

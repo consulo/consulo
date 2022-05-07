@@ -8,6 +8,7 @@ module consulo.util.lang {
   exports consulo.util.lang.function;
   exports consulo.util.lang.lazy;
   exports consulo.util.lang.ref;
+  exports consulo.util.lang.text;
   exports consulo.util.lang.reflect;
   exports consulo.util.lang.reflect.unsafe;
 }

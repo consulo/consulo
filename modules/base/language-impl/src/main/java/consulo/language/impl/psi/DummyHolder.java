@@ -24,7 +24,7 @@ import consulo.language.file.LanguageFileType;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.internal.ast.IdentityCharTable;
-import consulo.language.impl.internal.ast.SharedImplUtil;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.PsiElement;

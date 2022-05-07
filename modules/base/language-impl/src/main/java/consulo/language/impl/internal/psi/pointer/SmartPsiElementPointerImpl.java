@@ -24,7 +24,7 @@ import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.file.FreeThreadedFileViewProvider;
-import consulo.language.impl.internal.psi.PsiAnchor;
+import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
 import consulo.language.impl.internal.psi.PsiManagerEx;

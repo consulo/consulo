@@ -20,7 +20,7 @@ import consulo.language.psi.PsiNavigationSupport;
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.language.impl.ast.LeafElement;
-import consulo.language.impl.internal.ast.SharedImplUtil;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.ast.TreeElement;
 import consulo.navigation.ItemPresentation;
 import consulo.navigation.NavigationItem;

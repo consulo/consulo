@@ -20,7 +20,7 @@ import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
-import consulo.language.internal.PsiFileEx;
+import consulo.language.psi.PsiFileEx;
 import consulo.language.impl.psi.PsiFileImpl;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.*;

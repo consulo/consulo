@@ -1810,7 +1810,7 @@
     <applicationService serviceInterface="consulo.language.impl.internal.psi.DocumentCommitProcessor"
                         serviceImplementation="consulo.ide.impl.psi.impl.DocumentCommitThread"/>
 
-    <applicationService serviceInterface="consulo.language.impl.internal.psi.stub.StubTreeLoader"
+    <applicationService serviceInterface="consulo.language.psi.stub.StubTreeLoader"
                         serviceImplementation="consulo.ide.impl.psi.stubs.StubTreeLoaderImpl"/>
 
     <applicationService serviceInterface="consulo.language.psi.PsiNavigationSupport"

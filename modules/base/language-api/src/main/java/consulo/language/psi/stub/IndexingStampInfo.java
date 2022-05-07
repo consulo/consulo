@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.impl.internal.psi.stub;
+package consulo.language.psi.stub;
 
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;

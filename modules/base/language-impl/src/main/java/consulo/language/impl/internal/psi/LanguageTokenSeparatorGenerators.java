@@ -21,7 +21,7 @@ import consulo.language.LanguageExtension;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.TokenSeparatorGenerator;
 import consulo.language.ast.TokenType;
-import consulo.language.impl.internal.ast.Factory;
+import consulo.language.impl.ast.Factory;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
 import consulo.language.psi.PsiManager;

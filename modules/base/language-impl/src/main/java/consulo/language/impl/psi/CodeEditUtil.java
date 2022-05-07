@@ -22,7 +22,7 @@ import consulo.language.ast.TokenType;
 import consulo.language.impl.ast.ASTFactory;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
-import consulo.language.impl.internal.ast.Factory;
+import consulo.language.impl.ast.Factory;
 import consulo.language.impl.internal.psi.IndentHelper;
 import consulo.language.impl.internal.psi.LanguageTokenSeparatorGenerators;
 import consulo.language.impl.ast.TreeUtil;

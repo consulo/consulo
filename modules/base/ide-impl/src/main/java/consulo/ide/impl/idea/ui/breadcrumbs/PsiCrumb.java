@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.ui.breadcrumbs;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.document.util.TextRange;
-import consulo.language.impl.internal.psi.PsiAnchor;
+import consulo.language.impl.psi.PsiAnchor;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
 import org.jetbrains.annotations.Contract;
