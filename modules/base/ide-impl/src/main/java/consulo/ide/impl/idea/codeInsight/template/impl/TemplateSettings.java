@@ -604,8 +604,14 @@ public class TemplateSettings implements PersistentStateComponent<TemplateSettin
       if (classLoader == null) {
         classLoader = getClass().getClassLoader();
       }
-      ResourceBundle bundle = AbstractBundle.getResourceBundle(resourceBundle, classLoader);
-      description = bundle.getString(key);
+      ResourceBundle bundle;
+      try {
+        bundle = AbstractBundle.getResourceBundle(resourceBundle, classLoader);
+        description = bundle.getString(key);
+      }
+      catch (MissingResourceException e) {
+        description = resourceBundle + "@" + key;
+      }
     }
     else {
       description = element.getAttributeValue(DESCRIPTION);
