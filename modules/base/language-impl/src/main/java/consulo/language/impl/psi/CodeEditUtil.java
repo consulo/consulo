@@ -23,6 +23,7 @@ import consulo.language.impl.ast.ASTFactory;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.Factory;
+import consulo.language.impl.internal.psi.GeneratedMarkerVisitor;
 import consulo.language.impl.internal.psi.IndentHelper;
 import consulo.language.impl.internal.psi.LanguageTokenSeparatorGenerators;
 import consulo.language.impl.ast.TreeUtil;
@@ -343,6 +344,10 @@ public class CodeEditUtil {
   public static void setNodeGenerated(final ASTNode next, final boolean value) {
     if (next == null) return;
     next.putCopyableUserData(GENERATED_FLAG, value ? true : null);
+  }
+
+  public static void markGenerated(ASTNode node) {
+    ((TreeElement)node).acceptTree(new GeneratedMarkerVisitor());
   }
 
   public static void setNodeGeneratedRecursively(final ASTNode next, final boolean value) {

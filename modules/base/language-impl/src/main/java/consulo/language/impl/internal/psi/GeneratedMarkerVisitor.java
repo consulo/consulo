@@ -16,18 +16,13 @@
 
 package consulo.language.impl.internal.psi;
 
-import consulo.language.psi.PsiElement;
-import consulo.language.impl.psi.CodeEditUtil;
 import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.psi.CodeEditUtil;
 
 public class GeneratedMarkerVisitor extends RecursiveTreeElementWalkingVisitor {
   @Override
   protected void visitNode(TreeElement element) {
     CodeEditUtil.setNodeGenerated(element, true);
     super.visitNode(element);
-  }
-
-  public static void markGenerated(final PsiElement element) {
-    ((TreeElement)element.getNode()).acceptTree(new GeneratedMarkerVisitor());
   }
 }

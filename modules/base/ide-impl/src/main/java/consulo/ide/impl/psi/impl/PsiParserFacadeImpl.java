@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.LanguageCommenters;
@@ -25,14 +26,13 @@ import consulo.language.impl.ast.ASTFactory;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.TreeElement;
+import consulo.language.impl.psi.CodeEditUtil;
 import consulo.language.impl.psi.DummyHolderFactory;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
-import consulo.language.impl.internal.psi.GeneratedMarkerVisitor;
 import consulo.language.psi.*;
 import consulo.language.util.IncorrectOperationException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
@@ -50,11 +50,11 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
 
   @Override
   @Nonnull
-  public PsiElement createWhiteSpaceFromText(@Nonnull @NonNls String text) throws IncorrectOperationException {
+  public PsiElement createWhiteSpaceFromText(@Nonnull String text) throws IncorrectOperationException {
     final FileElement holderElement = DummyHolderFactory.createHolder(myManager, null).getTreeElement();
     final LeafElement newElement = ASTFactory.leaf(TokenType.WHITE_SPACE, holderElement.getCharTable().intern(text));
     holderElement.rawAddChildren(newElement);
-    GeneratedMarkerVisitor.markGenerated(newElement.getPsi());
+    CodeEditUtil.markGenerated(newElement);
     return newElement.getPsi();
   }
 
@@ -80,8 +80,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
     final String blockCommentPrefix = commenter.getBlockCommentPrefix();
     final String blockCommentSuffix = commenter.getBlockCommentSuffix();
 
-    PsiFile aFile =
-            PsiFileFactory.getInstance(myManager.getProject()).createFileFromText("_Dummy_", language, (blockCommentPrefix + text + blockCommentSuffix));
+    PsiFile aFile = PsiFileFactory.getInstance(myManager.getProject()).createFileFromText("_Dummy_", language, (blockCommentPrefix + text + blockCommentSuffix));
     return findPsiCommentChild(aFile);
   }
 
@@ -95,11 +94,11 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
     final String blockCommentSuffix = commenter.getBlockCommentSuffix();
     assert prefix != null || (blockCommentPrefix != null && blockCommentSuffix != null);
 
-    PsiFile aFile = PsiFileFactory.getInstance(myManager.getProject())
-            .createFileFromText("_Dummy_", lang, prefix != null ? (prefix + text) : (blockCommentPrefix + text + blockCommentSuffix));
+    PsiFile aFile = PsiFileFactory.getInstance(myManager.getProject()).createFileFromText("_Dummy_", lang, prefix != null ? (prefix + text) : (blockCommentPrefix + text + blockCommentSuffix));
     return findPsiCommentChild(aFile);
   }
 
+  @RequiredReadAction
   private PsiComment findPsiCommentChild(PsiFile aFile) {
     PsiElement[] children = aFile.getChildren();
     for (PsiElement aChildren : children) {
@@ -114,7 +113,7 @@ public class PsiParserFacadeImpl implements PsiParserFacade {
 
   protected PsiFile createDummyFile(String text, final LanguageFileType fileType) {
     String ext = fileType.getDefaultExtension();
-    @NonNls String fileName = "_Dummy_." + ext;
+    String fileName = "_Dummy_." + ext;
 
     return PsiFileFactory.getInstance(myManager.getProject()).createFileFromText(fileType, fileName, text, 0, text.length());
   }
