@@ -6,7 +6,7 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.*;
 import consulo.ide.impl.idea.ide.ui.PopupLocationTracker;
 import consulo.ide.impl.idea.ide.ui.ScreenAreaConsumer;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.PositionTracker;

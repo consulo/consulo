@@ -17,7 +17,7 @@ package consulo.desktop.awt.wm.impl;
 
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
 import consulo.disposer.Disposable;

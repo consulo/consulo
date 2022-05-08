@@ -1,13 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ui.ex.awt.internal;
+package consulo.ui.ex.awt;
 
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.CustomShortcutSet;
-import consulo.ui.ex.awt.ComponentTreeWatcher;
-import consulo.ui.ex.awt.JBOptionButton;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.internal.MnemonicWrapper;
 import consulo.ui.ex.awt.util.DialogUtil;
 import consulo.ui.ex.internal.ActionButtonComponent;
 import consulo.util.collection.ArrayUtil;

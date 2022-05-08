@@ -53,7 +53,7 @@ import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.AppIconUtil;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.internal.MouseGestureManager;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awt.util.ScreenUtil;

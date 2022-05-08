@@ -67,7 +67,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

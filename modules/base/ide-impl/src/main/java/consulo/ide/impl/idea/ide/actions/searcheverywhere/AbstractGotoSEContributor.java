@@ -11,7 +11,7 @@ import consulo.ui.ex.awt.scopeChooser.ScopeChooserCombo;
 import consulo.content.scope.ScopeDescriptor;
 import consulo.language.editor.CommonDataKeys;
 import consulo.navigation.NavigationItem;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButtonWithText;

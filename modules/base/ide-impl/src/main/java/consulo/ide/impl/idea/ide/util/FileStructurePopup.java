@@ -17,7 +17,7 @@ import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.SmartTreeStructure;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeElementWrapper;
 import consulo.ide.impl.idea.ide.util.treeView.smartTree.TreeStructureUtil;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;

@@ -11,7 +11,7 @@ import consulo.project.Project;
 import consulo.ui.TextBoxWithExtensions;
 import consulo.ui.border.BorderStyle;
 import consulo.ui.ex.awt.*;
-import consulo.ui.ex.awt.internal.MnemonicHelper;
+import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.popup.JBPopup;
 
