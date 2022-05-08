@@ -91,6 +91,11 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   @Override
+  public boolean isUnderSynchronization(@Nonnull Document document) {
+    return getSynchronizer().isInSynchronization(document);
+  }
+
+  @Override
   @Nullable
   public PsiFile getPsiFile(@Nonnull Document document) {
     if (document instanceof DocumentWindow && !((DocumentWindow)document).isValid()) {
@@ -117,14 +122,6 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   private static PsiFile ensureValidFile(@Nonnull PsiFile psiFile, @Nonnull String debugInfo) {
     if (!psiFile.isValid()) throw new PsiInvalidElementAccessException(psiFile, debugInfo);
     return psiFile;
-  }
-
-  @Deprecated
-  //@ApiStatus.ScheduledForRemoval(inVersion = "2017")
-  // todo remove when plugins come to their senses and stopped using it
-  // todo to be removed in idea 17
-  public static void cachePsi(@Nonnull Document document, @Nullable PsiFile file) {
-    DeprecatedMethodException.report("Unsupported method");
   }
 
   public void associatePsi(@Nonnull Document document, @Nullable PsiFile file) {

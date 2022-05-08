@@ -272,5 +272,10 @@ public abstract class PsiDocumentManager {
    */
   public abstract void performLaterWhenAllCommitted(@Nonnull Runnable runnable, ModalityState modalityState);
 
-
+  /**
+   * Return true if document under synchronization
+   */
+  public boolean isUnderSynchronization(@Nonnull Document document) {
+    return false;
+  }
 }
