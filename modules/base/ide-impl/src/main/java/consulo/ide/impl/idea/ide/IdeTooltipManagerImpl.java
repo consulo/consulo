@@ -1,11 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide;
 
-import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.AppUIUtil;
-import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.application.Application;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.registry.RegistryValue;
@@ -14,6 +9,11 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.keymap.impl.IdeMouseEventDispatcher;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.ide.impl.idea.ui.BalloonImpl;
 import consulo.language.editor.ui.awt.HintUtil;
 import consulo.ui.color.ColorValue;
 import consulo.ui.ex.Html;
@@ -33,7 +33,6 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.dataholder.Key;
-import consulo.util.lang.ref.Ref;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.Contract;
@@ -640,18 +639,19 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
   }
 
   public static JEditorPane initPane(@NonNls Html html, final HintHint hintHint, @Nullable final JLayeredPane layeredPane, boolean limitWidthToScreen) {
-    final Ref<Dimension> prefSize = new Ref<>(null);
-    @NonNls String text = HintUtil.prepareHintText(html, hintHint);
+    String text = HintUtil.prepareHintText(html, hintHint);
 
     final boolean[] prefSizeWasComputed = {false};
     final JEditorPane pane = limitWidthToScreen ? new JEditorPane() {
+      private Dimension prefSize = null;
+
       @Override
       public Dimension getPreferredSize() {
         if (!prefSizeWasComputed[0] && hintHint.isAwtTooltip()) {
           JLayeredPane lp = layeredPane;
           if (lp == null) {
             JRootPane rootPane = UIUtil.getRootPane(this);
-            if (rootPane != null) {
+            if (rootPane != null && rootPane.getSize().width > 0) {
               lp = rootPane.getLayeredPane();
             }
           }
@@ -671,14 +671,14 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
             setSize(new Dimension(fitWidth, Integer.MAX_VALUE));
             Dimension fixedWidthSize = super.getPreferredSize();
             Dimension minSize = super.getMinimumSize();
-            prefSize.set(new Dimension(Math.max(fitWidth, minSize.width), fixedWidthSize.height));
+            prefSize = new Dimension(Math.max(fitWidth, minSize.width), fixedWidthSize.height);
           }
           else {
-            prefSize.set(new Dimension(prefSizeOriginal));
+            prefSize = new Dimension(prefSizeOriginal);
           }
         }
 
-        Dimension s = prefSize.get() != null ? new Dimension(prefSize.get()) : super.getPreferredSize();
+        Dimension s = prefSize != null ? new Dimension(prefSize) : super.getPreferredSize();
         Border b = getBorder();
         if (b != null) {
           JBInsets.addTo(s, b.getBorderInsets(this));
@@ -689,7 +689,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
       @Override
       public void setPreferredSize(Dimension preferredSize) {
         super.setPreferredSize(preferredSize);
-        prefSize.set(preferredSize);
+        prefSize = preferredSize;
       }
     } : new JEditorPane();
 
@@ -732,7 +732,6 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
     }
     pane.setEditorKit(kit);
     pane.setText(text);
-
     pane.setCaretPosition(0);
     pane.setEditable(false);
 
