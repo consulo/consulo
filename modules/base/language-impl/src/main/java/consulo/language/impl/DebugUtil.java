@@ -18,12 +18,11 @@ package consulo.language.impl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.language.impl.ast.SharedImplUtil;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.document.Document;
 import consulo.language.ast.*;
 import consulo.language.file.FileViewProvider;
 import consulo.language.impl.ast.CompositeElement;
+import consulo.language.impl.ast.SharedImplUtil;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.internal.parser.PsiBuilderImpl;
 import consulo.language.impl.psi.SourceTreeToPsiMap;
@@ -39,6 +38,7 @@ import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ExceptionUtil;
 import consulo.util.lang.StringUtil;
 import consulo.util.lang.TimeoutUtil;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
@@ -193,12 +193,7 @@ public class DebugUtil {
         }
       }
       if (psiElement != null && extra != null) {
-        extra.accept(psiElement, new Consumer<PsiElement>() {
-          @Override
-          public void accept(PsiElement element) {
-            treeToBuffer(buffer, element.getNode(), indent + 2, skipWhiteSpaces, showChildrenRanges, showChildrenRanges, usePsi, null);
-          }
-        });
+        extra.accept(psiElement, it -> treeToBuffer(buffer, it.getNode(), indent + 2, skipWhiteSpaces, showChildrenRanges, showChildrenRanges, usePsi, null));
       }
     }
     catch (IOException e) {
@@ -227,7 +222,7 @@ public class DebugUtil {
     StringUtil.repeatSymbol(buffer, ' ', indent);
     try {
       if (tokenType == TokenType.ERROR_ELEMENT) {
-        buffer.append("PsiErrorElement:").append(PsiBuilderImpl.getErrorMessage(node).get());
+        buffer.append("PsiErrorElement:").append(PsiBuilderImpl.getErrorMessageImpl(node).get());
       }
       else if (tokenType == TokenType.WHITE_SPACE) {
         buffer.append("PsiWhiteSpace");

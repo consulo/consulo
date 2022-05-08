@@ -342,4 +342,12 @@ public interface PsiBuilder extends UserDataHolder {
    */
   @Nullable
   LighterASTNode getLatestDoneMarker();
+
+  /**
+   * Return localize value for node, if node is error. If it's not error empty value {@link LocalizeValue#empty()}
+   */
+  @Nonnull
+  LocalizeValue getErrorMessage(@Nonnull LighterASTNode node);
+
+  void setReparseMergeCustomComparator(@Nonnull ReparseMergeCustomComparator comparator);
 }
