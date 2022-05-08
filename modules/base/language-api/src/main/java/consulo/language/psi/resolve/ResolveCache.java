@@ -15,7 +15,6 @@
  */
 package consulo.language.psi.resolve;
 
-import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.*;
 import consulo.project.Project;
@@ -60,7 +59,7 @@ public interface ResolveCache {
 
   public static ResolveCache getInstance(Project project) {
     ProgressIndicatorProvider.checkCanceled(); // We hope this method is being called often enough to cancel daemon processes smoothly
-    return ApplicationManager.getApplication().getInstance(ResolveCache.class);
+    return project.getInstance(ResolveCache.class);
   }
 
   @Nonnull
