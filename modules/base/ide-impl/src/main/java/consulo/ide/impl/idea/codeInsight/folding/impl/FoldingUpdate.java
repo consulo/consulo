@@ -6,7 +6,7 @@ import consulo.language.util.AttachmentFactoryUtil;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
-import consulo.language.editor.internal.LanguageFolding;
+import consulo.language.editor.folding.LanguageFolding;
 import consulo.language.inject.InjectedLanguageManager;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.FoldingModel;

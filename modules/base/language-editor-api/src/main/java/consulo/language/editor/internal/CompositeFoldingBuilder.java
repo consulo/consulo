@@ -24,6 +24,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingBuilderEx;
 import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.language.editor.folding.LanguageFolding;
 import consulo.language.psi.PsiElement;
 import consulo.util.dataholder.Key;
 
@@ -38,13 +39,12 @@ import java.util.List;
  *
  * @author Konstantin Bulenkov
  * @see LanguageFolding
- * @since 9.0
  */
 public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAware {
   public static final Key<FoldingBuilder> FOLDING_BUILDER = Key.create("FOLDING_BUILDER");
   private final List<FoldingBuilder> myBuilders;
 
-  CompositeFoldingBuilder(List<FoldingBuilder> builders) {
+  public CompositeFoldingBuilder(List<FoldingBuilder> builders) {
     myBuilders = builders;
   }
 
@@ -73,9 +73,7 @@ public class CompositeFoldingBuilder extends FoldingBuilderEx implements DumbAwa
   @Override
   public String getPlaceholderText(@Nonnull ASTNode node, @Nonnull TextRange range) {
     final FoldingBuilder builder = node.getUserData(FOLDING_BUILDER);
-    return builder == null
-           ? node.getText()
-           : builder instanceof FoldingBuilderEx ? ((FoldingBuilderEx)builder).getPlaceholderText(node, range) : builder.getPlaceholderText(node);
+    return builder == null ? node.getText() : builder instanceof FoldingBuilderEx ? ((FoldingBuilderEx)builder).getPlaceholderText(node, range) : builder.getPlaceholderText(node);
   }
 
   @RequiredReadAction

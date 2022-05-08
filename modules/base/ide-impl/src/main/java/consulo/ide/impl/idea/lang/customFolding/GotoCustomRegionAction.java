@@ -29,7 +29,7 @@ import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.editor.internal.CompositeFoldingBuilder;
-import consulo.language.editor.internal.LanguageFolding;
+import consulo.language.editor.folding.LanguageFolding;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;

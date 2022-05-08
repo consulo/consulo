@@ -23,7 +23,7 @@ import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.FoldingBuilder;
 import consulo.language.editor.folding.FoldingDescriptor;
 import consulo.language.editor.internal.CompositeFoldingBuilder;
-import consulo.language.editor.internal.LanguageFolding;
+import consulo.language.editor.folding.LanguageFolding;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.language.file.FileViewProvider;

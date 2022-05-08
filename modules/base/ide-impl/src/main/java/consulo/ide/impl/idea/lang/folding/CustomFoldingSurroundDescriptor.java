@@ -25,7 +25,7 @@ import consulo.codeEditor.Editor;
 import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.language.editor.folding.FoldingBuilder;
-import consulo.language.editor.internal.LanguageFolding;
+import consulo.language.editor.folding.LanguageFolding;
 import consulo.project.Project;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

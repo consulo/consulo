@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package consulo.language.editor.internal;
+package consulo.language.editor.folding;
 
 import consulo.language.ast.ASTNode;
 import consulo.language.Language;
 import consulo.language.LanguageExtension;
 import consulo.document.Document;
-import consulo.language.editor.folding.FoldingBuilder;
-import consulo.language.editor.folding.FoldingBuilderEx;
-import consulo.language.editor.folding.FoldingDescriptor;
+import consulo.language.editor.internal.CompositeFoldingBuilder;
 import consulo.project.DumbService;
 import consulo.language.psi.PsiElement;
 import consulo.annotation.access.RequiredReadAction;

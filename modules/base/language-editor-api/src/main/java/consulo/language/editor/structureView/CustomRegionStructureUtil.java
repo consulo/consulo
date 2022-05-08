@@ -10,7 +10,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.editor.folding.CustomFoldingBuilder;
 import consulo.language.editor.folding.CustomFoldingProvider;
 import consulo.language.editor.folding.FoldingBuilder;
-import consulo.language.editor.internal.LanguageFolding;
+import consulo.language.editor.folding.LanguageFolding;
 import consulo.language.psi.PsiFileEx;
 import consulo.language.psi.*;
 import consulo.util.collection.ContainerUtil;

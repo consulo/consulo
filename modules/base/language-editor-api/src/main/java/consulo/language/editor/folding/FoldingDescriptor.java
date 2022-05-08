@@ -7,7 +7,6 @@ import consulo.codeEditor.FoldingGroup;
 import consulo.component.util.ModificationTracker;
 import consulo.document.util.TextRange;
 import consulo.language.ast.ASTNode;
-import consulo.language.editor.internal.LanguageFolding;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.BitUtil;
 import consulo.util.lang.ObjectUtil;
