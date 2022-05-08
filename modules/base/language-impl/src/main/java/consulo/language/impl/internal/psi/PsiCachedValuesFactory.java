@@ -58,6 +58,6 @@ public final class PsiCachedValuesFactory implements CachedValuesFactory {
 
   @Override
   public <T> void checkEquivalence(@Nullable T existing, @Nullable T fresh, @Nonnull Class<?> providerClass, @Nullable Supplier<? extends T> recomputeValue) {
-    IdempotenceChecker.checkEquivalence(existing, false, providerClass, recomputeValue);
+    IdempotenceChecker.checkEquivalence(existing, fresh, providerClass, recomputeValue);
   }
 }
