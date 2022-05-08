@@ -356,4 +356,6 @@ public interface PsiBuilder extends UserDataHolder {
 
   @Nullable
   PsiFile getContainingFile();
+
+  void registerWhitespaceToken(@Nonnull IElementType type);
 }

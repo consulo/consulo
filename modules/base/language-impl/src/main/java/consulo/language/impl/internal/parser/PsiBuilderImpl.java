@@ -20,7 +20,6 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.ast.*;
 import consulo.language.impl.ast.*;
-import consulo.language.impl.internal.psi.FileContextUtil;
 import consulo.language.impl.internal.psi.diff.*;
 import consulo.language.impl.psi.ForeignLeafPsiElement;
 import consulo.language.impl.psi.PsiWhiteSpaceImpl;
@@ -44,7 +43,6 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.util.lang.*;
 import consulo.util.lang.ref.SimpleReference;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +60,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
 
   private static final Key<LazyParseableTokensCache> LAZY_PARSEABLE_TOKENS = Key.create("LAZY_PARSEABLE_TOKENS");
 
-  private static TokenSet ourAnyLanguageWhitespaceTokens = TokenSet.EMPTY;
+  private TokenSet myAnyLanguageWhitespaceTokens = TokenSet.EMPTY;
 
   private final Project myProject;
   private final LanguageVersion myLanguageVersion;
@@ -122,10 +120,6 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
       doneMarker.clean();
     }
   });
-
-  public static void registerWhitespaceToken(@Nonnull IElementType type) {
-    ourAnyLanguageWhitespaceTokens = TokenSet.orSet(ourAnyLanguageWhitespaceTokens, TokenSet.create(type));
-  }
 
   public PsiBuilderImpl(@Nullable Project project,
                         @Nullable PsiFile containingFile,
@@ -1166,7 +1160,6 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     }
   }
 
-  @NonNls
   private static final String UNBALANCED_MESSAGE =
           "Unbalanced tree. Most probably caused by unbalanced markers. " + "Try calling setDebugMode(true) against PsiBuilder passed to identify exact location of the problem";
 
@@ -1175,7 +1168,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     DiffLog diffLog = new DiffLog();
     DiffTreeChangeBuilder<ASTNode, LighterASTNode> builder = new ConvertFromTokensToASTBuilder(newRoot, diffLog);
     MyTreeStructure treeStructure = new MyTreeStructure(newRoot, null);
-    ShallowNodeComparator<ASTNode, LighterASTNode> comparator = new MyComparator(myReparseMergeCustomComparator, treeStructure);
+    ShallowNodeComparator<ASTNode, LighterASTNode> comparator = new MyComparator(myAnyLanguageWhitespaceTokens, myReparseMergeCustomComparator, treeStructure);
 
     ProgressIndicator indicator = ProgressIndicatorProvider.getGlobalProgressIndicator();
     BlockSupportImpl.diffTrees(oldRoot, builder, comparator, treeStructure, indicator == null ? new EmptyProgressIndicator() : indicator, lastCommittedText);
@@ -1473,12 +1466,19 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     return LocalizeValue.empty();
   }
 
+  @Override
+  public void registerWhitespaceToken(@Nonnull IElementType type) {
+    myAnyLanguageWhitespaceTokens = TokenSet.orSet(myAnyLanguageWhitespaceTokens, TokenSet.create(type));
+  }
+
   private static class MyComparator implements ShallowNodeComparator<ASTNode, LighterASTNode> {
     private final ReparseMergeCustomComparator myComparator;
     private final MyTreeStructure myTreeStructure;
+    private final TokenSet myAnyLanguageWhitespaceTokens;
 
-    private MyComparator(ReparseMergeCustomComparator myComparator, @Nonnull MyTreeStructure treeStructure) {
-      this.myComparator = myComparator;
+    private MyComparator(TokenSet anyLanguageWhitespaceTokens, ReparseMergeCustomComparator comparator, @Nonnull MyTreeStructure treeStructure) {
+      myAnyLanguageWhitespaceTokens = anyLanguageWhitespaceTokens;
+      myComparator = comparator;
       myTreeStructure = treeStructure;
     }
 
@@ -1533,7 +1533,7 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     @Override
     public boolean typesEqual(@Nonnull final ASTNode n1, @Nonnull final LighterASTNode n2) {
       if (n1 instanceof PsiWhiteSpaceImpl) {
-        return ourAnyLanguageWhitespaceTokens.contains(n2.getTokenType()) || n2 instanceof Token && ((Token)n2).myBuilder.myWhitespaces.contains(n2.getTokenType());
+        return myAnyLanguageWhitespaceTokens.contains(n2.getTokenType()) || n2 instanceof Token && ((Token)n2).myBuilder.myWhitespaces.contains(n2.getTokenType());
       }
       IElementType n1t;
       IElementType n2t;

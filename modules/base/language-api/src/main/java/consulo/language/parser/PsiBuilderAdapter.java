@@ -185,6 +185,11 @@ public class PsiBuilderAdapter implements PsiBuilder {
   }
 
   @Override
+  public void registerWhitespaceToken(@Nonnull IElementType type) {
+    myDelegate.registerWhitespaceToken(type);
+  }
+
+  @Override
   public void setContainingFile(@Nonnull PsiFile containingFile) {
     myDelegate.setContainingFile(containingFile);
   }

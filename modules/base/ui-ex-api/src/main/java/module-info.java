@@ -40,7 +40,6 @@ module consulo.ui.ex.api {
   exports consulo.ui.ex.dialog;
   exports consulo.ui.ex.errorTreeView;
 
-  exports consulo.ui.ex.internal to consulo.ide.impl, consulo.desktop.awt.ide.impl, consulo.ui.ex.awt.api;
   exports consulo.ui.ex.awtUnsafe.internal to consulo.desktop.awt.ide.impl;
 
   uses TargetAWTFacade;
