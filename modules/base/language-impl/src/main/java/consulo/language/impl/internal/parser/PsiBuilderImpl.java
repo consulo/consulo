@@ -43,7 +43,6 @@ import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UnprotectedUserDataHolder;
 import consulo.util.lang.*;
-import consulo.util.lang.function.TripleFunction;
 import consulo.util.lang.ref.SimpleReference;
 import org.jetbrains.annotations.NonNls;
 
@@ -1841,20 +1840,15 @@ public class PsiBuilderImpl extends UnprotectedUserDataHolder implements PsiBuil
     return ASTFactory.leaf(type, myLanguageVersion, text);
   }
 
+  @Nullable
   @Override
-  @SuppressWarnings("unchecked")
-  public <T> T getUserData(@Nonnull Key<T> key) {
-    return key == FileContextUtil.CONTAINING_FILE_KEY ? (T)myFile : super.getUserData(key);
+  public PsiFile getContainingFile() {
+    return myFile;
   }
 
   @Override
-  public <T> void putUserData(@Nonnull Key<T> key, @Nullable T value) {
-    if (key == FileContextUtil.CONTAINING_FILE_KEY) {
-      myFile = (PsiFile)value;
-    }
-    else {
-      super.putUserData(key, value);
-    }
+  public void setContainingFile(@Nonnull PsiFile containingFile) {
+    myFile = containingFile;
   }
 
   private static class MyList extends ArrayList<ProductionMarker> {

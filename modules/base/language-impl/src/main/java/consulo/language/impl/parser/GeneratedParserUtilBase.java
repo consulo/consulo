@@ -24,7 +24,6 @@ import consulo.language.PairedBraceMatcher;
 import consulo.language.ast.*;
 import consulo.language.impl.internal.parser.PsiBuilderImpl;
 import consulo.language.impl.psi.CompositePsiElement;
-import consulo.language.impl.internal.psi.FileContextUtil;
 import consulo.language.lexer.Lexer;
 import consulo.language.parser.*;
 import consulo.language.psi.PsiFile;
@@ -919,7 +918,7 @@ public class GeneratedParserUtilBase {
 
     public static void initState(ErrorState state, PsiBuilder builder, IElementType root, TokenSet[] extendsSets) {
       state.extendsSets = extendsSets;
-      PsiFile file = builder.getUserData(FileContextUtil.CONTAINING_FILE_KEY);
+      PsiFile file = builder.getContainingFile();
       state.completionState = file == null ? null : file.getUserData(COMPLETION_STATE_KEY);
       Language language = file == null ? root.getLanguage() : file.getLanguage();
       state.caseSensitive = language.isCaseSensitive();

@@ -27,7 +27,6 @@ import javax.annotation.Nullable;
  */
 public class FileContextUtil {
   public static final Key<SmartPsiElementPointer> INJECTED_IN_ELEMENT = Key.create("injectedIn");
-  public static final Key<PsiFile> CONTAINING_FILE_KEY = Key.create("CONTAINING_FILE_KEY");
 
   private FileContextUtil() { }
 

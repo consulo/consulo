@@ -20,6 +20,7 @@ import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.LighterASTNode;
 import consulo.language.ast.TokenSet;
+import consulo.language.psi.PsiFile;
 import consulo.language.util.FlyweightCapableTreeStructure;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
@@ -350,4 +351,9 @@ public interface PsiBuilder extends UserDataHolder {
   LocalizeValue getErrorMessage(@Nonnull LighterASTNode node);
 
   void setReparseMergeCustomComparator(@Nonnull ReparseMergeCustomComparator comparator);
+
+  void setContainingFile(@Nonnull PsiFile containingFile);
+
+  @Nullable
+  PsiFile getContainingFile();
 }
