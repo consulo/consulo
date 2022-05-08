@@ -155,6 +155,17 @@ public class PsiBuilderAdapter implements PsiBuilder {
     return myDelegate.getLatestDoneMarker();
   }
 
+  @Nonnull
+  @Override
+  public LocalizeValue getErrorMessage(@Nonnull LighterASTNode node) {
+    return myDelegate.getErrorMessage(node);
+  }
+
+  @Override
+  public void setReparseMergeCustomComparator(@Nonnull ReparseMergeCustomComparator comparator) {
+    myDelegate.setReparseMergeCustomComparator(comparator);
+  }
+
   @Override
   @Nullable
   public <T> T getUserData(@Nonnull final Key<T> key) {
