@@ -71,7 +71,7 @@ import consulo.ui.ex.awt.MnemonicHelper;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopup;

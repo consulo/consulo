@@ -16,21 +16,21 @@
 package consulo.ide.impl.idea.openapi.vcs.ex;
 
 import consulo.application.TransactionGuard;
-import consulo.document.Document;
-import consulo.document.impl.DocumentImpl;
-import consulo.codeEditor.impl.DocumentMarkupModel;
+import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.document.impl.DocumentImpl;
+import consulo.document.util.TextRange;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

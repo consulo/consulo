@@ -16,38 +16,37 @@
 
 package consulo.ide.impl.idea.ide.bookmarks;
 
-import consulo.ide.IdeBundle;
+import consulo.application.util.SystemInfo;
+import consulo.codeEditor.DocumentMarkupModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorFactory;
+import consulo.codeEditor.event.EditorEventMulticaster;
+import consulo.codeEditor.event.EditorMouseEvent;
+import consulo.codeEditor.event.EditorMouseEventArea;
+import consulo.codeEditor.event.EditorMouseListener;
+import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.document.Document;
-import consulo.document.event.DocumentAdapter;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.document.FileDocumentManager;
-import consulo.codeEditor.event.EditorEventMulticaster;
-import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.event.EditorMouseEventArea;
-import consulo.codeEditor.event.EditorMouseListener;
-import consulo.project.Project;
-import consulo.project.startup.StartupManager;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.language.psi.event.PsiDocumentListener;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.component.messagebus.MessageBus;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.language.psi.event.PsiDocumentListener;
+import consulo.project.Project;
 import consulo.project.startup.StartupActivity;
+import consulo.project.startup.StartupManager;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -109,7 +108,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
       if (Comparing.equal(bookmark.getFile(), file)) {
         UIUtil.invokeLaterIfNeeded(() -> {
           if (project.isDisposed()) return;
-          bookmark.createHighlighter((MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true));
+          bookmark.createHighlighter(DocumentMarkupModel.forDocument(document, project, true));
         });
       }
     }

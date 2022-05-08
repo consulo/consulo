@@ -7,7 +7,7 @@ import consulo.logging.Logger;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.ui.ex.awt.internal.MnemonicWrapper;
 import consulo.ui.ex.awt.util.DialogUtil;
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.util.collection.ArrayUtil;
 import consulo.util.dataholder.Key;
 import org.intellij.lang.annotations.MagicConstant;

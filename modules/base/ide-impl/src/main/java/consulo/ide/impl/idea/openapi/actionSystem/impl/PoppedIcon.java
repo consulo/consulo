@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.awt.GraphicsConfig;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.Gray;

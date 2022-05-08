@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.codeInsight.navigation;
 
+import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;

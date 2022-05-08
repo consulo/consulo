@@ -19,7 +19,7 @@ import consulo.annotation.DeprecationInfo;
 import consulo.localize.LocalizeValue;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.*;
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.image.Image;
 

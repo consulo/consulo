@@ -30,7 +30,7 @@ import consulo.ui.NotificationType;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.popup.*;
 
 import javax.annotation.Nonnull;

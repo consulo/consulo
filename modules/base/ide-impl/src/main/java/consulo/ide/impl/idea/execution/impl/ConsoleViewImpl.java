@@ -3,22 +3,6 @@
 package consulo.ide.impl.idea.execution.impl;
 
 import com.google.common.base.CharMatcher;
-import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
-import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
-import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
-import consulo.ide.impl.idea.execution.actions.ConsoleActionsPostProcessor;
-import consulo.ide.impl.idea.execution.actions.EOFAction;
-import consulo.ide.impl.idea.execution.filters.*;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
-import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
-import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Pair;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
@@ -30,7 +14,6 @@ import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
 import consulo.codeEditor.action.TypedActionHandler;
 import consulo.codeEditor.event.EditorMouseEvent;
-import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.EditorColorsManager;
@@ -53,6 +36,22 @@ import consulo.execution.ExecutionDataKeys;
 import consulo.execution.internal.ConsoleBuffer;
 import consulo.execution.ui.console.*;
 import consulo.execution.ui.console.Filter.ResultItem;
+import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
+import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
+import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
+import consulo.ide.impl.idea.execution.actions.ConsoleActionsPostProcessor;
+import consulo.ide.impl.idea.execution.actions.EOFAction;
+import consulo.ide.impl.idea.execution.filters.*;
+import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
+import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
+import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -1134,7 +1133,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
   // finds range marker the [offset..offset+1) belongs to
   private RangeMarker findTokenMarker(int offset) {
     RangeMarker[] marker = new RangeMarker[1];
-    MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(myEditor.getDocument(), getProject(), true);
+    MarkupModelEx model = DocumentMarkupModel.forDocument(myEditor.getDocument(), getProject(), true);
     model.processRangeHighlightersOverlappingWith(offset, offset, m -> {
       if (getTokenType(m) == null || m.getStartOffset() > offset || offset + 1 > m.getEndOffset()) return true;
       marker[0] = m;

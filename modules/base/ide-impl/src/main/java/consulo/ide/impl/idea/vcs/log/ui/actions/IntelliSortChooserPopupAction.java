@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.vcs.log.ui.actions;
 
 import consulo.application.dumb.DumbAware;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.ActionGroup;

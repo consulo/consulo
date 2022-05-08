@@ -1,25 +1,25 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.execution.lineMarker.LineMarkerActionWrapper;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorEx;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.codeEditor.impl.DocumentMarkupModel;
-import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
+import consulo.codeEditor.DocumentMarkupModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.markup.GutterIconRenderer;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.dataContext.DataContext;
+import consulo.document.Document;
+import consulo.ide.impl.idea.execution.lineMarker.LineMarkerActionWrapper;
+import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.psi.PsiFile;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;

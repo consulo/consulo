@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.find;
 import consulo.ide.impl.idea.find.editorHeaderActions.*;
 import consulo.find.FindBundle;
 import consulo.find.FindInProjectSettings;
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ui.ex.action.ShortcutProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;

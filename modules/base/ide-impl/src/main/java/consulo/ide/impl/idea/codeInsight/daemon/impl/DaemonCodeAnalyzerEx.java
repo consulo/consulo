@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.CommonProcessors;
 import consulo.application.util.function.Processor;
+import consulo.codeEditor.DocumentMarkupModel;
+import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.Document;
+import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.SeverityRegistrar;
@@ -60,7 +60,7 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
-    MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
+    MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
     return model.processRangeHighlightersOverlappingWith(startOffset, endOffset, marker -> {
       Object tt = marker.getErrorStripeTooltip();
       if (!(tt instanceof HighlightInfo)) return true;
@@ -87,7 +87,7 @@ public abstract class DaemonCodeAnalyzerEx extends DaemonCodeAnalyzer {
     LOG.assertTrue(ApplicationManager.getApplication().isReadAccessAllowed());
 
     final SeverityRegistrar severityRegistrar = SeverityRegistrarImpl.getSeverityRegistrar(project);
-    MarkupModelEx model = (MarkupModelEx)DocumentMarkupModel.forDocument(document, project, true);
+    MarkupModelEx model = DocumentMarkupModel.forDocument(document, project, true);
     return model.processRangeHighlightersOutside(startOffset, endOffset, marker -> {
       Object tt = marker.getErrorStripeTooltip();
       if (!(tt instanceof HighlightInfo)) return true;

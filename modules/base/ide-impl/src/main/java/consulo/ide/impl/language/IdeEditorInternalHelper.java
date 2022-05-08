@@ -15,18 +15,20 @@
  */
 package consulo.ide.impl.language;
 
-import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
-import consulo.ide.impl.idea.ui.EditorNotifications;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.impl.DocumentMarkupModelImpl;
 import consulo.codeEditor.impl.util.EditorImplUtil;
 import consulo.codeEditor.internal.EditorInternalHelper;
+import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.dataContext.DataContext;
 import consulo.document.Document;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
+import consulo.ide.impl.idea.ui.EditorNotifications;
 import consulo.language.ast.IElementType;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.editor.action.LanguageWordBoundaryFilter;
@@ -134,5 +136,11 @@ public class IdeEditorInternalHelper implements EditorInternalHelper {
   @Override
   public int getSpaceWidth(@Nonnull Editor editor) {
     return EditorImplUtil.getSpaceWidth(Font.PLAIN, editor);
+  }
+
+  @Nonnull
+  @Override
+  public MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
+    return DocumentMarkupModelImpl.forDocument(document, project, create);
   }
 }

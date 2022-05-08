@@ -1,22 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.impl.DocumentMarkupModel;
-import consulo.language.editor.internal.PsiUtilBase;
 import consulo.application.ApplicationManager;
+import consulo.codeEditor.DocumentMarkupModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.markup.MarkupModel;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.colorScheme.EditorColorsScheme;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
-import consulo.codeEditor.Editor;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.markup.MarkupModel;
-import consulo.language.editor.Pass;
-import consulo.language.editor.rawHighlight.HighlightInfo;
+import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
+import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.Pass;
+import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;

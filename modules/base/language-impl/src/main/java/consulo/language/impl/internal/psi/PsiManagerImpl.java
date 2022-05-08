@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.application.progress.ProgressIndicatorProvider;
@@ -80,6 +81,13 @@ public class PsiManagerImpl extends PsiManagerEx {
   public void dropPsiCaches() {
     dropResolveCaches();
     WriteAction.run(myFileManager::firePropertyChangedForUnloadedPsi);
+  }
+
+  @RequiredReadAction
+  @Nullable
+  @Override
+  public PsiFile findCachedFile(@Nonnull VirtualFile file) {
+    return getFileManager().getCachedPsiFile(file);
   }
 
   @Override

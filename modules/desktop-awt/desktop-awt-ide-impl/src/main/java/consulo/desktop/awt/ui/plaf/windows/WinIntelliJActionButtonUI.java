@@ -15,7 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf.windows;
 
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionButton;
 import consulo.ui.ex.awt.paint.RectanglePainter2D;
 import consulo.ui.ex.awt.JBCurrentTheme;

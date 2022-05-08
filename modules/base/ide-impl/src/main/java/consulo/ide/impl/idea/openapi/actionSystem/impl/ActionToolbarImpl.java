@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
-import consulo.ui.ex.internal.ActionButtonComponent;
+import consulo.ui.ex.action.ActionButtonComponent;
 import consulo.ide.impl.idea.openapi.actionSystem.RightAlignedToolbarAction;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.CustomComponentAction;

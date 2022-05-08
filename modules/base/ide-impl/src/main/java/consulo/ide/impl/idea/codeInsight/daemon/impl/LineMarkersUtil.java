@@ -1,28 +1,23 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.gutter.LineMarkerInfo;
-import consulo.language.inject.InjectedLanguageManager;
 import consulo.application.ApplicationManager;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.logging.Logger;
+import consulo.application.util.function.Processor;
+import consulo.codeEditor.DocumentMarkupModel;
+import consulo.codeEditor.markup.*;
 import consulo.document.Document;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
-import consulo.codeEditor.impl.DocumentMarkupModel;
-import consulo.codeEditor.markup.HighlighterLayer;
-import consulo.codeEditor.markup.HighlighterTargetArea;
-import consulo.codeEditor.markup.MarkupEditorFilter;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.dataholder.Key;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.editor.gutter.LineMarkerInfo;
+import consulo.language.inject.InjectedLanguageManager;
 import consulo.language.psi.PsiElement;
-import consulo.application.util.function.Processor;
-import javax.annotation.Nonnull;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.dataholder.Key;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;

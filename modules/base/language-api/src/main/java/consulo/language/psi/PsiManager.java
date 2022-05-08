@@ -168,4 +168,8 @@ public abstract class PsiManager extends UserDataHolderBase {
    * @return true if the element belongs to the sources of the project, false otherwise.
    */
   public abstract boolean isInProject(@Nonnull PsiElement element);
+
+  @Nullable
+  @RequiredReadAction
+  public abstract PsiFile findCachedFile(@Nonnull VirtualFile file);
 }

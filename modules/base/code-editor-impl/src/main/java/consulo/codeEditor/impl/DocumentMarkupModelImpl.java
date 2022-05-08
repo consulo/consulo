@@ -15,8 +15,8 @@
  */
 package consulo.codeEditor.impl;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
@@ -24,7 +24,6 @@ import consulo.language.file.inject.DocumentWindow;
 import consulo.project.Project;
 import consulo.util.collection.Maps;
 import consulo.util.dataholder.Key;
-import consulo.util.dataholder.UserDataHolderEx;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,11 +35,13 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @author yole
  */
-public class DocumentMarkupModel {
+@Deprecated
+@DeprecationInfo("Use DocumentMarkupModel")
+public class DocumentMarkupModelImpl {
   private static final Key<MarkupModelEx> MARKUP_MODEL_KEY = Key.create("DocumentMarkupModel.MarkupModel");
   private static final Key<ConcurrentMap<Project, MarkupModelImpl>> MARKUP_MODEL_MAP_KEY = Key.create("DocumentMarkupModel.MarkupModelMap");
 
-  private DocumentMarkupModel() {
+  private DocumentMarkupModelImpl() {
   }
 
   /**
@@ -54,10 +55,10 @@ public class DocumentMarkupModel {
    * @return the markup model instance.
    * @see Editor#getMarkupModel()
    */
-  public static MarkupModel forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
+  public static MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create) {
     if (document instanceof DocumentWindow) {
       final Document delegate = ((DocumentWindow)document).getDelegate();
-      final MarkupModelEx baseMarkupModel = (MarkupModelEx)forDocument(delegate, project, true);
+      final MarkupModelEx baseMarkupModel = forDocument(delegate, project, true);
       return new MarkupModelWindow(baseMarkupModel, (DocumentWindow) document);
     }
 
@@ -65,7 +66,7 @@ public class DocumentMarkupModel {
       MarkupModelEx markupModel = document.getUserData(MARKUP_MODEL_KEY);
       if (create && markupModel == null) {
         MarkupModelEx newModel = new MarkupModelImpl((DocumentEx)document);
-        if ((markupModel = ((UserDataHolderEx)document).putUserDataIfAbsent(MARKUP_MODEL_KEY, newModel)) != newModel) {
+        if ((markupModel = document.putUserDataIfAbsent(MARKUP_MODEL_KEY, newModel)) != newModel) {
           newModel.dispose();
         }
       }
@@ -98,7 +99,7 @@ public class DocumentMarkupModel {
     ConcurrentMap<Project, MarkupModelImpl> markupModelMap = document.getUserData(MARKUP_MODEL_MAP_KEY);
     if (markupModelMap == null) {
       ConcurrentMap<Project, MarkupModelImpl> newMap = new ConcurrentHashMap<>();
-      markupModelMap = ((UserDataHolderEx)document).putUserDataIfAbsent(MARKUP_MODEL_MAP_KEY, newMap);
+      markupModelMap = document.putUserDataIfAbsent(MARKUP_MODEL_MAP_KEY, newMap);
     }
     return markupModelMap;
   }

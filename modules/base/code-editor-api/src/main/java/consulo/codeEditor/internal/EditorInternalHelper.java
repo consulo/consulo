@@ -19,6 +19,7 @@ import consulo.application.Application;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorHighlighter;
+import consulo.codeEditor.markup.MarkupModelEx;
 import consulo.codeEditor.util.EditorUtil;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataContextWrapper;
@@ -102,4 +103,7 @@ public interface EditorInternalHelper {
   default int getSpaceWidth(@Nonnull Editor editor) {
     return 1;
   }
+
+  @Nullable
+  MarkupModelEx forDocument(@Nonnull Document document, @Nullable Project project, boolean create);
 }

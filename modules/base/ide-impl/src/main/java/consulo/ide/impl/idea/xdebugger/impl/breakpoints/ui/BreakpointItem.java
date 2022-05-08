@@ -15,24 +15,24 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui;
 
+import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.impl.DocumentMarkupModel;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.navigation.Navigatable;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.execution.debug.ui.DebuggerColors;
 import consulo.ide.impl.idea.ui.popup.util.DetailView;
 import consulo.ide.impl.idea.ui.popup.util.ItemWrapper;
-import consulo.execution.debug.ui.DebuggerColors;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 
@@ -50,8 +50,7 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
   public abstract boolean isDefaultBreakpoint();
 
   protected static void showInEditor(DetailView panel, VirtualFile virtualFile, int line) {
-    TextAttributes attributes =
-            EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
+    TextAttributes attributes = EditorColorsManager.getInstance().getGlobalScheme().getAttributes(DebuggerColors.BREAKPOINT_ATTRIBUTES);
 
     DetailView.PreviewEditorState state = DetailView.PreviewEditorState.create(virtualFile, line, attributes);
 
@@ -69,15 +68,13 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
 
     final Editor editor = panel.getEditor();
     final MarkupModel editorModel = editor.getMarkupModel();
-    final MarkupModel documentModel =
-            DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
+    final MarkupModel documentModel = DocumentMarkupModel.forDocument(editor.getDocument(), editor.getProject(), false);
 
     for (RangeHighlighter highlighter : documentModel.getAllHighlighters()) {
       if (highlighter.getUserData(DebuggerColors.BREAKPOINT_HIGHLIGHTER_KEY) == Boolean.TRUE) {
         final int line1 = editor.offsetToLogicalPosition(highlighter.getStartOffset()).line;
         if (line1 != line) {
-          editorModel.addLineHighlighter(line1,
-                                         DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
+          editorModel.addLineHighlighter(line1, DebuggerColors.BREAKPOINT_HIGHLIGHTER_LAYER + 1, softerAttributes);
         }
       }
     }
@@ -107,7 +104,8 @@ public abstract class BreakpointItem extends ItemWrapper implements Comparable<B
 
   public abstract String getDisplayText();
 
-  protected void dispose() {}
+  protected void dispose() {
+  }
 
   @Override
   public boolean equals(Object o) {

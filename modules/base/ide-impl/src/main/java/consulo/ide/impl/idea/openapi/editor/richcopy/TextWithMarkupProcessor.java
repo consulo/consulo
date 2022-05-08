@@ -1,20 +1,14 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.richcopy;
 
-import consulo.ide.impl.idea.codeInsight.editorActions.CopyPastePostProcessor;
-import consulo.language.editor.action.CopyPastePreProcessor;
-import consulo.language.editor.highlight.HighlighterFactory;
-import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
-import consulo.logging.Logger;
-import consulo.codeEditor.Caret;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.RawText;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.codeEditor.impl.DocumentMarkupModel;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.*;
 import consulo.codeEditor.markup.MarkupModel;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.document.Document;
+import consulo.ide.impl.idea.codeInsight.editorActions.CopyPastePostProcessor;
+import consulo.ide.impl.idea.openapi.diagnostic.Attachment;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.Context;
 import consulo.ide.impl.idea.openapi.editor.richcopy.SyntaxInfoBuilder.MyMarkupIterator;
 import consulo.ide.impl.idea.openapi.editor.richcopy.model.SyntaxInfo;
@@ -22,14 +16,16 @@ import consulo.ide.impl.idea.openapi.editor.richcopy.settings.RichCopySettings;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.HtmlTransferableData;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RawTextWithMarkup;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RtfTransferableData;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Pair;
-import consulo.application.util.registry.Registry;
-import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.language.editor.action.CopyPastePreProcessor;
+import consulo.language.editor.highlight.HighlighterFactory;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

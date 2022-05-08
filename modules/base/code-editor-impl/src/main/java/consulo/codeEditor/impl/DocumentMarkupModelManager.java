@@ -36,7 +36,7 @@ public class DocumentMarkupModelManager implements Disposable {
   private volatile boolean myDisposed;
 
   public static DocumentMarkupModelManager getInstance(Project project) {
-    return project.getComponent(DocumentMarkupModelManager.class);
+    return project.getInstance(DocumentMarkupModelManager.class);
   }
 
   private Project myProject;
@@ -60,7 +60,7 @@ public class DocumentMarkupModelManager implements Disposable {
     if (!myDisposed) {
       myDisposed = true;
       for (Document document : myDocumentSet.toStrongList()) {
-        DocumentMarkupModel.removeMarkupModel(document, myProject);
+        DocumentMarkupModelImpl.removeMarkupModel(document, myProject);
       }
     }
   }
