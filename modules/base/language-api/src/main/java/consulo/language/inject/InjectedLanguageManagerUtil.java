@@ -25,6 +25,7 @@ import consulo.language.psi.PsiLanguageInjectionHost;
 import consulo.language.psi.PsiUtilCore;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -34,7 +35,7 @@ import java.util.List;
 public class InjectedLanguageManagerUtil {
   /**
    * Used in RegExp plugin for value pattern annotator
-   *
+   * <p>
    * Annotator that is used to validate the "Value-Pattern" textfield: The regex entered there should contain exactly
    * one capturing group that determines the text-range the configured language will be injected into.
    */
@@ -52,6 +53,20 @@ public class InjectedLanguageManagerUtil {
     int combinedEdiblesLength = edibles.stream().mapToInt(TextRange::getLength).sum();
 
     return combinedEdiblesLength != elementRange.getLength();
+  }
+
+  public static int getInjectedStart(@Nonnull List<? extends PsiLanguageInjectionHost.Shred> places) {
+    PsiLanguageInjectionHost.Shred shred = places.get(0);
+    PsiLanguageInjectionHost host = shred.getHost();
+    assert host != null;
+    return shred.getRangeInsideHost().getStartOffset() + host.getTextRange().getStartOffset();
+  }
+
+  @Nullable
+  public static PsiElement findElementInInjected(@Nonnull PsiLanguageInjectionHost injectionHost, final int offset) {
+    final SimpleReference<PsiElement> ref = SimpleReference.create();
+    InjectedLanguageManager.getInstance(injectionHost.getProject()).enumerate(injectionHost, (injectedPsi, places) -> ref.set(injectedPsi.findElementAt(offset - getInjectedStart(places))));
+    return ref.get();
   }
 
   @Nullable
