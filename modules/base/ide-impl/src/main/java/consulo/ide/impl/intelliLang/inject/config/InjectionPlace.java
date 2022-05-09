@@ -16,11 +16,11 @@
 
 package consulo.ide.impl.intelliLang.inject.config;
 
-import javax.annotation.Nonnull;
-
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.ArrayFactory;
+import consulo.util.collection.ArrayFactory;
+
+import javax.annotation.Nonnull;
 
 /**
 * @author Gregory.Shrago

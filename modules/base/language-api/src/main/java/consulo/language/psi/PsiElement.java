@@ -46,7 +46,7 @@ public interface PsiElement extends UserDataHolder {
   Key<PsiElement> KEY = Key.create(PsiElement.class);
   Key<PsiElement[]> KEY_OF_ARRAY = Key.create(PsiElement[].class);
 
-  ArrayFactory<PsiElement> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new PsiElement[count];
+  ArrayFactory<PsiElement> ARRAY_FACTORY = ArrayFactory.of(PsiElement[]::new);
 
   /**
    * Returns the project to which the PSI element belongs.

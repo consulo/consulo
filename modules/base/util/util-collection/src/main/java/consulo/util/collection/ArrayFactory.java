@@ -25,6 +25,27 @@ import java.util.function.IntFunction;
 @FunctionalInterface
 public interface ArrayFactory<T> extends IntFunction<T[]> {
   @Nonnull
+  static <K> ArrayFactory<K> of(@Nonnull IntFunction<K[]> factory) {
+    return new ArrayFactory<>() {
+      private K[] myEmptyArray;
+
+      @Nonnull
+      @Override
+      public K[] create(int count) {
+        if (count == 0) {
+          if (myEmptyArray == null) {
+            myEmptyArray = factory.apply(0);
+          }
+          return myEmptyArray;
+        }
+        else {
+          return factory.apply(count);
+        }
+      }
+    };
+  }
+
+  @Nonnull
   T[] create(int count);
 
   @Override

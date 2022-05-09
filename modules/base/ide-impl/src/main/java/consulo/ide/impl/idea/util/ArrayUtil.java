@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.util;
 
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
+import consulo.util.collection.ArrayFactory;
 import consulo.util.collection.HashingStrategy;
 import org.jetbrains.annotations.Contract;
 

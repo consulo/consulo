@@ -1,7 +1,10 @@
 package consulo.ide.impl.idea.openapi.diagnostic;
 
-import consulo.ide.impl.idea.util.*;
 import consulo.annotation.DeprecationInfo;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.ExceptionUtil;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.util.collection.ArrayFactory;
 
 import javax.annotation.Nonnull;
 import java.io.UnsupportedEncodingException;

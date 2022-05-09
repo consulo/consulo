@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.util.containers;
 
 import consulo.ide.impl.idea.openapi.util.*;
 import consulo.ide.impl.idea.util.*;
-import consulo.ide.impl.idea.util.ArrayFactory;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.util.collection.*;
 import consulo.util.collection.Stack;

@@ -22,9 +22,9 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.ex;
 
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.util.collection.ArrayFactory;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.ArrayFactory;
+import consulo.virtualFileSystem.fileType.FileType;
 
 public interface FileTypeIdentifiableByVirtualFile extends FileType {
   public static final FileTypeIdentifiableByVirtualFile[] EMPTY_ARRAY = new FileTypeIdentifiableByVirtualFile[0];
