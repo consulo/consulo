@@ -23,5 +23,7 @@ public enum UpdateChannel {
   release,
   beta,
   alpha,
-  nightly
+  nightly,
+  // consulo 3 branch
+  valhalla
 }
