@@ -48,9 +48,9 @@ import java.awt.*;
  * @author VISTALL
  * @since 2019-02-16
  */
-public class DesktopAwtTargetAWTImpl implements TargetAWTFacade {
+public class DesktopAWTTargetAWTImpl implements TargetAWTFacade {
   static class LoggerHolder {
-    static final Logger LOG = Logger.getInstance(DesktopAwtTargetAWTImpl.class);
+    static final Logger LOG = Logger.getInstance(DesktopAWTTargetAWTImpl.class);
   }
 
   private final static String popupHeavyWeightWindow = "javax.swing.Popup$HeavyWeightWindow";
@@ -71,7 +71,7 @@ public class DesktopAwtTargetAWTImpl implements TargetAWTFacade {
   // stub for popup default frame. Popup create it when, no target window. just hack it
   private DummyWindow myPopupDefaultFrame;
 
-  public DesktopAwtTargetAWTImpl() {
+  public DesktopAWTTargetAWTImpl() {
     if (!GraphicsEnvironment.isHeadless()) {
       myPopupDefaultFrame = new DummyWindow();
 

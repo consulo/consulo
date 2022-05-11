@@ -24,10 +24,10 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15-Sep-17
  */
-public class DesktopAwtPlatformInternalImpl extends PlatformInternal {
+public class DesktopAWTPlatformInternalImpl extends PlatformInternal {
   @Nonnull
   @Override
   public Platform createCurrent() {
-    return new DesktopAwtPlatformImpl();
+    return new DesktopAWTPlatformImpl();
   }
 }

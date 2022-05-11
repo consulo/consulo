@@ -41,7 +41,7 @@ import java.util.Map;
  * @since 2019-07-15
  */
 @SuppressWarnings("unused")
-public class DesktopContainerStartup implements ContainerStartup {
+public class DesktopAWTContainerStartupImpl implements ContainerStartup {
   @Override
   public void run(@Nonnull Map<String, Object> map) {
     StatCollector stat = (StatCollector)map.get(ContainerStartup.STAT_COLLECTOR);
@@ -105,7 +105,7 @@ public class DesktopContainerStartup implements ContainerStartup {
       StartupActionScriptManager.executeActionScript();
     }
     catch (IOException e) {
-      Logger.getInstance(DesktopContainerStartup.class).error(e);
+      Logger.getInstance(DesktopAWTContainerStartupImpl.class).error(e);
 
       StartupUtil.showMessage("Plugin Installation Error", e);
       return;

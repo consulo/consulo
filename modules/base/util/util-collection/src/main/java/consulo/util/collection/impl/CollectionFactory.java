@@ -30,7 +30,7 @@ public abstract class CollectionFactory {
 
   public static CollectionFactory get() {
     if (ourFactory == null) {
-      Optional<CollectionFactory> first = ServiceLoader.load(CollectionFactory.class.getModule().getLayer(), CollectionFactory.class).findFirst();
+      Optional<CollectionFactory> first = ServiceLoader.load(CollectionFactory.class, CollectionFactory.class.getClassLoader()).findFirst();
       ourFactory = first.get();
     }
     return Objects.requireNonNull(ourFactory);

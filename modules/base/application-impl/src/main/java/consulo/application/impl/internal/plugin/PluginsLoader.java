@@ -19,7 +19,6 @@ import consulo.application.Application;
 import consulo.application.ApplicationProperties;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.impl.internal.start.StartupProgress;
-import consulo.application.util.SystemInfo;
 import consulo.component.util.BuildNumber;
 import consulo.component.util.graph.*;
 import consulo.container.boot.ContainerPathManager;
@@ -214,10 +213,10 @@ public class PluginsLoader {
         final ClassLoader pluginClassLoader =
                 createPluginClassLoader(classPath.toArray(new File[classPath.size()]), parentLoaders.length > 0 ? parentLoaders : new ClassLoader[]{parentLoader}, pluginDescriptor);
 
-        if (SystemInfo.IS_AT_LEAST_JAVA9) {
+        if (System.getProperty("jdk.module.path") != null) {
           List<ModuleLayer> parentModuleLayer = getParentModuleLayer(idToDescriptorMap, dependentPluginIds);
 
-          pluginDescriptor.setModuleLayer((ModuleLayer)Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(), pluginClassLoader));
+          pluginDescriptor.setModuleLayer(Java9ModuleInitializer.initializeEtcModules(parentModuleLayer, pluginDescriptor.getClassPath(), pluginClassLoader));
         }
 
         pluginDescriptor.setLoader(pluginClassLoader);

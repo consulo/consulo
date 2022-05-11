@@ -1,7 +1,3 @@
-import consulo.desktop.awt.platform.impl.DesktopAwtPlatformInternalImpl;
-import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
-import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
-
 /**
  * @author VISTALL
  * @since 14/01/2022
@@ -41,9 +37,9 @@ open module consulo.desktop.awt.ide.impl {
   requires consulo.desktop.awt.eawt.wrapper;
 
   provides consulo.ui.internal.UIInternal with consulo.desktop.awt.ui.impl.DesktopUIInternalImpl;
-  provides consulo.platform.internal.PlatformInternal with DesktopAwtPlatformInternalImpl;
-  provides consulo.container.boot.ContainerStartup with consulo.desktop.awt.container.impl.DesktopContainerStartup;
-  provides TargetAWTFacade with DesktopAwtTargetAWTImpl;
+  provides consulo.platform.internal.PlatformInternal with consulo.desktop.awt.platform.impl.DesktopAWTPlatformInternalImpl;
+  provides consulo.container.boot.ContainerStartup with consulo.desktop.awt.container.impl.DesktopAWTContainerStartupImpl;
+  provides consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade with consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
 
   // FIXME it's will not work due different classloaders?
   provides javax.imageio.spi.ImageReaderSpi with consulo.desktop.awt.spi.CommonsImagingImageReaderSpi;

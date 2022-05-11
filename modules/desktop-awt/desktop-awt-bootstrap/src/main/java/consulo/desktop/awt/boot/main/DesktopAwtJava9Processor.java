@@ -42,4 +42,9 @@ public class DesktopAwtJava9Processor implements Java9ModuleProcessor {
     toOpenMap.add(new Opens("java.desktop", "java.awt.peer", "consulo.desktop.awt.hacking"));
     toOpenMap.add(new Opens("java.desktop", "java.awt.event", "consulo.desktop.awt.hacking"));
   }
+
+  @Override
+  public boolean isEnabledModules() {
+    return System.getProperty("jdk.module.path") != null;
+  }
 }

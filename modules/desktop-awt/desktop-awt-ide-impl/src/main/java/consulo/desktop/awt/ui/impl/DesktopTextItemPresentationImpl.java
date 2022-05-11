@@ -17,7 +17,7 @@ package consulo.desktop.awt.ui.impl;
 
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
+import consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
 import consulo.localize.LocalizeValue;
 import consulo.ui.TextAttribute;
 import consulo.ui.TextItemPresentation;
@@ -61,6 +61,6 @@ class DesktopTextItemPresentationImpl implements TextItemPresentation {
 
   @Override
   public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
-    mySimpleColoredComponent.append(text.get(), DesktopAwtTargetAWTImpl.from(textAttribute));
+    mySimpleColoredComponent.append(text.get(), DesktopAWTTargetAWTImpl.from(textAttribute));
   }
 }

@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.tree.AsyncTreeModel;
 import consulo.ide.impl.idea.ui.tree.StructureTreeModel;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.desktop.awt.facade.FromSwingComponentWrapper;
-import consulo.desktop.awt.facade.DesktopAwtTargetAWTImpl;
+import consulo.desktop.awt.facade.DesktopAWTTargetAWTImpl;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
@@ -116,7 +116,7 @@ public class DesktopTreeImpl<E> extends SwingComponentDelegate<DesktopTreeImpl.M
 
         @Override
         public void append(@Nonnull LocalizeValue text, @Nonnull TextAttribute textAttribute) {
-          presentation.addText(text.getValue(), DesktopAwtTargetAWTImpl.from(textAttribute));
+          presentation.addText(text.getValue(), DesktopAWTTargetAWTImpl.from(textAttribute));
         }
       });
     }

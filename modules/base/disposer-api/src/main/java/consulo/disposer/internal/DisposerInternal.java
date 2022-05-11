@@ -60,12 +60,7 @@ public abstract class DisposerInternal {
 
   @Nonnull
   private static <T> T loadSingleOrError(@Nonnull Class<T> clazz) {
-    ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, clazz.getClassLoader());
-    Iterator<T> iterator = serviceLoader.iterator();
-    if (iterator.hasNext()) {
-      return iterator.next();
-    }
-    throw new Error("Unable to find '" + clazz.getName() + "' implementation");
+    return ServiceLoader.load(clazz, clazz.getClassLoader()).findFirst().get();
   }
 }
 

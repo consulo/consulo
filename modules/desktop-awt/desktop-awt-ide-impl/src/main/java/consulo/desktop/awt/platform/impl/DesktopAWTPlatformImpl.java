@@ -41,7 +41,7 @@ import java.util.Locale;
  * @author VISTALL
  * @since 15-Sep-17
  */
-class DesktopAwtPlatformImpl extends PlatformBase {
+class DesktopAWTPlatformImpl extends PlatformBase {
   static class DesktopFileSystemImpl extends FileSystemImpl {
     @Nullable
     @Override
@@ -113,7 +113,7 @@ class DesktopAwtPlatformImpl extends PlatformBase {
     }
   }
 
-  public DesktopAwtPlatformImpl() {
+  public DesktopAWTPlatformImpl() {
     super(getSystemJvmProperties());
   }
 

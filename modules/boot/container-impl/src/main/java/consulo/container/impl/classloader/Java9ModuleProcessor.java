@@ -26,6 +26,11 @@ public interface Java9ModuleProcessor {
     @Override
     public void process(List<Opens> toOpenMap) {
     }
+
+    @Override
+    public boolean isEnabledModules() {
+      return false;
+    }
   };
 
   class Opens {
@@ -41,4 +46,6 @@ public interface Java9ModuleProcessor {
   }
 
   void process(List<Opens> toOpenMap);
+
+  boolean isEnabledModules();
 }

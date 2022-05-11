@@ -28,4 +28,9 @@ public class DesktopSwtJava9ModuleProcessor implements Java9ModuleProcessor {
   public void process(List<Opens> toOpenMap) {
     toOpenMap.add(new Opens("java.base", "java.lang", "consulo.hacking.java.base"));
   }
+
+  @Override
+  public boolean isEnabledModules() {
+    return false;
+  }
 }
