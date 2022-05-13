@@ -15,6 +15,8 @@
  */
 package consulo.application.util.function;
 
+import consulo.annotation.DeprecationInfo;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -23,6 +25,8 @@ import java.util.function.Supplier;
  *  @author dsl
  */
 @FunctionalInterface
+@Deprecated
+@DeprecationInfo("Use Supplier")
 public interface Computable <T> extends Supplier<T> {
 
   T compute();

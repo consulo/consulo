@@ -15,6 +15,7 @@
  */
 package consulo.util.lang.function;
 
+import consulo.annotation.DeprecationInfo;
 import org.jetbrains.annotations.NonNls;
 
 import java.util.function.Predicate;
@@ -26,6 +27,8 @@ import java.util.function.Predicate;
  *
  * @author dsl
  */
+@Deprecated
+@DeprecationInfo("Use Predicate")
 public interface Condition<T> extends Predicate<T> {
   boolean value(T t);
 
