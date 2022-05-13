@@ -102,6 +102,10 @@ public class StringUtil {
 
   private static final String VOWELS = "aeiouy";
 
+  public static final Function<String, String> QUOTER = s -> "\"" + s + "\"";
+
+  public static final Function<String, String> SINGLE_QUOTER = s -> "'" + s + "'";
+
   public static boolean isAscii(@Nonnull String str) {
     return isAscii((CharSequence)str);
   }
