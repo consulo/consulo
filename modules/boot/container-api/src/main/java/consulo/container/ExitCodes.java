@@ -15,6 +15,8 @@
  */
 package consulo.container;
 
+import consulo.util.nodep.SystemInfoRt;
+
 /**
  * @author VISTALL
  * @since 2019-07-16
@@ -27,4 +29,14 @@ public interface ExitCodes {
   public static final int PLUGIN_ERROR = 3;
   public static final int UNSUPPORTED_JAVA_VERSION = 4;
   public static final int OUT_OF_MEMORY = 9;
+
+  public static final int MIN_JAVA_VERSION = 17;
+
+  public static String validateJavaRuntime() {
+    if (!SystemInfoRt.isJavaVersionAtLeast(MIN_JAVA_VERSION)) {
+      return "Cannot start under Java " + SystemInfoRt.JAVA_RUNTIME_VERSION + ": Java " + MIN_JAVA_VERSION + " or later is required.";
+    }
+    
+    return null;
+  }
 }

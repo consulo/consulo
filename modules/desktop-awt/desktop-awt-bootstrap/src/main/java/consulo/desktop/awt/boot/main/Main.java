@@ -21,7 +21,6 @@ import consulo.container.boot.ContainerStartup;
 import consulo.container.impl.SystemContainerLogger;
 import consulo.container.impl.classloader.BootstrapClassLoaderUtil;
 import consulo.container.util.StatCollector;
-import consulo.util.nodep.SystemInfoRt;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,8 +52,9 @@ public class Main {
       }
     }
 
-    if (!SystemInfoRt.isJavaVersionAtLeast(17)) {
-      showMessage("Unsupported Java Version", "Cannot start under Java " + SystemInfoRt.JAVA_RUNTIME_VERSION + ": Java 11 or later is required.", true);
+    String javaRuntimeError = ExitCodes.validateJavaRuntime();
+    if (javaRuntimeError != null) {
+      showMessage("Unsupported Java Version", javaRuntimeError, true);
       System.exit(ExitCodes.UNSUPPORTED_JAVA_VERSION);
     }
 
