@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util;
-
-import consulo.language.psi.PsiDirectory;
+package consulo.language.editor.ui;
 
 public interface TreeChooser<T> {
   T getSelected();
 
   void select(final T aClass);
 
-  void selectDirectory(final PsiDirectory directory);
-
   void showDialog();
 
   void showPopup();
-
-  interface Filter<T> {
-    boolean isAccepted(T element);
-  }
 }

@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.ide.util;
+package consulo.language.editor.ui;
 
 import consulo.language.psi.PsiFile;
 import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * Shows dialog with two tabs: Project View-like tree and Goto symbol-like list with quick search capability
  * Allows to quickly locate and choose PsiFile among all files inside project
  * (optionally filtered based on file type or general file filter(see PsiFileFilter))
- * @see TreeFileChooserFactory#createFileChooser(String, PsiFile, FileType, consulo.ide.impl.idea.ide.util.TreeFileChooser.PsiFileFilter)
- * @see PsiFileFilter
+ * @see TreeFileChooserFactory#createFileChooser(String, PsiFile, FileType, Predicate)
  */
 public interface TreeFileChooser {
   /**
@@ -40,8 +40,4 @@ public interface TreeFileChooser {
   void selectFile(@Nonnull PsiFile file);
 
   void showDialog();
-
-  interface PsiFileFilter {
-    boolean accept(PsiFile file);
-  }
 }

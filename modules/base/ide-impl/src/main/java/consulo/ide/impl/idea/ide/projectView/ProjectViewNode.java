@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * A node in the project view tree.
@@ -213,7 +214,7 @@ public abstract class ProjectViewNode<Value> extends AbstractTreeNode<Value> imp
    *
    * @param condition the condition to check the nodes.
    */
-  public boolean canHaveChildrenMatching(Condition<PsiFile> condition) {
+  public boolean canHaveChildrenMatching(Predicate<PsiFile> condition) {
     return true;
   }
 

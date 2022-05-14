@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.projectView;
+package consulo.project.ui.view.tree;
+
+import consulo.language.psi.PsiElement;
 
 import javax.annotation.Nullable;
-import consulo.language.psi.PsiElement;
-import consulo.project.ui.view.tree.TreeStructureProvider;
 
 /**
  * @author yole

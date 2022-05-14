@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
 import consulo.ide.impl.idea.ide.SelectInContext;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.ide.impl.idea.ide.projectView.SelectableTreeStructureProvider;
+import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;

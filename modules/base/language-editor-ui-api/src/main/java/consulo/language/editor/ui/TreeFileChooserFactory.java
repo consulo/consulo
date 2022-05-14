@@ -14,43 +14,41 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.ide.util;
+package consulo.language.editor.ui;
 
-import consulo.ide.ServiceManager;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @author yole
  */
 public abstract class TreeFileChooserFactory {
   public static TreeFileChooserFactory getInstance(Project project) {
-    return ServiceManager.getService(project, TreeFileChooserFactory.class);
+    return project.getInstance(TreeFileChooserFactory.class);
   }
+
+  @Nonnull
+  public abstract TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable Predicate<PsiFile> filter);
+
 
   @Nonnull
   public abstract TreeFileChooser createFileChooser(@Nonnull String title,
                                                     @Nullable PsiFile initialFile,
                                                     @Nullable FileType fileType,
-                                                    @Nullable TreeFileChooser.PsiFileFilter filter);
-
-
-  @Nonnull
-  public abstract TreeFileChooser createFileChooser(@Nonnull String title,
-                                                    @javax.annotation.Nullable PsiFile initialFile,
-                                                    @javax.annotation.Nullable FileType fileType,
-                                                    @Nullable TreeFileChooser.PsiFileFilter filter,
+                                                    @Nullable Predicate<PsiFile> filter,
                                                     boolean disableStructureProviders);
 
 
   @Nonnull
   public abstract TreeFileChooser createFileChooser(@Nonnull String title,
-                                                    @javax.annotation.Nullable PsiFile initialFile,
-                                                    @javax.annotation.Nullable FileType fileType,
-                                                    @Nullable TreeFileChooser.PsiFileFilter filter,
+                                                    @Nullable PsiFile initialFile,
+                                                    @Nullable FileType fileType,
+                                                    @Nullable Predicate<PsiFile> filter,
                                                     boolean disableStructureProviders,
                                                     boolean showLibraryContents);
 }

@@ -16,10 +16,12 @@
 
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
-import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectTreeStructure;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectAbstractTreeStructureBase;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectTreeBuilder;
@@ -28,33 +30,31 @@ import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNameModel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePanel;
 import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopupComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
-import consulo.ui.ex.tree.AlphaComparator;
-import consulo.language.editor.ui.PsiElementListCellRenderer;
-import consulo.ui.ex.awt.tree.NodeRenderer;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.util.lang.function.Condition;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.search.FileTypeIndex;
-import consulo.ide.impl.psi.search.FilenameIndex;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ui.ex.awt.event.DoubleClickListener;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ui.ex.awt.TabbedPaneWrapper;
-import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
-import consulo.ui.ex.awt.tree.Tree;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.psi.search.FileTypeIndex;
+import consulo.ide.impl.psi.search.FilenameIndex;
+import consulo.language.editor.ui.PsiElementListCellRenderer;
+import consulo.language.editor.ui.TreeFileChooser;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.TreeStructureProvider;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.event.DoubleClickListener;
+import consulo.ui.ex.awt.speedSearch.TreeSpeedSearch;
+import consulo.ui.ex.awt.tree.NodeRenderer;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.tree.AlphaComparator;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,6 +73,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * @author Anton Katilin
@@ -86,7 +87,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
   private TabbedPaneWrapper myTabbedPane;
   private ChooseByNamePanel myGotoByNamePanel;
   @Nullable private final PsiFile myInitialFile;
-  @Nullable private final PsiFileFilter myFilter;
+  @Nullable private final Predicate<PsiFile> myFilter;
   @Nullable private final FileType myFileType;
 
   private final boolean myDisableStructureProviders;
@@ -97,7 +98,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
                                String title,
                                @Nullable final PsiFile initialFile,
                                @Nullable FileType fileType,
-                               @Nullable PsiFileFilter filter,
+                               @Nullable Predicate<PsiFile> filter,
                                final boolean disableStructureProviders,
                                final boolean showLibraryContents) {
     super(project, true);
@@ -492,19 +493,16 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
   }
 
   private Object[] filterFiles(final Object[] list) {
-    Condition<PsiFile> condition = new Condition<PsiFile>() {
-      @Override
-      public boolean value(final PsiFile psiFile) {
-        if (myFilter != null && !myFilter.accept(psiFile)) {
-          return false;
-        }
-        boolean accepted = myFileType == null || psiFile.getFileType() == myFileType;
-        VirtualFile virtualFile = psiFile.getVirtualFile();
-        if (virtualFile != null && !accepted) {
-          accepted = virtualFile.getFileType() == myFileType;
-        }
-        return accepted;
+    Predicate<PsiFile> condition = psiFile -> {
+      if (myFilter != null && !myFilter.test(psiFile)) {
+        return false;
       }
+      boolean accepted = myFileType == null || psiFile.getFileType() == myFileType;
+      VirtualFile virtualFile = psiFile.getVirtualFile();
+      if (virtualFile != null && !accepted) {
+        accepted = virtualFile.getFileType() == myFileType;
+      }
+      return accepted;
     };
     final List<Object> result = new ArrayList<Object>(list.length);
     for (Object o : list) {
@@ -518,7 +516,7 @@ public final class TreeFileChooserDialog extends DialogWrapper implements TreeFi
       else {
         psiFile = null;
       }
-      if (psiFile != null && !condition.value(psiFile)) {
+      if (psiFile != null && !condition.test(psiFile)) {
         continue;
       }
       else {

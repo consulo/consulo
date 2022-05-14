@@ -16,13 +16,17 @@
 
 package consulo.ide.impl.idea.ide.util;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
+import consulo.language.editor.ui.TreeFileChooser;
+import consulo.language.editor.ui.TreeFileChooserFactory;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * @author yole
@@ -38,20 +42,20 @@ public class TreeFileChooserFactoryImpl extends TreeFileChooserFactory {
 
   @Override
   @Nonnull
-  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter) {
+  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable Predicate<PsiFile> filter) {
     return new TreeFileChooserDialog(myProject, title, initialFile, fileType, filter, false, false);
   }
 
   @Override
   @Nonnull
-  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter,
+  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable Predicate<PsiFile> filter,
                                            boolean disableStructureProviders) {
     return new TreeFileChooserDialog(myProject, title, initialFile, fileType, filter, disableStructureProviders, false);
   }
 
   @Override
   @Nonnull
-  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable TreeFileChooser.PsiFileFilter filter,
+  public TreeFileChooser createFileChooser(@Nonnull String title, @Nullable PsiFile initialFile, @Nullable FileType fileType, @Nullable Predicate<PsiFile> filter,
                                            boolean disableStructureProviders,
                                            boolean showLibraryContents) {
     return new TreeFileChooserDialog(myProject, title, initialFile, fileType, filter, disableStructureProviders, showLibraryContents);
