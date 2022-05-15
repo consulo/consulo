@@ -20,7 +20,7 @@
  * Date: 04-Sep-2006
  * Time: 18:30:23
  */
-package consulo.execution.configuration.log;
+package consulo.execution.configuration.log.ui;
 
 public interface AdditionalTabComponentManager {
   void addAdditionalTabComponent(AdditionalTabComponent component, final String id);

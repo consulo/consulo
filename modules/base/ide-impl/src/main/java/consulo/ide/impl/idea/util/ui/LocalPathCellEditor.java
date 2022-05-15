@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
+import consulo.ui.ex.awt.AbstractTableCellEditor;
+import consulo.ui.ex.awt.CellEditorComponentWithBrowseButton;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

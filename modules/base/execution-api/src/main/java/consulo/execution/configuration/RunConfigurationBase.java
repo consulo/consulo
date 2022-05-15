@@ -17,7 +17,7 @@ package consulo.execution.configuration;
 
 import consulo.execution.ExecutionTarget;
 import consulo.execution.RuntimeConfigurationException;
-import consulo.execution.configuration.log.AdditionalTabComponentManager;
+import consulo.execution.configuration.log.ui.AdditionalTabComponentManager;
 import consulo.execution.configuration.log.LogConsole;
 import consulo.execution.configuration.log.LogFileOptions;
 import consulo.execution.configuration.log.PredefinedLogFile;

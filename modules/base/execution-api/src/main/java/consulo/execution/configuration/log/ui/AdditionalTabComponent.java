@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.execution.configuration.log;
+package consulo.execution.configuration.log.ui;
 
 import consulo.ui.ex.ComponentContainer;
 import consulo.ui.ex.ComponentWithActions;

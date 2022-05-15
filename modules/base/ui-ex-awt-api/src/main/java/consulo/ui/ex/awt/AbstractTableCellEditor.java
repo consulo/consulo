@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util.ui;
+package consulo.ui.ex.awt;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 
-
-public abstract class AbstractTableCellEditor extends AbstractCellEditor implements TableCellEditor{
-
+public abstract class AbstractTableCellEditor extends AbstractCellEditor implements TableCellEditor {
 }

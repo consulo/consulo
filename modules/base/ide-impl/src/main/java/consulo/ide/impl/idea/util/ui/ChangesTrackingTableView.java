@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.util.ui;
 
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ui.ex.awt.CellEditorComponentWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.table.TableView;
 

@@ -30,7 +30,7 @@ import consulo.language.codeStyle.arrangement.std.StdArrangementTokens;
 import consulo.ui.ex.awt.util.ComponentUtil;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.ui.AbstractTableCellEditor;
+import consulo.ui.ex.awt.AbstractTableCellEditor;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
 

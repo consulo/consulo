@@ -27,7 +27,7 @@ import consulo.project.Project;
 import consulo.util.lang.ref.Ref;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.ui.AbstractTableCellEditor;
+import consulo.ui.ex.awt.AbstractTableCellEditor;
 import consulo.ui.ex.awt.UIUtil;
 import javax.annotation.Nonnull;
 

@@ -48,7 +48,7 @@ import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.AbstractTableCellEditor;
+import consulo.ui.ex.awt.AbstractTableCellEditor;
 import consulo.ide.impl.actionSystem.ex.ComboBoxButton;
 import consulo.ide.impl.VfsIconUtil;
 import consulo.ui.image.Image;

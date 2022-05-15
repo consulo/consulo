@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
 
-import consulo.ide.impl.idea.diagnostic.logging.LogConfigurationPanel;
+import consulo.execution.configuration.log.ui.LogConfigurationPanel;
 import consulo.execution.DefaultExecutionResult;
 import consulo.execution.ExecutionBundle;
 import consulo.execution.configuration.ConfigurationFactory;

@@ -25,6 +25,7 @@ import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
+import consulo.execution.configuration.log.ui.AdditionalTabComponent;
 import consulo.execution.internal.ConsoleBuffer;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;

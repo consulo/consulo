@@ -21,6 +21,7 @@ module consulo.execution.api {
   exports consulo.execution.action;
   exports consulo.execution.configuration;
   exports consulo.execution.configuration.log;
+  exports consulo.execution.configuration.log.ui;
   exports consulo.execution.configuration.ui;
   exports consulo.execution.configuration.ui.event;
   exports consulo.execution.event;

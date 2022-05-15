@@ -20,6 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.log.ui.AdditionalTabComponent;
 import consulo.execution.ui.layout.RunnerLayoutUi;
 import consulo.process.ProcessHandler;
 import consulo.project.Project;

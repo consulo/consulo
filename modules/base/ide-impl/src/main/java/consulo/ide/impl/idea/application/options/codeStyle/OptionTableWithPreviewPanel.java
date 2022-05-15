@@ -30,7 +30,7 @@ import consulo.ui.ex.awt.tree.table.TreeTable;
 import consulo.ui.ex.awt.tree.table.TreeTableCellRenderer;
 import consulo.ui.ex.awt.tree.table.TreeTableModel;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.ui.AbstractTableCellEditor;
+import consulo.ui.ex.awt.AbstractTableCellEditor;
 import consulo.ui.ex.awt.ColumnInfo;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;

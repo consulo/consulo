@@ -26,7 +26,7 @@ import consulo.language.codeStyle.arrangement.std.CompositeArrangementSettingsTo
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.ide.impl.idea.util.ui.AbstractTableCellEditor;
+import consulo.ui.ex.awt.AbstractTableCellEditor;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

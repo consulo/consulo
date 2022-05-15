@@ -28,11 +28,8 @@ import consulo.ide.impl.idea.packageDependencies.DependencyRule;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.PackageSet;
-import consulo.ui.ex.awt.ToolbarDecorator;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.TableView;
-import consulo.ide.impl.idea.util.ui.*;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.EditableModel;
 import consulo.ui.ex.awt.table.ListTableModel;
 
 import javax.swing.*;

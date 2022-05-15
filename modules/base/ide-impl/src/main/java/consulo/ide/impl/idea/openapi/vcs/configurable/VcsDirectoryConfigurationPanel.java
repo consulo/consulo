@@ -16,12 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.vcs.configurable;
 
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.table.ListTableModel;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -36,9 +33,6 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.ColoredTableCellRenderer;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.ToolbarDecorator;
-import consulo.ui.ex.awt.JBCheckBox;
-import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ide.impl.idea.util.Function;
 import consulo.util.io.UriUtil;

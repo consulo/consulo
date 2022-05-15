@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.diagnostic.logging;
+package consulo.execution.configuration.log.ui;
 
-import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
+import consulo.execution.ExecutionBundle;
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.TextComponentAccessor;
 import consulo.ui.ex.awt.TextFieldWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import consulo.ui.ex.UIBundle;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -40,7 +40,7 @@ public class EditLogPatternDialog extends DialogWrapper {
 
   public EditLogPatternDialog() {
     super(true);
-    setTitle(DiagnosticBundle.message("log.monitor.edit.aliases.title"));
+    setTitle(ExecutionBundle.message("log.monitor.edit.aliases.title"));
     init();
   }
 

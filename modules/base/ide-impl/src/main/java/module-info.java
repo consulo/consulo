@@ -356,7 +356,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.designer.propertyTable.renderers;
   exports consulo.ide.impl.idea.diagnostic;
   exports consulo.ide.impl.idea.diagnostic.errordialog;
-  exports consulo.ide.impl.idea.diagnostic.logging;
   exports consulo.ide.impl.idea.diff;
   exports consulo.ide.impl.idea.diff.actions;
   exports consulo.ide.impl.idea.diff.actions.impl;

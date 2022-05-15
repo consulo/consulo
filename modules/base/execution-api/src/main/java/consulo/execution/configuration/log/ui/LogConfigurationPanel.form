@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="consulo.ide.impl.idea.diagnostic.logging.LogConfigurationPanel">
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="consulo.execution.configuration.log.ui.LogConfigurationPanel">
   <grid id="57687" binding="myWholePanel" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="10">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
@@ -9,7 +9,7 @@
     <clientProperties>
       <BorderFactoryClass class="java.lang.String" value="consulo.ui.ex.awt.IdeBorderFactory$PlainSmallWithoutIndent"/>
     </clientProperties>
-    <border type="none" title-resource-bundle="messages/DiagnosticBundle" title-key="log.monitor.group"/>
+    <border type="none" title-resource-bundle="consulo/execution/ExecutionBundle" title-key="log.monitor.group"/>
     <children>
       <grid id="faa06" binding="myScrollPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints>

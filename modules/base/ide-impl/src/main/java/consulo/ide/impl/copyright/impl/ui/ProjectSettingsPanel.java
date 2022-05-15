@@ -15,9 +15,7 @@
  */
 package consulo.ide.impl.copyright.impl.ui;
 
-import consulo.ui.ex.awt.ElementProducer;
-import consulo.ui.ex.awt.ColumnInfo;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.util.scopeChooser.PackageSetChooserCombo;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
@@ -25,21 +23,17 @@ import consulo.dataContext.DataContext;
 import consulo.configurable.Configurable;
 import consulo.ide.setting.Settings;
 import consulo.project.Project;
-import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
-import consulo.ui.ex.awt.HyperlinkLabel;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
-import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ide.impl.idea.ui.components.editors.JBComboBoxTableCellEditorComponent;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.ui.*;
 import consulo.ide.impl.copyright.impl.CopyrightManager;
 import consulo.ide.impl.copyright.impl.CopyrightProfile;
 import consulo.ui.ex.awt.table.ListTableModel;
