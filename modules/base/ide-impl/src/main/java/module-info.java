@@ -1083,8 +1083,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.psi.injection;
   exports consulo.ide.impl.psi.injection.impl;
   exports consulo.ide.impl.psi.meta;
-  exports consulo.ide.impl.psi.scope;
-  exports consulo.ide.impl.psi.scope.util;
   exports consulo.ide.impl.psi.search;
   exports consulo.ide.impl.psi.search.scope;
   exports consulo.ide.impl.psi.search.scope.impl;

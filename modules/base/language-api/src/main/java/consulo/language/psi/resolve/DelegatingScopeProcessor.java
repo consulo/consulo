@@ -1,9 +1,8 @@
-package consulo.ide.impl.psi.scope;
+package consulo.language.psi.resolve;
 
-import consulo.language.psi.resolve.PsiScopeProcessor;
-import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
-import consulo.language.psi.resolve.ResolveState;
+import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
