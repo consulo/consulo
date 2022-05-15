@@ -16,9 +16,9 @@
 package consulo.ide.impl.idea.execution.filters.impl;
 
 import consulo.execution.ExecutionBundle;
-import consulo.ide.impl.idea.execution.filters.FileHyperlinkInfo;
+import consulo.execution.ui.console.FileHyperlinkInfo;
 import consulo.execution.ui.console.HyperlinkInfoBase;
-import consulo.ide.impl.idea.execution.filters.HyperlinkInfoFactory;
+import consulo.execution.ui.console.HyperlinkInfoFactory;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.util.gotoByName.GotoFileCellRenderer;
 import consulo.language.editor.CommonDataKeys;

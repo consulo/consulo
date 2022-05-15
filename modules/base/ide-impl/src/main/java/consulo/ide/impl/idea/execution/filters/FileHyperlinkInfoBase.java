@@ -16,12 +16,14 @@
 package consulo.ide.impl.idea.execution.filters;
 
 import consulo.application.Application;
+import consulo.application.util.function.Computable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.execution.ui.console.FileHyperlinkInfo;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.project.Project;
-import consulo.application.util.function.Computable;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -87,7 +89,7 @@ public abstract class FileHyperlinkInfoBase implements FileHyperlinkInfo {
   @Override
   public void navigate(final Project project) {
     Application.get().runReadAction(() -> {
-      OpenFileDescriptorImpl descriptor = getDescriptor();
+      OpenFileDescriptor descriptor = getDescriptor();
       if (descriptor != null) {
         FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
       }

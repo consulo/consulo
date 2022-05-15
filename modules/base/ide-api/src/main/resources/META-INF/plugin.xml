@@ -571,7 +571,7 @@
     </extensionPoint>
 
     <extensionPoint name="outerLanguageRangePatcher" beanClass="consulo.language.LanguageExtensionPoint">
-      <with attribute="implementationClass" implements="consulo.ide.impl.psi.templateLanguages.TemplateDataElementType$OuterLanguageRangePatcher"/>
+      <with attribute="implementationClass" implements="consulo.language.impl.psi.template.TemplateDataElementType$OuterLanguageRangePatcher"/>
     </extensionPoint>
 
     <extensionPoint name="lang.tokenSeparatorGenerator" beanClass="consulo.language.LanguageExtensionPoint">
@@ -777,8 +777,8 @@
     <extensionPoint name="utf8BomOptionProvider" interface="consulo.ide.impl.idea.openapi.vfs.encoding.Utf8BomOptionProvider"/>
 
     <extensionPoint name="consoleFilterProvider" interface="consulo.execution.ui.console.ConsoleFilterProvider"/>
-    <extensionPoint name="consoleInputFilterProvider" interface="consulo.ide.impl.idea.execution.filters.ConsoleInputFilterProvider"/>
-    <extensionPoint name="consoleActionsPostProcessor" interface="consulo.ide.impl.idea.execution.actions.ConsoleActionsPostProcessor"/>
+    <extensionPoint name="consoleInputFilterProvider" interface="consulo.execution.ui.console.ConsoleInputFilterProvider"/>
+    <extensionPoint name="consoleActionsPostProcessor" interface="consulo.execution.ui.console.ConsoleActionsPostProcessor"/>
 
     <extensionPoint name="console.folding" interface="consulo.execution.ConsoleFolding"/>
 
@@ -1934,7 +1934,7 @@
     <projectService serviceInterface="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"
                     serviceImplementation="consulo.ide.impl.idea.moduleDependencies.DependenciesAnalyzeManager"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.util.TreeFileChooserFactory"
+    <projectService serviceInterface="consulo.language.editor.ui.TreeFileChooserFactory"
                     serviceImplementation="consulo.ide.impl.idea.ide.util.TreeFileChooserFactoryImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.psi.impl.cache.CacheManager"
@@ -2477,7 +2477,7 @@
     <applicationService serviceInterface="consulo.language.editor.inspection.scheme.InspectionProfileManager"
                         serviceImplementation="consulo.ide.impl.idea.profile.codeInspection.InspectionProfileManagerImpl"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.execution.filters.HyperlinkInfoFactory"
+    <applicationService serviceInterface="consulo.execution.ui.console.HyperlinkInfoFactory"
                         serviceImplementation="consulo.ide.impl.idea.execution.filters.impl.HyperlinkInfoFactoryImpl"/>
     <consoleFilterProvider implementation="consulo.ide.impl.idea.execution.filters.UrlFilter$UrlFilterProvider"/>
 

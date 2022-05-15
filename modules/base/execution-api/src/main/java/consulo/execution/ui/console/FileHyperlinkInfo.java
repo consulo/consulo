@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.execution.filters;
+package consulo.execution.ui.console;
 
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.navigation.OpenFileDescriptor;
 
 import javax.annotation.Nullable;
 
@@ -27,5 +26,5 @@ import javax.annotation.Nullable;
  */
 public interface FileHyperlinkInfo extends HyperlinkInfo {
   @Nullable
-  OpenFileDescriptorImpl getDescriptor();
+  OpenFileDescriptor getDescriptor();
 }

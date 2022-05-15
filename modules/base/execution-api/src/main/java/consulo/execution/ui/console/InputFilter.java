@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.execution.ui.console;
 
-package consulo.ide.impl.idea.execution.filters;
+import consulo.util.lang.Pair;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
-public interface ConsoleInputFilterProvider {
-  ExtensionPointName<ConsoleInputFilterProvider> INPUT_FILTER_PROVIDERS =
-    ExtensionPointName.create("consulo.consoleInputFilterProvider");
+public interface InputFilter {
 
-  @Nonnull
-  InputFilter[] getDefaultFilters(@Nonnull Project project);
+  /**
+   * @param text        the text to be filtered.
+   * @param contentType the content type of filtered text
+   * @return            <tt>null</tt>, if there was no match, otherwise, a list of pairs like ('string to use', 'content type to use')
+   */
+  @Nullable
+  List<Pair<String, ConsoleViewContentType>> applyFilter(String text, ConsoleViewContentType contentType);
+
 }

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.execution.actions;
+package consulo.execution.ui.console;
 
-import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nonnull;

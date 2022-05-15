@@ -17,19 +17,21 @@
 package consulo.ide.impl.idea.execution.filters;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.execution.ui.console.InputFilter;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.util.lang.Pair;
-import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CompositeInputFilter implements InputFilter {
   private static final Logger LOG = Logger.getInstance(CompositeInputFilter.class);
 
-  private final List<Pair<InputFilter, Boolean /* is dumb aware */>> myFilters = ContainerUtilRt.newArrayList();
+  private final List<Pair<InputFilter, Boolean /* is dumb aware */>> myFilters = new ArrayList<>();
   private final DumbService myDumbService;
 
   public CompositeInputFilter(@Nonnull Project project) {
@@ -37,7 +39,7 @@ public class CompositeInputFilter implements InputFilter {
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public List<Pair<String, ConsoleViewContentType>> applyFilter(final String text, final ConsoleViewContentType contentType) {
     boolean dumb = myDumbService.isDumb();
     for (Pair<InputFilter, Boolean> pair : myFilters) {

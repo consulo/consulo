@@ -1,26 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.unscramble;
 
-import consulo.ide.impl.idea.execution.filters.FileHyperlinkInfo;
-import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
 import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorGutterAction;
-import consulo.codeEditor.TextAnnotationGutterProvider;
-import consulo.colorScheme.EditorColorKey;
-import consulo.colorScheme.EditorFontType;
-import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorGutterAction;
+import consulo.codeEditor.EditorGutterComponentEx;
+import consulo.codeEditor.TextAnnotationGutterProvider;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorKey;
+import consulo.colorScheme.EditorFontType;
+import consulo.disposer.Disposer;
+import consulo.execution.ui.console.HyperlinkInfo;
+import consulo.execution.ui.console.FileHyperlinkInfo;
+import consulo.ide.impl.idea.execution.impl.EditorHyperlinkSupport;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsContextFactory;
@@ -31,19 +27,23 @@ import consulo.ide.impl.idea.openapi.vcs.history.VcsFileRevision;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistoryProvider;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsHistorySession;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
 import consulo.ide.impl.idea.vcs.history.VcsHistoryProviderEx;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.disposer.Disposer;
 import consulo.logging.Logger;
+import consulo.navigation.OpenFileDescriptor;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
+import consulo.util.collection.MultiMap;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -192,7 +192,7 @@ public class AnnotateStackTraceAction extends DumbAwareAction {
     if (key == null) return null;
     HyperlinkInfo info = EditorHyperlinkSupport.getHyperlinkInfo(key);
     if (!(info instanceof FileHyperlinkInfo)) return null;
-    OpenFileDescriptorImpl descriptor = ((FileHyperlinkInfo)info).getDescriptor();
+    OpenFileDescriptor descriptor = ((FileHyperlinkInfo)info).getDescriptor();
     return descriptor != null ? descriptor.getFile() : null;
   }
 

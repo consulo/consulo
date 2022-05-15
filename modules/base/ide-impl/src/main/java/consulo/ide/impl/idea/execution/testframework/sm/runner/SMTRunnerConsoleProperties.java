@@ -20,7 +20,7 @@ import consulo.execution.action.Location;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.configuration.RunProfile;
 import consulo.ide.impl.idea.execution.filters.CompositeFilter;
-import consulo.ide.impl.idea.execution.filters.FileHyperlinkInfo;
+import consulo.execution.ui.console.FileHyperlinkInfo;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.test.TestConsoleProperties;
@@ -35,7 +35,7 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.navigation.Navigatable;
 import consulo.language.psi.PsiDocumentManager;
@@ -116,7 +116,7 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     return getErrorNavigatable(location.getProject(), stacktrace);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public Navigatable getErrorNavigatable(@Nonnull final Project project, final @Nonnull String stacktrace) {
     if (myCustomFilter.isEmpty()) {
@@ -169,7 +169,7 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     myCustomFilter.addFilter(filter);
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Deprecated
   protected Navigatable findSuitableNavigatableForLine(@Nonnull Project project, @Nonnull VirtualFile file, int line) {
     // lets find first non-ws psi element
@@ -197,12 +197,12 @@ public class SMTRunnerConsoleProperties extends TestConsoleProperties implements
     return false;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public SMTestLocator getTestLocator() {
     return null;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   public TestProxyFilterProvider getFilterProvider() {
     return null;
   }

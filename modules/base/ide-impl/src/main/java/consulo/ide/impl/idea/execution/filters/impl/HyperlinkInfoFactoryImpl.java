@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.execution.filters.impl;
 
 import consulo.execution.ui.console.HyperlinkInfo;
-import consulo.ide.impl.idea.execution.filters.HyperlinkInfoFactory;
+import consulo.execution.ui.console.HyperlinkInfoFactory;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

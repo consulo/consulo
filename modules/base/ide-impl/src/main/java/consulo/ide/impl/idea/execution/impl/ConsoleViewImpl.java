@@ -39,16 +39,14 @@ import consulo.execution.ui.console.Filter.ResultItem;
 import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
-import consulo.ide.impl.idea.execution.actions.ConsoleActionsPostProcessor;
+import consulo.execution.ui.console.ConsoleActionsPostProcessor;
 import consulo.ide.impl.idea.execution.actions.EOFAction;
 import consulo.ide.impl.idea.execution.filters.*;
 import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
@@ -56,6 +54,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
+import consulo.navigation.OpenFileDescriptor;
 import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -71,6 +70,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.undoRedo.util.UndoUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import consulo.util.lang.SystemProperties;
 import consulo.util.lang.ref.Ref;
 import org.jetbrains.annotations.NonNls;
@@ -847,7 +847,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
     if (CommonDataKeys.NAVIGATABLE == dataId) {
       final LogicalPosition pos = myEditor.getCaretModel().getLogicalPosition();
       final HyperlinkInfo info = myHyperlinks.getHyperlinkInfoByLineAndCol(pos.line, pos.column);
-      final OpenFileDescriptorImpl openFileDescriptor = info instanceof FileHyperlinkInfo ? ((FileHyperlinkInfo)info).getDescriptor() : null;
+      final OpenFileDescriptor openFileDescriptor = info instanceof FileHyperlinkInfo ? ((FileHyperlinkInfo)info).getDescriptor() : null;
       if (openFileDescriptor == null || !openFileDescriptor.getFile().isValid()) {
         return null;
       }
