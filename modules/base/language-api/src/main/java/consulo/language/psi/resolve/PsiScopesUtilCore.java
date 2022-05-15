@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.scope.util;
+package consulo.language.psi.resolve;
 
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiInvalidElementAccessException;
-import consulo.language.psi.resolve.ResolveState;
-import consulo.language.psi.resolve.PsiScopeProcessor;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
