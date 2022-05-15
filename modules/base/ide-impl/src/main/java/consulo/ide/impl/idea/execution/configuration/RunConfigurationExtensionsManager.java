@@ -23,7 +23,7 @@ import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.ide.impl.idea.openapi.options.SettingsEditorGroup;
+import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;

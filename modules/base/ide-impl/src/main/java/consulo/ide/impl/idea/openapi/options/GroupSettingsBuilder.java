@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.options;
 
 import consulo.disposer.Disposable;
+import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ui.ex.awt.TabbedPaneWrapper;
 import consulo.execution.configuration.ui.CompositeSettingsBuilder;

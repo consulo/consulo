@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemBundle;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.document.FileDocumentManager;
 import consulo.execution.configuration.ui.SettingsEditor;
-import consulo.ide.impl.idea.openapi.options.SettingsEditorGroup;
+import consulo.execution.configuration.ui.SettingsEditorGroup;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;

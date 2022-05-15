@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.options;
+package consulo.execution.configuration.ui;
 
 import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Pair;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
-
+import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
 
   public void addEditor(String name, SettingsEditor<T> editor) {
     Disposer.register(this, editor);
-    myEditors.add(new Pair<String, SettingsEditor<T>>(name, editor));
+    myEditors.add(new Pair<>(name, editor));
   }
 
   public void addGroup(SettingsEditorGroup<T> group) {
@@ -45,14 +46,28 @@ public class SettingsEditorGroup<T> extends SettingsEditor<T> {
     return myEditors;
   }
 
-  public void resetEditorFrom(T t) {}
-  public void applyEditorTo(T t) throws ConfigurationException {}
+  @Override
+  public void resetEditorFrom(T t) {
+  }
 
+  @Override
+  public void applyEditorTo(T t) throws ConfigurationException {
+  }
+
+  @Override
   @Nonnull
   public JComponent createEditor() {
     throw new UnsupportedOperationException("This method should never be called!");
   }
 
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  protected Component createUIComponent() {
+    throw new UnsupportedOperationException("This method should never be called!");
+  }
+
+  @Override
   public void disposeEditor() {
   }
 }
