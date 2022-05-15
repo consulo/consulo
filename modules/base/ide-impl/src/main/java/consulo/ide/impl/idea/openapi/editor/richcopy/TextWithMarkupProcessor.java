@@ -16,7 +16,7 @@ import consulo.ide.impl.idea.openapi.editor.richcopy.settings.RichCopySettings;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.HtmlTransferableData;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RawTextWithMarkup;
 import consulo.ide.impl.idea.openapi.editor.richcopy.view.RtfTransferableData;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.language.editor.action.CopyPastePreProcessor;
 import consulo.language.editor.highlight.HighlighterFactory;

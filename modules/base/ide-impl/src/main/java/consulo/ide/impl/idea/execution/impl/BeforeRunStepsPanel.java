@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.execution.impl;
 
 import consulo.ide.impl.idea.execution.configurations.UnknownRunConfiguration;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.SimpleDataContext;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.dataContext.DataContext;
 import consulo.execution.BeforeRunTask;
 import consulo.execution.BeforeRunTaskProvider;
@@ -35,6 +34,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import consulo.util.lang.function.Conditions;
 
 import javax.annotation.Nonnull;

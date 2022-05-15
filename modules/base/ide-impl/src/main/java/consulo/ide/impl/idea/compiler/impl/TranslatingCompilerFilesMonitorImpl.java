@@ -40,7 +40,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.startup.StartupManager;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Trinity;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.*;

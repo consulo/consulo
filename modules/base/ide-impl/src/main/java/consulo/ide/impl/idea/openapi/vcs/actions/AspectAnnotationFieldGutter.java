@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorGutterAction;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.LineAnnotationAspect;
 import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;

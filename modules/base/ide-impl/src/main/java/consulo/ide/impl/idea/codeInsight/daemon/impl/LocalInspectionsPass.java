@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.codeInspection.InspectionEngine;
 import consulo.ide.impl.idea.codeInspection.ex.*;
 import consulo.ide.impl.idea.codeInspection.ui.InspectionToolPresentation;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManager;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;

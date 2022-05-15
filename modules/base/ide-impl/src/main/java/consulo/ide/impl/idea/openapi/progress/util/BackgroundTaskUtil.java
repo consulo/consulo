@@ -27,7 +27,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;
@@ -149,9 +149,9 @@ public class BackgroundTaskUtil {
    */
   @Nonnull
   private static <T> Pair<T, ProgressIndicator> computeInBackgroundAndTryWait(@Nonnull Function<ProgressIndicator, T> task,
-                                                                              @Nonnull PairConsumer<T, ProgressIndicator> asyncCallback,
-                                                                              @Nonnull IdeaModalityState modality,
-                                                                              long waitMillis) {
+                                                                                                @Nonnull PairConsumer<T, ProgressIndicator> asyncCallback,
+                                                                                                @Nonnull IdeaModalityState modality,
+                                                                                                long waitMillis) {
     ProgressIndicator indicator = new EmptyProgressIndicator(modality);
 
     Helper<T> helper = new Helper<>();

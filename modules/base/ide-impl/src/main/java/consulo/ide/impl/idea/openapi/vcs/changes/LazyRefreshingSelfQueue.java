@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.logging.Logger;
 

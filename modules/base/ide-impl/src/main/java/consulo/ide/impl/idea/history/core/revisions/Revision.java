@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.history.core.revisions;
 
 import consulo.ide.impl.idea.history.core.tree.Entry;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import javax.annotation.Nullable;
 
 import java.util.Collections;

@@ -19,7 +19,7 @@ import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;

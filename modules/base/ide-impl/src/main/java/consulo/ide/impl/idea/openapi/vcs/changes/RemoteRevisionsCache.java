@@ -19,9 +19,8 @@ import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RemoteStatusChangeNodeDecorator;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
@@ -34,6 +33,7 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.messagebus.Topic;
 import consulo.logging.Logger;
 
+import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

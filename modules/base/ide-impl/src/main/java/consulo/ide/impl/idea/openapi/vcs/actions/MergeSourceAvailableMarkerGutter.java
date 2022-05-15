@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.actions;
 
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationSource;
 import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationSourceSwitcher;
 import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;

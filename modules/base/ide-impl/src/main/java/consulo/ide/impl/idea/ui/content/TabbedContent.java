@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui.content;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 

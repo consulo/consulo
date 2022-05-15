@@ -31,7 +31,7 @@ import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.util.lang.Trinity;
 import consulo.application.ui.wm.IdeFocusManager;

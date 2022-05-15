@@ -6,7 +6,6 @@ import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.application.util.mac.foundation.Foundation;
@@ -15,6 +14,7 @@ import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.concurrency.FutureResult;
 import com.sun.jna.IntegerType;
+import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 import sun.awt.datatransfer.DataTransferer;
 

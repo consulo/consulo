@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesSelection;

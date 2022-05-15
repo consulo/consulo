@@ -12,7 +12,6 @@ import consulo.language.LangBundle;
 import consulo.dataContext.DataProvider;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
@@ -28,6 +27,7 @@ import consulo.disposer.Disposer;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 

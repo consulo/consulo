@@ -67,7 +67,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> Map<K, V> newHashMap(@Nonnull Pair<K, ? extends V> first, @Nonnull Pair<K, ? extends V>... entries) {
+  public static <K, V> Map<K, V> newHashMap(@Nonnull consulo.util.lang.Pair<K, ? extends V> first, @Nonnull consulo.util.lang.Pair<K, ? extends V>... entries) {
     return ContainerUtilRt.newHashMap(first, entries);
   }
 
@@ -109,7 +109,7 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(@Nonnull Pair<K, V> first, @Nonnull Pair<K, V>... entries) {
+  public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(@Nonnull consulo.util.lang.Pair<K, V> first, @Nonnull consulo.util.lang.Pair<K, V>... entries) {
     return ContainerUtilRt.newLinkedHashMap(first, entries);
   }
 
@@ -595,8 +595,8 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <K, V> Map<K, Couple<V>> diff(@Nonnull Map<K, V> map1, @Nonnull Map<K, V> map2) {
-    final Map<K, Couple<V>> res = newHashMap();
+  public static <K, V> Map<K, consulo.util.lang.Couple<V>> diff(@Nonnull Map<K, V> map1, @Nonnull Map<K, V> map2) {
+    final Map<K, consulo.util.lang.Couple<V>> res = newHashMap();
     final Set<K> keys = newHashSet();
     keys.addAll(map1.keySet());
     keys.addAll(map2.keySet());
@@ -604,7 +604,7 @@ public class ContainerUtil extends ContainerUtilRt {
       V v1 = map1.get(k);
       V v2 = map2.get(k);
       if (!(v1 == v2 || v1 != null && v1.equals(v2))) {
-        res.put(k, Couple.of(v1, v2));
+        res.put(k, consulo.util.lang.Couple.of(v1, v2));
       }
     }
     return res;
@@ -901,16 +901,16 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T, KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull T[] collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
+  public static <T, KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull T[] collection, @Nonnull Function<T, consulo.util.lang.Pair<KEY, VALUE>> mapper) {
     return map2Map(Arrays.asList(collection), mapper);
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T, KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
+  public static <T, KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, consulo.util.lang.Pair<KEY, VALUE>> mapper) {
     final Map<KEY, VALUE> set = new HashMap<KEY, VALUE>(collection.size());
     for (T t : collection) {
-      Pair<KEY, VALUE> pair = mapper.fun(t);
+      consulo.util.lang.Pair<KEY, VALUE> pair = mapper.fun(t);
       set.put(pair.first, pair.second);
     }
     return set;
@@ -918,16 +918,16 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T, KEY, VALUE> Map<KEY, VALUE> map2MapNotNull(@Nonnull T[] collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
+  public static <T, KEY, VALUE> Map<KEY, VALUE> map2MapNotNull(@Nonnull T[] collection, @Nonnull Function<T, consulo.util.lang.Pair<KEY, VALUE>> mapper) {
     return map2MapNotNull(Arrays.asList(collection), mapper);
   }
 
   @Nonnull
   @Contract(pure = true)
-  public static <T, KEY, VALUE> Map<KEY, VALUE> map2MapNotNull(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, Pair<KEY, VALUE>> mapper) {
+  public static <T, KEY, VALUE> Map<KEY, VALUE> map2MapNotNull(@Nonnull Collection<? extends T> collection, @Nonnull Function<T, consulo.util.lang.Pair<KEY, VALUE>> mapper) {
     final Map<KEY, VALUE> set = new HashMap<KEY, VALUE>(collection.size());
     for (T t : collection) {
-      Pair<KEY, VALUE> pair = mapper.fun(t);
+      consulo.util.lang.Pair<KEY, VALUE> pair = mapper.fun(t);
       if (pair != null) {
         set.put(pair.first, pair.second);
       }
@@ -937,9 +937,9 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull Collection<Pair<KEY, VALUE>> collection) {
+  public static <KEY, VALUE> Map<KEY, VALUE> map2Map(@Nonnull Collection<consulo.util.lang.Pair<KEY, VALUE>> collection) {
     final Map<KEY, VALUE> result = new HashMap<KEY, VALUE>(collection.size());
-    for (Pair<KEY, VALUE> pair : collection) {
+    for (consulo.util.lang.Pair<KEY, VALUE> pair : collection) {
       result.put(pair.first, pair.second);
     }
     return result;
@@ -1273,11 +1273,11 @@ public class ContainerUtil extends ContainerUtilRt {
 
   @Nonnull
   @Contract(pure = true)
-  public static <T, E> Iterable<Pair<T, E>> zip(@Nonnull final Iterable<T> iterable1, @Nonnull final Iterable<E> iterable2) {
-    return new Iterable<Pair<T, E>>() {
+  public static <T, E> Iterable<consulo.util.lang.Pair<T, E>> zip(@Nonnull final Iterable<T> iterable1, @Nonnull final Iterable<E> iterable2) {
+    return new Iterable<consulo.util.lang.Pair<T, E>>() {
       @Override
-      public Iterator<Pair<T, E>> iterator() {
-        return new Iterator<Pair<T, E>>() {
+      public Iterator<consulo.util.lang.Pair<T, E>> iterator() {
+        return new Iterator<consulo.util.lang.Pair<T, E>>() {
           private final Iterator<T> i1 = iterable1.iterator();
           private final Iterator<E> i2 = iterable2.iterator();
 
@@ -1287,8 +1287,8 @@ public class ContainerUtil extends ContainerUtilRt {
           }
 
           @Override
-          public Pair<T, E> next() {
-            return Pair.create(i1.next(), i2.next());
+          public consulo.util.lang.Pair<T, E> next() {
+            return consulo.util.lang.Pair.create(i1.next(), i2.next());
           }
 
           @Override

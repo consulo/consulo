@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.dupLocator.equivalence.MultiChildDescriptor;
 import consulo.ide.impl.idea.dupLocator.equivalence.SingleChildDescriptor;
 import consulo.ide.impl.idea.dupLocator.util.DuplocatorUtil;
 import consulo.ide.impl.idea.dupLocator.util.PsiFragment;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.impl.ast.LeafElement;
@@ -221,8 +221,8 @@ class TreeHasherBase extends AbstractTreeHasher {
 
   @Nonnull
   private Couple<Integer> computeHash(SingleChildDescriptor childDescriptor,
-                                      PsiFragment parentFragment,
-                                      NodeSpecificHasher nodeSpecificHasher) {
+                                                        PsiFragment parentFragment,
+                                                        NodeSpecificHasher nodeSpecificHasher) {
 
     final PsiElement element = childDescriptor.getElement();
     if (element == null) {
@@ -246,8 +246,8 @@ class TreeHasherBase extends AbstractTreeHasher {
 
   @Nonnull
   private Couple<Integer> doComputeHash(SingleChildDescriptor childDescriptor,
-                                        PsiFragment parentFragment,
-                                        NodeSpecificHasher nodeSpecificHasher) {
+                                                          PsiFragment parentFragment,
+                                                          NodeSpecificHasher nodeSpecificHasher) {
     final PsiElement element = childDescriptor.getElement();
 
     switch (childDescriptor.getType()) {
@@ -284,8 +284,8 @@ class TreeHasherBase extends AbstractTreeHasher {
 
   @Nonnull
   private Couple<Integer> computeHash(MultiChildDescriptor childDescriptor,
-                                      PsiFragment parentFragment,
-                                      NodeSpecificHasher nodeSpecificHasher) {
+                                                        PsiFragment parentFragment,
+                                                        NodeSpecificHasher nodeSpecificHasher) {
     final PsiElement[] elements = childDescriptor.getElements();
 
     if (elements == null) {

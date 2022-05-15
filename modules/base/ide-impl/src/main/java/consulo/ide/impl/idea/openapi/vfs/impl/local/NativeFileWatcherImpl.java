@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
 import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.application.ApplicationBundle;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.local.FileWatcherNotificationSink;
 import consulo.ide.impl.idea.openapi.vfs.local.PluggableFileWatcher;
@@ -21,6 +20,7 @@ import consulo.process.local.OSProcessHandler;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.util.dataholder.Key;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ShutDownTracker;
 import consulo.util.lang.TimeoutUtil;
 import org.jetbrains.annotations.TestOnly;

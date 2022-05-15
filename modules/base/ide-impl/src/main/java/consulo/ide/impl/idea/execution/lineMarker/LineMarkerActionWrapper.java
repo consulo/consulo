@@ -5,7 +5,6 @@ import consulo.ide.impl.idea.codeInsight.intention.PriorityAction;
 import consulo.execution.action.Location;
 import consulo.execution.action.PsiLocation;
 import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.logging.Logger;
@@ -17,6 +16,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderBase;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

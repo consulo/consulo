@@ -23,7 +23,7 @@ import consulo.codeEditor.markup.HighlighterTargetArea;
 import consulo.codeEditor.markup.MarkupModel;
 import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.TextAttributes;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.util.NotNullFunction;

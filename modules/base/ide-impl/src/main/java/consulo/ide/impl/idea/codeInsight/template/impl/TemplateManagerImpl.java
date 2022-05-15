@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate;
 import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplateBase;
 import consulo.ide.impl.idea.codeInsight.template.CustomTemplateCallback;
 import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.PairProcessor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;

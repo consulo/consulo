@@ -95,7 +95,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   // You must update all existing default configurations accordingly
   private static final int VERSION = 17;
-  private static final ThreadLocal<Pair<VirtualFile, FileType>> FILE_TYPE_FIXED_TEMPORARILY = new ThreadLocal<>();
+  private static final ThreadLocal<consulo.util.lang.Pair<VirtualFile, FileType>> FILE_TYPE_FIXED_TEMPORARILY = new ThreadLocal<>();
 
   // cached auto-detected file type. If the file was auto-detected as plain text or binary
   // then the value is null and AUTO_DETECTED_* flags stored in packedFlags are used instead.
@@ -734,8 +734,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   public void freezeFileTypeTemporarilyIn(@Nonnull VirtualFile file, @Nonnull Runnable runnable) {
     FileType fileType = file.getFileType();
-    Pair<VirtualFile, FileType> old = FILE_TYPE_FIXED_TEMPORARILY.get();
-    FILE_TYPE_FIXED_TEMPORARILY.set(Pair.create(file, fileType));
+    consulo.util.lang.Pair<VirtualFile, FileType> old = FILE_TYPE_FIXED_TEMPORARILY.get();
+    FILE_TYPE_FIXED_TEMPORARILY.set(consulo.util.lang.Pair.create(file, fileType));
     if (toLog()) {
       log("F: freezeFileTypeTemporarilyIn(" + file.getName() + ") to " + fileType.getName() + " in " + Thread.currentThread());
     }
@@ -790,7 +790,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   @Nullable // null means all conventional detect methods returned UnknownFileType.INSTANCE, have to detect from content
   public FileType getByFile(@Nonnull VirtualFile file) {
-    Pair<VirtualFile, FileType> fixedType = FILE_TYPE_FIXED_TEMPORARILY.get();
+    consulo.util.lang.Pair<VirtualFile, FileType> fixedType = FILE_TYPE_FIXED_TEMPORARILY.get();
     if (fixedType != null && fixedType.getFirst().equals(file)) {
       FileType fileType = fixedType.getSecond();
       if (toLog()) {
@@ -1512,7 +1512,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   }
 
   private void readGlobalMappings(@Nonnull Element e, boolean isAddToInit) {
-    for (Pair<FileNameMatcher, String> association : AbstractFileType.readAssociations(e)) {
+    for (consulo.util.lang.Pair<FileNameMatcher, String> association : AbstractFileType.readAssociations(e)) {
       FileType type = getFileTypeByName(association.getSecond());
       FileNameMatcher matcher = association.getFirst();
       final FileTypeBean pendingFileTypeBean = myPendingAssociations.findAssociatedFileType(matcher);
@@ -1749,7 +1749,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     else {
       Element extensions = typeElement.getChild(AbstractFileType.ELEMENT_EXTENSION_MAP);
       if (extensions != null) {
-        for (Pair<FileNameMatcher, String> association : AbstractFileType.readAssociations(extensions)) {
+        for (consulo.util.lang.Pair<FileNameMatcher, String> association : AbstractFileType.readAssociations(extensions)) {
           associate(type, association.getFirst(), false);
         }
 

@@ -52,7 +52,7 @@ import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ui.ex.popup.Balloon;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.annotate.AnnotationProvider;
 import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;

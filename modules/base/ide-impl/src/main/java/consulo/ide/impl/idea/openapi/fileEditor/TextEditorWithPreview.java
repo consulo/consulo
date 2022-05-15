@@ -8,7 +8,7 @@ import consulo.fileEditor.structureView.StructureViewBuilder;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.codeEditor.EditorGutterComponentEx;
 import consulo.application.dumb.DumbAware;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.JBColor;

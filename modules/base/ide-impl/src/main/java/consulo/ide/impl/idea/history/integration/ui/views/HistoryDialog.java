@@ -43,11 +43,11 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.*;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.*;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangesUtil;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchConfigurationPanel;
+import consulo.util.lang.Couple;
 import consulo.util.lang.ref.Ref;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
@@ -149,7 +149,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     root.setFocusTraversalPolicy(traversalPolicy);
     root.setFocusTraversalPolicyProvider(true);
 
-    Pair<JComponent, Dimension> diffAndToolbarSize = createDiffPanel(root, traversalPolicy);
+    consulo.util.lang.Pair<JComponent, Dimension> diffAndToolbarSize = createDiffPanel(root, traversalPolicy);
     myDiffView = new MyDiffContainer(diffAndToolbarSize.first);
     Disposer.register(this, myDiffView);
 
@@ -186,7 +186,7 @@ public abstract class HistoryDialog<T extends HistoryDialogModel> extends FrameW
     super.dispose();
   }
 
-  protected abstract Pair<JComponent, Dimension> createDiffPanel(JPanel root, ExcludingTraversalPolicy traversalPolicy);
+  protected abstract consulo.util.lang.Pair<JComponent, Dimension> createDiffPanel(JPanel root, ExcludingTraversalPolicy traversalPolicy);
 
   private JComponent createRevisionsSide(Dimension prefToolBarSize) {
     ActionGroup actions = createRevisionsActions();

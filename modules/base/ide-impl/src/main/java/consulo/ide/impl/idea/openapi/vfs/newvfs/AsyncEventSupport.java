@@ -7,7 +7,7 @@ import consulo.component.extension.ExtensionPointName;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.event.AsyncFileListener;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.VirtualFileManager;

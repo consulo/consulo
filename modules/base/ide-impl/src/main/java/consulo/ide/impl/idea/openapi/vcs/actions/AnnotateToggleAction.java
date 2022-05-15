@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.localVcs.UpToDateLineNumberProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;

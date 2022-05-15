@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.laf.WideSelectionTreeUI;
+import consulo.util.lang.Pair;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;

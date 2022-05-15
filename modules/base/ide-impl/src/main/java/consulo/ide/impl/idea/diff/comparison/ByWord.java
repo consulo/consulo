@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.diff.fragments.MergeWordFragment;
 import consulo.ide.impl.idea.diff.util.MergeRange;
 import consulo.ide.impl.idea.diff.util.Range;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.lang.MergingCharSequence;
 
@@ -458,9 +458,9 @@ public class ByWord {
    */
   @Nonnull
   private static Couple<FairDiffIterable> comparePunctuation2Side(@Nonnull CharSequence text1,
-                                                                  @Nonnull CharSequence text21,
-                                                                  @Nonnull CharSequence text22,
-                                                                  @Nonnull ProgressIndicator indicator) {
+                                                                                    @Nonnull CharSequence text21,
+                                                                                    @Nonnull CharSequence text22,
+                                                                                    @Nonnull ProgressIndicator indicator) {
     CharSequence text2 = new MergingCharSequence(text21, text22);
     FairDiffIterable changes = ByChar.comparePunctuation(text1, text2, indicator);
 

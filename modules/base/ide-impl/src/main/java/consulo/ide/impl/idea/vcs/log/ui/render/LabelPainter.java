@@ -31,7 +31,7 @@ package consulo.ide.impl.idea.vcs.log.ui.render;
  */
 
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -134,11 +134,11 @@ public class LabelPainter {
 
   @Nonnull
   private static Pair<List<Pair<String, LabelIcon>>, Integer> calculatePresentation(@Nonnull List<RefGroup> refGroups,
-                                                                                    @Nonnull FontMetrics fontMetrics,
-                                                                                    int height,
-                                                                                    @Nonnull Color background,
-                                                                                    int availableWidth,
-                                                                                    boolean compact) {
+                                                                                                                        @Nonnull FontMetrics fontMetrics,
+                                                                                                                        int height,
+                                                                                                                        @Nonnull Color background,
+                                                                                                                        int availableWidth,
+                                                                                                                        boolean compact) {
     int width = LEFT_PADDING + RIGHT_PADDING;
 
     List<Pair<String, LabelIcon>> labels = ContainerUtil.newArrayList();
@@ -151,10 +151,10 @@ public class LabelPainter {
 
   @Nonnull
   private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateCompactPresentation(@Nonnull List<RefGroup> refGroups,
-                                                                                           @Nonnull FontMetrics fontMetrics,
-                                                                                           int height,
-                                                                                           @Nonnull Color background,
-                                                                                           int availableWidth) {
+                                                                                                                               @Nonnull FontMetrics fontMetrics,
+                                                                                                                               int height,
+                                                                                                                               @Nonnull Color background,
+                                                                                                                               int availableWidth) {
     int width = LEFT_PADDING + RIGHT_PADDING;
 
     List<Pair<String, LabelIcon>> labels = ContainerUtil.newArrayList();
@@ -177,10 +177,10 @@ public class LabelPainter {
 
   @Nonnull
   private static Pair<List<Pair<String, LabelIcon>>, Integer> calculateLongPresentation(@Nonnull List<RefGroup> refGroups,
-                                                                                        @Nonnull FontMetrics fontMetrics,
-                                                                                        int height,
-                                                                                        @Nonnull Color background,
-                                                                                        int availableWidth) {
+                                                                                                                            @Nonnull FontMetrics fontMetrics,
+                                                                                                                            int height,
+                                                                                                                            @Nonnull Color background,
+                                                                                                                            int availableWidth) {
     int width = LEFT_PADDING + RIGHT_PADDING;
 
     List<Pair<String, LabelIcon>> labels = ContainerUtil.newArrayList();

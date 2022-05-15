@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.remote;
 
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.ide.impl.idea.remote.ext.CredentialsCase;
 import consulo.ide.impl.idea.remote.ext.CredentialsManager;

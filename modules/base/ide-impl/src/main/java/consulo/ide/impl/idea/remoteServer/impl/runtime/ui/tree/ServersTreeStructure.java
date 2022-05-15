@@ -13,7 +13,6 @@ import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.project.Project;
 import consulo.util.lang.EmptyRunnable;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServer;
 import consulo.ide.impl.idea.remoteServer.configuration.RemoteServersManager;
 import consulo.ide.impl.idea.remoteServer.impl.configuration.RemoteServerConfigurable;
@@ -31,6 +30,7 @@ import consulo.ide.impl.idea.remoteServer.runtime.deployment.DeploymentTask;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

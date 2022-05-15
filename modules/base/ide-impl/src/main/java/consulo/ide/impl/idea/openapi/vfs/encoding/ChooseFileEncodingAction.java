@@ -11,7 +11,7 @@ import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
 import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.VolatileNotNullLazyValue;
 import consulo.util.io.CharsetToolkit;
 import consulo.virtualFileSystem.VirtualFile;

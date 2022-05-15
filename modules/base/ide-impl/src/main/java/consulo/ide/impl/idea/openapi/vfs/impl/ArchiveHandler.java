@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.util.io.FileAttributes;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.ArrayUtil;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 
 import java.util.Arrays;
 import java.util.Collections;

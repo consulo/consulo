@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInsight.editorActions.moveUpDown;
 
 import consulo.component.extension.ExtensionPointName;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.SelectionModel;

@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.diff.util.DiffUserDataKeysEx;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ide.impl.idea.openapi.diff.DiffNavigationContext;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;

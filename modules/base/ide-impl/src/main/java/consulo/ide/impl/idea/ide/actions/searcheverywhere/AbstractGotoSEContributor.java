@@ -358,7 +358,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
   @Nullable
   protected Navigatable createExtendedNavigatable(PsiElement psi, String searchText, int modifiers) {
     VirtualFile file = PsiUtilCore.getVirtualFile(psi);
-    Pair<Integer, Integer> position = getLineAndColumn(searchText);
+    consulo.util.lang.Pair<Integer, Integer> position = getLineAndColumn(searchText);
     boolean positionSpecified = position.first >= 0 || position.second >= 0;
     if (file != null && positionSpecified) {
       OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(psi.getProject(), file, position.first, position.second);
@@ -372,7 +372,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
     return psiElement.getNavigationElement();
   }
 
-  protected static Pair<Integer, Integer> getLineAndColumn(String text) {
+  protected static consulo.util.lang.Pair<Integer, Integer> getLineAndColumn(String text) {
     int line = getLineAndColumnRegexpGroup(text, 2);
     int column = getLineAndColumnRegexpGroup(text, 3);
 
@@ -380,7 +380,7 @@ public abstract class AbstractGotoSEContributor implements WeightedSearchEverywh
       line = 0;
     }
 
-    return new Pair<>(line, column);
+    return new consulo.util.lang.Pair<>(line, column);
   }
 
   private static int getLineAndColumnRegexpGroup(String text, int groupNumber) {

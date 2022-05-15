@@ -27,7 +27,7 @@ import consulo.content.library.ui.DetectedLibraryRoot;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.ui.LibraryRootsDetector;
 import consulo.content.library.OrderRoot;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
 import consulo.logging.Logger;

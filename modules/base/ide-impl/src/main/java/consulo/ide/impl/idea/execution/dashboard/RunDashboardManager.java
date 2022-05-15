@@ -19,11 +19,11 @@ import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.content.ContentManager;
 import consulo.component.messagebus.Topic;
 import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.List;

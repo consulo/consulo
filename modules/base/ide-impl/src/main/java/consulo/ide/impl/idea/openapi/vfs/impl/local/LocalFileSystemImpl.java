@@ -19,7 +19,7 @@ import consulo.application.impl.internal.JobScheduler;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.FileDocumentManager;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;

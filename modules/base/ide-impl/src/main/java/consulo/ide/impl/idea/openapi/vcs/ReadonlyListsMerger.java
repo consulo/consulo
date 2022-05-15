@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ReadonlyList;

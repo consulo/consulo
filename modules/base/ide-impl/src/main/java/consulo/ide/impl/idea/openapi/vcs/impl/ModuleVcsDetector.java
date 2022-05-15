@@ -20,7 +20,7 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import consulo.module.event.ModuleAdapter;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;

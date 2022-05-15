@@ -5,13 +5,13 @@ import consulo.ide.impl.idea.execution.configurations.PathEnvironmentVariableUti
 import consulo.process.io.ProcessIOExecutorService;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 
@@ -27,7 +27,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static consulo.ide.impl.idea.openapi.util.Pair.pair;
+import static consulo.util.lang.Pair.pair;
 
 /**
  * An experiment; please do not use (unless you're certain about what you're doing).

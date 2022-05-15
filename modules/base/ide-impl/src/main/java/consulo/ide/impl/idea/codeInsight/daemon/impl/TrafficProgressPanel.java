@@ -6,7 +6,6 @@ import consulo.language.editor.DaemonBundle;
 import consulo.codeEditor.Editor;
 import consulo.application.progress.ProgressIndicator;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;
@@ -17,6 +16,8 @@ import consulo.ide.impl.idea.ui.components.panels.VerticalBox;
 import consulo.ui.ex.awt.Wrapper;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;

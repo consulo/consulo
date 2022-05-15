@@ -23,7 +23,7 @@ import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.CollectionComboBoxModel;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.HyperlinkAdapter;

@@ -13,7 +13,7 @@ import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
 import consulo.project.Project;
 import consulo.ui.ex.awt.OnePixelDivider;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.awt.OnePixelSplitter;
 import consulo.ui.ex.awt.ScrollPaneFactory;

@@ -1,6 +1,6 @@
 package consulo.ide.impl.idea.util.concurrency;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nullable;

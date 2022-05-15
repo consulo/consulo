@@ -12,7 +12,7 @@ import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -126,11 +126,11 @@ public class PsiFileBreadcrumbsCollector extends FileBreadcrumbsCollector {
 
   @Nullable
   private static Collection<Pair<PsiElement, BreadcrumbsProvider>> getLineElements(Document document,
-                                                                                   int offset,
-                                                                                   VirtualFile file,
-                                                                                   Project project,
-                                                                                   BreadcrumbsProvider defaultInfoProvider,
-                                                                                   boolean checkSettings) {
+                                                                                                     int offset,
+                                                                                                     VirtualFile file,
+                                                                                                     Project project,
+                                                                                                     BreadcrumbsProvider defaultInfoProvider,
+                                                                                                     boolean checkSettings) {
     PsiElement element = findStartElement(document, offset, file, project, defaultInfoProvider, checkSettings);
     if (element == null) return null;
 

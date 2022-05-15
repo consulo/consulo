@@ -34,7 +34,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.*;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.registry.Registry;

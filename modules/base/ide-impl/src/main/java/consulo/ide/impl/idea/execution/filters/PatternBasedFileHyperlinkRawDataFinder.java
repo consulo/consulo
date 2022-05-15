@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.filters;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

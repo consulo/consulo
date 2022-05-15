@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.openapi.diff.impl.patch.apply.GenericPatchApplier;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.ObjectsConvertor;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;

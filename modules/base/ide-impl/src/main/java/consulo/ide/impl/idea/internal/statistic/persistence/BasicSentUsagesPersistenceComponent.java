@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.internal.statistic.persistence;
 import consulo.ide.impl.idea.internal.statistic.StatisticsUploadAssistant;
 import consulo.ide.impl.idea.internal.statistic.beans.PatchedUsage;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;

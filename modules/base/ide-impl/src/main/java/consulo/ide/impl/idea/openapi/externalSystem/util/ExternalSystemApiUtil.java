@@ -38,7 +38,7 @@ import consulo.content.OrderRootType;
 import consulo.content.library.Library;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;

@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.tree;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import javax.annotation.Nonnull;
 

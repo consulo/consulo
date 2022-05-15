@@ -12,7 +12,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;

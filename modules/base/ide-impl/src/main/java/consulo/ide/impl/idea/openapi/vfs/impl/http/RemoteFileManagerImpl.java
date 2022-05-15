@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.http;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
 import consulo.ide.impl.idea.util.EventDispatcher;

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.util.proxy;
 import consulo.application.CommonBundle;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.compiler.impl.packagingCompiler;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.compiler.artifact.element.ArchivePackageWriter;
 import javax.annotation.Nonnull;

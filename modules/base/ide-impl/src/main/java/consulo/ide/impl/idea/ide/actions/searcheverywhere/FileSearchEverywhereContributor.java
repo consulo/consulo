@@ -15,7 +15,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;

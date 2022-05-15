@@ -20,7 +20,7 @@ import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;

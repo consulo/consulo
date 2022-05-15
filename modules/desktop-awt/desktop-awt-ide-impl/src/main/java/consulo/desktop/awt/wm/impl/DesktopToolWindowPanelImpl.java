@@ -16,7 +16,7 @@
 package consulo.desktop.awt.wm.impl;
 
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.components.JBLayeredPane;

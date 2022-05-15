@@ -45,7 +45,6 @@ import consulo.logging.Logger;
 import consulo.ui.image.Image;
 import consulo.usage.*;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.language.psi.PsiElement;
@@ -67,6 +66,8 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.application.util.matcher.MatcherHolder;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.update;
 import consulo.application.AllIcons;
 import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.content.scope.NamedScopesHolder;

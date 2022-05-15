@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.util;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.logging.Logger;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

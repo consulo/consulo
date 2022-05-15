@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
+import consulo.util.lang.Pair;
 
 import java.io.IOException;
 

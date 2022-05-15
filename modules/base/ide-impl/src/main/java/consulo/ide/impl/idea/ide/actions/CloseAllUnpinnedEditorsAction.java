@@ -19,10 +19,10 @@ package consulo.ide.impl.idea.ide.actions;
 import consulo.ide.IdeBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.fileEditor.FileEditorComposite;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.FileEditorWithProviderComposite;
+import consulo.util.lang.Pair;
 
 import java.util.HashSet;
 import java.util.List;

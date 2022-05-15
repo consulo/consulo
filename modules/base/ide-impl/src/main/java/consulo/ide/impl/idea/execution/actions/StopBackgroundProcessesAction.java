@@ -15,7 +15,7 @@ import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;

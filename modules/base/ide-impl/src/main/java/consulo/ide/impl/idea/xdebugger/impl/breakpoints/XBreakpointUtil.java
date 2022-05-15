@@ -25,7 +25,7 @@ import consulo.codeEditor.FoldRegion;
 import consulo.codeEditor.markup.GutterIconRenderer;
 import consulo.project.Project;
 import consulo.util.concurrent.AsyncResult;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.XDebuggerUtil;

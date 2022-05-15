@@ -21,7 +21,7 @@ import consulo.execution.executor.Executor;
 import consulo.ide.impl.idea.openapi.options.ex.WholeWestSingleConfigurableEditor;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Splitter;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;

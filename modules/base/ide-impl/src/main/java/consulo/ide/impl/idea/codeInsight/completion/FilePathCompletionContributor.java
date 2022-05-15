@@ -27,7 +27,7 @@ import consulo.language.psi.path.*;
 import consulo.ui.ex.action.IdeActions;
 import consulo.language.file.FileTypeManager;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiMultiReference;

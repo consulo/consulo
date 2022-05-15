@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.util;
 
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.vcs.log.VcsUser;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

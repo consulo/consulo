@@ -21,7 +21,7 @@ import consulo.project.Project;
 import consulo.project.ProjectCoreUtil;
 import consulo.module.content.ProjectRootManager;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.impl.internal.psi.PsiDocumentManagerBase;

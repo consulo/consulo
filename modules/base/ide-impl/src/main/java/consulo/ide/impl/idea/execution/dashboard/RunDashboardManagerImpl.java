@@ -35,7 +35,7 @@ import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;

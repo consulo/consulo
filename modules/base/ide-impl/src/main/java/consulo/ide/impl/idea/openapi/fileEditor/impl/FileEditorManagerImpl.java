@@ -1771,7 +1771,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
           VirtualFile file = editor.getFile();
           if (!file.isValid()) continue;
 
-          consulo.ide.impl.idea.openapi.util.Pair<VirtualFile, Integer> newFilePair = null;
+          Pair<VirtualFile, Integer> newFilePair = null;
 
           for (EditorFileSwapper each : swappers) {
             newFilePair = each.getFileToSwapTo(myProject, editor);

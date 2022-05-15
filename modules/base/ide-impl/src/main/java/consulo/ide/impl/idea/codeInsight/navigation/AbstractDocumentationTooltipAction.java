@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.navigation;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.ref.PatchedWeakReference;
 import javax.annotation.Nonnull;

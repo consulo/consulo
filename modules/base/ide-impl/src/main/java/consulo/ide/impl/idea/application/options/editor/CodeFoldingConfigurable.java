@@ -25,7 +25,7 @@ import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.configurable.Configurable;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.settings.impl.EditorGeneralConfigurable;
 import consulo.configurable.SimpleConfigurableByProperties;

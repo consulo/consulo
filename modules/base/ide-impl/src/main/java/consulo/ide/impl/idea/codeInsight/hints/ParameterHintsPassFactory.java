@@ -32,7 +32,7 @@ import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.ide.impl.idea.openapi.editor.ex.util.CaretVisualPositionKeeper;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.SyntaxTraverser;

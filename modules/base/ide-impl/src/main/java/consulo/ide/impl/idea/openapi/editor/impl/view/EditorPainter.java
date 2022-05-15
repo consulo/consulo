@@ -16,7 +16,6 @@ import consulo.ide.impl.idea.openapi.editor.impl.*;
 import consulo.codeEditor.SoftWrapDrawingType;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributesEffectsBuilder.EffectDescriptor;
-import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
@@ -44,6 +43,7 @@ import consulo.ui.style.StandardColors;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.collection.primitive.ints.IntMaps;
 import consulo.util.collection.primitive.ints.IntObjectMap;
+import consulo.util.lang.Couple;
 import gnu.trove.TFloatArrayList;
 import org.jetbrains.annotations.Contract;
 

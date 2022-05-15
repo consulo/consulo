@@ -26,7 +26,7 @@ import consulo.language.psi.util.EditSourceUtil;
 import consulo.language.editor.ui.PsiElementListCellRenderer;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.codeEditor.EditorGutterComponentEx;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.dumb.DumbAware;

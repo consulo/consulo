@@ -7,7 +7,7 @@ import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassManager;
 import consulo.ide.impl.idea.codeInspection.GlobalInspectionUtil;
 import consulo.ide.impl.idea.codeInspection.GlobalSimpleInspectionTool;
 import consulo.ide.impl.idea.codeInspection.ex.GlobalInspectionContextBase;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.application.progress.ProgressIndicator;

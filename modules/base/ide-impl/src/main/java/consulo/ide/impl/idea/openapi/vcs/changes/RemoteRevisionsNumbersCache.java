@@ -20,7 +20,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;

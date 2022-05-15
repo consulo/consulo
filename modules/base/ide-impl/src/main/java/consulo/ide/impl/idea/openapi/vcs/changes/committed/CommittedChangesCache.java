@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;

@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.jar;
 
-import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.util.collection.SmartList;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
@@ -36,7 +36,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static consulo.ide.impl.idea.openapi.util.Pair.pair;
+import static consulo.util.lang.Pair.pair;
 
 public class VfsImplUtil {
   private static final Logger LOG = Logger.getInstance(VfsImplUtil.class);

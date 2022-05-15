@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeEditor.printing;
 import consulo.codeEditor.Editor;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiFile;
 
 import java.awt.*;

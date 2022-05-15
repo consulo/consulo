@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.internal.statistic.beans.PatchedUsage;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
 import consulo.component.util.PluginExceptionUtil;

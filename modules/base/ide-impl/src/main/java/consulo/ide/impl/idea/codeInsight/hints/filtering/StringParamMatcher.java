@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints.filtering;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 
 import java.util.List;

@@ -17,7 +17,7 @@ import consulo.project.ProjectLocator;
 import consulo.ui.ex.awt.Messages;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.RepositoryLocation;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
 

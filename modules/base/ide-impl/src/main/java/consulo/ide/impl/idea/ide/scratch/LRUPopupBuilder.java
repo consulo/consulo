@@ -15,7 +15,7 @@ import consulo.undoRedo.UnexpectedUndoException;
 import consulo.language.file.LanguageFileType;
 import consulo.project.Project;
 import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.ReadonlyStatusHandler;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

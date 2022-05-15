@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.testIntegration;
 
 import consulo.component.extension.Extensions;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;

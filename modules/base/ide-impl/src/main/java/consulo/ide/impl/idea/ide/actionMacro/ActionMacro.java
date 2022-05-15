@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.ui.playback.commands.TypeCommand;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.dataContext.DataContext;

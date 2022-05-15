@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.history.integration.revertion.Reverter;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsException;

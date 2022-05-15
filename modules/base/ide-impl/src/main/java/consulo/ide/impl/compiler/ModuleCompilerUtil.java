@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.compiler;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.graph.GraphAlgorithms;
 import consulo.annotation.access.RequiredReadAction;
@@ -34,6 +33,7 @@ import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.project.Project;
 import consulo.util.collection.Chunk;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nullable;
 import java.util.*;

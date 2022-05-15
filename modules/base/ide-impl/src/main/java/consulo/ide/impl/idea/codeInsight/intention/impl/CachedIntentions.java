@@ -21,7 +21,6 @@ import consulo.language.psi.PsiFile;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -30,6 +29,7 @@ import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;
@@ -256,7 +256,8 @@ public class CachedIntentions {
     for (IntentionAction option : options) {
       Editor editor = ObjectUtils.chooseNotNull(myEditor, containingEditor);
       if (editor == null) continue;
-      Pair<PsiFile, Editor> availableIn = ShowIntentionActionsHandler.chooseBetweenHostAndInjected(myFile, editor, containingFile, (f, e) -> ShowIntentionActionsHandler.availableFor(f, e, option));
+      Pair<PsiFile, Editor>
+              availableIn = ShowIntentionActionsHandler.chooseBetweenHostAndInjected(myFile, editor, containingFile, (f, e) -> ShowIntentionActionsHandler.availableFor(f, e, option));
       if (availableIn == null) continue;
       IntentionActionWithTextCaching textCaching = new IntentionActionWithTextCaching(option);
       boolean isErrorFix = myErrorFixes.contains(textCaching);

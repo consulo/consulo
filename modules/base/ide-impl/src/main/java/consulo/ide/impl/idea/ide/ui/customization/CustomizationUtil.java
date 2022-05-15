@@ -20,7 +20,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.util.TextWithMnemonic;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

@@ -5,7 +5,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
 import consulo.localize.LocalizeValue;
@@ -15,7 +15,7 @@ import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import static consulo.ide.impl.idea.openapi.util.Pair.pair;
+import static consulo.util.lang.Pair.pair;
 
 public class StatusBarProgress extends ProgressIndicatorBase {
   // statusBar -> [textToRestore, MyPreviousText]

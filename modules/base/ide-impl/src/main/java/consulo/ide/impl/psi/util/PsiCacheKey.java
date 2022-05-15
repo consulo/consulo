@@ -21,7 +21,7 @@ package consulo.ide.impl.psi.util;
 
 import consulo.language.psi.PsiModificationTracker;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.reference.SoftReference;

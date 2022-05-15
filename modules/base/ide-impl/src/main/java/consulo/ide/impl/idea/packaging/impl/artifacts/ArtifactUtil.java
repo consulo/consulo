@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.packaging.impl.artifacts;
 
 import consulo.compiler.artifact.element.*;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.Trinity;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

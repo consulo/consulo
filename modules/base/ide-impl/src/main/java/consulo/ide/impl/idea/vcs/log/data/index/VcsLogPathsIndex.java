@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.data.index;
 
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;

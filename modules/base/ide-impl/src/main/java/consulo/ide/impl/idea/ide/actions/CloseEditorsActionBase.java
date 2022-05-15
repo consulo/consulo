@@ -21,7 +21,7 @@ import consulo.undoRedo.CommandProcessor;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.fileEditor.FileEditorComposite;

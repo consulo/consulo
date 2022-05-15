@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.injecting.InjectingContainer;
 import consulo.util.dataholder.UserDataHolder;
 

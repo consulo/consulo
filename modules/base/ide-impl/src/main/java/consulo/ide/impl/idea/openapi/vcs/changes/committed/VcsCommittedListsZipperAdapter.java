@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.vcs.RepositoryLocation;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
 import consulo.util.collection.MultiMap;
+import consulo.util.lang.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;

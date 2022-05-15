@@ -224,13 +224,13 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
   }
 
   @Nonnull
-  public List<Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
+  public List<consulo.util.lang.Pair<TaskInfo, ProgressIndicator>> getBackgroundProcesses() {
     synchronized (myOriginals) {
       if (myOriginals.isEmpty()) return Collections.emptyList();
 
-      List<Pair<TaskInfo, ProgressIndicator>> result = new ArrayList<>(myOriginals.size());
+      List<consulo.util.lang.Pair<TaskInfo, ProgressIndicator>> result = new ArrayList<>(myOriginals.size());
       for (int i = 0; i < myOriginals.size(); i++) {
-        result.add(Pair.create(myInfos.get(i), myOriginals.get(i)));
+        result.add(consulo.util.lang.Pair.create(myInfos.get(i), myOriginals.get(i)));
       }
 
       return Collections.unmodifiableList(result);
@@ -522,14 +522,14 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     return pane != null && pane.isBottomSideToolWindowsVisible();
   }
 
-  public Couple<String> setText(@Nullable final String text, @Nullable final String requestor) {
+  public consulo.util.lang.Couple<String> setText(@Nullable final String text, @Nullable final String requestor) {
     if (StringUtil.isEmpty(text) && !Comparing.equal(requestor, myCurrentRequestor) && !EventLog.LOG_REQUESTOR.equals(requestor)) {
-      return Couple.of(myInfoPanel.getText(), myCurrentRequestor);
+      return consulo.util.lang.Couple.of(myInfoPanel.getText(), myCurrentRequestor);
     }
 
     boolean logMode = myInfoPanel.updateText(EventLog.LOG_REQUESTOR.equals(requestor) ? "" : text);
     myCurrentRequestor = logMode ? EventLog.LOG_REQUESTOR : requestor;
-    return Couple.of(text, requestor);
+    return consulo.util.lang.Couple.of(text, requestor);
   }
 
   public void setRefreshVisible(final boolean visible) {

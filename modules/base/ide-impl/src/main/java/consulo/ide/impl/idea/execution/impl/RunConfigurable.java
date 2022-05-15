@@ -25,7 +25,7 @@ import consulo.ui.ex.awt.LabeledComponent;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.ui.components.labels.ActionLink;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.IconUtil;

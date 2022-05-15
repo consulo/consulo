@@ -31,7 +31,7 @@ import consulo.language.impl.internal.psi.diff.DiffLog;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.disposer.Disposer;
 import consulo.util.dataholder.UserDataHolderBase;

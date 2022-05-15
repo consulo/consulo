@@ -23,7 +23,7 @@ import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CustomShortcutSet;
 import consulo.application.ApplicationBundle;
 import consulo.ide.impl.idea.openapi.util.NullableComputable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ui.ex.awt.AnActionButton;
 import consulo.ui.ex.awt.AnActionButtonRunnable;

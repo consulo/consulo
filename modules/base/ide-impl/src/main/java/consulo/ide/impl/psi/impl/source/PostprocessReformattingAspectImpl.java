@@ -2,7 +2,7 @@
 package consulo.ide.impl.psi.impl.source;
 
 import consulo.ide.impl.idea.openapi.util.NullableComputable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;

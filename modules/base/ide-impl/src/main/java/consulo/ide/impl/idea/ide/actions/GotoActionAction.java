@@ -14,7 +14,6 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
@@ -39,6 +38,7 @@ import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.KeymapManager;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ui.ex.popup.ListPopup;
+import consulo.util.lang.Pair;
 import org.intellij.lang.annotations.JdkConstants;
 
 import javax.annotation.Nonnull;

@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.DecoratorManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.VcsCommittedListsZipper;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.VcsCommittedViewAuxiliary;
@@ -24,6 +23,7 @@ import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangeBrowserSettings;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangesBrowserSettingsEditor;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.AsynchConsumer;
 import javax.annotation.Nonnull;

@@ -19,7 +19,7 @@ import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
 import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.application.ui.WindowStateService;
 import consulo.ui.ex.awt.JBSplitter;
 import consulo.ui.ex.awt.OnePixelSplitter;

@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.ide.util.gotoByName;
 
 import consulo.ide.impl.idea.ide.actions.searcheverywhere.FoundItemDescriptor;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.CollectConsumer;
 import consulo.ide.impl.idea.util.Consumer;

@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.openapi.options.binding;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 
 import javax.swing.*;
 import java.lang.reflect.Field;

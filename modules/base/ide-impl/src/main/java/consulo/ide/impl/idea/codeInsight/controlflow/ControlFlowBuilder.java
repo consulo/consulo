@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.codeInsight.controlflow;
 import consulo.ide.impl.idea.codeInsight.controlflow.impl.ConditionalInstructionImpl;
 import consulo.ide.impl.idea.codeInsight.controlflow.impl.ControlFlowImpl;
 import consulo.ide.impl.idea.codeInsight.controlflow.impl.InstructionImpl;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiElementVisitor;
 import consulo.language.psi.util.PsiTreeUtil;

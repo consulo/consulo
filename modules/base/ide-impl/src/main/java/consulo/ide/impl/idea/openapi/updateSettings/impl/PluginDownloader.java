@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.ide.plugins.RepositoryHelper;
 import consulo.ide.impl.idea.ide.startup.StartupActionScriptManager;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.progress.ProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;

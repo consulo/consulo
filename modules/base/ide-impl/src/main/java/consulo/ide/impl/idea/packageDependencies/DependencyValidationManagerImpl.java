@@ -27,7 +27,7 @@ import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;

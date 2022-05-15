@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

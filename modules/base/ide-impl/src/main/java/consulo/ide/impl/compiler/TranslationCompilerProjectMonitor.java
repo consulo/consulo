@@ -20,7 +20,7 @@ import consulo.ide.ServiceManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;

@@ -30,7 +30,7 @@ import consulo.ui.ex.action.Presentation;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.document.Document;
 
@@ -105,7 +105,7 @@ public class DuplicateAction extends EditorAction {
 
     editor.getCaretModel().moveToOffset(newOffset);
     editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-    return new Pair<Integer, Integer>(end, end+s.length()-1);   // don't include separator of last line in range to select
+    return new Pair<Integer, Integer>(end, end + s.length() - 1);   // don't include separator of last line in range to select
   }
 
   @Override

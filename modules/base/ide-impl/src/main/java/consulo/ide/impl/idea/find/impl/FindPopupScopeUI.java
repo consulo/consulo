@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.find.impl;
 import consulo.find.FindModel;
 import consulo.find.FindSettings;
 import consulo.ui.ex.awt.ValidationInfo;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.localize.LocalizeValue;
 import consulo.ui.image.Image;
 

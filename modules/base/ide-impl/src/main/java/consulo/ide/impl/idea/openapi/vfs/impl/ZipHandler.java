@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.openapi.vfs.impl;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.util.io.FileAttributes;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.impl.internal.mediator.FileSystemUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

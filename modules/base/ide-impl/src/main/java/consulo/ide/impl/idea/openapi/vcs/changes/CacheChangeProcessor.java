@@ -32,7 +32,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.CalledInAwt;
 import consulo.ide.impl.idea.openapi.vcs.CalledInBackground;
 import consulo.ide.impl.idea.openapi.vcs.changes.actions.diff.ChangeDiffRequestProducer;

@@ -22,7 +22,7 @@ import consulo.document.internal.DocumentEx;
 import consulo.language.codeStyle.arrangement.*;
 import consulo.language.codeStyle.arrangement.match.TextAwareArrangementEntry;
 import consulo.project.DumbService;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiDocumentManager;

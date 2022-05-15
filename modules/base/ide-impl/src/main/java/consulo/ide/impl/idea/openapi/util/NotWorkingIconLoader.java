@@ -25,6 +25,7 @@ import consulo.ui.ex.awt.JBUI;
 import consulo.annotation.DeprecationInfo;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

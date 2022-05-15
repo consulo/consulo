@@ -10,7 +10,7 @@ import consulo.application.WriteAction;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;

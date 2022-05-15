@@ -20,7 +20,7 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.fileEditor.FileEditorWithProviderComposite;
 

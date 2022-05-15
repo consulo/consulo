@@ -26,7 +26,7 @@ package consulo.ide.impl.idea.codeInsight.intention.impl.config;
 
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionContributor;
 import consulo.ide.impl.idea.ide.ui.search.SearchableOptionProcessor;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;

@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.NotNullComputable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.virtualFileSystem.LocalFileSystem;

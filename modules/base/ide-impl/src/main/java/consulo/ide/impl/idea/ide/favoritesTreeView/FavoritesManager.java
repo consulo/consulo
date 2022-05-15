@@ -39,7 +39,7 @@ import consulo.module.content.ProjectRootManager;
 import consulo.ui.ex.InputValidator;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.ide.impl.idea.util.ArrayUtil;

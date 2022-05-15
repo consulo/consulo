@@ -35,7 +35,7 @@ import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.OrderRootType;
 import consulo.project.content.WatchedRootsProvider;
 import consulo.project.startup.StartupManager;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.*;
 import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerAdapter;

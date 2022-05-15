@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.ide.fileTemplates.actions;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;

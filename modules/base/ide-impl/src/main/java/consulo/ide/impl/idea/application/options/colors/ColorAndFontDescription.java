@@ -21,7 +21,7 @@ import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.localize.LocalizeValue;
 import consulo.ui.color.ColorValue;
 import consulo.ui.image.Image;

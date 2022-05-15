@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
 import javax.swing.*;

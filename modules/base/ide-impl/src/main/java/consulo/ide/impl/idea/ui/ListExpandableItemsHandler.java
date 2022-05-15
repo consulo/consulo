@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;

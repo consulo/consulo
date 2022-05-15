@@ -20,7 +20,7 @@ import consulo.fileEditor.FileEditorState;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorProviderManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;

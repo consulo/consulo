@@ -28,7 +28,7 @@ import consulo.project.Project;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.project.UnknownFeaturesCollector;
 import consulo.component.util.ModificationTracker;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.ide.impl.idea.packaging.impl.artifacts.state.ArtifactManagerState;

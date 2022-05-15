@@ -16,7 +16,8 @@
 package consulo.ide.impl.idea.execution.filters;
 
 import consulo.execution.ui.console.ConsoleViewContentType;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nullable;
 
 import java.util.List;

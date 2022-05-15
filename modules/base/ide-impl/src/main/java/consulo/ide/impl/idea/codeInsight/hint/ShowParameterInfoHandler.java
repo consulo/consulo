@@ -18,13 +18,13 @@ import consulo.language.editor.hint.HintManager;
 import consulo.project.DumbService;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -25,7 +25,7 @@ import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.ide.impl.idea.openapi.ui.popup.MultiSelectionListPopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;

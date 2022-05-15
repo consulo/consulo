@@ -19,7 +19,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.codeEditor.Editor;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.EditorFontType;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.openapi.vcs.annotate.FileAnnotation;
 import consulo.ide.impl.idea.openapi.vcs.annotate.TextAnnotationPresentation;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;

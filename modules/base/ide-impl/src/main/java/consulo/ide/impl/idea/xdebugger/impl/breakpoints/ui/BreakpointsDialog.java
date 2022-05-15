@@ -22,7 +22,7 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.ToolbarDecorator;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.popup.util.DetailController;
 import consulo.ide.impl.idea.ui.popup.util.DetailViewImpl;

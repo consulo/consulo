@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.history.core.changes.ChangeVisitor;
 import consulo.ide.impl.idea.history.core.changes.ContentChange;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
 import java.util.ArrayList;

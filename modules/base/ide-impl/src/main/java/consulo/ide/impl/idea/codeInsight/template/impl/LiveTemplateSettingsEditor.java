@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.CheckboxTree;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;

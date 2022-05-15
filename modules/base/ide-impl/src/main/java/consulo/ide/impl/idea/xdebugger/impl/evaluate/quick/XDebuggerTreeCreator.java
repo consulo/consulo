@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick;
 
 import consulo.util.concurrent.ResultConsumer;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.tree.Tree;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;

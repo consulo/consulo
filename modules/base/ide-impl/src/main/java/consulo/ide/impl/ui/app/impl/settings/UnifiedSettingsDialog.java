@@ -16,13 +16,13 @@
 package consulo.ide.impl.ui.app.impl.settings;
 
 import consulo.configurable.Configurable;
-import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.localize.LocalizeValue;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.impl.ui.app.WholeLeftWindowWrapper;
 import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.ScrollableLayout;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

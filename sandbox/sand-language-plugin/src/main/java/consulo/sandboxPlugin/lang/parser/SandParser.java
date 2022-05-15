@@ -15,7 +15,7 @@
  */
 package consulo.sandboxPlugin.lang.parser;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ASTNode;
 import consulo.language.parser.PsiBuilder;

@@ -15,23 +15,23 @@
  */
 package consulo.desktop.awt.action;
 
-import consulo.application.CommonBundle;
-import consulo.application.impl.internal.JobScheduler;
 import consulo.application.Application;
+import consulo.application.CommonBundle;
 import consulo.application.impl.internal.ApplicationInfo;
-import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.ui.ex.awt.VerticalFlowLayout;
-import consulo.ide.impl.idea.openapi.util.Couple;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.ScrollPaneFactory;
-import consulo.ide.impl.idea.util.text.DateFormatUtil;
-import consulo.ide.impl.idea.util.ui.TextTransferable;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ide.impl.application.WholeWestDialogWrapper;
+import consulo.application.impl.internal.JobScheduler;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginManager;
+import consulo.ide.impl.application.WholeWestDialogWrapper;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.text.DateFormatUtil;
+import consulo.ide.impl.idea.util.ui.TextTransferable;
 import consulo.platform.Platform;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ui.ex.awt.ScrollPaneFactory;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

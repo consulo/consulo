@@ -27,7 +27,7 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.awt.*;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.ui.PanelWithActionsAndCloseButton;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesBrowserUseCase;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;

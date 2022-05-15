@@ -26,7 +26,7 @@ import consulo.application.ApplicationManager;
 import consulo.undoRedo.CommandProcessor;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;

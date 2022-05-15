@@ -18,7 +18,7 @@ import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.actions.runAnything.RunAnythingUtil;
 import consulo.ide.impl.idea.ide.actions.runAnything.handlers.RunAnythingCommandHandler;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;
 

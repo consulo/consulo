@@ -36,7 +36,7 @@ import consulo.ui.ex.action.*;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.language.psi.PsiCompiledElement;
 import consulo.language.psi.PsiElement;

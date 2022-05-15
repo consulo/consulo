@@ -21,7 +21,7 @@ import consulo.ide.impl.idea.history.core.revisions.RecentChange;
 import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.integration.IdeaGateway;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 
 import java.util.Collections;
 import java.util.List;

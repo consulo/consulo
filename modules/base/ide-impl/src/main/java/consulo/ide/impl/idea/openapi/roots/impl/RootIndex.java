@@ -31,7 +31,7 @@ import consulo.module.ModuleManager;
 import consulo.project.Project;
 import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;

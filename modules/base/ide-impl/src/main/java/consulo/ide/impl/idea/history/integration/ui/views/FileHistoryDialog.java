@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.history.integration.ui.models.EntireFileHistoryDial
 import consulo.ide.impl.idea.history.integration.ui.models.FileDifferenceModel;
 import consulo.ide.impl.idea.history.integration.ui.models.FileHistoryDialogModel;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.ui.ExcludingTraversalPolicy;
 import consulo.disposer.Disposer;

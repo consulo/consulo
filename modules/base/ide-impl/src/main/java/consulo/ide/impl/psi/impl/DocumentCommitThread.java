@@ -5,7 +5,7 @@ import com.google.common.annotations.VisibleForTesting;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

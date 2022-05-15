@@ -16,8 +16,8 @@
 package consulo.ide.impl.idea.diff.actions;
 
 import consulo.ide.impl.idea.openapi.diff.DiffNavigationContext;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.Iterator;

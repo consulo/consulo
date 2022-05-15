@@ -16,10 +16,10 @@
 package consulo.ide.impl.idea.history.core;
 
 import consulo.ide.impl.idea.openapi.util.Clock;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.util.io.PagePool;
 import consulo.ide.impl.idea.util.io.storage.AbstractRecordsTable;
 import consulo.ide.impl.idea.util.io.storage.AbstractStorage;
+import consulo.util.lang.Pair;
 
 import java.io.File;
 import java.io.IOException;

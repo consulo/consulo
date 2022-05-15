@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vfs.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressManager;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;

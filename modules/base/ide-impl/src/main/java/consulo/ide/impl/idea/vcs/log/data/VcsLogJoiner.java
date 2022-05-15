@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.data;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.GraphCommit;
 

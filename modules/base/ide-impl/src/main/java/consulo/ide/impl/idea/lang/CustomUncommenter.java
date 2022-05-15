@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.lang;
 
-import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.document.util.TextRange;
+import consulo.util.lang.Couple;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

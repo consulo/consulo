@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.ide.impl.idea.util.Consumer;
 
 import java.util.List;

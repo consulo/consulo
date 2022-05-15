@@ -273,7 +273,7 @@ public final class EncodingProjectManagerImpl extends EncodingProjectManager imp
    */
   @Nonnull
   public Map<? extends VirtualFile, ? extends Charset> getAllMappings() {
-    return myMapping.entrySet().stream().map(e -> Pair.create(e.getKey().getFile(), e.getValue())).filter(e -> e.getFirst() != null)
+    return myMapping.entrySet().stream().map(e -> consulo.util.lang.Pair.create(e.getKey().getFile(), e.getValue())).filter(e -> e.getFirst() != null)
             .collect(Collectors.toMap(p -> p.getFirst(), p -> p.getSecond(), (c1, c2) -> c1));
   }
 

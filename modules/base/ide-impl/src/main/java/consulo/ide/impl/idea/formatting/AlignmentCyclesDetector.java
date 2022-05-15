@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.formatting;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.codeStyle.internal.LeafBlockWrapper;
 

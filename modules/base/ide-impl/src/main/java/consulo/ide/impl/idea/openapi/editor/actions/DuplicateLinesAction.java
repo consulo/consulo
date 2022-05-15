@@ -21,8 +21,8 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
 import consulo.codeEditor.impl.action.EditorAction;
 import consulo.ide.impl.idea.openapi.editor.actionSystem.EditorWriteActionHandler;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.util.lang.Pair;
 
 /**
  * @author yole

@@ -12,7 +12,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.IntegrationKey;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;

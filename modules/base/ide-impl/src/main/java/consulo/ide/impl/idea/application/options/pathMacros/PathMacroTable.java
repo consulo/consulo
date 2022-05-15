@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.application.options.pathMacros;
 import consulo.application.ApplicationBundle;
 import consulo.application.macro.PathMacros;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.table.JBTable;
 import consulo.component.store.impl.internal.PathMacrosService;

@@ -58,7 +58,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.usage.*;

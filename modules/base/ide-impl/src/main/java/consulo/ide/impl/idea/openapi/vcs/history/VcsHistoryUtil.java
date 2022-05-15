@@ -29,7 +29,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsException;

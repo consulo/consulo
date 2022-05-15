@@ -33,7 +33,7 @@ import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.BooleanFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import consulo.logging.Logger;
@@ -92,7 +92,7 @@ public class ModuleDependencyDataService extends AbstractDependencyDataService<M
       @Override
       public void execute() {
         ModuleRootManager moduleRootManager = ModuleRootManager.getInstance(module);
-        Map<Pair<String /* dependency module internal name */, /* dependency module scope */DependencyScope> , ModuleOrderEntry> toRemove = ContainerUtilRt.newHashMap();
+        Map<Pair<String /* dependency module internal name */, /* dependency module scope */DependencyScope>, ModuleOrderEntry> toRemove = ContainerUtilRt.newHashMap();
         for (OrderEntry entry : moduleRootManager.getOrderEntries()) {
           if (entry instanceof ModuleOrderEntry) {
             ModuleOrderEntry e = (ModuleOrderEntry)entry;

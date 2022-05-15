@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.ui.render;
 
 import consulo.ui.ex.awt.GraphicsConfig;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

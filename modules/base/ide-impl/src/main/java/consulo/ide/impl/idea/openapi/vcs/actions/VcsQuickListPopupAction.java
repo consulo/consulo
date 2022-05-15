@@ -5,7 +5,7 @@ import consulo.dataContext.DataContext;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;

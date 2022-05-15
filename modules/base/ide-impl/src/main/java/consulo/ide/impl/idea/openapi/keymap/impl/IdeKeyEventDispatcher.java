@@ -25,7 +25,7 @@ import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.keyGestures.KeyboardGestureProcessor;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ShortcutTextField;
 import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
 import consulo.ide.impl.idea.openapi.wm.impl.IdeGlassPaneEx;
 import consulo.ide.impl.idea.ui.ComponentWithMnemonics;

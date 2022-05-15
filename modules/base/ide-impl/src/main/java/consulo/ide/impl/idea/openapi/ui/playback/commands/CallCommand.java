@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.ui.playback.commands;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
 import consulo.util.concurrent.ActionCallback;
 import consulo.util.concurrent.AsyncResult;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

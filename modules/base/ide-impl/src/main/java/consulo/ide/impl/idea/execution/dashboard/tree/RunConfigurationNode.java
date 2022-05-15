@@ -28,7 +28,7 @@ import consulo.ide.impl.idea.execution.ui.RunContentManagerImpl;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.content.Content;
 import consulo.ui.image.Image;

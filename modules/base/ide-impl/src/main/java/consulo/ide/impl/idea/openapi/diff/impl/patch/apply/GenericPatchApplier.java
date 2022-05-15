@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.diff.util.IntPair;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.ApplyPatchStatus;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchHunk;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.PatchLine;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.document.util.UnfairTextRange;
 import consulo.application.util.LineTokenizer;

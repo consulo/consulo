@@ -6,7 +6,7 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileListener;

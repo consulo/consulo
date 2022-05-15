@@ -31,7 +31,7 @@ import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterIterator;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;

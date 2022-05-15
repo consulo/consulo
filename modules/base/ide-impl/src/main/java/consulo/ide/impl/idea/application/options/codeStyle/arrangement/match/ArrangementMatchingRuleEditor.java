@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.application.options.codeStyle.arrangement.match;
 
 import consulo.ide.impl.idea.application.options.codeStyle.arrangement.ArrangementConstants;
 import consulo.language.codeStyle.arrangement.ArrangementColorsProvider;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.codeStyle.arrangement.ArrangementUtil;
 import consulo.language.codeStyle.arrangement.match.ArrangementEntryMatcher;
 import consulo.language.codeStyle.arrangement.match.ArrangementMatchRule;

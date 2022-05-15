@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.ui.playback.commands;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.TypingTarget;
 import consulo.ide.impl.idea.openapi.ui.playback.PlaybackContext;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.util.concurrent.ActionCallback;
 

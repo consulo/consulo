@@ -15,10 +15,10 @@
  */
 package consulo.desktop.awt.ui.impl.image;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.ConcurrentMap;

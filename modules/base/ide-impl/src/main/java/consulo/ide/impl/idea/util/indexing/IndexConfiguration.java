@@ -18,8 +18,8 @@ package consulo.ide.impl.idea.util.indexing;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import gnu.trove.TObjectIntHashMap;
 
 import javax.annotation.Nonnull;

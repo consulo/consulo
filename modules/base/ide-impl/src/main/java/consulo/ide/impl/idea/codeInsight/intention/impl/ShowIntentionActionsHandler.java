@@ -31,7 +31,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

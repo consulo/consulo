@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.ui.LoadingDecorator;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.awt.*;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.registry.Registry;
 import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.VirtualFile;

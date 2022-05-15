@@ -18,7 +18,6 @@ package consulo.ide.impl.idea.vcs.log.data.index;
 import consulo.application.progress.ProgressManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.indexing.*;
 import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;
@@ -37,6 +36,7 @@ import consulo.index.io.ID;
 import consulo.index.io.IndexExtension;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

@@ -28,12 +28,12 @@ import consulo.configurable.ConfigurationException;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.options.*;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ui.ex.awt.ColoredListCellRenderer;
 import consulo.ui.ex.awt.IdeBorderFactory;
 import consulo.ui.ex.awt.ScrollingUtil;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

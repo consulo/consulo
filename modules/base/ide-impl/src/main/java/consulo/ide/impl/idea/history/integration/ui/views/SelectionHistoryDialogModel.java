@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.history.integration.revertion.Reverter;
 import consulo.ide.impl.idea.history.integration.revertion.SelectionReverter;
 import consulo.ide.impl.idea.history.integration.ui.models.*;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

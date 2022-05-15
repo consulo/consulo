@@ -17,9 +17,9 @@ package consulo.ide.impl.idea.ui.mac.touchbar;
 
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.disposer.Disposable;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.swing.*;

@@ -21,7 +21,6 @@ import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.popup.ListPopup;
-import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.ide.impl.idea.openapi.vcs.ui.FlatSpeedSearchPopup;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.VcsLogUserFilter;
@@ -30,6 +29,7 @@ import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.impl.VcsLogUserFilterImpl;
 import consulo.ide.impl.idea.vcs.log.util.VcsUserUtil;
 import consulo.dataContext.DataContext;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

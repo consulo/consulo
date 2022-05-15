@@ -24,7 +24,6 @@ import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingLevelM
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.HighlightingSettingsPerFile;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorMarkupModelImpl;
 import consulo.ide.impl.idea.openapi.editor.markup.*;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -58,6 +57,7 @@ import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;
 import consulo.util.collection.primitive.ints.IntLists;
 import consulo.util.lang.DeprecatedMethodException;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
 

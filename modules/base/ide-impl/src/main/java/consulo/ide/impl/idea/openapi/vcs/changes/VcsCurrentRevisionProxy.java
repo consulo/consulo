@@ -16,12 +16,12 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.diff.DiffProvider;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.impl.ContentRevisionCache;
 import consulo.ide.impl.idea.openapi.vcs.impl.CurrentRevisionProvider;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
 import javax.annotation.Nonnull;

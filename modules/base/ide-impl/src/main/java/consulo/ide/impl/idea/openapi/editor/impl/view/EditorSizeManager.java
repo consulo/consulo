@@ -15,7 +15,7 @@ import consulo.ide.impl.idea.openapi.editor.impl.*;
 import consulo.codeEditor.SoftWrapDrawingType;
 import consulo.codeEditor.impl.softwrap.mapping.IncrementalCacheUpdateEvent;
 import consulo.codeEditor.impl.softwrap.mapping.SoftWrapAwareDocumentParsingListenerAdapter;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
 import consulo.document.util.DocumentUtil;

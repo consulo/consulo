@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.history.core.revisions.Revision;
 import consulo.ide.impl.idea.history.integration.LocalHistoryBundle;
 import consulo.ide.impl.idea.history.integration.ui.models.HistoryDialogModel;
 import consulo.ide.impl.idea.history.integration.ui.models.RevisionItem;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ui.ex.ExpandableItemsHandler;

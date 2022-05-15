@@ -26,7 +26,7 @@ import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
 import consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService;
 import consulo.ide.setting.ui.MasterDetailsComponent;
 import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
 import consulo.ui.ex.awt.PopupHandler;
 import consulo.ui.ex.awt.SimpleColoredComponent;

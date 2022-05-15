@@ -45,6 +45,7 @@ import consulo.ide.impl.idea.openapi.util.*;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.util.lang.Couple;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ide.impl.idea.openapi.vcs.ObjectsConvertor;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
@@ -963,13 +964,13 @@ public class ApplyPatchDifferentiatedDialog extends DialogWrapper {
       }
     }
 
-    public List<Pair<String, Stress>> stressPartsOfFileName(final Change change, final String parentPath) {
+    public List<consulo.util.lang.Pair<String, Stress>> stressPartsOfFileName(final Change change, final String parentPath) {
       if (change instanceof AbstractFilePatchInProgress.PatchChange) {
         final AbstractFilePatchInProgress.PatchChange patchChange = (AbstractFilePatchInProgress.PatchChange)change;
         final String basePath = patchChange.getPatchInProgress().getBase().getPath();
         final String basePathCorrected = basePath.trim().replace('/', File.separatorChar);
         if (parentPath.startsWith(basePathCorrected)) {
-          return Arrays.asList(Pair.create(basePathCorrected, Stress.BOLD), Pair.create(StringUtil.tail(parentPath, basePathCorrected.length()), Stress.PLAIN));
+          return Arrays.asList(consulo.util.lang.Pair.create(basePathCorrected, Stress.BOLD), consulo.util.lang.Pair.create(StringUtil.tail(parentPath, basePathCorrected.length()), Stress.PLAIN));
         }
       }
       return null;

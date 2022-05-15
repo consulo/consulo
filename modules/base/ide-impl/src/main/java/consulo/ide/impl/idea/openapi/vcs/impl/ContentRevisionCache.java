@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.util.Throwable2Computable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
@@ -28,6 +27,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.FilePathsHelper;
 import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScope;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
 import consulo.util.io.CharsetToolkit;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.util.Consumer;
@@ -272,7 +272,7 @@ public class ContentRevisionCache {
   }
 
   public static Pair<VcsRevisionNumber, byte[]> getOrLoadCurrentAsBytes(final Project project, FilePath path, @Nonnull VcsKey vcsKey,
-                                                                        final CurrentRevisionProvider loader) throws VcsException, IOException {
+                                                                                          final CurrentRevisionProvider loader) throws VcsException, IOException {
     ContentRevisionCache cache = ProjectLevelVcsManager.getInstance(project).getContentRevisionCache();
 
     VcsRevisionNumber currentRevision;
@@ -293,7 +293,7 @@ public class ContentRevisionCache {
   }
 
   public static Pair<VcsRevisionNumber, String> getOrLoadCurrentAsString(final Project project, FilePath path, @Nonnull VcsKey vcsKey,
-                                                                         final CurrentRevisionProvider loader) throws VcsException, IOException {
+                                                                                           final CurrentRevisionProvider loader) throws VcsException, IOException {
     Pair<VcsRevisionNumber, byte[]> pair = getOrLoadCurrentAsBytes(project, path, vcsKey, loader);
     return Pair.create(pair.getFirst(), bytesToString(path, pair.getSecond()));
   }

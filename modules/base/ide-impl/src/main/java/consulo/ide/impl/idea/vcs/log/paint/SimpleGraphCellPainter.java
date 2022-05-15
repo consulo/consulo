@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.paint;
 
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.JBColor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.graph.EdgePrintElement;

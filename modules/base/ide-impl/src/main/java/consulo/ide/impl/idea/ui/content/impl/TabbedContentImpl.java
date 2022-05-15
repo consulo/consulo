@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.ui.content.impl;
 
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.ui.content.TabbedContent;
 import consulo.ide.impl.idea.util.ContentUtilEx;

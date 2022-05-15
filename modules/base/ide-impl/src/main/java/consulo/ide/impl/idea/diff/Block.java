@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.diff.comparison.iterables.FairDiffIterable;
 import consulo.ide.impl.idea.diff.util.Range;
 import consulo.logging.Logger;
 import consulo.ide.impl.idea.openapi.progress.DumbProgressIndicator;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.LineTokenizer;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import javax.annotation.Nonnull;

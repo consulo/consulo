@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.execution.actions;
 import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.mac.touchbar.TouchBarsManager;

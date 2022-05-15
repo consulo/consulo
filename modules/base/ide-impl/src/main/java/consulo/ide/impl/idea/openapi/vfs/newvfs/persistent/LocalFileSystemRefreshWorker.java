@@ -3,7 +3,7 @@ package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.util.io.FileAttributes;
 import consulo.application.util.registry.Registry;
@@ -32,7 +32,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import static consulo.ide.impl.idea.openapi.util.Pair.pair;
+import static consulo.util.lang.Pair.pair;
 import static consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.VfsEventGenerationHelper.LOG;
 
 class LocalFileSystemRefreshWorker {

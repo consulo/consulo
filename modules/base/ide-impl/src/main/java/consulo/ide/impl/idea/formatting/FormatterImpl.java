@@ -3,7 +3,6 @@
 package consulo.ide.impl.idea.formatting;
 
 import consulo.ide.impl.idea.formatting.engine.ExpandableIndent;
-import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.ide.impl.idea.util.SequentialTask;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.application.Application;
@@ -21,6 +20,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.util.lang.Couple;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;

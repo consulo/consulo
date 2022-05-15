@@ -12,7 +12,7 @@ import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalProjectSett
 import consulo.ide.impl.idea.openapi.externalSystem.settings.ExternalSystemSettingsListener;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.Function;
 import javax.annotation.Nonnull;
 

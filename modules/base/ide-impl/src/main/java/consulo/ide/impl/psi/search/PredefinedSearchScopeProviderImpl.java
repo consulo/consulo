@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.ide.scratch.ScratchesSearchScope;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.content.scope.PredefinedSearchScopeProvider;
 import consulo.usage.Usage;
 import consulo.usage.UsageView;

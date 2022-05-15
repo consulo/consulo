@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.vcs.log.impl;
 
 import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.vcs.LocalFilePath;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;

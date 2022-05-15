@@ -29,7 +29,6 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -49,6 +48,7 @@ import consulo.ide.impl.externalStorage.storage.ExternalStorage;
 import consulo.ide.impl.externalStorage.storage.InfoAllBeanResponse;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 
 import javax.annotation.Nonnull;

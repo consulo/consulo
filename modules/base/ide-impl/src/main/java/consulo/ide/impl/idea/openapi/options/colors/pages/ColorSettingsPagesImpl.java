@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
 import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.TextAttributesKey;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;

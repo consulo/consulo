@@ -20,11 +20,12 @@ import consulo.ide.IdeBundle;
 import consulo.fileTemplate.FileTemplate;
 import consulo.ide.impl.idea.ide.fileTemplates.actions.AttributesDefaults;
 import consulo.ui.ex.awt.internal.DialogWrapperPeer;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.document.util.TextRange;
 import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.annotation.DeprecationInfo;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

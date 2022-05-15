@@ -15,7 +15,6 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
 import consulo.ide.impl.idea.openapi.wm.impl.status.ToolWindowsWidget;
 import consulo.ide.impl.idea.openapi.wm.impl.status.widget.StatusBarWidgetWrapper;
@@ -45,6 +44,7 @@ import consulo.ui.layout.DockLayout;
 import consulo.ui.layout.HorizontalLayout;
 import consulo.ui.layout.WrappedLayout;
 import consulo.ui.style.ComponentColors;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.ide.impl.wm.impl.status.UnifiedInfoAndProgressPanel;
 

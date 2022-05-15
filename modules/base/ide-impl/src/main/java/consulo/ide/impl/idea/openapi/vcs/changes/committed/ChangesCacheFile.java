@@ -19,7 +19,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;

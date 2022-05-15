@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.codeInsight;
 import consulo.language.ast.ASTNode;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;

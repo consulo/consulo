@@ -31,7 +31,7 @@ import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;

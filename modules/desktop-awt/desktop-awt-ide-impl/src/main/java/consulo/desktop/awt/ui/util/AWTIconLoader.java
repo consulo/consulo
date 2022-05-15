@@ -15,8 +15,8 @@
  */
 package consulo.desktop.awt.ui.util;
 
-import consulo.ide.impl.idea.openapi.util.Couple;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Couple;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.awt.ScalableIcon;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.reference.SoftReference;

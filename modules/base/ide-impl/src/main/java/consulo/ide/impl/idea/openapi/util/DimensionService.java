@@ -23,6 +23,7 @@ import consulo.application.ui.ApplicationWindowStateService;
 import consulo.project.ui.ProjectWindowStateService;
 import consulo.util.collection.primitive.objects.ObjectIntMap;
 import consulo.util.collection.primitive.objects.ObjectMaps;
+import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;

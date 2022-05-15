@@ -21,7 +21,7 @@ import consulo.execution.ui.layout.PlaceInGrid;
 import consulo.ide.impl.idea.execution.ui.layout.Tab;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.content.Content;
 import consulo.util.xml.serializer.SkipDefaultValuesSerializationFilters;

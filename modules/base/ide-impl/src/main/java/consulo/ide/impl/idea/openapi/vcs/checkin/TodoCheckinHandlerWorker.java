@@ -31,7 +31,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
 import consulo.ide.impl.idea.openapi.util.Getter;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;

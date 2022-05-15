@@ -1,7 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.newvfs.persistent;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.ex.temp.TempFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.DirectoryAccessChecker;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static consulo.ide.impl.idea.openapi.util.Pair.pair;
+import static consulo.util.lang.Pair.pair;
 import static consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.VfsEventGenerationHelper.LOG;
 
 /**

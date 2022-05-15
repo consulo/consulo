@@ -24,7 +24,7 @@ import consulo.module.content.layer.orderEntry.*;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.roots.impl.LibraryScopeCache;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.content.TestSourcesFilter;

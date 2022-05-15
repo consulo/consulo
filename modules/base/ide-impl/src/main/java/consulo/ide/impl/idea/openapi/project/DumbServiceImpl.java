@@ -18,7 +18,7 @@ import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
 import consulo.project.startup.StartupManager;
 import consulo.component.util.ModificationTracker;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.NotificationType;
 import consulo.util.lang.ShutDownTracker;
 import consulo.application.util.registry.Registry;

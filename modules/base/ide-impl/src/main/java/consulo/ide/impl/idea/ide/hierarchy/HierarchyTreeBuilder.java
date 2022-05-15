@@ -22,7 +22,7 @@ import consulo.ui.ex.awt.tree.TreeBuilderUtil;
 import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
 import consulo.virtualFileSystem.VirtualFile;

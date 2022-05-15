@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.collection.FList;
 import consulo.ui.ex.awt.TitledSeparator;
 import consulo.ui.ex.awt.UIUtil;
@@ -29,7 +29,7 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import java.awt.*;
 
-import static consulo.ide.impl.idea.openapi.util.Pair.pair;
+import static consulo.util.lang.Pair.pair;
 
 /**
  * Please use this wrapper in case you need simple cell renderer with text and icon.

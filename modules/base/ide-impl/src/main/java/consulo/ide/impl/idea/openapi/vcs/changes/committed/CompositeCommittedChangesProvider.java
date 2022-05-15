@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes.committed;
 
 import consulo.ui.ex.action.AnAction;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.ChangeBrowserSettings;

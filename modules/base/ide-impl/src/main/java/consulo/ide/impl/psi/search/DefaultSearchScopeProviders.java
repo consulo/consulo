@@ -13,7 +13,7 @@ import consulo.content.scope.SearchScopeProvider;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.application.util.ColoredItem;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;

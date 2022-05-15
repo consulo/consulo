@@ -38,7 +38,7 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.UnknownFeaturesCollector;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizableStringList;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.util.registry.Registry;
 import consulo.ui.ex.IconDeferrer;

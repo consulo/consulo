@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.util.containers;
 
 import consulo.util.collection.JBIterator;
 import consulo.util.lang.function.Condition;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.util.collection.JBIterable;

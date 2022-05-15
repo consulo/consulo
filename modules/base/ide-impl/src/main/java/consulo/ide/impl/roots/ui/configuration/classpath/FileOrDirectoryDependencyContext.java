@@ -32,7 +32,7 @@ import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.DefaultLibraryRootsComponentDescriptor;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.module.content.layer.ModifiableModuleRootLayer;

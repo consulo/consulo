@@ -6,7 +6,6 @@ import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
 import consulo.ide.impl.idea.find.FindUtil;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.ide.impl.idea.util.concurrency.FutureResult;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
@@ -26,6 +25,7 @@ import consulo.project.Project;
 import consulo.application.util.BombedStringUtil;
 import consulo.util.collection.Stack;
 import consulo.util.concurrent.ActionCallback;
+import consulo.util.lang.Pair;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 

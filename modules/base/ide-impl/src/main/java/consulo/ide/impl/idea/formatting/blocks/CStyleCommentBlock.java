@@ -21,7 +21,7 @@ import consulo.language.codeStyle.Indent;
 import consulo.language.codeStyle.Spacing;
 import consulo.language.ast.ASTNode;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.codeStyle.AbstractBlock;

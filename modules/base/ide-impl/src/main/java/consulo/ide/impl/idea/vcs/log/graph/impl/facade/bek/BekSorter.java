@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.graph.impl.facade.bek;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.vcs.log.graph.api.LinearGraph;
 import consulo.ide.impl.idea.vcs.log.graph.impl.permanent.GraphLayoutImpl;
 import consulo.ide.impl.idea.vcs.log.graph.utils.IntList;

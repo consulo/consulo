@@ -19,9 +19,10 @@ import consulo.execution.action.Location;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.Pair;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

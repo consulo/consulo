@@ -17,7 +17,7 @@ package consulo.desktop.awt.wm.impl.content;
 
 import consulo.ui.ex.popup.PopupStep;
 import consulo.ui.ex.popup.BaseListPopupStep;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.ui.content.TabbedContent;
 

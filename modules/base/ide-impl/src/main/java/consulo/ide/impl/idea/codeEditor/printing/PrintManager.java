@@ -33,7 +33,7 @@ import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;

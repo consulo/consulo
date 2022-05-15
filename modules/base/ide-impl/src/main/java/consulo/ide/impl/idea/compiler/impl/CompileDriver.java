@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.compiler.make.CacheUtils;
 import consulo.ide.impl.idea.compiler.progress.CompilerTask;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;

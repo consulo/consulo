@@ -11,7 +11,6 @@ import consulo.ide.impl.idea.codeInsight.intention.impl.ShowIntentionActionsHand
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateManagerImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateStateImpl;
 import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ApplicationManager;
@@ -34,6 +33,7 @@ import consulo.language.psi.PsiUtilCore;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.FocusableComponent;
+import consulo.util.lang.Pair;
 import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;

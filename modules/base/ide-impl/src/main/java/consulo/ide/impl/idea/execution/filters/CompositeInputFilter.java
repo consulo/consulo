@@ -20,7 +20,7 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
 import javax.annotation.Nonnull;
 

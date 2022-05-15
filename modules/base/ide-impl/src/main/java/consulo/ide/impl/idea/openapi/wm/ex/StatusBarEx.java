@@ -18,10 +18,10 @@ package consulo.ide.impl.idea.openapi.wm.ex;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.progress.TaskInfo;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.project.ui.wm.StatusBar;
 import consulo.disposer.Disposable;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

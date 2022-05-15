@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.ide.impl.idea.openapi.util.*;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

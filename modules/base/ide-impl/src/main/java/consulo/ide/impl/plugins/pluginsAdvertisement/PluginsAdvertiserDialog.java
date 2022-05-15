@@ -19,7 +19,6 @@ import consulo.ide.impl.idea.ide.plugins.InstallPluginAction;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerMain;
 import consulo.ide.impl.idea.ide.plugins.PluginTable;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Couple;
 import consulo.ui.ex.awt.ScrollPaneFactory;
 import consulo.ui.ex.awt.util.TableUtil;
 import consulo.ui.ex.awt.CustomLineBorder;
@@ -30,6 +29,7 @@ import consulo.container.plugin.PluginDescriptor;
 import consulo.container.plugin.PluginId;
 import consulo.ide.impl.plugins.PluginDescriptionPanel;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.lang.Couple;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

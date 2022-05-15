@@ -19,7 +19,7 @@ import consulo.ide.impl.fileEditor.FileEditorWindowBase;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.ui.ThreeComponentsSplitter;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.DeprecationInfo;
 import consulo.application.AllIcons;

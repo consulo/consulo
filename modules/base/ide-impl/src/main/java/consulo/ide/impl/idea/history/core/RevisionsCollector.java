@@ -19,7 +19,7 @@ package consulo.ide.impl.idea.history.core;
 import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import consulo.ide.impl.idea.history.core.revisions.*;
 import consulo.ide.impl.idea.history.core.tree.RootEntry;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

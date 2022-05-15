@@ -23,7 +23,7 @@ import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.ui.ComboBoxTableRenderer;
 import consulo.ide.impl.idea.openapi.ui.StripeTable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.SystemInfo;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.BooleanTableCellRenderer;

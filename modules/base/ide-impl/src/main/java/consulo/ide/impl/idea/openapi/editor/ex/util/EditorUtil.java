@@ -19,7 +19,7 @@ import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopScrollingModelImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorImpl;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;

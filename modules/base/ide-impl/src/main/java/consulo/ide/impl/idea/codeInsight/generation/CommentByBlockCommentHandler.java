@@ -48,7 +48,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Couple;
+import consulo.util.lang.Couple;
 import consulo.document.util.TextRange;
 import consulo.language.codeStyle.CodeStyleSettingsManager;
 import consulo.language.codeStyle.CommonCodeStyleSettings;

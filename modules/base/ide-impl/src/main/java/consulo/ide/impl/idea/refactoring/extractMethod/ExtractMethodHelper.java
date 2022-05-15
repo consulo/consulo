@@ -34,7 +34,7 @@ import consulo.application.progress.Task;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.function.Computable;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.RefactoringBundle;

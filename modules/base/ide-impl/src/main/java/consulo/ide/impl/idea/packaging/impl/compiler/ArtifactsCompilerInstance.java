@@ -27,7 +27,7 @@ import consulo.compiler.generic.GenericCompilerProcessingItem;
 import consulo.compiler.generic.VirtualFilePersistentState;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;

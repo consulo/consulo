@@ -4,7 +4,7 @@ package consulo.ide.impl.idea.openapi.fileTypes.impl;
 import consulo.ide.impl.idea.openapi.fileTypes.ExactFileNameMatcher;
 import consulo.ide.impl.idea.openapi.fileTypes.ExtensionFileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.ide.impl.idea.util.text.CharSequenceHashingStrategy;

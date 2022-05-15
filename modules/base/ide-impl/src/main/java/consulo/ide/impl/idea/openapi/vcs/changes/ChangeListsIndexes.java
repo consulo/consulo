@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import com.google.common.collect.Sets;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.ide.impl.idea.openapi.vcs.VcsKey;

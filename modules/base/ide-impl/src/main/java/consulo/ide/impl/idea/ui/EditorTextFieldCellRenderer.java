@@ -139,7 +139,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     private boolean mySelected;
 
     public RendererComponent(Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
-      Pair<EditorTextField, EditorEx> pair = createEditor(project, fileType, inheritFontFromLaF);
+      consulo.util.lang.Pair<EditorTextField, EditorEx> pair = createEditor(project, fileType, inheritFontFromLaF);
       myTextField = pair.first;
       myEditor = pair.second;
       add(myEditor.getContentComponent());
@@ -150,7 +150,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
     }
 
     @Nonnull
-    private static Pair<EditorTextField, EditorEx> createEditor(Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
+    private static consulo.util.lang.Pair<EditorTextField, EditorEx> createEditor(Project project, @Nullable FileType fileType, boolean inheritFontFromLaF) {
       EditorTextField field = new EditorTextField(new EditorTextFieldRendererDocument(), project, fileType, false, false);
       field.setSupplementary(true);
       field.setFontInheritedFromLAF(inheritFontFromLaF);
@@ -164,7 +164,7 @@ public abstract class EditorTextFieldCellRenderer implements TableCellRenderer, 
 
       editor.getScrollPane().setBorder(null);
 
-      return Pair.create(field, editor);
+      return consulo.util.lang.Pair.create(field, editor);
     }
 
     public void setText(String text, @Nullable TextAttributes textAttributes, boolean selected) {

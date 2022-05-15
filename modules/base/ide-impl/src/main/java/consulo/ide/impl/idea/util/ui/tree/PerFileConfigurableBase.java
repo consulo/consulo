@@ -69,7 +69,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static consulo.ide.impl.idea.openapi.util.Pair.pair;
+import static consulo.util.lang.Pair.pair;
 import static consulo.ui.ex.awt.IdeBorderFactory.*;
 
 /**
@@ -298,7 +298,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   @Nullable
   public T getNewMapping(@Nullable VirtualFile file) {
-    for (Pair<Object, T> p : ContainerUtil.reverse(myModel.data)) {
+    for (consulo.util.lang.Pair<Object, T> p : ContainerUtil.reverse(myModel.data)) {
       if (keyMatches(p.first, file, false) && p.second != null) return p.second;
     }
     ProjectFileIndex index = ProjectFileIndex.getInstance(myProject);
@@ -380,7 +380,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   protected Map<VirtualFile, T> getNewMappings() {
     HashMap<VirtualFile, T> map = new HashMap<>();
-    for (Pair<Object, T> p : myModel.data) {
+    for (consulo.util.lang.Pair<Object, T> p : myModel.data) {
       if (p.second != null) {
         map.put((VirtualFile)p.first, p.second);
       }
@@ -415,9 +415,9 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   protected int[] findRow(VirtualFile file, boolean strict, boolean all) {
     TIntArrayList rows = new TIntArrayList();
-    List<Pair<Object, T>> reversed = ContainerUtil.reverse(myModel.data);
+    List<consulo.util.lang.Pair<Object, T>> reversed = ContainerUtil.reverse(myModel.data);
     for (int i = 0, size = reversed.size(); i < size; i++) {
-      Pair<Object, T> p = reversed.get(i);
+      consulo.util.lang.Pair<Object, T> p = reversed.get(i);
       if (keyMatches(p.first, file, strict)) {
         rows.add(size - i - 1);
         if (!all) break;
@@ -447,7 +447,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       @Override
       public String toString(TableModel model, int row, int column) {
         text.clear();
-        Pair<Object, T> pair = myModel.data.get(row);
+        consulo.util.lang.Pair<Object, T> pair = myModel.data.get(row);
         if (column == 0) {
           renderTarget(pair.first, text);
         }
@@ -499,7 +499,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
       @Override
       protected void customizeCellRenderer(@Nonnull JTable table, @Nullable Object value, boolean selected, boolean hasFocus, int row, int column) {
-        Pair<Object, T> p = myModel.data.get(myTable.convertRowIndexToModel(row));
+        consulo.util.lang.Pair<Object, T> p = myModel.data.get(myTable.convertRowIndexToModel(row));
         if (p.second != null) {
           setTransparentIconBackground(true);
           renderValue(p.first, p.second, this);
@@ -516,7 +516,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       @Override
       public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         int modelRow = myTable.convertRowIndexToModel(row);
-        Pair<Object, T> pair = myModel.data.get(modelRow);
+        consulo.util.lang.Pair<Object, T> pair = myModel.data.get(modelRow);
         Object target = pair.first;
         if (!(target instanceof VirtualFile)) return null;
         startValue = (VirtualFile)target;
@@ -547,7 +547,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
       @Override
       public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         int modelRow = myTable.convertRowIndexToModel(row);
-        Pair<Object, T> pair = myModel.data.get(modelRow);
+        consulo.util.lang.Pair<Object, T> pair = myModel.data.get(modelRow);
         Object target = pair.first;
         editorValue = pair.second; // (T)value
         if (!canEditTarget(target, editorValue)) return null;
@@ -632,7 +632,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
     TIntArrayList rows = new TIntArrayList();
     boolean toOverride = false;
     for (int i = 0, size = myModel.data.size(); i < size; i++) {
-      Pair<Object, T> p = myModel.data.get(i);
+      consulo.util.lang.Pair<Object, T> p = myModel.data.get(i);
       if (p.first instanceof VirtualFile) {
         for (Object key : keys) {
           if (key == p.first) {
@@ -822,7 +822,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
   private static class MyModel<T> extends AbstractTableModel {
     final String[] columnNames;
-    final List<Pair<Object, T>> data = new ArrayList<>();
+    final List<consulo.util.lang.Pair<Object, T>> data = new ArrayList<>();
 
     MyModel(String... names) {
       columnNames = names;
@@ -855,7 +855,7 @@ public abstract class PerFileConfigurableBase<T> implements SearchableConfigurab
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-      Pair<Object, T> pair = data.get(rowIndex);
+      consulo.util.lang.Pair<Object, T> pair = data.get(rowIndex);
       if (columnIndex == 1) {
         if (Comparing.equal(aValue, pair.second)) return;
         @SuppressWarnings("unchecked") T t = (T)aValue;

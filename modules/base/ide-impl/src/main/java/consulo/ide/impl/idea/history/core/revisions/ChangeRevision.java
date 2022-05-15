@@ -22,7 +22,7 @@ import consulo.ide.impl.idea.history.core.changes.Change;
 import consulo.ide.impl.idea.history.core.changes.ChangeSet;
 import consulo.ide.impl.idea.history.core.tree.Entry;
 import consulo.ide.impl.idea.history.core.tree.RootEntry;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.collection.SmartList;
 import javax.annotation.Nonnull;
 

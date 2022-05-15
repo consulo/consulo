@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.collection.SmartList;
 import consulo.index.io.data.DataExternalizer;
 import consulo.index.io.data.IOUtil;

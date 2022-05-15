@@ -16,8 +16,8 @@
 package consulo.sandboxPlugin.lang.version;
 
 import consulo.language.lexer.Lexer;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.fileType.FileType;
-import consulo.ide.impl.idea.openapi.util.Pair;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.TokenSet;
 import consulo.sandboxPlugin.lang.Sand2FileType;

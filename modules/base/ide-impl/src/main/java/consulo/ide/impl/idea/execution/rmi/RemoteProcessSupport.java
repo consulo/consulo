@@ -30,7 +30,7 @@ import consulo.execution.runner.ProgramRunner;
 import consulo.application.internal.ApplicationManagerEx;
 import consulo.application.progress.ProgressManager;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ExceptionUtil;

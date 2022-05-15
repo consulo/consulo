@@ -30,7 +30,7 @@ import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.popup.event.JBPopupAdapter;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ide.impl.idea.ui.components.GradientViewport;

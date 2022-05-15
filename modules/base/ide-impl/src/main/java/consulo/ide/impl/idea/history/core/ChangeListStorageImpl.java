@@ -24,7 +24,7 @@ import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
 import consulo.project.ui.notification.Notifications;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
 import consulo.ide.impl.idea.util.Consumer;

@@ -14,7 +14,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.file.FileTypeManager;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.openapi.util.Pair;
+import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.text.StringTokenizer;

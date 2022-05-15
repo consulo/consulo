@@ -43,7 +43,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
-import static consulo.ide.impl.idea.openapi.util.Pair.pair;
+import static consulo.util.lang.Pair.pair;
 import static consulo.ide.impl.idea.util.containers.ContainerUtil.newHashMap;
 
 /**
