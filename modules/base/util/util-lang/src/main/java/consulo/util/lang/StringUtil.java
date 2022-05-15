@@ -325,6 +325,12 @@ public class StringUtil {
     return VOWELS.indexOf(c) >= 0;
   }
 
+  @Nonnull
+  @Contract(pure = true)
+  public static String getPackageName(@Nonnull String fqName) {
+    return getPackageName(fqName, '.');
+  }
+
   /**
    * Given a fqName returns the package name for the type or the containing type.
    * <p/>

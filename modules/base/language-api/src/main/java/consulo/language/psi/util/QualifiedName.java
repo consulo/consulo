@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.util;
+package consulo.language.psi.util;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.index.io.StringRef;
 import consulo.language.psi.stub.StubInputStream;
 import consulo.language.psi.stub.StubOutputStream;
-import consulo.index.io.StringRef;
+import consulo.util.lang.StringUtil;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class QualifiedName implements Comparable<QualifiedName> {
   private final List<String> myComponents;
 
   private QualifiedName(int count) {
-    myComponents = new ArrayList<String>(count);
+    myComponents = new ArrayList<>(count);
   }
 
   public static QualifiedName fromComponents(Collection<String> components) {
