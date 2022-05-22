@@ -19,40 +19,35 @@ import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
-import consulo.util.collection.ContainerUtil;
-import consulo.util.lang.Pair;
 import consulo.util.xml.serializer.InvalidDataException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
 
 /**
  * @author VISTALL
  * @since 21.08.14
  */
 public class OrderEntrySerializationUtil {
-  @NonNls
   public static final String ORDER_ENTRY_ELEMENT_NAME = "orderEntry";
 
-  @NonNls
   public static final String ORDER_ENTRY_TYPE_ATTR = "type";
 
-  @Nonnull
-  public static Map<String, OrderEntryType> getProvidersAsMap() {
-    return ContainerUtil.map2Map(OrderEntryType.EP_NAME.getExtensionList(), orderEntryType -> Pair.create(orderEntryType.getId(), orderEntryType));
+  @Nullable
+  public static OrderEntryType<?> findOrderEntryType(@Nonnull String id) {
+    return OrderEntryType.EP_NAME.findFirstSafe(it -> it.getId().equals(id));
   }
 
   @Nullable
   public static OrderEntry loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) {
     String type = element.getAttributeValue(ORDER_ENTRY_TYPE_ATTR);
-    if(type == null) {
+    if (type == null) {
       return null;
     }
-    OrderEntryType orderEntryType = getProvidersAsMap().get(type);
-    if(orderEntryType == null) {
+
+    OrderEntryType orderEntryType = findOrderEntryType(type);
+    if (orderEntryType == null) {
       return new UnknownOrderEntryImpl(new UnknownOrderEntryType(type, element), (ModuleRootLayerImpl)moduleRootLayer);
     }
 

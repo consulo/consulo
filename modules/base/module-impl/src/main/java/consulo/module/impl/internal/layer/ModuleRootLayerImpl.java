@@ -17,7 +17,6 @@ package consulo.module.impl.internal.layer;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
@@ -505,9 +504,9 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   }
 
   @Override
-  public boolean iterateContentEntries(@Nonnull Processor<ContentEntry> processor) {
+  public boolean iterateContentEntries(@Nonnull Predicate<ContentEntry> processor) {
     for (ContentEntry contentEntry : myContent) {
-      if (!processor.process(contentEntry)) {
+      if (!processor.test(contentEntry)) {
         return false;
       }
     }
@@ -858,6 +857,20 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
     final ModuleOrderEntryImpl moduleOrderEntry = new ModuleOrderEntryImpl(module, this);
     myOrderEntries.add(moduleOrderEntry);
     return moduleOrderEntry;
+  }
+
+  @Nonnull
+  @Override
+  @SuppressWarnings("unchecked")
+  public <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(@Nonnull CustomOrderEntryTypeProvider<M> type, @Nonnull M model) {
+    OrderEntryType<?> entryType = OrderEntrySerializationUtil.findOrderEntryType(type.getId());
+    if (!(entryType instanceof CustomOrderEntryTypeProvider)) {
+      throw new IllegalArgumentException("Type is not registered: " + type.getId());
+    }
+    model.bind(this);
+    CustomOrderEntryImpl<M> entry = new CustomOrderEntryImpl<>((CustomOrderEntryTypeWrapper<M>)type, this, model);
+    myOrderEntries.add(entry);
+    return entry;
   }
 
   @Nonnull

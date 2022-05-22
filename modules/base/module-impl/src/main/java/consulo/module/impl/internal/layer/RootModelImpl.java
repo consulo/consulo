@@ -30,10 +30,7 @@ import consulo.module.content.layer.ModifiableModuleRootLayer;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.event.ModuleRootLayerListener;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.*;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.module.impl.internal.ModuleRootManagerImpl;
@@ -198,6 +195,13 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
   public ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module) {
     assertWritable();
     return getCurrentLayer().addModuleOrderEntry(module);
+  }
+
+  @Nonnull
+  @Override
+  public <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(@Nonnull CustomOrderEntryTypeProvider<M> type, @Nonnull M model) {
+    assertWritable();
+    return getCurrentLayer().addCustomOderEntry(type, model);
   }
 
   @Nonnull

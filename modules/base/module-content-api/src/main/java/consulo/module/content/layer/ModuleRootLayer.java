@@ -16,12 +16,11 @@
 package consulo.module.content.layer;
 
 import consulo.annotation.DeprecationInfo;
-import consulo.application.util.function.Processor;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
-import consulo.module.extension.ModuleExtension;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
+import consulo.module.extension.ModuleExtension;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -51,7 +50,7 @@ public interface ModuleRootLayer {
    * lexicographical order of their paths.
    *
    * @return list of content entries for this module
-   * @see consulo.ide.impl.idea.openapi.roots.ContentEntry
+   * @see ContentEntry
    */
   ContentEntry[] getContentEntries();
 
@@ -60,7 +59,7 @@ public interface ModuleRootLayer {
    * @param processor for iterate
    * @return true if iteration finished normally
    */
-  boolean iterateContentEntries(@Nonnull Processor<ContentEntry> processor);
+  boolean iterateContentEntries(@Nonnull Predicate<ContentEntry> processor);
 
   /**
    * Use this method to obtain order of roots of a module. Order of entries is important.

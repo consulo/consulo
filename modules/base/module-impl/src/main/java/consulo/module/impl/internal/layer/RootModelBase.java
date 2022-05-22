@@ -15,16 +15,15 @@
  */
 package consulo.module.impl.internal.layer;
 
-import consulo.application.util.function.Processor;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.Module;
-import consulo.module.extension.ModuleExtension;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.ModuleRootModel;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
+import consulo.module.extension.ModuleExtension;
 import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
@@ -61,7 +60,7 @@ public abstract class RootModelBase implements ModuleRootModel {
   }
 
   @Override
-  public boolean iterateContentEntries(@Nonnull Processor<ContentEntry> processor) {
+  public boolean iterateContentEntries(@Nonnull Predicate<ContentEntry> processor) {
     return getCurrentLayer().iterateContentEntries(processor);
   }
 

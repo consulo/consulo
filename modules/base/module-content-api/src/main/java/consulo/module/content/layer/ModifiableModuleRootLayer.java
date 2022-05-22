@@ -18,10 +18,7 @@ package consulo.module.content.layer;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.module.Module;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.*;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionWithSdk;
 import consulo.virtualFileSystem.VirtualFile;
@@ -113,6 +110,9 @@ public interface ModifiableModuleRootLayer extends ModuleRootLayer {
 
   @Nonnull
   ModuleOrderEntry addModuleOrderEntry(@Nonnull Module module);
+
+  @Nonnull
+  <M extends CustomOrderEntryModel> CustomOrderEntry<M> addCustomOderEntry(@Nonnull CustomOrderEntryTypeProvider<M> type, @Nonnull M model);
 
   @Nonnull
   ModuleOrderEntry addInvalidModuleEntry(@Nonnull String name);

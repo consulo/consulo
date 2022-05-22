@@ -15,27 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui;
 
+import consulo.content.bundle.Sdk;
+import consulo.content.library.Library;
 import consulo.ide.ServiceManager;
 import consulo.module.Module;
-import consulo.project.Project;
-import consulo.content.bundle.Sdk;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.content.library.Library;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.annotation.DeprecationInfo;
 
 public abstract class OrderEntryAppearanceService {
   public static OrderEntryAppearanceService getInstance() {
     return ServiceManager.getService(OrderEntryAppearanceService.class);
-  }
-
-  @Nonnull
-  @Deprecated
-  @DeprecationInfo("Use #forOrderEntry(@ OrderEntry)")
-  public CellAppearanceEx forOrderEntry(@Deprecated Project project, @Nonnull OrderEntry orderEntry, @Deprecated boolean selected) {
-    return forOrderEntry(orderEntry);
   }
 
   @Nonnull

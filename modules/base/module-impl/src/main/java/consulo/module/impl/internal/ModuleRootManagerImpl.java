@@ -158,7 +158,7 @@ public class ModuleRootManagerImpl extends ModuleRootManager implements Disposab
   }
 
   @Override
-  public boolean iterateContentEntries(@Nonnull Processor<ContentEntry> processor) {
+  public boolean iterateContentEntries(@Nonnull Predicate<ContentEntry> processor) {
     return myRootModel.iterateContentEntries(processor);
   }
 

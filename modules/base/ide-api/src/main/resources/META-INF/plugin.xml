@@ -626,7 +626,8 @@
 
     <extensionPoint name="moduleRootsProcessor" interface="consulo.module.impl.internal.layer.ModuleRootsProcessor"/>
     <extensionPoint name="orderRootType" interface="consulo.content.OrderRootType"/>
-    <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType"/>
+    <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType" internal="true"/>
+    <extensionPoint name="customOrderEntryTypeProvider" interface="consulo.module.content.layer.orderEntry.CustomOrderEntryTypeProvider"/>
     <extensionPoint name="orderEntryTypeEditor" beanClass="consulo.component.extension.KeyedFactoryEPBean">
       <with attribute="implementationClass" implements="consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor"/>
     </extensionPoint>
@@ -2555,6 +2556,7 @@
     <orderEntryType implementation="consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryType"/>
     <orderEntryType implementation="consulo.module.impl.internal.layer.orderEntry.ModuleOrderEntryType"/>
     <orderEntryType implementation="consulo.module.impl.internal.layer.orderEntry.ModuleSourceOrderEntryType"/>
+    <extensionExtender key="consulo.orderEntryType" implementationClass="consulo.module.impl.internal.layer.orderEntry.CustomOrderEntryTypeExtender" />
 
     <orderEntryTypeEditor key="library" implementationClass="consulo.ide.impl.roots.orderEntry.LibraryOrderEntryTypeEditor"/>
     <orderEntryTypeEditor key="module-extension-sdk" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleExtensionWithSdkOrderEntryTypeEditor"/>

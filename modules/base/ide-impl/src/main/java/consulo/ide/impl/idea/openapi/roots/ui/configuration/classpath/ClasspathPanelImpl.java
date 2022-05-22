@@ -134,7 +134,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
       @Override
       public String getElementText(Object element) {
-        return getCellAppearance((ClasspathTableItem<?>)element, false).getText();
+        return ((ClasspathTableItem<?>)element).getEntry().getPresentableName();
       }
 
       @Override

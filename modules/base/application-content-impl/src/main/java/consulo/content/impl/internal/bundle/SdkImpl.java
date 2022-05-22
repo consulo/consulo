@@ -7,18 +7,15 @@ import consulo.content.OrderRootType;
 import consulo.content.RootProvider;
 import consulo.content.bundle.*;
 import consulo.content.impl.internal.GlobalLibraryRootListenerProvider;
-import consulo.content.impl.internal.RootProviderBaseImpl;
+import consulo.content.RootProviderBase;
 import consulo.content.impl.internal.RootsAsVirtualFilePointers;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
 import org.jdom.Element;
@@ -253,7 +250,7 @@ public class SdkImpl extends UserDataHolderBase implements Sdk, SdkModificator, 
     dest.myRootProvider.rootsChanged();
   }
 
-  private class MyRootProvider extends RootProviderBaseImpl {
+  private class MyRootProvider extends RootProviderBase {
     @Override
     @Nonnull
     public String[] getUrls(@Nonnull OrderRootType rootType) {

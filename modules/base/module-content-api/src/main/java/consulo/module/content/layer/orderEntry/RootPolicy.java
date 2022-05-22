@@ -38,4 +38,8 @@ public class RootPolicy<R> {
   public R visitModuleExtensionSdkOrderEntry(ModuleExtensionWithSdkOrderEntry orderEntry, R value) {
     return visitOrderEntry(orderEntry, value);
   }
+
+  public R visitCustomOrderEntry(CustomOrderEntry orderEntry, R value) {
+    return visitOrderEntry(orderEntry, value);
+  }
 }

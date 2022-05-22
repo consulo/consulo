@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package consulo.content.impl.internal;
+package consulo.content;
 
-import consulo.content.RootProvider;
 import consulo.disposer.Disposable;
 import consulo.proxy.EventDispatcher;
 
@@ -25,7 +24,7 @@ import javax.annotation.Nonnull;
 /**
  *  @author dsl
  */
-public abstract class RootProviderBaseImpl implements RootProvider {
+public abstract class RootProviderBase implements RootProvider {
   protected final EventDispatcher<RootSetChangedListener> myDispatcher = EventDispatcher.create(RootSetChangedListener.class);
 
   @Override
