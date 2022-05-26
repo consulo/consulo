@@ -38,7 +38,7 @@ import java.util.List;
  * @author dsl
  */
 public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl implements OrderEntryWithTracking {
-  public static final Logger LOGGER = Logger.getInstance(LibraryOrderEntryBaseImpl.class);
+  private static final Logger LOG = Logger.getInstance(LibraryOrderEntryBaseImpl.class);
 
   protected final ProjectRootManagerImpl myProjectRootManagerImpl;
   @Nonnull
@@ -71,7 +71,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
   @Override
   @Nonnull
   public String[] getUrls(@Nonnull OrderRootType type) {
-    LOGGER.assertTrue(!getRootModel().getModule().isDisposed());
+    LOG.assertTrue(!getRootModel().getModule().isDisposed());
     RootProvider rootProvider = getRootProvider();
     return rootProvider == null ? ArrayUtil.EMPTY_STRING_ARRAY : rootProvider.getUrls(type);
 
@@ -88,7 +88,7 @@ public abstract class LibraryOrderEntryBaseImpl extends OrderEntryBaseImpl imple
 
   @Override
   public boolean isEquivalentTo(@Nonnull OrderEntry other) {
-    LOGGER.assertTrue(this instanceof LibraryOrderEntry);
+    LOG.assertTrue(this instanceof LibraryOrderEntry);
 
     LibraryOrderEntry libraryOrderEntry1 = (LibraryOrderEntry)this;
     LibraryOrderEntry libraryOrderEntry2 = (LibraryOrderEntry)other;

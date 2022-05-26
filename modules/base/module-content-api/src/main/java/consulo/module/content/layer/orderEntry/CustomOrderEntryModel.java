@@ -19,6 +19,7 @@ import consulo.content.RootProvider;
 import consulo.module.content.layer.ModuleRootLayer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
@@ -44,4 +45,13 @@ public interface CustomOrderEntryModel {
 
   @Nonnull
   CustomOrderEntryModel clone();
+
+  @Nullable
+  default Object getEqualObject() {
+    return null;
+  }
+
+  default boolean isEquivalentTo(@Nonnull CustomOrderEntryModel otherModel) {
+    return false;
+  }
 }

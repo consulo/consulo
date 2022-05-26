@@ -28,6 +28,7 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author dsl
@@ -59,7 +60,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public Sdk getSdk() {
     final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension == null) {
@@ -70,7 +71,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
   }
 
   @Override
-  @javax.annotation.Nullable
+  @Nullable
   public String getSdkName() {
     final ModuleExtensionWithSdk<?> moduleExtension = getModuleExtension();
     if (moduleExtension == null) {
@@ -145,7 +146,7 @@ public class ModuleExtensionWithSdkOrderEntryImpl extends LibraryOrderEntryBaseI
     return myModuleExtensionId;
   }
 
-  @javax.annotation.Nullable
+  @Nullable
   @Override
   public ModuleExtensionWithSdk<?> getModuleExtension() {
     ModuleExtension<?> extensionWithoutCheck = myModuleRootLayer.getExtensionWithoutCheck(myModuleExtensionId);

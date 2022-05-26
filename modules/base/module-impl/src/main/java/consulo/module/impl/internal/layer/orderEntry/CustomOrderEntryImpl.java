@@ -22,6 +22,7 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * @author VISTALL
@@ -33,6 +34,27 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
   public CustomOrderEntryImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootLayer, @Nonnull M data) {
     super(provider, rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     myModel = data;
+  }
+
+  @Nullable
+  @Override
+  public Object getEqualObject() {
+    return myModel.getEqualObject();
+  }
+
+  @Override
+  public boolean isEquivalentTo(@Nonnull OrderEntry other) {
+    if (other instanceof CustomOrderEntry otherCustomOrderEntry) {
+      CustomOrderEntryTypeWrapper<?> type = (CustomOrderEntryTypeWrapper<?>)otherCustomOrderEntry.getType();
+
+      if (!Objects.equals(type.getId(), getType().getId())) {
+        return false;
+      }
+
+      CustomOrderEntryModel otherModel = otherCustomOrderEntry.getModel();
+      return myModel.isEquivalentTo(otherModel);
+    }
+    return false;
   }
 
   @Nonnull
