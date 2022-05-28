@@ -33,11 +33,13 @@ import java.util.function.Consumer;
 /**
  * @author VISTALL
  * @since 06-Jun-16
+ *
+ * @see CustomOrderEntryTypeEditor
  */
 public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
   ExtensionPointName<KeyedFactoryEPBean> EP_NAME = ExtensionPointName.create("consulo.orderEntryTypeEditor");
 
-  KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY = new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME, Application.get()) {
+  KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY = new KeyedExtensionFactory<>(OrderEntryTypeEditor.class, EP_NAME, Application.get()) {
     @Override
     public OrderEntryTypeEditor getByKey(@Nullable OrderEntryType key) {
       OrderEntryTypeEditor editor = super.getByKey(key);
