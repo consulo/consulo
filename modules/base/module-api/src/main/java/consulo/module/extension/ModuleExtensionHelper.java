@@ -16,8 +16,10 @@
 package consulo.module.extension;
 
 import consulo.project.Project;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
@@ -30,11 +32,14 @@ public interface ModuleExtensionHelper {
     return project.getInstance(ModuleExtensionHelper.class);
   }
 
-  public abstract boolean hasModuleExtension(@Nonnull Class<? extends ModuleExtension> clazz);
+  public boolean hasModuleExtension(@Nonnull Class<? extends ModuleExtension> clazz);
 
   @Nonnull
-  public abstract <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@Nonnull Class<T> clazz);
+  public <T extends ModuleExtension<T>> Collection<T> getModuleExtensions(@Nonnull Class<T> clazz);
 
   @Nonnull
   public String getModuleExtensionName(@Nonnull ModuleExtension<?> moduleExtension);
+
+  @Nullable
+  public Image getModuleExtensionIcon(@Nonnull String extensionId);
 }

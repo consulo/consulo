@@ -22,10 +22,13 @@ import consulo.module.extension.ModuleExtensionHelper;
 import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
+import consulo.ui.image.Image;
 import consulo.util.collection.MultiMap;
 import consulo.annotation.access.RequiredReadAction;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -84,6 +87,13 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper {
     final ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(moduleExtension.getId());
     assert provider != null;
     return provider.getName();
+  }
+
+  @Nullable
+  @Override
+  public Image getModuleExtensionIcon(@Nonnull String extensionId) {
+    ModuleExtensionProviderEP provider = ModuleExtensionProviders.findProvider(extensionId);
+    return provider == null ? null : provider.getIcon();
   }
 
   @RequiredReadAction
