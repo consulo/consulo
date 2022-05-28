@@ -86,6 +86,11 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
   }
 
   @Override
+  public boolean isSynthetic() {
+    return myModel.isSynthetic();
+  }
+
+  @Override
   @SuppressWarnings("unchecked")
   public OrderEntry cloneEntry(ModuleRootLayerImpl layer) {
     M cloneModel = (M)myModel.clone();

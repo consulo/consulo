@@ -17,6 +17,7 @@ package consulo.module.content.layer.orderEntry;
 
 import consulo.content.RootProvider;
 import consulo.module.content.layer.ModuleRootLayer;
+import consulo.module.content.layer.Synthetic;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,7 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 21-May-22
  */
-public interface CustomOrderEntryModel {
+public interface CustomOrderEntryModel extends Synthetic {
   /**
    * Initialize module with target moduleRootLayer once, after adding to layer. Also called after {@link #clone()} call.
    *
