@@ -17,7 +17,7 @@ package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootLayer;

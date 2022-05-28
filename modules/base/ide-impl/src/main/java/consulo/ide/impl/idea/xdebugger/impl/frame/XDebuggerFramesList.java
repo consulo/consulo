@@ -15,26 +15,27 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.frame;
 
-import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
-import consulo.ui.ex.awt.ColoredListCellRenderer;
-import consulo.ide.impl.idea.ui.FileColorManager;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.ui.popup.list.GroupedItemsListRenderer;
-import consulo.ide.impl.idea.util.ui.TextTransferable;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.execution.debug.XDebuggerBundle;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.frame.XStackFrame;
+import consulo.ide.impl.idea.openapi.ui.popup.ListItemDescriptorAdapter;
+import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.ide.impl.idea.ui.popup.list.GroupedItemsListRenderer;
+import consulo.ide.impl.idea.util.ui.TextTransferable;
+import consulo.ide.impl.psi.search.scope.NonProjectFilesScope;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.psi.PsiManager;
+import consulo.project.Project;
+import consulo.ui.ex.ColoredStringBuilder;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.ColoredListCellRenderer;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +65,7 @@ public class XDebuggerFramesList extends DebuggerFramesList {
 
       StringBuilder plainBuf = new StringBuilder();
       StringBuilder htmlBuf = new StringBuilder();
-      TextTransferable.ColoredStringBuilder coloredTextContainer = new TextTransferable.ColoredStringBuilder();
+      ColoredStringBuilder coloredTextContainer = new ColoredStringBuilder();
       htmlBuf.append("<html>\n<body>\n<ul>\n");
       for (Object value : values) {
         htmlBuf.append("  <li>");

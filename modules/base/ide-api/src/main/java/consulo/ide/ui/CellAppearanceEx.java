@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui;
+package consulo.ide.ui;
 
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.annotation.DeprecationInfo;
+import consulo.ui.ex.ColoredTextContainer;
 
 import javax.annotation.Nonnull;
 
+@Deprecated
+@DeprecationInfo("Use just Consumer<ColoredTextContainer>")
 public interface CellAppearanceEx {
   @Nonnull
   String getText();
 
-  void customize(@Nonnull SimpleColoredComponent component);
+  void customize(@Nonnull ColoredTextContainer component);
 }

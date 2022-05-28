@@ -16,31 +16,32 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.dependencyAnalysis;
 
 import consulo.application.AllIcons;
-import consulo.virtualFileSystem.VirtualFilePresentation;
+import consulo.application.util.function.Processor;
+import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.language.content.ProductionContentFolderTypeProvider;
+import consulo.language.content.ProductionResourceContentFolderTypeProvider;
+import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.content.TestResourceContentFolderTypeProvider;
 import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.OrderEnumerator;
 import consulo.module.content.layer.OrderRootsEnumerator;
 import consulo.module.content.layer.orderEntry.ModuleOrderEntry;
 import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.image.Image;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
-import consulo.application.util.function.Processor;
-import consulo.compiler.ModuleCompilerPathsManager;
-import consulo.language.content.ProductionContentFolderTypeProvider;
-import consulo.language.content.ProductionResourceContentFolderTypeProvider;
-import consulo.language.content.TestContentFolderTypeProvider;
-import consulo.language.content.TestResourceContentFolderTypeProvider;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Analyzer for  module classpath. It uses order enumerator to get classpath details.
@@ -325,7 +326,7 @@ public class ModuleDependenciesAnalyzer {
      * @return the appearance to use for rendering
      */
     @Nonnull
-    public abstract CellAppearanceEx getAppearance(boolean isSelected);
+    public abstract Consumer<ColoredTextContainer> getRender(boolean isSelected);
   }
 
   /**
@@ -386,8 +387,8 @@ public class ModuleDependenciesAnalyzer {
      */
     @Nonnull
     @Override
-    public CellAppearanceEx getAppearance(boolean isSelected) {
-      return OrderEntryAppearanceService.getInstance().forOrderEntry(myEntry);
+    public Consumer<ColoredTextContainer> getRender(boolean isSelected) {
+      return OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(myEntry);
     }
   }
 

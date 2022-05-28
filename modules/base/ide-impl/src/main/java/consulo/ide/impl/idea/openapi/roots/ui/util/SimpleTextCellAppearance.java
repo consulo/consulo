@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.util;
 
 import consulo.ide.impl.idea.openapi.roots.ui.ModifiableCellAppearanceEx;
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
 
@@ -50,7 +50,7 @@ public class SimpleTextCellAppearance implements ModifiableCellAppearanceEx {
   }
 
   @Override
-  public void customize(@Nonnull final SimpleColoredComponent component) {
+  public void customize(@Nonnull final ColoredTextContainer component) {
     component.setIcon(myIcon);
     component.append(myText, myTextAttributes);
   }

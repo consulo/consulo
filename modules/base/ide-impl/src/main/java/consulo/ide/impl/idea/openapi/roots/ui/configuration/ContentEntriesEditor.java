@@ -19,6 +19,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 import consulo.application.AllIcons;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.ex.FileChooserKeys;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
 import consulo.ui.ex.action.DumbAwareAction;

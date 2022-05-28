@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration;
+package consulo.ide.setting.module;
 
-import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.project.Project;
 import consulo.util.dataholder.UserDataHolder;
 
 import javax.annotation.Nonnull;

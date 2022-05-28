@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
 import consulo.content.bundle.Sdk;
-import consulo.module.impl.internal.layer.orderEntry.ModuleExtensionWithSdkOrderEntryImpl;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.content.bundle.SdkUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
+import consulo.module.impl.internal.layer.orderEntry.ModuleExtensionWithSdkOrderEntryImpl;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -45,8 +46,12 @@ public class ModuleExtensionWithSdkOrderEntryTypeEditor implements OrderEntryTyp
 
   @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
-    Sdk sdk = orderEntry.getSdk();
-    return new SimpleTextCellAppearance(orderEntry.getPresentableName(), SdkUtil.getIcon(sdk), sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
+  public Consumer<ColoredTextContainer> getRender(@Nonnull ModuleExtensionWithSdkOrderEntryImpl orderEntry) {
+    return it -> {
+      Sdk sdk = orderEntry.getSdk();
+
+      it.setIcon(SdkUtil.getIcon(sdk));
+      it.append(orderEntry.getPresentableName(), sdk == null ? SimpleTextAttributes.ERROR_ATTRIBUTES : SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
+    };
   }
 }

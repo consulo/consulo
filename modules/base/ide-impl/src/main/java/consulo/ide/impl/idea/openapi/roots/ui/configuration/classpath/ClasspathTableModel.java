@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath;
 
+import consulo.ide.setting.module.ClasspathTableItem;
 import consulo.logging.Logger;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleConfigurationState;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ui.ex.awt.ItemRemovable;
 import javax.annotation.Nonnull;
 

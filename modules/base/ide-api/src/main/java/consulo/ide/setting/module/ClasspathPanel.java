@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath;
+package consulo.ide.setting.module;
 
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleConfigurationState;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 import java.util.List;

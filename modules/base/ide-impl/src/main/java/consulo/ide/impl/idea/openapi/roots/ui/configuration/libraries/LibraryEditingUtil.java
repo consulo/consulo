@@ -30,7 +30,7 @@ import consulo.module.impl.internal.layer.library.ModuleLibraryTable;
 import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.LibrariesModifiableModel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureValidator;
 import consulo.ui.ex.popup.PopupStep;

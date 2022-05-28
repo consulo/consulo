@@ -221,7 +221,8 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     try {
       Long timestamp = getInstance(project).getRecentFilesTimestamps().get(file.getPath());
       if (timestamp != null) {
-        component.append(" ").append(DateFormatUtil.formatPrettyDateTime(timestamp), SimpleTextAttributes.GRAYED_SMALL_ATTRIBUTES);
+        component.append(" ");
+        component.append(DateFormatUtil.formatPrettyDateTime(timestamp), SimpleTextAttributes.GRAYED_SMALL_ATTRIBUTES);
       }
     }
     catch (IOException e) {

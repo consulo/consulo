@@ -15,13 +15,8 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.ui.ex.ColoredTextContainer;
-import consulo.ui.ex.SimpleTextAttributes;
 import consulo.logging.Logger;
-import consulo.ui.image.Image;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -89,38 +84,5 @@ public class TextTransferable implements Transferable {
       return myPlainContent;
     }
     throw new UnsupportedFlavorException(flavor);
-  }
-
-  public static class ColoredStringBuilder implements ColoredTextContainer {
-    private final StringBuilder builder = new StringBuilder();
-
-    public void appendTo(@Nonnull StringBuilder... subBuilders) {
-      for (StringBuilder subBuilder : subBuilders) {
-        subBuilder.append(builder);
-      }
-      builder.setLength(0);
-    }
-
-    @Override
-    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes) {
-      builder.append(fragment);
-    }
-
-    @Override
-    public void append(@Nonnull String fragment, @Nonnull SimpleTextAttributes attributes, Object tag) {
-      builder.append(fragment);
-    }
-
-    @Override
-    public void setIcon(@Nullable Image icon) {
-    }
-
-    @Override
-    public void setToolTipText(@Nullable String text) {
-    }
-
-    public StringBuilder getBuilder() {
-      return builder;
-    }
   }
 }

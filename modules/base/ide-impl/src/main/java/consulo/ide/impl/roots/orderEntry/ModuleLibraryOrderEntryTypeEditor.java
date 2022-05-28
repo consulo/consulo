@@ -15,28 +15,41 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.FileAppearanceService;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
+import consulo.ide.setting.module.ClasspathTableItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
-import consulo.content.base.BinariesOrderRootType;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
+import consulo.ide.ui.FileAppearanceService;
+import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.module.impl.internal.layer.orderEntry.ModuleLibraryOrderEntryImpl;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ColoredTextContainer;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
  * @since 06-Jun-16
  */
 public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleLibraryOrderEntryImpl> {
+  private final Provider<FileAppearanceService> myFileAppearanceService;
+  private final Provider<OrderEntryAppearanceService> myOrderEntryAppearanceService;
+
+  @Inject
+  public ModuleLibraryOrderEntryTypeEditor(Provider<FileAppearanceService> fileAppearanceService, Provider<OrderEntryAppearanceService> orderEntryAppearanceService) {
+    myFileAppearanceService = fileAppearanceService;
+    myOrderEntryAppearanceService = orderEntryAppearanceService;
+  }
+
   @RequiredUIAccess
   @Override
   public void navigate(@Nonnull final ModuleLibraryOrderEntryImpl orderEntry) {
@@ -55,13 +68,14 @@ public class ModuleLibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<M
 
   @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
-    if (!orderEntry.isValid()) { //library can be removed
-      return FileAppearanceService.getInstance().forInvalidUrl(orderEntry.getPresentableName());
+  public Consumer<ColoredTextContainer> getRender(@Nonnull ModuleLibraryOrderEntryImpl orderEntry) {
+    if (!orderEntry.isValid()) {
+      return myFileAppearanceService.get().getRenderForInvalidUrl(orderEntry.getPresentableName());
     }
+
     Library library = orderEntry.getLibrary();
     assert library != null : orderEntry;
-    return OrderEntryAppearanceService.getInstance()
-            .forLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
+    return myOrderEntryAppearanceService.get()
+            .getRenderForLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
   }
 }

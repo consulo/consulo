@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui;
+package consulo.ide.ui;
 
-import consulo.ide.ServiceManager;
+import consulo.application.Application;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.function.Consumer;
 
 public abstract class FileAppearanceService {
   public static FileAppearanceService getInstance() {
-    return ServiceManager.getService(FileAppearanceService.class);
+    return Application.get().getInstance(FileAppearanceService.class);
   }
-
-  @Nonnull
-  public abstract CellAppearanceEx empty();
 
   @Nonnull
   public abstract CellAppearanceEx forVirtualFile(@Nonnull VirtualFile file);
@@ -37,4 +36,19 @@ public abstract class FileAppearanceService {
 
   @Nonnull
   public abstract CellAppearanceEx forInvalidUrl(@Nonnull String url);
+
+  @Nonnull
+  public Consumer<ColoredTextContainer> getRenderForVirtualFile(@Nonnull VirtualFile file) {
+    return it -> forVirtualFile(file).customize(it);
+  }
+
+  @Nonnull
+  public Consumer<ColoredTextContainer> getRenderForIoFile(@Nonnull File file) {
+    return it -> forIoFile(file).customize(it);
+  }
+
+  @Nonnull
+  public Consumer<ColoredTextContainer> getRenderForInvalidUrl(@Nonnull String url) {
+    return it -> forInvalidUrl(url).customize(it);
+  }
 }

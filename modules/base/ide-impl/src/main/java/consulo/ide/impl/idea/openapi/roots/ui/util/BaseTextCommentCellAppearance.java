@@ -15,30 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.util;
 
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.SimpleColoredComponent;
+import consulo.ide.ui.CellAppearanceEx;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 
 public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx {
-  private SimpleTextAttributes myCommentAttributes = SimpleTextAttributes.GRAY_ATTRIBUTES;
-  private SimpleTextAttributes myTextAttributes = SimpleTextAttributes.REGULAR_ATTRIBUTES;
-
   protected abstract Image getIcon();
 
   protected abstract String getSecondaryText();
 
   protected abstract String getPrimaryText();
 
-  public void customize(@Nonnull final SimpleColoredComponent component) {
+  @Override
+  public void customize(@Nonnull final ColoredTextContainer component) {
     component.setIcon(getIcon());
-    component.append(getPrimaryText(), myTextAttributes);
+    component.append(getPrimaryText(), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     final String secondaryText = getSecondaryText();
     if (!StringUtil.isEmptyOrSpaces(secondaryText)) {
-      component.append(" (" + secondaryText + ")", myCommentAttributes);
+      component.append(" (" + secondaryText + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
     }
   }
 
@@ -49,13 +47,5 @@ public abstract class BaseTextCommentCellAppearance implements CellAppearanceEx 
       return getPrimaryText() + " (" + secondaryText + ")";
     }
     return getPrimaryText();
-  }
-
-  public void setCommentAttributes(SimpleTextAttributes commentAttributes) {
-    myCommentAttributes = commentAttributes;
-  }
-
-  public void setTextAttributes(SimpleTextAttributes textAttributes) {
-    myTextAttributes = textAttributes;
   }
 }

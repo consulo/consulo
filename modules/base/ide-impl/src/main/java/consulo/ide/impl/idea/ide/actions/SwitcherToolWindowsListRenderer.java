@@ -77,7 +77,8 @@ class SwitcherToolWindowsListRenderer extends ColoredListCellRenderer<Object> {
       append(label);
 
       if (!myShowEdited.get()) {
-        append(" ").append(KeymapUtil.getShortcutsText(shortcuts.getShortcuts()), SimpleTextAttributes.GRAY_ATTRIBUTES);
+        append(" ");
+        append(KeymapUtil.getShortcutsText(shortcuts.getShortcuts()), SimpleTextAttributes.GRAY_ATTRIBUTES);
       }
     }
 

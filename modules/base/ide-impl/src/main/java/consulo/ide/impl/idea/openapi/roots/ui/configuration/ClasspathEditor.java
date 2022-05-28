@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanelImpl;
 import consulo.disposer.Disposable;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;

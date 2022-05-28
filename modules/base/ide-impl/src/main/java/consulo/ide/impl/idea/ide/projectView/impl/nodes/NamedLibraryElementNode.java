@@ -18,37 +18,34 @@ package consulo.ide.impl.idea.ide.projectView.impl.nodes;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.Project;
-import consulo.content.bundle.Sdk;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.OrderRootType;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkUtil;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.ModifiableCellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
+import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.language.pom.NavigatableWithText;
-import consulo.content.bundle.SdkUtil;
-import consulo.module.content.layer.orderEntry.OrderEntryWithTracking;
-import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.module.content.layer.orderEntry.*;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.ex.ColoredStringBuilder;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement> implements NavigatableWithText {
   public NamedLibraryElementNode(Project project, NamedLibraryElement value, ViewSettings viewSettings) {
@@ -118,11 +115,11 @@ public class NamedLibraryElementNode extends ProjectViewNode<NamedLibraryElement
       presentation.setTooltip(StringUtil.capitalize(IdeBundle.message("node.projectview.library", ((LibraryOrderEntry)orderEntry).getLibraryLevel())));
     }
     else if(orderEntry instanceof OrderEntryWithTracking) {
-      Image icon = null;
-      CellAppearanceEx cellAppearance = OrderEntryAppearanceService.getInstance().forOrderEntry(orderEntry);
-      if(cellAppearance instanceof ModifiableCellAppearanceEx) {
-        icon = ((ModifiableCellAppearanceEx)cellAppearance).getIcon();
-      }
+      Consumer<ColoredTextContainer> renderForOrderEntry = OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(orderEntry);
+      ColoredStringBuilder builder = new ColoredStringBuilder();
+      renderForOrderEntry.accept(builder);
+
+      Image icon = builder.getIcon();
       presentation.setIcon(icon == null ? AllIcons.Actions.Help : icon);
     }
   }

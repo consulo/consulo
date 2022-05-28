@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui;
 
+import consulo.ide.ui.CellAppearanceEx;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nullable;

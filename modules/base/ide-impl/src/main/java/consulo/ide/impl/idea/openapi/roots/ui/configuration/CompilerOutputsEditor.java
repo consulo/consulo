@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.module.Module;
 import consulo.project.ProjectBundle;
 import consulo.ide.impl.idea.openapi.util.Comparing;

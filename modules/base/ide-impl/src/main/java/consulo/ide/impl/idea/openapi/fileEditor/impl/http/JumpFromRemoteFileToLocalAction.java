@@ -21,7 +21,7 @@ import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.roots.ui.FileAppearanceService;
+import consulo.ide.ui.FileAppearanceService;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -77,7 +77,7 @@ public class JumpFromRemoteFileToLocalAction extends AnAction {
       list.setCellRenderer(new ColoredListCellRenderer() {
         @Override
         protected void customizeCellRenderer(JList list, Object value, int index, boolean selected, boolean hasFocus) {
-          FileAppearanceService.getInstance().forVirtualFile((VirtualFile)value).customize(this);
+          FileAppearanceService.getInstance().getRenderForVirtualFile((VirtualFile)value).accept(this);
         }
       });
       new PopupChooserBuilder(list)

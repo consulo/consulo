@@ -15,22 +15,24 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.project.Project;
-import consulo.module.impl.internal.layer.orderEntry.LibraryOrderEntryImpl;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.content.impl.internal.library.LibraryEx;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.FileAppearanceService;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
+import consulo.ide.setting.module.ClasspathTableItem;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.LibraryClasspathTableItem;
-import consulo.content.base.BinariesOrderRootType;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
+import consulo.ide.ui.FileAppearanceService;
+import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.module.impl.internal.layer.orderEntry.LibraryOrderEntryImpl;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ColoredTextContainer;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -46,14 +48,15 @@ public class LibraryOrderEntryTypeEditor implements OrderEntryTypeEditor<Library
 
   @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@Nonnull LibraryOrderEntryImpl orderEntry) {
+  public Consumer<ColoredTextContainer> getRender(@Nonnull LibraryOrderEntryImpl orderEntry) {
     if (!orderEntry.isValid()) { //library can be removed
-      return FileAppearanceService.getInstance().forInvalidUrl(orderEntry.getPresentableName());
+      return FileAppearanceService.getInstance().getRenderForInvalidUrl(orderEntry.getPresentableName());
     }
     Library library = orderEntry.getLibrary();
     assert library != null : orderEntry;
     return OrderEntryAppearanceService.getInstance()
-            .forLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
+            .getRenderForLibrary(orderEntry.getModuleRootLayer().getProject(), library, !((LibraryEx)library).getInvalidRootUrls(BinariesOrderRootType.getInstance()).isEmpty());
+
   }
 
   @Nonnull

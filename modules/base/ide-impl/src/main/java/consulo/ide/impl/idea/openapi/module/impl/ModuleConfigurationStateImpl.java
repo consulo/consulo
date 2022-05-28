@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.module.impl;
 
 import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleConfigurationState;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.util.dataholder.UserDataHolderBase;

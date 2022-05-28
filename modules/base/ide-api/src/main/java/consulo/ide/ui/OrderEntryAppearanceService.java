@@ -13,26 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui;
+package consulo.ide.ui;
 
+import consulo.application.Application;
 import consulo.content.bundle.Sdk;
 import consulo.content.library.Library;
-import consulo.ide.ServiceManager;
 import consulo.module.Module;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.project.Project;
+import consulo.ui.ex.ColoredTextContainer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public abstract class OrderEntryAppearanceService {
   public static OrderEntryAppearanceService getInstance() {
-    return ServiceManager.getService(OrderEntryAppearanceService.class);
+    return Application.get().getInstance(OrderEntryAppearanceService.class);
   }
 
   @Nonnull
-  public abstract CellAppearanceEx forOrderEntry(@Nonnull OrderEntry orderEntry);
+  public abstract Consumer<ColoredTextContainer> getRenderForOrderEntry(@Nonnull OrderEntry orderEntry);
+
+  @Nonnull
+  public Consumer<ColoredTextContainer> getRenderForModule(@Nonnull Module module) {
+    return it -> forModule(module).customize(it);
+  }
+
+  @Nonnull
+  public Consumer<ColoredTextContainer> getRenderForLibrary(Project project, @Nonnull Library library, boolean hasInvalidRoots) {
+    return it -> forLibrary(project, library, hasInvalidRoots).customize(it);
+  }
 
   @Nonnull
   public abstract CellAppearanceEx forLibrary(Project project, @Nonnull Library library, boolean hasInvalidRoots);

@@ -26,7 +26,7 @@ import consulo.content.library.Library;
 import consulo.compiler.artifact.Artifact;
 import consulo.annotation.DeprecationInfo;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;

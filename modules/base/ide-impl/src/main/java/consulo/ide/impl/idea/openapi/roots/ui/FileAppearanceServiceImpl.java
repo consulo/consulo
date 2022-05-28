@@ -16,36 +16,26 @@
 package consulo.ide.impl.idea.openapi.roots.ui;
 
 import consulo.application.AllIcons;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
 import consulo.ide.impl.idea.openapi.roots.ui.util.*;
+import consulo.ide.ui.CellAppearanceEx;
+import consulo.ide.ui.FileAppearanceService;
+import consulo.language.file.FileTypeManager;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileSystem;
-import consulo.virtualFileSystem.http.HttpFileSystem;
-import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.http.HttpFileSystem;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.util.function.Consumer;
 
 @Singleton
 public class FileAppearanceServiceImpl extends FileAppearanceService {
-  private static CellAppearanceEx EMPTY = new CellAppearanceEx() {
-    @Override
-    public void customize(@Nonnull SimpleColoredComponent component) { }
-
-    @Nonnull
-    @Override
-    public String getText() { return ""; }
-  };
-
-  @Nonnull
-  @Override
-  public CellAppearanceEx empty() {
-    return EMPTY;
-  }
-
   @Nonnull
   @Override
   public CellAppearanceEx forVirtualFile(@Nonnull final VirtualFile file) {
@@ -90,5 +80,50 @@ public class FileAppearanceServiceImpl extends FileAppearanceService {
   @Nonnull
   public CellAppearanceEx forInvalidUrl(@Nonnull final String text) {
     return SimpleTextCellAppearance.invalid(text, AllIcons.Nodes.PpInvalid);
+  }
+
+  @Nonnull
+  @Override
+  public Consumer<ColoredTextContainer> getRenderForInvalidUrl(@Nonnull String url) {
+    return it -> {
+      it.setIcon(PlatformIconGroup.nodesPpinvalid());
+      it.append(url, SimpleTextAttributes.ERROR_ATTRIBUTES);
+    };
+  }
+
+  @Nonnull
+  @Override
+  public Consumer<ColoredTextContainer> getRenderForVirtualFile(@Nonnull VirtualFile file) {
+    if (!file.isValid()) {
+      return getRenderForInvalidUrl(file.getPresentableUrl());
+    }
+
+    return it -> forVirtualFile(file).customize(it);
+  }
+
+  @Nonnull
+  @Override
+  public Consumer<ColoredTextContainer> getRenderForIoFile(@Nonnull File file) {
+    final String absolutePath = file.getAbsolutePath();
+    if (!file.exists()) {
+      return getRenderForInvalidUrl(absolutePath);
+    }
+
+    if (file.isDirectory()) {
+      return it -> {
+        it.setIcon(PlatformIconGroup.nodesFolder());
+        it.append(absolutePath);
+      };
+    }
+
+    return it -> {
+      final String name = file.getName();
+      final FileType fileType = FileTypeManager.getInstance().getFileTypeByFileName(name);
+      final File parent = file.getParentFile();
+
+      it.setIcon(fileType.getIcon());
+      it.append(name);
+      it.append(" (" + parent.getAbsolutePath() + ")", SimpleTextAttributes.GRAY_ATTRIBUTES);
+    };
   }
 }

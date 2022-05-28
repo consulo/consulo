@@ -16,7 +16,7 @@
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.application.Application;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 import consulo.localize.LocalizeValue;

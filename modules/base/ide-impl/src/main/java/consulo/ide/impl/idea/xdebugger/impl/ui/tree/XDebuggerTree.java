@@ -15,17 +15,6 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui.tree;
 
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
-import consulo.ide.impl.idea.util.SingleAlarm;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.containers.Convertor;
-import consulo.ide.impl.idea.util.ui.TextTransferable;
-import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
-import consulo.ide.impl.idea.xdebugger.impl.frame.XValueMarkers;
-import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
-import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.*;
 import consulo.codeEditor.Editor;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
@@ -40,8 +29,20 @@ import consulo.execution.debug.frame.XValueNode;
 import consulo.execution.debug.frame.XValuePlace;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.issueLinks.TreeLinkMouseListener;
+import consulo.ide.impl.idea.util.SingleAlarm;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.ide.impl.idea.util.ui.TextTransferable;
+import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
+import consulo.ide.impl.idea.xdebugger.impl.frame.XValueMarkers;
+import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
+import consulo.ide.impl.idea.xdebugger.impl.ui.tree.nodes.*;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.project.Project;
+import consulo.ui.ex.ColoredStringBuilder;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
@@ -118,7 +119,7 @@ public class XDebuggerTree extends DnDAwareTree implements DataProvider, Disposa
       StringBuilder plainBuf = new StringBuilder();
       StringBuilder htmlBuf = new StringBuilder();
       htmlBuf.append("<html>\n<body>\n<ul>\n");
-      TextTransferable.ColoredStringBuilder coloredTextContainer = new TextTransferable.ColoredStringBuilder();
+      ColoredStringBuilder coloredTextContainer = new ColoredStringBuilder();
       for (TreePath path : selectedPaths) {
         htmlBuf.append("  <li>");
         Object node = path.getLastPathComponent();

@@ -13,26 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.roots.orderEntry;
+package consulo.ide.setting.module;
 
 import consulo.application.Application;
+import consulo.application.extension.KeyedExtensionFactory;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.extension.KeyedFactoryEPBean;
 import consulo.ide.setting.ShowSettingsUtil;
-import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.module.impl.internal.layer.orderEntry.UnknownOrderEntryType;
-import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathTableItem;
-import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
-import consulo.application.extension.KeyedExtensionFactory;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.module.content.layer.orderEntry.OrderEntryType;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ColoredTextContainer;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -43,23 +39,24 @@ public abstract interface OrderEntryTypeEditor<T extends OrderEntry> {
 
   KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType> FACTORY = new KeyedExtensionFactory<OrderEntryTypeEditor, OrderEntryType>(OrderEntryTypeEditor.class, EP_NAME, Application.get()) {
     @Override
-    public OrderEntryTypeEditor getByKey(@Nonnull OrderEntryType key) {
-      // special hack for unknown order entry type
-      if (key instanceof UnknownOrderEntryType) {
-        return new UnknownOrderEntryTypeEditor();
+    public OrderEntryTypeEditor getByKey(@Nullable OrderEntryType key) {
+      OrderEntryTypeEditor editor = super.getByKey(key);
+      if (editor == null) {
+        return super.getByKey(null);
       }
-      return super.getByKey(key);
+      return editor;
     }
 
     @Override
-    public String getKey(@Nonnull final OrderEntryType key) {
-      return key.getId();
+    @Nonnull
+    public String getKey(@Nullable final OrderEntryType key) {
+      return key == null ? "" : key.getId();
     }
   };
 
   @Nonnull
-  default CellAppearanceEx getCellAppearance(@Nonnull T orderEntry) {
-    return new SimpleTextCellAppearance(orderEntry.getPresentableName(), null, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+  default Consumer<ColoredTextContainer> getRender(@Nonnull T orderEntry) {
+    return it -> it.append(orderEntry.getPresentableName());
   }
 
   @Nonnull

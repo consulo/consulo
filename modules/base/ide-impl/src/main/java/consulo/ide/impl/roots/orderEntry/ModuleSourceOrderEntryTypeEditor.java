@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.roots.orderEntry;
 
-import consulo.application.AllIcons;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
 import consulo.module.impl.internal.layer.orderEntry.ModuleSourceOrderEntryImpl;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
+
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * @author VISTALL
@@ -28,7 +31,10 @@ import javax.annotation.Nonnull;
 public class ModuleSourceOrderEntryTypeEditor implements OrderEntryTypeEditor<ModuleSourceOrderEntryImpl> {
   @Nonnull
   @Override
-  public CellAppearanceEx getCellAppearance(@Nonnull ModuleSourceOrderEntryImpl orderEntry) {
-    return SimpleTextCellAppearance.synthetic(orderEntry.getPresentableName(), AllIcons.Nodes.Module);
+  public Consumer<ColoredTextContainer> getRender(@Nonnull ModuleSourceOrderEntryImpl orderEntry) {
+    return it -> {
+      it.setIcon(PlatformIconGroup.nodesModule());
+      it.append(orderEntry.getPresentableName(), SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
+    };
   }
 }

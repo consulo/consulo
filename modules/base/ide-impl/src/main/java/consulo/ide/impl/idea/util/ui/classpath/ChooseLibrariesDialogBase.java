@@ -16,6 +16,8 @@
 package consulo.ide.impl.idea.util.ui.classpath;
 
 import consulo.application.AllIcons;
+import consulo.ui.ex.ColoredStringBuilder;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.action.CommonActionsManager;
 import consulo.ide.impl.idea.ide.DefaultTreeExpander;
 import consulo.ui.ex.TreeExpander;
@@ -39,8 +41,8 @@ import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService;
+import consulo.ide.ui.CellAppearanceEx;
+import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.event.DoubleClickListener;
@@ -68,6 +70,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * @author Gregory.Shrago
@@ -313,12 +316,14 @@ public abstract class ChooseLibrariesDialogBase extends DialogWrapper {
   private static class LibraryDescriptor extends LibrariesTreeNodeBase<Library> {
     protected LibraryDescriptor(final Project project, final NodeDescriptor parentDescriptor, final Library element) {
       super(project, parentDescriptor, element);
-      final CellAppearanceEx appearance = OrderEntryAppearanceService.getInstance().forLibrary(project, element, false);
-      final SimpleColoredComponent coloredComponent = new SimpleColoredComponent();
-      appearance.customize(coloredComponent);
+      Consumer<ColoredTextContainer> renderForLibrary = OrderEntryAppearanceService.getInstance().getRenderForLibrary(project, element, false);
+
+      ColoredStringBuilder builder = new ColoredStringBuilder();
+      renderForLibrary.accept(builder);
+
       final PresentationData templatePresentation = getTemplatePresentation();
-      templatePresentation.setIcon(coloredComponent.getIcon());
-      templatePresentation.addText(notEmpty(appearance.getText()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
+      templatePresentation.setIcon(builder.getIcon());
+      templatePresentation.addText(notEmpty(builder.toString()), SimpleTextAttributes.REGULAR_ATTRIBUTES);
     }
   }
 

@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.ide.impl.idea.openapi.module.ModuleConfigurationEditor;
 import consulo.configurable.ConfigurationException;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.project.Project;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.ui.ex.awtUnsafe.TargetAWT;

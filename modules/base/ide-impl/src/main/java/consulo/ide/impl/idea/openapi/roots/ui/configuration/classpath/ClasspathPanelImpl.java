@@ -18,15 +18,18 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath;
 import consulo.find.FindBundle;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryScope;
+import consulo.ide.setting.module.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathTableItem;
 import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleConfigurationState;
+import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.FindUsagesInProjectStructureActionBase;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.LibraryProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ModuleProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.ProjectStructureElement;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.projectRoot.daemon.SdkProjectStructureElement;
+import consulo.ui.ex.ColoredStringBuilder;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.awt.*;
 import consulo.ide.impl.idea.openapi.ui.ComboBoxTableRenderer;
 import consulo.ui.ex.awt.Messages;
@@ -78,6 +81,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
   private static final Logger LOG = Logger.getInstance(ClasspathPanelImpl.class);
@@ -134,7 +138,10 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
 
       @Override
       public String getElementText(Object element) {
-        return ((ClasspathTableItem<?>)element).getEntry().getPresentableName();
+        Consumer<ColoredTextContainer> render = getRender((ClasspathTableItem<?>)element);
+        ColoredStringBuilder b = new ColoredStringBuilder();
+        render.accept(b);
+        return b.toString();
       }
 
       @Override
@@ -494,10 +501,10 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
     TableUtil.selectRows(myEntryTable, selection);
   }
 
-  private static CellAppearanceEx getCellAppearance(final ClasspathTableItem<?> item, final boolean selected) {
+  private static Consumer<ColoredTextContainer> getRender(final ClasspathTableItem<?> item) {
     final OrderEntryAppearanceService service = OrderEntryAppearanceService.getInstance();
     final OrderEntry entry = item.getEntry();
-    return service.forOrderEntry(entry);
+    return service.getRenderForOrderEntry(entry);
   }
 
   private static class TableItemRenderer extends ColoredTableCellRenderer {
@@ -508,7 +515,7 @@ public class ClasspathPanelImpl extends JPanel implements ClasspathPanel {
       setBorder(JBUI.Borders.empty(1));
       if (value instanceof ClasspathTableItem<?>) {
         final ClasspathTableItem<?> tableItem = (ClasspathTableItem<?>)value;
-        getCellAppearance(tableItem, selected).customize(this);
+        getRender(tableItem).accept(this);
         setToolTipText(tableItem.getTooltipText());
       }
     }

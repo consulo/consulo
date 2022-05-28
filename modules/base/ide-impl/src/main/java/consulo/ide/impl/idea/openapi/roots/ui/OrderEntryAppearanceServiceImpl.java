@@ -16,33 +16,37 @@
 package consulo.ide.impl.idea.openapi.roots.ui;
 
 import consulo.application.AllIcons;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
-import consulo.ide.impl.idea.openapi.roots.ui.util.CompositeAppearance;
-import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
 import consulo.application.util.SystemInfo;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkType;
 import consulo.content.bundle.SdkUtil;
 import consulo.content.library.Library;
-import consulo.ide.setting.ProjectStructureSettingsUtil;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
+import consulo.ide.impl.idea.openapi.roots.ui.util.CompositeAppearance;
+import consulo.ide.impl.idea.openapi.roots.ui.util.SimpleTextCellAppearance;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.ide.setting.module.OrderEntryTypeEditor;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ide.ui.CellAppearanceEx;
+import consulo.ide.ui.FileAppearanceService;
+import consulo.ide.ui.OrderEntryAppearanceService;
 import consulo.module.Module;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
-import consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor;
-import consulo.ide.setting.module.LibrariesConfigurator;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.image.Image;
+import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Singleton;
@@ -51,6 +55,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.File;
+import java.util.function.Consumer;
 
 @Singleton
 public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService {
@@ -58,30 +63,40 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
   @Nonnull
   @Override
   @SuppressWarnings("unchecked")
-  public CellAppearanceEx forOrderEntry(@Nonnull OrderEntry orderEntry) {
+  public Consumer<ColoredTextContainer> getRenderForOrderEntry(@Nonnull OrderEntry orderEntry) {
     OrderEntryType<?> type = orderEntry.getType();
     OrderEntryTypeEditor editor = OrderEntryTypeEditor.FACTORY.getByKey(type);
-    if(editor != null) {
-      return editor.getCellAppearance(orderEntry);
+    if (editor != null) {
+      return editor.getRender(orderEntry);
     }
-    return new SimpleTextCellAppearance(orderEntry.getPresentableName(), null, SimpleTextAttributes.REGULAR_ATTRIBUTES);
+
+    return component -> component.append(orderEntry.getPresentableName());
+  }
+
+  @Nonnull
+  @Override
+  public Consumer<ColoredTextContainer> getRenderForModule(@Nonnull Module module) {
+    return it -> {
+      it.setIcon(PlatformIconGroup.nodesModule());
+      it.append(module.getName());
+    };
   }
 
   @Nonnull
   @Override
   public CellAppearanceEx forLibrary(Project project, @Nonnull final Library library, final boolean hasInvalidRoots) {
-    final LibrariesConfigurator context = ((ProjectStructureSettingsUtil)ShowSettingsUtil.getInstance()).getLibrariesModel(project);
+    final LibrariesConfigurator context = ShowSettingsUtil.getInstance().getLibrariesModel(project);
 
     final Image icon = LibraryPresentationManager.getInstance().getCustomIcon(library, context);
 
     final String name = library.getName();
     if (name != null) {
-      return normalOrRedWaved(name, (icon != null ? icon :  AllIcons.Nodes.PpLib), hasInvalidRoots);
+      return normalOrRedWaved(name, (icon != null ? icon : AllIcons.Nodes.PpLib), hasInvalidRoots);
     }
 
     final String[] files = library.getUrls(BinariesOrderRootType.getInstance());
     if (files.length == 0) {
-      return SimpleTextCellAppearance.invalid(ProjectBundle.message("library.empty.library.item"),  AllIcons.Nodes.PpLib);
+      return SimpleTextCellAppearance.invalid(ProjectBundle.message("library.empty.library.item"), AllIcons.Nodes.PpLib);
     }
     else if (files.length == 1) {
       return forVirtualFilePointer(new LightFilePointer(files[0]));
@@ -109,9 +124,9 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
     if (showVersion) {
       String versionString = jdk.getVersionString();
       if (versionString != null && !versionString.equals(name)) {
-        SimpleTextAttributes textAttributes = isInComboBox && !selected ? SimpleTextAttributes.SYNTHETIC_ATTRIBUTES :
-                                              SystemInfo.isMac && selected ? new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, 
-                                                                                                      Color.WHITE): SimpleTextAttributes.GRAY_ATTRIBUTES;
+        SimpleTextAttributes textAttributes = isInComboBox && !selected
+                                              ? SimpleTextAttributes.SYNTHETIC_ATTRIBUTES
+                                              : SystemInfo.isMac && selected ? new SimpleTextAttributes(SimpleTextAttributes.STYLE_PLAIN, Color.WHITE) : SimpleTextAttributes.GRAY_ATTRIBUTES;
         ending.addComment(versionString, textAttributes);
       }
     }
@@ -142,15 +157,13 @@ public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService
 
   @Nonnull
   private static CellAppearanceEx normalOrRedWaved(@Nonnull final String text, @Nullable final Image icon, final boolean waved) {
-    return waved ? new SimpleTextCellAppearance(text, icon, new SimpleTextAttributes(SimpleTextAttributes.STYLE_WAVED, null, JBColor.RED))
-                 : SimpleTextCellAppearance.regular(text, icon);
+    return waved ? new SimpleTextCellAppearance(text, icon, new SimpleTextAttributes(SimpleTextAttributes.STYLE_WAVED, null, JBColor.RED)) : SimpleTextCellAppearance.regular(text, icon);
   }
 
   @Nonnull
   private static CellAppearanceEx forVirtualFilePointer(@Nonnull final LightFilePointer filePointer) {
     final VirtualFile file = filePointer.getFile();
-    return file != null ? FileAppearanceService.getInstance().forVirtualFile(file)
-                        : FileAppearanceService.getInstance().forInvalidUrl(filePointer.getPresentableUrl());
+    return file != null ? FileAppearanceService.getInstance().forVirtualFile(file) : FileAppearanceService.getInstance().forInvalidUrl(filePointer.getPresentableUrl());
   }
 
   @Nonnull

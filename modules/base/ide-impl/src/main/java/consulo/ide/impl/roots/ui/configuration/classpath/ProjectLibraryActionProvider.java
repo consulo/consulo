@@ -19,7 +19,7 @@ import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.util.ChooseElementsDialog;
 import consulo.project.Project;
 import consulo.content.library.Library;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootLayer;

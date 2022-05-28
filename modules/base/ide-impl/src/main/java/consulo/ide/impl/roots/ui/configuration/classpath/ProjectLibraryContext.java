@@ -22,7 +22,7 @@ import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
 import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;

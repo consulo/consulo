@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath;
+package consulo.ide.setting.module;
 
 import consulo.project.Project;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.ExportableOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
-import consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ide.setting.module.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -91,7 +88,7 @@ public class ClasspathTableItem<T extends OrderEntry> {
     return false;
   }
 
-  public void doEdit(ClasspathPanelImpl panel) {
+  public void doEdit(ClasspathPanel panel) {
 
   }
 

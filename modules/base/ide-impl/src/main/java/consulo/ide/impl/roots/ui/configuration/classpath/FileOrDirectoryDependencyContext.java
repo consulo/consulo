@@ -29,7 +29,7 @@ import consulo.content.library.PersistentLibraryKind;
 import consulo.content.library.ui.LibraryRootsComponentDescriptor;
 import consulo.content.library.OrderRoot;
 import consulo.ide.impl.idea.openapi.roots.libraries.ui.impl.RootDetectionUtil;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath.ClasspathPanel;
+import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.DefaultLibraryRootsComponentDescriptor;
 import consulo.util.lang.Pair;

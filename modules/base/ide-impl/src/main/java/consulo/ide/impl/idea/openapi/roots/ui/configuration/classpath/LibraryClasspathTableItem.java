@@ -15,23 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.classpath;
 
-import consulo.project.Project;
-import consulo.project.ProjectBundle;
-import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.content.base.BinariesOrderRootType;
 import consulo.content.impl.internal.library.LibraryEx;
-import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.content.library.Library;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablePresentation;
-import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryPresentationManager;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraryEditor.EditExistingLibraryDialog;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.xml.util.XmlStringUtil;
-import consulo.content.base.BinariesOrderRootType;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.ide.setting.module.*;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
+import consulo.project.Project;
+import consulo.project.ProjectBundle;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -57,7 +55,7 @@ public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends Clas
   }
 
   @Override
-  public void doEdit(ClasspathPanelImpl panel) {
+  public void doEdit(ClasspathPanel panel) {
     final Library library = getEntry().getLibrary();
     if (library == null) {
       return;
@@ -66,7 +64,7 @@ public class LibraryClasspathTableItem<T extends LibraryOrderEntry> extends Clas
     final String tableLevel = table != null ? table.getTableLevel() : LibraryTableImplUtil.MODULE_LEVEL;
     final LibraryTablePresentation presentation = LibraryEditingUtil.getLibraryTablePresentation(myProject, tableLevel);
     final LibraryTableModifiableModelProvider provider = panel.getModifiableModelProvider(tableLevel);
-    EditExistingLibraryDialog dialog = EditExistingLibraryDialog.createDialog(panel, provider, library, myProject, presentation, myLibrariesConfigurator);
+    EditExistingLibraryDialog dialog = EditExistingLibraryDialog.createDialog(panel.getComponent(), provider, library, myProject, presentation, myLibrariesConfigurator);
     dialog.setContextModule(getEntry().getOwnerModule());
     dialog.show();
   }

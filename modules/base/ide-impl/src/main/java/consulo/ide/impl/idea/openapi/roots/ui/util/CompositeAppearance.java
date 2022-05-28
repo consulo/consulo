@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.util;
 
-import consulo.ide.impl.idea.openapi.roots.ui.ModifiableCellAppearanceEx;
-import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.application.AllIcons;
 import consulo.colorScheme.TextAttributes;
-import consulo.ui.ex.util.TextAttributesUtil;
+import consulo.ide.impl.idea.openapi.roots.ui.ModifiableCellAppearanceEx;
 import consulo.logging.Logger;
+import consulo.ui.ex.ColoredTextContainer;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -40,7 +40,7 @@ public class CompositeAppearance implements ModifiableCellAppearanceEx {
   private int myInsertionIndex = 0;
 
   @Override
-  public void customize(@Nonnull SimpleColoredComponent component) {
+  public void customize(@Nonnull ColoredTextContainer component) {
     synchronized (mySections) {
       for (TextSection section : mySections) {
         final TextAttributes attributes = section.getTextAttributes();

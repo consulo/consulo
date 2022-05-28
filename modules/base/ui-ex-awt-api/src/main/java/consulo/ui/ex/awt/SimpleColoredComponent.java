@@ -17,7 +17,6 @@ package consulo.ui.ex.awt;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.ui.UISettings;
 import consulo.application.util.SystemInfo;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
@@ -149,12 +148,6 @@ public class SimpleColoredComponent extends JComponent implements Accessible, Co
 
   public void setIconOnTheRight(boolean iconOnTheRight) {
     myIconOnTheRight = iconOnTheRight;
-  }
-
-  @Nonnull
-  public final SimpleColoredComponent append(@Nonnull String fragment) {
-    append(fragment, SimpleTextAttributes.REGULAR_ATTRIBUTES);
-    return this;
   }
 
   /**

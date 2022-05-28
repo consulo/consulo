@@ -17,6 +17,7 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.application.AllIcons;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
 import consulo.ui.ex.tree.AbstractTreeStructure;
 import consulo.ui.ex.tree.NodeDescriptor;

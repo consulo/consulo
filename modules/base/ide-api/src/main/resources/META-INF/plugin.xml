@@ -629,7 +629,7 @@
     <extensionPoint name="orderEntryType" interface="consulo.module.content.layer.orderEntry.OrderEntryType" internal="true"/>
     <extensionPoint name="customOrderEntryTypeProvider" interface="consulo.module.content.layer.orderEntry.CustomOrderEntryTypeProvider"/>
     <extensionPoint name="orderEntryTypeEditor" beanClass="consulo.component.extension.KeyedFactoryEPBean">
-      <with attribute="implementationClass" implements="consulo.ide.impl.roots.orderEntry.OrderEntryTypeEditor"/>
+      <with attribute="implementationClass" implements="consulo.ide.setting.module.OrderEntryTypeEditor"/>
     </extensionPoint>
     <extensionPoint name="orderEnumerationHandlerFactory" interface="consulo.module.impl.internal.layer.OrderEnumerationHandler$Factory"/>
     <extensionPoint name="directoryIndexExcludePolicy" interface="consulo.module.content.layer.DirectoryIndexExcludePolicy"
@@ -1347,7 +1347,7 @@
                         serviceImplementation="consulo.ide.impl.application.PathMacrosServiceImpl"/>
     <schemeOwner serviceInterface="consulo.colorScheme.EditorColorsManager"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.roots.ui.FileAppearanceService"
+    <applicationService serviceInterface="consulo.ide.ui.FileAppearanceService"
                         serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.FileAppearanceServiceImpl"/>
 
     <applicationService serviceImplementation="consulo.ide.impl.idea.internal.statistic.UsageTrigger"/>
@@ -1588,7 +1588,7 @@
                     serviceImplementation="consulo.ide.impl.idea.packaging.impl.elements.PackagingElementFactoryImpl"/>
 
 
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService"
+    <applicationService serviceInterface="consulo.ide.ui.OrderEntryAppearanceService"
                         serviceImplementation="consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceServiceImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesGroupingPolicyFactory"
@@ -2563,6 +2563,7 @@
     <orderEntryTypeEditor key="module-library" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleLibraryOrderEntryTypeEditor"/>
     <orderEntryTypeEditor key="module" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleOrderEntryTypeEditor"/>
     <orderEntryTypeEditor key="sourceFolder" implementationClass="consulo.ide.impl.roots.orderEntry.ModuleSourceOrderEntryTypeEditor"/>
+    <orderEntryTypeEditor key="" implementationClass="consulo.ide.impl.roots.orderEntry.UnknownOrderEntryTypeEditor"/>
 
     <writingAccessProvider implementation="consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider" order="first"/>
 

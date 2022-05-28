@@ -16,7 +16,7 @@
 package consulo.ide.impl.roots.ui.configuration.extension;
 
 import consulo.module.content.layer.ModifiableRootModel;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.ModuleConfigurationState;
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.ui.CheckedTreeNode;

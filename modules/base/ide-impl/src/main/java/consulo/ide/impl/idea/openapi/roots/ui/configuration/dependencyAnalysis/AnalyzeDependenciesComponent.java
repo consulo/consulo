@@ -16,39 +16,35 @@
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.dependencyAnalysis;
 
 import consulo.application.AllIcons;
-import consulo.dataContext.DataManager;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.ide.impl.idea.openapi.roots.ui.CellAppearanceEx;
-import consulo.ide.impl.idea.openapi.roots.ui.OrderEntryAppearanceService;
-import consulo.ide.setting.ui.MasterDetailsComponent;
-import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
-import consulo.util.lang.Pair;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.PopupHandler;
-import consulo.ui.ex.awt.SimpleColoredComponent;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.awt.JBScrollPane;
-import consulo.ui.ex.awt.tree.Tree;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.configurable.ConfigurationException;
+import consulo.dataContext.DataManager;
 import consulo.dataContext.DataProvider;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ComboBoxAction;
+import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.ide.setting.ui.MasterDetailsComponent;
+import consulo.ide.ui.OrderEntryAppearanceService;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
 import consulo.module.Module;
-import consulo.module.content.layer.event.ModuleRootAdapter;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.JBScrollPane;
+import consulo.ui.ex.awt.PopupHandler;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.awt.tree.TreeUtil;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFilePathUtil;
 import org.jetbrains.annotations.Nls;
@@ -63,6 +59,7 @@ import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 /**
  * The classpath details component
@@ -83,8 +80,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
   /**
    * The cached analyzed classpaths for this module
    */
-  private final HashMap<Pair<ClasspathType, Boolean>, ModuleDependenciesAnalyzer> myClasspaths =
-    new HashMap<Pair<ClasspathType, Boolean>, ModuleDependenciesAnalyzer>();
+  private final HashMap<Pair<ClasspathType, Boolean>, ModuleDependenciesAnalyzer> myClasspaths = new HashMap<>();
 
   /**
    * The message bus connection to use
@@ -103,7 +99,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     init();
     getSplitter().setProportion(0.3f);
     myMessageBusConnection = myModule.getProject().getMessageBus().connect();
-    myMessageBusConnection.subscribe(ModuleRootListener.TOPIC, new ModuleRootAdapter() {
+    myMessageBusConnection.subscribe(ModuleRootListener.TOPIC, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myClasspaths.clear();
@@ -129,21 +125,12 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
   private void init() {
     myTree.setCellRenderer(new ColoredTreeCellRenderer() {
       @Override
-      public void customizeCellRenderer(JTree tree,
-                                        Object value,
-                                        boolean selected,
-                                        boolean expanded,
-                                        boolean leaf,
-                                        int row,
-                                        boolean hasFocus) {
-        //if(getBackground() == null) {
-        //  setBackground(UIUtil.getTreeTextBackground());
-        //}
+      public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         if (value instanceof MyNode && !(value instanceof MyRootNode)) {
           final MyNode node = (MyNode)value;
           PathNode<?> n = (PathNode<?>)node.getUserObject();
-          CellAppearanceEx a = n.getAppearance(selected, node.isDisplayInBold());
-          a.customize(this);
+          Consumer<ColoredTextContainer> a = n.getRender(selected, node.isDisplayInBold());
+          a.accept(this);
         }
       }
     });
@@ -158,7 +145,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
   @Override
   protected ArrayList<AnAction> createActions(boolean fromPopup) {
     if (!fromPopup) {
-      ArrayList<AnAction> rc = new ArrayList<AnAction>();
+      ArrayList<AnAction> rc = new ArrayList<>();
       rc.add(new ClasspathTypeAction());
       rc.add(new SdkFilterAction());
       rc.add(new UrlModeAction());
@@ -231,9 +218,9 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
    * @return the current classpath type from settings
    */
   private ClasspathType getClasspathType() {
-    return mySettings.isRuntime() ?
-           (mySettings.isTest() ? ClasspathType.TEST_RUNTIME : ClasspathType.PRODUCTION_RUNTIME) :
-           (mySettings.isTest() ? ClasspathType.TEST_COMPILE : ClasspathType.PRODUCTION_COMPILE);
+    return mySettings.isRuntime()
+           ? (mySettings.isTest() ? ClasspathType.TEST_RUNTIME : ClasspathType.PRODUCTION_RUNTIME)
+           : (mySettings.isTest() ? ClasspathType.TEST_COMPILE : ClasspathType.PRODUCTION_COMPILE);
   }
 
 
@@ -376,9 +363,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * @param orderPath the order entry path
      * @param i         the position in the path
      */
-    private void addDependencyPath(DefaultMutableTreeNode parent,
-                                   ModuleDependenciesAnalyzer.OrderPath orderPath,
-                                   int i) {
+    private void addDependencyPath(DefaultMutableTreeNode parent, ModuleDependenciesAnalyzer.OrderPath orderPath, int i) {
       if (i >= orderPath.entries().size()) {
         return;
       }
@@ -456,7 +441,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * @param bold     true if bold
      * @return the result appearance
      */
-    public abstract CellAppearanceEx getAppearance(boolean selected, boolean bold);
+    public abstract Consumer<ColoredTextContainer> getRender(boolean selected, boolean bold);
 
     /**
      * @retrun the string cut so it would fit the banner (the prefix is dropped)
@@ -485,21 +470,15 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
   static class ExplanationTreeRenderer extends ColoredTreeCellRenderer {
 
     @Override
-    public void customizeCellRenderer(JTree tree,
-                                      Object value,
-                                      boolean selected,
-                                      boolean expanded,
-                                      boolean leaf,
-                                      int row,
-                                      boolean hasFocus) {
+    public void customizeCellRenderer(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
       DefaultMutableTreeNode n = (DefaultMutableTreeNode)value;
       final Object userObject = n.getUserObject();
       if (!(userObject instanceof ModuleDependenciesAnalyzer.OrderPathElement)) {
         return;
       }
       ModuleDependenciesAnalyzer.OrderPathElement e = (ModuleDependenciesAnalyzer.OrderPathElement)userObject;
-      final CellAppearanceEx appearance = e.getAppearance(selected);
-      appearance.customize(this);
+      final Consumer<ColoredTextContainer> appearance = e.getRender(selected);
+      appearance.accept(this);
     }
   }
 
@@ -522,29 +501,19 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public CellAppearanceEx getAppearance(boolean selected, final boolean isBold) {
-      return new CellAppearanceEx() {
-        @Override
-        public void customize(@Nonnull SimpleColoredComponent component) {
-          component.setIcon(myExplanation.getIcon());
-          final Font font = UIUtil.getTreeFont();
-          if (isBold) {
-            component.setFont(font.deriveFont(Font.BOLD));
-          }
-          else {
-            component.setFont(font.deriveFont(Font.PLAIN));
-          }
-          final String p = VirtualFilePathUtil.toPresentableUrl(getEditableObject().url());
-          component.append(PathUtil.getFileName(p),
-                           isBold ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
-          component.append(" (" + PathUtil.getParentPath(p) + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
+    public Consumer<ColoredTextContainer> getRender(boolean selected, final boolean isBold) {
+      return component -> {
+        component.setIcon(myExplanation.getIcon());
+        final Font font = UIUtil.getTreeFont();
+        if (isBold) {
+          component.setFont(font.deriveFont(Font.BOLD));
         }
-
-        @Nonnull
-        @Override
-        public String getText() {
-          return getDisplayName();
+        else {
+          component.setFont(font.deriveFont(Font.PLAIN));
         }
+        final String p = VirtualFilePathUtil.toPresentableUrl(getEditableObject().url());
+        component.append(PathUtil.getFileName(p), isBold ? SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES : SimpleTextAttributes.REGULAR_ATTRIBUTES);
+        component.append(" (" + PathUtil.getParentPath(p) + ")", SimpleTextAttributes.GRAYED_ATTRIBUTES);
       };
     }
 
@@ -588,29 +557,20 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      * {@inheritDoc}
      */
     @Override
-    public CellAppearanceEx getAppearance(boolean selected, final boolean isBold) {
+    public Consumer<ColoredTextContainer> getRender(boolean selected, final boolean isBold) {
       if (myExplanation.entry() instanceof ModuleSourceOrderEntry) {
         ModuleSourceOrderEntry e = (ModuleSourceOrderEntry)myExplanation.entry();
         if (e.getOwnerModule() == myModule) {
-          return new CellAppearanceEx() {
-            @Override
-            public void customize(@Nonnull SimpleColoredComponent component) {
-              component.setIcon(AllIcons.Nodes.Module);
-              component.append("<This Module>", SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
-            }
-
-            @Nonnull
-            @Override
-            public String getText() {
-              return "<This Module>";
-            }
+          return component -> {
+            component.setIcon(AllIcons.Nodes.Module);
+            component.append("<This Module>", SimpleTextAttributes.SYNTHETIC_ATTRIBUTES);
           };
         }
         else {
-          return OrderEntryAppearanceService.getInstance().forModule(e.getOwnerModule());
+          return OrderEntryAppearanceService.getInstance().getRenderForModule(e.getOwnerModule());
         }
       }
-      return OrderEntryAppearanceService.getInstance().forOrderEntry(myExplanation.entry());
+      return OrderEntryAppearanceService.getInstance().getRenderForOrderEntry(myExplanation.entry());
     }
 
     /**
@@ -824,6 +784,5 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
      */
     public String getDescription() {
       return myDescription;
-    }
-  }
+    }}
 }

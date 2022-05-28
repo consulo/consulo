@@ -22,6 +22,7 @@ import consulo.injecting.InjectingContainerOwner;
 import consulo.util.lang.Comparing;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -65,7 +66,7 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
   }
 
   @SuppressWarnings("unchecked")
-  public T getByKey(@Nonnull KeyT key) {
+  public T getByKey(@Nullable KeyT key) {
     final List<KeyedFactoryEPBean> epBeans = myEpName.getExtensionList();
     for (KeyedFactoryEPBean epBean : epBeans) {
       if (Comparing.strEqual(getKey(key), epBean.key)) {
@@ -117,5 +118,6 @@ public abstract class KeyedExtensionFactory<T, KeyT> {
     return (T)result;
   }
 
-  public abstract String getKey(@Nonnull KeyT key);
+  @Nonnull
+  public abstract String getKey(@Nullable KeyT key);
 }

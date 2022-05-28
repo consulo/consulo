@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.ui.configuration;
 
+import consulo.ide.setting.module.ModuleConfigurationState;
 import consulo.module.Module;
 import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.*;
