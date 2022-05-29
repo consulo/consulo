@@ -23,6 +23,7 @@ import consulo.module.Module;
 import consulo.module.content.DirectoryIndex;
 import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ModuleFileIndex;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
@@ -175,30 +176,30 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
     @Nonnull
     @Override
     public OrderEntryType<?> getType() {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Nonnull
     @Override
     public VirtualFile[] getFiles(@Nonnull OrderRootType type) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Nonnull
     @Override
     public String[] getUrls(@Nonnull OrderRootType rootType) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Nonnull
     @Override
     public String getPresentableName() {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean isValid() {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Nonnull
@@ -207,9 +208,15 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
       return myOwnerModule;
     }
 
+    @Nonnull
+    @Override
+    public ModuleRootLayer getModuleRootLayer() {
+      throw new UnsupportedOperationException();
+    }
+
     @Override
     public <R> R accept(@Nonnull RootPolicy<R> policy, @Nullable R initialValue) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Override
@@ -219,12 +226,12 @@ public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileInde
 
     @Override
     public int compareTo(@Nonnull OrderEntry o) {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean isSynthetic() {
-      throw new IncorrectOperationException();
+      throw new UnsupportedOperationException();
     }
   }
 }
