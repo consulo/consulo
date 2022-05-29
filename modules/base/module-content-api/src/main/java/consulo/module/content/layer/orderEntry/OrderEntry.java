@@ -17,6 +17,7 @@ package consulo.module.content.layer.orderEntry;
 
 import consulo.content.OrderRootType;
 import consulo.module.Module;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.Synthetic;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -93,6 +94,12 @@ public interface OrderEntry extends Synthetic, Comparable<OrderEntry> {
    */
   @Nonnull
   Module getOwnerModule();
+
+  /**
+   * Return owner module root layer
+   */
+  @Nonnull
+  ModuleRootLayer getModuleRootLayer();
 
   /**
    * Accepts the specified order entries visitor.

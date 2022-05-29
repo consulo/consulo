@@ -31,9 +31,15 @@ import java.util.Objects;
 public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends LibraryOrderEntryBaseImpl implements CustomOrderEntry<M>, ClonableOrderEntry {
   private final M myModel;
 
-  public CustomOrderEntryImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootLayer, @Nonnull M data) {
+  public CustomOrderEntryImpl(@Nonnull OrderEntryType<?> provider, @Nonnull ModuleRootLayerImpl rootLayer, @Nonnull M data, boolean init) {
     super(provider, rootLayer, ProjectRootManagerImpl.getInstanceImpl(rootLayer.getProject()));
     myModel = data;
+
+    if (init) {
+      init();
+
+      myProjectRootManagerImpl.addOrderWithTracking(this);
+    }
   }
 
   @Nullable
@@ -96,6 +102,6 @@ public class CustomOrderEntryImpl<M extends CustomOrderEntryModel> extends Libra
     M cloneModel = (M)myModel.clone();
     cloneModel.bind(layer);
 
-    return new CustomOrderEntryImpl<M>(getType(), myModuleRootLayer, cloneModel);
+    return new CustomOrderEntryImpl<M>(getType(), myModuleRootLayer, cloneModel, true);
   }
 }

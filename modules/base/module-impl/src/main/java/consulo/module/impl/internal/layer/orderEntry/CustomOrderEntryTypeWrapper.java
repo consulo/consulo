@@ -51,7 +51,7 @@ public class CustomOrderEntryTypeWrapper<M extends CustomOrderEntryModel> implem
   public CustomOrderEntryImpl<M> loadOrderEntry(@Nonnull Element element, @Nonnull ModuleRootLayer moduleRootLayer) throws InvalidDataException {
     M data = myCustomOrderEntryTypeProvider.loadOrderEntry(element, moduleRootLayer);
     data.bind(moduleRootLayer);
-    return new CustomOrderEntryImpl<>(this, (ModuleRootLayerImpl) moduleRootLayer, data);
+    return new CustomOrderEntryImpl<>(this, (ModuleRootLayerImpl) moduleRootLayer, data, false);
   }
 
   @Override

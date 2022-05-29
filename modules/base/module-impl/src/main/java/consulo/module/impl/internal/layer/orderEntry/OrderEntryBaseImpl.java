@@ -25,7 +25,7 @@ import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
 import javax.annotation.Nonnull;
 
 public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implements OrderEntry {
-  public static final Logger LOGGER = Logger.getInstance(OrderEntryBaseImpl.class);
+  private static final Logger LOG = Logger.getInstance(OrderEntryBaseImpl.class);
 
   private static int _hc = 0;
 
@@ -52,7 +52,7 @@ public abstract class OrderEntryBaseImpl extends BaseModuleRootLayerChild implem
 
   @Override
   public int compareTo(@Nonnull OrderEntry orderEntry) {
-    LOGGER.assertTrue(orderEntry.getOwnerModule() == getOwnerModule());
+    LOG.assertTrue(orderEntry.getOwnerModule() == getOwnerModule());
     return myIndex - ((OrderEntryBaseImpl)orderEntry).myIndex;
   }
 
