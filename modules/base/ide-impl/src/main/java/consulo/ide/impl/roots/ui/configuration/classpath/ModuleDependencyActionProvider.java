@@ -16,6 +16,7 @@
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
 import consulo.application.AllIcons;
+import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.ChooseModulesDialog;
 import consulo.ide.setting.module.ClasspathPanel;

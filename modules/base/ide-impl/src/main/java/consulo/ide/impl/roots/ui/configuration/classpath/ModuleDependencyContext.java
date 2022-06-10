@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
+import consulo.ide.setting.module.AddModuleDependencyContext;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.orderEntry.OrderEntry;

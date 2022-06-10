@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
+import consulo.ide.setting.module.AddModuleDependencyContext;
 import consulo.language.editor.LangDataKeys;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.impl.idea.openapi.fileChooser.impl.FileChooserUtil;

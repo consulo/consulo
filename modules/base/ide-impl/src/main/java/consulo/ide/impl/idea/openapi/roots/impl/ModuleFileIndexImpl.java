@@ -16,24 +16,23 @@
 
 package consulo.ide.impl.idea.openapi.roots.impl;
 
-import consulo.language.file.FileTypeManager;
+import consulo.application.AccessRule;
+import consulo.content.ContentFolderTypeProvider;
 import consulo.content.ContentIterator;
 import consulo.content.OrderRootType;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.language.file.FileTypeManager;
 import consulo.module.Module;
 import consulo.module.content.DirectoryIndex;
 import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.content.layer.orderEntry.RootPolicy;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileFilter;
-import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.AccessRule;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.content.ContentFolderTypeProvider;
-import consulo.module.content.layer.orderEntry.OrderEntryType;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

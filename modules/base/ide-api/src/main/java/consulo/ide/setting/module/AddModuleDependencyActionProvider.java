@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.roots.ui.configuration.classpath;
+package consulo.ide.setting.module;
 
 import consulo.application.Application;
-import consulo.ide.setting.module.ClasspathPanel;
 import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootLayer;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ide.setting.module.ModulesConfigurator;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;

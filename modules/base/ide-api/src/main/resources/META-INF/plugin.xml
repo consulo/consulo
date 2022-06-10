@@ -1168,7 +1168,7 @@
     <extensionPoint name="cachesInvalidator" interface="consulo.ide.impl.idea.ide.caches.CachesInvalidator"/>
 
     <extensionPoint name="addModuleDependencyActionProvider"
-                    interface="consulo.ide.impl.roots.ui.configuration.classpath.AddModuleDependencyActionProvider"/>
+                    interface="consulo.ide.setting.module.AddModuleDependencyActionProvider"/>
 
     <extensionPoint name="actionFromOptionDescriptorProvider" interface="consulo.ide.impl.idea.ide.ui.search.ActionFromOptionDescriptorProvider"/>
 

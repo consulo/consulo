@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.roots.ui.configuration.classpath;
+package consulo.ide.setting.module;
 
-import consulo.project.Project;
-import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.ide.setting.module.ClasspathPanel;
-import consulo.ide.setting.module.ClasspathTableItem;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.module.content.layer.orderEntry.OrderEntry;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;

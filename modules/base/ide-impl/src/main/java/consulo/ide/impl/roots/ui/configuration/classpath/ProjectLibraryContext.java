@@ -15,22 +15,19 @@
  */
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
+import consulo.ide.setting.module.*;
 import consulo.project.ProjectBundle;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.module.content.layer.orderEntry.LibraryDependencyScopeSuggester;
 import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.content.library.Library;
-import consulo.ide.setting.module.LibraryTableModifiableModelProvider;
-import consulo.ide.setting.module.ClasspathPanel;
 import consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.LibraryEditingUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.lang.function.Condition;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.module.content.layer.ModifiableModuleRootLayer;
-import consulo.ide.setting.module.LibrariesConfigurator;
-import consulo.ide.setting.module.ModulesConfigurator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
