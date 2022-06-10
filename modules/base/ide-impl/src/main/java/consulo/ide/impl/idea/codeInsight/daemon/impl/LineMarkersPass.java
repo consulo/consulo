@@ -34,7 +34,7 @@ import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.FunctionUtil;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.NotNullList;
 import consulo.annotation.access.RequiredReadAction;

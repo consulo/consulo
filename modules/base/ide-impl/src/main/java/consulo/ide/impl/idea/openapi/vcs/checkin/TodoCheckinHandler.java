@@ -46,7 +46,7 @@ import consulo.ui.ex.awt.LinkListener;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import javax.annotation.Nonnull;
 

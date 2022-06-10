@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.util.ui;
 
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.ElementProducer;

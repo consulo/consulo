@@ -2,7 +2,7 @@ package consulo.ide.impl.idea.vcs.log.ui;
 
 import com.google.common.util.concurrent.SettableFuture;
 import consulo.ide.impl.idea.openapi.vcs.ui.VcsBalloonProblemNotifier;
-import consulo.ide.impl.idea.util.PairFunction;
+import consulo.util.lang.function.PairFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcs.log.*;
 import consulo.ide.impl.idea.vcs.log.data.*;

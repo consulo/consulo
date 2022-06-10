@@ -13,7 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.util;
+package consulo.util.lang.function;
+
+import consulo.annotation.DeprecationInfo;
 
 import javax.annotation.Nullable;
 import java.util.function.BiFunction;
@@ -21,6 +23,9 @@ import java.util.function.BiFunction;
 /**
  * @author max
  */
+@Deprecated
+@DeprecationInfo("Use BiFunction")
+@FunctionalInterface
 public interface PairFunction<Arg1, Arg2, ResultType> extends BiFunction<Arg1, Arg2, ResultType> {
   @Nullable
   ResultType fun(Arg1 t, Arg2 v);

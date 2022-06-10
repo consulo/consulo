@@ -40,7 +40,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.patch.AppliedTextPatch.HunkStat
 import consulo.ide.impl.idea.openapi.vcs.ex.LineStatusMarkerRenderer;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.image.Image;

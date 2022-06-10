@@ -20,7 +20,7 @@ import consulo.ui.ex.SimpleColoredText;
 import consulo.ide.impl.idea.ui.tabs.TabInfo;
 import consulo.ide.impl.idea.ui.tabs.TabsUtil;
 import consulo.ide.impl.idea.ui.tabs.UiDecorator;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.ui.Centerizer;
 import consulo.application.ui.UISettings;
 import consulo.dataContext.DataManager;

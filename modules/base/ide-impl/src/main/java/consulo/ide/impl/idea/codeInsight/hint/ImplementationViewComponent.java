@@ -53,7 +53,7 @@ import consulo.ui.ex.awt.util.ScreenUtil;
 import consulo.ui.ex.awt.SideBorder;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.usage.UsageView;
-import consulo.ide.impl.idea.util.PairFunction;
+import consulo.util.lang.function.PairFunction;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.language.icon.IconDescriptorUpdaters;

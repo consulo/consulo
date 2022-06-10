@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.openapi.util.io;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 import consulo.util.lang.ThreeState;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.Convertor;

@@ -26,7 +26,7 @@ import consulo.language.psi.PsiReference;
 import consulo.language.psi.PsiWhiteSpace;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;

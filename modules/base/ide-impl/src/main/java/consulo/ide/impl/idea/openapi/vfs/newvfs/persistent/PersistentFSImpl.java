@@ -12,6 +12,7 @@ import consulo.util.io.*;
 import consulo.util.lang.ShutDownTracker;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.util.lang.function.PairFunction;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.PersistentFSConstants;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;

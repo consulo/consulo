@@ -17,7 +17,7 @@
 package consulo.ide.impl.intelliLang.inject;
 
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.ServiceManager;
 import consulo.language.Language;

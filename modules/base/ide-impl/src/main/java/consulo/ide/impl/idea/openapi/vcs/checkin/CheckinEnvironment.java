@@ -24,7 +24,7 @@ import consulo.ide.impl.idea.openapi.vcs.changes.ChangeList;
 import consulo.ide.impl.idea.openapi.vcs.ui.RefreshableOnComponent;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.NullableFunction;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

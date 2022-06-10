@@ -41,6 +41,7 @@ import consulo.undoRedo.UndoableAction;
 import consulo.util.collection.MultiMap;
 import consulo.util.collection.MultiValuesMap;
 import consulo.util.lang.function.Condition;
+import consulo.util.lang.function.PairProcessor;
 import consulo.util.lang.lazy.LazyValue;
 import consulo.util.xml.serializer.JDOMExternalizerUtil;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;

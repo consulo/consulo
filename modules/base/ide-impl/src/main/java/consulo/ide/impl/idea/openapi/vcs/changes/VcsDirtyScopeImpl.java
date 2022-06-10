@@ -29,7 +29,7 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 import consulo.application.util.function.Processor;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;

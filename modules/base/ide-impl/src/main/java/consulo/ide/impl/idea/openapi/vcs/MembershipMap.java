@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs;
 
 import consulo.util.lang.Pair;
 import consulo.util.lang.ref.Ref;
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 
 import java.util.*;
 

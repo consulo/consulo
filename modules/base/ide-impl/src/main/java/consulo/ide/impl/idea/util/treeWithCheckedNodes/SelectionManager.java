@@ -19,7 +19,7 @@ import consulo.util.lang.ref.Ref;
 import consulo.ide.impl.idea.openapi.vcs.impl.CollectionsDelta;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
 import consulo.ide.impl.idea.util.containers.Convertor;
 

@@ -29,7 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.ReferenceRange;
 import consulo.language.psi.PsiMultiReference;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 

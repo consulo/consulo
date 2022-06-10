@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 import javax.annotation.Nonnull;
 
 import java.util.*;

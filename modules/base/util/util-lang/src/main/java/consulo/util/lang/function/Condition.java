@@ -29,6 +29,7 @@ import java.util.function.Predicate;
  */
 @Deprecated
 @DeprecationInfo("Use Predicate")
+@FunctionalInterface
 public interface Condition<T> extends Predicate<T> {
   boolean value(T t);
 

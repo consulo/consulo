@@ -48,7 +48,7 @@ import consulo.language.psi.search.IndexPatternOccurrence;
 import consulo.language.psi.search.PsiTodoSearchHelper;
 import consulo.language.psi.search.TodoItem;
 import consulo.language.psi.search.IndexPatternSearch;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.application.util.diff.FilesTooBigForDiffException;

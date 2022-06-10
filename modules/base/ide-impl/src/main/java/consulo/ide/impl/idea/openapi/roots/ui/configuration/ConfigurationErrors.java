@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;

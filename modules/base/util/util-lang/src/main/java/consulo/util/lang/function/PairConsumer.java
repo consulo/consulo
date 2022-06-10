@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util;
+package consulo.util.lang.function;
+
+import consulo.annotation.DeprecationInfo;
 
 import java.util.function.BiConsumer;
 
 /**
  * @author peter
  */
+@Deprecated
+@DeprecationInfo("Use BiConsumer")
 public interface PairConsumer<S, T> extends BiConsumer<S, T> {
   void consume(S s, T t);
 

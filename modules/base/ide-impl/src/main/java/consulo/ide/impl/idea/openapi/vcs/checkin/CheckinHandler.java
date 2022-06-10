@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalCommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.ui.RefreshableOnComponent;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.annotation.DeprecationInfo;
 import consulo.disposer.Disposable;
 

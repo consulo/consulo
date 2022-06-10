@@ -27,7 +27,7 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.PairFunction;
+import consulo.util.lang.function.PairFunction;
 import consulo.ui.ex.awt.EmptyIcon;
 import consulo.ui.ex.awt.util.TableUtil;
 

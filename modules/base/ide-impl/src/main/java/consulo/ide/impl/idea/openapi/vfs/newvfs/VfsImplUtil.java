@@ -20,7 +20,7 @@ import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.ArchiveHandler;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.util.PairFunction;
+import consulo.util.lang.function.PairFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;

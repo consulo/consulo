@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.util;
+package consulo.util.lang.function;
+
+import consulo.annotation.DeprecationInfo;
 
 import java.util.function.BiPredicate;
 
@@ -22,6 +24,8 @@ import java.util.function.BiPredicate;
  * @author Gregory.Shrago
  */
 @FunctionalInterface
+@Deprecated
+@DeprecationInfo("Use BiPredicate")
 public interface PairProcessor<S, T> extends BiPredicate<S, T> {
   PairProcessor TRUE = (o, o1) -> true;
 

@@ -26,7 +26,7 @@ import consulo.colorScheme.TextAttributes;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.codeEditor.markup.*;

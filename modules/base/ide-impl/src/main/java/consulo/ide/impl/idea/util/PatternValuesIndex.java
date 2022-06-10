@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.util;
 
 import consulo.language.pattern.*;
+import consulo.util.lang.function.PairProcessor;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -17,7 +17,7 @@ package consulo.ide.impl.idea.openapi.vcs.checkin;
 
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.ide.impl.idea.util.containers.Convertor;
 
 import java.util.ArrayList;

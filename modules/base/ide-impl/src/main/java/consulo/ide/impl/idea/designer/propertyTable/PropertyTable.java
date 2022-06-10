@@ -34,7 +34,7 @@ import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.awt.SimpleColoredComponent;
 import consulo.ui.ex.awt.table.JBTable;
-import consulo.ide.impl.idea.util.PairFunction;
+import consulo.util.lang.function.PairFunction;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.colorScheme.EditorColorsManager;

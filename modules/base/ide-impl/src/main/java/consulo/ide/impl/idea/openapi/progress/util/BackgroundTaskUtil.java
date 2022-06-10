@@ -32,7 +32,7 @@ import consulo.application.util.function.ThrowableComputable;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.Function;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;

@@ -19,7 +19,7 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.*;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.NotNullFunction;
-import consulo.ide.impl.idea.util.PairProcessor;
+import consulo.util.lang.function.PairProcessor;
 import consulo.container.boot.ContainerPathManager;
 import org.jetbrains.annotations.NonNls;
 

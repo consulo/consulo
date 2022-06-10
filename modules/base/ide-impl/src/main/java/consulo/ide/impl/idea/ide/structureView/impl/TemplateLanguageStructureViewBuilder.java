@@ -22,7 +22,7 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.template.TemplateLanguageFileViewProvider;
 import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.ide.impl.idea.util.PairFunction;
+import consulo.util.lang.function.PairFunction;
 import consulo.util.collection.JBIterable;
 import consulo.disposer.Disposer;
 import consulo.ui.image.Image;

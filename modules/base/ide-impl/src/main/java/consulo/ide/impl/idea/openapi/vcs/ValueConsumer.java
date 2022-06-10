@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.ide.impl.idea.util.PairConsumer;
+import consulo.util.lang.function.PairConsumer;
 
 /**
  * @author irengrig
