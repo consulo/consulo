@@ -42,6 +42,10 @@ import java.util.List;
  */
 public class TopMenuInitializer {
   public static void register(Application application) {
+    if (!Desktop.isDesktopSupported()) {
+      return;
+    }
+
     Desktop desktop = Desktop.getDesktop();
 
     if (desktop.isSupported(Desktop.Action.APP_ABOUT)) {
