@@ -11,7 +11,7 @@ module consulo.proxy {
 
   requires consulo.util.collection;
 
-  requires net.bytebuddy;
+  requires static net.bytebuddy;
 
   exports consulo.proxy;
   exports consulo.proxy.advanced;
