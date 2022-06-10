@@ -14,6 +14,7 @@ module consulo.ui.ex.awt.api {
   requires transitive consulo.file.chooser.api;
   requires transitive consulo.project.ui.api;
   requires consulo.process.api;
+  requires consulo.util.jna;
 
   requires static consulo.desktop.awt.eawt.wrapper;
 
@@ -21,6 +22,7 @@ module consulo.ui.ex.awt.api {
 
   requires imgscalr.lib;
   requires com.sun.jna;
+  requires com.sun.jna.platform;
 
   exports consulo.ui.ex.awt;
   exports consulo.ui.ex.awt.accessibility;
