@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 
-import static consulo.ide.impl.idea.util.BitUtil.isSet;
+import static consulo.util.lang.BitUtil.isSet;
 
 public abstract class PersistentFS extends ManagingFS {
   static final int CHILDREN_CACHED_FLAG = 0x01;

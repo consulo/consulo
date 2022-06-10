@@ -17,7 +17,7 @@ package consulo.ide.impl.psi.stubs;
 
 import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.ide.impl.idea.util.indexing.*;
 import consulo.ide.impl.idea.util.indexing.impl.DebugAssertions;
 import consulo.ide.impl.idea.util.indexing.impl.IndexStorage;

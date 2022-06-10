@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.util.io;
 
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.index.io.data.IOUtil;
 import gnu.trove.TIntIntHashMap;

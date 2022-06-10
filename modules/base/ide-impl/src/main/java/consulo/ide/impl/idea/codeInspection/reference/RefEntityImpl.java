@@ -17,7 +17,7 @@
 package consulo.ide.impl.idea.codeInspection.reference;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.inspection.reference.RefEntity;

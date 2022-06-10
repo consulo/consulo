@@ -2,7 +2,7 @@
 package consulo.ide.impl.idea.openapi.editor.impl.view;
 
 import consulo.codeEditor.impl.FontInfo;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.codeEditor.impl.FontLayoutService;
 import consulo.logging.Logger;
 

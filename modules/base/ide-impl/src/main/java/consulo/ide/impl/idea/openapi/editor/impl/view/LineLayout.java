@@ -17,7 +17,7 @@ import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.ast.StringEscapesTokenTypes;
 import consulo.language.ast.TokenType;
 import consulo.language.ast.IElementType;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.document.util.DocumentUtil;
 import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;

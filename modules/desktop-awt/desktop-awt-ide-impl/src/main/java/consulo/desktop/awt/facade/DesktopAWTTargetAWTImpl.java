@@ -15,13 +15,11 @@
  */
 package consulo.desktop.awt.facade;
 
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ide.impl.idea.util.BitUtil;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
-import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.container.StartupError;
-import consulo.ui.ex.awt.MorphColor;
+import consulo.desktop.awt.ui.impl.DesktopFontImpl;
+import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopImageKeyImpl;
+import consulo.desktop.awt.ui.impl.window.DummyWindow;
+import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
 import consulo.logging.Logger;
 import consulo.ui.Component;
 import consulo.ui.Window;
@@ -30,12 +28,14 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.cursor.StandardCursors;
-import consulo.desktop.awt.ui.impl.DesktopFontImpl;
-import consulo.desktop.awt.ui.impl.image.libraryImage.DesktopImageKeyImpl;
-import consulo.desktop.awt.ui.impl.window.DummyWindow;
-import consulo.desktop.awt.ui.impl.window.WindowOverAWTWindow;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.MorphColor;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.awtUnsafe.internal.TargetAWTFacade;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageKey;
+import consulo.util.lang.BitUtil;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.Nonnull;

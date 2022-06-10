@@ -16,7 +16,7 @@
 package consulo.ide.impl.idea.usages.impl;
 
 import consulo.usage.UsageView;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.ide.impl.idea.util.Consumer;
 import org.intellij.lang.annotations.MagicConstant;
 import javax.annotation.Nonnull;

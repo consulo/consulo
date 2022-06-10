@@ -198,7 +198,7 @@ public class FSRecords {
 
       int count = fileLength / RECORD_SIZE;
       for (int n = 2; n < count; n++) {
-        if (BitUtil.isSet(getFlags(n), FREE_RECORD_FLAG)) {
+        if (consulo.util.lang.BitUtil.isSet(getFlags(n), FREE_RECORD_FLAG)) {
           myFreeRecords.add(n);
         }
       }
@@ -1469,7 +1469,7 @@ public class FSRecords {
   private static void checkFileIsValid(int fileId) throws IOException {
     assert fileId > 0 : fileId;
     if (!lazyVfsDataCleaning) {
-      assert !BitUtil.isSet(doGetFlags(fileId), FREE_RECORD_FLAG) : "Accessing attribute of a deleted page: " + fileId + ":" + doGetNameSequence(fileId);
+      assert !consulo.util.lang.BitUtil.isSet(doGetFlags(fileId), FREE_RECORD_FLAG) : "Accessing attribute of a deleted page: " + fileId + ":" + doGetNameSequence(fileId);
     }
   }
 
@@ -1803,7 +1803,7 @@ public class FSRecords {
       LOG.assertTrue((flags & ~ALL_VALID_FLAGS) == 0, "Invalid flags: 0x" + Integer.toHexString(flags) + ", id: " + id);
       int currentId = id;
       boolean isFreeRecord = readAndHandleErrors(() -> DbConnection.myFreeRecords.contains(currentId));
-      if (BitUtil.isSet(flags, FREE_RECORD_FLAG)) {
+      if (consulo.util.lang.BitUtil.isSet(flags, FREE_RECORD_FLAG)) {
         LOG.assertTrue(isFreeRecord, "Record, marked free, not in free list: " + id);
       }
       else {
@@ -1821,8 +1821,8 @@ public class FSRecords {
     assert parentId >= 0 && parentId < recordCount;
     if (parentId > 0 && getParent(parentId) > 0) {
       int parentFlags = getFlags(parentId);
-      assert !BitUtil.isSet(parentFlags, FREE_RECORD_FLAG) : parentId + ": " + Integer.toHexString(parentFlags);
-      assert BitUtil.isSet(parentFlags, PersistentFS.IS_DIRECTORY_FLAG) : parentId + ": " + Integer.toHexString(parentFlags);
+      assert !consulo.util.lang.BitUtil.isSet(parentFlags, FREE_RECORD_FLAG) : parentId + ": " + Integer.toHexString(parentFlags);
+      assert consulo.util.lang.BitUtil.isSet(parentFlags, PersistentFS.IS_DIRECTORY_FLAG) : parentId + ": " + Integer.toHexString(parentFlags);
     }
 
     CharSequence name = getNameSequence(id);

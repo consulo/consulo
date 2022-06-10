@@ -19,11 +19,11 @@ import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdater;
+import consulo.util.lang.BitUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.WritingAccessProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.BitUtil;
 import consulo.annotation.access.RequiredReadAction;
 import javax.annotation.Nonnull;
 

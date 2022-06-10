@@ -25,7 +25,7 @@ import consulo.disposer.Disposer;
 import consulo.util.dataholder.Key;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.logging.Logger;
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;

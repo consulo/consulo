@@ -57,7 +57,7 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.language.psi.PsiElement;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;

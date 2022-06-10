@@ -9,7 +9,7 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFSImpl;
 import consulo.ide.impl.idea.util.ArrayUtilRt;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.ide.impl.idea.util.Functions;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;

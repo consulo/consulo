@@ -5,6 +5,7 @@ import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
 import consulo.ide.impl.idea.concurrency.JobSchedulerImpl;
 import consulo.ide.impl.idea.openapi.progress.util.PingProgress;
 import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.util.lang.BitUtil;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.util.io.*;

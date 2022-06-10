@@ -15,11 +15,11 @@
  */
 package consulo.ide.impl.builtInServer.impl.net.json;
 
-import consulo.ide.impl.idea.util.BitUtil;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.builtInServer.json.JsonGetRequestHandler;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.lang.BitUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

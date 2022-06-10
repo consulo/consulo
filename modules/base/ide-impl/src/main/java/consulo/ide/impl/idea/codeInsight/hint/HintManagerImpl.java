@@ -39,7 +39,7 @@ import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.ui.*;
 import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.ex.awt.util.TimerUtil;
 import consulo.ui.ex.awt.accessibility.AccessibleContextUtil;

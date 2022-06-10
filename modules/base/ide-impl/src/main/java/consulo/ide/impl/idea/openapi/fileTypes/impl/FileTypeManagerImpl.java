@@ -832,16 +832,16 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       int id = ((VirtualFileWithId)file).getId();
 
       long flags = packedFlags.get(id);
-      if (!BitUtil.isSet(flags, ATTRIBUTES_WERE_LOADED_MASK)) {
+      if (!consulo.util.lang.BitUtil.isSet(flags, ATTRIBUTES_WERE_LOADED_MASK)) {
         flags = readFlagsFromCache(file);
-        flags = BitUtil.set(flags, ATTRIBUTES_WERE_LOADED_MASK, true);
+        flags = consulo.util.lang.BitUtil.set(flags, ATTRIBUTES_WERE_LOADED_MASK, true);
 
         packedFlags.set(id, flags);
         if (toLog()) {
           log("F: getOrDetectFromContent(" + file.getName() + "): readFlagsFromCache() = " + readableFlags(flags));
         }
       }
-      boolean autoDetectWasRun = BitUtil.isSet(flags, AUTO_DETECT_WAS_RUN_MASK);
+      boolean autoDetectWasRun = consulo.util.lang.BitUtil.isSet(flags, AUTO_DETECT_WAS_RUN_MASK);
       if (autoDetectWasRun) {
         FileType type = textOrBinaryFromCachedFlags(flags);
         if (toLog()) {
@@ -884,10 +884,10 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Nonnull
   private static String readableFlags(long flags) {
     String result = "";
-    if (BitUtil.isSet(flags, ATTRIBUTES_WERE_LOADED_MASK)) result += (result.isEmpty() ? "" : " | ") + "ATTRIBUTES_WERE_LOADED_MASK";
-    if (BitUtil.isSet(flags, AUTO_DETECT_WAS_RUN_MASK)) result += (result.isEmpty() ? "" : " | ") + "AUTO_DETECT_WAS_RUN_MASK";
-    if (BitUtil.isSet(flags, AUTO_DETECTED_AS_BINARY_MASK)) result += (result.isEmpty() ? "" : " | ") + "AUTO_DETECTED_AS_BINARY_MASK";
-    if (BitUtil.isSet(flags, AUTO_DETECTED_AS_TEXT_MASK)) result += (result.isEmpty() ? "" : " | ") + "AUTO_DETECTED_AS_TEXT_MASK";
+    if (consulo.util.lang.BitUtil.isSet(flags, ATTRIBUTES_WERE_LOADED_MASK)) result += (result.isEmpty() ? "" : " | ") + "ATTRIBUTES_WERE_LOADED_MASK";
+    if (consulo.util.lang.BitUtil.isSet(flags, AUTO_DETECT_WAS_RUN_MASK)) result += (result.isEmpty() ? "" : " | ") + "AUTO_DETECT_WAS_RUN_MASK";
+    if (consulo.util.lang.BitUtil.isSet(flags, AUTO_DETECTED_AS_BINARY_MASK)) result += (result.isEmpty() ? "" : " | ") + "AUTO_DETECTED_AS_BINARY_MASK";
+    if (consulo.util.lang.BitUtil.isSet(flags, AUTO_DETECTED_AS_TEXT_MASK)) result += (result.isEmpty() ? "" : " | ") + "AUTO_DETECTED_AS_TEXT_MASK";
     return result;
   }
 
@@ -905,7 +905,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     catch (IOException ignored) {
 
     }
-    status = BitUtil.set(status, AUTO_DETECT_WAS_RUN_MASK, wasAutoDetectRun);
+    status = consulo.util.lang.BitUtil.set(status, AUTO_DETECT_WAS_RUN_MASK, wasAutoDetectRun);
 
     return (byte)(status & (AUTO_DETECTED_AS_TEXT_MASK | AUTO_DETECTED_AS_BINARY_MASK | AUTO_DETECT_WAS_RUN_MASK));
   }
@@ -939,20 +939,20 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   @Nullable //null means the file was not auto-detected as text/binary
   private static FileType textOrBinaryFromCachedFlags(long flags) {
-    return BitUtil.isSet(flags, AUTO_DETECTED_AS_TEXT_MASK) ? PlainTextFileType.INSTANCE : BitUtil.isSet(flags, AUTO_DETECTED_AS_BINARY_MASK) ? UnknownFileType.INSTANCE : null;
+    return consulo.util.lang.BitUtil.isSet(flags, AUTO_DETECTED_AS_TEXT_MASK) ? PlainTextFileType.INSTANCE : consulo.util.lang.BitUtil.isSet(flags, AUTO_DETECTED_AS_BINARY_MASK) ? UnknownFileType.INSTANCE : null;
   }
 
   private void cacheAutoDetectedFileType(@Nonnull VirtualFile file, @Nonnull FileType fileType) {
     boolean wasAutodetectedAsText = fileType == PlainTextFileType.INSTANCE;
     boolean wasAutodetectedAsBinary = fileType == UnknownFileType.INSTANCE;
 
-    int flags = BitUtil.set(0, AUTO_DETECTED_AS_TEXT_MASK, wasAutodetectedAsText);
-    flags = BitUtil.set(flags, AUTO_DETECTED_AS_BINARY_MASK, wasAutodetectedAsBinary);
+    int flags = consulo.util.lang.BitUtil.set(0, AUTO_DETECTED_AS_TEXT_MASK, wasAutodetectedAsText);
+    flags = consulo.util.lang.BitUtil.set(flags, AUTO_DETECTED_AS_BINARY_MASK, wasAutodetectedAsBinary);
     writeFlagsToCache(file, flags);
     if (file instanceof VirtualFileWithId) {
       int id = ((VirtualFileWithId)file).getId();
-      flags = BitUtil.set(flags, AUTO_DETECT_WAS_RUN_MASK, true);
-      flags = BitUtil.set(flags, ATTRIBUTES_WERE_LOADED_MASK, true);
+      flags = consulo.util.lang.BitUtil.set(flags, AUTO_DETECT_WAS_RUN_MASK, true);
+      flags = consulo.util.lang.BitUtil.set(flags, ATTRIBUTES_WERE_LOADED_MASK, true);
       packedFlags.set(id, flags);
 
       if (wasAutodetectedAsText || wasAutodetectedAsBinary) {

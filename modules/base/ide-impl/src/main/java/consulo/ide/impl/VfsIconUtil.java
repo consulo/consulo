@@ -16,6 +16,7 @@
 package consulo.ide.impl;
 
 import consulo.application.AllIcons;
+import consulo.util.lang.BitUtil;
 import consulo.virtualFileSystem.VirtualFilePresentation;
 import consulo.project.Project;
 import consulo.component.util.Iconable;
@@ -26,7 +27,6 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ide.impl.idea.util.AnyIconKey;
-import consulo.ide.impl.idea.util.BitUtil;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.language.icon.IconDescriptor;
 import consulo.language.icon.IconDescriptorUpdaters;

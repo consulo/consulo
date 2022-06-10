@@ -1749,7 +1749,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
     GutterIconRenderer renderer = getGutterRenderer(e);
     AnAction clickAction = null;
     if (renderer != null && e.getButton() < 4) {
-      clickAction = BitUtil.isSet(e.getModifiers(), InputEvent.BUTTON2_MASK) ? renderer.getMiddleButtonClickAction() : renderer.getClickAction();
+      clickAction = consulo.util.lang.BitUtil.isSet(e.getModifiers(), InputEvent.BUTTON2_MASK) ? renderer.getMiddleButtonClickAction() : renderer.getClickAction();
     }
     if (clickAction != null) {
       /*PluginInfo pluginInfo = PluginInfoDetectorKt.getPluginInfo(renderer.getClass());

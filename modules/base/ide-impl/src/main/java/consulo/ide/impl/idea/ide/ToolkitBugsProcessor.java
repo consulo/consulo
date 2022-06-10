@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.BitUtil;
+import consulo.util.lang.BitUtil;
 import consulo.logging.Logger;
 
 import java.lang.reflect.Modifier;

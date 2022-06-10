@@ -26,10 +26,10 @@ import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.StatusBar;
 import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.BitUtil;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.ui.UIAccess;
 import consulo.project.ui.wm.IdeFrameUtil;
+import consulo.util.lang.BitUtil;
 import org.jetbrains.annotations.NonNls;
 
 import javax.accessibility.Accessible;
