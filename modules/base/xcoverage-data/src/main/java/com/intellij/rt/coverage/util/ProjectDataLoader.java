@@ -19,9 +19,10 @@ package com.intellij.rt.coverage.util;
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
-import gnu.trove.TIntObjectHashMap;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author anna
@@ -34,23 +35,23 @@ public class ProjectDataLoader {
     DataInputStream in = null;
     try {
       in = new DataInputStream(new BufferedInputStream(new FileInputStream(sessionDataFile)));
-      final TIntObjectHashMap dict = new TIntObjectHashMap(1000, 0.99f);
+      final Map<Integer, ClassData> dict = new HashMap<Integer, ClassData>(1000, 0.99f);
       final int classCount = CoverageIOUtil.readINT(in);
       for (int c = 0; c < classCount; c++) {
         final ClassData classInfo = projectInfo.getOrCreateClassData(StringsPool.getFromPool(CoverageIOUtil.readUTFFast(in)));
         dict.put(c, classInfo);
       }
       for (int c = 0; c < classCount; c++) {
-        final ClassData classInfo = (ClassData)dict.get(CoverageIOUtil.readINT(in));
+        final ClassData classInfo = dict.get(CoverageIOUtil.readINT(in));
         final int methCount = CoverageIOUtil.readINT(in);
-        final TIntObjectHashMap lines = new TIntObjectHashMap(4, 0.99f);
+        final Map<Integer, LineData> lines = new HashMap<Integer, LineData>(4, 0.99f);
         int maxLine = 1;
         for (int m = 0; m < methCount; m++) {
           final String methodSig = expand(in, dict);
           final int lineCount = CoverageIOUtil.readINT(in);
           for (int l = 0; l < lineCount; l++) {
             final int line = CoverageIOUtil.readINT(in);
-            LineData lineInfo = (LineData) lines.get(line);
+            LineData lineInfo = lines.get(line);
             if (lineInfo == null) {
               lineInfo = new LineData(line, StringsPool.getFromPool(methodSig));
               lines.put(line, lineInfo);
@@ -103,7 +104,7 @@ public class ProjectDataLoader {
     return projectInfo;
   }
 
-  private static String expand(DataInputStream in, final TIntObjectHashMap dict) throws IOException {
+  private static String expand(DataInputStream in, final Map<Integer, ClassData> dict) throws IOException {
     return CoverageIOUtil.processWithDictionary(CoverageIOUtil.readUTFFast(in), new CoverageIOUtil.Consumer() {
       protected String consume(String type) {
         final int typeIdx;
@@ -112,7 +113,7 @@ public class ProjectDataLoader {
         } catch (NumberFormatException e) {
           return type;
         }
-        return ((ClassData) dict.get(typeIdx)).getName();
+        return dict.get(typeIdx).getName();
       }
     });
   }

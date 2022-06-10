@@ -16,13 +16,14 @@
 
 package com.intellij.rt.coverage.util;
 
-import gnu.trove.TLongObjectHashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Pavel.Sher
  */
 public class StringsPool {
-  private final static TLongObjectHashMap myReusableStrings = new TLongObjectHashMap(30000);
+  private final static Map<Long, String> myReusableStrings = new ConcurrentHashMap<Long, String>(30000);
   private final static String EMPTY = "";
 
   public static String getFromPool(String value) {
@@ -30,7 +31,7 @@ public class StringsPool {
     if (value.length() == 0) return EMPTY;
 
     final long hash = StringHash.calc(value);
-    String reused = (String) myReusableStrings.get(hash);
+    String reused = myReusableStrings.get(hash);
     if (reused != null) return reused;
     // new String() is required because value often is passed as substring which has a reference to original char array
     // see {@link String.substring(int, int} method implementation.
