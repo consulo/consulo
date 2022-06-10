@@ -18,11 +18,11 @@ module consulo.ui.ex.awt.api {
 
   requires static consulo.desktop.awt.eawt.wrapper;
 
-  requires consulo.desktop.awt.hacking;
+  requires static consulo.desktop.awt.hacking;
 
-  requires imgscalr.lib;
-  requires com.sun.jna;
-  requires com.sun.jna.platform;
+  requires static imgscalr.lib;
+  requires static com.sun.jna;
+  requires static com.sun.jna.platform;
 
   exports consulo.ui.ex.awt;
   exports consulo.ui.ex.awt.accessibility;
