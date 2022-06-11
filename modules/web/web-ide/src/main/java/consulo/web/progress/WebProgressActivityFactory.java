@@ -13,29 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.progress;
+package consulo.web.progress;
 
-import consulo.ide.impl.idea.ui.mac.foundation.MacUtil;
 import consulo.application.impl.internal.progress.ProgressActivityFactory;
-import consulo.application.util.SystemInfo;
-import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
- * @since 23-Mar-22
+ * @since 10-Jun-22
  */
-@Singleton
-public class DesktopProgressActivityFactory implements ProgressActivityFactory {
-  private boolean myShouldStartActivity = SystemInfo.isMac && Boolean.parseBoolean(System.getProperty("consulo.mac.prevent.app.nap", "true"));
-
+public class WebProgressActivityFactory implements ProgressActivityFactory {
   @Nullable
   @Override
   public Runnable createActivity() {
-    if (myShouldStartActivity) {
-      return MacUtil.wakeUpNeo(this);
-    }
     return null;
   }
 }

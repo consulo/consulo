@@ -14,7 +14,7 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <id>consulo.platform.web</id>
+  <id>consulo.web</id>
   <name>Platform: web</name>
 
   <application-components>
@@ -80,5 +80,8 @@
     <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI" serviceImplementation="consulo.web.codeInsight.daemon.impl.WebIntentionsUIImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.ide.impl.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
+    <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.web.progress.WebProgressActivityFactory"/>
+    <applicationService serviceInterface="consulo.ui.ex.dialog.DialogService" serviceImplementation="consulo.ide.impl.ui.dialog.impl.UnifiedDialogServiceImpl"/>
+    <applicationService serviceInterface="consulo.application.ui.UISettings" serviceImplementation="consulo.application.ui.UISettings"/>
   </extensions>
 </consulo-plugin>
