@@ -24,7 +24,6 @@
   <extensionPoints>
     <extensionPoint name="xdebugger.settings" interface="consulo.execution.debug.setting.XDebuggerSettings"/>
     <extensionPoint name="xdebugger.breakpointType" interface="consulo.execution.debug.breakpoint.XBreakpointType"/>
-    <extensionPoint name="xdebugger.debuggerSupport" interface="consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport"/>
     <extensionPoint name="xdebugger.lineBreakpointTypeResolver" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">
       <with attribute="implementationClass" implements="consulo.execution.debug.breakpoint.XLineBreakpointTypeResolver"/>
     </extensionPoint>
@@ -59,8 +58,6 @@
                     serviceImplementation="consulo.ide.impl.idea.xdebugger.impl.XDebuggerHistoryManager"/>
 
     <customizableActionGroupProvider implementation="consulo.ide.impl.idea.xdebugger.impl.ui.XDebugTabCustomizableActionGroupProvider"/>
-
-    <xdebugger.debuggerSupport implementation="consulo.ide.impl.idea.xdebugger.impl.XDebuggerSupport" order="first"/>
 
     <editor.linePainter implementation="consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEditorLinePainter"/>
 

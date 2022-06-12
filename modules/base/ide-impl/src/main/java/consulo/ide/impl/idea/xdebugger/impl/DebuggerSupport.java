@@ -15,10 +15,8 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl;
 
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.annotation.DeprecationInfo;
 import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 import consulo.execution.debug.AbstractDebuggerSession;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.ide.impl.idea.xdebugger.impl.actions.DebuggerActionHandler;
@@ -29,6 +27,8 @@ import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointPanelProvid
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.AbstractValueHint;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.QuickEvaluateHandler;
 import consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common.ValueHintType;
+import consulo.project.Project;
+import consulo.ui.ex.action.AnActionEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,8 +40,10 @@ import java.util.List;
  * @author nik
  */
 @Deprecated
+@DeprecationInfo("Remove it in future, just replace by calling XDebuggerSupport")
 public abstract class DebuggerSupport {
-  private static final ExtensionPointName<DebuggerSupport> EXTENSION_POINT = ExtensionPointName.create("consulo.xdebugger.debuggerSupport");
+  private static final XDebuggerSupport ourDefaultInstance = new XDebuggerSupport();
+  private static final List<DebuggerSupport> ourDefaultValues = List.of(ourDefaultInstance);
 
   protected static final class DisabledActionHandler extends DebuggerActionHandler {
     public static final DisabledActionHandler INSTANCE = new DisabledActionHandler();
@@ -58,7 +60,12 @@ public abstract class DebuggerSupport {
 
   @Nonnull
   public static List<DebuggerSupport> getDebuggerSupports() {
-    return EXTENSION_POINT.getExtensionList();
+    return ourDefaultValues;
+  }
+
+  @Nonnull
+  public static <T extends DebuggerSupport> DebuggerSupport getDebuggerSupport(Class<T> aClass) {
+    return ourDefaultInstance;
   }
 
   @Nonnull
@@ -239,16 +246,5 @@ public abstract class DebuggerSupport {
   @Nonnull
   public EditBreakpointActionHandler getEditBreakpointAction() {
     return DISABLED_EDIT;
-  }
-
-
-  @Nonnull
-  public static <T extends DebuggerSupport> DebuggerSupport getDebuggerSupport(Class<T> aClass) {
-    for (DebuggerSupport support : getDebuggerSupports()) {
-      if (support.getClass() == aClass) {
-        return support;
-      }
-    }
-    throw new IllegalStateException();
   }
 }
