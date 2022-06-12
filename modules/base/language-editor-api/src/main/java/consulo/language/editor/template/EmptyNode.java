@@ -16,25 +16,5 @@
 
 package consulo.language.editor.template;
 
-import consulo.language.editor.completion.lookup.LookupElement;
-
-public class EmptyNode extends Expression {
-  public EmptyNode() {
-  }
-
-  @Override
-  public Result calculateResult(ExpressionContext context) {
-    return null;
-  }
-
-  @Override
-  public Result calculateQuickResult(ExpressionContext context) {
-    return null;
-  }
-
-  @Override
-  public LookupElement[] calculateLookupItems(ExpressionContext context) {
-    return null;
-  }
-
+public class EmptyNode extends EmptyExpression {
 }

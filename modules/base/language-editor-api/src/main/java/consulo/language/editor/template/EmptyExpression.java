@@ -17,17 +17,11 @@
 /*
  * @author ven
  */
-package consulo.ide.impl.idea.codeInsight.daemon.impl.quickfix;
+package consulo.language.editor.template;
 
 import consulo.language.editor.completion.lookup.LookupElement;
-import consulo.language.editor.template.Expression;
-import consulo.language.editor.template.ExpressionContext;
-import consulo.language.editor.template.Result;
 
 public class EmptyExpression extends Expression {
-  public EmptyExpression() {
-  }
-
   @Override
   public Result calculateResult(ExpressionContext context) {
     return null;
@@ -42,5 +36,4 @@ public class EmptyExpression extends Expression {
   public LookupElement[] calculateLookupItems(ExpressionContext context) {
     return null;
   }
-
 }
