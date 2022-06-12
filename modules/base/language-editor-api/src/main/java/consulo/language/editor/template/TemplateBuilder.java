@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * specified element with values of his/her choice.
  *
  * @author yole
- * @see consulo.ide.impl.idea.codeInsight.template.TemplateBuilderFactory
+ * @see TemplateBuilderFactory
  * @since 9.0
  */
 public interface TemplateBuilder {

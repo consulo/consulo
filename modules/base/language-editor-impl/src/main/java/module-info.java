@@ -20,4 +20,5 @@ module consulo.language.editor.impl {
   exports consulo.language.editor.impl.internal.psi.path to consulo.ide.impl;
 
   opens consulo.language.editor.impl.internal.parser to consulo.injecting.pico.impl;
+  opens consulo.language.editor.impl.internal.template to consulo.injecting.pico.impl;
 }

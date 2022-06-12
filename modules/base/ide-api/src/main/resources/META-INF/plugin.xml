@@ -2325,7 +2325,7 @@
                      implementationClass="consulo.ide.impl.idea.codeInspection.LossyEncodingInspection"/>
 
     <applicationService serviceInterface="consulo.language.editor.template.TemplateBuilderFactory"
-                        serviceImplementation="consulo.ide.impl.idea.codeInsight.template.TemplateBuilderFactoryImpl"/>
+                        serviceImplementation="consulo.language.editor.impl.internal.template.TemplateBuilderFactoryImpl"/>
 
     <projectViewPane implementation="consulo.ide.impl.idea.ide.scopeView.ScopeViewPane"/>
 

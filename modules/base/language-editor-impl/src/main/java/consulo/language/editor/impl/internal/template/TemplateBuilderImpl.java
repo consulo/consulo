@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template;
+package consulo.language.editor.impl.internal.template;
 
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.document.Document;
+import consulo.document.RangeMarker;
+import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditorManager;
 import consulo.language.editor.template.*;
 import consulo.language.inject.InjectedLanguageManager;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.document.RangeMarker;
-import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
-import consulo.ide.impl.idea.util.Function;
 import consulo.logging.Logger;
+import consulo.navigation.OpenFileDescriptor;
+import consulo.navigation.OpenFileDescriptorFactory;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -46,12 +45,12 @@ import java.util.TreeSet;
  */
 public class TemplateBuilderImpl implements TemplateBuilder {
   private final RangeMarker myContainerElement;
-  private final Map<RangeMarker,Expression> myExpressions = new HashMap<RangeMarker, Expression>();
-  private final Map<RangeMarker,String> myVariableExpressions = new HashMap<RangeMarker, String>();
-  private final Map<RangeMarker, Boolean> myAlwaysStopAtMap = new HashMap<RangeMarker, Boolean>();
-  private final Map<RangeMarker, Boolean> mySkipOnStartMap = new HashMap<RangeMarker, Boolean>();
-  private final Map<RangeMarker, String> myVariableNamesMap = new HashMap<RangeMarker, String>();
-  private final Set<RangeMarker> myElements = new TreeSet<RangeMarker>(RangeMarker.BY_START_OFFSET);
+  private final Map<RangeMarker, Expression> myExpressions = new HashMap<>();
+  private final Map<RangeMarker, String> myVariableExpressions = new HashMap<>();
+  private final Map<RangeMarker, Boolean> myAlwaysStopAtMap = new HashMap<>();
+  private final Map<RangeMarker, Boolean> mySkipOnStartMap = new HashMap<>();
+  private final Map<RangeMarker, String> myVariableNamesMap = new HashMap<>();
+  private final Set<RangeMarker> myElements = new TreeSet<>(RangeMarker.BY_START_OFFSET);
 
   private RangeMarker myEndElement;
   private RangeMarker mySelection;
@@ -79,9 +78,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
 
   private RangeMarker wrapReference(final PsiReference ref) {
     PsiElement element = ref.getElement();
-    return myDocument.createRangeMarker(ref.getRangeInElement().shiftRight(
-      InjectedLanguageManager.getInstance(myFile.getProject()).injectedToHost(element, element.getTextRange().getStartOffset())
-    ));
+    return myDocument.createRangeMarker(ref.getRangeInElement().shiftRight(InjectedLanguageManager.getInstance(myFile.getProject()).injectedToHost(element, element.getTextRange().getStartOffset())));
   }
 
   @Override
@@ -103,7 +100,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
   }
 
   @Override
-  public void replaceElement (PsiElement element, String varName, String dependantVariableName, boolean alwaysStopAt) {
+  public void replaceElement(PsiElement element, String varName, String dependantVariableName, boolean alwaysStopAt) {
     final RangeMarker key = wrapElement(element);
     myAlwaysStopAtMap.put(key, alwaysStopAt ? Boolean.TRUE : Boolean.FALSE);
     myVariableNamesMap.put(key, varName);
@@ -112,7 +109,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
   }
 
   @Override
-  public void replaceElement (PsiReference ref, String varName, String dependantVariableName, boolean alwaysStopAt) {
+  public void replaceElement(PsiReference ref, String varName, String dependantVariableName, boolean alwaysStopAt) {
     final RangeMarker key = wrapReference(ref);
     myAlwaysStopAtMap.put(key, alwaysStopAt ? Boolean.TRUE : Boolean.FALSE);
     myVariableNamesMap.put(key, varName);
@@ -198,22 +195,16 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     TemplateManager manager = TemplateManager.getInstance(myFile.getProject());
     final Template template = manager.createTemplate("", "");
 
-    String text = getDocumentTextFragment(myContainerElement.getStartOffset(),myContainerElement.getEndOffset());
+    String text = getDocumentTextFragment(myContainerElement.getStartOffset(), myContainerElement.getEndOffset());
     final int containerStart = myContainerElement.getStartOffset();
     int start = 0;
     for (final RangeMarker element : myElements) {
       int offset = element.getStartOffset() - containerStart;
       if (start > offset) {
-        LOG.error("file: " + myFile +
-                  " container: " + myContainerElement +
-                  " markers: " + StringUtil.join(myElements, new Function<RangeMarker, String>() {
-                                    @Override
-                                    public String fun(RangeMarker rangeMarker) {
-                                      final String docString =
-                                        myDocument.getText(new TextRange(rangeMarker.getStartOffset(), rangeMarker.getEndOffset()));
-                                      return "[[" + docString + "]" + rangeMarker.getStartOffset() + ", " + rangeMarker.getEndOffset() + "]";
-                                    }
-                                  }, ", "));
+        LOG.error("file: " + myFile + " container: " + myContainerElement + " markers: " + StringUtil.join(myElements, rangeMarker -> {
+          final String docString = myDocument.getText(new TextRange(rangeMarker.getStartOffset(), rangeMarker.getEndOffset()));
+          return "[[" + docString + "]" + rangeMarker.getStartOffset() + ", " + rangeMarker.getEndOffset() + "]";
+        }, ", "));
       }
       template.addTextSegment(text.substring(start, offset));
 
@@ -231,9 +222,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
         Boolean stop = myAlwaysStopAtMap.get(element);
         final boolean alwaysStopAt = stop == null || stop.booleanValue();
         final Expression expression = myExpressions.get(element);
-        final String variableName = myVariableNamesMap.get(element) == null
-                                    ? String.valueOf(expression.hashCode())
-                                    : myVariableNamesMap.get(element);
+        final String variableName = myVariableNamesMap.get(element) == null ? String.valueOf(expression.hashCode()) : myVariableNamesMap.get(element);
 
         if (expression != null) {
           final Boolean skipOnStart = mySkipOnStartMap.get(element);
@@ -255,9 +244,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
         Boolean stop = myAlwaysStopAtMap.get(element);
         final boolean alwaysStopAt = stop == null || stop.booleanValue();
         final Expression expression = myExpressions.get(element);
-        final String variableName = myVariableNamesMap.get(element) == null
-                                    ? String.valueOf(expression.hashCode())
-                                    : myVariableNamesMap.get(element);
+        final String variableName = myVariableNamesMap.get(element) == null ? String.valueOf(expression.hashCode()) : myVariableNamesMap.get(element);
         template.addVariable(variableName, dependantVariable, dependantVariable, alwaysStopAt);
       }
     }
@@ -267,6 +254,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
 
     return template;
   }
+
   private String getDocumentTextFragment(final int startOffset, final int endOffset) {
     return myDocument.getCharsSequence().subSequence(startOffset, endOffset).toString();
   }
@@ -288,7 +276,7 @@ public class TemplateBuilderImpl implements TemplateBuilder {
     final Project project = myFile.getProject();
     VirtualFile file = myFile.getVirtualFile();
     assert file != null;
-    OpenFileDescriptorImpl descriptor = new OpenFileDescriptorImpl(project, file);
+    OpenFileDescriptor descriptor = OpenFileDescriptorFactory.getInstance(project).builder(file).build();
     final Editor editor = FileEditorManager.getInstance(project).openTextEditor(descriptor, true);
 
     assert editor != null : "Editor is null";
