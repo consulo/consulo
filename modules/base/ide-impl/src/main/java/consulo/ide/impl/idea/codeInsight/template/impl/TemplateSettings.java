@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
 import consulo.ide.ServiceManager;
+import consulo.language.editor.template.DefaultLiveTemplatesProvider;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.component.persist.*;

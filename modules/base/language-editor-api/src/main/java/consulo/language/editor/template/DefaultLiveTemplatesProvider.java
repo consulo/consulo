@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template.impl;
+package consulo.language.editor.template;
 
-import consulo.component.extension.ExtensionPointName;
-import javax.annotation.Nullable;
 import consulo.annotation.DeprecationInfo;
+import consulo.component.extension.ExtensionPointName;
+
+import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 @Deprecated
-@DeprecationInfo(value = "Use ep 'com.intellij.bundleLiveTemplateSet' for register")
+@DeprecationInfo(value = "Use ep 'consulo.bundleLiveTemplateSet' for register")
 public interface DefaultLiveTemplatesProvider {
   ExtensionPointName<DefaultLiveTemplatesProvider> EP_NAME = ExtensionPointName.create("consulo.defaultLiveTemplatesProvider");
 
