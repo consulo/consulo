@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.idea.codeInsight.template;
+package consulo.language.editor.template.context;
 
-import consulo.language.editor.template.context.TemplateActionContext;
-import consulo.language.editor.template.context.TemplateContextType;
-import consulo.language.file.LanguageFileType;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
+import consulo.language.file.LanguageFileType;
 
 import javax.annotation.Nonnull;
 
