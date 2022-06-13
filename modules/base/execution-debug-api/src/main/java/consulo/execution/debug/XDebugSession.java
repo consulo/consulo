@@ -142,7 +142,17 @@ public interface XDebugSession extends AbstractDebuggerSession {
    *
    * @param suspendContext context
    */
-  void positionReached(@Nonnull XSuspendContext suspendContext);
+  default void positionReached(@Nonnull XSuspendContext suspendContext) {
+    positionReached(suspendContext, false);
+  }
+
+  /**
+   * Call this method when position is reached (e.g. after "Run to cursor" or "Step over" command)
+   *
+   * @param suspendContext context
+   * @param attract attract to debugger panel, and active breakpoint panel if setting enable
+   */
+  void positionReached(@Nonnull XSuspendContext suspendContext, boolean attract);
 
   /**
    * Call this method when session resumed because of some external event, e.g. from the debugger console
