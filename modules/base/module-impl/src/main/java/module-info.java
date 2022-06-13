@@ -11,7 +11,7 @@ module consulo.module.impl {
 
   exports consulo.module.impl.internal to consulo.ide.impl;
   exports consulo.module.impl.internal.extension to consulo.ide.impl;
-  exports consulo.module.impl.internal.layer to consulo.ide.impl;
+  exports consulo.module.impl.internal.layer to consulo.ide.impl, consulo.util.xml.serializer;
   exports consulo.module.impl.internal.layer.library to consulo.ide.impl;
   exports consulo.module.impl.internal.layer.orderEntry to consulo.ide.impl;
 
