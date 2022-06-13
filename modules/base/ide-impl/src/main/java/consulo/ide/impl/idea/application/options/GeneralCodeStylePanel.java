@@ -72,7 +72,7 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
 
   private IntegerField myRightMarginField;
 
-  private JComboBox myLineSeparatorCombo;
+  private ComboBox<String> myLineSeparatorCombo;
   private JPanel myPanel;
   private JBCheckBox myCbWrapWhenTypingReachesRightMargin;
   private JCheckBox myEnableFormatterTags;
@@ -98,6 +98,12 @@ public class GeneralCodeStylePanel extends CodeStyleAbstractPanel {
   public GeneralCodeStylePanel(CodeStyleSettings settings) {
     super(settings);
 
+    myLineSeparatorCombo.setRenderer(new ColoredListCellRenderer<String>() {
+      @Override
+      protected void customizeCellRenderer(@Nonnull JList list, String value, int index, boolean selected, boolean hasFocus) {
+        append(consulo.util.lang.StringUtil.notNullize(value));
+      }
+    });
     //noinspection unchecked
     myLineSeparatorCombo.addItem(SYSTEM_DEPENDANT_STRING);
     //noinspection unchecked
