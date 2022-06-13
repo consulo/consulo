@@ -75,6 +75,18 @@ public interface Component extends Disposable, UserDataHolder {
   }
 
   @RequiredUIAccess
+  default void addMirrorBorders(@Nonnull BorderStyle borderStyle, @Nullable ColorValue colorValue, int topBottom, int leftRight) {
+    if (topBottom > 0) {
+      addBorder(BorderPosition.TOP, borderStyle, colorValue, topBottom);
+      addBorder(BorderPosition.BOTTOM, borderStyle, colorValue, topBottom);
+    }
+    if (leftRight > 0) {
+      addBorder(BorderPosition.LEFT, borderStyle, colorValue, leftRight);
+      addBorder(BorderPosition.RIGHT, borderStyle, colorValue, leftRight);
+    }
+  }
+
+  @RequiredUIAccess
   default void addBorder(@Nonnull BorderPosition borderPosition, @Nonnull BorderStyle borderStyle, @Nonnegative int width) {
     addBorder(borderPosition, borderStyle, null, width);
   }
@@ -177,7 +189,7 @@ public interface Component extends Disposable, UserDataHolder {
     setCursor(cursor);
     return this;
   }
-  
+
   /**
    * @return runner for unregister listener
    */

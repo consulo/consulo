@@ -17,71 +17,62 @@
 
 package consulo.ide.impl.idea.application.options.codeStyle;
 
-import consulo.application.ApplicationManager;
 import consulo.language.codeStyle.CodeStyleScheme;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
-import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.localize.LocalizeValue;
+import consulo.ui.*;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.border.BorderStyle;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.layout.HorizontalLayout;
+import consulo.ui.model.MutableListModel;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CodeStyleSchemesPanel {
-  private JComboBox myCombo;
 
   private final CodeStyleSchemesModel myModel;
-  private JPanel myPanel;
-  private JButton myManageButton;
 
   private boolean myIsReset = false;
-  private final Font myDefaultComboFont;
-  private final Font myBoldComboFont;
 
+  private final HorizontalLayout myLayout;
+  private final ComboBox<CodeStyleScheme> mySchemeComboBox;
+  private final MutableListModel<CodeStyleScheme> mySchemeComboBoxModel;
+
+  @RequiredUIAccess
   public CodeStyleSchemesPanel(CodeStyleSchemesModel model) {
     myModel = model;
-    myDefaultComboFont = myCombo.getFont();
-    myBoldComboFont = myDefaultComboFont.deriveFont(Font.BOLD);
-    myCombo.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        if (!myIsReset) {
-          ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              onCombo();
-            }
-          });
-        }
-      }
-    });
-    myCombo.setRenderer(new ListCellRendererWrapper() {
-      @Override
-      public void customize(final JList list, final Object value, final int index, final boolean selected, final boolean hasFocus) {
-        Font font = myDefaultComboFont;
-        if (value instanceof CodeStyleScheme) {
-          CodeStyleScheme scheme = (CodeStyleScheme)value;
-          if (scheme.isDefault() || myModel.isProjectScheme(scheme)) {
-            font = myBoldComboFont;
-          }
-        }
-        setFont(font);
-      }
-    });
 
-    myManageButton.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(@Nonnull ActionEvent e) {
-        showManageSchemesDialog();
+    myLayout = HorizontalLayout.create();
+    myLayout.add(Label.create(LocalizeValue.localizeTODO("Scheme:")));
+
+    mySchemeComboBoxModel = MutableListModel.of(List.of());
+    mySchemeComboBox = ComboBox.create(mySchemeComboBoxModel);
+    mySchemeComboBox.setRender((render, index, scheme) -> {
+      if (scheme == null) {
+        return;
+      }
+
+      if (scheme.isDefault() || myModel.isProjectScheme(scheme)) {
+        render.append(scheme.getName(), TextAttribute.REGULAR_BOLD);
+      }
+      else {
+        render.append(scheme.getName());
       }
     });
+    mySchemeComboBox.addValueListener(e -> {
+      if (!myIsReset) {
+        UIAccess.current().give(this::onCombo);
+      }
+    });
+    myLayout.add(mySchemeComboBox);
+    myLayout.addMirrorBorders(BorderStyle.EMPTY, null, 5, 8);
 
-    myPanel.setBorder(new EmptyBorder(UIUtil.PANEL_SMALL_INSETS));
+    Button manageButton = Button.create(LocalizeValue.localizeTODO("&Manage..."));
+    manageButton.addClickListener(event -> showManageSchemesDialog());
+
+    myLayout.add(manageButton);
   }
 
   private void onCombo() {
@@ -99,29 +90,22 @@ public class CodeStyleSchemesPanel {
 
   @Nullable
   private CodeStyleScheme getSelectedScheme() {
-    Object selected = myCombo.getSelectedItem();
-    if (selected instanceof CodeStyleScheme) {
-      return (CodeStyleScheme)selected;
-    }
-    return null;
+    return mySchemeComboBox.getValue();
   }
 
-  public void disposeUIResources() {
-    myPanel.removeAll();
-  }
-
+  @RequiredUIAccess
   public void resetSchemesCombo() {
     myIsReset = true;
     try {
-      List<CodeStyleScheme> schemes = new ArrayList<CodeStyleScheme>();
+      List<CodeStyleScheme> schemes = new ArrayList<>();
       schemes.addAll(myModel.getAllSortedSchemes());
-      DefaultComboBoxModel model = new DefaultComboBoxModel(schemes.toArray());
-      myCombo.setModel(model);
+      mySchemeComboBoxModel.replaceAll(schemes);
+
       if (myModel.isUsePerProjectSettings()) {
-        myCombo.setSelectedItem(myModel.getProjectScheme());
+        mySchemeComboBox.setValue(myModel.getProjectScheme());
       }
       else {
-        myCombo.setSelectedItem(myModel.getSelectedGlobalScheme());
+        mySchemeComboBox.setValue(myModel.getSelectedGlobalScheme());
       }
     }
     finally {
@@ -129,14 +113,15 @@ public class CodeStyleSchemesPanel {
     }
   }
 
+  @RequiredUIAccess
   public void onSelectedSchemeChanged() {
     myIsReset = true;
     try {
       if (myModel.isUsePerProjectSettings()) {
-        myCombo.setSelectedItem(myModel.getProjectScheme());
+        mySchemeComboBox.setValue(myModel.getProjectScheme());
       }
       else {
-        myCombo.setSelectedItem(myModel.getSelectedGlobalScheme());
+        mySchemeComboBox.setValue(myModel.getSelectedGlobalScheme());
       }
     }
     finally {
@@ -144,21 +129,23 @@ public class CodeStyleSchemesPanel {
     }
   }
 
-  public JComponent getPanel() {
-    return myPanel;
+  public Component getLayout() {
+    return myLayout;
   }
 
+  @RequiredUIAccess
   private void showManageSchemesDialog() {
-    ManageCodeStyleSchemesDialog manageSchemesDialog = new ManageCodeStyleSchemesDialog(myPanel, myModel);
-    manageSchemesDialog.show();
+    ManageCodeStyleSchemesDialog manageSchemesDialog = new ManageCodeStyleSchemesDialog(TargetAWT.to(myLayout), myModel);
+    manageSchemesDialog.showAsync();
   }
 
+  @RequiredUIAccess
   public void usePerProjectSettingsOptionChanged() {
     if (myModel.isProjectScheme(myModel.getSelectedScheme())) {
-      myCombo.setSelectedItem(myModel.getProjectScheme());
+      mySchemeComboBox.setValue(myModel.getProjectScheme());
     }
     else {
-      myCombo.setSelectedItem(myModel.getSelectedScheme());
+      mySchemeComboBox.setValue(myModel.getSelectedScheme());
     }
   }
 }

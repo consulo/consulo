@@ -25,6 +25,7 @@ import consulo.application.ApplicationManager;
 import consulo.language.codeStyle.CodeStyleScheme;
 import consulo.language.codeStyle.CodeStyleSchemes;
 import consulo.ide.impl.idea.ui.components.labels.SwingActionLink;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.concurrent.EdtExecutorService;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -112,7 +113,7 @@ public class CodeStyleMainPanel extends JPanel implements TabbedLanguageCodeStyl
     link.setVerticalAlignment(SwingConstants.CENTER);
 
     JPanel top = new JPanel(new BorderLayout());
-    top.add(BorderLayout.WEST, mySchemesPanel.getPanel());
+    top.add(BorderLayout.WEST, TargetAWT.to(mySchemesPanel.getLayout()));
     top.add(BorderLayout.EAST, link);
     top.setBorder(new EmptyBorder(0, 0, 0, 8));
     add(top, BorderLayout.NORTH);
