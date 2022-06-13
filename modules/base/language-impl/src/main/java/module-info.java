@@ -43,4 +43,5 @@ module consulo.language.impl {
   opens consulo.language.impl.internal.psi.meta to consulo.injecting.pico.impl;
   opens consulo.language.impl.psi.template to consulo.injecting.pico.impl;
   opens consulo.language.impl.internal.sem to consulo.injecting.pico.impl;
+  opens consulo.language.impl.internal.psi.resolve to consulo.injecting.pico.impl;
 }
