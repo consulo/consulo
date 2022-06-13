@@ -43,6 +43,7 @@ module consulo.ide.api {
   requires transitive consulo.execution.coverage.api;
   requires transitive consulo.compiler.api;
   requires transitive consulo.language.editor.api;
+  requires transitive consulo.language.copyright.api;
   requires transitive consulo.undo.redo.api;
   requires transitive consulo.file.editor.api;
   requires transitive consulo.file.template.api;

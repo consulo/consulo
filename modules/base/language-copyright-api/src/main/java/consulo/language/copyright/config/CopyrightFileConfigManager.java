@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.copyright.impl.config;
+package consulo.language.copyright.config;
 
+import consulo.language.copyright.CopyrightUpdaters;
+import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.logging.Logger;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ide.impl.copyright.impl.CopyrightUpdaters;
-import consulo.ide.impl.copyright.impl.psi.UpdateCopyrightsProvider;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;

@@ -20,6 +20,7 @@
  */
 package consulo.ide.impl.copyright.impl.ui;
 
+import consulo.language.copyright.ui.TemplateCommentPanel;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.configurable.Configurable;
@@ -27,10 +28,10 @@ import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.project.Project;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.copyright.impl.CopyrightUpdaters;
-import consulo.ide.impl.copyright.impl.psi.UpdateCopyrightsProvider;
+import consulo.language.copyright.CopyrightUpdaters;
+import consulo.language.copyright.UpdateCopyrightsProvider;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ide.impl.copyright.impl.config.CopyrightFileConfigManager;
+import consulo.language.copyright.config.CopyrightFileConfigManager;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 

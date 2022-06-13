@@ -21,22 +21,17 @@
 
 package consulo.ide.impl.copyright.impl.actions;
 
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 @Singleton
-@State(
-  name = "UpdateCopyrightCheckinHandler",
-  storages = {@Storage(
-    file = StoragePathMacros.WORKSPACE_FILE
-  )}
-)
+@State(name = "UpdateCopyrightCheckinHandler", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class UpdateCopyrightCheckinHandlerState implements PersistentStateComponent<UpdateCopyrightCheckinHandlerState> {
   public boolean UPDATE_COPYRIGHT = false;
 

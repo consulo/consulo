@@ -34,8 +34,8 @@ import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
 import consulo.ide.impl.idea.ui.components.editors.JBComboBoxTableCellEditorComponent;
 import consulo.ui.ex.awt.table.TableView;
 import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.copyright.impl.CopyrightManager;
-import consulo.ide.impl.copyright.impl.CopyrightProfile;
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.config.CopyrightProfile;
 import consulo.ui.ex.awt.table.ListTableModel;
 
 import javax.annotation.Nonnull;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.copyright.impl.generate;
+package consulo.language.copyright.internal;
 
 import consulo.language.Commenter;
 

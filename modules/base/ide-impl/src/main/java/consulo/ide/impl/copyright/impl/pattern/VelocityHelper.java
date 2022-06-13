@@ -16,17 +16,18 @@
 
 package consulo.ide.impl.copyright.impl.pattern;
 
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.language.psi.PsiFile;
-import consulo.ide.impl.copyright.impl.CopyrightManager;
+import consulo.util.lang.StringUtil;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.io.StringWriter;
 import java.util.Properties;
 
@@ -71,7 +72,7 @@ public class VelocityHelper {
         extendedProperties.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
         extendedProperties.setProperty(RuntimeConstants.PARSER_POOL_SIZE, "1");
 
-        extendedProperties.setProperty("file.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+        extendedProperties.setProperty("file.resource.loader.class", ClasspathResourceLoader.class.getName());
         extendedProperties.setProperty("file.resource.loader.path", "resources");
 
         VelocityEngine engine = new VelocityEngine(extendedProperties);

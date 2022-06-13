@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.copyright.impl.pattern;
+package consulo.language.copyright.util;
 
 public class EntityUtil {
   public static String encode(String text) {
-    StringBuffer res = new StringBuffer(text.length());
+    StringBuilder res = new StringBuilder(text.length());
     for (int i = 0; i < text.length(); i++) {
       char ch = text.charAt(i);
       if (ch == '&') {
@@ -36,7 +36,7 @@ public class EntityUtil {
   }
 
   public static String decode(String text) {
-    StringBuffer res = new StringBuffer(text.length());
+    StringBuilder res = new StringBuilder(text.length());
 
     for (int i = 0; i < text.length(); i++) {
       char ch = text.charAt(i);

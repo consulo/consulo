@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.copyright.impl.config;
+package consulo.language.copyright.config;
 
 import consulo.util.xml.serializer.*;
 import org.jdom.Element;

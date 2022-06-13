@@ -142,5 +142,10 @@
       <artifactId>consulo-web-browser-api</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>consulo-language-copyright-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

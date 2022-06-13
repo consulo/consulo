@@ -14,33 +14,35 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.copyright.impl.ui;
+package consulo.language.copyright.ui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
-import consulo.ide.impl.idea.util.ObjectUtil;
-import consulo.ide.impl.copyright.impl.CopyrightManager;
-import consulo.ide.impl.copyright.impl.CopyrightProfile;
-import consulo.ide.impl.copyright.impl.CopyrightUpdaters;
-import consulo.ide.impl.copyright.impl.pattern.EntityUtil;
-import consulo.ide.impl.copyright.impl.pattern.VelocityHelper;
-import consulo.ide.impl.copyright.impl.util.FileTypeUtil;
 import consulo.application.WriteAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
-import consulo.ide.impl.copyright.impl.config.CopyrightFileConfig;
-import consulo.ide.impl.copyright.impl.config.CopyrightFileConfigManager;
-import consulo.ide.impl.copyright.impl.generate.TemplateCopyrightCommenter;
 import consulo.document.Document;
 import consulo.language.Commenter;
+import consulo.language.copyright.CopyrightUpdaters;
+import consulo.language.copyright.config.CopyrightFileConfig;
+import consulo.language.copyright.config.CopyrightFileConfigManager;
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.config.CopyrightProfile;
+import consulo.language.copyright.internal.CopyrightEditorUtil;
+import consulo.language.copyright.internal.CopyrightGenerator;
+import consulo.language.copyright.internal.TemplateCopyrightCommenter;
+import consulo.language.copyright.util.EntityUtil;
+import consulo.language.copyright.util.FileTypeUtil;
+import consulo.language.file.LanguageFileType;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.Nls;
 
@@ -55,7 +57,6 @@ import java.awt.event.ActionListener;
 public class TemplateCommentPanel implements SearchableConfigurable, Configurable.NoScroll {
   private final CopyrightManager myManager;
   private final TemplateCommentPanel parentPanel;
-  private final String myOptionName;
   private final EventListenerList listeners = new EventListenerList();
   private JRadioButton[] fileLocations = null;
   private JPanel mainPanel;
@@ -100,7 +101,6 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
 
   public TemplateCommentPanel(@Nonnull String optionName, @Nullable FileType fileType, @Nullable TemplateCommentPanel parentPanel, @Nonnull Project project) {
     this.parentPanel = parentPanel;
-    myOptionName = optionName;
     myProject = project;
     myManager = CopyrightManager.getInstance(project);
     myFileType = fileType;
@@ -228,14 +228,10 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     res.setSeparateAfter(cbSeparatorAfter.isSelected());
     res.setSeparateBefore(cbSeparatorBefore.isSelected());
     try {
-      Object val = Integer.parseInt(txtLengthBefore.getText());
-      if (val instanceof Number) {
-        res.setLenBefore(((Number)val).intValue());
-      }
+      Integer val = Integer.parseInt(txtLengthBefore.getText());
+      res.setLenBefore(val);
       val = Integer.parseInt(txtLengthAfter.getText());
-      if (val instanceof Number) {
-        res.setLenAfter(((Number)val).intValue());
-      }
+      res.setLenAfter(val);
     }
     catch (NumberFormatException e) {
       //leave blank
@@ -341,7 +337,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
     else {
       String evaluate;
       try {
-        evaluate = VelocityHelper.evaluate(null, null, null, EntityUtil.decode(CopyrightProfile.DEFAULT_COPYRIGHT_NOTICE));
+        evaluate = CopyrightGenerator.getInstance(myProject).generate(null, null, EntityUtil.decode(CopyrightProfile.DEFAULT_COPYRIGHT_NOTICE));
       }
       catch (Exception e) {
         evaluate = "";
@@ -356,7 +352,10 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   @Override
   @Nls
   public String getDisplayName() {
-    return myOptionName;
+    if (myFileType instanceof LanguageFileType) {
+      return ((LanguageFileType)myFileType).getLanguage().getDisplayName();
+    }
+    return myFileType.getDisplayName();
   }
 
   @RequiredUIAccess
@@ -373,7 +372,7 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
       myDocument = editorFactory.createDocument("");
 
       myEditor = editorFactory.createEditor(myDocument, myProject, ObjectUtil.notNull(myFileType, PlainTextFileType.INSTANCE), true);
-      CopyrightConfigurable.setupEditor(myEditor);
+      CopyrightEditorUtil.setupEditor(myEditor);
 
       myPreviewEditorPanel.add(myEditor.getComponent(), BorderLayout.CENTER);
     }
@@ -473,6 +472,6 @@ public class TemplateCommentPanel implements SearchableConfigurable, Configurabl
   @Override
   @Nonnull
   public String getId() {
-    return getHelpTopic() + "." + myOptionName;
+    return getHelpTopic() + "." + myFileType.getId();
   }
 }

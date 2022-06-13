@@ -34,9 +34,9 @@ import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.copyright.impl.CopyrightManager;
-import consulo.ide.impl.copyright.impl.CopyrightProfile;
-import consulo.ide.impl.copyright.impl.CopyrightUpdaters;
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.config.CopyrightProfile;
+import consulo.language.copyright.CopyrightUpdaters;
 import consulo.logging.Logger;
 
 import java.util.ArrayList;

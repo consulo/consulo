@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.copyright.impl.util;
+package consulo.language.copyright.util;
 
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.copyright.CopyrightUpdaters;
+import consulo.language.copyright.UpdateCopyrightsProvider;
+import consulo.language.copyright.config.CopyrightFileConfig;
 import consulo.language.file.LanguageFileType;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.copyright.impl.CopyrightUpdaters;
-import consulo.ide.impl.copyright.impl.psi.UpdateCopyrightsProvider;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.ide.impl.copyright.impl.config.CopyrightFileConfig;
 
 public class FileTypeUtil {
 

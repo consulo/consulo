@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.copyright.impl;
+package consulo.language.copyright.config;
 
+import consulo.language.copyright.util.EntityUtil;
 import consulo.util.xml.serializer.SmartSerializer;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import consulo.ide.impl.copyright.impl.pattern.EntityUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;

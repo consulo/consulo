@@ -75,6 +75,7 @@ open module consulo.ide.impl {
   requires transitive consulo.application.content.impl;
   requires transitive consulo.module.impl;
   requires transitive consulo.util.xml.fast.reader;
+  requires transitive consulo.language.copyright.api;
 
   requires consulo.ui.impl;
   requires consulo.localize.impl;
@@ -184,13 +185,9 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.configurationStore.vcs;
   exports consulo.ide.impl.copyright.impl;
   exports consulo.ide.impl.copyright.impl.actions;
-  exports consulo.ide.impl.copyright.impl.config;
-  exports consulo.ide.impl.copyright.impl.generate;
   exports consulo.ide.impl.copyright.impl.options;
   exports consulo.ide.impl.copyright.impl.pattern;
-  exports consulo.ide.impl.copyright.impl.psi;
   exports consulo.ide.impl.copyright.impl.ui;
-  exports consulo.ide.impl.copyright.impl.util;
   exports consulo.ide.impl.debugger;
   exports consulo.ide.impl.desktop;
   exports consulo.ide.impl.desktop.awt;

@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.copyright.impl;
+package consulo.language.copyright.config;
 
 import consulo.component.persist.*;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.language.psi.PsiFile;
 import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.PackageSet;
-import consulo.ide.impl.copyright.impl.config.CopyrightFileConfig;
-import consulo.ide.impl.copyright.impl.config.CopyrightFileConfigManager;
+import consulo.language.psi.PsiFile;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.Comparing;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -166,13 +165,12 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
     if (virtualFile == null || myCopyrightFileConfigManager.getOptions(virtualFile.getFileType()).getFileTypeOverride() == CopyrightFileConfig.NO_COPYRIGHT) {
       return null;
     }
-    final DependencyValidationManager validationManager = DependencyValidationManager.getInstance(myProject);
     for (String scopeName : myModule2Copyrights.keySet()) {
-      final NamedScope namedScope = validationManager.getScope(scopeName);
-      if (namedScope != null) {
-        final PackageSet packageSet = namedScope.getValue();
+      Pair<NamedScopesHolder, NamedScope> scopeWithHolder = NamedScopesHolder.getScopeWithHolder(myProject, scopeName);
+      if (scopeWithHolder != null) {
+        final PackageSet packageSet = scopeWithHolder.getSecond().getValue();
         if (packageSet != null) {
-          if (packageSet.contains(file.getVirtualFile(), file.getProject(), validationManager)) {
+          if (packageSet.contains(file.getVirtualFile(), file.getProject(), scopeWithHolder.getFirst())) {
             final CopyrightProfile profile = myCopyrights.get(myModule2Copyrights.get(scopeName));
             if (profile != null) {
               return profile;
@@ -196,7 +194,7 @@ public class CopyrightManager implements PersistentStateComponent<Element> {
     addCopyright(copyrightProfile);
   }
 
-  static final class CopyrightStateSplitter extends MainConfigurationStateSplitter {
+  public static final class CopyrightStateSplitter extends MainConfigurationStateSplitter {
     @Nonnull
     @Override
     protected String getSubStateFileName(@Nonnull Element element) {

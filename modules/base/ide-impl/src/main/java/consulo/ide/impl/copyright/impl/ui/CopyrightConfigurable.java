@@ -18,26 +18,25 @@ package consulo.ide.impl.copyright.impl.ui;
 
 import consulo.application.AllIcons;
 import consulo.application.WriteAction;
-import consulo.ui.ex.awt.*;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorSettings;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.ui.*;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.copyright.impl.CopyrightManager;
-import consulo.ide.impl.copyright.impl.CopyrightProfile;
-import consulo.ide.impl.copyright.impl.pattern.EntityUtil;
-import consulo.ide.impl.copyright.impl.pattern.VelocityHelper;
+import consulo.document.Document;
 import consulo.ide.impl.copyright.impl.PredefinedCopyrightTextEP;
+import consulo.ide.impl.idea.openapi.ui.NamedConfigurable;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.config.CopyrightProfile;
+import consulo.language.copyright.internal.CopyrightEditorUtil;
+import consulo.language.copyright.internal.CopyrightGenerator;
+import consulo.language.copyright.util.EntityUtil;
 import consulo.localize.LocalizeValue;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.JBColor;
 import consulo.ui.ex.action.*;
+import consulo.ui.ex.awt.*;
 import org.jetbrains.annotations.Nls;
 
 import javax.annotation.Nonnull;
@@ -53,8 +52,11 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
 
     private Editor myEditor;
 
+    private final Project myProject;
+
     public PreviewDialog(@Nullable Project project, @Nonnull String text, @Nonnull Dimension size) {
       super(project);
+      myProject = project;
       myText = text;
       mySize = size;
       setTitle("Preview");
@@ -79,8 +81,8 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     @Override
     protected JComponent createCenterPanel() {
       Document document = EditorFactory.getInstance().createDocument(myText);
-      myEditor = EditorFactory.getInstance().createViewer(document);
-      setupEditor(myEditor);
+      myEditor = EditorFactory.getInstance().createViewer(document, myProject);
+      CopyrightEditorUtil.setupEditor(myEditor);
 
       JComponent component = myEditor.getComponent();
       component.setPreferredSize(mySize);
@@ -109,8 +111,8 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
 
     EditorFactory editorFactory = EditorFactory.getInstance();
     myCopyrightDocument = editorFactory.createDocument("");
-    myCopyrightEditor = editorFactory.createEditor(myCopyrightDocument);
-    setupEditor(myCopyrightEditor);
+    myCopyrightEditor = editorFactory.createEditor(myCopyrightDocument, project);
+    CopyrightEditorUtil.setupEditor(myCopyrightEditor);
 
     DefaultActionGroup group = new DefaultActionGroup();
 
@@ -121,9 +123,9 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
       @Override
       public void actionPerformed(@Nonnull AnActionEvent e) {
         try {
-          String evaluate = VelocityHelper.evaluate(null, project, null, myCopyrightEditor.getDocument().getText());
+          String evaluate = CopyrightGenerator.getInstance(project).generate(null, null, myCopyrightEditor.getDocument().getText());
 
-          new PreviewDialog(project, evaluate, editorComponent.getSize()).show();
+          new PreviewDialog(project, evaluate, editorComponent.getSize()).showAsync();
         }
         catch (Exception e1) {
           Messages.showErrorDialog(myProject, "Template contains error:\n" + e1.getMessage(), "Preview");
@@ -154,6 +156,7 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
     }
 
     ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);
+    actionToolbar.setTargetComponent(myWholePanel);
 
     JPanel result = new JPanel(new BorderLayout());
     JPanel toolBarPanel = new JPanel(new BorderLayout());
@@ -170,14 +173,6 @@ public class CopyrightConfigurable extends NamedConfigurable<CopyrightProfile> i
 
     myWholePanel.add(LabeledComponent.left(myKeywordField = new JBTextField(), "Keyword to detect copyright in comments"));
     myWholePanel.add(LabeledComponent.left(myAllowReplaceTextField = new JBTextField(), "Allow replacing copyright if old copyright contains"));
-  }
-
-  static void setupEditor(Editor editor) {
-    EditorSettings settings = editor.getSettings();
-    settings.setLineNumbersShown(false);
-    settings.setFoldingOutlineShown(false);
-    settings.setIndentGuidesShown(false);
-    settings.setLineMarkerAreaShown(false);
   }
 
   @Override

@@ -14,36 +14,34 @@
  * limitations under the License.
  */
 
-package consulo.ide.impl.copyright.impl.psi;
+package consulo.language.copyright;
 
-import consulo.language.Commenter;
-import consulo.language.LanguageCommenters;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
+import consulo.document.util.TextRange;
+import consulo.language.Commenter;
+import consulo.language.LanguageCommenters;
+import consulo.language.copyright.config.CopyrightFileConfig;
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.config.CopyrightProfile;
+import consulo.language.copyright.internal.CopyrightGenerator;
+import consulo.language.copyright.util.EntityUtil;
+import consulo.language.copyright.util.FileTypeUtil;
 import consulo.language.plain.psi.PsiPlainTextFile;
 import consulo.language.psi.*;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.module.Module;
-import consulo.language.util.ModuleUtilCore;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiUtilCore;
 import consulo.language.util.IncorrectOperationException;
-import consulo.ide.impl.copyright.impl.CopyrightManager;
-import consulo.ide.impl.copyright.impl.CopyrightProfile;
-import consulo.ide.impl.copyright.impl.pattern.EntityUtil;
-import consulo.ide.impl.copyright.impl.pattern.VelocityHelper;
-import consulo.ide.impl.copyright.impl.util.FileTypeUtil;
-import consulo.ide.impl.copyright.impl.config.CopyrightFileConfig;
+import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -371,7 +369,7 @@ public abstract class UpdatePsiFileCopyright<T extends CopyrightFileConfig> {
       else {
         String expanded = null;
         try {
-          expanded = VelocityHelper.evaluate(myPsiFile, getProject(), getModule(), base);
+          expanded = CopyrightGenerator.getInstance(getProject()).generate(myPsiFile, getModule(), base);
         }
         catch (Exception e) {
           expanded = "";

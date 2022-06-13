@@ -19,7 +19,7 @@ package consulo.ide.impl.copyright.impl.options;
 import consulo.logging.Logger;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.copyright.impl.CopyrightProfile;
+import consulo.language.copyright.config.CopyrightProfile;
 import org.jdom.Document;
 import org.jdom.Element;
 

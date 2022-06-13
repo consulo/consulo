@@ -29,8 +29,8 @@ import consulo.project.Project;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.copyright.impl.CopyrightManager;
-import consulo.ide.impl.copyright.impl.CopyrightUpdaters;
+import consulo.language.copyright.config.CopyrightManager;
+import consulo.language.copyright.CopyrightUpdaters;
 import consulo.ide.impl.copyright.impl.pattern.FileUtil;
 import javax.annotation.Nonnull;
 

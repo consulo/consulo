@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package consulo.language.copyright.internal;
 
-package consulo.ide.impl.copyright.impl.ui;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorSettings;
 
-import java.util.EventListener;
-
-public interface TemplateOptionsPanelListener extends EventListener {
-  void optionChanged();
+/**
+ * @author VISTALL
+ * @since 13-Jun-22
+ */
+public class CopyrightEditorUtil {
+  public static void setupEditor(Editor editor) {
+    EditorSettings settings = editor.getSettings();
+    settings.setLineNumbersShown(false);
+    settings.setFoldingOutlineShown(false);
+    settings.setIndentGuidesShown(false);
+    settings.setLineMarkerAreaShown(false);
+  }
 }

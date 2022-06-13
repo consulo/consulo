@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.copyright.impl.psi;
+package consulo.language.copyright;
 
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
+import consulo.language.copyright.config.CopyrightFileConfig;
+import consulo.language.copyright.config.CopyrightProfile;
+import consulo.language.copyright.ui.TemplateCommentPanel;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.copyright.impl.CopyrightProfile;
-import consulo.ide.impl.copyright.impl.ui.TemplateCommentPanel;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
+
 import javax.annotation.Nonnull;
-import consulo.ide.impl.copyright.impl.config.CopyrightFileConfig;
 
 /**
  * @author yole
