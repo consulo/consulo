@@ -15,31 +15,29 @@
  */
 package consulo.ide.impl.copyright.impl.ui;
 
-import consulo.ui.ex.awt.*;
+import consulo.configurable.Configurable;
+import consulo.content.scope.NamedScope;
+import consulo.content.scope.NamedScopesHolder;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.util.scopeChooser.PackageSetChooserCombo;
 import consulo.ide.impl.idea.ide.util.scopeChooser.ScopeChooserConfigurable;
-import consulo.dataContext.DataContext;
-import consulo.configurable.Configurable;
-import consulo.ide.setting.Settings;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.packageDependencies.DefaultScopesProvider;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
-import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
-import consulo.content.scope.NamedScope;
-import consulo.content.scope.NamedScopesHolder;
-import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.ui.ListCellRendererWrapper;
 import consulo.ide.impl.idea.ui.components.editors.JBComboBoxTableCellEditorComponent;
-import consulo.ui.ex.awt.table.TableView;
 import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
+import consulo.ide.setting.Settings;
 import consulo.language.copyright.config.CopyrightManager;
 import consulo.language.copyright.config.CopyrightProfile;
+import consulo.project.Project;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.table.ListTableModel;
+import consulo.ui.ex.awt.table.TableView;
 
 import javax.annotation.Nonnull;
-
 import javax.annotation.Nullable;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -48,8 +46,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class ProjectSettingsPanel {
   private final Project myProject;
@@ -58,7 +56,7 @@ public class ProjectSettingsPanel {
 
   private final TableView<ScopeSetting> myScopeMappingTable;
   private final ListTableModel<ScopeSetting> myScopeMappingModel;
-  private final JComboBox myProfilesComboBox = new JComboBox();
+  private final ComboBox<CopyrightProfile> myProfilesComboBox = new ComboBox<>();
 
   private final HyperlinkLabel myScopesLink = new HyperlinkLabel();
 
@@ -88,15 +86,10 @@ public class ProjectSettingsPanel {
     myScopeMappingTable = new TableView<ScopeSetting>(myScopeMappingModel);
 
     reloadCopyrightProfiles();
-    myProfilesComboBox.setRenderer(new ListCellRendererWrapper<CopyrightProfile>() {
+    myProfilesComboBox.setRenderer(new ColoredListCellRenderer<CopyrightProfile>() {
       @Override
-      public void customize(JList list, CopyrightProfile value, int index, boolean selected, boolean hasFocus) {
-        if (value == null) {
-          setText("No copyright");
-        }
-        else {
-          setText(value.getName());
-        }
+      protected void customizeCellRenderer(@Nonnull JList list, CopyrightProfile value, int index, boolean selected, boolean hasFocus) {
+        append(value == null ? "No copyright" : value.getName());
       }
     });
 
