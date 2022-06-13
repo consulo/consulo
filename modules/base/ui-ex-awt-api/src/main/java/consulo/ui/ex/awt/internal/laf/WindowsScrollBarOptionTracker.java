@@ -34,6 +34,9 @@ import java.util.List;
  * We get new value on each focus/unfocus window
  */
 class WindowsScrollBarOptionTracker implements AWTEventListener {
+  private static final String KEY = "Control Panel\\Accessibility";
+  private static final String VALUE = "DynamicScrollbars";
+
   private final UIElementWeakStorage<ConfigurableScrollBarUI> myElementWeakStorage;
   private Boolean myDynamicScrollBars;
 
@@ -72,6 +75,9 @@ class WindowsScrollBarOptionTracker implements AWTEventListener {
       return false;
     }
 
-    return Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, "Control Panel\\Accessibility", "DynamicScrollbars") == 1;
+    if (Advapi32Util.registryValueExists(WinReg.HKEY_CURRENT_USER, KEY, VALUE)) {
+      return Advapi32Util.registryGetIntValue(WinReg.HKEY_CURRENT_USER, KEY, VALUE) == 1;
+    }
+    return false;
   }
 }
