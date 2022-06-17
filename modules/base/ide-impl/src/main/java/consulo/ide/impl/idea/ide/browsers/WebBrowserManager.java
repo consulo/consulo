@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.browsers;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.GeneralSettings;
 import consulo.application.util.SystemInfo;
 import consulo.util.lang.function.Condition;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 @State(name = "WebBrowsersConfiguration", storages = @Storage("web-browsers.xml"))
 public class WebBrowserManager extends SimpleModificationTracker implements PersistentStateComponent<Element>, consulo.webBrowser.WebBrowserManager {
   private static final Logger LOG = Logger.getInstance(WebBrowserManager.class);

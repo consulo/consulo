@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.keymap;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.ui.image.Image;
 
 /**
  * @author yole
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class KeymapGroupFactory {
   public static KeymapGroupFactory getInstance() {
     return ServiceManager.getService(KeymapGroupFactory.class);

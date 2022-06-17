@@ -15,9 +15,8 @@
  */
 package consulo.ide.impl.newProject;
 
-import consulo.application.Application;
-import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionType;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 
 import javax.annotation.Nonnull;
 
@@ -25,9 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 05.06.14
  */
-@ExtensionType(value = "newModuleBuilder", component = Application.class)
+@Extension(ComponentScope.APPLICATION)
 public interface NewModuleBuilder {
-  ExtensionList<NewModuleBuilder, Application> EP = ExtensionList.of(NewModuleBuilder.class);
-
   void setupContext(@Nonnull NewModuleContext context);
 }

@@ -16,7 +16,6 @@
 package consulo.component.impl;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
 import consulo.annotation.component.Service;
 import consulo.component.BaseComponent;
 import consulo.component.ComponentManager;
@@ -24,9 +23,9 @@ import consulo.component.NamedComponent;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointId;
-import consulo.component.impl.extension.EmptyExtensionPoint;
 import consulo.component.impl.extension.ExtensionAreaId;
 import consulo.component.impl.extension.ExtensionsAreaImpl;
+import consulo.component.impl.extension.NewExtensionAreaImpl;
 import consulo.component.impl.messagebus.MessageBusFactory;
 import consulo.component.impl.messagebus.MessageBusImpl;
 import consulo.component.internal.InjectingBindingHolder;
@@ -166,7 +165,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   private volatile ThreeState myDisposeState = ThreeState.NO;
 
-  private final Map<Class, ExtensionPoint> myExtensionPoints = new ConcurrentHashMap<>();
+  private NewExtensionAreaImpl myNewExtensionArea;
 
   protected BaseComponentManager(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId extensionAreaId, boolean buildInjectionContainer) {
     myParent = parent;
@@ -186,6 +185,10 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
     fillListenerDescriptors(mapByTopic);
 
     myMessageBus.setLazyListeners(mapByTopic);
+
+    myNewExtensionArea = new NewExtensionAreaImpl(this, getComponentScope(), this::checkCanceled);
+
+    myNewExtensionArea.registerFromInjectingBinding();
 
     myExtensionsArea = new ExtensionsAreaImpl(this, this::checkCanceled);
 
@@ -285,7 +288,10 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
     InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Service.class, getComponentScope());
 
-    for (InjectingBinding injectingBinding : holder.getBindings().values()) {
+    for (List<InjectingBinding> listOfBindings : holder.getBindings().values()) {
+      // TODO [VISTALL] filter by profiles, and throw if two or more
+      InjectingBinding injectingBinding = listOfBindings.get(0);
+
       ServiceDescriptor descriptor = new ServiceDescriptor();
       descriptor.serviceInterface = injectingBinding.getApiClassName();
       descriptor.serviceImplementation = injectingBinding.getImplClassName();
@@ -508,17 +514,7 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   @Nonnull
   @Override
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
-    Extension annotation = extensionClass.getAnnotation(Extension.class);
-    if(annotation == null) {
-      throw new UnsupportedOperationException(extensionClass + " is not annotated by @Extension");
-    }
-
-    ComponentScope value = annotation.value();
-    if (value != getComponentScope()) {
-      throw new UnsupportedOperationException("Wrong extension scope " + value + " vs " + getComponentScope());
-    }
-
-    return EmptyExtensionPoint.get();
+    return myNewExtensionArea.getExtensionPoint(extensionClass);
   }
 
   @TestOnly

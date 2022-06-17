@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.notification;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl;
@@ -67,6 +70,8 @@ import java.util.regex.Pattern;
  * @author peter
  */
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class EventLog {
   public static final String LOG_REQUESTOR = "Internal log requestor";
   public static final String LOG_TOOL_WINDOW_ID = "Event Log";

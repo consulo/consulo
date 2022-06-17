@@ -16,18 +16,21 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataProvider;
+import consulo.dataContext.GetDataRule;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.dataContext.GetDataRule;
-import consulo.util.dataholder.Key;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class VirtualFileRule implements GetDataRule<VirtualFile> {
   @Nonnull
   @Override

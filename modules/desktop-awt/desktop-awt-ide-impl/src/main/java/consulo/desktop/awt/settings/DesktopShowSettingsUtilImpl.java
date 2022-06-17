@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.settings;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.configurable.Configurable;
 import consulo.configurable.SearchableConfigurable;
@@ -55,6 +56,7 @@ import java.util.function.Consumer;
  * @author max
  */
 @Singleton
+@ServiceImpl
 public class DesktopShowSettingsUtilImpl extends BaseProjectStructureShowSettingsUtil  {
   private static final Logger LOG = Logger.getInstance(DesktopShowSettingsUtilImpl.class);
 

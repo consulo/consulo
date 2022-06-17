@@ -19,6 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.component.bind.InjectingBinding;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,21 +28,16 @@ import java.util.Map;
  * @since 13-Jun-22
  */
 public class InjectingBindingHolder {
-  private final Class<?> myComponentAnnotation;
-  private final ComponentScope myComponentScope;
-
-  private final Map<String, InjectingBinding> myBindings = new HashMap<>();
+  private final Map<String, List<InjectingBinding>> myBindings = new HashMap<>();
 
   public InjectingBindingHolder(Class<?> componentAnnotation, ComponentScope componentScope) {
-    myComponentAnnotation = componentAnnotation;
-    myComponentScope = componentScope;
   }
 
   public void addBinding(InjectingBinding binding) {
-    myBindings.put(binding.getApiClassName(), binding);
+    myBindings.computeIfAbsent(binding.getApiClassName(), s -> new LinkedList<>()).add(binding);
   }
 
-  public Map<String, InjectingBinding> getBindings() {
+  public Map<String, List<InjectingBinding>> getBindings() {
     return myBindings;
   }
 }

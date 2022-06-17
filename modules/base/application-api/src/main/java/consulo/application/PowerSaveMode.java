@@ -15,6 +15,9 @@
  */
 package consulo.application;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
 import jakarta.inject.Inject;
@@ -24,6 +27,8 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PowerSaveMode {
   private static final String POWER_SAVE_MODE = "power.save.mode";
   private boolean myEnabled = ApplicationPropertiesComponent.getInstance().getBoolean(POWER_SAVE_MODE, false);

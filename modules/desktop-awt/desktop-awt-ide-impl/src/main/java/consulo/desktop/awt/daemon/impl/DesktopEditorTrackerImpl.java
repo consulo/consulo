@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.daemon.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
@@ -52,6 +53,7 @@ import java.util.Map;
  * @since 07/12/2020
  */
 @Singleton
+@ServiceImpl
 public class DesktopEditorTrackerImpl extends EditorTracker {
   private static final Logger LOG = Logger.getInstance(DesktopEditorTrackerImpl.class);
 

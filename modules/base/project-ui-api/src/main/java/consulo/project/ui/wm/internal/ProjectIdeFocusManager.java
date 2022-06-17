@@ -15,6 +15,8 @@
  */
 package consulo.project.ui.wm.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ui.wm.ApplicationIdeFocusManager;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.project.Project;
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2018-08-24
  */
+@Service(ComponentScope.PROJECT)
 public interface ProjectIdeFocusManager extends IdeFocusManager {
   @Nonnull
   static IdeFocusManager getInstance(@Nullable Project project) {

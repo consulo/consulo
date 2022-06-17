@@ -19,6 +19,7 @@
  */
 package consulo.desktop.awt.uiOld;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.component.messagebus.MessageBusConnection;
@@ -42,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
+@ServiceImpl
 public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable {
   private static final ThreadLocal<Boolean> ourEvaluationIsInProgress = ThreadLocal.withInitial(() -> Boolean.FALSE);
 

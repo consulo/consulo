@@ -15,17 +15,18 @@
  */
 package consulo.desktop.awt.fileChooser.impl.system;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.eap.EarlyAccessProgramManager;
 import consulo.component.ComponentManager;
+import consulo.desktop.awt.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor;
+import consulo.desktop.awt.fileChooser.impl.system.windows2.WinPathChooserDialog2;
+import consulo.desktop.awt.uiOld.win.WinPathChooserDialog;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.project.Project;
-import consulo.desktop.awt.uiOld.win.WinPathChooserDialog;
-import consulo.desktop.awt.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor;
-import consulo.desktop.awt.fileChooser.impl.system.windows2.WinPathChooserDialog2;
-import consulo.application.eap.EarlyAccessProgramManager;
-import consulo.platform.Platform;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
+import consulo.platform.Platform;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,6 +36,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-06-28
  */
+@ExtensionImpl
 public class WindowsFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override

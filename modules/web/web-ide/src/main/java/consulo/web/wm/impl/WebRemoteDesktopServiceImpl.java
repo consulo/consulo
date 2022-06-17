@@ -15,6 +15,7 @@
  */
 package consulo.web.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.RemoteDesktopService;
 import jakarta.inject.Singleton;
 
@@ -23,6 +24,7 @@ import jakarta.inject.Singleton;
  * @since 2020-10-21
  */
 @Singleton
+@ServiceImpl
 public class WebRemoteDesktopServiceImpl extends RemoteDesktopService {
   @Override
   public boolean isRemoteDesktopConnected() {

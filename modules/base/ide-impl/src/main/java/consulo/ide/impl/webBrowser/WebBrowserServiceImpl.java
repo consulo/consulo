@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.webBrowser;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
 import consulo.language.psi.PsiElement;
@@ -35,6 +36,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Singleton
+@ServiceImpl
 public class WebBrowserServiceImpl extends WebBrowserService {
   @Nonnull
   @Override

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.project;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.platform.DefaultProjectOpenProcessor;
 import consulo.ide.impl.idea.projectImport.ProjectOpenProcessor;
@@ -31,6 +32,7 @@ import java.util.List;
  * @since 31-Jan-17
  */
 @Singleton
+@ServiceImpl
 public class ProjectOpenProcessorsImpl implements ProjectOpenProcessors {
   private final NotNullLazyValue<ProjectOpenProcessor[]> myCacheValue;
 

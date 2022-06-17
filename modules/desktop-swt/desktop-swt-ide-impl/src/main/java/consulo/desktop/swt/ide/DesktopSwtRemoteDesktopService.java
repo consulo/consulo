@@ -15,12 +15,16 @@
  */
 package consulo.desktop.swt.ide;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.RemoteDesktopService;
+import jakarta.inject.Singleton;
 
 /**
  * @author VISTALL
  * @since 29/04/2021
  */
+@Singleton
+@ServiceImpl
 public class DesktopSwtRemoteDesktopService extends RemoteDesktopService {
   @Override
   public boolean isRemoteDesktopConnected() {

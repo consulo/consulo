@@ -19,18 +19,22 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
+import consulo.container.plugin.PluginManager;
 import consulo.ide.ServiceManager;
-import consulo.ui.ex.keymap.Keymap;
-import consulo.ui.ex.keymap.KeymapManager;
-import consulo.util.xml.serializer.InvalidDataException;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.ui.ex.keymap.BundledKeymapProvider;
+import consulo.ui.ex.keymap.Keymap;
+import consulo.ui.ex.keymap.KeymapManager;
+import consulo.util.xml.serializer.InvalidDataException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,23 +59,20 @@ public class DefaultKeymap {
 
   @Inject
   public DefaultKeymap(@Nonnull Application application) {
-    for (BundledKeymapEP bundledKeymapEP : BundledKeymapEP.EP_NAME.getExtensionList(application)) {
-      try {
-        String file = bundledKeymapEP.file;
-        if (!file.endsWith(".xml")) {
-          file += ".xml";
-        }
+    for (BundledKeymapProvider provider : application.getExtensionPoint(BundledKeymapProvider.class).getExtensionList()) {
+      for (String keymapFile : provider.getKeymapFiles()) {
+        try {
+          InputStream inputStream = provider.getClass().getClassLoader().getResourceAsStream(keymapFile);
+          if (inputStream == null) {
+            LOG.warn("Keymap: " + keymapFile + " not found in " + PluginManager.getPlugin(provider.getClass()).getPluginId().getIdString());
+            continue;
+          }
 
-        InputStream inputStream = bundledKeymapEP.getLoaderForClass().getResourceAsStream(file);
-        if (inputStream == null) {
-          LOG.warn("Keymap: " + file + " not found in " + bundledKeymapEP.getPluginDescriptor().getPluginId().getIdString());
-          continue;
+          loadKeymapsFromElement(JDOMUtil.load(inputStream));
         }
-
-        loadKeymapsFromElement(JDOMUtil.load(inputStream));
-      }
-      catch (Exception e) {
-        LOG.error(e);
+        catch (JDOMException | IOException e) {
+          LOG.error(e);
+        }
       }
     }
   }

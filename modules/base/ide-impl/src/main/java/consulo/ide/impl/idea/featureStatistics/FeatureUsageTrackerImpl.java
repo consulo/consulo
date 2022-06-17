@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.featureStatistics;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.application.PermanentInstallationID;
 import consulo.application.statistic.FeatureUsageTracker;
 import consulo.component.ComponentManager;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 @Singleton
+@ServiceImpl
 @State(name = "FeatureUsageStatistics", storages = @Storage(value = "feature.usage.statistics.xml", roamingType = RoamingType.DISABLED))
 public class FeatureUsageTrackerImpl extends FeatureUsageTracker implements PersistentStateComponent<Element> {
   private static final int HOUR = 1000 * 60 * 60;

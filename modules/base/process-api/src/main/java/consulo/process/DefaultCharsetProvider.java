@@ -15,6 +15,8 @@
  */
 package consulo.process;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nullable;
@@ -24,6 +26,7 @@ import java.nio.charset.Charset;
  * @author VISTALL
  * @since 05-Feb-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface DefaultCharsetProvider {
   static DefaultCharsetProvider getInstance() {
     return Application.get().getInstance(DefaultCharsetProvider.class);

@@ -18,25 +18,10 @@
     <extensionPoint name="additionalTextAttributes" beanClass="consulo.ide.impl.idea.openapi.editor.colors.impl.AdditionalTextAttributesEP"/>
     <extensionPoint name="bundledColorScheme" beanClass="consulo.ide.impl.idea.openapi.editor.colors.impl.BundledColorSchemeEP"/>
     <extensionPoint name="bundledQuickListsProvider" interface="consulo.ide.impl.idea.openapi.actionSystem.impl.BundledQuickListsProvider"/>
-    <extensionPoint name="bundledKeymap" beanClass="consulo.ide.impl.idea.openapi.keymap.impl.BundledKeymapEP"/>
     <extensionPoint name="bundleLiveTemplateSet" beanClass="consulo.ide.impl.codeInsight.template.impl.BundleLiveTemplateSetEP"/>
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <bundledKeymap file="/keymap/Keymap_Default.xml"/>
-    <bundledKeymap file="/keymap/Keymap_DefaultXWin.xml"/>
-    <bundledKeymap file="/keymap/Keymap_DefaultGNOME.xml"/>
-    <bundledKeymap file="/keymap/Keymap_DefaultKDE.xml"/>
-    <bundledKeymap file="/keymap/Keymap_DefaultMac.xml"/>
-    <bundledKeymap file="/keymap/Keymap_MacClassic.xml"/>
-    <bundledKeymap file="/keymap/Keymap_Emacs.xml"/>
-    <bundledKeymap file="/keymap/Keymap_VisualStudio.xml"/>
-    <bundledKeymap file="/keymap/Keymap_VisualStudioForMac.xml"/>
-    <bundledKeymap file="/keymap/Keymap_Eclipse.xml"/>
-    <bundledKeymap file="/keymap/Keymap_EclipseMac.xml"/>
-    <bundledKeymap file="/keymap/Keymap_Netbeans.xml"/>
-    <bundledKeymap file="/keymap/Keymap_VSCode.xml"/>
-    <bundledKeymap file="/keymap/Keymap_VSCode_OSX.xml"/>
 
     <bundledColorScheme path="/colorSchemes/Default.xml"/>
     <bundledColorScheme path="/colorSchemes/IDEA.xml"/>

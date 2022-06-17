@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.ui.ex.impl.util;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.util.concurrency.InvokerImpl;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.util.Invoker;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @since 27-Feb-22
  */
 @Singleton
+@ServiceImpl
 public class InvokerFactoryImpl implements InvokerFactory {
   @Nonnull
   @Override

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.ui.popup;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.ui.Window;
 
@@ -24,6 +26,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2019-07-27
  */
+@Service(ComponentScope.APPLICATION)
 public interface JWindowPopupFactory {
   static JWindowPopupFactory getInstance() {
     return ServiceManager.getService(JWindowPopupFactory.class);

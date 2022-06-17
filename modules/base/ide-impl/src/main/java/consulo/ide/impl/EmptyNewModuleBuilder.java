@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ide.impl.newProject.NewModuleBuilder;
 import consulo.ide.impl.newProject.NewModuleBuilderProcessor;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 05.06.14
  */
+@ExtensionImpl
 public class EmptyNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@Nonnull NewModuleContext context) {

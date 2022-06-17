@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.ui.customization;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.ActionsTreeUtil;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
 import consulo.ide.impl.idea.openapi.util.Comparing;
@@ -35,6 +36,7 @@ import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.JDOMExternalizable;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -50,6 +52,7 @@ import java.util.*;
  * Date: Jan 20, 2005
  */
 @Singleton
+@ServiceImpl
 @State(name = "CustomActionsSchema", storages = @Storage("customization.xml"))
 public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExternalizable {
   private static final String ACTIONS_SCHEMA = "custom_actions_schema";
@@ -69,6 +72,7 @@ public class CustomActionsSchemaImpl implements CustomActionsSchema, JDOMExterna
 
   private static final Logger LOG = Logger.getInstance(CustomActionsSchemaImpl.class);
 
+  @Inject
   public CustomActionsSchemaImpl(Application application) {
     myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_MENU, ActionsTreeUtil.MAIN_MENU_TITLE));
     myIdToNameList.add(new Pair(IdeActions.GROUP_MAIN_TOOLBAR, ActionsTreeUtil.MAIN_TOOLBAR));

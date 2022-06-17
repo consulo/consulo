@@ -15,15 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.local;
 
-import consulo.application.impl.internal.JobScheduler;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.JobScheduler;
+import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue;
@@ -32,9 +31,11 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.disposer.Disposer;
 import consulo.util.collection.Maps;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.RefreshableFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFilePointerCapableFileSystem;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.TestOnly;
 
@@ -44,6 +45,7 @@ import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@ExtensionImpl
 public final class LocalFileSystemImpl extends LocalFileSystemBase implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem {
   private static final String FS_ROOT = "/";
   private static final int STATUS_UPDATE_PERIOD = 1000;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.ExpandableItemsHandler;
 import consulo.ui.ex.TableCell;
 import consulo.ui.ex.awt.ExpandableItemsHandlerFactory;
@@ -23,6 +24,7 @@ import jakarta.inject.Singleton;
 import javax.swing.*;
 
 @Singleton
+@ServiceImpl
 public class ExpandTipHandlerFactoryImpl extends ExpandableItemsHandlerFactory {
   @Override
   public ExpandableItemsHandler<Integer> doInstall(JList list) {

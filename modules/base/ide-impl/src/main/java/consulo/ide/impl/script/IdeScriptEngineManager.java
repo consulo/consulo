@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.script;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 
 import javax.annotation.Nonnull;
@@ -22,6 +24,7 @@ import javax.annotation.Nullable;
 
 import java.util.List;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class IdeScriptEngineManager {
   public static IdeScriptEngineManager getInstance() {
     return ServiceManager.getService(IdeScriptEngineManager.class);

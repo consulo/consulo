@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.application;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.*;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -50,6 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Vladimir Kondratyev
  */
 @Singleton
+@ServiceImpl
 public class DesktopSaveAndSyncHandlerImpl extends SaveAndSyncHandler implements Disposable {
   private static final Logger LOG = Logger.getInstance(SaveAndSyncHandler.class);
 

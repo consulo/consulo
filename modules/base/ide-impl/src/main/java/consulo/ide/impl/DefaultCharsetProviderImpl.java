@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.process.DefaultCharsetProvider;
 import jakarta.inject.Inject;
@@ -28,6 +29,7 @@ import java.nio.charset.Charset;
  * @since 05-Feb-22
  */
 @Singleton
+@ServiceImpl
 public class DefaultCharsetProviderImpl implements DefaultCharsetProvider {
   private EncodingManager myEncodingManager;
 

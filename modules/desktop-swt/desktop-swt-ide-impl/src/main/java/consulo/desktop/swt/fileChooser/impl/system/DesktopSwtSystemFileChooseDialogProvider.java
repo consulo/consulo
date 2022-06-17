@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.fileChooser.impl.system;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
@@ -29,6 +30,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 10/07/2021
  */
+@ExtensionImpl
 public class DesktopSwtSystemFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.impl.internal.ModalityStateListener;
 import consulo.application.impl.internal.LaterInvocator;
@@ -22,6 +23,7 @@ import javax.swing.*;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 public class UiActivityMonitorImpl extends UiActivityMonitor implements ModalityStateListener, Disposable {
   private final Map<Project, BusyContainer> myObjects = FactoryMap.create(this::create);
 

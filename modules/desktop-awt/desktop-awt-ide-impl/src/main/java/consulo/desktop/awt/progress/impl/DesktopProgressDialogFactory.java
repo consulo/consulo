@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.progress.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.project.Project;
@@ -32,6 +33,7 @@ import java.awt.*;
  * @since 2020-05-11
  */
 @Singleton
+@ServiceImpl
 public class DesktopProgressDialogFactory implements ProgressDialogFactory {
   private final Application myApplication;
 

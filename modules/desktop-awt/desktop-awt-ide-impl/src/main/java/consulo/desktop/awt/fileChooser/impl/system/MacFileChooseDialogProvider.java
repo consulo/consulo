@@ -15,14 +15,15 @@
  */
 package consulo.desktop.awt.fileChooser.impl.system;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
+import consulo.desktop.awt.uiOld.mac.MacPathChooserDialog;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
-import consulo.project.Project;
-import consulo.desktop.awt.uiOld.mac.MacPathChooserDialog;
-import consulo.platform.Platform;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
+import consulo.platform.Platform;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,6 +33,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-06-28
  */
+@ExtensionImpl
 public class MacFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override

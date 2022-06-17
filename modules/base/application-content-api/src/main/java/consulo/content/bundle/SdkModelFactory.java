@@ -15,6 +15,8 @@
  */
 package consulo.content.bundle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 14-Apr-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface SdkModelFactory {
   static SdkModelFactory getInstance() {
     return Application.get().getInstance(SdkModelFactory.class);

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileEditor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorWithProviderComposite;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopFileEditorsSplitters;
@@ -42,6 +43,7 @@ import java.awt.*;
  * @since 2018-05-09
  */
 @Singleton
+@ServiceImpl
 public class DesktopPsiAwareFileEditorManagerImpl extends PsiAwareFileEditorManagerImpl {
   private volatile JPanel myPanels;
   private final Object myInitLock = new Object();

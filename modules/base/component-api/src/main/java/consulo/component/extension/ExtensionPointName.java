@@ -16,12 +16,12 @@
 
 package consulo.component.extension;
 
-import consulo.component.ComponentManager;
 import consulo.annotation.DeprecationInfo;
+import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
 import consulo.logging.Logger;
-import consulo.component.util.PluginExceptionUtil;
 import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;
@@ -42,16 +42,31 @@ public class ExtensionPointName<T> {
   private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);
 
   private final ExtensionPointId<T> myId;
+  private final Class<T> myIdClass;
+
+
+  @SuppressWarnings("deprecation")
+  public static <T> ExtensionPointName<T> create(@Nonnull String name) {
+    return new ExtensionPointName<>(name);
+  }
+
+  @SuppressWarnings("deprecation")
+  public static <T> ExtensionPointName<T> create(@Nonnull Class<T> idClass) {
+    return new ExtensionPointName<>(idClass.getName(), idClass);
+  }
 
   @Deprecated
   @DeprecationInfo("Use #create()")
   public ExtensionPointName(@Nonnull String name) {
     myId = ExtensionPointId.of(name);
+    myIdClass = null;
   }
 
-  @SuppressWarnings("deprecation")
-  public static <T> ExtensionPointName<T> create(@Nonnull String name) {
-    return new ExtensionPointName<>(name);
+  @Deprecated
+  @DeprecationInfo("Use #create()")
+  public ExtensionPointName(@Nonnull String name, @Nonnull Class<T> idClass) {
+    myId = ExtensionPointId.of(name);
+    myIdClass = idClass;
   }
 
   public String getName() {
@@ -77,7 +92,7 @@ public class ExtensionPointName<T> {
   @Nonnull
   @Deprecated
   public T[] getExtensions(@Nonnull ComponentManager componentManager) {
-    return componentManager.getExtensions(this);
+    return getExtensionPoint(componentManager).getExtensions();
   }
 
   public boolean hasAnyExtensions() {
@@ -85,7 +100,15 @@ public class ExtensionPointName<T> {
   }
 
   public boolean hasAnyExtensions(@Nonnull ComponentManager manager) {
-    return manager.getExtensionPoint(this).hasAnyExtensions();
+    return getExtensionPoint(manager).hasAnyExtensions();
+  }
+
+  @Nonnull
+  private ExtensionPoint<T> getExtensionPoint(@Nonnull ComponentManager componentManager) {
+    if (myIdClass != null) {
+      return componentManager.getExtensionPoint(myIdClass);
+    }
+    return componentManager.getExtensionPoint(this);
   }
 
   @Nonnull
@@ -97,7 +120,7 @@ public class ExtensionPointName<T> {
 
   @Nonnull
   public List<T> getExtensionList(@Nonnull ComponentManager componentManager) {
-    return componentManager.getExtensionList(this);
+    return getExtensionPoint(componentManager).getExtensionList();
   }
 
   @Nullable
@@ -107,7 +130,7 @@ public class ExtensionPointName<T> {
 
   @Nullable
   public <V extends T> V findExtension(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
-    return componentManager.findExtension(this, instanceOf);
+    return getExtensionPoint(componentManager).findExtension(instanceOf);
   }
 
   @Nonnull
@@ -117,7 +140,7 @@ public class ExtensionPointName<T> {
 
   @Nonnull
   public <V extends T> V findExtensionOrFail(@Nonnull ComponentManager componentManager, @Nonnull Class<V> instanceOf) {
-    V extension = componentManager.findExtension(this, instanceOf);
+    V extension = getExtensionPoint(componentManager).findExtension(instanceOf);
     if (extension == null) {
       throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
     }
@@ -190,7 +213,7 @@ public class ExtensionPointName<T> {
   }
 
   public void processWithPluginDescriptor(@Nonnull ComponentManager manager, @Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
-    manager.getExtensionPoint(this).processWithPluginDescriptor(consumer);
+    getExtensionPoint(manager).processWithPluginDescriptor(consumer);
   }
 
   public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {

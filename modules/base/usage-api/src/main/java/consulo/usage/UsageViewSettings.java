@@ -15,6 +15,9 @@
  */
 package consulo.usage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -26,6 +29,8 @@ import jakarta.inject.Singleton;
 import java.io.File;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "UsageViewSettings", storages = @Storage("other.xml"))
 public class UsageViewSettings implements PersistentStateComponent<UsageViewSettings> {
   public String EXPORT_FILE_NAME = "report.txt";

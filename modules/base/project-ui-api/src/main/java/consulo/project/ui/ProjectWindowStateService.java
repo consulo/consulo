@@ -15,6 +15,8 @@
  */
 package consulo.project.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ui.WindowStateService;
 import consulo.project.Project;
 
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-08-24
  */
+@Service(ComponentScope.PROJECT)
 public interface ProjectWindowStateService extends WindowStateService {
   /**
    * @param project the project to use by the service

@@ -16,6 +16,8 @@
 
 package consulo.pathMacro;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.virtualFileSystem.VirtualFile;
@@ -24,9 +26,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class Macro {
-  public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create("consulo.macro");
-
   public static final class ExecutionCancelledException extends Exception {
   }
 

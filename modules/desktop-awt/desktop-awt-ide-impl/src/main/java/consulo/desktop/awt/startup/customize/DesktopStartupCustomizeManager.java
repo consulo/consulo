@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.startup.customize;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.startup.customize.StartupCustomizeManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.style.StyleManager;
@@ -25,6 +26,7 @@ import jakarta.inject.Singleton;
  * @since 09/01/2021
  */
 @Singleton
+@ServiceImpl
 public class DesktopStartupCustomizeManager implements StartupCustomizeManager {
   @RequiredUIAccess
   @Override

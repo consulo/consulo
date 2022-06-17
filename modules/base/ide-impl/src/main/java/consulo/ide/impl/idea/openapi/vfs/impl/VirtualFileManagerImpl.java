@@ -55,7 +55,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
 
   @Inject
   public VirtualFileManagerImpl(@Nonnull Application application) {
-    this(application, VirtualFileSystem.EP_NAME.getExtensionList());
+    this(application, application.getExtensionPoint(VirtualFileSystem.class).getExtensionList());
   }
 
   public VirtualFileManagerImpl(@Nonnull Application application, @Nonnull List<VirtualFileSystem> fileSystems) {

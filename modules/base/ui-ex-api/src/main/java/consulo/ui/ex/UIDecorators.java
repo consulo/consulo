@@ -15,12 +15,11 @@
  */
 package consulo.ui.ex;
 
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.component.extension.ExtensionPointName;
 import consulo.container.plugin.PluginManager;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,19 +27,18 @@ import java.util.List;
  * @since 2019-11-03
  */
 public class UIDecorators {
-  private static final ExtensionPointName<UIDecorator> EP_NAME = ExtensionPointName.create("consulo.uiDecorator");
-
   @Nonnull
   public static List<UIDecorator> getDecorators() {
     if (PluginManager.isInitialized()) {
-      if (ApplicationManager.getApplication() == null) {
+      Application application = ApplicationManager.getApplication();
+      if (application == null) {
         throw new IllegalArgumentException("Application is not initialized");
       }
 
-      return EP_NAME.getExtensionList();
+      return application.getExtensionPoint(UIDecorator.class).getExtensionList();
     }
     else {
-      return Collections.emptyList();
+      return List.of();
     }
   }
 }

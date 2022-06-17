@@ -15,6 +15,8 @@
  */
 package consulo.fileChooser.provider;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -29,6 +31,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-06-28
  */
+@Extension(ComponentScope.APPLICATION)
 public interface FileChooseDialogProvider extends FileOperateDialogProvider {
   ExtensionPointName<FileChooseDialogProvider> EP_NAME = ExtensionPointName.create("consulo.fileChooseDialogProvider");
 

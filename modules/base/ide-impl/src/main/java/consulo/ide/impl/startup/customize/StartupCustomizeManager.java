@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.startup.customize;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ui.annotation.RequiredUIAccess;
 
 /**
  * @author VISTALL
  * @since 09/01/2021
  */
+@Service(ComponentScope.APPLICATION)
 public interface StartupCustomizeManager {
   @RequiredUIAccess
   void showAsync(boolean firstShow);

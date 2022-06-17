@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.Window;
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class DialogWrapperPeerFactory {
   @Nonnull
   public static DialogWrapperPeerFactory getInstance() {

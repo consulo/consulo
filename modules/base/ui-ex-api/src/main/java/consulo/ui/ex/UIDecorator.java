@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.util.lang.ObjectUtil;
 
 import javax.annotation.Nonnull;
@@ -25,6 +27,7 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2018-07-23
  */
+@Extension(ComponentScope.APPLICATION)
 public interface UIDecorator {
   static <ARG, U extends UIDecorator> void apply(BiPredicate<U, ARG> predicate, ARG arg, Class<U> clazz) {
     for (UIDecorator decorator : UIDecorators.getDecorators()) {

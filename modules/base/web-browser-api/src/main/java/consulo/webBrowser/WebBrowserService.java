@@ -15,6 +15,8 @@
  */
 package consulo.webBrowser;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.language.psi.PsiElement;
 import consulo.util.io.Url;
@@ -24,6 +26,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class WebBrowserService {
   public static WebBrowserService getInstance() {
     return Application.get().getInstance(WebBrowserService.class);

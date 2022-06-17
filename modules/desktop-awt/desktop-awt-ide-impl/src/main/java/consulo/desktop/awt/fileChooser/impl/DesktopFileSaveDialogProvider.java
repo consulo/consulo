@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileSaverDescriptor;
 import consulo.fileChooser.FileSaverDialog;
@@ -29,6 +30,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-06-28
  */
+@ExtensionImpl
 public class DesktopFileSaveDialogProvider implements FileSaveDialogProvider {
   @Nonnull
   @Override

@@ -15,20 +15,22 @@
  */
 package consulo.ide.impl.fileChooser;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.application.macro.PathMacros;
-import consulo.project.ui.wm.WindowManager;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.component.ComponentManager;
-import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.fileChooser.*;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
 import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.fileChooser.provider.FileSaveDialogProvider;
 import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.TextBox;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.lang.ObjectUtil;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,30 +45,32 @@ import java.util.function.Function;
  * @author VISTALL
  * @since 2020-05-30
  */
+@Singleton
+@ServiceImpl
 public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   @Override
   public FileChooserDialog createFileChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.EP_NAME).createFileChooser(descriptor, project, parent);
+    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.class).createFileChooser(descriptor, project, parent);
   }
 
   @Nonnull
   @Override
   public PathChooserDialog createPathChooser(@Nonnull FileChooserDescriptor descriptor, @Nullable ComponentManager project, @Nullable Component parent) {
     Component parentComponent = parent == null ? TargetAWT.to(WindowManager.getInstance().suggestParentWindow((Project)project)) : parent;
-    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.EP_NAME).createPathChooser(descriptor, project, parentComponent);
+    return findProvider(descriptor, FileOperateDialogSettings::getFileChooseDialogId, FileChooseDialogProvider.class).createPathChooser(descriptor, project, parentComponent);
   }
 
   @Nonnull
   @Override
   public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nullable ComponentManager project) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, project, null);
+    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.class).createSaveFileDialog(descriptor, project, null);
   }
 
   @Nonnull
   @Override
   public FileSaverDialog createSaveFileDialog(@Nonnull FileSaverDescriptor descriptor, @Nonnull Component parent) {
-    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.EP_NAME).createSaveFileDialog(descriptor, null, parent);
+    return findProvider(descriptor, FileOperateDialogSettings::getFileSaveDialogId, FileSaveDialogProvider.class).createSaveFileDialog(descriptor, null, parent);
   }
 
   @Override
@@ -87,8 +91,8 @@ public class FileChooserFactoryImpl extends FileChooserFactory {
   @Nonnull
   private static <T extends FileOperateDialogProvider> T findProvider(@Nonnull FileChooserDescriptor fileChooserDescriptor,
                                                                       @Nonnull Function<FileOperateDialogSettings, String> idFunc,
-                                                                      @Nonnull ExtensionPointName<T> ep) {
-    List<T> extensions = ep.getExtensionList();
+                                                                      @Nonnull Class<T> ep) {
+    List<T> extensions = Application.get().getExtensionPoint(ep).getExtensionList();
 
     String forceOperateDialogProviderId = fileChooserDescriptor.getForceOperateDialogProviderId();
     if (forceOperateDialogProviderId != null) {

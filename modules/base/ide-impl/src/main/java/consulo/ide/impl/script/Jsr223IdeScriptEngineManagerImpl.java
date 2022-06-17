@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.script;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.util.lang.ClassLoaderUtil;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.ObjectUtils;
@@ -44,6 +45,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 @Singleton
+@ServiceImpl
 public class Jsr223IdeScriptEngineManagerImpl extends IdeScriptEngineManager {
   private static final Logger LOG = Logger.getInstance(IdeScriptEngineManager.class);
 

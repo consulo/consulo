@@ -27,12 +27,13 @@ import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.application.util.SystemInfo;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 public class ShowSettingsAction extends AnAction implements DumbAware {
-  private final ShowSettingsUtil myShowSettingsUtil;
+  private final Provider<ShowSettingsUtil> myShowSettingsUtil;
 
   @Inject
-  public ShowSettingsAction(ShowSettingsUtil showSettingsUtil) {
+  public ShowSettingsAction(Provider<ShowSettingsUtil> showSettingsUtil) {
     super(CommonBundle.settingsAction(), CommonBundle.settingsActionDescription(), AllIcons.General.Settings);
     myShowSettingsUtil = showSettingsUtil;
   }
@@ -54,6 +55,6 @@ public class ShowSettingsAction extends AnAction implements DumbAware {
       project = ProjectManager.getInstance().getDefaultProject();
     }
 
-    myShowSettingsUtil.showSettingsDialog(project);
+    myShowSettingsUtil.get().showSettingsDialog(project);
   }
 }

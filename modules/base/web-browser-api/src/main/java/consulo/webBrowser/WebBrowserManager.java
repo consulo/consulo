@@ -15,6 +15,8 @@
  */
 package consulo.webBrowser;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.util.ModificationTracker;
 
@@ -26,6 +28,7 @@ import java.util.List;
  * @author VISTALL
  * @since 28/11/2021
  */
+@Service(ComponentScope.APPLICATION)
 public interface WebBrowserManager extends ModificationTracker {
   public static WebBrowserManager getInstance() {
     return Application.get().getInstance(WebBrowserManager.class);

@@ -15,6 +15,8 @@
  */
 package consulo.pathMacro;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -28,6 +30,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 10-Apr-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface MacroSelector {
   static MacroSelector getInstance() {
     return Application.get().getInstance(MacroSelector.class);

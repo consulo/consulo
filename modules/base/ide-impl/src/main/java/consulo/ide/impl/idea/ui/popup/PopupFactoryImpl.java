@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.popup;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
@@ -58,6 +59,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 @Singleton
+@ServiceImpl
 public class PopupFactoryImpl extends JBPopupFactory {
   private static final Logger LOG = Logger.getInstance(PopupFactoryImpl.class);
 

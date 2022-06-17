@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.macro.PathMacroFilter;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -22,6 +23,7 @@ import org.jdom.Element;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class VcsPathMacroFilter extends PathMacroFilter {
   @Override
   public boolean skipPathMacros(Attribute attribute) {

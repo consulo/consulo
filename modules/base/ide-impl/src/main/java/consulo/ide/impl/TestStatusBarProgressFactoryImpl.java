@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.progress.util.StatusBarProgress;
 import consulo.application.progress.ProgressIndicator;
 import consulo.execution.test.internal.TestStatusBarProgressFactory;
@@ -25,6 +26,7 @@ import jakarta.inject.Singleton;
  * @since 05-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class TestStatusBarProgressFactoryImpl implements TestStatusBarProgressFactory {
   @Override
   public ProgressIndicator createStatusBarProgress() {

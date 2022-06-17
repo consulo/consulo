@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.TaskBar;
@@ -22,6 +24,7 @@ import consulo.ui.Window;
 
 import javax.annotation.Nonnull;
 
+@Service(ComponentScope.APPLICATION)
 public interface AppIcon {
   @Nonnull
   public static AppIcon getInstance() {
@@ -35,7 +38,7 @@ public interface AppIcon {
   public void setErrorBadge(ComponentManager project, String text) ;
 
   public void setOkBadge(ComponentManager project, boolean visible) ;
-
+                                                                   
   public void requestAttention(ComponentManager project, boolean critical);
 
   public void requestFocus(Window frame);

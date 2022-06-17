@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.impl.BasePropertiesComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -23,6 +24,7 @@ import consulo.application.ApplicationPropertiesComponent;
 import jakarta.inject.Singleton;
 
 @Singleton
+@ServiceImpl
 @State(name = "PropertiesComponent", storages = @Storage("options.xml"))
 public class AppPropertiesComponentImpl extends BasePropertiesComponent implements ApplicationPropertiesComponent, PropertiesComponent {
 }

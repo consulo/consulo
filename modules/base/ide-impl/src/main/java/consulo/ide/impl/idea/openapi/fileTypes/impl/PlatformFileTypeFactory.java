@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.archive.ZipArchiveFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.*;
 import consulo.language.plain.PlainTextFileType;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class PlatformFileTypeFactory extends FileTypeFactory {
   @Override
   public void createFileTypes(@Nonnull final FileTypeConsumer consumer) {

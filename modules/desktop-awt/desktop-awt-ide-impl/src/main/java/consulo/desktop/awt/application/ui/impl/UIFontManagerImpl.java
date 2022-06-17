@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.application.ui.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UIFontManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
@@ -34,6 +35,7 @@ import java.awt.*;
  * @since 21-Feb-22
  */
 @Singleton
+@ServiceImpl
 @State(name = "UIFontManager", storages = @Storage(value = "ui.font.xml", roamingType = RoamingType.PER_OS))
 public class UIFontManagerImpl implements UIFontManager, PersistentStateComponent<UIFontManagerImpl.State> {
   public static class State {

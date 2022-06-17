@@ -15,13 +15,16 @@
  */
 package consulo.dataContext;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Extension(ComponentScope.APPLICATION)
 public interface GetDataRule<T> {
-  ExtensionPointName<GetDataRule> EP_NAME = ExtensionPointName.create("consulo.getDataRule");
+  ExtensionPointName<GetDataRule> EP_NAME = ExtensionPointName.create(GetDataRule.class);
 
   @Nonnull
   Key<T> getKey();

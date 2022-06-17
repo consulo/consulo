@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.content.bundle.SdkModel;
 import consulo.content.bundle.SdkModelFactory;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @since 14-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class IdeSdkModelFactory implements SdkModelFactory {
   private final ShowSettingsUtil myShowSettingsUtil;
 

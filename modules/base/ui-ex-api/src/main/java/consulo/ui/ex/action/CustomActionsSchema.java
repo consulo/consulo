@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nullable;
@@ -23,6 +25,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 20-Mar-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface CustomActionsSchema {
   static CustomActionsSchema getInstance() {
     return Application.get().getInstance(CustomActionsSchema.class);

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.dialog;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
 import java.awt.*;
 
 @Singleton
+@ServiceImpl
 public class DialogWrapperPeerFactoryImpl extends DialogWrapperPeerFactory {
   @Override
   public DialogWrapperPeer createPeer(@Nonnull DialogWrapper wrapper, @Nullable ComponentManager project, boolean canBeParent) {

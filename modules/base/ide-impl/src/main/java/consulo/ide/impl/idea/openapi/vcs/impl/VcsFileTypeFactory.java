@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
 import consulo.virtualFileSystem.fileType.FileTypeConsumer;
 import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class VcsFileTypeFactory extends FileTypeFactory {
   @Override
   public void createFileTypes(@Nonnull FileTypeConsumer consumer) {

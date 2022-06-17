@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.layer.ModifiableRootModel;
@@ -48,6 +49,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 05.06.14
  */
+@ExtensionImpl
 public class SandNewModuleBuilder implements NewModuleBuilder {
   @Override
   public void setupContext(@Nonnull NewModuleContext context) {

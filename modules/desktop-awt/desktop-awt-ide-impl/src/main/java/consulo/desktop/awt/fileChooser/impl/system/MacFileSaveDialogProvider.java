@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl.system;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.desktop.awt.uiOld.mac.MacFileSaverDialog;
 import consulo.fileChooser.FileSaverDescriptor;
@@ -31,6 +32,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-06-28
  */
+@ExtensionImpl
 public class MacFileSaveDialogProvider implements FileSaveDialogProvider {
   @Nonnull
   @Override

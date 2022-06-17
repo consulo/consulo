@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.presentation.Presentation;
 import consulo.ide.impl.idea.ide.presentation.PresentationProvider;
 import consulo.ide.impl.idea.openapi.util.NullableLazyValue;
@@ -38,6 +39,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author peter
  */
 @Singleton
+@ServiceImpl
 public class TypePresentationServiceImpl extends TypePresentationService {
 
   @Override

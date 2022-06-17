@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.application;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.macro.PathMacroFilter;
 import org.jdom.Attribute;
 
@@ -24,6 +25,7 @@ import org.jdom.Attribute;
  *
  * @author yole
  */
+@ExtensionImpl
 public class StructuralSearchPathMacroFilter extends PathMacroFilter {
   @Override
   public boolean skipPathMacros(Attribute attribute) {

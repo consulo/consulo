@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.pathMacro;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.macro.MacrosDialog;
 import consulo.module.Module;
 import consulo.pathMacro.Macro;
@@ -33,6 +34,7 @@ import java.util.function.Consumer;
  * @since 10-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class DesktopAwtMacroSelectorImpl implements MacroSelector {
   @RequiredUIAccess
   @Override

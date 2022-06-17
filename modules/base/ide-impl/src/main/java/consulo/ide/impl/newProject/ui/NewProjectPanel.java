@@ -121,7 +121,7 @@ public abstract class NewProjectPanel extends BaseWelcomeScreenPanel implements 
   protected JComponent createLeftComponent(@Nonnull Disposable parentDisposable) {
     NewModuleContext context = new NewModuleContext();
 
-    NewModuleBuilder.EP.forEachExtensionSafe(Application.get(), it -> it.setupContext(context));
+    Application.get().getExtensionPoint(NewModuleBuilder.class).forEachExtensionSafe(it -> it.setupContext(context));
 
     myTree = new Tree(new AsyncTreeModel(new StructureTreeModel<>(new NewProjectTreeStructure(context), parentDisposable), parentDisposable));
     myTree.setFont(UIUtil.getFont(UIUtil.FontSize.BIGGER, null));

@@ -17,6 +17,7 @@
 package consulo.pathMacro.impl.internal;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.FileEditor;
@@ -105,7 +106,7 @@ public final class MacroManagerImpl implements MacroManager {
   @Override
   @Nonnull
   public Collection<Macro> getMacros() {
-    return ContainerUtil.concat(myPredefinedMacroes, Macro.EP_NAME.getExtensionList());
+    return ContainerUtil.concat(myPredefinedMacroes, Application.get().getExtensionPoint(Macro.class).getExtensionList());
   }
 
   @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.application.ui;
+package consulo.ui.ex.keymap;
 
 import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
-import consulo.application.Application;
+import consulo.annotation.component.Extension;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 2018-08-24
+ * @since 17-Jun-22
  */
-@Service(ComponentScope.APPLICATION)
-public interface ApplicationWindowStateService extends WindowStateService {
+@Extension(ComponentScope.APPLICATION)
+public interface BundledKeymapProvider {
   @Nonnull
-  static ApplicationWindowStateService getInstance() {
-    return Application.get().getInstance(ApplicationWindowStateService.class);
-  }
+  String[] getKeymapFiles();
 }

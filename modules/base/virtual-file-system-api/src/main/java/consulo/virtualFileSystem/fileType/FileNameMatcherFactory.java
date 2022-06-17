@@ -15,6 +15,8 @@
  */
 package consulo.virtualFileSystem.fileType;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.util.lang.StringUtil;
 
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class FileNameMatcherFactory {
   @Nonnull
   public static FileNameMatcherFactory getInstance() {

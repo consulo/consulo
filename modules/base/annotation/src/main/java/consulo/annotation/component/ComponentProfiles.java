@@ -22,6 +22,8 @@ package consulo.annotation.component;
 public final class ComponentProfiles {
   public static final String PRODUCTION = "prod";
 
+  public static final String AWT = "awt";
+
   private ComponentProfiles() {
   }
 }

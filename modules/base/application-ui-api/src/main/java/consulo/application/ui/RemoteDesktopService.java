@@ -15,8 +15,11 @@
  */
 package consulo.application.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class RemoteDesktopService {
   public static RemoteDesktopService getInstance() {
     return Application.get().getInstance(RemoteDesktopService.class);

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.project.Project;
@@ -35,6 +36,7 @@ import java.util.Objects;
  * @since 04-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class AppIconImpl implements AppIcon {
   protected Object myCurrentProcessId;
 

@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ApplicationManager;
 
 /**
  * @author Kirill Likhodedov
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class SaveAndSyncHandler {
   public static SaveAndSyncHandler getInstance() {
     return ApplicationManager.getApplication().getComponent(SaveAndSyncHandler.class);

@@ -15,17 +15,21 @@
  */
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
-import consulo.ide.impl.idea.openapi.fileTypes.*;
-import javax.annotation.Nonnull;
-
+import consulo.annotation.component.ServiceImpl;
+import consulo.ide.impl.idea.openapi.fileTypes.ExactFileNameMatcher;
+import consulo.ide.impl.idea.openapi.fileTypes.ExtensionFileNameMatcher;
+import consulo.ide.impl.idea.openapi.fileTypes.WildcardFileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class FileNameMatcherFactoryImpl extends FileNameMatcherFactory {
   @Nonnull
   @Override

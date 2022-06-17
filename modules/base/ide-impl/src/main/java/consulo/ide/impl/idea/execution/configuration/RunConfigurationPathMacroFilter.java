@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.configuration;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.macro.PathMacroFilter;
 import consulo.util.xml.serializer.Constants;
 import org.jdom.Attribute;
@@ -23,6 +24,7 @@ import org.jdom.Element;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class RunConfigurationPathMacroFilter extends PathMacroFilter {
   @Override
   public boolean skipPathMacros(Attribute attribute) {

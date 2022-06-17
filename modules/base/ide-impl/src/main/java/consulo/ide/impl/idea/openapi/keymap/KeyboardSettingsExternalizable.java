@@ -15,18 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.keymap;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.SystemInfo;
 import consulo.application.util.registry.Registry;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.awt.im.InputContext;
 import java.util.Locale;
@@ -36,10 +38,12 @@ import java.util.Locale;
  */
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "KeyboardSettings", storages = @Storage("keyboard.xml"))
 public class KeyboardSettingsExternalizable implements PersistentStateComponent<KeyboardSettingsExternalizable.OptionSet> {
 
-  private static final String [] supportedNonEnglishLanguages = {"de", "fr", "it", "uk"};
+  private static final String[] supportedNonEnglishLanguages = {"de", "fr", "it", "uk"};
 
   public static boolean isSupportedKeyboardLayout(@Nonnull Component component) {
     if (Registry.is("ide.keyboard.dvorak")) return true;
@@ -97,15 +101,15 @@ public class KeyboardSettingsExternalizable implements PersistentStateComponent<
     myOptions = state;
   }
 
-  public boolean isUkrainianKeyboard (Component c) {
-    return c!=null && "uk".equals(c.getInputContext().getLocale().getLanguage());
+  public boolean isUkrainianKeyboard(Component c) {
+    return c != null && "uk".equals(c.getInputContext().getLocale().getLanguage());
   }
 
-  public boolean isNonEnglishKeyboardSupportEnabled () {
+  public boolean isNonEnglishKeyboardSupportEnabled() {
     return myOptions.USE_NON_ENGLISH_KEYBOARD;
   }
 
-  public void setNonEnglishKeyboardSupportEnabled (boolean enabled) {
+  public void setNonEnglishKeyboardSupportEnabled(boolean enabled) {
     myOptions.USE_NON_ENGLISH_KEYBOARD = enabled;
   }
 

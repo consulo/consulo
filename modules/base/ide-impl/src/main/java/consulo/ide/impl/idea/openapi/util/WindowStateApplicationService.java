@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -25,6 +26,7 @@ import jakarta.inject.Singleton;
  * @author Sergey.Malenkov
  */
 @Singleton
+@ServiceImpl
 @State(name = "WindowStateApplicationService", storages = @Storage(value = "window.state.xml", roamingType = RoamingType.DISABLED))
 public class WindowStateApplicationService extends WindowStateServiceImpl implements ApplicationWindowStateService {
   public WindowStateApplicationService() {

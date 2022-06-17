@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.util;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 24-Feb-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface InvokerFactory {
   @Nonnull
   static InvokerFactory getInstance() {

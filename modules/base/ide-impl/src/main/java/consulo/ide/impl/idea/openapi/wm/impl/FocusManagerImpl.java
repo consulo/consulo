@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.util.EdtRunnable;
 import consulo.ide.impl.idea.openapi.util.TimedOutCallback;
@@ -47,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
+@ServiceImpl
 public final class FocusManagerImpl implements ApplicationIdeFocusManager, Disposable {
   private static final Logger LOG = Logger.getInstance(FocusManagerImpl.class);
 

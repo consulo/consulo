@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.dnd;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.reference.SoftReference;
 import consulo.ide.impl.idea.ui.MouseDragHelper;
 import consulo.ide.impl.idea.util.ui.GeometryUtil;
@@ -43,6 +44,7 @@ import java.awt.event.ActionListener;
 import java.lang.ref.WeakReference;
 
 @Singleton
+@ServiceImpl
 public class DnDManagerImpl extends DnDManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(DnDManagerImpl.class);
 

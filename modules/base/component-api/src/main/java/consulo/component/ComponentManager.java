@@ -104,6 +104,7 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
   }
 
   @Nullable
+  @Deprecated
   default <T, K extends T> K findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<K> extensionClass) {
     return getExtensionPoint(extensionPointName).findExtension(extensionClass);
   }

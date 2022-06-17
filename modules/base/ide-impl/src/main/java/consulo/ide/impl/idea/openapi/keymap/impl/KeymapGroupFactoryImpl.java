@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroupFactory;
 import consulo.ide.impl.idea.openapi.keymap.impl.ui.Group;
@@ -26,6 +27,7 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class KeymapGroupFactoryImpl extends KeymapGroupFactory {
   @Override
   public KeymapGroup createGroup(final String name) {

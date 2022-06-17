@@ -17,6 +17,7 @@ package consulo.internal.injecting.binding;
 
 import com.squareup.javapoet.*;
 import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.annotation.component.Service;
 
 import javax.annotation.processing.*;
@@ -40,13 +41,21 @@ import java.util.*;
  * @see https://github.com/google/auto/blob/master/service/processor/src/main/java/com/google/auto/service/processor/AutoServiceProcessor.java
  * @since 16-Jun-22
  */
-@SupportedAnnotationTypes(InjectingBindingProcessor.SERVICE_IMPL)
+@SupportedAnnotationTypes({InjectingBindingProcessor.SERVICE_IMPL, InjectingBindingProcessor.EXTENSION_IMPL})
 @SupportedSourceVersion(SourceVersion.RELEASE_17)
 public class InjectingBindingProcessor extends AbstractProcessor {
   private static record AnnotationResolveInfo(Annotation annotation, TypeElement typeElement) {
   }
 
   public static final String SERVICE_IMPL = "consulo.annotation.component.ServiceImpl";
+  public static final String EXTENSION_IMPL = "consulo.annotation.component.ExtensionImpl";
+
+  private Map<String, Class<? extends Annotation>> myApiAnnotations = new HashMap<>();
+
+  public InjectingBindingProcessor() {
+    myApiAnnotations.put(SERVICE_IMPL, Service.class);
+    myApiAnnotations.put(EXTENSION_IMPL, Extension.class);
+  }
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -59,16 +68,20 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     for (TypeElement annotation : annotations) {
       Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(annotation);
 
+      Class<? extends Annotation> apiClass = myApiAnnotations.get(annotation.getQualifiedName().toString());
+      if (apiClass == null) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "@" + annotation.getQualifiedName() + " not supported");
+      }
+
       for (Element element : elementsAnnotatedWith) {
         if (!(element instanceof TypeElement)) {
           continue;
         }
 
         TypeElement typeElement = (TypeElement)element;
-
-        AnnotationResolveInfo apiInfo = findAnnotationInSuper(typeElement, Service.class);
+        AnnotationResolveInfo apiInfo = findAnnotationInSuper(typeElement, apiClass);
         if (apiInfo == null) {
-          processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Can't find @Service annotation for: " + typeElement.getQualifiedName(), typeElement);
+          processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Can't find @" + apiClass + " annotation for: " + typeElement.getQualifiedName(), typeElement);
           return false;
         }
 
@@ -84,7 +97,8 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
           bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClassName").returns(String.class).addModifiers(Modifier.PUBLIC)
                                         .addCode(CodeBlock.of("return $S;", apiInfo.typeElement().getQualifiedName().toString())).build());
-          bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClass").returns(Class.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $T.class;", apiInfo.typeElement())).build());
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClass").returns(Class.class).addModifiers(Modifier.PUBLIC)
+                                        .addCode(CodeBlock.of("return $T.class;", ClassName.bestGuess(apiInfo.typeElement().getQualifiedName().toString()))).build());
 
           bindBuilder.addMethod(
                   MethodSpec.methodBuilder("getImplClassName").returns(String.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $S;", typeElement.getQualifiedName().toString()))
@@ -207,6 +221,10 @@ public class InjectingBindingProcessor extends AbstractProcessor {
   private static ComponentScope getScope(Annotation annotation) {
     if (annotation instanceof Service) {
       return ((Service)annotation).value();
+    }
+
+    if (annotation instanceof Extension) {
+      return ((Extension)annotation).value();
     }
 
     throw new UnsupportedOperationException(annotation.getClass().getName());

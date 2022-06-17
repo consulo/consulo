@@ -119,43 +119,4 @@ public abstract class FileTypeRegistry {
    */
   @Nullable
   public abstract FileType findFileTypeByName(@Nonnull String fileTypeName);
-
-  /**
-   * Pluggable file type detector by content
-   */
-  public interface FileTypeDetector {
-    ExtensionPointName<FileTypeDetector> EP_NAME = ExtensionPointName.create("consulo.fileTypeDetector");
-
-    /**
-     * Detects file type by its content
-     *
-     * @param file             to analyze
-     * @param firstBytes       of the file for identifying its file type
-     * @param firstCharsIfText - characters, converted from first bytes parameter if the file content was determined to be text, or null otherwise
-     * @return detected file type, or null if was unable to detect
-     */
-    @Nullable
-    FileType detect(@Nonnull VirtualFile file, @Nonnull ByteSequence firstBytes, @Nullable CharSequence firstCharsIfText);
-
-    /**
-     * Returns the file type that this detector is capable of detecting, or null if it can detect
-     * multiple file types.
-     */
-    @Nullable
-    default Collection<? extends FileType> getDetectedFileTypes() {
-      return null;
-    }
-
-    /**
-     * Defines how much content is required for this detector to detect file type reliably. At least such amount of bytes
-     * will be passed to {@link #detect(VirtualFile, ByteSequence, CharSequence)} if present.
-     *
-     * @return number of first bytes to be given
-     */
-    default int getDesiredContentPrefixLength() {
-      return 1024;
-    }
-
-    int getVersion();
-  }
 }

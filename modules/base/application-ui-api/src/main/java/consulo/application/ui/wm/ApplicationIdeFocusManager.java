@@ -15,6 +15,8 @@
  */
 package consulo.application.ui.wm;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.dataContext.DataContext;
@@ -27,6 +29,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-08-24
  */
+@Service(ComponentScope.APPLICATION)
 public interface ApplicationIdeFocusManager extends IdeFocusManager {
   @Nonnull
   static ApplicationIdeFocusManager getInstance() {

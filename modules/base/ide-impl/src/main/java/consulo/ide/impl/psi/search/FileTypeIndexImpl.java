@@ -1,21 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.search;
 
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.index.io.DataIndexer;
+import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.ID;
+import consulo.index.io.KeyDescriptor;
 import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileContent;
 import consulo.language.psi.stub.ScalarIndexExtension;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.index.io.EnumeratorStringDescriptor;
-import consulo.index.io.KeyDescriptor;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.fileType.FileType;
+import consulo.virtualFileSystem.fileType.FileTypeDetector;
+import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
+import javax.annotation.Nonnull;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public final class FileTypeIndexImpl extends ScalarIndexExtension<FileType> impl
     }
 
     version *= 31;
-    for (FileTypeRegistry.FileTypeDetector detector : FileTypeRegistry.FileTypeDetector.EP_NAME.getExtensionList()) {
+    for (FileTypeDetector detector : FileTypeDetector.EP_NAME.getExtensionList()) {
       version += detector.getVersion();
     }
     return version;

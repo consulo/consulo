@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ui.JBTabsPaneImpl;
 import consulo.ide.impl.idea.ui.TabbedPaneImpl;
 import consulo.ide.impl.idea.ui.tabs.JBTabs;
@@ -36,6 +37,7 @@ import javax.swing.*;
  * @since 16-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class TabFactoryBuilderImpl implements TabFactoryBuilder {
 
   private static class JTabbedPaneFactory implements TabFactory {

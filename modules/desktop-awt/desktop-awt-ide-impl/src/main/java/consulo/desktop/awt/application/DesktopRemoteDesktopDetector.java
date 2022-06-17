@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.application;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationBundle;
 import com.sun.jna.platform.win32.User32;
 import consulo.application.ApplicationManager;
@@ -33,6 +34,7 @@ import java.awt.desktop.UserSessionEvent;
 import java.awt.desktop.UserSessionListener;
 
 @Singleton
+@ServiceImpl
 public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
   private static final Logger LOG = Logger.getInstance(DesktopRemoteDesktopDetector.class);
   private static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Remote Desktop", NotificationDisplayType.BALLOON, false);

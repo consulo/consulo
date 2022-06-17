@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.SwingUIDecorator;
@@ -29,6 +30,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-07-23
  */
+@ExtensionImpl
 public class MacAquaUIDecorator implements SwingUIDecorator {
   public static final Color MAC_REGULAR_COLOR = new Color(0x80479cfc, true);
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.util;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -28,6 +29,7 @@ import jakarta.inject.Singleton;
  * @author Sergey.Malenkov
  */
 @Singleton
+@ServiceImpl
 @State(name = "WindowStateProjectService", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 final class WindowStateProjectService extends WindowStateServiceImpl implements ProjectWindowStateService {
   @Inject

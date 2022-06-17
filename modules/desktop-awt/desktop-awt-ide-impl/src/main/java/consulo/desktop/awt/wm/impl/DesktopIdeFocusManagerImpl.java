@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.wm.WeakFocusStackManager;
 import consulo.application.ui.wm.ExpirableRunnable;
 import consulo.application.ui.wm.FocusableFrame;
@@ -33,6 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @Singleton
+@ServiceImpl
 public class DesktopIdeFocusManagerImpl implements ProjectIdeFocusManager {
   public DesktopIdeFocusManagerImpl() {
     WeakFocusStackManager.getInstance();
