@@ -15,9 +15,11 @@
  */
 package consulo.application.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
-
+@Extension(ComponentScope.APPLICATION)
 public interface ApplicationLoadListener {
   ExtensionPointName<ApplicationLoadListener> EP_NAME = ExtensionPointName.create("consulo.applicationLoadListener");
 

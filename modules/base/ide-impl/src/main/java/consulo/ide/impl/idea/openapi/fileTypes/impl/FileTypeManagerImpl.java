@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
@@ -88,6 +89,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.StreamSupport;
 
 @Singleton
+@ServiceImpl
 @State(name = "FileTypeManager", storages = @Storage("filetypes.xml"), additionalExportFile = FileTypeManagerImpl.FILE_SPEC)
 public class FileTypeManagerImpl extends FileTypeManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final ExtensionPointName<FileTypeBean> EP_NAME = ExtensionPointName.create("consulo.fileType");

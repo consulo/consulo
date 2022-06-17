@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl.dock;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import consulo.desktop.awt.uiOld.win.WinDockDelegate;
@@ -31,6 +32,7 @@ import java.awt.*;
  * @since 2019-05-11
  */
 @Singleton
+@ServiceImpl
 public class DesktopSystemDockImpl extends SystemDock implements Disposable {
   public interface Delegate {
     void updateRecentProjectsMenu();

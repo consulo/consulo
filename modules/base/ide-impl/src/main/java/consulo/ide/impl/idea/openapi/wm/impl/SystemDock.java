@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 
 import javax.annotation.Nonnull;
@@ -22,6 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Denis Fokin
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class SystemDock {
   @Nonnull
   public static SystemDock getInstance() {

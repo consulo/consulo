@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.action;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.actions.AboutManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.Window;
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
  * @since 2019-02-15
  */
 @Singleton
+@ServiceImpl
 public class DesktopAboutManager implements AboutManager {
   @RequiredUIAccess
   @Override

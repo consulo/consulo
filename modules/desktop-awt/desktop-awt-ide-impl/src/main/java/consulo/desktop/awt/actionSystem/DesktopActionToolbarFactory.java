@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.actionSystem;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionGroup;
 import consulo.ui.ex.action.ActionToolbar;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionToolbarImpl;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @since 2020-05-11
  */
 @Singleton
+@ServiceImpl
 public class DesktopActionToolbarFactory implements ActionToolbarFactory {
   @Nonnull
   @Override

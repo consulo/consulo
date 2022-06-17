@@ -15,6 +15,8 @@
  */
 package consulo.application.progress;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
@@ -27,6 +29,7 @@ import javax.swing.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class ProgressManager extends ProgressIndicatorProvider {
   @Nonnull
   public static ProgressManager getInstance() {

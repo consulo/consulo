@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.data.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ProhibitAWTEvents;
 import consulo.ide.impl.idea.ide.impl.TypeSafeDataProviderAdapter;
@@ -51,6 +52,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @Singleton
+@ServiceImpl
 public class DesktopDataManagerImpl extends BaseDataManager {
   private static final Logger LOG = Logger.getInstance(DesktopDataManagerImpl.class);
 

@@ -16,6 +16,8 @@
 package consulo.project;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
@@ -32,6 +34,7 @@ import javax.annotation.Nullable;
 /**
  * Provides project management.
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class ProjectManager {
   public static final Topic<ProjectManagerListener> TOPIC = Topic.create("Project open and close events", ProjectManagerListener.class);
 

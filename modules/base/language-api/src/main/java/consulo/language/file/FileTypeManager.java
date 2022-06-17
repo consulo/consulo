@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.file;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.util.PerApplicationInstance;
 import consulo.component.messagebus.Topic;
 import consulo.language.Language;
@@ -18,6 +20,7 @@ import java.util.function.Supplier;
 /**
  * Manages the relationship between filenames and {@link FileType} instances.
  */
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class FileTypeManager extends FileTypeRegistry {
   private static Supplier<FileTypeManager> ourInstance = PerApplicationInstance.of(FileTypeManager.class);
 

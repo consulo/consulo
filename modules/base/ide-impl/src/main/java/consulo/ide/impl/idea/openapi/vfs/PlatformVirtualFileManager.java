@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.vfs.impl.VirtualFileManagerImpl;
@@ -24,14 +25,13 @@ import consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshSession;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.FileNameCache;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
-
-import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
-
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 @Singleton
+@ServiceImpl
 public class PlatformVirtualFileManager extends VirtualFileManagerImpl {
   @Nonnull
   private final ManagingFS myManagingFS;

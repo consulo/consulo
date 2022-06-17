@@ -16,6 +16,8 @@
 package consulo.application.ui;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.event.UISettingsListener;
@@ -35,6 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
 @State(name = "UISettings", storages = @Storage("ui.lnf.xml"))
 public class UISettings extends SimpleModificationTracker implements PersistentStateComponent<UISettings> {
   private volatile static UISettings ourInstance;

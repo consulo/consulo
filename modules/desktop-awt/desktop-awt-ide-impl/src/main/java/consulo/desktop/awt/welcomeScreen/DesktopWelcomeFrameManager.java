@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.welcomeScreen;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ide.impl.start.WelcomeFrameManager;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @since 14-Oct-17
  */
 @Singleton
+@ServiceImpl
 public class DesktopWelcomeFrameManager extends WelcomeFrameManager {
   @Inject
   public DesktopWelcomeFrameManager(Application application) {

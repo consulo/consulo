@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -24,6 +25,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 @Singleton
+@ServiceImpl
 @State(name = "RecentProjectsManager", storages = {@Storage(value = "recentProjects.xml", roamingType = RoamingType.DISABLED)})
 public class RecentDirectoryProjectsManager extends RecentProjectsManagerBase {
   @Inject

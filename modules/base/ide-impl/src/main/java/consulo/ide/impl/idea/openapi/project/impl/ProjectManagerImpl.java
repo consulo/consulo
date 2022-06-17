@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.project.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.conversion.ConversionResult;
 import consulo.ide.impl.idea.conversion.ConversionService;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
@@ -101,6 +102,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 @Singleton
+@ServiceImpl
 public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   private static final Logger LOG = Logger.getInstance(ProjectManagerImpl.class);
 

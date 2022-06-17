@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.application;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.application.options.PathMacrosCollectorImpl;
 import consulo.component.macro.PathMacroFilter;
 import consulo.application.macro.PathMacros;
@@ -31,6 +32,7 @@ import java.util.Set;
  * @since 06-Jun-16
  */
 @Singleton
+@ServiceImpl
 public class PathMacrosServiceImpl extends PathMacrosService {
   @Override
   public Set<String> getMacroNames(Element root, @Nullable PathMacroFilter filter, @Nonnull PathMacros pathMacros) {

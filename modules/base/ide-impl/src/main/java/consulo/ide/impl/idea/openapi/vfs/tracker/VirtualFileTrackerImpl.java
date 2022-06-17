@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.tracker;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.disposer.Disposer;
@@ -36,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author mike
  */
 @Singleton
+@ServiceImpl
 public class VirtualFileTrackerImpl implements VirtualFileTracker {
   private final Map<String, Set<VirtualFileListener>> myNonRefreshTrackers = new ConcurrentHashMap<String, Set<VirtualFileListener>>();
   private final Map<String, Set<VirtualFileListener>> myAllTrackers = new ConcurrentHashMap<String, Set<VirtualFileListener>>();

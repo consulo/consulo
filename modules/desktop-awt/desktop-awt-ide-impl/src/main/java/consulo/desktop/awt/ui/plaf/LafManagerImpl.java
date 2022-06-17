@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.IdeBundle;
@@ -103,6 +104,7 @@ import java.util.*;
  */
 @State(name = "LafManager", storages = @Storage(value = "laf.xml", roamingType = RoamingType.PER_OS))
 @Singleton
+@ServiceImpl
 public final class LafManagerImpl extends LafManager implements Disposable, PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(LafManagerImpl.class);
 

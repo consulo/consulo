@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.options;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.RoamingType;
 import consulo.ide.impl.idea.openapi.components.ServiceBean;
 import consulo.component.persist.SettingsSavingComponent;
@@ -30,6 +31,7 @@ import java.io.File;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements SettingsSavingComponent {
   private static final Logger LOG = Logger.getInstance(SchemesManagerFactoryImpl.class);
 

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import jakarta.inject.Singleton;
 
@@ -23,6 +24,7 @@ import jakarta.inject.Singleton;
  * @since 11/12/2021
  */
 @Singleton
+@ServiceImpl
 public class DesktopSwtSystemDockImpl extends SystemDock {
   @Override
   public void updateMenu() {

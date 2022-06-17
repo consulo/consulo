@@ -23,6 +23,7 @@ import consulo.application.impl.internal.plugin.PluginsInitializeInfo;
 import consulo.application.impl.internal.plugin.PluginsLoader;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.internal.TransactionGuardEx;
+import consulo.component.internal.InjectingBindingLoader;
 import consulo.container.boot.ContainerPathManager;
 import consulo.container.classloader.PluginClassLoader;
 import consulo.container.impl.classloader.PluginLoadStatistics;
@@ -106,6 +107,10 @@ public abstract class ApplicationStarter {
     BaseIconLibraryManager iconLibraryManager = (BaseIconLibraryManager)IconLibraryManager.get();
 
     Map<String, List<String>> filesWithMarkers = new HashMap<>();
+
+    InjectingBindingLoader bindingLoader = InjectingBindingLoader.INSTANCE;
+
+    libraryStats.markWith("binding.analyze", () -> bindingLoader.analyzeBindings());
 
     libraryStats.markWith("library.analyze", () -> analyzeLibraries(filesWithMarkers));
 

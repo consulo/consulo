@@ -237,8 +237,7 @@ public abstract class BaseDataManager extends DataManager implements DataRuleHol
   protected <T> GetDataRule<T> getRuleFromMap(@Nonnull Key<T> dataId) {
     GetDataRule rule = myDataConstantToRuleMap.get(dataId);
     if (rule == null && !myDataConstantToRuleMap.containsKey(dataId)) {
-      final GetDataRule[] eps = GetDataRule.EP_NAME.getExtensions();
-      for (GetDataRule<?> getDataRule : eps) {
+      for (GetDataRule<?> getDataRule : GetDataRule.EP_NAME.getExtensionList()) {
         if (getDataRule.getKey() == dataId) {
           rule = getDataRule;
         }

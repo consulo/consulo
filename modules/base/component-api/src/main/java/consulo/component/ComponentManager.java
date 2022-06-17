@@ -98,6 +98,11 @@ public interface ComponentManager extends UserDataHolder, Disposable, InjectingC
     throw new UnsupportedOperationException();
   }
 
+  @Nonnull
+  default <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
+    throw new UnsupportedOperationException();
+  }
+
   @Nullable
   default <T, K extends T> K findExtension(@Nonnull ExtensionPointName<T> extensionPointName, @Nonnull Class<K> extensionClass) {
     return getExtensionPoint(extensionPointName).findExtension(extensionClass);

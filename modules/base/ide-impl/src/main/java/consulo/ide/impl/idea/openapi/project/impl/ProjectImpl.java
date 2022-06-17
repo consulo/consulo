@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.project.impl;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
 import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
 import consulo.project.ui.wm.FrameTitleBuilder;
@@ -131,6 +132,12 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
   @Override
   protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
     return PROJECT_SERVICES;
+  }
+
+  @Nonnull
+  @Override
+  public ComponentScope getComponentScope() {
+    return ComponentScope.PROJECT;
   }
 
   @Nonnull

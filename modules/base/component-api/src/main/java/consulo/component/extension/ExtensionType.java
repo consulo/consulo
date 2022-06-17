@@ -27,7 +27,6 @@ import java.lang.annotation.Target;
  * @since 16/01/2022
  *
  * @see ExtensionList
- * @see ExtensionTypeImpl
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

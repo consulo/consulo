@@ -15,6 +15,8 @@
  */
 package consulo.virtualFileSystem;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.util.io.FileTooBigException;
 
@@ -30,6 +32,7 @@ import java.nio.file.Path;
  *
  * @see RawFileLoaderHelper
  */
+@Service(ComponentScope.APPLICATION)
 public interface RawFileLoader {
   @Nonnull
   static RawFileLoader getInstance() {

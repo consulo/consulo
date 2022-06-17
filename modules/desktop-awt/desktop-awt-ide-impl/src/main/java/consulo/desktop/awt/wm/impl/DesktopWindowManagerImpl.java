@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.GeneralSettings;
@@ -70,6 +71,7 @@ import java.util.Set;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
+@ServiceImpl
 @Singleton
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED), defaultStateFilePath = "/defaultState/WindowManager.xml")
 public final class DesktopWindowManagerImpl extends WindowManagerEx implements PersistentStateComponent<Element> {

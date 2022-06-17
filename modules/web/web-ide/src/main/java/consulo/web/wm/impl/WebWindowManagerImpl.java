@@ -15,6 +15,7 @@
  */
 package consulo.web.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -45,6 +46,7 @@ import java.util.Map;
  * @since 24-Sep-17
  */
 @Singleton
+@ServiceImpl
 @State(name = WindowManagerEx.ID, storages = @Storage(value = "window.manager.xml", roamingType = RoamingType.DISABLED), defaultStateFilePath = "/defaultState/WindowManager.xml")
 public class WebWindowManagerImpl extends UnifiedWindowManagerImpl implements PersistentStateComponent<Element> {
   private final Map<Project, WebIdeFrameImpl> myProject2Frame = new HashMap<>();

@@ -15,6 +15,8 @@
  */
 package consulo.component.store.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.macro.PathMacros;
 import consulo.component.macro.CompositePathMacroFilter;
 import consulo.component.macro.PathMacroFilter;
@@ -29,6 +31,7 @@ import java.util.regex.Pattern;
  * @author VISTALL
  * @since 06-Jun-16
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class PathMacrosService {
   public static final Pattern MACRO_PATTERN = Pattern.compile("\\$([\\w\\-\\.]+?)\\$");
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.keymap.Keymap;
 import consulo.ui.ex.keymap.event.KeymapManagerListener;
 import consulo.ide.impl.idea.openapi.keymap.ex.KeymapManagerEx;
@@ -38,6 +39,7 @@ import java.util.*;
 @State(name = "KeymapManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG +
                                                           "/keymap.xml", roamingType = RoamingType.PER_OS), additionalExportFile = KeymapManagerImpl.KEYMAPS_DIR_PATH)
 @Singleton
+@ServiceImpl
 public class KeymapManagerImpl extends KeymapManagerEx implements PersistentStateComponent<Element> {
   static final String KEYMAPS_DIR_PATH = StoragePathMacros.ROOT_CONFIG + "/keymaps";
 

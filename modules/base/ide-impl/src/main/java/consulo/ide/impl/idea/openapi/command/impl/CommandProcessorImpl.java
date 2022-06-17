@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.command.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.command.CommandToken;
 import consulo.undoRedo.UndoManager;
 import consulo.ui.ex.awt.Messages;
@@ -17,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Singleton
+@ServiceImpl
 public class CommandProcessorImpl extends CoreCommandProcessor {
   @Override
   public void finishCommand(@Nonnull final CommandToken command, @Nullable final Throwable throwable) {

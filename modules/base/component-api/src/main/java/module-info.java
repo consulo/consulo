@@ -24,7 +24,10 @@ module consulo.component.api {
   
   requires consulo.injecting.api;
 
+  requires java.compiler;
+
   exports consulo.component;
+  exports consulo.component.bind;
   exports consulo.component.extension;
   exports consulo.component.persist;
   exports consulo.component.macro;
@@ -47,4 +50,6 @@ module consulo.component.api {
           consulo.module.impl;
 
   opens consulo.component.internal to consulo.util.xml.serializer, consulo.injecting.pico.impl;
+
+  uses consulo.component.bind.InjectingBinding;
 }

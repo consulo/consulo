@@ -15,14 +15,22 @@
  */
 package consulo.component.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.annotation.component.Service;
 import consulo.component.BaseComponent;
 import consulo.component.ComponentManager;
 import consulo.component.NamedComponent;
+import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
 import consulo.component.extension.ExtensionPointId;
-import consulo.component.impl.extension.*;
+import consulo.component.impl.extension.EmptyExtensionPoint;
+import consulo.component.impl.extension.ExtensionAreaId;
+import consulo.component.impl.extension.ExtensionsAreaImpl;
 import consulo.component.impl.messagebus.MessageBusFactory;
 import consulo.component.impl.messagebus.MessageBusImpl;
+import consulo.component.internal.InjectingBindingHolder;
+import consulo.component.internal.InjectingBindingLoader;
 import consulo.component.internal.ServiceDescriptor;
 import consulo.component.messagebus.MessageBus;
 import consulo.container.plugin.ComponentConfig;
@@ -41,7 +49,6 @@ import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.collection.MultiMap;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.Comparing;
-import consulo.util.lang.Pair;
 import consulo.util.lang.ThreeState;
 import org.jetbrains.annotations.TestOnly;
 
@@ -159,6 +166,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
 
   private volatile ThreeState myDisposeState = ThreeState.NO;
 
+  private final Map<Class, ExtensionPoint> myExtensionPoints = new ConcurrentHashMap<>();
+
   protected BaseComponentManager(@Nullable ComponentManager parent, @Nonnull String name, @Nullable ExtensionAreaId extensionAreaId, boolean buildInjectionContainer) {
     myParent = parent;
     myName = name;
@@ -241,21 +250,23 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {
-    PluginExtensionRegistrator.registerExtensionPointsAndExtensions(myExtensionAreaId, area);
+    //TODO removed PluginExtensionRegistrator.registerExtensionPointsAndExtensions(myExtensionAreaId, area);
   }
 
   protected void registerServices(InjectingContainerBuilder builder) {
     for (PluginDescriptor plugin : PluginManager.getPlugins()) {
-      if (!PluginManager.shouldSkipPlugin(plugin)) {
-        List<ComponentConfig> componentConfigs = getComponentConfigs(plugin);
+      if (PluginManager.shouldSkipPlugin(plugin)) {
+        continue;
+      }
 
-        for (ComponentConfig componentConfig : componentConfigs) {
-          registerComponent(componentConfig, plugin);
-        }
+      List<ComponentConfig> componentConfigs = getComponentConfigs(plugin);
+
+      for (ComponentConfig componentConfig : componentConfigs) {
+        registerComponent(componentConfig, plugin);
       }
     }
 
-    myComponentsRegistry.loadClasses(myNotLazyServices, builder);
+    //myComponentsRegistry.loadClasses(myNotLazyServices, builder);
   }
 
   protected void bootstrapInjectingContainer(@Nonnull InjectingContainerBuilder builder) {
@@ -272,46 +283,87 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   private void loadServices(List<Class> notLazyServices, InjectingContainerBuilder builder) {
-    ExtensionPointId<ServiceDescriptor> ep = getServiceExtensionPointName();
-    if (ep != null) {
-      ExtensionPointImpl<ServiceDescriptor> extensionPoint = myExtensionsArea.getExtensionPointImpl(ep);
-      // there no injector at that level - build it via hardcode
-      List<Pair<ServiceDescriptor, PluginDescriptor>> descriptorList = extensionPoint.buildUnsafe(aClass -> new ServiceDescriptor());
-      // and cache it
-      extensionPoint.setExtensionCache(descriptorList);
+    InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Service.class, getComponentScope());
 
-      for (ServiceDescriptor descriptor : extensionPoint.getExtensionList()) {
-        InjectingKey<Object> key = InjectingKey.of(descriptor.getInterface(), getTargetClassLoader(descriptor.getPluginDescriptor()));
-        InjectingKey<Object> implKey = InjectingKey.of(descriptor.getImplementation(), getTargetClassLoader(descriptor.getPluginDescriptor()));
+    for (InjectingBinding injectingBinding : holder.getBindings().values()) {
+      ServiceDescriptor descriptor = new ServiceDescriptor();
+      descriptor.serviceInterface = injectingBinding.getApiClassName();
+      descriptor.serviceImplementation = injectingBinding.getImplClassName();
+      descriptor.lazy = injectingBinding.isLazy();
 
-        InjectingPoint<Object> point = builder.bind(key);
-        // bind to impl class
-        point.to(implKey);
-        // require singleton
-        point.forceSingleton();
-        // remap object initialization
-        point.factory(objectProvider -> runServiceInitialize(descriptor, objectProvider::get));
+      PluginDescriptor plugin = PluginManager.getPlugin(injectingBinding.getClass());
+      descriptor.setPluginDescriptor(plugin);
+      
+      InjectingKey<Object> key = InjectingKey.of(descriptor.getInterface(), getTargetClassLoader(descriptor.getPluginDescriptor()));
+      InjectingKey<Object> implKey = InjectingKey.of(descriptor.getImplementation(), getTargetClassLoader(descriptor.getPluginDescriptor()));
 
-        point.injectListener((time, instance) -> {
+      InjectingPoint<Object> point = builder.bind(key);
+      // bind to impl class
+      point.to(implKey);
+      // require singleton
+      point.forceSingleton();
+      // remap object initialization
+      point.factory(objectProvider -> runServiceInitialize(descriptor, objectProvider::get));
 
-          if (myChecker.containsKey(key.getTargetClass())) {
-            throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
-          }
-          myChecker.put(key.getTargetClass(), instance);
+      point.injectListener((time, instance) -> {
 
-          if (instance instanceof Disposable) {
-            Disposer.register(this, (Disposable)instance);
-          }
-
-          initializeIfStorableComponent(instance, true, descriptor.isLazy());
-        });
-
-        if (!descriptor.isLazy()) {
-          // if service is not lazy - add it for init at start
-          notLazyServices.add(key.getTargetClass());
+        if (myChecker.containsKey(key.getTargetClass())) {
+          throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
         }
+        myChecker.put(key.getTargetClass(), instance);
+
+        if (instance instanceof Disposable) {
+          Disposer.register(this, (Disposable)instance);
+        }
+
+        initializeIfStorableComponent(instance, true, descriptor.isLazy());
+      });
+
+      if (!descriptor.isLazy()) {
+        // if service is not lazy - add it for init at start
+        notLazyServices.add(key.getTargetClass());
       }
     }
+    //ExtensionPointId<ServiceDescriptor> ep = getServiceExtensionPointName();
+    //if (ep != null) {
+    //  ExtensionPointImpl<ServiceDescriptor> extensionPoint = myExtensionsArea.getExtensionPointImpl(ep);
+    //  // there no injector at that level - build it via hardcode
+    //  List<Pair<ServiceDescriptor, PluginDescriptor>> descriptorList = extensionPoint.buildUnsafe(aClass -> new ServiceDescriptor());
+    //  // and cache it
+    //  extensionPoint.setExtensionCache(descriptorList);
+    //
+    //  for (ServiceDescriptor descriptor : extensionPoint.getExtensionList()) {
+    //    InjectingKey<Object> key = InjectingKey.of(descriptor.getInterface(), getTargetClassLoader(descriptor.getPluginDescriptor()));
+    //    InjectingKey<Object> implKey = InjectingKey.of(descriptor.getImplementation(), getTargetClassLoader(descriptor.getPluginDescriptor()));
+    //
+    //    InjectingPoint<Object> point = builder.bind(key);
+    //    // bind to impl class
+    //    point.to(implKey);
+    //    // require singleton
+    //    point.forceSingleton();
+    //    // remap object initialization
+    //    point.factory(objectProvider -> runServiceInitialize(descriptor, objectProvider::get));
+    //
+    //    point.injectListener((time, instance) -> {
+    //
+    //      if (myChecker.containsKey(key.getTargetClass())) {
+    //        throw new IllegalArgumentException("Duplicate init of " + key.getTargetClass());
+    //      }
+    //      myChecker.put(key.getTargetClass(), instance);
+    //
+    //      if (instance instanceof Disposable) {
+    //        Disposer.register(this, (Disposable)instance);
+    //      }
+    //
+    //      initializeIfStorableComponent(instance, true, descriptor.isLazy());
+    //    });
+    //
+    //    if (!descriptor.isLazy()) {
+    //      // if service is not lazy - add it for init at start
+    //      notLazyServices.add(key.getTargetClass());
+    //    }
+    //  }
+    //}
   }
 
   @Nonnull
@@ -331,6 +383,11 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   @Nullable
   protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
     return null;
+  }
+
+  @Nonnull
+  public ComponentScope getComponentScope() {
+    throw new UnsupportedOperationException();
   }
 
   public boolean initializeIfStorableComponent(@Nonnull Object component, boolean service, boolean lazy) {
@@ -446,6 +503,22 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   @Override
   public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull ExtensionPointId<T> extensionPointId) {
     return myExtensionsArea.getExtensionPoint(extensionPointId);
+  }
+
+  @Nonnull
+  @Override
+  public <T> ExtensionPoint<T> getExtensionPoint(@Nonnull Class<T> extensionClass) {
+    Extension annotation = extensionClass.getAnnotation(Extension.class);
+    if(annotation == null) {
+      throw new UnsupportedOperationException(extensionClass + " is not annotated by @Extension");
+    }
+
+    ComponentScope value = annotation.value();
+    if (value != getComponentScope()) {
+      throw new UnsupportedOperationException("Wrong extension scope " + value + " vs " + getComponentScope());
+    }
+
+    return EmptyExtensionPoint.get();
   }
 
   @TestOnly

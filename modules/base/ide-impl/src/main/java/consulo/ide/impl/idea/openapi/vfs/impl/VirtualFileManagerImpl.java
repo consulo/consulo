@@ -55,10 +55,10 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
 
   @Inject
   public VirtualFileManagerImpl(@Nonnull Application application) {
-    this(application, VirtualFileSystem.EP_NAME.getExtensions());
+    this(application, VirtualFileSystem.EP_NAME.getExtensionList());
   }
 
-  public VirtualFileManagerImpl(@Nonnull Application application, @Nonnull VirtualFileSystem[] fileSystems) {
+  public VirtualFileManagerImpl(@Nonnull Application application, @Nonnull List<VirtualFileSystem> fileSystems) {
     for (VirtualFileSystem system : fileSystems) {
       registerFileSystem(system);
     }

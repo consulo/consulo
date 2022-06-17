@@ -16,6 +16,7 @@
 
 package consulo.pathMacro.impl.internal;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.fileEditor.FileEditor;
@@ -39,6 +40,7 @@ import java.util.*;
 import java.util.function.Function;
 
 @Singleton
+@ServiceImpl
 public final class MacroManagerImpl implements MacroManager {
   private final List<Macro> myPredefinedMacroes = new ArrayList<>();
 

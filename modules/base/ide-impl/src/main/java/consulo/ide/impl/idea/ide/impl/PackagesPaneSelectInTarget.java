@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.ide.impl;
 
 import consulo.ide.impl.idea.ide.SelectInContext;
 import consulo.ide.impl.idea.ide.SelectInManager;
-import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.projectView.impl.PackageViewPane;
 import consulo.project.Project;
@@ -25,10 +24,8 @@ import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.editor.internal.PsiUtilBase;
-import consulo.component.extension.ExtensionTypeImpl;
 import consulo.virtualFileSystem.VirtualFile;
 
-@ExtensionTypeImpl(SelectInTarget.class)
 public class PackagesPaneSelectInTarget extends ProjectViewSelectInTarget {
   public PackagesPaneSelectInTarget(Project project) {
     super(project);

@@ -16,13 +16,19 @@
 package consulo.component.extension;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.logging.Logger;
+import consulo.util.collection.ContainerUtil;
+import consulo.util.lang.ControlFlowException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author AKireyev
@@ -62,7 +68,29 @@ public interface ExtensionPoint<T> {
   String getClassName();
 
   @Nullable
-  <K extends T> K findExtension(Class<K> extensionClass);
+  default <K extends T> K findExtension(Class<K> extensionClass) {
+    return ContainerUtil.findInstance(getExtensionList(), extensionClass);
+  }
 
-  void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer);
+  default void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
+    for (T extension : getExtensionList()) {
+      PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());
+
+      consumer.accept(extension, plugin);
+    }
+  }
+
+  default void forEachExtensionSafe(@Nonnull Consumer<T> consumer) {
+    processWithPluginDescriptor((value, pluginDescriptor) -> {
+      try {
+        consumer.accept(value);
+      }
+      catch (Throwable e) {
+        if (e instanceof ControlFlowException) {
+          throw ControlFlowException.rethrow(e);
+        }
+        PluginExceptionUtil.logPluginError(Logger.getInstance(ExtensionPoint.class), e.getMessage(), e, value.getClass());
+      }
+    });
+  }
 }

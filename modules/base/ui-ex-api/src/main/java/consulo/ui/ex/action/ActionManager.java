@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.container.plugin.PluginId;
@@ -34,6 +36,7 @@ import java.awt.event.InputEvent;
  *
  * @see AnAction
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class ActionManager {
 
   /**

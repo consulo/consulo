@@ -16,6 +16,7 @@
 package consulo.application.impl.internal;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ComponentScope;
 import consulo.application.AccessToken;
 import consulo.application.AllIcons;
 import consulo.application.Application;
@@ -57,7 +58,6 @@ import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
 import consulo.injecting.InjectingContainerBuilder;
-import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.language.file.FileTypeManager;
 import consulo.logging.Logger;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -77,6 +77,7 @@ import consulo.util.lang.StringUtil;
 import consulo.util.lang.function.ThrowableSupplier;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.virtualFileSystem.encoding.EncodingRegistry;
 import consulo.virtualFileSystem.fileType.FileTypeRegistry;
 
@@ -255,6 +256,12 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
 
   @Nonnull
   @Override
+  public ComponentScope getComponentScope() {
+    return ComponentScope.APPLICATION;
+  }
+
+  @Nonnull
+  @Override
   protected List<ComponentConfig> getComponentConfigs(PluginDescriptor ideaPluginDescriptor) {
     return ideaPluginDescriptor.getAppComponents();
   }
@@ -325,7 +332,7 @@ public abstract class BaseApplication extends PlatformComponentManagerImpl imple
   }
 
   private void fireBeforeApplicationLoaded() {
-    ApplicationLoadListener.EP_NAME.forEachExtensionSafe(this, ApplicationLoadListener::beforeApplicationLoaded);
+    getExtensionPoint(ApplicationLoadListener.class).forEachExtensionSafe(ApplicationLoadListener::beforeApplicationLoaded);
   }
 
   @Override

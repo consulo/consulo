@@ -16,6 +16,8 @@
 package consulo.virtualFileSystem;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
@@ -39,6 +41,7 @@ import java.nio.file.Path;
  *
  * @see VirtualFileSystem
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class VirtualFileManager implements ModificationTracker {
   public static final Topic<BulkFileListener> VFS_CHANGES = new Topic<>("NewVirtualFileSystem changes", BulkFileListener.class);
 

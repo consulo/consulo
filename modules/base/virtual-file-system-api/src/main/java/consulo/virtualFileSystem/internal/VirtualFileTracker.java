@@ -16,6 +16,8 @@
 
 package consulo.virtualFileSystem.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.disposer.Disposable;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author mike
  */
+@Service(ComponentScope.APPLICATION)
 public interface VirtualFileTracker {
   void addTracker(@Nonnull String fileUrl, @Nonnull VirtualFileListener listener, boolean fromRefreshOnly, @Nonnull Disposable parentDisposable);
 }

@@ -1,3 +1,5 @@
+import consulo.component.bind.InjectingBinding;
+
 /**
  * @author VISTALL
  * @since 13/01/2022

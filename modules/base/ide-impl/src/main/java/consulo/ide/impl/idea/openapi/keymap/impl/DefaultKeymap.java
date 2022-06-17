@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.ide.ServiceManager;
 import consulo.ui.ex.keymap.Keymap;
@@ -23,6 +26,7 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
@@ -35,6 +39,8 @@ import java.util.List;
  * @author Eugene Belyaev
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class DefaultKeymap {
   private static final Logger LOG = Logger.getInstance(DefaultKeymap.class);
 
@@ -47,6 +53,7 @@ public class DefaultKeymap {
     return ServiceManager.getService(DefaultKeymap.class);
   }
 
+  @Inject
   public DefaultKeymap(@Nonnull Application application) {
     for (BundledKeymapEP bundledKeymapEP : BundledKeymapEP.EP_NAME.getExtensionList(application)) {
       try {

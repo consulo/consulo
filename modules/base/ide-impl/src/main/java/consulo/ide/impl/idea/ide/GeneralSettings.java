@@ -15,21 +15,26 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import org.intellij.lang.annotations.MagicConstant;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 import jakarta.inject.Singleton;
-
 import kava.beans.PropertyChangeListener;
 import kava.beans.PropertyChangeSupport;
+import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.NonNls;
+
+import javax.annotation.Nullable;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "GeneralSettings", storages = @Storage("ide.general.xml"))
 public class GeneralSettings implements PersistentStateComponent<GeneralSettings> {
   public static final String PROP_SUPPORT_SCREEN_READERS = "supportScreenReaders";

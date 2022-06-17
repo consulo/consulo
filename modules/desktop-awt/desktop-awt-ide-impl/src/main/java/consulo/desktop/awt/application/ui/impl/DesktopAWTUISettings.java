@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.application.ui.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.ui.ex.awt.ComponentTreeEventDispatcher;
@@ -25,6 +26,7 @@ import jakarta.inject.Singleton;
  * @since 21-Feb-22
  */
 @Singleton
+@ServiceImpl
 public class DesktopAWTUISettings extends UISettings {
   private final ComponentTreeEventDispatcher<UISettingsListener> myDispatcher = ComponentTreeEventDispatcher.create(UISettingsListener.class);
 

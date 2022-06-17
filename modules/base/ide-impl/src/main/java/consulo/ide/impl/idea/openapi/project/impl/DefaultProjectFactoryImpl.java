@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.project.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -41,6 +42,7 @@ import java.io.IOException;
  */
 @State(name = "ProjectManager", storages = @Storage("project.default.xml"))
 @Singleton
+@ServiceImpl
 public class DefaultProjectFactoryImpl extends DefaultProjectFactory implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(DefaultProjectFactoryImpl.class);
 

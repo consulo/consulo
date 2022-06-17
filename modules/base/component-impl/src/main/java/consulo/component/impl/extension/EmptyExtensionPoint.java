@@ -16,12 +16,9 @@
 package consulo.component.impl.extension;
 
 import consulo.component.extension.ExtensionPoint;
-import consulo.container.plugin.PluginDescriptor;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 /**
  * @author VISTALL
@@ -70,16 +67,5 @@ public final class EmptyExtensionPoint<T> implements ExtensionPoint<T> {
   @Override
   public String getClassName() {
     return Object.class.getName();
-  }
-
-  @Override
-  public void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
-
-  }
-
-  @Nullable
-  @Override
-  public <K extends T> K findExtension(Class<K> extensionClass) {
-    return null;
   }
 }

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.internal.statistic.collectors.fus.actions.persistence.ActionIdProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.AbbreviationManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ActionGroupStub;
@@ -64,6 +65,7 @@ import consulo.util.concurrent.ActionCallback;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 import gnu.trove.TObjectIntHashMap;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,6 +79,8 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.*;
 
+@Singleton
+@ServiceImpl
 public final class ActionManagerImpl extends ActionManagerEx implements Disposable {
   private static final String ACTION_ELEMENT_NAME = "action";
   private static final String GROUP_ELEMENT_NAME = "group";

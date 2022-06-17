@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.component.extension;
+package consulo.annotation.component;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -22,10 +22,12 @@ import java.lang.annotation.Target;
 
 /**
  * @author VISTALL
- * @since 19/01/2022
+ * @since 13-Jun-22
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ExtensionTypeImpl {
-  Class<?>[] value();
+public @interface Service {
+  ComponentScope value();
+
+  boolean lazy() default true;
 }

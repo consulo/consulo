@@ -1,0 +1,241 @@
+/*
+ * Copyright 2013-2022 consulo.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package consulo.internal.injecting.binding;
+
+import com.squareup.javapoet.*;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+
+import javax.annotation.processing.*;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.*;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
+import javax.tools.FileObject;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardLocation;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.*;
+
+/**
+ * @author VISTALL
+ * @see https://github.com/google/auto/blob/master/service/processor/src/main/java/com/google/auto/service/processor/AutoServiceProcessor.java
+ * @since 16-Jun-22
+ */
+@SupportedAnnotationTypes(InjectingBindingProcessor.SERVICE_IMPL)
+@SupportedSourceVersion(SourceVersion.RELEASE_17)
+public class InjectingBindingProcessor extends AbstractProcessor {
+  private static record AnnotationResolveInfo(Annotation annotation, TypeElement typeElement) {
+  }
+
+  public static final String SERVICE_IMPL = "consulo.annotation.component.ServiceImpl";
+
+  @Override
+  public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    Filer filer = processingEnv.getFiler();
+
+    Map<String, Set<String>> providers = new HashMap<>();
+
+    String injectingBindingClassName = "consulo.component.bind.InjectingBinding";
+
+    for (TypeElement annotation : annotations) {
+      Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(annotation);
+
+      for (Element element : elementsAnnotatedWith) {
+        if (!(element instanceof TypeElement)) {
+          continue;
+        }
+
+        TypeElement typeElement = (TypeElement)element;
+
+        AnnotationResolveInfo apiInfo = findAnnotationInSuper(typeElement, Service.class);
+        if (apiInfo == null) {
+          processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "Can't find @Service annotation for: " + typeElement.getQualifiedName(), typeElement);
+          return false;
+        }
+
+        try {
+          String bindingQualifiedName = typeElement.getQualifiedName() + "_Binding";
+          JavaFileObject bindingObject = filer.createSourceFile(bindingQualifiedName);
+
+          providers.computeIfAbsent(injectingBindingClassName, (c) -> new HashSet<>()).add(bindingQualifiedName);
+
+          TypeSpec.Builder bindBuilder = TypeSpec.classBuilder(typeElement.getSimpleName().toString() + "_Binding");
+          bindBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+          bindBuilder.addSuperinterface(ParameterizedTypeName.get(ClassName.bestGuess(injectingBindingClassName), toTypeName(apiInfo.typeElement()), toTypeName(typeElement)));
+
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClassName").returns(String.class).addModifiers(Modifier.PUBLIC)
+                                        .addCode(CodeBlock.of("return $S;", apiInfo.typeElement().getQualifiedName().toString())).build());
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClass").returns(Class.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $T.class;", apiInfo.typeElement())).build());
+
+          bindBuilder.addMethod(
+                  MethodSpec.methodBuilder("getImplClassName").returns(String.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $S;", typeElement.getQualifiedName().toString()))
+                          .build());
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getImplClass").returns(Class.class).addModifiers(Modifier.PUBLIC).addCode(CodeBlock.of("return $T.class;", typeElement)).build());
+
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentAnnotationClass").addModifiers(Modifier.PUBLIC).returns(Class.class)
+                                        .addCode(CodeBlock.of("return $T.class;", apiInfo.annotation().annotationType())).build());
+
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentScope").addModifiers(Modifier.PUBLIC).returns(ComponentScope.class)
+                                        .addCode(CodeBlock.of("return $T.$L;", ComponentScope.class, getScope(apiInfo.annotation()).name())).build());
+
+          // TODO stub
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentProfiles").addModifiers(Modifier.PUBLIC).returns(String[].class).addCode(CodeBlock.of("return new String[0];")).build());
+
+          // TODO stub
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getParametersCount").addModifiers(Modifier.PUBLIC).returns(int.class).addCode(CodeBlock.of("return 0;")).build());
+
+          // TODO stub
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of("return new $T[0];", Type.class)).build());
+
+          // TODO stub
+          bindBuilder.addMethod(
+                  MethodSpec.methodBuilder("create").addParameter(Object[].class, "args").addModifiers(Modifier.PUBLIC).returns(toTypeName(typeElement)).addCode(CodeBlock.of("return " + "null;"))
+                          .build());
+
+          TypeSpec bindClass = bindBuilder.build();
+
+          PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(typeElement);
+
+          JavaFile javaFile = JavaFile.builder(packageElement.getQualifiedName().toString(), bindClass).build();
+
+          try (Writer writer = bindingObject.openWriter()) {
+            javaFile.writeTo(writer);
+          }
+        }
+        catch (IOException e) {
+          processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage(), typeElement);
+        }
+      }
+    }
+
+    generateConfigFiles(providers);
+
+    return true;
+  }
+
+  private void generateConfigFiles(Map<String, Set<String>> providers) {
+    Filer filer = processingEnv.getFiler();
+
+    for (String providerInterface : providers.keySet()) {
+      String resourceFile = "META-INF/services/" + providerInterface;
+      log("Working on resource file: " + resourceFile);
+      try {
+        SortedSet<String> allServices = new TreeSet<>();
+        try {
+          // would like to be able to print the full path
+          // before we attempt to get the resource in case the behavior
+          // of filer.getResource does change to match the spec, but there's
+          // no good way to resolve CLASS_OUTPUT without first getting a resource.
+          FileObject existingFile = filer.getResource(StandardLocation.CLASS_OUTPUT, "", resourceFile);
+          log("Looking for existing resource file at " + existingFile.toUri());
+          Set<String> oldServices = ServicesFiles.readServiceFile(existingFile.openInputStream());
+          log("Existing service entries: " + oldServices);
+          allServices.addAll(oldServices);
+        }
+        catch (IOException e) {
+          // According to the javadoc, Filer.getResource throws an exception
+          // if the file doesn't already exist.  In practice this doesn't
+          // appear to be the case.  Filer.getResource will happily return a
+          // FileObject that refers to a non-existent file but will throw
+          // IOException if you try to open an input stream for it.
+          log("Resource file did not already exist.");
+        }
+
+        Set<String> newServices = new HashSet<>(providers.get(providerInterface));
+        if (!allServices.addAll(newServices)) {
+          log("No new service entries being added.");
+          continue;
+        }
+
+        log("New service file contents: " + allServices);
+        FileObject fileObject = filer.createResource(StandardLocation.CLASS_OUTPUT, "", resourceFile);
+        try (OutputStream out = fileObject.openOutputStream()) {
+          ServicesFiles.writeServiceFile(allServices, out);
+        }
+        log("Wrote to: " + fileObject.toUri());
+      }
+      catch (IOException e) {
+        fatalError("Unable to create " + resourceFile + ", " + e);
+        return;
+      }
+    }
+  }
+
+  private void log(String msg) {
+    if (processingEnv.getOptions().containsKey("debug")) {
+      processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, msg);
+    }
+  }
+
+  private void warning(String msg, Element element, AnnotationMirror annotation) {
+    processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, msg, element, annotation);
+  }
+
+  private void error(String msg, Element element, AnnotationMirror annotation) {
+    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg, element, annotation);
+  }
+
+  private void fatalError(String msg) {
+    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "FATAL ERROR: " + msg);
+  }
+
+  private TypeName toTypeName(TypeElement typeElement) {
+    PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(typeElement);
+
+    return ClassName.get(packageElement.getQualifiedName().toString(), typeElement.getSimpleName().toString());
+  }
+
+  private static ComponentScope getScope(Annotation annotation) {
+    if (annotation instanceof Service) {
+      return ((Service)annotation).value();
+    }
+
+    throw new UnsupportedOperationException(annotation.getClass().getName());
+  }
+
+  private static <T extends Annotation> AnnotationResolveInfo findAnnotationInSuper(TypeElement typeElement, Class<T> annotationClass) {
+    T annotation = typeElement.getAnnotation(annotationClass);
+    if (annotation != null) {
+      return new AnnotationResolveInfo(annotation, typeElement);
+    }
+
+    TypeMirror superclass = typeElement.getSuperclass();
+    if (superclass != null) {
+      if (superclass instanceof DeclaredType) {
+        AnnotationResolveInfo inSuper = findAnnotationInSuper((TypeElement)((DeclaredType)superclass).asElement(), annotationClass);
+        if (inSuper != null) {
+          return inSuper;
+        }
+      }
+    }
+
+    for (TypeMirror typeMirror : typeElement.getInterfaces()) {
+      if (typeMirror instanceof DeclaredType) {
+        AnnotationResolveInfo inSuper = findAnnotationInSuper((TypeElement)((DeclaredType)typeMirror).asElement(), annotationClass);
+        if (inSuper != null) {
+          return inSuper;
+        }
+      }
+    }
+    return null;
+  }
+}

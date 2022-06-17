@@ -15,6 +15,7 @@
     <module>arch/managment</module>
     <module>arch/global</module>
     <module>arch/ide</module>
+    <module>arch/bind</module>
     <module>arch/ide-api-provided</module>
 
     <module>distribution</module>
@@ -122,6 +123,7 @@
     <module>modules/base/language-editor-refactoring-api</module>
     <module>modules/base/language-copyright-api</module>
     <module>modules/base/web-browser-api</module>
+    <module>modules/base/injecting-binding-processor</module>
 
     <module>modules/base/proxy</module>
     <module>modules/base/xcoverage-data</module>

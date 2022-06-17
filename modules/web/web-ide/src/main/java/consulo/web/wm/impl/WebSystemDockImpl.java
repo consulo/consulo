@@ -15,6 +15,7 @@
  */
 package consulo.web.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.wm.impl.SystemDock;
 import jakarta.inject.Singleton;
 
@@ -23,6 +24,7 @@ import jakarta.inject.Singleton;
  * @since 2020-10-20
  */
 @Singleton
+@ServiceImpl
 public class WebSystemDockImpl extends SystemDock {
   @Override
   public void updateMenu() {

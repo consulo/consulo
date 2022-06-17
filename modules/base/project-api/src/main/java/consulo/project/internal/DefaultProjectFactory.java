@@ -15,6 +15,8 @@
  */
 package consulo.project.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.project.Project;
 
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class DefaultProjectFactory {
   @Nonnull
   public static DefaultProjectFactory getInstance() {

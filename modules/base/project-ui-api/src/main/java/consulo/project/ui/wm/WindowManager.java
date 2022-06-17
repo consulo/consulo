@@ -16,6 +16,8 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.ui.wm.event.WindowManagerListener;
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class WindowManager {
   /**
    * @return <code>true</code> is and only if current OS supports alpha mode for windows and
