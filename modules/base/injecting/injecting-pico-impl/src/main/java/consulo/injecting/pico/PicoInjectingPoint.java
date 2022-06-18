@@ -21,6 +21,7 @@ import consulo.injecting.key.InjectingKey;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Type;
 import java.util.function.Function;
 
 /**
@@ -92,6 +93,20 @@ class PicoInjectingPoint<T> implements InjectingPoint<T> {
   @Override
   public InjectingPoint<T> injectListener(@Nonnull PostInjectListener<T> consumer) {
     base().setAfterInjectionListener(consumer);
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public InjectingPoint<T> constructorParameterTypes(@Nonnull Type[] constructorParameterTypes) {
+    base().setConstructorParameterTypes(constructorParameterTypes);
+    return this;
+  }
+
+  @Nonnull
+  @Override
+  public InjectingPoint<T> constructorFactory(@Nonnull Function<Object[], T> factory) {
+    base().setConstructorFactory(factory);
     return this;
   }
 

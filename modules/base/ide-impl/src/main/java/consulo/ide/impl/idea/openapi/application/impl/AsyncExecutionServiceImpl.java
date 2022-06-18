@@ -1,9 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.application.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.*;
 import consulo.application.event.ApplicationListener;
 import consulo.application.impl.internal.IdeaModalityState;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 
@@ -13,11 +15,12 @@ import java.util.concurrent.Callable;
  * @author peter
  */
 @Singleton
+@ServiceImpl
 public class AsyncExecutionServiceImpl extends AsyncExecutionService {
   private static long ourWriteActionCounter = 0;
 
-  public AsyncExecutionServiceImpl() {
-    Application app = ApplicationManager.getApplication();
+  @Inject
+  public AsyncExecutionServiceImpl(Application app) {
     app.addApplicationListener(new ApplicationListener() {
       @Override
       public void writeActionStarted(@Nonnull Object action) {

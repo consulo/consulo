@@ -15,6 +15,7 @@
  */
 package consulo.module.impl.internal;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.application.WriteAction;
@@ -47,6 +48,7 @@ import java.util.Set;
  * @since 06.04.2015
  */
 @Singleton
+@ExtensionImpl
 public class ContentEntryFileListener implements AsyncFileListener {
   private final Application myApplication;
   private final ProjectLocator myProjectLocator;

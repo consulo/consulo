@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.diff;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.diff.editor.DiffVirtualFile;
 import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiElement;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 24/09/2021
  */
+@ExtensionImpl
 public class DiffIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.ui.search;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.util.lang.Pair;
@@ -33,6 +34,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.util.interner.Interner;
 import consulo.util.io.ResourceUtil;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -50,6 +52,7 @@ import java.util.regex.Pattern;
  * Date: 07-Feb-2006
  */
 @Singleton
+@ServiceImpl
 public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
   private final Map<String, Set<OptionDescription>> myStorage = Collections.synchronizedMap(new HashMap<String, Set<OptionDescription>>(20, 0.9f));
   private final Map<String, String> myId2Name = Collections.synchronizedMap(new HashMap<String, String>(20, 0.9f));
@@ -65,6 +68,7 @@ public class SearchableOptionsRegistrarImpl extends SearchableOptionsRegistrar {
 
   private static final Pattern REG_EXP = Pattern.compile("[\\W&&[^-]]+");
 
+  @Inject
   public SearchableOptionsRegistrarImpl() {
     try {
       //stop words

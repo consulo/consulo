@@ -70,7 +70,7 @@ public class PicoInjectingContainer implements InjectingContainer {
     if (instance != null) {
       return instance;
     }
-    throw new UnsupportedOperationException("Class " + clazz + " is not binded");
+    throw new IllegalArgumentException("Class " + clazz + " is not binded");
   }
 
   @Nullable

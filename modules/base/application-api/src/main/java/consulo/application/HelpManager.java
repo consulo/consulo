@@ -15,11 +15,14 @@
  */
 package consulo.application;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.util.dataholder.Key;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Service(ComponentScope.APPLICATION)
 public interface HelpManager {
   /**
    * Returns help id (String)

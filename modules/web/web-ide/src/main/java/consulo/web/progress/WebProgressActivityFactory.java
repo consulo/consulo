@@ -15,7 +15,9 @@
  */
 package consulo.web.progress;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.progress.ProgressActivityFactory;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
 
@@ -23,6 +25,8 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 10-Jun-22
  */
+@Singleton
+@ServiceImpl
 public class WebProgressActivityFactory implements ProgressActivityFactory {
   @Nullable
   @Override

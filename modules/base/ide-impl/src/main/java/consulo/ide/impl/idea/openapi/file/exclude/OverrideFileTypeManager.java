@@ -1,6 +1,9 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.file.exclude;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -22,6 +25,8 @@ import javax.annotation.Nonnull;
  */
 @State(name = "OverrideFileTypeManager", storages = @Storage("overrideFileTypes.xml"))
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public final class OverrideFileTypeManager extends PersistentFileSetManager {
   public boolean isMarkedPlainText(@Nonnull VirtualFile file) {
     return PlainTextFileType.INSTANCE.getName().equals(getFileValue(file));

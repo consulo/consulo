@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.ui.ex.awt.HintHint;
 import org.jetbrains.annotations.NonNls;
@@ -27,6 +29,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 30-Apr-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface IdeTooltipManager {
   static IdeTooltipManager getInstance() {
     return Application.get().getInstance(IdeTooltipManager.class);

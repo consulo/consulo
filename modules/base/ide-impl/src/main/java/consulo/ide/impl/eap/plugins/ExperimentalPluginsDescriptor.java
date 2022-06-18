@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.eap.plugins;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 
 import javax.annotation.Nonnull;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-09-02
  */
+@ExtensionImpl
 public class ExperimentalPluginsDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override

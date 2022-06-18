@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.content.ProjectRootModificationTracker;
@@ -26,6 +27,7 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class ProjectRootModificationTrackerImpl extends ProjectRootModificationTracker {
   private final Project myProject;
 

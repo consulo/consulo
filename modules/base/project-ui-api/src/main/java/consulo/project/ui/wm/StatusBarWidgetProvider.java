@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  */
 @Deprecated
 public interface StatusBarWidgetProvider {
-  ExtensionPointName<StatusBarWidgetProvider> EP_NAME = new ExtensionPointName<>(PluginIds.CONSULO_BASE + ".statusBarWidgetProvider");
+  ExtensionPointName<StatusBarWidgetProvider> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".statusBarWidgetProvider");
 
   /**
    * Returns a widget to be added to the status bar.

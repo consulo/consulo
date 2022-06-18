@@ -15,28 +15,7 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="additionalTextAttributes" beanClass="consulo.ide.impl.idea.openapi.editor.colors.impl.AdditionalTextAttributesEP"/>
-    <extensionPoint name="bundledColorScheme" beanClass="consulo.ide.impl.idea.openapi.editor.colors.impl.BundledColorSchemeEP"/>
     <extensionPoint name="bundledQuickListsProvider" interface="consulo.ide.impl.idea.openapi.actionSystem.impl.BundledQuickListsProvider"/>
     <extensionPoint name="bundleLiveTemplateSet" beanClass="consulo.ide.impl.codeInsight.template.impl.BundleLiveTemplateSetEP"/>
   </extensionPoints>
-
-  <extensions defaultExtensionNs="consulo">
-
-    <bundledColorScheme path="/colorSchemes/Default.xml"/>
-    <bundledColorScheme path="/colorSchemes/IDEA.xml"/>
-    <bundledColorScheme path="/colorSchemes/Consulo Light.xml"/>
-    <bundledColorScheme path="/colorSchemes/Darcula.xml"/>
-    <bundledColorScheme path="/colorSchemes/all_hallows_eve.xml"/>
-    <bundledColorScheme path="/colorSchemes/blackboard.xml"/>
-    <bundledColorScheme path="/colorSchemes/cobalt.xml"/>
-    <bundledColorScheme path="/colorSchemes/github.xml"/>
-    <bundledColorScheme path="/colorSchemes/monokai.xml"/>
-    <bundledColorScheme path="/colorSchemes/rails_casts.xml"/>
-    <bundledColorScheme path="/colorSchemes/twilight.xml"/>
-    <bundledColorScheme path="/colorSchemes/vibrant_ink.xml"/>
-    <bundledColorScheme path="/colorSchemes/WarmNeon.xml"/>
-    <bundledColorScheme path="/colorSchemes/Visual Studio Light.xml"/>
-    <bundledColorScheme path="/colorSchemes/Visual Studio Dark.xml"/>
-  </extensions>
 </consulo-plugin>

@@ -19,6 +19,7 @@ import com.squareup.javapoet.*;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Extension;
 import consulo.annotation.component.Service;
+import jakarta.inject.Inject;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -59,6 +60,8 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    AnnotationSpec suppressWarning = AnnotationSpec.builder(SuppressWarnings.class).addMember("value", CodeBlock.of("$S", "ALL")).build();
+
     Filer filer = processingEnv.getFiler();
 
     Map<String, Set<String>> providers = new HashMap<>();
@@ -93,6 +96,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
           TypeSpec.Builder bindBuilder = TypeSpec.classBuilder(typeElement.getSimpleName().toString() + "_Binding");
           bindBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+          bindBuilder.addAnnotation(suppressWarning);
           bindBuilder.addSuperinterface(ParameterizedTypeName.get(ClassName.bestGuess(injectingBindingClassName), toTypeName(apiInfo.typeElement()), toTypeName(typeElement)));
 
           bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClassName").returns(String.class).addModifiers(Modifier.PUBLIC)
@@ -111,19 +115,102 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentScope").addModifiers(Modifier.PUBLIC).returns(ComponentScope.class)
                                         .addCode(CodeBlock.of("return $T.$L;", ComponentScope.class, getScope(apiInfo.annotation()).name())).build());
 
+          List<? extends VariableElement> injectParameters = null;
+
+          List<? extends Element> allMembers = processingEnv.getElementUtils().getAllMembers(typeElement);
+          for (Element member : allMembers) {
+            if (member instanceof ExecutableElement) {
+              Name simpleName = member.getSimpleName();
+              if ("<init>".equals(simpleName.toString())) {
+                List<? extends VariableElement> parameters = ((ExecutableElement)member).getParameters();
+
+                Inject injectAnnotation = member.getAnnotation(Inject.class);
+                if (injectAnnotation != null) {
+                  injectParameters = parameters;
+                  break;
+                }
+
+                // default constructor
+                if (parameters.size() == 0 && member.getModifiers().contains(Modifier.PUBLIC)) {
+                  injectParameters = parameters;
+                  break;
+                }
+              }
+            }
+          }
+
+          if (injectParameters == null) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "There no public constructor or constructor with @Inject annotation. Injecting impossible", typeElement);
+            return false;
+          }
+
           // TODO stub
           bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentProfiles").addModifiers(Modifier.PUBLIC).returns(String[].class).addCode(CodeBlock.of("return new String[0];")).build());
 
-          // TODO stub
-          bindBuilder.addMethod(MethodSpec.methodBuilder("getParametersCount").addModifiers(Modifier.PUBLIC).returns(int.class).addCode(CodeBlock.of("return 0;")).build());
+          bindBuilder.addMethod(MethodSpec.methodBuilder("getParametersCount").addModifiers(Modifier.PUBLIC).returns(int.class).addCode(CodeBlock.of("return $L;", injectParameters.size())).build());
 
-          // TODO stub
-          bindBuilder.addMethod(MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of("return new $T[0];", Type.class)).build());
+          List<TypeName> paramTypes = new ArrayList<>();
+          for (VariableElement parameter : injectParameters) {
+            paramTypes.add(toTypeName(parameter.asType()));
+          }
 
-          // TODO stub
+          List<TypeName> paramTypesForMethod = new ArrayList<>();
+          // array creation
+          paramTypesForMethod.add(TypeName.get(Type.class));
+
+          StringBuilder paramTypesBuilder = new StringBuilder();
+          paramTypesBuilder.append("return new $T[] {");
+          for (int i = 0; i < paramTypes.size(); i++) {
+            if (i != 0) {
+              paramTypesBuilder.append(", ");
+            }
+
+            TypeName injectType = paramTypes.get(i);
+            // simple type
+            if (injectType instanceof ClassName) {
+              paramTypesBuilder.append("$T.class");
+              paramTypesForMethod.add(injectType);
+            }
+            else if (injectType instanceof ParameterizedTypeName parType) {
+              paramTypesBuilder.append("new $T(");
+              paramTypesForMethod.add(ClassName.bestGuess("consulo.component.bind.ParameterizedTypeImpl"));
+              paramTypesBuilder.append("$T.class, ");
+              paramTypesForMethod.add(parType.rawType);
+
+              for (int j = 0; j < parType.typeArguments.size(); j++) {
+                if (j != 0) {
+                  paramTypesBuilder.append(", ");
+                }
+
+                paramTypesBuilder.append("$T.class");
+                paramTypesForMethod.add(parType.typeArguments.get(j));
+              }
+              paramTypesBuilder.append(")");
+            }
+          }
+          paramTypesBuilder.append("};");
+
           bindBuilder.addMethod(
-                  MethodSpec.methodBuilder("create").addParameter(Object[].class, "args").addModifiers(Modifier.PUBLIC).returns(toTypeName(typeElement)).addCode(CodeBlock.of("return " + "null;"))
+                  MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of(paramTypesBuilder.toString(), paramTypesForMethod.toArray()))
                           .build());
+
+          List<TypeName> argsTypes = new ArrayList<>();
+          argsTypes.add(toTypeName(typeElement));
+          argsTypes.addAll(paramTypes);
+
+          StringBuilder newCreationBuilder = new StringBuilder();
+          newCreationBuilder.append("return new $T(");
+          for (int i = 0; i < injectParameters.size(); i++) {
+            if (i != 0) {
+              newCreationBuilder.append(", ");
+            }
+            newCreationBuilder.append("($T) args[").append(i).append("]");
+          }
+
+          newCreationBuilder.append(");");
+
+          bindBuilder.addMethod(MethodSpec.methodBuilder("create").addParameter(Object[].class, "args").addModifiers(Modifier.PUBLIC).returns(toTypeName(typeElement))
+                                        .addCode(CodeBlock.of(newCreationBuilder.toString(), argsTypes.toArray())).build());
 
           TypeSpec bindClass = bindBuilder.build();
 
@@ -210,6 +297,10 @@ public class InjectingBindingProcessor extends AbstractProcessor {
 
   private void fatalError(String msg) {
     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "FATAL ERROR: " + msg);
+  }
+
+  private TypeName toTypeName(TypeMirror typeMirror) {
+    return TypeName.get(typeMirror);
   }
 
   private TypeName toTypeName(TypeElement typeElement) {

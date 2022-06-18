@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerManager;
 import consulo.project.Project;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 1:20/19.07.13
  */
+@ExtensionImpl
 public class CompilerIconDescriptorUpdater implements IconDescriptorUpdater {
   private final FileIndexFacade myFileIndexFacade;
   private final CompilerManager myCompilerManager;

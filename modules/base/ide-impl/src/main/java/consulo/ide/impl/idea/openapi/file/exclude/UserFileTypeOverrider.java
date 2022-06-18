@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.file.exclude;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.language.file.FileTypeManager;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeOverrider;
@@ -13,6 +14,7 @@ import javax.annotation.Nullable;
 /**
  * Substitutes type for files which users explicitly marked with "Override File Type" action
  */
+@ExtensionImpl
 public class UserFileTypeOverrider implements FileTypeOverrider {
   private final Provider<OverrideFileTypeManager> myOverrideFileTypeManagerProvider;
   private final Provider<FileTypeManager> myFileTypeManagerProvider;

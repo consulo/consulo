@@ -19,11 +19,12 @@
  */
 package consulo.ide.impl.idea.openapi.project;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.project.ProjectManager;
-import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -36,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class ProjectLocatorImpl extends ProjectLocator {
   private final ProjectManager myProjectManager;
 
@@ -53,9 +55,9 @@ public class ProjectLocatorImpl extends ProjectLocator {
       return project;
     }
 
-    if(file != null) {
+    if (file != null) {
       Project preferredProject = getPreferredProject(file);
-      if(preferredProject != null) {
+      if (preferredProject != null) {
         return preferredProject;
       }
     }

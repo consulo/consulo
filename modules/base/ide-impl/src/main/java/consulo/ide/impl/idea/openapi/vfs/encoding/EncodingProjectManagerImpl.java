@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.concurrency.ConcurrentCollectionFactory;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
@@ -55,6 +56,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Singleton
+@ServiceImpl
 @State(name = "Encoding", storages = @Storage("encodings.xml"))
 public final class EncodingProjectManagerImpl extends EncodingProjectManager implements PersistentStateComponent<Element>, Disposable {
   private static final String PROJECT_URL = "PROJECT";

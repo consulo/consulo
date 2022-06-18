@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.plugins;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -38,6 +41,8 @@ import java.util.TreeSet;
  * A service to hold a state of plugin changes in a current session (i.e. before the changes are applied on restart).
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class InstalledPluginsState {
   @Nonnull
   public static InstalledPluginsState getInstance() {

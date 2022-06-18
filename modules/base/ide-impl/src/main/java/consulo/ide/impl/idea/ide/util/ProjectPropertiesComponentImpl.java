@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.impl.BasePropertiesComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -24,6 +25,7 @@ import consulo.project.ProjectPropertiesComponent;
 import jakarta.inject.Singleton;
 
 @Singleton
+@ServiceImpl
 @State(name = "PropertiesComponent", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 public class ProjectPropertiesComponentImpl extends BasePropertiesComponent implements ProjectPropertiesComponent, PropertiesComponent {
 }

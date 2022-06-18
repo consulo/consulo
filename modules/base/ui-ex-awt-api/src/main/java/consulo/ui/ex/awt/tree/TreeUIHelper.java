@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt.tree;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.swing.*;
@@ -24,6 +26,7 @@ import java.util.function.Function;
 /**
  * @author yole
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class TreeUIHelper {
   public static TreeUIHelper getInstance() {
     return Application.get().getInstance(TreeUIHelper.class);

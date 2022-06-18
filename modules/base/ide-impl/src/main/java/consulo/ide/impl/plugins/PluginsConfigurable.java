@@ -15,13 +15,15 @@
  */
 package consulo.ide.impl.plugins;
 
-import consulo.ide.IdeBundle;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.configurable.ApplicationConfigurable;
 import consulo.configurable.Configurable;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
 import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.IdeBundle;
 import consulo.ui.annotation.RequiredUIAccess;
 import jakarta.inject.Inject;
 
@@ -33,7 +35,8 @@ import javax.swing.*;
  * @author VISTALL
  * @since 2020-06-26
  */
-public class PluginsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent, Configurable.NoMargin {
+@ExtensionImpl
+public class PluginsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Configurable.HoldPreferredFocusedComponent, Configurable.NoMargin, ApplicationConfigurable {
   public static final String ID = "platformAndPlugins";
 
   private PluginsPanel myPanel;

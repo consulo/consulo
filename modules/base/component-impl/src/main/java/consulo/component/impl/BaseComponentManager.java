@@ -311,6 +311,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
       // remap object initialization
       point.factory(objectProvider -> runServiceInitialize(descriptor, objectProvider::get));
 
+      point.constructorParameterTypes(injectingBinding.getParameterTypes());
+      point.constructorFactory(injectingBinding::create);
+
       point.injectListener((time, instance) -> {
 
         if (myChecker.containsKey(key.getTargetClass())) {

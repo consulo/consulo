@@ -26,6 +26,7 @@ import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Type;
 import java.util.function.Function;
 
 /**
@@ -40,6 +41,10 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
   private final Object myLock = new Object();
 
   private InjectingKey<? extends T> myImplementationKey;
+
+  private Type[] myConstructorParameterTypes;
+
+  private Function<Object[], T> myConstructorFactory;
 
   @Nonnull
   private PostInjectListener<T> myAfterInjectionListener = (time, object) -> {
@@ -72,6 +77,14 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
 
   public void setForceSingleton() {
     myForceSingleton = true;
+  }
+
+  public void setConstructorParameterTypes(Type[] constructorParameterTypes) {
+    myConstructorParameterTypes = constructorParameterTypes;
+  }
+
+  public void setConstructorFactory(Function<Object[], T> constructorFactory) {
+    myConstructorFactory = constructorFactory;
   }
 
   @Override
@@ -128,14 +141,21 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
       long l = System.nanoTime();
 
       try {
-        ConstructorInjectionComponentAdapter<T> delegate = new ConstructorInjectionComponentAdapter<T>(getComponentKey(), getComponentImplementation());
+        ConstructorInjectionComponentAdapter<T> delegate;
+        if (myConstructorParameterTypes != null && myConstructorFactory != null) {
+          delegate = new NewConstructorInjectionComponentAdapter<T>(getComponentKey(), getComponentImplementation(), myConstructorParameterTypes, myConstructorFactory);
+        }
+        else {
+          delegate = new ConstructorInjectionComponentAdapter<T>(getComponentKey(), getComponentImplementation());
+        }
+
         instance = myRemap.apply(() -> GetInstanceValidator.createObject(targetClass, () -> (T)delegate.getComponentInstance(container)));
 
         try {
           myAfterInjectionListener.afterInject(l, instance);
         }
         catch (Throwable t) {
-          if(t instanceof ControlFlowException) {
+          if (t instanceof ControlFlowException) {
             throw t;
           }
 
@@ -143,7 +163,7 @@ class BaseComponentAdapter<T> implements ComponentAdapter<T> {
         }
       }
       catch (Throwable t) {
-        if(t instanceof ControlFlowException) {
+        if (t instanceof ControlFlowException) {
           throw t;
         }
         LOG.error("Problem with initializing: " + targetClass.getName(), t);

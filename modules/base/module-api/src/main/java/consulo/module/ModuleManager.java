@@ -17,6 +17,8 @@ package consulo.module;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.util.graph.Graph;
 import consulo.project.Project;
 
@@ -30,6 +32,7 @@ import java.util.List;
 /**
  * Provides services for working with the modules of a project.
  */
+@Service(ComponentScope.PROJECT)
 public abstract class ModuleManager {
   /**
    * Returns the module manager instance for the current project.

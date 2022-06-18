@@ -15,6 +15,7 @@
  */
 package consulo.desktop.swt.editor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.application.Application;
 import consulo.codeEditor.EditorKind;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @since 29/04/2021
  */
 @Singleton
+@ServiceImpl
 public class DesktopSwtEditorFactoryImpl extends EditorFactoryImpl {
   @Inject
   public DesktopSwtEditorFactoryImpl(Application application) {

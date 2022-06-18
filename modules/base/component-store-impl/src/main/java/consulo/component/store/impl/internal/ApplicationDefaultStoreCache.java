@@ -18,10 +18,13 @@ package consulo.component.store.impl.internal;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.util.jdom.JDOMUtil;
 import consulo.util.lang.ObjectUtil;
 import consulo.util.lang.Pair;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -49,7 +52,7 @@ public class ApplicationDefaultStoreCache implements Disposable {
     Object result = myUrlCache.computeIfAbsent(Pair.create(clazz.getClassLoader(), path), pair -> {
       URL resource = pair.getFirst().getResource(pair.getSecond());
 
-      if(resource != null) {
+      if (resource != null) {
         try {
           Document document = JDOMUtil.loadDocument(resource);
           Element rootElement = document.getRootElement();

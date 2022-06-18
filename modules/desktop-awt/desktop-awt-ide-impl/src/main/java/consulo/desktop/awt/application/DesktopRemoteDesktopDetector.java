@@ -15,9 +15,9 @@
  */
 package consulo.desktop.awt.application;
 
+import com.sun.jna.platform.win32.User32;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationBundle;
-import com.sun.jna.platform.win32.User32;
 import consulo.application.ApplicationManager;
 import consulo.application.ui.RemoteDesktopService;
 import consulo.logging.Logger;
@@ -43,7 +43,7 @@ public class DesktopRemoteDesktopDetector extends RemoteDesktopService {
   private volatile boolean myRemoteDesktopConnected;
 
   @Inject
-  private DesktopRemoteDesktopDetector() {
+  DesktopRemoteDesktopDetector() {
     if (Platform.current().os().isWindows()) {
       Desktop.getDesktop().addAppEventListener(new UserSessionListener() {
         @Override

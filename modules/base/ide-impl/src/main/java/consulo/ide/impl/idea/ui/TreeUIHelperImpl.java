@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.util.EditSourceOnEnterKeyHandler;
 import consulo.ui.ex.awt.EditSourceOnDoubleClickHandler;
 import consulo.ui.ex.awt.JBList;
@@ -32,6 +33,7 @@ import java.util.function.Function;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class TreeUIHelperImpl extends TreeUIHelper {
   @Override
   public void installToolTipHandler(final JTree tree) {

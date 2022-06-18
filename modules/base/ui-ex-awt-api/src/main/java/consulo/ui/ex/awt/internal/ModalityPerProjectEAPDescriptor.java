@@ -15,14 +15,17 @@
  */
 package consulo.ui.ex.awt.internal;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 01-Nov-17
  */
+@ExtensionImpl
 public class ModalityPerProjectEAPDescriptor extends EarlyAccessProgramDescriptor {
   public static boolean is() {
     return EarlyAccessProgramManager.is(ModalityPerProjectEAPDescriptor.class);

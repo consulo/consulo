@@ -24,7 +24,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -90,7 +89,7 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
   }
 
   @Nonnull
-  private T doGetComponentInstance(DefaultPicoContainer guardedContainer) {
+  protected T doGetComponentInstance(DefaultPicoContainer guardedContainer) {
     Constructor<T> constructor = getGreediestSatisfiableConstructor(guardedContainer);
 
     if (InjectingContainer.LOG_INJECTING_PROBLEMS && !isDefaultConstructor(constructor) && !constructor.isAnnotationPresent(Inject.class)) {

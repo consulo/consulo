@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.UISettings;
 import consulo.fileEditor.UniqueVFilePathBuilder;
 import consulo.fileEditor.EditorTabTitleProvider;
@@ -16,6 +17,7 @@ import java.io.File;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class UniqueNameEditorTabTitleProvider implements EditorTabTitleProvider {
   @Override
   public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {

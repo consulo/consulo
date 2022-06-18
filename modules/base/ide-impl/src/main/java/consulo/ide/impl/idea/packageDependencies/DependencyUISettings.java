@@ -16,25 +16,23 @@
 
 package consulo.ide.impl.idea.packageDependencies;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.extension.Extensions;
-import consulo.ide.impl.idea.packageDependencies.ui.PatternDialectProvider;
-import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.util.xml.serializer.XmlSerializerUtil;
-
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.packageDependencies.ui.PatternDialectProvider;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
 @Singleton
-@State(
-  name = "DependencyUISettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+@State(name = "DependencyUISettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class DependencyUISettings implements PersistentStateComponent<DependencyUISettings> {
   public boolean UI_FLATTEN_PACKAGES = true;
   public boolean UI_SHOW_FILES = true;

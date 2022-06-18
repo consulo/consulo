@@ -15,19 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
-import consulo.ide.impl.idea.ide.navigationToolbar.AbstractNavBarModelExtension;
-import consulo.ide.impl.idea.lang.PerFileMappingsBase;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
-import consulo.usage.UsageTypeProvider;
-import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.language.psi.stub.IndexableSetContributor;
-import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;
-import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -42,10 +30,19 @@ import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
-import consulo.fileEditor.EditorTabTitleProvider;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.idea.ide.navigationToolbar.AbstractNavBarModelExtension;
+import consulo.ide.impl.idea.lang.PerFileMappingsBase;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.PathUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;
 import consulo.ide.impl.psi.search.UseScopeEnlarger;
 import consulo.language.Language;
 import consulo.language.editor.highlight.SyntaxHighlighter;
@@ -55,17 +52,20 @@ import consulo.language.editor.scratch.RootType;
 import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.language.file.FileTypeManager;
-import consulo.language.icon.IconDescriptor;
-import consulo.language.icon.IconDescriptorUpdater;
 import consulo.language.plain.PlainTextLanguage;
-import consulo.language.psi.*;
+import consulo.language.psi.LanguageSubstitutor;
+import consulo.language.psi.LanguageSubstitutors;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.LocalSearchScope;
+import consulo.language.psi.stub.IndexableSetContributor;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.usage.UsageType;
+import consulo.usage.UsageTypeProvider;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -86,6 +86,7 @@ import java.util.concurrent.ConcurrentMap;
 
 @Singleton
 @State(name = "ScratchFileService", storages = @Storage(value = "scratches.xml", roamingType = RoamingType.DISABLED))
+@ServiceImpl
 public class ScratchFileServiceImpl extends ScratchFileService implements PersistentStateComponent<Element>, Disposable {
 
   private static final RootType NULL_TYPE = new RootType("", null) {
@@ -246,37 +247,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
 
       Language language = LanguageUtil.getLanguageForPsi(project, file);
       return language == null ? null : SyntaxHighlighterFactory.getSyntaxHighlighter(language, project, file);
-    }
-  }
-
-  public static class FilePresentation implements IconDescriptorUpdater, EditorTabTitleProvider {
-    private ScratchFileService myScratchFileService;
-
-    @Inject
-    public FilePresentation(ScratchFileService scratchFileService) {
-      myScratchFileService = scratchFileService;
-    }
-
-    @RequiredReadAction
-    @Override
-    public void updateIcon(@Nonnull IconDescriptor iconDescriptor, @Nonnull PsiElement element, int flags) {
-      if (element instanceof PsiFile) {
-        VirtualFile virtualFile = ((PsiFile)element).getVirtualFile();
-        if (virtualFile == null) {
-          return;
-        }
-        RootType rootType = myScratchFileService.getRootType(virtualFile);
-        if (rootType == null) return;
-        iconDescriptor.setMainIcon(rootType.substituteIcon(element.getProject(), virtualFile));
-      }
-    }
-
-    @Nullable
-    @Override
-    public String getEditorTabTitle(@Nonnull Project project, @Nonnull VirtualFile file) {
-      RootType rootType = myScratchFileService.getRootType(file);
-      if (rootType == null) return null;
-      return rootType.substituteName(project, file);
     }
   }
 

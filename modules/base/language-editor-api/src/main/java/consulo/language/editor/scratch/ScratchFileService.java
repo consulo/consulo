@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.scratch;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.language.Language;
 import consulo.virtualFileSystem.VirtualFile;
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class ScratchFileService {
 
   public enum Option { existing_only, create_if_missing, create_new_always }

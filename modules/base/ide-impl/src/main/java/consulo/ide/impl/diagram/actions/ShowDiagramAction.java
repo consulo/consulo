@@ -21,7 +21,6 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ide.impl.diagram.provider.GraphProvider;
-import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.application.eap.EarlyAccessProgramManager;
 import javax.annotation.Nonnull;
 
@@ -30,25 +29,6 @@ import javax.annotation.Nonnull;
  * @since 22:29/15.10.13
  */
 public class ShowDiagramAction extends AnAction {
-  public static class DiagramSupport extends EarlyAccessProgramDescriptor {
-    @Nonnull
-    @Override
-    public String getName() {
-      return "Diagram Support";
-    }
-
-    @Override
-    public boolean isAvailable() {
-      return false;
-    }
-
-    @Nonnull
-    @Override
-    public String getDescription() {
-      return "";
-    }
-  }
-
   @RequiredUIAccess
   @Override
   public void actionPerformed(@Nonnull AnActionEvent e) {
@@ -57,7 +37,7 @@ public class ShowDiagramAction extends AnAction {
   @RequiredUIAccess
   @Override
   public void update(@Nonnull AnActionEvent e) {
-    boolean state = EarlyAccessProgramManager.is(DiagramSupport.class);
+    boolean state = EarlyAccessProgramManager.is(DiagramSupportEapDescriptor.class);
     if (state) {
       PsiElement psiElement = e.getData(CommonDataKeys.PSI_ELEMENT);
       state = false;

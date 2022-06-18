@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.ui.color.ColorValue;
@@ -26,6 +28,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.util.EventListener;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class CopyPasteManager {
   public static final ColorValue CUT_COLOR = new RGBColor(160, 160, 160);
 

@@ -52,6 +52,11 @@
               <artifactId>consulo-injecting-binding-processor</artifactId>
               <version>${project.version}</version>
             </annotationProcessorPath>
+            <annotationProcessorPath>
+              <groupId>consulo.internal</groupId>
+              <artifactId>jakarta.inject-api</artifactId>
+              <version>1.0.3-SNAPSHOT</version>
+            </annotationProcessorPath>
           </annotationProcessorPaths>
         </configuration>
       </plugin>
@@ -76,6 +81,11 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>consulo-annotation</artifactId>
       <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

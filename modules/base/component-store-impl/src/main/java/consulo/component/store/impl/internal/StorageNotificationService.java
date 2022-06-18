@@ -15,6 +15,8 @@
  */
 package consulo.component.store.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.NotificationType;
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 22-Mar-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface StorageNotificationService {
   static StorageNotificationService getInstance() {
     return Application.get().getInstance(StorageNotificationService.class);

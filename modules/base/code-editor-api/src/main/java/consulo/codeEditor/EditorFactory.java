@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
@@ -18,6 +20,7 @@ import javax.annotation.Nullable;
  * <p>
  * Creating and releasing of editors must be done from EDT.
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class EditorFactory {
   /**
    * Returns the editor factory instance.

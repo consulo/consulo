@@ -51,6 +51,12 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>consulo.internal</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <version>1.0.3-SNAPSHOT</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>javapoet</artifactId>
       <version>1.12.1</version>

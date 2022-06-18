@@ -3,7 +3,6 @@ package consulo.component.extension;
 import consulo.component.ComponentManager;
 import consulo.component.util.PluginExceptionUtil;
 import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginManager;
 import consulo.logging.Logger;
 import consulo.util.lang.ControlFlowException;
 
@@ -25,75 +24,36 @@ public final class ExtensionList<E, C extends ComponentManager> {
   @Nonnull
   @SuppressWarnings("unchecked")
   public static <C1 extends ComponentManager, T1> ExtensionList<T1, C1> of(@Nonnull Class<T1> extensionClass) {
-    ExtensionType annotation = extensionClass.getAnnotation(ExtensionType.class);
-    if (annotation == null) {
-      throw new IllegalArgumentException(extensionClass + " is not annotated by @" + ExtensionType.class.getSimpleName());
-    }
-
-    return new ExtensionList<>((Class<C1>)annotation.component(), extensionClass, annotation.value());
+    return new ExtensionList<>(extensionClass);
   }
 
-  @Nonnull
-  private final Class<C> myComponentClass;
   @Nonnull
   private final Class<E> myExtensionClass;
-  @Nonnull
-  private final String myName;
-  @Nullable
-  private ExtensionPointId<E> myExtensionPointId;
 
-  private ExtensionList(@Nonnull Class<C> componentClass, @Nonnull Class<E> extensionClass, @Nonnull String name) {
-    myComponentClass = componentClass;
+
+  private ExtensionList(@Nonnull Class<E> extensionClass) {
     myExtensionClass = extensionClass;
-    myName = name;
-  }
-
-  @Nonnull
-  private ExtensionPointId<E> getId() {
-    if (myExtensionPointId != null) {
-      return myExtensionPointId;
-    }
-
-    PluginDescriptor plugin = PluginManager.getPlugin(myExtensionClass);
-    if (plugin == null) {
-      throw new IllegalArgumentException(myExtensionClass + " is not inside registered in container");
-    }
-
-    ExtensionPointId<E> id = ExtensionPointId.of(plugin.getPluginId() + "." + myName);
-    myExtensionPointId = id;
-    return id;
-  }
-
-  private void checkComponent(@Nonnull C component) {
-    if (!myComponentClass.isInstance(component)) {
-      throw new IllegalArgumentException("Component " + component.getClass() + " is not instance of " + myComponentClass);
-    }
   }
 
   public boolean hasAnyExtensions(@Nonnull C component) {
-    checkComponent(component);
-    return component.getExtensionPoint(getId()).hasAnyExtensions();
+    return component.getExtensionPoint(myExtensionClass).hasAnyExtensions();
   }
 
   @Nonnull
   public List<E> getExtensionList(@Nonnull C component) {
-    checkComponent(component);
-    return component.getExtensionPoint(getId()).getExtensionList();
+    return component.getExtensionPoint(myExtensionClass).getExtensionList();
   }
 
   @Nullable
   public <V extends E> V findExtension(@Nonnull C component, @Nonnull Class<V> instanceOf) {
-    checkComponent(component);
-    return component.getExtensionPoint(getId()).findExtension(instanceOf);
+    return component.getExtensionPoint(myExtensionClass).findExtension(instanceOf);
   }
 
   @Nonnull
   public <V extends E> V findExtensionOrFail(@Nonnull C component, @Nonnull Class<V> instanceOf) {
-    checkComponent(component);
-
-    V extension = component.getExtensionPoint(getId()).findExtension(instanceOf);
+    V extension = component.getExtensionPoint(myExtensionClass).findExtension(instanceOf);
     if (extension == null) {
-      throw new IllegalArgumentException("Extension point: " + getId() + " not contains extension of type: " + instanceOf);
+      throw new IllegalArgumentException("Extension point: " + myExtensionClass + " not contains extension of type: " + instanceOf);
     }
     return extension;
   }
@@ -110,9 +70,7 @@ public final class ExtensionList<E, C extends ComponentManager> {
   }
 
   public void processWithPluginDescriptor(@Nonnull C component, @Nonnull BiConsumer<? super E, ? super PluginDescriptor> consumer) {
-    checkComponent(component);
-
-    component.getExtensionPoint(getId()).processWithPluginDescriptor(consumer);
+    component.getExtensionPoint(myExtensionClass).processWithPluginDescriptor(consumer);
   }
 
   @Nullable

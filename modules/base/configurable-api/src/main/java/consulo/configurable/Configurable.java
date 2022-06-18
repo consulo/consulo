@@ -54,6 +54,16 @@ public interface Configurable extends UnnamedConfigurable {
 
   ArrayFactory<Configurable> ARRAY_FACTORY = count -> count == 0 ? EMPTY_ARRAY : new Configurable[count];
 
+  @Nonnull
+  default String getId() {
+    throw new AbstractMethodError("#getId() implementation required");
+  }
+
+  @Nullable
+  default String getParentId() {
+    return null;
+  }
+
   /**
    * can be used inside {@link #getHelpTopic()} for disable help
    */

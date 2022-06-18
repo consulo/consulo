@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  * Prohibiting the widget for the main IDE could be done in the {@link StatusBarWidgetFactory#isAvailable(Project)} method.
  */
 public interface StatusBarWidgetFactory {
-  ExtensionPointName<StatusBarWidgetFactory> EP_NAME = new ExtensionPointName<>(PluginIds.CONSULO_BASE + ".statusBarWidgetFactory");
+  ExtensionPointName<StatusBarWidgetFactory> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".statusBarWidgetFactory");
 
   /**
    * @return Widget identifier. Used to store visibility settings.

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.compound;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
 import consulo.execution.configuration.ConfigurationTypeUtil;
@@ -23,12 +24,12 @@ import consulo.application.AllIcons;
 import consulo.project.Project;
 import consulo.ui.image.ImageEffects;
 
+@ExtensionImpl
 public class CompoundRunConfigurationType extends ConfigurationTypeBase {
 
   public static CompoundRunConfigurationType getInstance() {
     return ConfigurationTypeUtil.findConfigurationType(CompoundRunConfigurationType.class);
   }
-
   public CompoundRunConfigurationType() {
     super("CompoundRunConfigurationType", "Compound", "It runs batch of run configurations at once", ImageEffects.layered(AllIcons.Nodes.Folder, AllIcons.Nodes.RunnableMark));
     addFactory(new ConfigurationFactory(this) {
@@ -53,6 +54,4 @@ public class CompoundRunConfigurationType extends ConfigurationTypeBase {
       }
     });
   }
-
-
 }

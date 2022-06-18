@@ -66,12 +66,12 @@ public class NewExtensionAreaImpl {
 
     Extension annotation = extensionClass.getAnnotation(Extension.class);
     if (annotation == null) {
-      throw new UnsupportedOperationException(extensionClass + " is not annotated by @Extension");
+      throw new IllegalArgumentException(extensionClass + " is not annotated by @Extension");
     }
 
     ComponentScope value = annotation.value();
     if (value != myComponentScope) {
-      throw new UnsupportedOperationException("Wrong extension scope " + value + " vs " + myComponentScope);
+      throw new IllegalArgumentException("Wrong extension scope " + value + " vs " + myComponentScope);
     }
 
     return new NewEmptyExtensionPoint<>(extensionClass);

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.newvfs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,6 +29,7 @@ import java.util.Collection;
 /**
  * @author max
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class RefreshQueue {
   public static RefreshQueue getInstance() {
     return ServiceManager.getService(RefreshQueue.class);

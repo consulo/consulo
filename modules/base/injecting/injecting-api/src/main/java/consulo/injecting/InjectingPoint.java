@@ -19,6 +19,7 @@ import consulo.injecting.key.InjectingKey;
 import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Type;
 import java.util.function.Function;
 
 /**
@@ -47,4 +48,10 @@ public interface InjectingPoint<T> {
 
   @Nonnull
   InjectingPoint<T> injectListener(@Nonnull PostInjectListener<T> consumer);
+
+  @Nonnull
+  InjectingPoint<T> constructorParameterTypes(@Nonnull Type[] constructorParameterTypes);
+
+  @Nonnull
+  InjectingPoint<T> constructorFactory(@Nonnull Function<Object[], T> factory);
 }

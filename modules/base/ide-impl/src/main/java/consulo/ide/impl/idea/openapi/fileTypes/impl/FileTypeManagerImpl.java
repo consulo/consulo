@@ -3,14 +3,24 @@ package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import com.google.common.annotations.VisibleForTesting;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ApplicationPropertiesComponent;
+import consulo.application.ReadAction;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.concurrent.AppExecutorUtil;
+import consulo.application.util.concurrent.PooledThreadExecutor;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.persist.*;
+import consulo.container.PluginException;
+import consulo.container.plugin.PluginId;
+import consulo.disposer.Disposable;
+import consulo.document.util.FileContentUtilCore;
 import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.ide.impl.idea.openapi.fileTypes.*;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.ExternalizableFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeChooser;
@@ -19,50 +29,38 @@ import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;
 import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
-import consulo.ide.impl.idea.openapi.util.*;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.JDOMExternalizer;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.FileUtilRt;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
-import consulo.util.collection.MultiValuesMap;
-import consulo.virtualFileSystem.FileSystemInterface;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.StubVirtualFile;
-import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ide.impl.idea.util.*;
 import consulo.ide.impl.idea.util.containers.ConcurrentPackedBitsArray;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.HashSetQueue;
 import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.persist.*;
-import consulo.container.PluginException;
-import consulo.container.plugin.PluginId;
-import consulo.disposer.Disposable;
-import consulo.document.util.FileContentUtilCore;
 import consulo.language.Language;
 import consulo.language.file.LanguageFileType;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
 import consulo.language.file.light.LightVirtualFile;
+import consulo.language.impl.internal.psi.LoadTextUtil;
 import consulo.language.plain.PlainTextFileType;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.concurrent.EdtExecutorService;
-import consulo.application.ApplicationPropertiesComponent;
+import consulo.util.collection.MultiValuesMap;
 import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
 import consulo.util.io.ByteArraySequence;
 import consulo.util.io.ByteSequence;
 import consulo.util.lang.DeprecatedMethodException;
-import consulo.virtualFileSystem.VFileProperty;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.*;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -73,7 +71,6 @@ import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
-import consulo.application.util.concurrent.PooledThreadExecutor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -92,7 +89,6 @@ import java.util.stream.StreamSupport;
 @ServiceImpl
 @State(name = "FileTypeManager", storages = @Storage("filetypes.xml"), additionalExportFile = FileTypeManagerImpl.FILE_SPEC)
 public class FileTypeManagerImpl extends FileTypeManagerEx implements PersistentStateComponent<Element>, Disposable {
-  private static final ExtensionPointName<FileTypeBean> EP_NAME = ExtensionPointName.create("consulo.fileType");
   private static final Logger LOG = Logger.getInstance(FileTypeManagerImpl.class);
 
   // You must update all existing default configurations accordingly
@@ -341,8 +337,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
   @VisibleForTesting
   void initStandardFileTypes() {
-    loadFileTypeBeans();
-
     FileTypeConsumer consumer = new FileTypeConsumer() {
       @Override
       public void consume(@Nonnull FileType fileType) {
@@ -419,42 +413,6 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
     }
     catch (Exception e) {
       LOG.error(e);
-    }
-  }
-
-  private void loadFileTypeBeans() {
-    final List<FileTypeBean> fileTypeBeans = EP_NAME.getExtensionList();
-
-    for (FileTypeBean bean : fileTypeBeans) {
-      initializeMatchers(bean);
-    }
-
-    for (FileTypeBean bean : fileTypeBeans) {
-      if (bean.implementationClass == null) continue;
-
-      if (myPendingFileTypes.containsKey(bean.name)) {
-        LOG.error(new PluginException("Trying to override already registered file type " + bean.name, bean.getPluginId()));
-        continue;
-      }
-
-      myPendingFileTypes.put(bean.name, bean);
-      for (FileNameMatcher matcher : bean.getMatchers()) {
-        myPendingAssociations.addAssociation(matcher, bean);
-      }
-    }
-
-    // Register additional extensions for file types
-    for (FileTypeBean bean : fileTypeBeans) {
-      if (bean.implementationClass != null) continue;
-      FileTypeBean oldBean = myPendingFileTypes.get(bean.name);
-      if (oldBean == null) {
-        LOG.error(new PluginException("Trying to add extensions to non-registered file type " + bean.name, bean.getPluginId()));
-        continue;
-      }
-      oldBean.addMatchers(bean.getMatchers());
-      for (FileNameMatcher matcher : bean.getMatchers()) {
-        myPendingAssociations.addAssociation(matcher, oldBean);
-      }
     }
   }
 

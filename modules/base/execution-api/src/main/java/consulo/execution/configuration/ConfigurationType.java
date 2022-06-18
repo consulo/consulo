@@ -15,8 +15,9 @@
  */
 package consulo.execution.configuration;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import consulo.annotation.DeprecationInfo;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -27,12 +28,9 @@ import javax.annotation.Nullable;
  *
  * @see ConfigurationTypeBase
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ConfigurationType {
-  ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create("consulo.configurationType");
-
-  @Deprecated
-  @DeprecationInfo("Use #EP_NAME")
-  ExtensionPointName<ConfigurationType> CONFIGURATION_TYPE_EP = EP_NAME;
+  ExtensionPointName<ConfigurationType> EP_NAME = ExtensionPointName.create(ConfigurationType.class);
 
   /**
    * Returns the display name of the configuration type. This is used, for example, to represent the configuration type in the run

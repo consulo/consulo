@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.highlighter.custom.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.TypedHandler;
 import consulo.language.editor.action.BraceMatchingUtil;
 import consulo.ide.impl.idea.ide.highlighter.FileTypeRegistrator;
@@ -25,6 +26,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
 import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
 
+@ExtensionImpl
 public class StandardFileTypeRegistrator implements FileTypeRegistrator {
   @Override
   public void initFileType(final FileType fileType) {

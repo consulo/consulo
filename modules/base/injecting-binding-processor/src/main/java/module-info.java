@@ -5,6 +5,7 @@
 module consulo.injecting.binding.processor {
   requires java.compiler;
   requires consulo.annotation;
+  requires jakarta.inject;
 
   requires com.squareup.javapoet;
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VFileProperty;
@@ -33,6 +34,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 0:28/19.07.13
  */
+@ExtensionImpl
 public class PsiFileIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override

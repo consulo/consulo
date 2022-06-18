@@ -18,33 +18,31 @@ package consulo.ide.impl.idea.openapi.options;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
-import consulo.ide.impl.idea.openapi.application.ex.DecodeDefaultsUtil;
 import consulo.component.persist.RoamingType;
-import consulo.ide.ServiceManager;
-import consulo.component.extension.AbstractExtensionPointBean;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
-import consulo.ide.impl.idea.openapi.vfs.*;
-import consulo.virtualFileSystem.internal.VirtualFileTracker;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.ThrowableConvertor;
-import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.component.util.text.UniqueNameGenerator;
-import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.component.store.impl.internal.StreamProvider;
 import consulo.component.store.impl.internal.storage.DirectoryStorageData;
+import consulo.component.store.impl.internal.storage.StorageUtil;
 import consulo.component.store.impl.internal.storage.VfsDirectoryBasedStorage;
+import consulo.component.util.text.UniqueNameGenerator;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtilRt;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.util.ThrowableConvertor;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.Messages;
 import consulo.util.collection.ContainerUtil;
+import consulo.util.collection.SmartList;
+import consulo.util.io.URLUtil;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.event.VirtualFileAdapter;
 import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.internal.VirtualFileTracker;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -175,9 +173,7 @@ public class SchemesManagerImpl<T, E extends ExternalizableScheme> extends Abstr
   @Override
   public void loadBundledScheme(@Nonnull String resourceName, @Nonnull Object requestor, @Nonnull ThrowableConvertor<Element, T, Throwable> convertor) {
     try {
-      URL url = requestor instanceof AbstractExtensionPointBean
-                ? (((AbstractExtensionPointBean)requestor).getLoaderForClass().getResource(resourceName))
-                : DecodeDefaultsUtil.getDefaults(requestor, resourceName);
+      URL url = requestor.getClass().getResource(resourceName);
       if (url == null) {
         // Error shouldn't occur during this operation thus we report error instead of info
         LOG.error("Cannot read scheme from " + resourceName);

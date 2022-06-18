@@ -15,11 +15,12 @@
  */
 package consulo.content.bundle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.OrderRootType;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.ProjectBundle;
-import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,13 +28,12 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.*;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Consumer;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class SdkType implements SdkTypeId {
-  public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create("consulo.sdkType");
+  public static final ExtensionPointName<SdkType> EP_NAME = ExtensionPointName.create(SdkType.class);
 
   private final String myId;
 

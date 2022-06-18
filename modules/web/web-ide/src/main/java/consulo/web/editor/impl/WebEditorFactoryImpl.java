@@ -15,13 +15,16 @@
  */
 package consulo.web.editor.impl;
 
-import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.EditorKind;
 import consulo.codeEditor.internal.RealEditor;
 import consulo.document.Document;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
 import consulo.project.Project;
 import consulo.ui.web.internal.ex.WebEditorImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 
@@ -29,7 +32,10 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 06/12/2020
  */
+@Singleton
+@ServiceImpl
 public class WebEditorFactoryImpl extends EditorFactoryImpl {
+  @Inject
   public WebEditorFactoryImpl(Application application) {
     super(application);
   }

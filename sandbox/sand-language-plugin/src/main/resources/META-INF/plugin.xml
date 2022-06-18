@@ -34,7 +34,7 @@
     <permission type="NATIVE_LIBRARY"/>
   </permissions>
 
-  <extensions defaultExtensionNs="com.intellij">
+  <extensions defaultExtensionNs="consulo">
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand1EapDescriptor"/>
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand2EapDescriptor"/>
     <eapDescriptor implementation="consulo.sandboxPlugin.ide.eap.Sand3EapDescriptor"/>

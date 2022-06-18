@@ -15,31 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.editor.colors.impl;
 
-import consulo.ide.impl.idea.ide.ui.LafManager;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.component.persist.RoamingType;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
-import consulo.component.persist.StoragePathMacros;
 import consulo.codeEditor.EditorFactory;
+import consulo.colorScheme.*;
 import consulo.colorScheme.event.EditorColorsListener;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributesKey;
-import consulo.colorScheme.TextAttributes;
+import consulo.component.persist.*;
+import consulo.container.plugin.PluginManager;
+import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;
 import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ui.ex.awt.ComponentTreeEventDispatcher;
-import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.util.xml.serializer.annotation.OptionTag;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.logging.Logger;
+import consulo.ui.ex.awt.ComponentTreeEventDispatcher;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.io.URLUtil;
+import consulo.util.xml.serializer.WriteExternalException;
+import consulo.util.xml.serializer.annotation.OptionTag;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -51,12 +46,10 @@ import java.net.URL;
 import java.util.*;
 
 @Singleton
-@State(
-        name = "EditorColorsManagerImpl",
+@State(name = "EditorColorsManagerImpl",
         // make roamingType per platform, due user can use light laf on one platform, and dark on other
-        storages = @Storage(value = "colors.scheme.xml", roamingType = RoamingType.PER_OS),
-        additionalExportFile = EditorColorsManagerImpl.FILE_SPEC
-)
+        storages = @Storage(value = "colors.scheme.xml", roamingType = RoamingType.PER_OS), additionalExportFile = EditorColorsManagerImpl.FILE_SPEC)
+@ServiceImpl
 public class EditorColorsManagerImpl extends EditorColorsManager implements PersistentStateComponent<EditorColorsManagerImpl.State> {
   private static final Logger LOG = Logger.getInstance(EditorColorsManagerImpl.class);
 
@@ -126,15 +119,17 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
     addDefaultSchemes();
 
     // Load default schemes from providers
-    for (BundledColorSchemeEP ep : BundledColorSchemeEP.EP.getExtensionList(application)) {
-      mySchemesManager.loadBundledScheme(ep.path, ep, element -> {
-        DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this);
-        defaultColorsScheme.readExternal(element);
+    application.getExtensionPoint(BundledColorSchemeProvider.class).forEachExtensionSafe(bundledColorSchemeProvider -> {
+      for (String colorSchemeFile : bundledColorSchemeProvider.getColorSchemeFiles()) {
+        mySchemesManager.loadBundledScheme(colorSchemeFile, bundledColorSchemeProvider, element -> {
+          DefaultColorsScheme defaultColorsScheme = new DefaultColorsScheme(EditorColorsManagerImpl.this);
+          defaultColorsScheme.readExternal(element);
 
-        myDefaultColorsSchemes.put(defaultColorsScheme.getName(), defaultColorsScheme);
-        return defaultColorsScheme;
-      });
-    }
+          myDefaultColorsSchemes.put(defaultColorsScheme.getName(), defaultColorsScheme);
+          return defaultColorsScheme;
+        });
+      }
+    });
 
     mySchemesManager.loadSchemes();
 
@@ -163,23 +158,23 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
   }
 
   private void loadAdditionalTextAttributes(@Nonnull Application application) {
-    for (AdditionalTextAttributesEP attributesEP : AdditionalTextAttributesEP.EP.getExtensionList(application)) {
-      EditorColorsScheme editorColorsScheme = mySchemesManager.findSchemeByName(attributesEP.scheme);
+    application.getExtensionPoint(AdditionalTextAttributesProvider.class).forEachExtensionSafe(provider -> {
+      EditorColorsScheme editorColorsScheme = mySchemesManager.findSchemeByName(provider.getColorSchemeName());
       if (editorColorsScheme == null) {
         if (!isUnitTestOrHeadlessMode()) {
-          LOG.warn("Cannot find scheme: " + attributesEP.scheme + " from plugin: " + attributesEP.getPluginDescriptor().getPluginId());
+          LOG.warn("Cannot find scheme: " + provider.getColorSchemeName() + " from plugin: " + PluginManager.getPlugin(provider.getClass()).getPluginId());
         }
-        continue;
+        return;
       }
       try {
-        URL resource = attributesEP.getLoaderForClass().getResource(attributesEP.file);
+        URL resource = provider.getClass().getResource(provider.getColorSchemeFile());
         assert resource != null;
         ((AbstractColorsScheme)editorColorsScheme).readAttributes(JDOMUtil.load(URLUtil.openStream(resource)));
       }
       catch (Exception e) {
         LOG.error(e);
       }
-    }
+    });
   }
 
   @Override

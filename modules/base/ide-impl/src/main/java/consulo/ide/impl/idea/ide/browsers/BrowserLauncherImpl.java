@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.browsers;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.JobScheduler;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.ide.impl.idea.execution.util.ExecUtil;
@@ -36,6 +37,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
+@ServiceImpl
 public final class BrowserLauncherImpl extends BrowserLauncherAppless {
   @Override
   @Nullable

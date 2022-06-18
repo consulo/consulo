@@ -16,8 +16,9 @@
 package consulo.language.icon;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionType;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
 
@@ -27,7 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 0:20/19.07.13
  */
-@ExtensionType(value = "iconDescriptorUpdater", component = Project.class)
+@Extension(ComponentScope.PROJECT)
 public interface IconDescriptorUpdater {
   ExtensionList<IconDescriptorUpdater, Project> EP = ExtensionList.of(IconDescriptorUpdater.class);
 

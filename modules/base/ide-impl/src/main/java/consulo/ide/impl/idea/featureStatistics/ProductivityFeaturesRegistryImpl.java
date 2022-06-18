@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.featureStatistics;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.logging.Logger;
 import jakarta.inject.Singleton;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
+@ServiceImpl
 public class ProductivityFeaturesRegistryImpl extends ProductivityFeaturesRegistry {
   private static final Logger LOG = Logger.getInstance(ProductivityFeaturesRegistryImpl.class);
 

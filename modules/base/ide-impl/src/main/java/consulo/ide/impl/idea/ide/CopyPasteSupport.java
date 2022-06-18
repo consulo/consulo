@@ -21,6 +21,8 @@ import consulo.ui.ex.PasteProvider;
 
 public interface CopyPasteSupport {
   CutProvider getCutProvider();
+
   CopyProvider getCopyProvider();
+
   PasteProvider getPasteProvider();
 }

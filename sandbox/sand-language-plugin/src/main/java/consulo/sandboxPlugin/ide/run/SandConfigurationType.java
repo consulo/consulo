@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.run;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 04.06.14
  */
+@ExtensionImpl
 public class SandConfigurationType implements ConfigurationType {
   private final ConfigurationFactory myConfigurationFactory;
 

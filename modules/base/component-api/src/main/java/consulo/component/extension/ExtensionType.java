@@ -15,6 +15,7 @@
  */
 package consulo.component.extension;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.component.ComponentManager;
 
 import java.lang.annotation.ElementType;
@@ -30,6 +31,8 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Deprecated
+@DeprecationInfo("Use @Extension")
 public @interface ExtensionType {
   /**
    * @return extension id

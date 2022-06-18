@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.impl.idea.compiler.impl.TranslatingCompilerFilesMonitorImpl;
 import consulo.compiler.CompileContext;
 import consulo.compiler.TranslatingCompiler;
@@ -36,6 +38,7 @@ import java.util.List;
  * @author VISTALL
  * @since 13:36/06.11.13
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class TranslatingCompilerFilesMonitor {
   @Nonnull
   public static TranslatingCompilerFilesMonitor getInstance() {

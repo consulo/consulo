@@ -15,6 +15,9 @@
  */
 package consulo.application.impl.internal.performance;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.ApplicationProperties;
@@ -60,6 +63,8 @@ import java.util.function.Consumer;
  * @author yole
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PerformanceWatcher implements Disposable {
   private static final Logger LOG = Logger.getInstance(PerformanceWatcher.class);
   private static final int TOLERABLE_LATENCY = 100;

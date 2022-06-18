@@ -1,5 +1,3 @@
-import consulo.component.bind.InjectingBinding;
-
 /**
  * @author VISTALL
  * @since 13/01/2022
@@ -608,7 +606,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.editor.actionSystem;
   exports consulo.ide.impl.idea.openapi.editor.actions;
   exports consulo.ide.impl.idea.openapi.editor.bidi;
-  exports consulo.ide.impl.idea.openapi.editor.colors;
   exports consulo.ide.impl.idea.openapi.editor.colors.impl;
   exports consulo.ide.impl.idea.openapi.editor.event;
   exports consulo.ide.impl.idea.openapi.editor.ex;

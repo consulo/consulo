@@ -15,13 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.application.ex;
 
-import consulo.logging.Logger;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.util.io.URLUtil;
-import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nullable;
 import consulo.annotation.DeprecationInfo;
+import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
+import org.jetbrains.annotations.NonNls;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -36,7 +36,8 @@ public class DecodeDefaultsUtil {
   private static final Logger LOG = Logger.getInstance(DecodeDefaultsUtil.class);
   private static final Map<String, URL> myResourceCache = Collections.synchronizedMap(new HashMap<String, URL>());
 
-  @NonNls private static final String XML_EXTENSION = ".xml";
+  @NonNls
+  private static final String XML_EXTENSION = ".xml";
 
   public static URL getDefaults(Object requestor, final String componentResourcePath) {
     if (myResourceCache.containsKey(componentResourcePath)) {

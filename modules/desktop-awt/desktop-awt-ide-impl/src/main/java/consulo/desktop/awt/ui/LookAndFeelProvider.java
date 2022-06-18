@@ -15,6 +15,8 @@
  */
 package consulo.desktop.awt.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -25,8 +27,9 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-11-03
  */
+@Extension(ComponentScope.APPLICATION)
 public interface LookAndFeelProvider {
-  ExtensionPointName<LookAndFeelProvider> EP_NAME = ExtensionPointName.create("consulo.desktop.awt.lookAndFeelProvider");
+  ExtensionPointName<LookAndFeelProvider> EP_NAME = ExtensionPointName.create(LookAndFeelProvider.class);
 
   void register(@Nonnull Consumer<UIManager.LookAndFeelInfo> consumer);
 }

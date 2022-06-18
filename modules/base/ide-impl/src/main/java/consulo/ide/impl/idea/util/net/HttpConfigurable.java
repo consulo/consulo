@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.util.net;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
@@ -61,6 +64,8 @@ import java.util.stream.Collectors;
 
 @State(name = "HttpConfigurable", storages = @Storage("proxy.settings.xml"))
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class HttpConfigurable implements PersistentStateComponent<HttpConfigurable>, Disposable {
   private static final Logger LOG = Logger.getInstance(HttpConfigurable.class);
   private static final File PROXY_CREDENTIALS_FILE = new File(ContainerPathManager.get().getOptionsPath(), "proxy.settings.pwd");

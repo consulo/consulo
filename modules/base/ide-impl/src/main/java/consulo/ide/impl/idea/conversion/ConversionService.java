@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.conversion;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
@@ -25,12 +27,12 @@ import java.io.File;
 /**
  * @author nik
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class ConversionService {
 
   @Nonnull
   public static ConversionService getInstance() {
-    ConversionService service = ServiceManager.getService(ConversionService.class);
-    return service == null ? new DummyConversionService() : service;
+    return ServiceManager.getService(ConversionService.class);
   }
 
   @Nonnull

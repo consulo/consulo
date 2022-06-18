@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.module.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.module.content.ProjectTopics;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -43,6 +44,7 @@ import javax.annotation.Nullable;
  */
 @State(name = "ModuleManager", storages = @Storage("modules.xml"))
 @Singleton
+@ServiceImpl
 public class ModuleManagerComponent extends ModuleManagerImpl {
   public static final Logger LOG = Logger.getInstance(ModuleManagerComponent.class);
 

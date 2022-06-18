@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.notification.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.FrameStateManager;
 import consulo.ide.impl.idea.notification.*;
 import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
@@ -95,6 +96,7 @@ import java.util.List;
  * @author spleaner
  */
 @Singleton
+@ServiceImpl
 public class NotificationsManagerImpl extends NotificationsManager {
   public static final Color DEFAULT_TEXT_COLOR = new JBColor(Gray._0, Gray._191);
   public static final Color FILL_COLOR = JBColor.namedColor("Notification.background", new JBColor(Gray._242, new Color(0x4E5052)));

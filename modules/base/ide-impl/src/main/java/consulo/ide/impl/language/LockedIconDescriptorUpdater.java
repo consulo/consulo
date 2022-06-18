@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.component.util.Iconable;
 import consulo.language.icon.IconDescriptor;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 1:10/19.07.13
  */
+@ExtensionImpl
 public class LockedIconDescriptorUpdater implements IconDescriptorUpdater {
   @RequiredReadAction
   @Override

@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.lang.moduleImport;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.module.ModifiableModuleModel;
 import consulo.module.Module;
@@ -44,6 +45,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-08-26
  */
+@ExtensionImpl
 public class Sand2ModuleImportProvider implements ModuleImportProvider<ModuleImportContext> {
   @Nonnull
   @Override

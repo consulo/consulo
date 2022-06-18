@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.application;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.HelpManager;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.platform.Platform;
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
  * @since 04/01/2022
  */
 @Singleton
+@ServiceImpl
 public class HelpManagerImpl implements HelpManager {
   @Override
   public void invokeHelp(@Nullable String id) {

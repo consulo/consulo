@@ -15,6 +15,8 @@
  */
 package consulo.colorScheme;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.event.EditorColorsListener;
@@ -24,6 +26,7 @@ import consulo.disposer.Disposable;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class EditorColorsManager {
   public static final Topic<EditorColorsListener> TOPIC = Topic.create("EditorColorsListener", EditorColorsListener.class);
 

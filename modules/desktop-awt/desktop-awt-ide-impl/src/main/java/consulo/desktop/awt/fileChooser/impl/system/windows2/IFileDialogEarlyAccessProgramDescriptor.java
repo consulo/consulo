@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl.system.windows2;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 import consulo.platform.Platform;
 
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 06/10/2021
  */
+@ExtensionImpl
 public class IFileDialogEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override

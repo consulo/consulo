@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.store;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.internal.ProjectEx;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
@@ -45,6 +46,7 @@ import java.util.Set;
  * @since 22-Mar-22
  */
 @Singleton
+@ServiceImpl
 public class IdeStorageNotificationService implements StorageNotificationService {
   private static final Logger LOG = Logger.getInstance(IdeStorageNotificationService.class);
 

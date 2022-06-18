@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.conversion;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import jakarta.inject.Singleton;
 
@@ -27,6 +28,7 @@ import java.io.File;
  *         Date: 9/22/11
  */
 @Singleton
+@ServiceImpl
 public class DummyConversionService extends ConversionService {
   @Nonnull
   @Override

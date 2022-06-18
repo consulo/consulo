@@ -15,6 +15,7 @@
  */
 package consulo.application.impl.internal.start;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 
 import javax.annotation.Nonnull;
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 24/10/2021
  */
+@ExtensionImpl
 public class PluginPermissionEarlyAccessProgramDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vfs.ex.temp;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.util.io.BufferExposingByteArrayInputStream;
 import consulo.util.io.FileAttributes;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -42,6 +43,7 @@ import java.util.List;
 /**
  * @author max
  */
+@ExtensionImpl
 public class TempFileSystem extends NewVirtualFileSystem implements RefreshableFileSystem, VirtualFilePointerCapableFileSystem{
   public static final String PROTOCOL = "temp";
   private final FSItem myRoot = new FSDir(null, "/");

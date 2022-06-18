@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.editor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.LaterInvocator;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorFactoryImpl;
@@ -34,6 +35,7 @@ import javax.annotation.Nonnull;
  * @since 06/12/2020
  */
 @Singleton
+@ServiceImpl
 public class DesktopEditorFactoryImpl extends EditorFactoryImpl {
   @Inject
   public DesktopEditorFactoryImpl(Application application) {

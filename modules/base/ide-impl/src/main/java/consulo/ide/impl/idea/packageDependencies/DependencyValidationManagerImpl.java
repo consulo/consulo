@@ -15,24 +15,25 @@
  */
 package consulo.ide.impl.idea.packageDependencies;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.ide.IdeBundle;
 import consulo.component.persist.MainConfigurationStateSplitter;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.content.scope.*;
+import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProvider;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.language.editor.scope.NamedScopeManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.Pair;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.image.Image;
+import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -43,8 +44,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
-@State(name = "DependencyValidationManager", storages = {
-        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)})
+@State(name = "DependencyValidationManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/scopes/", stateSplitter = DependencyValidationManagerImpl.ScopesStateSplitter.class)})
+@ServiceImpl
 public class DependencyValidationManagerImpl extends DependencyValidationManager {
   private static final Logger LOG = Logger.getInstance(DependencyValidationManagerImpl.class);
 

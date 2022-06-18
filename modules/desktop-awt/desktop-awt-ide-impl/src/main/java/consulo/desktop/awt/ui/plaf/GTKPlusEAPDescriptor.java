@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.plaf;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.SystemInfo;
 import consulo.application.eap.EarlyAccessProgramDescriptor;
 import javax.annotation.Nonnull;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 6/7/17
  */
+@ExtensionImpl
 public class GTKPlusEAPDescriptor extends EarlyAccessProgramDescriptor {
   @Nonnull
   @Override

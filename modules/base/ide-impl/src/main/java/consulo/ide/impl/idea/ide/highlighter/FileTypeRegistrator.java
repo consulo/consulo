@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.idea.ide.highlighter;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.component.extension.ExtensionPointName;
 
+@Extension(ComponentScope.APPLICATION)
 public interface FileTypeRegistrator {
-  ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create("consulo.fileTypeRegistrator");
+  ExtensionPointName<FileTypeRegistrator> EP_NAME = ExtensionPointName.create(FileTypeRegistrator.class);
 
   void initFileType(FileType fileType);
 }

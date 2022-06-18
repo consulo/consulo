@@ -1,27 +1,28 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
-import consulo.ide.impl.idea.openapi.editor.CaretStateTransferableData;
+import consulo.disposer.Disposable;
 import consulo.document.Document;
-import consulo.ui.ex.awt.CopyPasteManager;
+import consulo.ide.impl.idea.openapi.editor.CaretStateTransferableData;
 import consulo.ide.impl.idea.openapi.ide.CutElementMarker;
 import consulo.ide.impl.idea.openapi.ide.KillRingTransferable;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.disposer.Disposable;
+import consulo.ui.ex.awt.CopyPasteManager;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.awt.datatransfer.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class CopyPasteManagerEx extends CopyPasteManager implements ClipboardOwner {
   private final List<Transferable> myData = new ArrayList<>();
   private final EventDispatcher<ContentChangedListener> myDispatcher = EventDispatcher.create(ContentChangedListener.class);
