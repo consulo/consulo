@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.projectRoots.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import javax.annotation.Nonnull;
@@ -26,6 +28,7 @@ import java.util.concurrent.Future;
  * @author nik
  */
 @Deprecated
+@Service(ComponentScope.APPLICATION)
 public abstract class JdkVersionDetector {
   @Nonnull
   public static JdkVersionDetector getInstance() {

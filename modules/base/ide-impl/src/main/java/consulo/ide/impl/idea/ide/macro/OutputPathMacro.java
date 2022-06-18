@@ -15,26 +15,28 @@
  */
 package consulo.ide.impl.idea.ide.macro;
 
-import consulo.ide.IdeBundle;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.pathMacro.Macro;
-import consulo.project.Project;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.dataContext.DataContext;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.compiler.CompilerPathsImpl;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 import consulo.language.content.TestContentFolderTypeProvider;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.pathMacro.Macro;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
 
 import java.io.File;
 
+@ExtensionImpl
 public final class OutputPathMacro extends Macro {
   @Override
   public String getName() {

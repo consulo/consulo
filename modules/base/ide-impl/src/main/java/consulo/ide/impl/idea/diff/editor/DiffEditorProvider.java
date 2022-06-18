@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.diff.editor;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.diff.impl.DiffRequestProcessor;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
@@ -26,6 +27,7 @@ import consulo.ui.annotation.RequiredUIAccess;
 import javax.annotation.Nonnull;
 
 // from kotlin
+@ExtensionImpl
 public class DiffEditorProvider implements FileEditorProvider, DumbAware {
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {

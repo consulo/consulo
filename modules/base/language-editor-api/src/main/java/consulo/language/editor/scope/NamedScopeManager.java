@@ -15,6 +15,9 @@
  */
 package consulo.language.editor.scope;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -27,6 +30,8 @@ import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "NamedScopeManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class NamedScopeManager extends NamedScopesHolder {
   @Inject
   public NamedScopeManager(final Project project) {

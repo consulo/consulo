@@ -15,6 +15,8 @@
  */
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.TransactionId;
 import consulo.document.Document;
 import consulo.project.Project;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Service(ComponentScope.APPLICATION)
 public interface DocumentCommitProcessor {
   void commitSynchronously(@Nonnull Document document, @Nonnull Project project, @Nonnull PsiFile psiFile);
   void commitAsynchronously(@Nonnull final Project project,

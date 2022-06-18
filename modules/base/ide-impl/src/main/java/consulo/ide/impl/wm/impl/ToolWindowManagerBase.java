@@ -15,21 +15,8 @@
  */
 package consulo.ide.impl.wm.impl;
 
-import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
-import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
-import consulo.ide.impl.idea.openapi.wm.ToolWindowEP;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.project.ui.wm.ToolWindowManagerListener;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowActiveStack;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowSideStack;
-import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.CallChain;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.component.ProcessCanceledException;
@@ -38,6 +25,17 @@ import consulo.component.persist.PersistentStateComponentWithUIState;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
+import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
+import consulo.ide.impl.idea.openapi.wm.ToolWindowEP;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowActiveStack;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowSideStack;
+import consulo.ide.impl.idea.openapi.wm.impl.WindowInfoImpl;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
@@ -45,8 +43,8 @@ import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.startup.StartupActivity;
 import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.Rectangle2D;
@@ -74,24 +72,6 @@ import java.util.*;
  */
 public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implements PersistentStateComponentWithUIState<Element, Element>, Disposable {
   public static final String ID = "ToolWindowManager";
-
-  public static class InitToolWindowsActivity implements StartupActivity.DumbAware {
-    @Override
-    public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      UIAccess.assetIsNotUIThread();
-
-      ToolWindowManagerBase manager = (ToolWindowManagerBase)ToolWindowManagerEx.getInstanceEx(project);
-
-      CallChain.Link<Void, Void> chain = CallChain.first(uiAccess);
-      chain = chain.linkUI(manager::initializeEditorComponent);
-      chain = chain.linkAsync(() -> manager.registerToolWindowsFromBeans(uiAccess));
-      chain = chain.linkUI(manager::postInitialize);
-      chain = chain.linkUI(manager::connectModuleExtensionListener);
-
-      // toss it, and wait result
-      chain.tossAsync().getResultSync();
-    }
-  }
 
   /**
    * Spies on IdeToolWindow properties and applies them to the window

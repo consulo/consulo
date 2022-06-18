@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.editor.rawHighlight;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.editor.rawHighlight.internal.HighlightInfoFactory;
@@ -25,6 +26,7 @@ import jakarta.inject.Singleton;
  * @since 01-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class HighlightInfoFactoryImpl implements HighlightInfoFactory {
   @Override
   public HighlightInfo.Builder createBuilder(HighlightInfoType infoType) {

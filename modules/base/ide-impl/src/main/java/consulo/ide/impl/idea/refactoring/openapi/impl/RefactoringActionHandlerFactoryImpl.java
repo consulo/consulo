@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.openapi.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.ide.impl.idea.refactoring.RefactoringActionHandlerFactory;
 import consulo.ide.impl.idea.refactoring.move.MoveHandler;
@@ -26,6 +27,7 @@ import jakarta.inject.Singleton;
  * @author dsl
  */
 @Singleton
+@ServiceImpl
 public class RefactoringActionHandlerFactoryImpl extends RefactoringActionHandlerFactory {
 
   @Override

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.language.Language;
 import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
@@ -27,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since Aug 18, 2010 1:37:55 PM
  */
+@Service(ComponentScope.APPLICATION)
 public interface EditorTextFieldProvider {
 
   /**

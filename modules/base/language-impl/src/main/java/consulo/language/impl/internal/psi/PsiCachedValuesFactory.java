@@ -2,6 +2,7 @@
 
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.util.CachedValuesFactory;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
@@ -21,6 +22,7 @@ import java.util.function.Supplier;
  * @author Dmitry Avdeev
  */
 @Singleton
+@ServiceImpl
 public final class PsiCachedValuesFactory implements CachedValuesFactory {
   private final PsiManager myManager;
 

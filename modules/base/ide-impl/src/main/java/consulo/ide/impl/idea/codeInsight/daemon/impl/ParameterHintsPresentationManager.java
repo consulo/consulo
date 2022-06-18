@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.hints.InlayParameterHintsProvider;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
@@ -46,6 +49,8 @@ import java.util.List;
 import java.util.Set;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class ParameterHintsPresentationManager implements Disposable {
   private static final Key<MyFontMetrics> HINT_FONT_METRICS = Key.create("ParameterHintFontMetrics");
   private static final Key<AnimationStep> ANIMATION_STEP = Key.create("ParameterHintAnimationStep");

@@ -15,13 +15,14 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.project.Project;
-import consulo.component.extension.ExtensionType;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionList;
+import consulo.project.Project;
 
 import javax.annotation.Nullable;
 
-@ExtensionType(value = "selectInTarget", component = Project.class)
+@Extension(ComponentScope.PROJECT)
 public interface SelectInTarget {
   ExtensionList<SelectInTarget, Project> EP_NAME = ExtensionList.of(SelectInTarget.class);
 

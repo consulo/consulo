@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.navigation.Navigatable;
 import consulo.platform.Platform;
@@ -14,6 +16,7 @@ import java.io.File;
 /**
  * @author yole
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class PsiNavigationSupport {
   public static PsiNavigationSupport getInstance() {
     return Application.get().getInstance(PsiNavigationSupport.class);

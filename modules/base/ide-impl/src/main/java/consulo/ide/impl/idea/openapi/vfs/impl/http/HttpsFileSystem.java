@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.http;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.VirtualFileManager;
 import org.jetbrains.annotations.NonNls;
 
 /**
  * @author nik
  */
+@ExtensionImpl
 public class HttpsFileSystem extends HttpFileSystemBase {
   @NonNls public static final String HTTPS_PROTOCOL = "https";
 

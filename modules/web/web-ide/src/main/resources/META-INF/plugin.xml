@@ -62,9 +62,6 @@
 
     <fileChooseDialogProvider implementation="consulo.ide.impl.fileChooser.UnifiedFileChooseDialogProvider" order="last"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory"
-                        serviceImplementation="consulo.ide.impl.fileEditor.text.UnifiedTextEditorComponentContainerFactory"/>
-
     <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.web.wm.impl.WebApplicationIdeFocusManagerImpl" lazy="false"/>
     <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.web.wm.impl.WebWindowManagerImpl"/>
     <applicationService serviceInterface="consulo.dataContext.DataManager" serviceImplementation="consulo.ide.impl.UnifiedDataManagerImpl"/>
@@ -73,7 +70,6 @@
     <applicationService serviceInterface="consulo.ide.impl.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.web.startup.customize.WebStartupCustomizeManager"/>
 
     <projectService serviceInterface="consulo.fileEditor.FileEditorManager" serviceImplementation="consulo.ide.impl.fileEditor.UnifiedPsiAwareFileEditorManagerImpl" lazy="false"/>
-    <projectService serviceInterface="consulo.project.ui.wm.ToolWindowManager" serviceImplementation="consulo.web.wm.impl.WebToolWindowManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.ide.impl.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.project.ui.wm.dock.DockManager" serviceImplementation="consulo.ide.impl.ui.docking.impl.UnifiedDockManagerImpl"/>
 

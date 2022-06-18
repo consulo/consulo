@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
-import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
-import consulo.util.lang.Pair;
-import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.annotation.component.ServiceImpl;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.setting.AttributesDescriptor;
+import consulo.ide.impl.idea.openapi.options.colors.ColorSettingsPages;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.util.lang.Pair;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
+@ServiceImpl
 public class ColorSettingsPagesImpl extends ColorSettingsPages {
   private final List<ColorSettingsPage> myPages = new ArrayList<>();
   private boolean myExtensionsLoaded = false;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.http;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.http.event.HttpVirtualFileListener;
@@ -36,6 +37,7 @@ import java.util.Map;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class RemoteFileManagerImpl extends RemoteFileManager implements Disposable {
   private final LocalFileStorage myStorage;
   private final Map<Pair<Boolean, String>, VirtualFileImpl> myRemoteFiles;

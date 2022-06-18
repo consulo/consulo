@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.content.library.*;
 import consulo.project.Project;
@@ -37,6 +38,7 @@ import java.util.*;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class LibraryPresentationManagerImpl extends LibraryPresentationManager {
   private Map<LibraryKind, LibraryPresentationProvider<?>> myPresentationProviders;
 

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.codeStyle.CommonCodeStyleSettings;
 import consulo.language.ast.ASTNode;
@@ -28,6 +29,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 
 @Singleton
+@ServiceImpl
 public final class IndentHelperImpl extends IndentHelper {
   //----------------------------------------------------------------------------------------------------
 

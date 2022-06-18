@@ -15,6 +15,8 @@
  */
 package consulo.content.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerListener;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09-Apr-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface GlobalLibraryRootListenerProvider {
   @Nonnull
   VirtualFilePointerListener getListener();

@@ -15,13 +15,15 @@
  */
 package consulo.fileEditor;
 
-import consulo.component.extension.ExtensionPointName;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposer;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -33,14 +35,15 @@ import javax.annotation.Nonnull;
  * @author Vladimir Kondratyev
  * @see DumbAware
  */
+@Extension(ComponentScope.APPLICATION)
 public interface FileEditorProvider {
-  ExtensionPointName<FileEditorProvider> EP_FILE_EDITOR_PROVIDER = ExtensionPointName.create("consulo.fileEditorProvider");
+  ExtensionPointName<FileEditorProvider> EP_FILE_EDITOR_PROVIDER = ExtensionPointName.create(FileEditorProvider.class);
+
   Key<FileEditorProvider> KEY = Key.create("com.intellij.fileEditorProvider");
 
   /**
    * @param file file to be tested for acceptance. This
-   * parameter is never {@code null}.
-   *
+   *             parameter is never {@code null}.
    * @return whether the provider can create valid editor for the specified
    * {@code file} or not
    */
@@ -92,7 +95,6 @@ public interface FileEditorProvider {
 
   /**
    * @return policy that specifies how show editor created via this provider be opened
-   *
    * @see FileEditorPolicy#NONE
    * @see FileEditorPolicy#HIDE_DEFAULT_EDITOR
    * @see FileEditorPolicy#PLACE_BEFORE_DEFAULT_EDITOR

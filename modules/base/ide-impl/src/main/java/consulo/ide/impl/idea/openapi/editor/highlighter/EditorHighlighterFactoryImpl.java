@@ -15,27 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.editor.highlighter;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.EditorHighlighter;
-import consulo.language.editor.highlight.*;
-import consulo.language.Language;
-import consulo.language.file.LanguageFileType;
-import consulo.logging.Logger;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.language.editor.highlight.LexerEditorHighlighter;
 import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.LanguageSubstitutors;
+import consulo.language.Language;
+import consulo.language.editor.highlight.*;
+import consulo.language.file.LanguageFileType;
 import consulo.language.file.light.LightVirtualFile;
-import javax.annotation.Nonnull;
+import consulo.language.psi.LanguageSubstitutors;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
   private static final Logger LOG = Logger.getInstance(EditorHighlighterFactoryImpl.class);
 
@@ -118,9 +120,7 @@ public class EditorHighlighterFactoryImpl extends EditorHighlighterFactory {
 
   @Nonnull
   @Override
-  public EditorHighlighter createEditorHighlighter(@Nonnull final EditorColorsScheme settings,
-                                                   @Nonnull final String fileName,
-                                                   @javax.annotation.Nullable final Project project) {
+  public EditorHighlighter createEditorHighlighter(@Nonnull final EditorColorsScheme settings, @Nonnull final String fileName, @javax.annotation.Nullable final Project project) {
     return createEditorHighlighter(new LightVirtualFile(fileName), settings, project);
   }
 }

@@ -16,6 +16,8 @@
 package consulo.language.psi;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.language.Language;
 import consulo.language.util.IncorrectOperationException;
 import consulo.language.version.LanguageVersion;
@@ -30,6 +32,7 @@ import javax.annotation.Nullable;
 /**
  * @author max
  */
+@Service(ComponentScope.PROJECT)
 public abstract class PsiFileFactory {
   public static Key<PsiFile> ORIGINAL_FILE = Key.create("ORIGINAL_FILE");
 

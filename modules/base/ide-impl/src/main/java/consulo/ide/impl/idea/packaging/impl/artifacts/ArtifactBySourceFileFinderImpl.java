@@ -15,29 +15,28 @@
  */
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
-import consulo.project.Project;
-import consulo.component.util.ModificationTracker;
-import consulo.util.collection.MultiValuesMap;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
+import consulo.component.util.ModificationTracker;
 import consulo.ide.impl.idea.packaging.impl.elements.FileOrDirectoryCopyPackagingElement;
 import consulo.ide.impl.idea.packaging.impl.elements.ModuleOutputPackagingElement;
-import consulo.application.util.CachedValue;
-import consulo.application.util.CachedValueProvider;
-import consulo.application.util.CachedValuesManager;
-import consulo.util.collection.SmartList;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.util.collection.MultiValuesMap;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
-
-import javax.annotation.Nonnull;
-
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,6 +46,7 @@ import java.util.List;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class ArtifactBySourceFileFinderImpl extends ArtifactBySourceFileFinder {
   private CachedValue<MultiValuesMap<VirtualFile, Artifact>> myFile2Artifacts;
   private final Project myProject;

@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.FrameStateManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.ide.ui.LafManager;
@@ -117,6 +118,7 @@ import java.util.*;
  */
 @State(name = ToolWindowManagerBase.ID, storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
 @Singleton
+@ServiceImpl
 public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
   /**

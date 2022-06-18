@@ -15,8 +15,9 @@
  */
 package consulo.project.content;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionType;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -26,7 +27,7 @@ import java.util.Set;
  * @author anna
  * @since 27-Dec-2007
  */
-@ExtensionType(value = "roots.watchedRootsProvider", component = Project.class)
+@Extension(ComponentScope.PROJECT)
 public interface WatchedRootsProvider {
   ExtensionList<WatchedRootsProvider, Project> EP = ExtensionList.of(WatchedRootsProvider.class);
 

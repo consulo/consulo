@@ -15,6 +15,8 @@
  */
 package consulo.compiler.artifact;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
 import consulo.compiler.artifact.event.ArtifactListener;
@@ -29,6 +31,7 @@ import java.util.Comparator;
 /**
  * @author nik
  */
+@Service(ComponentScope.PROJECT)
 public abstract class ArtifactManager implements ArtifactModel {
   @Nonnull
   public static ArtifactManager getInstance(@Nonnull Project project) {

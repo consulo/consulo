@@ -17,6 +17,8 @@
 package consulo.fileTemplate;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.util.dataholder.Key;
@@ -32,6 +34,7 @@ import java.util.Properties;
  * @author MYakovlev
  * Date: Jul 24, 2002
  */
+@Service(ComponentScope.PROJECT)
 public abstract class FileTemplateManager {
   public static final Key<Properties> DEFAULT_TEMPLATE_PROPERTIES = Key.create("DEFAULT_TEMPLATE_PROPERTIES");
   public static final int RECENT_TEMPLATES_SIZE = 25;

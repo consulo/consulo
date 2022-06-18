@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ui.tabs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -29,8 +30,8 @@ import java.awt.*;
 /**
  * @author spleaner
  */
+@ExtensionImpl
 public class EditorTabColorProviderImpl implements EditorTabColorProvider, DumbAware {
-
   @Override
   @Nullable
   public Color getEditorTabColor(Project project, VirtualFile file) {

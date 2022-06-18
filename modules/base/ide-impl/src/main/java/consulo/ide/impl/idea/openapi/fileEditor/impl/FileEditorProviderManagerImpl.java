@@ -15,32 +15,28 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessRule;
+import consulo.application.util.function.ThrowableComputable;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.fileEditor.FileEditorPolicy;
-import consulo.fileEditor.FileEditorProvider;
-import consulo.fileEditor.WeighedFileEditorProvider;
+import consulo.fileEditor.*;
+import consulo.fileEditor.text.TextEditorProvider;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorProviderManager;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.application.util.function.ThrowableComputable;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.xml.serializer.annotation.MapAnnotation;
-import consulo.application.AccessRule;
-import consulo.fileEditor.FileEditorComposite;
-import consulo.fileEditor.FileEditorWithProviderComposite;
-import consulo.fileEditor.text.TextEditorProvider;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.util.*;
 
 /**
@@ -48,6 +44,7 @@ import java.util.*;
  * @author Vladimir Kondratyev
  */
 @Singleton
+@ServiceImpl
 @State(name = "FileEditorProviderManager", storages = @Storage(value = "fileEditorProviderManager.xml", roamingType = RoamingType.DISABLED))
 public final class FileEditorProviderManagerImpl extends FileEditorProviderManager implements PersistentStateComponent<FileEditorProviderManagerImpl> {
 
@@ -55,7 +52,7 @@ public final class FileEditorProviderManagerImpl extends FileEditorProviderManag
 
   @Inject
   public FileEditorProviderManagerImpl() {
-    for (FileEditorProvider fileEditorProvider : FileEditorProvider.EP_FILE_EDITOR_PROVIDER.getExtensions()) {
+    for (FileEditorProvider fileEditorProvider : FileEditorProvider.EP_FILE_EDITOR_PROVIDER.getExtensionList()) {
       registerProvider(fileEditorProvider);
     }
   }

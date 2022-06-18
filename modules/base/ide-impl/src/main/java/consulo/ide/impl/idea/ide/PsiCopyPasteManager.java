@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.dnd.LinuxDragAndDropSupport;
 import consulo.application.Application;
 import consulo.ide.ServiceManager;
@@ -48,6 +51,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PsiCopyPasteManager {
   public static PsiCopyPasteManager getInstance() {
     return ServiceManager.getService(PsiCopyPasteManager.class);

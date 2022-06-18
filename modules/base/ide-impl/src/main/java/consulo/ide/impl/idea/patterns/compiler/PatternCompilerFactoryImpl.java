@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.patterns.compiler;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.application.util.ConcurrentFactoryMap;
-
-import javax.annotation.Nonnull;
-
 import consulo.language.pattern.compiler.PatternCompiler;
 import consulo.language.pattern.compiler.PatternCompilerFactory;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,9 +33,9 @@ import java.util.Map;
  * @author Gregory.Shrago
  */
 @Singleton
+@ServiceImpl
 public class PatternCompilerFactoryImpl extends PatternCompilerFactory {
   public static final ExtensionPointName<PatternClassBean> PATTERN_CLASS_EP = ExtensionPointName.create("consulo.patterns.patternClass");
-
 
   private final Map<String, Class[]> myClasses = ConcurrentFactoryMap.createMap(key -> {
     final ArrayList<Class> result = new ArrayList<Class>(1);

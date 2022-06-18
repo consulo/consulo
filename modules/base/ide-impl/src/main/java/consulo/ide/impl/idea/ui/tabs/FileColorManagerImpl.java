@@ -16,28 +16,28 @@
 
 package consulo.ide.impl.idea.ui.tabs;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
+import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.ide.impl.idea.ui.FileColorManager;
+import consulo.project.Project;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.component.persist.PersistentStateComponent;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -47,6 +47,7 @@ import java.util.*;
  * @author Konstantin Bulenkov
  */
 @Singleton
+@ServiceImpl
 @State(name = "FileColors", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class FileColorManagerImpl extends FileColorManager implements PersistentStateComponent<Element> {
   public static final String FC_ENABLED = "FileColorsEnabled";

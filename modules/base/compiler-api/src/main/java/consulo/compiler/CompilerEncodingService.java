@@ -15,6 +15,8 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.collection.Chunk;
@@ -27,6 +29,7 @@ import java.util.Collection;
 /**
  * @author nik
  */
+@Service(ComponentScope.PROJECT)
 public abstract class CompilerEncodingService {
   public static CompilerEncodingService getInstance(@Nonnull Project project) {
     return project.getInstance(CompilerEncodingService.class);

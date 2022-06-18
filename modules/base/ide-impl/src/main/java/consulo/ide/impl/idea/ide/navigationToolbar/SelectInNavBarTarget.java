@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.application.ui.UISettings;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.SelectInManager;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.impl.SelectInTargetPsiWrapper;
-import consulo.application.ui.UISettings;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.IdeRootPaneNorthExtension;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
-import org.jetbrains.annotations.NonNls;
+import consulo.project.Project;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.IdeRootPaneNorthExtension;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 
@@ -35,15 +36,16 @@ import javax.swing.*;
  * @author Anna Kozlova
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class SelectInNavBarTarget extends SelectInTargetPsiWrapper implements DumbAware {
   public static final String NAV_BAR_ID = "NavBar";
 
+  @Inject
   public SelectInNavBarTarget(final Project project) {
     super(project);
   }
 
   @Override
-  @NonNls
   public String getToolWindowId() {
     return NAV_BAR_ID;
   }

@@ -16,11 +16,13 @@
 package consulo.desktop.awt.fileChooser.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.component.Orderable;
 import consulo.component.ComponentManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.fileChooser.FileChooserDialog;
 import consulo.fileChooser.PathChooserDialog;
 import consulo.fileChooser.provider.FileChooseDialogProvider;
+import consulo.fileChooser.provider.FileOperateDialogProvider;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -32,6 +34,7 @@ import java.awt.*;
  * @since 2018-06-28
  */
 @ExtensionImpl
+@Orderable(id = FileOperateDialogProvider.APPLICATION_ID, order = "last")
 public class DesktopFileChooseDialogProvider implements FileChooseDialogProvider {
   @Nonnull
   @Override

@@ -15,6 +15,8 @@
  */
 package consulo.content.scope;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class PredefinedSearchScopeProvider {
   public static PredefinedSearchScopeProvider getInstance() {
     return Application.get().getInstance(PredefinedSearchScopeProvider.class);

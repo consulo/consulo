@@ -15,10 +15,11 @@
  */
 package consulo.language.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
@@ -32,7 +33,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 20.04.2015
  */
-@ExtensionType(value = "targetElementUtilEx", component = Application.class)
+@Extension(ComponentScope.APPLICATION)
 public interface TargetElementUtilExtender {
   ExtensionList<TargetElementUtilExtender, Application> EP = ExtensionList.of(TargetElementUtilExtender.class);
 

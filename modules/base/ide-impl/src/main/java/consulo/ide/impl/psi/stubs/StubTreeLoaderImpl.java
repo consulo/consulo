@@ -16,6 +16,7 @@
 package consulo.ide.impl.psi.stubs;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.RecursionManager;
@@ -56,6 +57,7 @@ import java.util.Map;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class StubTreeLoaderImpl extends StubTreeLoader {
   public static class UpToDateStubIndexMismatch extends RuntimeExceptionWithAttachments {
     public UpToDateStubIndexMismatch(String message, Throwable cause, Attachment... attachments) {

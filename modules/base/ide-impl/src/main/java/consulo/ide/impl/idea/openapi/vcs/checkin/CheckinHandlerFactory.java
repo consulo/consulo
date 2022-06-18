@@ -16,10 +16,12 @@
 
 package consulo.ide.impl.idea.openapi.vcs.checkin;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
+import consulo.project.Project;
 
 /**
  * Factory which provides callbacks to run before and after checkin operations.
@@ -33,8 +35,9 @@ import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
  * @author lesya
  * @since 5.1
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class CheckinHandlerFactory implements BaseCheckinHandlerFactory {
-  public static final ExtensionPointName<CheckinHandlerFactory> EP_NAME = ExtensionPointName.create("consulo.checkinHandlerFactory");
+  public static final ExtensionPointName<CheckinHandlerFactory> EP_NAME = ExtensionPointName.create(CheckinHandlerFactory.class);
   
   /**
    * Creates a handler for a single Checkin Project or Checkin File operation.

@@ -16,6 +16,8 @@
 package consulo.module.content.scope;
 
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.module.Module;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author dmitrylomov
  */
+@Service(ComponentScope.MODULE)
 public interface ModuleScopeProvider {
   @Nonnull
   static ModuleScopeProvider getInstance(@Nonnull Module module) {

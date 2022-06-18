@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.codeEditor;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupFactoryImpl;
 import consulo.codeEditor.Editor;
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
  * @since 10-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class EditorPopupHelperImpl implements EditorPopupHelper {
   private PopupFactoryImpl myPopupFactory;
 

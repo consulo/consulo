@@ -1,6 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util.query;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -10,6 +12,7 @@ import java.util.function.Function;
 /**
  * This class is intentionally package local.
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class Queries {
   @Nonnull
   static Queries getInstance() {

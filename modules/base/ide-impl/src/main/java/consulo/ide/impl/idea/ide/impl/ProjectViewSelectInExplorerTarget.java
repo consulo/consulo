@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.SelectInContext;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
@@ -28,6 +29,7 @@ import java.io.File;
 /**
  * @author Roman.Chernyatchik
  */
+@ExtensionImpl
 public class ProjectViewSelectInExplorerTarget implements SelectInTarget, DumbAware {
   @Override
   public boolean canSelect(SelectInContext context) {

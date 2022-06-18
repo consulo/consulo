@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
@@ -39,6 +40,7 @@ import java.util.function.IntConsumer;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class ArtifactSortingUtilImpl extends ArtifactSortingUtil {
   private final Project myProject;
   private CachedValue<Map<String, String>> myArtifactToSelfIncludingName;

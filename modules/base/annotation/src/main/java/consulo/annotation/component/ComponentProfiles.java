@@ -20,7 +20,7 @@ package consulo.annotation.component;
  * @since 13-Jun-22
  */
 public final class ComponentProfiles {
-  public static final String PRODUCTION = "prod";
+  public static final String PROD = "prod";
 
   public static final String AWT = "awt";
 

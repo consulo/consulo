@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.fileEditor.text;
 
-import consulo.dataContext.DataProvider;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 
 /**
@@ -25,6 +27,7 @@ import consulo.disposer.Disposable;
  *
  * Factory for TextEditorComponentContainer implementations, for desktop & web
  */
+@Service(ComponentScope.APPLICATION)
 public interface TextEditorComponentContainerFactory {
   TextEditorComponentContainer createTextComponentContainer(Editor editor, Disposable parentDisposable, DataProvider dataProvider);
 }

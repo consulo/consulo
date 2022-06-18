@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.search;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
 import consulo.ide.impl.idea.ide.hierarchy.HierarchyBrowserBase;
@@ -61,6 +62,7 @@ import javax.swing.*;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 public class PredefinedSearchScopeProviderImpl extends PredefinedSearchScopeProvider {
 
   @Nonnull

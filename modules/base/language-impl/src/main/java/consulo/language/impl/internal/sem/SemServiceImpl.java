@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.internal.sem;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.application.util.RecursionGuard;
@@ -48,6 +49,7 @@ import java.util.function.Function;
  * @author peter
  */
 @Singleton
+@ServiceImpl
 public class SemServiceImpl extends SemService {
   private static final Logger LOG = Logger.getInstance(SemServiceImpl.class);
 

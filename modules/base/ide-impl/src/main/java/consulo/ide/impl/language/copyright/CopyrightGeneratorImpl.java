@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.copyright;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.copyright.impl.pattern.DateInfo;
 import consulo.ide.impl.copyright.impl.pattern.FileInfo;
 import consulo.ide.impl.copyright.impl.pattern.ModuleInfo;
@@ -45,6 +46,7 @@ import java.util.function.Supplier;
  * @since 13-Jun-22
  */
 @Singleton
+@ServiceImpl
 public class CopyrightGeneratorImpl implements CopyrightGenerator {
   private static final Logger LOG = Logger.getInstance(CopyrightGeneratorImpl.class);
 

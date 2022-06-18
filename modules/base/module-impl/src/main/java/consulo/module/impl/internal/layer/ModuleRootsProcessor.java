@@ -16,6 +16,8 @@
 package consulo.module.impl.internal.layer;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.util.function.Processor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.ContentFolderTypeProvider;
@@ -33,8 +35,9 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 08.12.14
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ModuleRootsProcessor {
-  public static final ExtensionPointName<ModuleRootsProcessor> EP_NAME = ExtensionPointName.create("consulo.moduleRootsProcessor");
+  public static final ExtensionPointName<ModuleRootsProcessor> EP_NAME = ExtensionPointName.create(ModuleRootsProcessor.class);
 
   @Nullable
   public static ModuleRootsProcessor findRootsProcessor(@Nonnull ModuleRootModel moduleRootModel) {

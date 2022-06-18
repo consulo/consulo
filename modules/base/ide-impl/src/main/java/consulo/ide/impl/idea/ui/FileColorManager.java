@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -29,6 +31,7 @@ import java.util.Collection;
 /**
  * @author spleaner
  */
+@Service(ComponentScope.PROJECT)
 public abstract class FileColorManager {
   public static FileColorManager getInstance(@Nonnull final Project project) {
     return ServiceManager.getService(project, FileColorManager.class);

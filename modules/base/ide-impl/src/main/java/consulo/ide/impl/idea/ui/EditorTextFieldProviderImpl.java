@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.Language;
 import consulo.language.editor.ui.EditorCustomization;
 import consulo.language.editor.ui.awt.EditorTextField;
@@ -42,6 +43,7 @@ import java.util.Comparator;
  * @since Aug 20, 2010 3:21:03 PM
  */
 @Singleton
+@ServiceImpl
 public class EditorTextFieldProviderImpl implements EditorTextFieldProvider {
 
   /**

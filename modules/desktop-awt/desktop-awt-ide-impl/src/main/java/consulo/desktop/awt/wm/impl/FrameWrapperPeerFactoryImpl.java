@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.IdeFocusTraversalPolicy;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
@@ -51,6 +52,7 @@ import java.io.File;
  * @since 2019-02-15
  */
 @Singleton
+@ServiceImpl
 public class FrameWrapperPeerFactoryImpl implements FrameWrapperPeerFactory {
   private static class MyJFrame extends JFrameAsUIWindow implements IdeFrame.Child, IdeFrameEx {
 

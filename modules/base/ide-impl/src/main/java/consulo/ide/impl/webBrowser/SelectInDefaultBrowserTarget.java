@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.webBrowser;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.SelectInContext;
 import consulo.ide.impl.idea.ide.SelectInTargetBase;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
@@ -30,6 +31,7 @@ import consulo.webBrowser.WebBrowserUrlProvider;
 import consulo.webBrowser.WebFileFilter;
 import consulo.webBrowser.action.BaseOpenInBrowserAction;
 
+@ExtensionImpl
 public final class SelectInDefaultBrowserTarget extends SelectInTargetBase {
   private static final Logger LOG = Logger.getInstance(SelectInDefaultBrowserTarget.class);
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.SelectInManager;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.ide.impl.idea.ide.impl.SelectInTargetPsiWrapper;
@@ -28,13 +29,17 @@ import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiUtilCore;
 import consulo.ui.ex.awt.UIUtil;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author anna
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class FavoritesViewSelectInTarget extends SelectInTargetPsiWrapper {
+  @Inject
   public FavoritesViewSelectInTarget(final Project project) {
     super(project);
   }

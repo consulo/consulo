@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.WriteAction;
 import consulo.compiler.artifact.*;
@@ -54,6 +55,7 @@ import java.util.*;
  */
 @Singleton
 @State(name = "ArtifactManager", storages = @Storage(value = "artifacts", stateSplitter = ArtifactManagerStateSplitter.class))
+@ServiceImpl
 public class ArtifactManagerImpl extends ArtifactManager implements Disposable, PersistentStateComponent<ArtifactManagerState> {
   private static final Logger LOG = Logger.getInstance(ArtifactManagerImpl.class);
   @NonNls

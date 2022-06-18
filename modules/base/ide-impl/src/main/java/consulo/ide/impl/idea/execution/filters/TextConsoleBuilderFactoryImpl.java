@@ -22,6 +22,7 @@
  */
 package consulo.ide.impl.idea.execution.filters;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.content.scope.SearchScope;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
@@ -34,6 +35,7 @@ import javax.annotation.Nonnull;
  * @author dyoma
  */
 @Singleton
+@ServiceImpl
 public class TextConsoleBuilderFactoryImpl extends TextConsoleBuilderFactory {
   @Override
   public TextConsoleBuilder createBuilder(@Nonnull final Project project) {

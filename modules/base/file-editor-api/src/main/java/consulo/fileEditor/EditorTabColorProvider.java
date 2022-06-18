@@ -15,6 +15,8 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,8 +29,9 @@ import java.awt.*;
 /**
  * @author spleaner
  */
+@Extension(ComponentScope.APPLICATION)
 public interface EditorTabColorProvider {
-  ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create("consulo.editorTabColorProvider");
+  ExtensionPointName<EditorTabColorProvider> EP_NAME = ExtensionPointName.create(EditorTabColorProvider.class);
 
   @Nullable
   Color getEditorTabColor(Project project, VirtualFile file);

@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.psi.PsiErrorElement;
@@ -23,6 +25,7 @@ import consulo.language.psi.PsiErrorElement;
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ErrorQuickFixProvider {
   ExtensionPointName<ErrorQuickFixProvider> EP_NAME = ExtensionPointName.create("consulo.errorQuickFixProvider");
   

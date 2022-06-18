@@ -19,6 +19,9 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -29,6 +32,8 @@ import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 @State(name = "CompilerWorkspaceConfiguration", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class CompilerWorkspaceConfiguration implements PersistentStateComponent<CompilerWorkspaceConfiguration> {
   public boolean AUTO_SHOW_ERRORS_IN_EDITOR = true;

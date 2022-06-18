@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.usage;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.EditorColorsUtil;
 import consulo.ui.ex.awt.UIUtil;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @since 28-Mar-22
  */
 @Singleton
+@ServiceImpl
 public class UsageTreeColorsSchemeImpl implements UsageTreeColorsScheme {
   @Nonnull
   @Override

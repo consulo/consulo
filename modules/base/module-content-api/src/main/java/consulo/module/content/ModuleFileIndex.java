@@ -15,6 +15,8 @@
  */
 package consulo.module.content;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.content.FileIndex;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,6 +30,7 @@ import java.util.List;
  *
  * @author dsl
  */
+@Service(ComponentScope.MODULE)
 public interface ModuleFileIndex extends FileIndex {
   /**
    * Returns the order entry to which the specified file or directory

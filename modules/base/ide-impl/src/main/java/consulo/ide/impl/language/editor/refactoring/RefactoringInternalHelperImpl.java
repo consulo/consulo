@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.editor.refactoring;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessProvider;
 import consulo.language.editor.refactoring.internal.RefactoringInternalHelper;
 import consulo.project.Project;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @since 20-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class RefactoringInternalHelperImpl implements RefactoringInternalHelper {
   @Override
   public void disableWriteChecksDuring(Runnable runnable) {

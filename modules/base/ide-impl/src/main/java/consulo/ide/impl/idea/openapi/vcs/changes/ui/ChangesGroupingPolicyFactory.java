@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 
@@ -23,6 +25,7 @@ import javax.swing.tree.DefaultTreeModel;
 /**
  * @author yole
  */
+@Service(ComponentScope.PROJECT)
 public abstract class ChangesGroupingPolicyFactory {
   public static ChangesGroupingPolicyFactory getInstance(Project project) {
     return ServiceManager.getService(project, ChangesGroupingPolicyFactory.class);

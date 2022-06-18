@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.compiler.impl.*;
 import consulo.application.ApplicationManager;
 import consulo.compiler.*;
@@ -58,6 +59,7 @@ import java.util.concurrent.Semaphore;
 
 @Singleton
 @State(name = "CompilerManager", storages = @Storage("compiler.xml"))
+@ServiceImpl
 public class CompilerManagerImpl extends CompilerManager implements PersistentStateComponent<Element> {
   private class ListenerNotificator implements CompileStatusNotification {
     @Nullable

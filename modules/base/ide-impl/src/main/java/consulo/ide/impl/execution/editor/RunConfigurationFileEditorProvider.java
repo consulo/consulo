@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.execution.editor;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.application.dumb.DumbAware;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19/12/2021
  */
+@ExtensionImpl
 public class RunConfigurationFileEditorProvider implements FileEditorProvider, DumbAware {
   @Override
   public boolean accept(@Nonnull Project project, @Nonnull VirtualFile file) {

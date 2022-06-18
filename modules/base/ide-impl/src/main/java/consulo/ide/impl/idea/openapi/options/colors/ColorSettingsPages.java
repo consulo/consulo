@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.options.colors;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
 import consulo.ide.ServiceManager;
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
 /**
  * Registry for custom pages shown in the "Colors and Fonts" settings dialog.
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class ColorSettingsPages {
   /**
    * Gets the global instance of the registry.

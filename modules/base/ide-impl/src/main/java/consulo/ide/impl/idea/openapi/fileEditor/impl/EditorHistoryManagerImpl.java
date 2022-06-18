@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.component.persist.State;
@@ -58,6 +59,7 @@ import java.util.List;
 
 @State(name = "EditorHistoryManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
+@ServiceImpl
 public final class EditorHistoryManagerImpl implements PersistentStateComponentWithUIState<Element, HistoryEntry[]>, Disposable, EditorHistoryManager {
   private static final Logger LOG = Logger.getInstance(EditorHistoryManagerImpl.class);
 

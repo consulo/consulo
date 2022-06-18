@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.execution.RunnerRegistry;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ProgramRunner;
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
 
 // TODO[spLeaner]: eliminate
 @Singleton
+@ServiceImpl
 public class RunnerRegistryImpl extends RunnerRegistry {
   @Override
   public boolean hasRunner(@Nonnull final String executorId, @Nonnull final RunProfile settings) {

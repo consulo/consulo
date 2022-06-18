@@ -15,6 +15,8 @@
  */
 package consulo.language.pattern.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,7 @@ import javax.annotation.Nullable;
 /**
  * @author Gregory.Shrago
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class PatternCompilerFactory {
   public static PatternCompilerFactory getFactory() {
     return Application.get().getInstance(PatternCompilerFactory.class);

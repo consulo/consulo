@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 2020-06-23
  */
 @Singleton
-@ServiceImpl(profiles = {ComponentProfiles.PRODUCTION, ComponentProfiles.AWT})
+@ServiceImpl(profiles = {ComponentProfiles.PROD, ComponentProfiles.AWT})
 public class DesktopTipOfDayManager implements TipOfDayManager {
   private AtomicBoolean myAlreadyShow = new AtomicBoolean();
 

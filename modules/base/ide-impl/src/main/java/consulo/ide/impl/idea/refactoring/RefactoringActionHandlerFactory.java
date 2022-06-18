@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.refactoring;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
@@ -26,6 +28,7 @@ import consulo.project.Project;
  * IntelliJ IDEA refactorings.
  * @author dsl
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class RefactoringActionHandlerFactory {
   public static RefactoringActionHandlerFactory getInstance() {
     return ServiceManager.getService(RefactoringActionHandlerFactory.class);

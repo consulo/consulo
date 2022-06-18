@@ -16,25 +16,29 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.structureView.StructureViewWrapper;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.SelectInContext;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.StandardTargetWeights;
 import consulo.language.editor.structureView.StructureViewFactoryEx;
-import consulo.fileEditor.structureView.StructureViewWrapper;
-import consulo.fileEditor.FileEditor;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import jakarta.inject.Inject;
 
+@ExtensionImpl
 public class StructureViewSelectInTarget implements SelectInTarget {
   private final Project myProject;
 
+  @Inject
   public StructureViewSelectInTarget(Project project) {
     myProject = project;
   }
 
-
+  @Override
   public String toString() {
     return IdeBundle.message("select.in.file.structure");
   }
@@ -48,7 +52,7 @@ public class StructureViewSelectInTarget implements SelectInTarget {
   public void selectIn(final SelectInContext context, final boolean requestFocus) {
     final FileEditor fileEditor = context.getFileEditorProvider().get();
 
-    ToolWindowManager windowManager=ToolWindowManager.getInstance(context.getProject());
+    ToolWindowManager windowManager = ToolWindowManager.getInstance(context.getProject());
     final Runnable runnable = new Runnable() {
       @Override
       public void run() {

@@ -15,25 +15,26 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.util.xml.serializer.annotation.Tag;
-
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 /**
  * @author lene
- *         Date: 06.08.12
+ * Date: 06.08.12
  */
 @Singleton
-@State(
-  name = "ToolsProjectConfig",
-  storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)}
-)
+@State(name = "ToolsProjectConfig", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ToolsProjectConfig implements PersistentStateComponent<ToolsProjectConfig.State> {
   private String myAfterCommitToolsId;
 

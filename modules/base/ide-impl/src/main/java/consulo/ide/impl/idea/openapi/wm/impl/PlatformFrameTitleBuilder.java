@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -37,6 +38,7 @@ import java.util.Arrays;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class PlatformFrameTitleBuilder extends FrameTitleBuilder {
   private final UISettings myUISettings;
   private final ProjectManager myProjectManager;

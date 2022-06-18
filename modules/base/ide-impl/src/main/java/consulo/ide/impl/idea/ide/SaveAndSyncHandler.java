@@ -22,7 +22,7 @@ import consulo.application.ApplicationManager;
 /**
  * @author Kirill Likhodedov
  */
-@Service(ComponentScope.APPLICATION)
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class SaveAndSyncHandler {
   public static SaveAndSyncHandler getInstance() {
     return ApplicationManager.getApplication().getComponent(SaveAndSyncHandler.class);

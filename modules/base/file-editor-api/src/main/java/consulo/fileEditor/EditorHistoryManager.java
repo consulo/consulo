@@ -15,6 +15,8 @@
  */
 package consulo.fileEditor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 
@@ -26,6 +28,7 @@ import java.util.List;
  * @author VISTALL
  * @since 05-Apr-22
  */
+@Service(ComponentScope.PROJECT)
 public interface EditorHistoryManager {
   public static EditorHistoryManager getInstance(@Nonnull Project project) {
     return project.getInstance(EditorHistoryManager.class);

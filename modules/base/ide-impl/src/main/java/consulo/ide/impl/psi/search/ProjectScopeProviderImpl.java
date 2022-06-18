@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.search;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.scratch.RootType;
 import consulo.language.psi.scope.EverythingGlobalScope;
 import consulo.module.content.DirectoryInfo;
@@ -29,6 +30,7 @@ import java.util.function.Supplier;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class ProjectScopeProviderImpl extends ProjectScopeProvider {
 
   public static class ContentSearchScope extends GlobalSearchScope {

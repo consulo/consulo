@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.packaging.impl.artifacts;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.artifact.*;
 import consulo.compiler.artifact.event.ArtifactListener;
 import consulo.project.Project;
@@ -34,6 +35,7 @@ import java.util.List;
  * @author VISTALL
  */
 @Singleton
+@ServiceImpl
 public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact> implements ArtifactPointerManager {
   private final Provider<ArtifactManager> myArtifactManagerProvider;
 

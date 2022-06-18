@@ -15,27 +15,30 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints.settings;
 
-import consulo.ide.ServiceManager;
-import consulo.language.Language;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import java.util.HashMap;
-
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.Language;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
 import org.jdom.Element;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 
 /**
  * from kotlin
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "ParameterNameHintsSettings", storages = @Storage("parameter.hints.xml"))
 public class ParameterNameHintsSettings implements PersistentStateComponent<Element> {
   private static final String BLACKLISTS = "blacklists";

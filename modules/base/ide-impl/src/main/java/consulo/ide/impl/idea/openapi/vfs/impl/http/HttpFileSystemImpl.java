@@ -15,9 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.impl.http;
 
+import consulo.annotation.component.ExtensionImpl;
+
 /**
  * @author nik
  */
+@ExtensionImpl
 public class HttpFileSystemImpl extends HttpFileSystemBase {
   public HttpFileSystemImpl() {
     super(PROTOCOL);

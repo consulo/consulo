@@ -15,6 +15,9 @@
  */
 package consulo.fileTemplate.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -29,6 +32,8 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "ExportableFileTemplateSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE)})
 public class ExportableFileTemplateSettings extends FileTemplateSettings {
   @Inject

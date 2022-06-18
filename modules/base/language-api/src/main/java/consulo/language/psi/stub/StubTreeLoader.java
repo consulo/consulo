@@ -16,6 +16,8 @@
 package consulo.language.psi.stub;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.util.PerApplicationInstance;
 import consulo.language.Language;
 import consulo.language.file.FileViewProvider;
@@ -34,6 +36,7 @@ import java.util.function.Function;
 /**
  * @author yole
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class StubTreeLoader {
   private static final PerApplicationInstance<StubTreeLoader> ourInstance = PerApplicationInstance.of(StubTreeLoader.class);
 

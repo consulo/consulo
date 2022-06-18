@@ -15,23 +15,26 @@
  */
 package consulo.desktop.awt.uiOld.content;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.ComponentManager;
 import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
 import consulo.ide.impl.idea.ui.content.impl.ContentImpl;
 import consulo.ide.impl.idea.ui.content.impl.DesktopContentManagerImpl;
-import consulo.component.ComponentManager;
+import consulo.ide.impl.wm.impl.UnifiedContentImpl;
 import consulo.project.Project;
 import consulo.ui.Component;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.ContentUI;
-import consulo.ide.impl.wm.impl.UnifiedContentImpl;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Singleton
+@ServiceImpl(profiles = {ComponentProfiles.PROD, ComponentProfiles.AWT})
 public class ContentFactoryImpl implements ContentFactory {
   @Nonnull
   @Override

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.codeStyle;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
 import consulo.ide.impl.psi.formatter.FormattingDocumentModelImpl;
@@ -47,6 +48,7 @@ import java.util.Collections;
  * @since 30-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class CodeStyleInternalHelperImpl implements CodeStyleInternalHelper {
   @Override
   public void debugTreeToBuffer(@Nonnull Appendable buffer, @Nonnull ASTNode root, int indent, boolean skipWhiteSpaces, boolean showRanges, boolean showChildrenRanges, boolean usePsi) {

@@ -15,20 +15,22 @@
  */
 package consulo.desktop.awt.ui.dialog;
 
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.AnAction;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ButtonToolbarImpl;
-import consulo.ui.ex.awt.DialogWrapper;
-import consulo.ui.ex.awt.CustomLineBorder;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.BorderLayoutPanel;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.platform.Platform;
 import consulo.ui.Component;
 import consulo.ui.Size;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.ActionPlaces;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.awt.BorderLayoutPanel;
+import consulo.ui.ex.awt.CustomLineBorder;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.dialog.Dialog;
 import consulo.ui.ex.dialog.DialogDescriptor;
 import consulo.ui.ex.dialog.DialogService;
@@ -46,6 +48,7 @@ import java.awt.*;
  * @since 13/12/2021
  */
 @Singleton
+@ServiceImpl(profiles = {ComponentProfiles.PROD, ComponentProfiles.AWT})
 public class DesktopAwtDialogService implements DialogService {
   private static class DialogImpl<V> implements Dialog<V> {
     private final DialogWrapperImpl myDialogWrapper;
@@ -165,7 +168,7 @@ public class DesktopAwtDialogService implements DialogService {
       panel.add(buttonToolbar.getComponent(), BorderLayout.EAST);
 
       panel.setBorder(JBUI.Borders.empty(ourDefaultBorderInsets));
-      
+
       BorderLayoutPanel borderLayoutPanel = JBUI.Panels.simplePanel(panel);
       borderLayoutPanel.setBorder(new CustomLineBorder(JBUI.scale(1), 0, 0, 0));
       return borderLayoutPanel;

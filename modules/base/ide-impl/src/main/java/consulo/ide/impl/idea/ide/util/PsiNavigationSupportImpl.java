@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.util;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class PsiNavigationSupportImpl extends PsiNavigationSupport {
   @Nullable
   @Override

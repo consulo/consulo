@@ -25,39 +25,4 @@
     <extensionPoint name="compiler.beforeTask" interface="consulo.compiler.CompileTask"/>
     <extensionPoint name="compiler.afterTask" interface="consulo.compiler.CompileTask"/>
   </extensionPoints>
-
-  <extensions defaultExtensionNs="consulo">
-    <projectService serviceInterface="consulo.compiler.artifact.ArtifactManager"
-                    serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactManagerImpl"/>
-
-    <projectService serviceInterface="consulo.compiler.artifact.ArtifactPointerManager"
-                    serviceImplementation="consulo.ide.impl.packaging.impl.artifacts.ArtifactPointerManagerImpl"/>
-
-    <projectService serviceInterface="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinder"
-                    serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactBySourceFileFinderImpl"/>
-    <projectService serviceInterface="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactSortingUtil"
-                    serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactSortingUtilImpl"/>
-    <applicationService serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.InvalidArtifactType"/>
-
-    <projectService serviceInterface="consulo.compiler.CompilerManager"
-                    serviceImplementation="consulo.ide.impl.compiler.CompilerManagerImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.compiler.BuildViewServiceFactory" serviceImplementation="consulo.ide.impl.compiler.build.BuildViewServiceFactoryImpl"/>
-
-    <projectService serviceInterface="consulo.compiler.CompilerConfiguration"
-                    serviceImplementation="consulo.ide.impl.compiler.CompilerConfigurationImpl"/>
-
-    <projectService serviceInterface="consulo.compiler.CompilerEncodingService"
-                    serviceImplementation="consulo.ide.impl.compiler.CompilerEncodingServiceImpl"/>
-
-    <projectService serviceInterface="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings"
-                    serviceImplementation="consulo.ide.impl.idea.packaging.impl.compiler.ArtifactsWorkspaceSettings"/>
-
-    <projectService serviceInterface="consulo.ide.impl.compiler.CompilerWorkspaceConfiguration"
-                    serviceImplementation="consulo.ide.impl.compiler.CompilerWorkspaceConfiguration"/>
-
-    <macro implementation="consulo.ide.impl.idea.ide.macro.OutputPathMacro"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.idea.compiler.impl.CompilerCacheManager"/>
-  </extensions>
 </consulo-plugin>

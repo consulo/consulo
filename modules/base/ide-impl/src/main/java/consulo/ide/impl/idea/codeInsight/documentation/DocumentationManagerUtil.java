@@ -1,10 +1,15 @@
 package consulo.ide.impl.idea.codeInsight.documentation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import jakarta.inject.Singleton;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class DocumentationManagerUtil {
   public static DocumentationManagerUtil getInstance() {
     return ServiceManager.getService(DocumentationManagerUtil.class);

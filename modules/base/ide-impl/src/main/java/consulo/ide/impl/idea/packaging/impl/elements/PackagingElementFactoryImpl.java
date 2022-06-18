@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.elements;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.content.impl.internal.library.LibraryImpl;
 import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
@@ -57,6 +58,7 @@ import java.util.List;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class PackagingElementFactoryImpl extends PackagingElementFactory {
   private static final Logger LOG = Logger.getInstance(PackagingElementFactoryImpl.class);
 

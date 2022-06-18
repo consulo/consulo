@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.build;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.build.process.BuildProcessHandler;
 import consulo.execution.ExecutionUtil;
 import consulo.ide.impl.idea.execution.ui.BaseContentCloseListener;
@@ -47,6 +48,7 @@ import static consulo.ide.impl.idea.util.ContentUtilEx.getFullName;
  * @author Vladislav.Soroka
  */
 @Singleton
+@ServiceImpl
 public final class BuildContentManagerImpl implements BuildContentManager {
   /**
    * @deprecated use Build_Tab_Title_Supplier instead

@@ -15,6 +15,8 @@
  */
 package consulo.application.impl.internal.util;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.ParameterizedCachedValue;
@@ -29,6 +31,7 @@ import java.util.function.Supplier;
 /**
  * @author Dmitry Avdeev
  */
+@Service(ComponentScope.PROJECT)
 public interface CachedValuesFactory {
   <T> CachedValue<T> createCachedValue(@Nonnull CachedValueProvider<T> provider, boolean trackValue);
 

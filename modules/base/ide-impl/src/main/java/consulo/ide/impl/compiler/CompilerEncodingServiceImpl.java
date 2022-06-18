@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.virtualFileSystem.encoding.EncodingProjectManager;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingProjectManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -41,6 +42,7 @@ import java.util.*;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class CompilerEncodingServiceImpl extends CompilerEncodingService {
   @Nonnull
   private final Project myProject;

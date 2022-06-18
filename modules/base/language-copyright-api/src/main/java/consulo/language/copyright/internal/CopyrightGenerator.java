@@ -15,6 +15,8 @@
  */
 package consulo.language.copyright.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.language.psi.PsiFile;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 13-Jun-22
  */
+@Service(ComponentScope.PROJECT)
 public interface CopyrightGenerator {
   @Nonnull
   static CopyrightGenerator getInstance(@Nonnull Project project) {

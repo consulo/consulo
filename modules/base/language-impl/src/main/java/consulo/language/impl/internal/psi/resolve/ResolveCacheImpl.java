@@ -16,6 +16,7 @@
 
 package consulo.language.impl.internal.psi.resolve;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.RecursionGuard;
@@ -38,6 +39,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
 @Singleton
+@ServiceImpl
 public class ResolveCacheImpl implements ResolveCache {
   private final AtomicReferenceArray<Map> myPhysicalMaps = new AtomicReferenceArray<>(4); //boolean incompleteCode, boolean isPoly
   private final AtomicReferenceArray<Map> myNonPhysicalMaps = new AtomicReferenceArray<>(4); //boolean incompleteCode, boolean isPoly

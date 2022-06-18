@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.diff.editor;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -11,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 
+@ExtensionImpl
 public class VcsEditorTabColorProvider implements EditorTabColorProvider, DumbAware {
 
   @Nullable

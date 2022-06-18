@@ -15,6 +15,8 @@
  */
 package consulo.module.content;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.content.FileIndex;
 import consulo.module.content.layer.ContentFolder;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -32,6 +34,7 @@ import java.util.List;
  *
  * @see ProjectRootManager#getFileIndex()
  */
+@Service(ComponentScope.PROJECT)
 public interface ProjectFileIndex extends FileIndex {
   @Deprecated
   class SERVICE {

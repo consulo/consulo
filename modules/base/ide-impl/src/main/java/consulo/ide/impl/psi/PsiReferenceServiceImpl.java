@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.psi.ReferenceProvidersRegistry;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.psi.*;
@@ -28,6 +29,7 @@ import java.util.List;
  * @author Gregory.Shrago
  */
 @Singleton
+@ServiceImpl
 public class PsiReferenceServiceImpl extends PsiReferenceService {
   @RequiredReadAction
   @Nonnull

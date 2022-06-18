@@ -16,6 +16,9 @@
 
 package consulo.language.copyright.config;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.*;
 import consulo.content.scope.NamedScope;
 import consulo.content.scope.NamedScopesHolder;
@@ -36,6 +39,8 @@ import java.util.*;
 
 @State(name = "CopyrightManager", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/copyright/", stateSplitter = CopyrightManager.CopyrightStateSplitter.class)})
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class CopyrightManager implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(CopyrightManager.class);
   private static final String COPYRIGHT = "copyright";

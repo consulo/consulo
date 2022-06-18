@@ -121,25 +121,10 @@
   </actions>
 
   <application-components>
-
-    <component>
-      <interface-class>consulo.ide.impl.idea.ide.SaveAndSyncHandler</interface-class>
-      <implementation-class>consulo.desktop.awt.application.DesktopSaveAndSyncHandlerImpl</implementation-class>
-    </component>
-
     <component>
       <interface-class>consulo.ide.impl.idea.ide.ui.LafManager</interface-class>
       <implementation-class>consulo.desktop.awt.ui.plaf.LafManagerImpl</implementation-class>
       <headless-implementation-class>consulo.desktop.awt.ui.plaf.HeadlessLafManagerImpl</headless-implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.codeEditor.EditorFactory</interface-class>
-      <implementation-class>consulo.desktop.awt.editor.impl.DesktopEditorFactoryImpl</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.editor.impl.VisibleEditorsTracker</implementation-class>
     </component>
   </application-components>
 
@@ -152,26 +137,11 @@
     </component>
   </project-components>
 
-  <extensionPoints>
-    <extensionPoint name="lookAndFeelProvider" interface="consulo.desktop.awt.ui.LookAndFeelProvider"/>
-  </extensionPoints>
-
   <extensions defaultExtensionNs="consulo">
-    <eapDescriptor implementation="consulo.desktop.awt.ui.plaf.GTKPlusEAPDescriptor"/>
 
     <uiDebuggerExtension implementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger"/>
 
-    <applicationService serviceInterface="consulo.ide.impl.progress.util.ProgressDialogFactory" serviceImplementation="consulo.desktop.awt.progress.impl.DesktopProgressDialogFactory"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.action.ActionToolbarFactory" serviceImplementation="consulo.desktop.awt.actionSystem.DesktopActionToolbarFactory"/>
-
     <applicationService serviceImplementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.start.WelcomeFrameManager"
-                        serviceImplementation="consulo.desktop.awt.welcomeScreen.DesktopWelcomeFrameManager"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.content.ContentFactory"
-                        serviceImplementation="consulo.desktop.awt.uiOld.content.ContentFactoryImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.ide.projectView.ProjectView"
                     serviceImplementation="consulo.ide.impl.idea.ide.projectView.impl.ProjectViewImpl"/>
@@ -179,77 +149,13 @@
     <applicationService serviceInterface="consulo.ide.impl.idea.ui.ColorChooserService"
                         serviceImplementation="consulo.desktop.awt.uiOld.DesktopColorChooserServiceImpl"/>
 
-    <applicationService serviceInterface="consulo.ui.ex.IconDeferrer"
-                        serviceImplementation="consulo.desktop.awt.uiOld.DesktopIconDeferrerImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.diagram.builder.GraphBuilderFactory"
-                        serviceImplementation="consulo.desktop.awt.diagram.builder.impl.DesktopGraphBuilderFactoryImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueue"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.vfs.newvfs.RefreshQueueImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.setting.ShowSettingsUtil"
-                        serviceImplementation="consulo.desktop.awt.settings.DesktopShowSettingsUtilImpl"/>
-
-    <applicationService serviceInterface="consulo.dataContext.DataManager"
-                        serviceImplementation="consulo.desktop.awt.data.impl.DesktopDataManagerImpl"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.SystemNotifications"
-                        serviceImplementation="consulo.desktop.awt.uiOld.SystemNotificationsImpl"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.awt.internal.FrameWrapperPeerFactory" serviceImplementation="consulo.desktop.awt.wm.impl.FrameWrapperPeerFactoryImpl"/>
-    <applicationService serviceInterface="consulo.ide.impl.actions.AboutManager" serviceImplementation="consulo.desktop.awt.action.DesktopAboutManager"/>
-    <applicationService serviceInterface="consulo.ide.impl.tipOfDay.TipOfDayManager" serviceImplementation="consulo.desktop.awt.tipOfDay.DesktopTipOfDayManager"/>
-
-    <fileChooseDialogProvider implementation="consulo.desktop.awt.fileChooser.impl.system.WindowsFileChooseDialogProvider"/>
-    <fileChooseDialogProvider implementation="consulo.desktop.awt.fileChooser.impl.system.MacFileChooseDialogProvider"/>
-    <fileChooseDialogProvider implementation="consulo.desktop.awt.fileChooser.impl.DesktopFileChooseDialogProvider" order="last"/>
-
-    <fileSaveDialogProvider implementation="consulo.desktop.awt.fileChooser.impl.system.MacFileSaveDialogProvider"/>
-    <fileSaveDialogProvider implementation="consulo.desktop.awt.fileChooser.impl.DesktopFileSaveDialogProvider" order="last"/>
-
-    <applicationService serviceInterface="consulo.fileChooser.FileChooserFactory"
-                        serviceImplementation="consulo.desktop.awt.fileChooser.impl.DesktopFileChooserFactoryImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.wm.impl.SystemDock" serviceImplementation="consulo.desktop.awt.wm.impl.dock.DesktopSystemDockImpl"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory"
-                        serviceImplementation="consulo.desktop.awt.fileEditor.impl.text.DesktopTextEditorComponentContainerFactory"/>
-
-    <applicationService serviceInterface="consulo.ide.impl.startup.customize.StartupCustomizeManager" serviceImplementation="consulo.desktop.awt.startup.customize.DesktopStartupCustomizeManager"/>
-    <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.desktop.awt.application.DesktopRemoteDesktopDetector"/>
-    <applicationService serviceInterface="consulo.application.ui.wm.ApplicationIdeFocusManager" serviceImplementation="consulo.ide.impl.idea.openapi.wm.impl.FocusManagerImpl" lazy="false"/>
-    <applicationService serviceInterface="consulo.project.ui.wm.WindowManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopWindowManagerImpl" lazy="false"/>
-    <applicationService serviceInterface="consulo.ui.ex.awt.internal.DialogWrapperPeerFactory" serviceImplementation="consulo.desktop.awt.ui.dialog.DialogWrapperPeerFactoryImpl"/>
     <applicationService serviceInterface="consulo.ui.ex.awt.internal.MacMessages" serviceImplementation="consulo.desktop.awt.uiOld.messages.JBMacMessages"/>
-    <applicationService serviceInterface="consulo.ide.impl.ui.popup.JWindowPopupFactory" serviceImplementation="consulo.desktop.awt.ui.popup.impl.JWindowPopupFactoryImpl"/>
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.fileChooser.FileSystemTreeFactory" serviceImplementation="consulo.desktop.awt.fileChooser.impl.DesktopFileSystemTreeFactoryImpl"/>
-    <projectService serviceInterface="consulo.fileEditor.FileEditorManager" serviceImplementation="consulo.desktop.awt.fileEditor.impl.DesktopPsiAwareFileEditorManagerImpl" lazy="false"/>
-    <projectService serviceInterface="consulo.project.ui.wm.ToolWindowManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopToolWindowManagerImpl" lazy="false"/>
-    <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.desktop.awt.wm.impl.DesktopIdeFocusManagerImpl" lazy="false"/>
-
-    <projectService serviceInterface="consulo.project.ui.wm.dock.DockManager" serviceImplementation="consulo.desktop.awt.uiOld.docking.impl.DesktopDockManagerImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.desktop.awt.daemon.impl.DesktopEditorTrackerImpl"/>
-
-    <backgroundPostStartupActivity implementation="consulo.desktop.util.windows.defender.WindowsDefenderCheckerActivity"/>
-    <applicationService serviceImplementation="consulo.desktop.util.windows.defender.WindowsDefenderChecker"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI"
                     serviceImplementation="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUIImpl"/>
 
-    <uiDecorator implementation="consulo.desktop.awt.ui.MacAquaUIDecorator"/>
-    <uiDecorator implementation="consulo.desktop.awt.ui.DefaultUIDecorator" order="last"/>
-
-    <eapDescriptor implementation="consulo.desktop.awt.fileChooser.impl.system.windows2.IFileDialogEarlyAccessProgramDescriptor"/>
-
-    <applicationService serviceInterface="consulo.ui.ex.dialog.DialogService" serviceImplementation="consulo.desktop.awt.ui.dialog.DesktopAwtDialogService"/>
-
-    <applicationService serviceInterface="consulo.application.ui.UISettings" serviceImplementation="consulo.desktop.awt.application.ui.impl.DesktopAWTUISettings"/>
-    <applicationService serviceInterface="consulo.application.ui.UIFontManager" serviceImplementation="consulo.desktop.awt.application.ui.impl.UIFontManagerImpl"/>
-
-    <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.ide.impl.progress.DesktopProgressActivityFactory"/>
-    <applicationService serviceInterface="consulo.pathMacro.MacroSelector" serviceImplementation="consulo.desktop.awt.pathMacro.DesktopAwtMacroSelectorImpl"/>
     <applicationService serviceInterface="consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory"
                         serviceImplementation="consulo.desktop.awt.ui.errorTreeView.DesktopAwtNewErrorTreeViewPanelFactoryImpl"/>
   </extensions>

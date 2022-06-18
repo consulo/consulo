@@ -16,6 +16,8 @@
 package consulo.project.ui.wm;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.application.ui.wm.IdeFocusManager;
@@ -34,6 +36,7 @@ import javax.annotation.Nullable;
  * If you want to register a toolwindow, which will be enabled during the dumb mode, please use {@link ToolWindowManager}'s
  * registration methods which have 'canWorkInDumMode' parameter.
  */
+@Service(ComponentScope.PROJECT)
 public abstract class ToolWindowManager {
 
   public abstract boolean canShowNotification(@Nonnull String toolWindowId);

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.PlatformDataKeys;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author Eugene Zhuravlev
  *         Date: Feb 10, 2004
  */
+@ExtensionImpl
 public class ProjectFileDirectoryRule implements GetDataRule<VirtualFile> {
   @Nonnull
   @Override

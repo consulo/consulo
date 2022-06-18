@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.fileChooser.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.actions.SynchronizeAction;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
@@ -30,6 +31,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 
 @Singleton
+@ServiceImpl
 public class DesktopFileSystemTreeFactoryImpl extends FileSystemTreeFactory {
   @Override
   @Nonnull

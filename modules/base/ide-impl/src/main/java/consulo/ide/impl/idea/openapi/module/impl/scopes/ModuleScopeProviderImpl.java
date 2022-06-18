@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.module.impl.scopes;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.module.Module;
 import consulo.module.content.scope.ModuleScopeProvider;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * Author: dmitrylomov
  */
 @Singleton
+@ServiceImpl
 public class ModuleScopeProviderImpl implements ModuleScopeProvider {
   private final Module myModule;
   private final ConcurrentIntObjectMap<GlobalSearchScope> myScopeCache = IntMaps.newConcurrentIntObjectHashMap();

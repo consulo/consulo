@@ -15,6 +15,9 @@
  */
 package consulo.fileTemplate.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -35,6 +38,8 @@ import java.util.Locale;
  * @author Rustam Vishnyakov
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 @State(name = "ExportableFileTemplateSettings", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/" + ExportableFileTemplateSettings.EXPORTABLE_SETTINGS_FILE))
 public class FileTemplateSettings extends FileTemplatesLoader implements PersistentStateComponent<Element> {
   public final static String EXPORTABLE_SETTINGS_FILE = "file.template.settings.xml";

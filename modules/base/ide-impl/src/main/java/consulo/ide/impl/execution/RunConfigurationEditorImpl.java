@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.execution;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.execution.impl.RunDialog;
 import consulo.execution.RunConfigurationEditor;
 import consulo.execution.RunnerAndConfigurationSettings;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
  * @since 05-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class RunConfigurationEditorImpl implements RunConfigurationEditor {
   @Override
   public boolean editConfiguration(Project project, RunnerAndConfigurationSettings configuration, String title, @Nullable Executor executor) {

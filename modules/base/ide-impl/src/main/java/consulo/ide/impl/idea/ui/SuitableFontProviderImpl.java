@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ui;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.impl.ComplementaryFontsRegistry;
 import consulo.ui.ex.awt.SuitableFontProvider;
 import jakarta.inject.Singleton;
@@ -27,6 +28,7 @@ import java.awt.*;
  * @author egor
  */
 @Singleton
+@ServiceImpl
 public class SuitableFontProviderImpl implements SuitableFontProvider {
   @Override
   public Font getFontAbleToDisplay(char c, int size, @JdkConstants.FontStyle int style, @Nonnull String defaultFontFamily) {

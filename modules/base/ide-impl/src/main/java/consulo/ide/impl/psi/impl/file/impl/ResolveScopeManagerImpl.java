@@ -15,38 +15,37 @@
  */
 package consulo.ide.impl.psi.impl.file.impl;
 
-import consulo.language.psi.ResolveScopeEnlarger;
-import consulo.language.psi.ResolveScopeProvider;
-import consulo.language.psi.*;
-import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
-import consulo.module.content.layer.orderEntry.*;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.progress.ProgressIndicatorProvider;
-import consulo.project.Project;
+import consulo.application.util.ConcurrentFactoryMap;
+import consulo.content.scope.SearchScope;
+import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import consulo.ide.impl.idea.openapi.roots.impl.LibraryScopeCache;
-import consulo.util.lang.Pair;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.project.content.TestSourcesFilter;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.impl.internal.psi.FileContextUtil;
 import consulo.language.impl.internal.psi.PsiManagerImpl;
 import consulo.language.impl.psi.ResolveScopeManager;
-import consulo.language.impl.internal.psi.FileContextUtil;
+import consulo.language.psi.*;
 import consulo.language.psi.scope.DelegatingGlobalSearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.content.scope.SearchScope;
-import consulo.application.util.ConcurrentFactoryMap;
-import consulo.annotation.access.RequiredReadAction;
-
-import javax.annotation.Nonnull;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.orderEntry.*;
+import consulo.project.Project;
+import consulo.project.content.TestSourcesFilter;
+import consulo.util.lang.Pair;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Singleton
+@ServiceImpl
 public class ResolveScopeManagerImpl extends ResolveScopeManager {
   private final Project myProject;
   private final ProjectRootManager myProjectRootManager;

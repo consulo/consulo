@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.fileChooser;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ide.ServiceManager;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.project.Project;
 import javax.annotation.Nonnull;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class FileSystemTreeFactory {
   @Nonnull
   public static FileSystemTreeFactory getInstance() {

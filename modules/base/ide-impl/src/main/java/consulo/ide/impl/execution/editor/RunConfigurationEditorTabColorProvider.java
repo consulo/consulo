@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.execution.editor;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.EditorTabColorProvider;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -28,6 +29,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 19/12/2021
  */
+@ExtensionImpl
 public class RunConfigurationEditorTabColorProvider implements EditorTabColorProvider, DumbAware {
   @Nullable
   @Override

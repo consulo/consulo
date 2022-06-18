@@ -19,6 +19,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.TextEditorBackgroundHighlighter;
 import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
@@ -42,6 +43,7 @@ import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class PsiAwareTextEditorProviderImpl extends TextEditorProviderImpl {
   private static final Logger LOG = Logger.getInstance(PsiAwareTextEditorProviderImpl.class);
 

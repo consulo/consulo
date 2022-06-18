@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
@@ -39,6 +40,7 @@ import java.io.File;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class ModuleVcsPathPresenter extends VcsPathPresenter {
   private final Project myProject;
 

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessRule;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.ContentIterator;
@@ -42,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 public class ModuleFileIndexImpl extends FileIndexBase implements ModuleFileIndex {
   private final Module myModule;
 

@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.highlight;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.codeEditor.EditorHighlighter;
 import consulo.colorScheme.EditorColorsScheme;
@@ -28,6 +30,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class EditorHighlighterFactory {
 
   public static EditorHighlighterFactory getInstance() {
@@ -44,9 +47,7 @@ public abstract class EditorHighlighterFactory {
   public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull FileType fileType);
 
   @Nonnull
-  public abstract EditorHighlighter createEditorHighlighter(@Nonnull final VirtualFile file,
-                                                            @Nonnull EditorColorsScheme globalScheme,
-                                                            @Nullable final Project project);
+  public abstract EditorHighlighter createEditorHighlighter(@Nonnull final VirtualFile file, @Nonnull EditorColorsScheme globalScheme, @Nullable final Project project);
 
   @Nonnull
   public abstract EditorHighlighter createEditorHighlighter(final Project project, @Nonnull VirtualFile file);

@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -22,6 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author mike
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class SystemNotifications {
   private static final SystemNotifications NULL = new SystemNotifications() {
     @Override

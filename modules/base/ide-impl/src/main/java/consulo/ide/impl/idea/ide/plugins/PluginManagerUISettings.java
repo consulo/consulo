@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
@@ -28,6 +31,8 @@ import org.jdom.Element;
  * @author yole
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "PluginManagerConfigurable", storages = @Storage("plugin_ui.xml"))
 public class PluginManagerUISettings implements PersistentStateComponent<Element>, PerformInBackgroundOption {
   public boolean UPDATE_IN_BACKGROUND = false;

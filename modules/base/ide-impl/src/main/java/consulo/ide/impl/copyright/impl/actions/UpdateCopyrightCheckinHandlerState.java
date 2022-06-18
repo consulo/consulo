@@ -21,6 +21,9 @@
 
 package consulo.ide.impl.copyright.impl.actions;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -31,6 +34,8 @@ import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 @State(name = "UpdateCopyrightCheckinHandler", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
 public class UpdateCopyrightCheckinHandlerState implements PersistentStateComponent<UpdateCopyrightCheckinHandlerState> {
   public boolean UPDATE_COPYRIGHT = false;

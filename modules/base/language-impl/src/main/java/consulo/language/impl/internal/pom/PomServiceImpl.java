@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.internal.pom;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.impl.internal.psi.PomTargetPsiElementImpl;
 import consulo.language.pom.PomService;
 import consulo.language.pom.PomTarget;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @author peter
  */
 @Singleton
+@ServiceImpl
 public class PomServiceImpl extends PomService {
   private final Project myProject;
 

@@ -19,6 +19,7 @@
  */
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.file.FileViewProvider;
 import consulo.language.file.FileViewProviderFactory;
 import consulo.language.file.LanguageFileViewProviders;
@@ -56,6 +57,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Singleton
+@ServiceImpl
 public class PsiFileFactoryImpl extends PsiFileFactory {
   private static final Logger LOG = Logger.getInstance(PsiFileFactoryImpl.class);
   private final PsiManager myManager;

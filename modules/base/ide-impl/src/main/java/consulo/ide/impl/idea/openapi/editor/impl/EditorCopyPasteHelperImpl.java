@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.editorActions.TextBlockTransferable;
 import consulo.ide.impl.idea.codeInsight.editorActions.TextBlockTransferableData;
 import consulo.application.ApplicationManager;
@@ -40,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class EditorCopyPasteHelperImpl extends EditorCopyPasteHelper {
   private static final Logger LOG = Logger.getInstance(EditorCopyPasteHelperImpl.class);
 

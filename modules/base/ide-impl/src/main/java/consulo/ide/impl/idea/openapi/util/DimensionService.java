@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.util;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.WindowStateService;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
@@ -40,6 +43,8 @@ import java.util.Map;
  * sizes of window, dialogs, etc.
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "DimensionService", storages = @Storage(value = "window.state.xml", roamingType = RoamingType.DISABLED))
 public class DimensionService extends SimpleModificationTracker implements PersistentStateComponent<Element> {
   private static final Logger LOG = Logger.getInstance(DimensionService.class);

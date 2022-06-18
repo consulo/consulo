@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
 import consulo.ide.impl.idea.ide.SelectInContext;
 import consulo.ide.impl.idea.ide.SelectInTarget;
@@ -31,6 +32,7 @@ import java.util.LinkedHashSet;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class ProjectViewSelectInGroupTarget implements CompositeSelectInTarget, DumbAware {
   @Override
   @Nonnull

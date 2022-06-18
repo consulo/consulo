@@ -15,6 +15,7 @@
  */
 package consulo.module.impl.internal;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.content.impl.internal.GlobalLibraryRootListenerProvider;
 import consulo.module.content.ProjectRootManager;
 import consulo.project.Project;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @since 09-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class GlobalLibraryRootListenerProviderImpl implements GlobalLibraryRootListenerProvider {
   private  final VirtualFilePointerListener tellAllProjectsTheirRootsAreGoingToChange = new VirtualFilePointerListener() {
     @Override

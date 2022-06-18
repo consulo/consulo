@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Allows to query and modify the list of root directories belonging to a project.
  */
-@Service(ComponentScope.PROJECT)
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ProjectRootManager extends SimpleModificationTracker {
   /**
    * Returns the project root manager instance for the specified project.

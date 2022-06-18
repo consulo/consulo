@@ -17,6 +17,7 @@
 package consulo.ide.impl.psi.impl;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.Commenter;
 import consulo.language.Language;
 import consulo.language.LanguageCommenters;
@@ -40,6 +41,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class PsiParserFacadeImpl implements PsiParserFacade {
   protected final PsiManager myManager;
 

@@ -15,6 +15,8 @@
  */
 package consulo.compiler.artifact.element;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactPointer;
 import consulo.content.library.Library;
@@ -30,6 +32,7 @@ import java.util.List;
 /**
  * @author nik
  */
+@Service(ComponentScope.PROJECT)
 public abstract class PackagingElementFactory {
   public static PackagingElementFactory getInstance(@Nonnull Project project) {
     return project.getInstance(PackagingElementFactory.class);

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.fileTemplates.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.fileTypes.ex.FileTypeManagerEx;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -52,6 +53,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 @State(name = "FileTemplateManagerImpl", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class FileTemplateManagerImpl extends FileTemplateManager implements PersistentStateComponent<FileTemplateManagerImpl.State> {
   private static final Logger LOG = Logger.getInstance(FileTemplateManagerImpl.class);

@@ -1,6 +1,7 @@
 package consulo.ide.impl.idea.util;
 
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.model.search.impl.TransformationKt;
 import consulo.ide.impl.idea.model.search.impl.XQuery;
 import consulo.application.util.query.Queries;
@@ -14,6 +15,7 @@ import java.util.function.Function;
 
 // from kotlin
 @Singleton
+@ServiceImpl
 public final class QueriesImpl extends Queries {
   @Nonnull
   @Override

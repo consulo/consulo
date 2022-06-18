@@ -15,22 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
-import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.LibraryRuntimeClasspathScope;
 import consulo.ide.impl.idea.openapi.module.impl.scopes.SdkScope;
-import consulo.project.Project;
-import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.ide.impl.idea.util.ConcurrencyUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.module.Module;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.module.content.layer.orderEntry.ModuleExtensionWithSdkOrderEntry;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
@@ -38,6 +41,8 @@ import java.util.concurrent.ConcurrentMap;
  * @author yole
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class LibraryScopeCache {
   public static LibraryScopeCache getInstance(Project project) {
     return ServiceManager.getService(project, LibraryScopeCache.class);

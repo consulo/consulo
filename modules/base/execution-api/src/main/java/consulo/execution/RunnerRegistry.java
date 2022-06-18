@@ -15,6 +15,8 @@
  */
 package consulo.execution;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.runner.ProgramRunner;
@@ -22,6 +24,7 @@ import consulo.execution.runner.ProgramRunner;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class RunnerRegistry {
   public static RunnerRegistry getInstance() {
     return Application.get().getInstance(RunnerRegistry.class);

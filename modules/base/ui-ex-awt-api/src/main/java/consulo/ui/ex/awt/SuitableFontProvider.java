@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import org.intellij.lang.annotations.JdkConstants;
 
@@ -24,6 +26,7 @@ import java.awt.*;
 /**
  * @author egor
  */
+@Service(ComponentScope.APPLICATION)
 public interface SuitableFontProvider {
   @Nonnull
   static SuitableFontProvider getInstance() {

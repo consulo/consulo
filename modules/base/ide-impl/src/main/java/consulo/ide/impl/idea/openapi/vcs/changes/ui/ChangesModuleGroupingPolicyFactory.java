@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -26,6 +27,7 @@ import javax.swing.tree.DefaultTreeModel;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class ChangesModuleGroupingPolicyFactory extends ChangesGroupingPolicyFactory {
   private final Project myProject;
 

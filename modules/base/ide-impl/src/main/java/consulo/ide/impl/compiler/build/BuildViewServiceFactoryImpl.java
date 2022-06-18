@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.compiler.build;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.compiler.progress.BuildViewService;
 import consulo.project.Project;
 import consulo.ide.impl.compiler.BuildViewServiceFactory;
@@ -28,6 +29,7 @@ import java.util.UUID;
  * @since 28/11/2021
  */
 @Singleton
+@ServiceImpl
 public class BuildViewServiceFactoryImpl implements BuildViewServiceFactory {
   @Nonnull
   @Override

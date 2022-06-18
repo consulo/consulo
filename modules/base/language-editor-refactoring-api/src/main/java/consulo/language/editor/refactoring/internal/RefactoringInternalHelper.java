@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.refactoring.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -25,6 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 20-Apr-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface RefactoringInternalHelper {
   static RefactoringInternalHelper getInstance() {
     return Application.get().getInstance(RefactoringInternalHelper.class);

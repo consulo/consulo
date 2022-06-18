@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.ex;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.project.Project;
@@ -27,6 +29,7 @@ import javax.annotation.Nullable;
  * @author Anton Katilin
  * @author Vladimir Kondratyev
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class FileEditorProviderManager {
   public static FileEditorProviderManager getInstance() {
     return ServiceManager.getService(FileEditorProviderManager.class);

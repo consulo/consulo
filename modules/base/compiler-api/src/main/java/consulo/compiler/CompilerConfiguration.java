@@ -15,6 +15,8 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 12:57/10.06.13
  */
+@Service(ComponentScope.PROJECT)
 public abstract class CompilerConfiguration {
   @Nonnull
   public static CompilerConfiguration getInstance(@Nonnull Project project) {

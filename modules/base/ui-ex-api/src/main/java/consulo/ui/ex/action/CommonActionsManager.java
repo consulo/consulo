@@ -15,6 +15,8 @@
  */
 package consulo.ui.ex.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.ui.ex.OccurenceNavigator;
@@ -25,6 +27,7 @@ import javax.swing.*;
 /**
  * @author max
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class CommonActionsManager {
   public static CommonActionsManager getInstance() {
     return Application.get().getInstance(CommonActionsManager.class);

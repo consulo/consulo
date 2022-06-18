@@ -2,6 +2,7 @@
 package consulo.ide.impl.psi.impl;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.internal.ApplicationEx;
 import consulo.application.impl.internal.progress.StandardProgressIndicatorBase;
 import consulo.ide.impl.idea.openapi.util.Comparing;
@@ -64,6 +65,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Singleton
+@ServiceImpl
 public final class DocumentCommitThread implements Runnable, Disposable, DocumentCommitProcessor {
   private static final Logger LOG = Logger.getInstance(DocumentCommitThread.class);
   private static final String SYNC_COMMIT_REASON = "Sync commit";

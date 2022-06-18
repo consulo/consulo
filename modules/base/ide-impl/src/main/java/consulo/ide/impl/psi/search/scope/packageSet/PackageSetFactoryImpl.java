@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.search.scope.packageSet;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.language.lexer.Lexer;
 import consulo.component.extension.Extensions;
@@ -31,6 +32,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nullable;
 
 @Singleton
+@ServiceImpl
 public class PackageSetFactoryImpl extends PackageSetFactory {
   private static final Logger LOG = Logger.getInstance(PackageSetFactoryImpl.class);
 

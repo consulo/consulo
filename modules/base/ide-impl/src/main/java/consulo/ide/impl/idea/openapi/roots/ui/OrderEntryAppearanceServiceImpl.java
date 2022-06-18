@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.util.SystemInfo;
 import consulo.content.base.BinariesOrderRootType;
@@ -58,6 +59,7 @@ import java.io.File;
 import java.util.function.Consumer;
 
 @Singleton
+@ServiceImpl
 public class OrderEntryAppearanceServiceImpl extends OrderEntryAppearanceService {
 
   @Nonnull

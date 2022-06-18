@@ -20,21 +20,9 @@
                          dynamic="true"
                          instance="consulo.ide.impl.copyright.impl.ui.CopyrightProjectConfigurable"/>
 
-    <checkinHandlerFactory implementation="consulo.ide.impl.copyright.impl.actions.UpdateCopyrightCheckinHandlerFactory"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.copyright.impl.actions.UpdateCopyrightCheckinHandlerState"/>
-
     <predefinedCopyright name="Apache 2" file="/copyright/Apache2.txt"/>
     <predefinedCopyright name="MIT" file="/copyright/MIT.txt"/>
-
-    <projectService serviceImplementation="consulo.language.copyright.config.CopyrightManager"/>
-
-    <projectService serviceInterface="consulo.language.copyright.internal.CopyrightGenerator" serviceImplementation="consulo.ide.impl.language.copyright.CopyrightGeneratorImpl"/>
   </extensions>
-
-  <applicationListeners>
-    <listener class="consulo.ide.impl.copyright.impl.CopyrightBulkFileListener" topic="consulo.virtualFileSystem.event.BulkFileListener"/>
-  </applicationListeners>
 
   <extensionPoints>
     <extensionPoint name="copyright.updater" beanClass="consulo.virtualFileSystem.extension.FileTypeExtensionPoint">

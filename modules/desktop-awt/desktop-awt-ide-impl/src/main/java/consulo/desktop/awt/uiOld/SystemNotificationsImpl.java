@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.uiOld;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.util.AtomicNullableLazyValue;
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
  * @author mike
  */
 @Singleton
+@ServiceImpl
 public class SystemNotificationsImpl extends SystemNotifications {
   interface Notifier {
     void notify(@Nonnull String name, @Nonnull String title, @Nonnull String description);

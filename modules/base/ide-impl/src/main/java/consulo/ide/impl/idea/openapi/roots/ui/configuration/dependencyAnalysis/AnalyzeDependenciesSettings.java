@@ -15,22 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.dependencyAnalysis;
 
-import consulo.component.persist.StoragePathMacros;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 
 /**
  * The default mode for classpath details settings
  */
 @Singleton
-@State(
-  name = "AnalyzeDependenciesSettings",
-  storages = {@Storage(
-    file = StoragePathMacros.WORKSPACE_FILE)})
+@State(name = "AnalyzeDependenciesSettings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class AnalyzeDependenciesSettings implements PersistentStateComponent<AnalyzeDependenciesSettings.State> {
   /**
    * The current state

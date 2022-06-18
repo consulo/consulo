@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.language.file.FileTypeManager;
 import consulo.module.Module;
@@ -44,6 +45,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 public class ProjectFileIndexImpl extends FileIndexBase implements ProjectFileIndex {
   private static final Logger LOG = Logger.getInstance(ProjectFileIndexImpl.class);
   private final Project myProject;

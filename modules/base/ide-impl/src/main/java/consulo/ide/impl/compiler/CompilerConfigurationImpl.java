@@ -15,25 +15,25 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessRule;
 import consulo.compiler.CompilerConfiguration;
 import consulo.compiler.ModuleCompilerPathsManager;
+import consulo.content.ContentFolderTypeProvider;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;
+import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.language.content.LanguageContentFolderScopes;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.project.Project;
-import consulo.project.content.WatchedRootsProvider;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.project.Project;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ide.impl.idea.openapi.vfs.impl.LightFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointer;
 import consulo.virtualFileSystem.pointer.VirtualFilePointerManager;
-import consulo.ide.impl.idea.util.io.URLUtil;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.application.AccessRule;
-import consulo.language.content.LanguageContentFolderScopes;
-import consulo.content.ContentFolderTypeProvider;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -48,21 +48,8 @@ import java.util.Set;
  * @since 13:05/10.06.13
  */
 @Singleton
+@ServiceImpl
 public class CompilerConfigurationImpl extends CompilerConfiguration {
-  public static class MyWatchedRootsProvider implements WatchedRootsProvider {
-    private final Project myProject;
-
-    @Inject
-    public MyWatchedRootsProvider(final Project project) {
-      myProject = project;
-    }
-
-    @Nonnull
-    @Override
-    public Set<String> getRootsToWatch() {
-      return ((CompilerConfigurationImpl)CompilerConfiguration.getInstance(myProject)).getRootsToWatch();
-    }
-  }
 
   private static final String DEFAULT_OUTPUT_URL = "out";
   private static final String URL = "url";
@@ -95,7 +82,7 @@ public class CompilerConfigurationImpl extends CompilerConfiguration {
 
   @Nonnull
   @RequiredReadAction
-  private Set<String> getRootsToWatch() {
+  protected Set<String> getRootsToWatch() {
     final Set<String> rootsToWatch = new HashSet<>();
     ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     for (Module module : moduleManager.getModules()) {

@@ -16,11 +16,13 @@
 
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.ide.CutElementMarker;
 
 /**
  * @author yole
  */
+@ExtensionImpl
 public class PsiCutElementMarker implements CutElementMarker {
   @Override
   public boolean isCutElement(final Object element) {

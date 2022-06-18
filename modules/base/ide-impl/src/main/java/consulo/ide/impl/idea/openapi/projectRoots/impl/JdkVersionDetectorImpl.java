@@ -15,12 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.projectRoots.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.util.NotNullFunction;
 import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.io.*;
 import java.util.concurrent.Future;
 
@@ -29,6 +30,7 @@ import java.util.concurrent.Future;
  */
 @Singleton
 @Deprecated
+@ServiceImpl
 public class JdkVersionDetectorImpl extends JdkVersionDetector {
   private static final Logger LOG = Logger.getInstance(JdkVersionDetectorImpl.class);
   private static final NotNullFunction<Runnable, Future<?>> ACTION_RUNNER = new NotNullFunction<Runnable, Future<?>>() {

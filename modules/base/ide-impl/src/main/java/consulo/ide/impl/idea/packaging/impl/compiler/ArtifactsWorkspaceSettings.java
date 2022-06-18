@@ -15,23 +15,24 @@
  */
 package consulo.ide.impl.idea.packaging.impl.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.compiler.artifact.Artifact;
+import consulo.compiler.artifact.ArtifactManager;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactManager;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Tag;
-
-import javax.annotation.Nonnull;
-
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +43,8 @@ import java.util.List;
  */
 @Singleton
 @State(name = "ArtifactsWorkspaceSettings", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ArtifactsWorkspaceSettings implements PersistentStateComponent<ArtifactsWorkspaceSettings.ArtifactsWorkspaceSettingsState> {
   public static class ArtifactsWorkspaceSettingsState {
     @Tag("artifacts-to-build")

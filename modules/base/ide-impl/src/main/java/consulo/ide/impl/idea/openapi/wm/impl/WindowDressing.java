@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.Application;
 import consulo.project.Project;
@@ -30,6 +33,8 @@ import javax.annotation.Nonnull;
  * @author Bas Leijdekkers
  */
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class WindowDressing {
   @Inject
   public WindowDressing(@Nonnull Application application, @Nonnull ActionManager actionManager) {

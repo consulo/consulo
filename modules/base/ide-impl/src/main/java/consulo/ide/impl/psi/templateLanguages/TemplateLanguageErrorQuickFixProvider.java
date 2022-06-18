@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
 import consulo.language.editor.intention.QuickFixAction;
 import consulo.language.LangBundle;
@@ -38,6 +39,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
+@ExtensionImpl
 public class TemplateLanguageErrorQuickFixProvider implements ErrorQuickFixProvider{
 
   @Override

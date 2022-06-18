@@ -15,6 +15,8 @@
  */
 package consulo.language.codeStyle.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
@@ -30,6 +32,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 30-Apr-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface CodeStyleInternalHelper {
   static CodeStyleInternalHelper getInstance() {
     return Application.get().getInstance(CodeStyleInternalHelper.class);

@@ -20,6 +20,7 @@
 */
 package consulo.ide.impl.copyright.impl.actions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.FileDocumentManager;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitContext;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
+@ExtensionImpl
 public class UpdateCopyrightCheckinHandlerFactory extends CheckinHandlerFactory {
   @Nonnull
   public CheckinHandler createHandler(final CheckinProjectPanel panel, CommitContext commitContext) {

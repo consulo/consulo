@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration.libraries;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
 import consulo.content.library.Library;
@@ -32,6 +34,7 @@ import java.util.Set;
 /**
  * @author nik
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class LibraryPresentationManager {
   public static LibraryPresentationManager getInstance() {
     return ServiceManager.getService(LibraryPresentationManager.class);

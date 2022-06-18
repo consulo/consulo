@@ -15,8 +15,10 @@
  */
 package consulo.desktop.awt.fileEditor.impl.text;
 
-import consulo.dataContext.DataProvider;
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
+import consulo.dataContext.DataProvider;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainer;
 import consulo.ide.impl.fileEditor.text.TextEditorComponentContainerFactory;
@@ -27,6 +29,7 @@ import jakarta.inject.Singleton;
  * @since 07/08/2021
  */
 @Singleton
+@ServiceImpl(profiles = {ComponentProfiles.PROD, ComponentProfiles.AWT})
 public class DesktopTextEditorComponentContainerFactory implements TextEditorComponentContainerFactory {
   @Override
   public TextEditorComponentContainer createTextComponentContainer(Editor editor, Disposable parentDisposable, DataProvider dataProvider) {

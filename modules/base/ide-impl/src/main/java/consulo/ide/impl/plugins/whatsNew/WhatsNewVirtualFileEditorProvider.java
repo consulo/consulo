@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.plugins.whatsNew;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorProvider;
 import consulo.application.dumb.DumbAware;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15/11/2021
  */
+@ExtensionImpl
 public class WhatsNewVirtualFileEditorProvider implements FileEditorProvider, DumbAware {
   private final Provider<UpdateHistory> myUpdateHistoryProvider;
 

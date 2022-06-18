@@ -15,8 +15,11 @@
  */
 package consulo.content.scope;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class PackageSetFactory {
   public abstract PackageSet compile(String text) throws ParsingException;
 

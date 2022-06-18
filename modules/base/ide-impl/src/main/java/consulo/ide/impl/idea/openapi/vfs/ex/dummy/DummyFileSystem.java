@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vfs.ex.dummy;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.virtualFileSystem.*;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -22,6 +23,7 @@ import javax.annotation.Nullable;
 
 import java.io.IOException;
 
+@ExtensionImpl
 public class DummyFileSystem extends BaseVirtualFileSystem implements NonPhysicalFileSystem {
   @NonNls public static final String PROTOCOL = "dummy";
   private VirtualFileDirectoryImpl myRoot;

@@ -16,6 +16,8 @@
 package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.dataholder.Key;
@@ -27,6 +29,7 @@ import java.util.List;
 /**
  * @author Gregory.Shrago
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class PsiReferenceService {
 
   public static final Key<Hints> HINTS = Key.create("HINTS");

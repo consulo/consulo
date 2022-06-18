@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.usage;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.usage.UsagePreviewPanel;
 import consulo.usage.UsagePreviewPanelFactory;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @since 20-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class UsagePreviewPanelFactoryImpl implements UsagePreviewPanelFactory {
   @Nonnull
   @Override

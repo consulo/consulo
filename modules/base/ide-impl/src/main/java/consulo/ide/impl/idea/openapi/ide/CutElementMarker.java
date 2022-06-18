@@ -15,10 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.ide;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
+@Extension(ComponentScope.APPLICATION)
 public interface CutElementMarker {
-  ExtensionPointName<CutElementMarker> EP_NAME = ExtensionPointName.create("consulo.cutElementMarker");
+  ExtensionPointName<CutElementMarker> EP_NAME = ExtensionPointName.create(CutElementMarker.class);
 
   boolean isCutElement(Object element);
 }

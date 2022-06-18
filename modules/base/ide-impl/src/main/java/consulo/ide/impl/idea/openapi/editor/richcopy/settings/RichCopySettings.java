@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.editor.richcopy.settings;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.StoragePathMacros;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
@@ -33,6 +36,8 @@ import javax.annotation.Nullable;
  * @since 3/26/13 6:40 PM
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "EditorRichCopySettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.rich.copy.xml")})
 public class RichCopySettings implements PersistentStateComponent<RichCopySettings> {
 
