@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packageDependencies;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.NamedScopesHolderProvider;
 import jakarta.inject.Inject;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 13-Feb-22
  */
+@ExtensionImpl
 public class DependencyValidationNamedScopesHolderProvider implements NamedScopesHolderProvider {
   private final DependencyValidationManager myDependencyValidationManager;
 

@@ -15,6 +15,7 @@
  */
 package consulo.content.base;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.ProjectBundle;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22:46/31.10.13
  */
+@ExtensionImpl
 public final class ExcludedContentFolderTypeProvider extends ContentFolderTypeProvider {
   private static final ColorValue EXCLUDED_COLOR = new LightDarkColorValue(new RGBColor(153, 46, 0), StandardColors.RED);
 

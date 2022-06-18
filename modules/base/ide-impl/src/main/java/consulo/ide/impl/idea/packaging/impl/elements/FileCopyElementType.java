@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.elements;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -33,6 +34,7 @@ import java.util.List;
 /**
 * @author nik
 */
+@ExtensionImpl
 public class FileCopyElementType extends PackagingElementType<FileCopyPackagingElement> {
   public static FileCopyElementType getInstance() {
     return getInstance(FileCopyElementType.class);

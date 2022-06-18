@@ -16,6 +16,7 @@
 
 package consulo.language.impl.internal.parser;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.LighterLazyParseableNode;
@@ -35,6 +36,7 @@ import javax.annotation.Nullable;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class PsiBuilderFactoryImpl extends PsiBuilderFactory {
   @Nonnull
   @Override

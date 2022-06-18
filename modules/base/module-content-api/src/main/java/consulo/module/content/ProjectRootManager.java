@@ -15,6 +15,8 @@
  */
 package consulo.module.content;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.module.Module;
 import consulo.module.content.layer.OrderEnumerator;
@@ -28,6 +30,7 @@ import java.util.List;
 /**
  * Allows to query and modify the list of root directories belonging to a project.
  */
+@Service(ComponentScope.PROJECT)
 public abstract class ProjectRootManager extends SimpleModificationTracker {
   /**
    * Returns the project root manager instance for the specified project.

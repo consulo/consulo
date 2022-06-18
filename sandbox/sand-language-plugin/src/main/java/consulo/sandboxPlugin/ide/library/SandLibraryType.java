@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.library;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.roots.libraries.DummyLibraryProperties;
 import consulo.application.AllIcons;
 import consulo.content.library.NewLibraryConfiguration;
@@ -37,6 +38,7 @@ import javax.swing.*;
  * @author VISTALL
  * @since 20.03.14
  */
+@ExtensionImpl
 public class SandLibraryType extends ModuleAwareLibraryType<DummyLibraryProperties> {
   @Inject
   protected SandLibraryType() {

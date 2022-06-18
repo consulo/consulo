@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.LangDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class PsiElementArrayDataValidator extends DataValidators.ArrayValidator<PsiElement> {
   public PsiElementArrayDataValidator() {
     super(new PsiElementDataValidator());

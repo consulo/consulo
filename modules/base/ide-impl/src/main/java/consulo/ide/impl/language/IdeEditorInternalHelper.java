@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -50,6 +51,7 @@ import java.awt.*;
  * @since 18-Mar-22
  */
 @Singleton
+@ServiceImpl
 public class IdeEditorInternalHelper implements EditorInternalHelper {
   private static class FileEditorAffectCaretContext extends CaretDataContext {
 

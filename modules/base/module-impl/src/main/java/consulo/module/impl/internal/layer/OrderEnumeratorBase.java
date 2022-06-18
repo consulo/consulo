@@ -61,7 +61,7 @@ public  abstract class OrderEnumeratorBase extends OrderEnumerator implements Or
   public OrderEnumeratorBase(@Nullable Module module, @Nonnull Project project, @Nullable OrderRootsCache cache) {
     myCache = cache;
     List<OrderEnumerationHandler> customHandlers = null;
-    for (OrderEnumerationHandler.Factory handlerFactory : OrderEnumerationHandler.EP_NAME.getExtensions()) {
+    for (OrderEnumerationHandlerFactory handlerFactory : OrderEnumerationHandlerFactory.EP_NAME.getExtensionList()) {
       if (handlerFactory.isApplicable(project) && (module == null || handlerFactory.isApplicable(module))) {
         if (customHandlers == null) {
           customHandlers = new SmartList<>();

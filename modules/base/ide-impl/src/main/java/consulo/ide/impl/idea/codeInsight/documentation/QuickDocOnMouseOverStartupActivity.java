@@ -15,19 +15,23 @@
  */
 package consulo.ide.impl.idea.codeInsight.documentation;
 
-import consulo.ide.ServiceManager;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.ide.ServiceManager;
 import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
+import consulo.project.startup.PostStartupActivity;
+import consulo.ui.UIAccess;
 
 /**
  * @author Denis Zhdanov
  * @since 7/2/12 9:44 AM
  */
-public class QuickDocOnMouseOverStartupActivity implements IdeaStartupActivity {
+@ExtensionImpl
+public class QuickDocOnMouseOverStartupActivity implements PostStartupActivity, DumbAware {
 
   @Override
-  public void runActivity(Project project) {
+  public void runActivity(Project project, UIAccess uiAccess) {
     if (EditorSettingsExternalizable.getInstance().isShowQuickDocOnMouseOverElement()) {
       ServiceManager.getService(QuickDocOnMouseOverManager.class).setEnabled(true);
     }

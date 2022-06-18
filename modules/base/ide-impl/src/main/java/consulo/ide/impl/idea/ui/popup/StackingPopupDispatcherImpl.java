@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ui.popup;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.application.ApplicationManager;
 import consulo.ui.ex.popup.JBPopup;
@@ -38,6 +39,7 @@ import java.util.Stack;
 import java.util.stream.Stream;
 
 @Singleton
+@ServiceImpl
 public class StackingPopupDispatcherImpl extends StackingPopupDispatcher implements AWTEventListener, KeyEventDispatcher {
 
   private final Stack<JBPopup> myStack = new Stack<>();
@@ -47,7 +49,7 @@ public class StackingPopupDispatcherImpl extends StackingPopupDispatcher impleme
 
 
   @Inject
-  private StackingPopupDispatcherImpl() {
+  public StackingPopupDispatcherImpl() {
   }
 
   @Override

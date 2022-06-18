@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.content.library.*;
 import consulo.util.collection.SmartList;
@@ -32,6 +33,7 @@ import java.util.Map;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class LibraryDetectionManagerImpl extends LibraryDetectionManager {
   private final Map<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>> myCache = new HashMap<List<VirtualFile>, List<Pair<LibraryKind, LibraryProperties>>>();
   

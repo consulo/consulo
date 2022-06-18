@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.LangDataKeys;
@@ -42,6 +43,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+@ExtensionImpl
 public class VirtualFileArrayRule implements GetDataRule<VirtualFile[]> {
   @Nonnull
   @Override

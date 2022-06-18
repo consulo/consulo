@@ -72,6 +72,15 @@ public interface ExtensionPoint<T> {
     return ContainerUtil.findInstance(getExtensionList(), extensionClass);
   }
 
+  @Nonnull
+  default <V extends T> V findExtensionOrFail(@Nonnull Class<V> instanceOf) {
+    V extension = findExtension(instanceOf);
+    if (extension == null) {
+      throw new IllegalArgumentException("Extension point: " + getName() + " not contains extension of type: " + instanceOf);
+    }
+    return extension;
+  }
+
   default void processWithPluginDescriptor(@Nonnull BiConsumer<? super T, ? super PluginDescriptor> consumer) {
     for (T extension : getExtensionList()) {
       PluginDescriptor plugin = PluginManager.getPlugin(extension.getClass());

@@ -17,6 +17,8 @@ package consulo.content.bundle;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.messagebus.Topic;
 import consulo.content.bundle.event.SdkTableListener;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class SdkTable implements BundleHolder {
   @Nonnull
   @Deprecated

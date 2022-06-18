@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.featureStatistics;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
 import consulo.project.Project;
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class FeaturesUsageCollector extends UsagesCollector {
 
   @Nonnull

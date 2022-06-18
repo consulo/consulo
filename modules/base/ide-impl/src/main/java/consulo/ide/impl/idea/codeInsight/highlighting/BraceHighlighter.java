@@ -2,29 +2,32 @@
 
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
-import consulo.application.ApplicationManager;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.SelectionModel;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.event.FileEditorManagerEvent;
-import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.fileEditor.TextEditor;
 import consulo.codeEditor.event.*;
-import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.project.Project;
+import consulo.project.startup.PostStartupActivity;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.util.Alarm;
+
 import javax.annotation.Nonnull;
 
-public class BraceHighlighter implements IdeaStartupActivity {
+@ExtensionImpl
+public class BraceHighlighter implements PostStartupActivity {
   private final Alarm myAlarm = new Alarm();
 
   @Override
-  public void runActivity(@Nonnull final Project project) {
-    if (ApplicationManager.getApplication().isHeadlessEnvironment()) return; // sorry, upsource
+  public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
     final EditorEventMulticaster eventMulticaster = EditorFactory.getInstance().getEventMulticaster();
 
     eventMulticaster.addCaretListener(new CaretListener() {
@@ -108,6 +111,6 @@ public class BraceHighlighter implements IdeaStartupActivity {
 
   @Nonnull
   public static Alarm getAlarm() {
-    return POST_STARTUP_ACTIVITY.findExtensionOrFail(BraceHighlighter.class).myAlarm;
+    return Application.get().getExtensionPoint(PostStartupActivity.class).findExtensionOrFail(BraceHighlighter.class).myAlarm;
   }
 }

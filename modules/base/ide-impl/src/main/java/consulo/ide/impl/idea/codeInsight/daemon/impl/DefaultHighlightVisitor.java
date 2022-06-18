@@ -1,6 +1,7 @@
 // Copyright 2000-2021 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.AnnotatorStatisticsCollector;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.ErrorQuickFixProvider;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
@@ -28,6 +29,7 @@ import consulo.language.psi.PsiFile;
 import consulo.ide.impl.idea.util.ReflectionUtil;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.localize.LocalizeValue;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@ExtensionImpl
 final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   private static final Logger LOG = Logger.getInstance(DefaultHighlightVisitor.class);
   private AnnotationHolderImpl myAnnotationHolder;
@@ -50,7 +53,7 @@ final class DefaultHighlightVisitor implements HighlightVisitor, DumbAware {
   private boolean myDumb;
   private final AnnotatorStatisticsCollector myAnnotatorStatisticsCollector = new AnnotatorStatisticsCollector();
 
-  @SuppressWarnings("UnusedDeclaration")
+  @Inject
   DefaultHighlightVisitor(@Nonnull Project project) {
     this(project, true, true, false);
   }

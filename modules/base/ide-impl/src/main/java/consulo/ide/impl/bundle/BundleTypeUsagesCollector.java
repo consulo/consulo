@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.bundle;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.content.bundle.Sdk;
+import consulo.content.bundle.SdkTable;
 import consulo.ide.impl.idea.internal.statistic.CollectUsagesException;
 import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
-import consulo.content.bundle.Sdk;
-import consulo.content.bundle.SdkTable;
 import consulo.project.Project;
 import jakarta.inject.Inject;
 
@@ -34,6 +35,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 2020-06-07
  */
+@ExtensionImpl
 public class BundleTypeUsagesCollector extends UsagesCollector {
   private SdkTable mySdkTable;
 
@@ -48,7 +50,7 @@ public class BundleTypeUsagesCollector extends UsagesCollector {
     Map<String, UsageDescriptor> usages = new LinkedHashMap<>();
     for (Sdk sdk : mySdkTable.getBundles()) {
       String id = sdk.getSdkType().getId();
-      if(sdk.isPredefined()) {
+      if (sdk.isPredefined()) {
         id = "predefined." + id;
       }
 

@@ -16,6 +16,8 @@
 
 package consulo.language.parser;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
@@ -30,6 +32,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class PsiBuilderFactory {
   public static PsiBuilderFactory getInstance() {
     return Application.get().getInstance(PsiBuilderFactory.class);

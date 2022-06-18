@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl.file;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiDirectoryContainer;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class PsiPackageHelperImpl extends PsiPackageHelper {
   private final PsiPackageManager myPackageManager;
 

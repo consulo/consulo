@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class ExtensionsAreaImpl {
   private static final Logger LOG = Logger.getInstance(ExtensionsAreaImpl.class);
 

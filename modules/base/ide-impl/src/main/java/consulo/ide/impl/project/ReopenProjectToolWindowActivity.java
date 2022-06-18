@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.project;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
-import consulo.util.lang.EmptyRunnable;
-import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.util.lang.EmptyRunnable;
 
 import javax.annotation.Nonnull;
 
@@ -30,9 +31,10 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2020-10-22
  */
-public class ReopenProjectToolWindowActivity implements IdeaStartupActivity.Background, DumbAware {
+@ExtensionImpl
+public class ReopenProjectToolWindowActivity implements BackgroundStartupActivity, DumbAware {
   @Override
-  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
+  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
 
     ToolWindow toolWindow = toolWindowManager.getToolWindow(ToolWindowId.PROJECT_VIEW);

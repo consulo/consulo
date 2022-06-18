@@ -35,9 +35,6 @@ public interface IdeaStartupActivity extends StartupActivity {
   interface DumbAware extends IdeaStartupActivity, consulo.application.dumb.DumbAware {
   }
 
-  interface Background extends IdeaStartupActivity, StartupActivity.Background {
-  }
-
   default void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
     runActivity(project);
   }

@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.application;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -42,6 +45,8 @@ import java.util.concurrent.Executor;
  * @author peter
  */
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class Preloader implements Disposable {
   private static final Logger LOG = Logger.getInstance(Preloader.class);
   private final Executor myExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("Preloader pool");

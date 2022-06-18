@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.packaging.impl.elements.moduleContent;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ModuleOutputElementTypeBase;
 import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 
@@ -22,6 +23,7 @@ import consulo.language.content.ProductionResourceContentFolderTypeProvider;
  * @author VISTALL
  * @since 9:54/31.05.13
  */
+@ExtensionImpl
 public class ProductionResourceModuleOutputElementType extends ModuleOutputElementTypeBase {
   public static ProductionResourceModuleOutputElementType getInstance() {
     return getInstance(ProductionResourceModuleOutputElementType.class);

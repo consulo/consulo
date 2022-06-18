@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.remote;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskId;
 import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationEvent;
 import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
@@ -20,12 +21,10 @@ import java.util.concurrent.ConcurrentMap;
  * @since 11/10/11 11:56 AM
  */
 @Singleton
-public class ExternalSystemProgressNotificationManagerImpl extends RemoteObject
-  implements ExternalSystemProgressNotificationManager, RemoteExternalSystemProgressNotificationManager
-{
+@ServiceImpl
+public class ExternalSystemProgressNotificationManagerImpl extends RemoteObject implements ExternalSystemProgressNotificationManager, RemoteExternalSystemProgressNotificationManager {
 
-  private final ConcurrentMap<ExternalSystemTaskNotificationListener, Set<ExternalSystemTaskId>/* EMPTY_SET as a sign of 'all ids' */>
-    myListeners = ContainerUtil.newConcurrentMap();
+  private final ConcurrentMap<ExternalSystemTaskNotificationListener, Set<ExternalSystemTaskId>/* EMPTY_SET as a sign of 'all ids' */> myListeners = ContainerUtil.newConcurrentMap();
 
   @Override
   public boolean addNotificationListener(@Nonnull ExternalSystemTaskNotificationListener listener) {
@@ -70,7 +69,7 @@ public class ExternalSystemProgressNotificationManagerImpl extends RemoteObject
       if (Collections.EMPTY_SET == ids || ids.contains(id)) {
         entry.getKey().onStart(id);
       }
-    } 
+    }
   }
 
   @Override
@@ -80,7 +79,7 @@ public class ExternalSystemProgressNotificationManagerImpl extends RemoteObject
       if (Collections.EMPTY_SET == ids || ids.contains(event.getId())) {
         entry.getKey().onStatusChange(event);
       }
-    } 
+    }
   }
 
   @Override
@@ -100,7 +99,7 @@ public class ExternalSystemProgressNotificationManagerImpl extends RemoteObject
       if (Collections.EMPTY_SET == ids || ids.contains(id)) {
         entry.getKey().onEnd(id);
       }
-    } 
+    }
   }
 
   @Override

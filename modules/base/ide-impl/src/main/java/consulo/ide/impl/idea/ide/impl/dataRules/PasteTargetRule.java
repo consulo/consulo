@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.LangDataKeys;
 import consulo.dataContext.GetDataRule;
@@ -23,6 +24,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class PasteTargetRule implements GetDataRule<PsiElement> {
   @Nonnull
   @Override

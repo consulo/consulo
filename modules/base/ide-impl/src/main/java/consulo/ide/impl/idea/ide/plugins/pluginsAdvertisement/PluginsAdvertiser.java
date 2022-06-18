@@ -15,41 +15,43 @@
  */
 package consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
 
-import consulo.ide.impl.idea.notification.*;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
+import consulo.container.plugin.SimpleExtension;
+import consulo.ide.impl.idea.notification.NotificationAction;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.ui.EditorNotifications;
+import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
+import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
+import consulo.ide.impl.updateSettings.UpdateSettings;
+import consulo.project.Project;
+import consulo.project.UnknownExtension;
+import consulo.project.UnknownFeaturesCollector;
+import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationType;
+import consulo.ui.UIAccess;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.fileType.FileNameMatcher;
 import consulo.virtualFileSystem.fileType.FileNameMatcherFactory;
 import consulo.virtualFileSystem.fileType.FileTypeFactory;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
-import consulo.project.UnknownExtension;
-import consulo.project.UnknownFeaturesCollector;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.ui.EditorNotifications;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.container.plugin.PluginDescriptor;
-import consulo.container.plugin.PluginManager;
-import consulo.container.plugin.SimpleExtension;
-import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserDialog;
-import consulo.ide.impl.plugins.pluginsAdvertisement.PluginsAdvertiserHolder;
-import consulo.ide.impl.updateSettings.UpdateSettings;
-import consulo.ui.UIAccess;
-import consulo.ui.annotation.RequiredUIAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class PluginsAdvertiser implements IdeaStartupActivity.Background, DumbAware {
+@ExtensionImpl
+public class PluginsAdvertiser implements BackgroundStartupActivity, DumbAware {
   private static NotificationGroup ourGroup = new NotificationGroup("Plugins Suggestion", NotificationDisplayType.STICKY_BALLOON, true);
 
   @Override
-  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull final Project project) {
+  public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
     UpdateSettings updateSettings = UpdateSettings.getInstance();
     if (!updateSettings.isEnable()) {
       return;

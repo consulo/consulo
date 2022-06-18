@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class ActionPreloader extends PreloadingActivity {
   @Override
   public void preload(@Nonnull ProgressIndicator indicator) {

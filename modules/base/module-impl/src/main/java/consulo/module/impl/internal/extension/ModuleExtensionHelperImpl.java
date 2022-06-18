@@ -15,6 +15,7 @@
  */
 package consulo.module.impl.internal.extension;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtension;
@@ -40,6 +41,7 @@ import java.util.Map;
  * @since 8:00/12.11.13
  */
 @Singleton
+@ServiceImpl
 public class ModuleExtensionHelperImpl implements ModuleExtensionHelper {
   private final Project myProject;
   private MultiMap<Class<? extends ModuleExtension>, ModuleExtension> myExtensions;

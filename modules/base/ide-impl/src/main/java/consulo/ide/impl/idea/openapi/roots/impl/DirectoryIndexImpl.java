@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.module.content.DirectoryIndex;
 import consulo.module.content.DirectoryInfo;
 import consulo.module.content.ProjectTopics;
@@ -48,6 +49,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class DirectoryIndexImpl extends DirectoryIndex implements Disposable  {
   private static final Logger LOG = Logger.getInstance(DirectoryIndexImpl.class);
 

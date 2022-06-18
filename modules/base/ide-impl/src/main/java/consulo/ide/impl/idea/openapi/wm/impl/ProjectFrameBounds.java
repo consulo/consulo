@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -32,6 +35,8 @@ import java.awt.*;
  * @author yole
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 @State(name = "ProjectFrameBounds", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class ProjectFrameBounds implements PersistentStateComponent<Rectangle> {
   public static ProjectFrameBounds getInstance(Project project) {

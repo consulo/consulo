@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 04.03.14
  */
+@ExtensionImpl
 public class BackgroundTaskByVfsGeneratedSourcesFilter extends GeneratedSourcesFilter {
   @RequiredReadAction
   @Override

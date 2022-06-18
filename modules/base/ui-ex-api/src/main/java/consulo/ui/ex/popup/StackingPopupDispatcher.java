@@ -15,11 +15,14 @@
  */
 package consulo.ui.ex.popup;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class StackingPopupDispatcher implements IdePopupEventDispatcher {
 
   public abstract boolean isPopupFocused();

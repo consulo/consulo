@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.module.content.ProjectTopics;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
@@ -69,6 +70,7 @@ import java.util.Set;
  * ProjectRootManager extended with ability to watch events.
  */
 @Singleton
+@ServiceImpl
 public class ProjectRootManagerComponent extends ProjectRootManagerImpl implements ProjectComponent {
   private static final Logger LOG = Logger.getInstance(ProjectRootManagerComponent.class);
   private static final boolean LOG_CACHES_UPDATE = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();

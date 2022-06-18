@@ -15,25 +15,27 @@
  */
 package consulo.ide.impl.idea.packaging.impl.elements;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
-import consulo.project.Project;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ArtifactManager;
 import consulo.compiler.artifact.ArtifactPointerManager;
 import consulo.compiler.artifact.element.ComplexPackagingElementType;
 import consulo.compiler.artifact.element.CompositePackagingElement;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
+import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactUtil;
+import consulo.project.Project;
 import consulo.ui.image.Image;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Inject;
 import java.util.*;
 
 /**
  * @author nik
  */
+@ExtensionImpl
 public class ArtifactElementType extends ComplexPackagingElementType<ArtifactPackagingElement> {
   @Nonnull
   public static ArtifactElementType getInstance() {

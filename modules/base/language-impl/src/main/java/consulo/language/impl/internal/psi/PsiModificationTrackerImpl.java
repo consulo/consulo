@@ -2,6 +2,7 @@
 package consulo.language.impl.internal.psi;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.application.internal.TransactionGuardEx;
@@ -29,6 +30,7 @@ import java.util.Map;
  * @author mike
  */
 @Singleton
+@ServiceImpl
 public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTreeChangePreprocessor {
   private static final Logger LOG = Logger.getInstance(PsiModificationTrackerImpl.class);
 

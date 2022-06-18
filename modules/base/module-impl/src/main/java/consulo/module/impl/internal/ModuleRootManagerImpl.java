@@ -18,9 +18,9 @@ package consulo.module.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
-import consulo.application.util.function.Processor;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
@@ -58,6 +58,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 @Singleton
+@ServiceImpl
 public class ModuleRootManagerImpl extends ModuleRootManager implements Disposable {
   private static final Logger LOGGER = Logger.getInstance(ModuleRootManagerImpl.class);
 

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.application;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.progress.ProgressIndicator;
 import javax.annotation.Nonnull;
@@ -27,8 +29,9 @@ import javax.annotation.Nonnull;
  * @author peter
  * @since 144
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class PreloadingActivity {
-  public static final ExtensionPointName<PreloadingActivity> EP_NAME = ExtensionPointName.create("consulo.preloadingActivity");
+  public static final ExtensionPointName<PreloadingActivity> EP_NAME = ExtensionPointName.create(PreloadingActivity.class);
 
   /**
    * Perform the preloading

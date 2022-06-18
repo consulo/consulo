@@ -15,6 +15,8 @@
  */
 package consulo.language.content;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.util.ModificationTracker;
 import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.module.Module;
@@ -27,6 +29,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Service(ComponentScope.PROJECT)
 public abstract class FileIndexFacade {
   protected final Project myProject;
 

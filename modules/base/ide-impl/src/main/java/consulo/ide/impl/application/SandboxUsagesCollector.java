@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.application;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.internal.statistic.CollectUsagesException;
 import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
@@ -30,6 +31,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 2020-06-07
  */
+@ExtensionImpl
 public class SandboxUsagesCollector extends UsagesCollector {
   @Nonnull
   @Override

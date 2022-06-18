@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.project;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.project.LibraryPathType;
+import consulo.annotation.component.ServiceImpl;
 import consulo.content.OrderRootType;
 import consulo.content.base.BinariesOrderRootType;
 import consulo.content.base.DocumentationOrderRootType;
 import consulo.content.base.SourcesOrderRootType;
-import javax.annotation.Nonnull;
+import consulo.ide.impl.idea.openapi.externalSystem.model.project.LibraryPathType;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import java.util.Map;
  * @since 1/17/13 3:55 PM
  */
 @Singleton
+@ServiceImpl
 public class ExternalLibraryPathTypeMapperImpl implements ExternalLibraryPathTypeMapper {
 
   private static final Map<LibraryPathType, OrderRootType> MAPPINGS = new EnumMap<LibraryPathType, OrderRootType>(LibraryPathType.class);

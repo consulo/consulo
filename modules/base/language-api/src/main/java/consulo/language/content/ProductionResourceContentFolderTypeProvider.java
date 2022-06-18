@@ -15,9 +15,10 @@
  */
 package consulo.language.content;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.project.ProjectBundle;
 import consulo.content.ContentFolderTypeProvider;
+import consulo.project.ProjectBundle;
 import consulo.ui.color.ColorValue;
 import consulo.ui.color.RGBColor;
 import consulo.ui.image.Image;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22:37/31.10.13
  */
+@ExtensionImpl
 public class ProductionResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
   @Nonnull
   public static ProductionResourceContentFolderTypeProvider getInstance() {

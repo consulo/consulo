@@ -16,6 +16,8 @@
 package consulo.content;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.base.ExcludedContentFolderTypeProvider;
@@ -35,6 +37,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 22:32/31.10.13
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ContentFolderTypeProvider {
   @Nonnull
   public static Predicate<ContentFolderTypeProvider> allExceptExcluded() {
@@ -46,7 +49,7 @@ public abstract class ContentFolderTypeProvider {
     return typeProvider -> typeProvider instanceof ExcludedContentFolderTypeProvider;
   }
 
-  public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create("consulo.contentFolderTypeProvider");
+  public static final ExtensionPointName<ContentFolderTypeProvider> EP_NAME = ExtensionPointName.create(ContentFolderTypeProvider.class);
 
   private final String myId;
 

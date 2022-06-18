@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.roots.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.language.content.ProductionResourceContentFolderTypeProvider;
 import consulo.project.ProjectBundle;
@@ -28,10 +29,11 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 07.11.13.
  */
+@ExtensionImpl
 public class WebResourcesFolderTypeProvider extends ContentFolderTypeProvider {
   @Nonnull
   public static ContentFolderTypeProvider getInstance() {
-    return EP_NAME.findExtension(WebResourcesFolderTypeProvider.class);
+    return EP_NAME.findExtensionOrFail(WebResourcesFolderTypeProvider.class);
   }
 
   public WebResourcesFolderTypeProvider() {

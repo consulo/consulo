@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.content.library.LibraryTable;
 import consulo.content.library.LibraryTablesRegistrar;
@@ -24,6 +25,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 
 @Singleton
+@ServiceImpl
 public class LibraryTablesRegistrarImpl extends LibraryTablesRegistrar implements Disposable {
   @Override
   @Nonnull

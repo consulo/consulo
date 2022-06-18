@@ -2,18 +2,21 @@
 package consulo.ide.impl.idea.execution.wsl;
 
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.AtomicNullableLazyValue;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Tag;
-import javax.annotation.Nonnull;
-
-import javax.annotation.Nullable;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -25,6 +28,8 @@ import java.util.*;
  * Service automatically adds default descriptors on first invocation.
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "WslDistributionsService", storages = @Storage(value = "wsl.distributions.xml"))
 public class WSLDistributionService implements PersistentStateComponent<WSLDistributionService> {
   /**

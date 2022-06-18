@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.editor;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.inject.InjectedEditorManager;
 import consulo.language.inject.impl.internal.InjectedLanguageUtil;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @since 20-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class InjectedEditorManagerImpl implements InjectedEditorManager {
   private final Project myProject;
 

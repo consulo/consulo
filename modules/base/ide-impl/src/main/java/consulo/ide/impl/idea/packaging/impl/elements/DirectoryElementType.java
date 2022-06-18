@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.elements;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
 import consulo.ui.ex.awt.Messages;
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class DirectoryElementType extends CompositePackagingElementType<DirectoryPackagingElement> {
   public static DirectoryElementType getInstance() {
     return getInstance(DirectoryElementType.class);

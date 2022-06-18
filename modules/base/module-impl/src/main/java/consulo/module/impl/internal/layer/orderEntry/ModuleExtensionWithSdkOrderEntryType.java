@@ -15,6 +15,7 @@
  */
 package consulo.module.impl.internal.layer.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.OrderEntryType;
 import consulo.module.impl.internal.layer.ModuleRootLayerImpl;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.08.14
  */
+@ExtensionImpl
 public class ModuleExtensionWithSdkOrderEntryType implements OrderEntryType<ModuleExtensionWithSdkOrderEntryImpl> {
   @Nonnull
   public static ModuleExtensionWithSdkOrderEntryType getInstance() {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.vfs.newvfs.persistent;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FSRecords;
 import consulo.localize.LocalizeValue;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 20/03/2021
  */
+@ExtensionImpl
 public class FSCachesInvalidator extends CachesInvalidator {
   @Nonnull
   @Override

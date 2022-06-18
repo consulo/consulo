@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.dataholder.Key;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Extension(ComponentScope.APPLICATION)
 public interface DataValidator<T> {
-  ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create("consulo.dataValidator");
+  ExtensionPointName<DataValidator> EP_NAME = ExtensionPointName.create(DataValidator.class);
 
   @Nonnull
   Key<T> getKey();

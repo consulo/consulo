@@ -17,6 +17,7 @@
 package consulo.content.impl.internal.bundle;
 
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
@@ -48,6 +49,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 @Singleton
+@ServiceImpl
 @State(name = "SdkTable", storages = @Storage(value = "sdk.table.xml", roamingType = RoamingType.DISABLED))
 public class SdkTableImpl extends SdkTable implements PersistentStateComponent<Element> {
   private static final String ELEMENT_SDK = "sdk";

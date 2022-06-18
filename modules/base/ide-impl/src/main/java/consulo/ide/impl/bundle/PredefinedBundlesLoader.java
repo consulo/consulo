@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.bundle;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.application.PreloadingActivity;
 import consulo.application.progress.ProgressIndicator;
 import consulo.content.bundle.Sdk;
@@ -40,6 +41,7 @@ import java.util.List;
  * @author VISTALL
  * @since 15:05/22.11.13
  */
+@ExtensionImpl
 public class PredefinedBundlesLoader extends PreloadingActivity {
   private static final Logger LOG = Logger.getInstance(PredefinedBundlesLoader.class);
 

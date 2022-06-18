@@ -16,6 +16,8 @@
 package consulo.language.psi;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.extension.ModuleExtension;
@@ -29,6 +31,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 7:56/20.05.13
  */
+@Service(ComponentScope.PROJECT)
 public abstract class PsiPackageManager {
   @Nonnull
   public static PsiPackageManager getInstance(@Nonnull Project project) {

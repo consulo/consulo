@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.fileEditor;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.OpenFileDescriptorImpl;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.navigation.OpenFileDescriptorFactory;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @since 19-Feb-22
  */
 @Singleton
+@ServiceImpl
 public class OpenFileDescriptorFactoryImpl implements OpenFileDescriptorFactory {
 
   private static class BuilderImp implements Builder {

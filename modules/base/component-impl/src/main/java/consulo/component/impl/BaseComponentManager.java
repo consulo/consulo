@@ -17,6 +17,7 @@ package consulo.component.impl;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
+import consulo.annotation.component.Topic;
 import consulo.component.BaseComponent;
 import consulo.component.ComponentManager;
 import consulo.component.NamedComponent;
@@ -241,15 +242,9 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
   }
 
   protected void fillListenerDescriptors(MultiMap<String, PluginListenerDescriptor> mapByTopic) {
-    for (PluginDescriptor plugin : PluginManager.getPlugins()) {
-      if (!PluginManager.shouldSkipPlugin(plugin)) {
-        List<PluginListenerDescriptor> descriptors = getPluginListenerDescriptors(plugin);
+    InjectingBindingHolder holder = InjectingBindingLoader.INSTANCE.getHolder(Topic.class, getComponentScope());
 
-        for (PluginListenerDescriptor descriptor : descriptors) {
-          mapByTopic.putValue(descriptor.topicClassName, descriptor);
-        }
-      }
-    }
+    System.out.println();
   }
 
   protected void registerExtensionPointsAndExtensions(ExtensionsAreaImpl area) {

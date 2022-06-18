@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.internal.statistic;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
@@ -23,8 +25,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class UsagesCollector {
-  public static ExtensionPointName<UsagesCollector> EP_NAME = ExtensionPointName.create("consulo.statistics.usagesCollector");
+  public static ExtensionPointName<UsagesCollector> EP_NAME = ExtensionPointName.create(UsagesCollector.class);
 
   @Nonnull
   public abstract Set<UsageDescriptor> getUsages(@Nullable Project project) throws CollectUsagesException;

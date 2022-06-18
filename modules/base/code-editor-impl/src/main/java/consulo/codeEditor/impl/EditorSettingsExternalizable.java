@@ -15,6 +15,9 @@
  */
 package consulo.codeEditor.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.BidiTextDirection;
 import consulo.component.persist.PersistentStateComponent;
@@ -35,6 +38,8 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "EditorSettings", storages = {@Storage("editor.xml")})
 public class EditorSettingsExternalizable implements PersistentStateComponent<EditorSettingsExternalizable.OptionSet> {
   public static final UINumericRange BLINKING_RANGE = new UINumericRange(500, 10, 1500);

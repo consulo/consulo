@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ExternalSystemDataKeys;
 import consulo.ide.impl.idea.openapi.externalSystem.service.project.ProjectRenameAware;
@@ -26,7 +26,8 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.vcs.ExternalSystemVc
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemUtil;
 import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
+import consulo.project.startup.BackgroundStartupActivity;
+import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -35,18 +36,15 @@ import javax.annotation.Nonnull;
  * @author Denis Zhdanov
  * @since 5/2/13 9:23 PM
  */
-public class ExternalSystemStartupActivity implements IdeaStartupActivity.Background {
+@ExtensionImpl
+public class ExternalSystemStartupActivity implements BackgroundStartupActivity {
 
   @Override
-  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull final Project project) {
-    if (ApplicationManager.getApplication().isUnitTestMode()) {
-      return;
-    }
-
+  public void runActivity(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
     Application.get().invokeLater(() -> {
       for (ExternalSystemManager<?, ?, ?, ?, ?> manager : ExternalSystemApiUtil.getAllManagers()) {
-        if (manager instanceof IdeaStartupActivity) {
-          ((IdeaStartupActivity)manager).runActivity(uiAccess, project);
+        if (manager instanceof StartupActivity) {
+          ((StartupActivity)manager).runActivity(project, uiAccess);
         }
       }
       if (project.getUserData(ExternalSystemDataKeys.NEWLY_IMPORTED_PROJECT) != Boolean.TRUE) {

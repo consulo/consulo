@@ -15,6 +15,9 @@
  */
 package consulo.project;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -30,6 +33,8 @@ import java.util.Set;
  * User: anna
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 @State(name = "UnknownFeatures", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 public class UnknownFeaturesCollector implements PersistentStateComponent<Element> {
   private static final String FEATURE_ID = "featureType";

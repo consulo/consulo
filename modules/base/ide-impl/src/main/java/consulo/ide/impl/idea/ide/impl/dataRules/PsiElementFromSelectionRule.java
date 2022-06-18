@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
 import consulo.language.editor.PlatformDataKeys;
@@ -24,6 +25,7 @@ import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class PsiElementFromSelectionRule implements GetDataRule<PsiElement> {
   @Nonnull
   @Override

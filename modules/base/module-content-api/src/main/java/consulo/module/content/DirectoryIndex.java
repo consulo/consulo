@@ -16,6 +16,8 @@
 
 package consulo.module.content;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.util.query.Query;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -25,6 +27,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Service(ComponentScope.PROJECT)
 public abstract class DirectoryIndex {
   @Nonnull
   public static DirectoryIndex getInstance(Project project) {

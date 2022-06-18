@@ -15,12 +15,14 @@
  */
 package consulo.desktop.util.windows.defender;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.Application;
 import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
+import consulo.project.startup.BackgroundStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
@@ -35,7 +37,8 @@ import java.util.stream.Collectors;
 /**
  * from kotlin
  */
-public class WindowsDefenderCheckerActivity implements IdeaStartupActivity.Background {
+@ExtensionImpl
+public class WindowsDefenderCheckerActivity implements BackgroundStartupActivity, DumbAware {
   private final Application myApplication;
   private final Provider<WindowsDefenderChecker> myWindowsDefenderChecker;
 
@@ -46,7 +49,7 @@ public class WindowsDefenderCheckerActivity implements IdeaStartupActivity.Backg
   }
 
   @Override
-  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
+  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     if (!Boolean.getBoolean("consulo.windows.defender.activity")) {
       return;
     }

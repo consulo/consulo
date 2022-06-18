@@ -1,5 +1,6 @@
 package consulo.ide.impl.updateSettings.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.internal.statistic.CollectUsagesException;
 import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
@@ -17,6 +18,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 2020-05-31
  */
+@ExtensionImpl
 public class UpdateChannelUsagesCollector extends UsagesCollector {
   private final UpdateSettings myUpdateSettings;
 

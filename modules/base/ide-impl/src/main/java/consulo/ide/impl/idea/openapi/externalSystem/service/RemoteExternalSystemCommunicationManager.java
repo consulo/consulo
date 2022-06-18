@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.execution.DefaultExecutionResult;
 import consulo.process.ExecutionException;
@@ -72,6 +75,8 @@ import java.util.concurrent.atomic.AtomicReference;
  * @since 8/9/13 3:37 PM
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class RemoteExternalSystemCommunicationManager implements ExternalSystemCommunicationManager {
 
   private static final Logger LOG = Logger.getInstance(RemoteExternalSystemCommunicationManager.class);

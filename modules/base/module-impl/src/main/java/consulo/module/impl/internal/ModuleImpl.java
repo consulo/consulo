@@ -16,6 +16,7 @@
 
 package consulo.module.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
 import consulo.application.impl.internal.PlatformComponentManagerImpl;
 import consulo.component.extension.ExtensionPointId;
 import consulo.component.impl.extension.ExtensionAreaId;
@@ -67,6 +68,12 @@ public class ModuleImpl extends PlatformComponentManagerImpl implements ModuleEx
   @Override
   protected ExtensionPointId<ServiceDescriptor> getServiceExtensionPointName() {
     return MODULE_SERVICES;
+  }
+
+  @Nonnull
+  @Override
+  public ComponentScope getComponentScope() {
+    return ComponentScope.MODULE;
   }
 
   @Nonnull

@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.packaging.impl.elements.moduleContent;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.content.ProductionContentFolderTypeProvider;
 
 /**
 * @author nik
 */
+@ExtensionImpl
 public class ProductionModuleOutputElementType extends ModuleOutputElementTypeBase {
   public static ProductionModuleOutputElementType getInstance() {
     return getInstance(ProductionModuleOutputElementType.class);

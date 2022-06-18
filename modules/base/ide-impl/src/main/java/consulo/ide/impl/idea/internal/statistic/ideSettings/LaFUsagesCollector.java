@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.internal.statistic.ideSettings;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.ui.LafManager;
 import consulo.ide.impl.idea.internal.statistic.CollectUsagesException;
 import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
@@ -14,6 +15,7 @@ import javax.swing.*;
 import java.util.Collections;
 import java.util.Set;
 
+@ExtensionImpl
 public class LaFUsagesCollector extends UsagesCollector {
   @Nonnull
   @Override

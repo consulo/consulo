@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.ProblemsView;
 import consulo.ide.impl.idea.ide.errorTreeView.impl.ErrorTreeViewConfiguration;
 import consulo.project.Project;
@@ -46,6 +47,7 @@ import java.util.concurrent.ExecutorService;
  *         Date: 9/18/12
  */
 @Singleton
+@ServiceImpl
 public class ProblemsViewImpl extends ProblemsView {
   public static final Logger LOGGER = Logger.getInstance(ProblemsViewImpl.class);
 

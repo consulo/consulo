@@ -40,11 +40,6 @@
                              parentId="general"
                              displayName="Appearance"/>
 
-    <applicationConfigurable id="editor"
-                             displayName="Editor"
-                             instance="consulo.configurable.ConfigurableAdapter"/>
-
-
     <applicationConfigurable parentId="editor" id="editor.breadcrumbs"
                              key="configurable.breadcrumbs" bundle="consulo.application.ApplicationBundle"
                              instance="consulo.ide.impl.idea.ui.breadcrumbs.BreadcrumbsConfigurable"/>

@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.fileEditor.FileEditorManager;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.component.Orderable;
+import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.fileEditor.FileEditorManager;
 import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
+import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
@@ -28,9 +31,11 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  * Date: 4/11/12
  */
-public class OpenFilesActivity implements IdeaStartupActivity.DumbAware {
+@ExtensionImpl
+@Orderable(id = "OpenFilesActivity")
+public class OpenFilesActivity implements PostStartupActivity, DumbAware {
   @Override
-  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
+  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
     if (!(fileEditorManager instanceof FileEditorManagerImpl)) {
       return;

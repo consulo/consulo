@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.psi.search.scope;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;
 import consulo.content.scope.NamedScopesHolderProvider;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 13-Feb-22
  */
+@ExtensionImpl
 public class DefaultNamedScopesHolderProvider implements NamedScopesHolderProvider {
   private final NamedScopeManager myNamedScopeManager;
 

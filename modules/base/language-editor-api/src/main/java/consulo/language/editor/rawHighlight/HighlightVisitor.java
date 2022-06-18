@@ -16,14 +16,17 @@
 
 package consulo.language.editor.rawHighlight;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.PROJECT)
 public interface HighlightVisitor {
-  ExtensionPointName<HighlightVisitor> EP_HIGHLIGHT_VISITOR = ExtensionPointName.create("consulo.highlightVisitor");
+  ExtensionPointName<HighlightVisitor> EP_HIGHLIGHT_VISITOR = ExtensionPointName.create(HighlightVisitor.class);
 
   boolean suitableForFile(@Nonnull PsiFile file);
 
@@ -33,12 +36,4 @@ public interface HighlightVisitor {
 
   @Nonnull
   HighlightVisitor clone();
-
-  /**
-   * @deprecated unused, left for binary compatibility
-   */
-  @Deprecated
-  default int order() {
-    return -1;
-  }
 }

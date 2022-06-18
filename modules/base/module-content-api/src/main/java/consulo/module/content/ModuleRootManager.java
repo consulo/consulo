@@ -16,6 +16,8 @@
 package consulo.module.content;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.module.Module;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.ModuleRootModel;
@@ -27,6 +29,7 @@ import javax.annotation.Nonnull;
  *
  * @author dsl
  */
+@Service(ComponentScope.MODULE)
 public abstract class ModuleRootManager implements ModuleRootModel {
   /**
    * Returns the module root manager instance for the specified module.

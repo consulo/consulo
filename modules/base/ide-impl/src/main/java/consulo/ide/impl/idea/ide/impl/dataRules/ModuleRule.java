@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataManager;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
@@ -36,6 +37,7 @@ import javax.annotation.Nonnull;
  * @author Eugene Zhuravlev
  *         Date: Feb 10, 2004
  */
+@ExtensionImpl
 public class ModuleRule implements GetDataRule<Module> {
   @Nonnull
   @Override

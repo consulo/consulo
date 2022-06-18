@@ -23,10 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
- * Base interface for a custom compiler which participates in the IDEA build process.
- *
- * @see CompilerManager#addCompiler(Compiler)
- * @see CompilerManager#removeCompiler(Compiler)
+ * Base interface for a custom compiler which participates in the IDE build process.
  */
 public interface Compiler {
   ExtensionPointName<Compiler> EP_NAME = ExtensionPointName.create("consulo.compiler");

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.log.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
@@ -24,6 +25,7 @@ import consulo.logging.Logger;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class VcsLogCachesInvalidator extends CachesInvalidator {
   private static final Logger LOG = Logger.getInstance(VcsLogCachesInvalidator.class);
 

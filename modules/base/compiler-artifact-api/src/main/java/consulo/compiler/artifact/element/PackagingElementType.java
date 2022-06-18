@@ -15,6 +15,8 @@
  */
 package consulo.compiler.artifact.element;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.compiler.artifact.Artifact;
 import consulo.compiler.artifact.ui.ArtifactEditorContext;
 import consulo.compiler.artifact.ui.PackagingElementPropertiesPanel;
@@ -30,8 +32,9 @@ import java.util.List;
 /**
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class PackagingElementType<E extends PackagingElement<?>> {
-  public static final ExtensionPointName<PackagingElementType> EP_NAME = ExtensionPointName.create("consulo.packaging.elementType");
+  public static final ExtensionPointName<PackagingElementType> EP_NAME = ExtensionPointName.create(PackagingElementType.class);
   private final String myId;
   private final String myPresentableName;
 

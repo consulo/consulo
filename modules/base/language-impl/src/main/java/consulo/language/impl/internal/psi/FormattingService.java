@@ -15,12 +15,15 @@
  */
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 
 /**
  * @author VISTALL
  * @since 17-Feb-22
  */
+@Service(ComponentScope.PROJECT)
 public interface FormattingService {
   static FormattingService getInstance(Project project) {
     return project.getInstance(FormattingService.class);

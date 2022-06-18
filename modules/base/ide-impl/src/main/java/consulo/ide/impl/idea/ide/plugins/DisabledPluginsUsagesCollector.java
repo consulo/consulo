@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.plugins;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.internal.statistic.UsagesCollector;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
 import consulo.project.Project;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
+@ExtensionImpl
 public class DisabledPluginsUsagesCollector extends UsagesCollector {
   @Override
   @Nonnull

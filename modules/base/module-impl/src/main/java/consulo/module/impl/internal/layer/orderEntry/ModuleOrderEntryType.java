@@ -15,6 +15,7 @@
  */
 package consulo.module.impl.internal.layer.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.module.content.layer.orderEntry.DependencyScope;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.module.content.layer.ModuleRootLayer;
@@ -28,10 +29,11 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.08.14
  */
+@ExtensionImpl
 public class ModuleOrderEntryType implements OrderEntryType<ModuleOrderEntryImpl> {
   @Nonnull
   public static ModuleOrderEntryType getInstance() {
-    return EP_NAME.findExtension(ModuleOrderEntryType.class);
+    return EP_NAME.findExtensionOrFail(ModuleOrderEntryType.class);
   }
 
   @NonNls

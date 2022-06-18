@@ -11,6 +11,8 @@ import consulo.ide.impl.idea.diagnostic.StartUpMeasurer.Phases;
 import consulo.ide.impl.idea.ide.startup.ServiceNotReadyException;
 import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.project.startup.BackgroundStartupActivity;
+import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.event.NotificationListener;
 import consulo.project.ui.notification.NotificationType;
@@ -172,7 +174,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
     DumbService dumbService = DumbService.getInstance(myProject);
 
     AtomicInteger counter = new AtomicInteger();
-    StartupActivity.POST_STARTUP_ACTIVITY.processWithPluginDescriptor((extension, pluginDescriptor) -> {
+    myApplication.getExtensionPoint(PostStartupActivity.class).processWithPluginDescriptor((extension, pluginDescriptor) -> {
       if (DumbService.isDumbAware(extension)) {
         runActivity(uiFreezeWarned, uiAccess, extension, pluginDescriptor);
       }
@@ -420,7 +422,7 @@ public class StartupManagerImpl extends StartupManagerEx implements Disposable {
         return;
       }
 
-      List<StartupActivity.Background> activities = StartupActivity.BACKGROUND_POST_STARTUP_ACTIVITY.getExtensionList();
+      List<BackgroundStartupActivity> activities = myApplication.getExtensionPoint(BackgroundStartupActivity.class).getExtensionList();
       //StartupActivity.BACKGROUND_POST_STARTUP_ACTIVITY.addExtensionPointListener(new ExtensionPointListener<StartupActivity.Background>() {
       //  @Override
       //  public void extensionAdded(@Nonnull StartupActivity.Background extension, @Nonnull PluginDescriptor pluginDescriptor) {

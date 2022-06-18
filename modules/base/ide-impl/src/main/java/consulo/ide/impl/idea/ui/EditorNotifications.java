@@ -15,40 +15,23 @@
  */
 package consulo.ide.impl.idea.ui;
 
-import consulo.fileEditor.FileEditor;
+import consulo.annotation.UsedInPlugin;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
-import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.annotation.DeprecationInfo;
-import consulo.annotation.UsedInPlugin;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.codeEditor.EditorNotificationProvider;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.swing.*;
 
 /**
  * @author Dmitry Avdeev
  */
+@Service(ComponentScope.PROJECT)
 public abstract class EditorNotifications  {
-  @Deprecated
-  @DeprecationInfo(value = "Use consulo.editor.notifications.EditorNotificationProvider")
-  public abstract static class Provider<T extends JComponent> implements EditorNotificationProvider<T> {
-    @Override
-    @Nonnull
-    public abstract Key<T> getKey();
-
-    @RequiredReadAction
-    @Override
-    @Nullable
-    public abstract T createNotificationPanel(@Nonnull VirtualFile file, @Nonnull FileEditor fileEditor);
-  }
-
   @Nonnull
   public static EditorNotifications getInstance(Project project) {
-    return project.getComponent(EditorNotifications.class);
+    return project.getInstance(EditorNotifications.class);
   }
 
   public abstract void updateNotifications(final VirtualFile file);

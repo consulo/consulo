@@ -15,6 +15,8 @@
  */
 package consulo.module.content.layer.orderEntry;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.module.content.layer.ModuleRootLayer;
@@ -26,8 +28,9 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.08.14
  */
+@Extension(ComponentScope.APPLICATION)
 public interface OrderEntryType<T extends OrderEntry> {
-  ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create("consulo.orderEntryType");
+  ExtensionPointName<OrderEntryType> EP_NAME = ExtensionPointName.create(OrderEntryType.class);
 
   @Nonnull
   String getId();

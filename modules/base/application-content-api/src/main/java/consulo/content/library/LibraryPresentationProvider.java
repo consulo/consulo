@@ -27,7 +27,7 @@ import java.util.List;
  * @author nik
  */
 public abstract class LibraryPresentationProvider<P extends LibraryProperties> {
-  public static final ExtensionPointName<LibraryPresentationProvider> EP_NAME = ExtensionPointName.create("consulo.library.presentationProvider");
+  public static final ExtensionPointName<LibraryPresentationProvider> EP_NAME = ExtensionPointName.create(LibraryPresentationProvider.class);
   private final LibraryKind myKind;
 
   protected LibraryPresentationProvider(@Nonnull LibraryKind kind) {

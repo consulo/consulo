@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.psi;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorExBase;
 import consulo.application.impl.internal.progress.ProgressWrapper;
 import consulo.application.progress.ProgressIndicator;
@@ -35,6 +36,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 17-Feb-22
  */
 @Singleton
+@ServiceImpl
 public class IdePsiManagerImpl extends PsiManagerImpl {
   @Inject
   public IdePsiManagerImpl(@Nonnull Project project, @Nonnull Provider<FileIndexFacade> fileIndexFacadeProvider, @Nonnull PsiModificationTracker modificationTracker) {

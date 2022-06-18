@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.impl.property;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.util.dataholder.Key;
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 22:01/25.11.13
  */
+@ExtensionImpl
 public class GeneratedContentFolderPropertyProvider extends ContentFolderPropertyProvider<Boolean> {
   public static final Key<Boolean> IS_GENERATED = Key.create("is-generated-root");
 

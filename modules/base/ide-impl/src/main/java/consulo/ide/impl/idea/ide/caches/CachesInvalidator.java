@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.caches;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.localize.LocalizeValue;
 
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class CachesInvalidator {
-  public static final ExtensionPointName<CachesInvalidator> EP_NAME = ExtensionPointName.create("consulo.cachesInvalidator");
+  public static final ExtensionPointName<CachesInvalidator> EP_NAME = ExtensionPointName.create(CachesInvalidator.class);
 
   /**
    * @return description of the files to be cleared, shown in the warning dialog to the user.

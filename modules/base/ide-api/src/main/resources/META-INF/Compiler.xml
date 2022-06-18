@@ -27,18 +27,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.DirectoryElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.FileCopyElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.DirectoryCopyElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.ExtractedDirectoryElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.packaging.impl.elements.ZipArchiveElementType" id="zip-archive-element"/>
-    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.moduleContent.ProductionModuleOutputElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.packaging.impl.elements.moduleContent.ProductionResourceModuleOutputElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.moduleContent.TestModuleOutputElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.packaging.impl.elements.moduleContent.TestResourceModuleOutputElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.LibraryElementType"/>
-    <packaging.elementType implementation="consulo.ide.impl.idea.packaging.impl.elements.ArtifactElementType"/>
-
     <projectService serviceInterface="consulo.compiler.artifact.ArtifactManager"
                     serviceImplementation="consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactManagerImpl"/>
 

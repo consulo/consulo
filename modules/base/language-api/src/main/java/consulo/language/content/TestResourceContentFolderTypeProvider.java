@@ -15,6 +15,7 @@
  */
 package consulo.language.content;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.project.ProjectBundle;
 import consulo.content.ContentFolderTypeProvider;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22:44/31.10.13
  */
+@ExtensionImpl
 public class TestResourceContentFolderTypeProvider extends ContentFolderTypeProvider {
   @Nonnull
   public static TestResourceContentFolderTypeProvider getInstance() {

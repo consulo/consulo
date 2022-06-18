@@ -15,9 +15,12 @@
  */
 package consulo.configurable;
 
+import consulo.disposer.Disposable;
+import consulo.ui.Component;
 import consulo.ui.annotation.RequiredUIAccess;
 import org.jetbrains.annotations.Nls;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
@@ -35,7 +38,14 @@ public class ConfigurableAdapter implements Configurable {
   @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent() {
+  public JComponent createComponent(@Nonnull Disposable parentDisposable) {
+    return null;
+  }
+
+  @RequiredUIAccess
+  @Nullable
+  @Override
+  public Component createUIComponent(@Nonnull Disposable parentDisposable) {
     return null;
   }
 

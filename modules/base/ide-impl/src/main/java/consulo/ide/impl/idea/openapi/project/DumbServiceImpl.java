@@ -2,6 +2,7 @@
 package consulo.ide.impl.idea.openapi.project;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.util.concurrent.ThreadDumper;
 import consulo.ide.IdeBundle;
@@ -58,6 +59,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 
 @Singleton
+@ServiceImpl
 public class DumbServiceImpl extends DumbService implements Disposable, ModificationTracker {
   private static final Logger LOG = Logger.getInstance(DumbServiceImpl.class);
   private static final FrequentErrorLogger ourErrorLogger = FrequentErrorLogger.newInstance(LOG);

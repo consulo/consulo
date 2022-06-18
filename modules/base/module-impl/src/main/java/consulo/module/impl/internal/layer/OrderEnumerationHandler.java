@@ -15,38 +15,25 @@
  */
 package consulo.module.impl.internal.layer;
 
-import consulo.content.OrderRootType;
 import consulo.component.extension.ExtensionPointName;
-import consulo.module.Module;
+import consulo.content.OrderRootType;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import consulo.project.Project;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 
 /**
  * @author nik
  */
 public abstract class OrderEnumerationHandler {
-  public static final ExtensionPointName<Factory> EP_NAME =
-    ExtensionPointName.create("consulo.orderEnumerationHandlerFactory");
-
-  public static abstract class Factory {
-
-    public abstract boolean isApplicable(@Nonnull Project project);
-
-    public abstract boolean isApplicable(@Nonnull Module module);
-
-    public abstract OrderEnumerationHandler createHandler(@Nullable Module module);
+  public enum AddDependencyType {
+    ADD,
+    DO_NOT_ADD,
+    DEFAULT
   }
 
-
-  public enum AddDependencyType {ADD, DO_NOT_ADD, DEFAULT}
-
   @Nonnull
-  public AddDependencyType shouldAddDependency(@Nonnull OrderEntry orderEntry,
-                                               @Nonnull OrderEnumeratorSettings settings) {
+  public AddDependencyType shouldAddDependency(@Nonnull OrderEntry orderEntry, @Nonnull OrderEnumeratorSettings settings) {
     return AddDependencyType.DEFAULT;
   }
 
@@ -62,9 +49,7 @@ public abstract class OrderEnumerationHandler {
     return true;
   }
 
-  public boolean addCustomRootsForLibrary(@Nonnull OrderEntry forOrderEntry,
-                                          @Nonnull OrderRootType type,
-                                          @Nonnull Collection<String> urls) {
+  public boolean addCustomRootsForLibrary(@Nonnull OrderEntry forOrderEntry, @Nonnull OrderRootType type, @Nonnull Collection<String> urls) {
     return false;
   }
 }

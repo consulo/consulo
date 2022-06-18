@@ -1,13 +1,17 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service.notification;
 
-import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskId;
+import consulo.ide.impl.idea.openapi.externalSystem.model.task.ExternalSystemTaskNotificationListener;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Denis Zhdanov
  * @since 11/10/11 12:04 PM
  */
+@Service(ComponentScope.APPLICATION)
 public interface ExternalSystemProgressNotificationManager {
 
   /**

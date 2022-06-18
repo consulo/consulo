@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.CompilerPaths;
 import consulo.ide.ServiceManager;
 import consulo.module.Module;
@@ -47,6 +50,8 @@ import java.util.Map;
  * @since 2019-12-08
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class TranslationCompilerProjectMonitor {
   @Nonnull
   public static TranslationCompilerProjectMonitor getInstance(@Nonnull Project project) {

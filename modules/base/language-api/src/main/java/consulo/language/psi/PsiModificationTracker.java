@@ -3,6 +3,8 @@ package consulo.language.psi;
 
 import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.Topic;
 import consulo.component.util.ModificationTracker;
@@ -27,6 +29,7 @@ import javax.annotation.Nonnull;
  *
  * </ol>
  */
+@Service(ComponentScope.PROJECT)
 public interface PsiModificationTracker extends ModificationTracker {
   /**
    * Provides a way to get the instance of {@link PsiModificationTracker} corresponding to a given project.

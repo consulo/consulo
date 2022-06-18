@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.uiOld.docking.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DesktopDockableEditorTabbedContainer;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.DockableEditorContainerFactory;
@@ -79,6 +80,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Singleton
+@ServiceImpl
 @State(name = "DockManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class DesktopDockManagerImpl extends BaseDockManager {
   private final MutualMap<DockContainer, DockWindow> myWindows = new MutualMap<>();

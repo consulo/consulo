@@ -16,12 +16,14 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.util.dataholder.Key;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl
 public class PsiElementDataValidator implements DataValidator<PsiElement> {
   @Nonnull
   @Override

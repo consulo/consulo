@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.language.editor;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.find.FindUtil;
 import consulo.ide.impl.idea.ide.PsiCopyPasteManager;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
@@ -60,6 +61,7 @@ import java.util.function.Predicate;
  * @since 01-Apr-22
  */
 @Singleton
+@ServiceImpl
 public class LanguageEditorPopupFactoryImpl implements LanguageEditorPopupFactory {
   private static class NavigateOrPopupBuilderImpl extends PsiElementListNavigator.NavigateOrPopupBuilder {
     public NavigateOrPopupBuilderImpl(@Nonnull NavigatablePsiElement[] targets, String title) {

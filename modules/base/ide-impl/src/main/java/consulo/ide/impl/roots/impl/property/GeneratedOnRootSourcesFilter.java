@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.impl.property;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
 import consulo.project.Project;
 import consulo.module.content.layer.ContentFolder;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22:15/25.11.13
  */
+@ExtensionImpl
 public class GeneratedOnRootSourcesFilter extends GeneratedSourcesFilter {
   @RequiredReadAction
   @Override

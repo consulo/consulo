@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.elements;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
 import consulo.project.Project;
@@ -35,6 +36,7 @@ import java.util.List;
 /**
 * @author nik
 */
+@ExtensionImpl
 public class LibraryElementType extends ComplexPackagingElementType<LibraryPackagingElement> {
   public static LibraryElementType getInstance() {
     return getInstance(LibraryElementType.class);

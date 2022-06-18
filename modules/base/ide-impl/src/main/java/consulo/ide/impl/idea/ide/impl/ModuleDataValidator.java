@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CommonDataKeys;
 import consulo.module.Module;
 import consulo.util.dataholder.Key;
@@ -25,6 +26,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class ModuleDataValidator implements DataValidator<Module> {
   @Nonnull
   @Override

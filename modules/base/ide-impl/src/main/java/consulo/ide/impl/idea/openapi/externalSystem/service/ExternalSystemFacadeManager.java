@@ -1,6 +1,10 @@
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
 import consulo.ide.impl.idea.openapi.externalSystem.model.settings.ExternalSystemExecutionSettings;
@@ -10,18 +14,16 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.remote.RemoteExterna
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
 import consulo.ide.impl.idea.openapi.externalSystem.util.IntegrationKey;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.Consumer;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtilRt;
-import consulo.disposer.Disposer;
-
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,6 +45,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * @since 8/8/11 1:08 PM
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class ExternalSystemFacadeManager {
 
   private static final int REMOTE_FAIL_RECOVERY_ATTEMPTS_NUMBER = 3;

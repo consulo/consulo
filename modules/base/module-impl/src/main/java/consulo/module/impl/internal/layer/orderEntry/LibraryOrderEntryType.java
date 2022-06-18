@@ -15,6 +15,7 @@
  */
 package consulo.module.impl.internal.layer.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.library.LibraryTablesRegistrar;
 import consulo.module.content.layer.ModuleRootLayer;
 import consulo.module.content.layer.orderEntry.DependencyScope;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.08.14
  */
+@ExtensionImpl
 public class LibraryOrderEntryType implements OrderEntryType<LibraryOrderEntryImpl> {
   @Nonnull
   public static LibraryOrderEntryType getInstance() {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.packaging.impl.elements;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.fileChooser.IdeaFileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
@@ -34,6 +35,7 @@ import java.util.List;
 /**
 * @author nik
 */
+@ExtensionImpl
 public class DirectoryCopyElementType extends PackagingElementType<DirectoryCopyPackagingElement> {
   public static DirectoryCopyElementType getInstance() {
     return getInstance(DirectoryCopyElementType.class);

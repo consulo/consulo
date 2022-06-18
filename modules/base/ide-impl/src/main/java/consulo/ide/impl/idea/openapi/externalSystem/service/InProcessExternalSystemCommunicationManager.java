@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.externalSystem.ExternalSystemManager;
 import consulo.ide.impl.idea.openapi.externalSystem.model.ProjectSystemId;
 import consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager;
@@ -22,19 +25,19 @@ import consulo.ide.impl.idea.openapi.externalSystem.service.remote.ExternalSyste
 import consulo.ide.impl.idea.openapi.externalSystem.service.remote.wrapper.ExternalSystemFacadeWrapper;
 import consulo.ide.impl.idea.openapi.externalSystem.util.ExternalSystemApiUtil;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 
 /**
  * @author Denis Zhdanov
  * @since 8/9/13 4:00 PM
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class InProcessExternalSystemCommunicationManager implements ExternalSystemCommunicationManager {
-
   @Nonnull
   private final ExternalSystemProgressNotificationManagerImpl myProgressManager;
 

@@ -1,11 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.documentation;
 
-import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
@@ -17,6 +15,11 @@ import consulo.codeEditor.impl.EditorSettingsExternalizable;
 import consulo.document.Document;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
+import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.reference.SoftReference;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.plain.psi.PsiPlainText;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
@@ -29,6 +32,8 @@ import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.util.lang.ref.Ref;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +49,9 @@ import java.util.Map;
  *
  * @author Denis Zhdanov
  */
+@Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public final class QuickDocOnMouseOverManager {
   private static final Logger LOG = Logger.getInstance(QuickDocOnMouseOverManager.class);
 
@@ -73,8 +81,8 @@ public final class QuickDocOnMouseOverManager {
 
   private MyShowQuickDocRequest myCurrentRequest; // accessed only in EDT
 
-  public QuickDocOnMouseOverManager() {
-    Application app = ApplicationManager.getApplication();
+  @Inject
+  public QuickDocOnMouseOverManager(Application app) {
     myAlarm = new Alarm(Alarm.ThreadToUse.POOLED_THREAD, app);
 
     EditorFactory factory = EditorFactory.getInstance();

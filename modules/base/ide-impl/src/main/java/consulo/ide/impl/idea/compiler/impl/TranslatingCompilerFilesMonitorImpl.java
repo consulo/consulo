@@ -15,55 +15,40 @@
  */
 package consulo.ide.impl.idea.compiler.impl;
 
-import consulo.compiler.*;
-import consulo.content.ContentIterator;
-import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectTopics;
-import consulo.ide.impl.compiler.CompilerIOUtil;
-import consulo.ide.impl.idea.ide.caches.CachesInvalidator;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
-import consulo.ide.impl.compiler.CompileContextEx;
-import consulo.language.file.FileTypeManager;
-import consulo.module.Module;
-import consulo.module.ModuleManager;
-import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectRootManager;
-import consulo.project.event.ProjectManagerListener;
-import consulo.project.startup.StartupManager;
 import consulo.application.util.function.Computable;
-import consulo.util.lang.Couple;
-import consulo.util.lang.Trinity;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vfs.*;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.SLRUCache;
-import consulo.language.psi.stub.FileBasedIndex;
-import consulo.index.io.data.DataOutputStream;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ide.impl.compiler.TranslatingCompilerFilesMonitor;
-import consulo.compiler.TranslatingCompilerFilesMonitorHelper;
-import consulo.ide.impl.compiler.TranslationCompilerFilesMonitorVfsListener;
-import consulo.ide.impl.compiler.TranslationCompilerProjectMonitor;
-import consulo.compiler.DependencyCache;
+import consulo.compiler.*;
+import consulo.content.ContentIterator;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
-import consulo.localize.LocalizeValue;
-import consulo.logging.Logger;
-import consulo.module.extension.ModuleExtension;
+import consulo.ide.impl.compiler.*;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.index.io.data.DataOutputStream;
 import consulo.language.content.LanguageContentFolderScopes;
-import consulo.ui.UIAccess;
+import consulo.language.file.FileTypeManager;
+import consulo.language.psi.stub.FileBasedIndex;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.startup.StartupManager;
+import consulo.util.collection.SLRUCache;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Couple;
+import consulo.util.lang.Trinity;
 import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -73,7 +58,6 @@ import gnu.trove.TIntHashSet;
 import gnu.trove.TIntIntHashMap;
 import gnu.trove.TIntObjectHashMap;
 import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -97,161 +81,8 @@ import java.util.function.Consumer;
  * 2. corresponding source file has been deleted
  */
 @Singleton
+@ServiceImpl
 public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFilesMonitor implements Disposable {
-  static class ProjectListener implements ProjectManagerListener {
-    private final Map<Project, MessageBusConnection> myConnections = new HashMap<>();
-    private final Provider<TranslatingCompilerFilesMonitor> myMonitorProvider;
-
-    @Inject
-    ProjectListener(Provider<TranslatingCompilerFilesMonitor> monitorProvider) {
-      myMonitorProvider = monitorProvider;
-    }
-
-    @Override
-    public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
-
-      final MessageBusConnection conn = project.getMessageBus().connect();
-      myConnections.put(project, conn);
-      final ProjectRef projRef = new ProjectRef(project);
-      final int projectId = monitor.getProjectId(project);
-
-      monitor.watchProject(project);
-
-      conn.subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> {
-        for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensionList()) {
-          if (helper.isModuleExtensionAffectToCompilation(newExtension)) {
-            monitor.myForceCompiling = true;
-            break;
-          }
-        }
-      });
-
-      conn.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
-        private VirtualFile[] myRootsBefore;
-        private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
-
-        @Override
-        public void beforeRootsChange(final ModuleRootEvent event) {
-          if (monitor.isSuspended(projectId)) {
-            return;
-          }
-          try {
-            myRootsBefore = monitor.getRootsForScan(projRef.get());
-          }
-          catch (ProjectRef.ProjectClosedException e) {
-            myRootsBefore = null;
-          }
-        }
-
-        @Override
-        public void rootsChanged(final ModuleRootEvent event) {
-          if (monitor.isSuspended(projectId)) {
-            return;
-          }
-          if (LOG.isDebugEnabled()) {
-            LOG.debug("Before roots changed for projectId=" + projectId + "; url=" + project.getPresentableUrl());
-          }
-          try {
-            final VirtualFile[] rootsBefore = myRootsBefore;
-            myRootsBefore = null;
-            final VirtualFile[] rootsAfter = monitor.getRootsForScan(projRef.get());
-            final Set<VirtualFile> newRoots = new HashSet<>();
-            final Set<VirtualFile> oldRoots = new HashSet<>();
-            {
-              if (rootsAfter.length > 0) {
-                ContainerUtil.addAll(newRoots, rootsAfter);
-              }
-              if (rootsBefore != null) {
-                newRoots.removeAll(Arrays.asList(rootsBefore));
-              }
-            }
-            {
-              if (rootsBefore != null) {
-                ContainerUtil.addAll(oldRoots, rootsBefore);
-              }
-              if (!oldRoots.isEmpty() && rootsAfter.length > 0) {
-                oldRoots.removeAll(Arrays.asList(rootsAfter));
-              }
-            }
-
-            myAlarm.cancelAllRequests(); // need alarm to deal with multiple rootsChanged events
-            myAlarm.addRequest(new Runnable() {
-              @Override
-              public void run() {
-                monitor.startAsyncScan(projectId);
-                new Task.Backgroundable(project, CompilerBundle.message("compiler.initial.scanning.progress.text"), false) {
-                  @Override
-                  public void run(@Nonnull final ProgressIndicator indicator) {
-                    try {
-                      if (newRoots.size() > 0) {
-                        monitor.scanSourceContent(projRef, newRoots, newRoots.size(), true);
-                      }
-                      if (oldRoots.size() > 0) {
-                        monitor.scanSourceContent(projRef, oldRoots, oldRoots.size(), false);
-                      }
-                      monitor.markOldOutputRoots(projRef, TranslationCompilerProjectMonitor.getInstance(projRef.get()).buildOutputRootsLayout());
-                    }
-                    catch (ProjectRef.ProjectClosedException swallowed) {
-                      // ignored
-                    }
-                    finally {
-                      monitor.terminateAsyncScan(projectId, false);
-                    }
-                  }
-                }.queue();
-              }
-            }, 500, IdeaModalityState.NON_MODAL);
-          }
-          catch (ProjectRef.ProjectClosedException e) {
-            LOG.info(e);
-          }
-        }
-      });
-
-      monitor.scanSourcesForCompilableFiles(project);
-    }
-
-    @Override
-    public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      TranslatingCompilerFilesMonitorImpl monitor = getMonitor();
-
-      final int projectId = monitor.getProjectId(project);
-      monitor.terminateAsyncScan(projectId, true);
-      myConnections.remove(project).disconnect();
-      synchronized (monitor.myDataLock) {
-        monitor.mySourcesToRecompile.remove(projectId);
-        monitor.myOutputsToDelete.remove(projectId);  // drop cache to save memory
-      }
-    }
-
-    @Nonnull
-    TranslatingCompilerFilesMonitorImpl getMonitor() {
-      return (TranslatingCompilerFilesMonitorImpl)myMonitorProvider.get();
-    }
-  }
-
-  static class MonitorCachesInvalidator extends CachesInvalidator {
-    private final Provider<TranslatingCompilerFilesMonitor> myTranslatingCompilerFilesMonitorProvider;
-
-    @Inject
-    MonitorCachesInvalidator(Provider<TranslatingCompilerFilesMonitor> translatingCompilerFilesMonitorProvider) {
-      myTranslatingCompilerFilesMonitorProvider = translatingCompilerFilesMonitorProvider;
-    }
-
-    @Nonnull
-    @Override
-    public LocalizeValue getDescription() {
-      return LocalizeValue.localizeTODO("Invalidate compiler cache");
-    }
-
-    @Override
-    public void invalidateCaches() {
-      TranslatingCompilerFilesMonitorImpl monitor = (TranslatingCompilerFilesMonitorImpl)myTranslatingCompilerFilesMonitorProvider.get();
-
-      monitor.invalidate();
-    }
-  }
 
   private static final Logger LOG = Logger.getInstance(TranslatingCompilerFilesMonitorImpl.class);
 
@@ -259,14 +90,14 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
 
   private static final Key<Map<String, VirtualFile>> SOURCE_FILES_CACHE = Key.create("_source_url_to_vfile_cache_");
 
-  private final Object myDataLock = new Object();
+  protected final Object myDataLock = new Object();
 
   private final TIntHashSet mySuspendedProjects = new TIntHashSet(); // projectId for all projects that should not be monitored
 
-  private final TIntObjectHashMap<TIntHashSet> mySourcesToRecompile = new TIntObjectHashMap<>();
+  protected final TIntObjectHashMap<TIntHashSet> mySourcesToRecompile = new TIntObjectHashMap<>();
 
   // Map: projectId -> Map{output path -> [sourceUrl; className]}
-  private final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<Integer, Outputs>(3, 3) {
+  protected final SLRUCache<Integer, Outputs> myOutputsToDelete = new SLRUCache<Integer, Outputs>(3, 3) {
     @Override
     public Outputs getIfCached(Integer key) {
       final Outputs value = super.getIfCached(key);
@@ -326,7 +157,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private final TIntIntHashMap myInitInProgress = new TIntIntHashMap(); // projectId for successfully initialized projects
   private final Object myAsyncScanLock = new Object();
 
-  private boolean myForceCompiling;
+  protected boolean myForceCompiling;
 
   @Inject
   public TranslatingCompilerFilesMonitorImpl() {
@@ -683,7 +514,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
   private void close() {
   }
 
-  private void invalidate() {
+  protected void invalidate() {
   }
 
   @Override
@@ -839,7 +670,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  private void markOldOutputRoots(final ProjectRef projRef, final Map<String, Couple<String>> currentLayout) {
+  protected void markOldOutputRoots(final ProjectRef projRef, final Map<String, Couple<String>> currentLayout) {
     final int projectId = getProjectId(projRef.get());
 
     Set<VirtualFile> rootsToMark = new HashSet<>();
@@ -976,7 +807,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }.queue());
   }
 
-  private void terminateAsyncScan(int projectId, final boolean clearCounter) {
+  protected void terminateAsyncScan(int projectId, final boolean clearCounter) {
     synchronized (myAsyncScanLock) {
       int counter = myInitInProgress.remove(projectId);
       if (clearCounter) {
@@ -993,7 +824,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  private void startAsyncScan(final int projectId) {
+  protected void startAsyncScan(final int projectId) {
     synchronized (myAsyncScanLock) {
       int counter = myInitInProgress.get(projectId);
       counter = (counter > 0) ? counter + 1 : 1;
@@ -1075,7 +906,7 @@ public class TranslatingCompilerFilesMonitorImpl extends TranslatingCompilerFile
     }
   }
 
-  private VirtualFile[] getRootsForScan(Project project) {
+  protected VirtualFile[] getRootsForScan(Project project) {
     List<VirtualFile> list = new ArrayList<>();
     Module[] modules = ModuleManager.getInstance(project).getModules();
     List<TranslatingCompilerFilesMonitorHelper> extensions = TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensionList();

@@ -1,26 +1,29 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.desktop.util.windows.defender;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.container.boot.ContainerPathManager;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.diagnostic.DiagnosticBundle;
-import consulo.process.ExecutionException;
-import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.local.ProcessOutput;
 import consulo.ide.impl.idea.execution.util.ExecUtil;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.project.ui.notification.Notification;
 import consulo.ide.impl.idea.notification.NotificationAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.Application;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vfs.impl.local.NativeFileWatcherImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.platform.Platform;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.ProcessOutput;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.UIUtil;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -34,6 +37,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class WindowsDefenderChecker {
   private static final Logger LOG = Logger.getInstance(WindowsDefenderChecker.class);
 

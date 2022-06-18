@@ -15,6 +15,7 @@
  */
 package consulo.module.impl.internal.layer.orderEntry;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.library.Library;
 import consulo.logging.Logger;
 import consulo.module.content.layer.ModuleRootLayer;
@@ -25,7 +26,6 @@ import consulo.module.impl.internal.layer.library.LibraryTableImplUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 
@@ -33,6 +33,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 21.08.14
  */
+@ExtensionImpl
 public class ModuleLibraryOrderEntryType implements OrderEntryType<ModuleLibraryOrderEntryImpl> {
   public static final Logger LOGGER = Logger.getInstance(ModuleLibraryOrderEntryType.class);
 

@@ -16,6 +16,8 @@
 package consulo.content.library;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.project.Project;
 import org.jetbrains.annotations.NonNls;
@@ -26,6 +28,7 @@ import java.util.List;
 
 @Deprecated(forRemoval = true)
 @DeprecationInfo("Just use ProjectLibraryTable")
+@Service(ComponentScope.APPLICATION)
 public abstract class LibraryTablesRegistrar {
   @NonNls
   public static final String PROJECT_LEVEL = "project";

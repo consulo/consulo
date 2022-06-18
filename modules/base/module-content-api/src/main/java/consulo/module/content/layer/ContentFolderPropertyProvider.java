@@ -15,6 +15,8 @@
  */
 package consulo.module.content.layer;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.dataholder.Key;
 import consulo.ui.image.Image;
@@ -26,8 +28,9 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 21:58/25.11.13
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ContentFolderPropertyProvider<T> {
-  public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME = ExtensionPointName.create("consulo.contentFolderPropertyProvider");
+  public static final ExtensionPointName<ContentFolderPropertyProvider> EP_NAME = ExtensionPointName.create(ContentFolderPropertyProvider.class);
 
   @Nonnull
   public abstract Key<T> getKey();

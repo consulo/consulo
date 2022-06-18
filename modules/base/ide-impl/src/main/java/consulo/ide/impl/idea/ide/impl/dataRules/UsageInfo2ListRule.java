@@ -16,20 +16,22 @@
 
 package consulo.ide.impl.idea.ide.impl.dataRules;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.dataContext.DataProvider;
 import consulo.dataContext.GetDataRule;
+import consulo.usage.UsageInfo;
+import consulo.usage.UsageView;
 import consulo.util.dataholder.Key;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import consulo.dataContext.DataProvider;
-import consulo.usage.UsageView;
-import consulo.usage.UsageInfo;
-
 import java.util.Collections;
 import java.util.List;
 
 /**
  * @author cdr
  */
+@ExtensionImpl
 public class UsageInfo2ListRule implements GetDataRule<List<UsageInfo>> {
   @Nonnull
   @Override

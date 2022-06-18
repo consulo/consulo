@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.module.content.DirectoryIndex;
 import consulo.ide.impl.idea.util.ObjectUtil;
@@ -54,6 +55,7 @@ import java.util.concurrent.ConcurrentMap;
  * @since 8:05/20.05.13
  */
 @Singleton
+@ServiceImpl
 public class PsiPackageManagerImpl extends PsiPackageManager implements Disposable {
   private final Project myProject;
   private final ProjectFileIndex myProjectFileIndex;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.impl.DataValidator;
 import consulo.language.editor.CommonDataKeys;
 import consulo.util.dataholder.Key;
@@ -26,6 +27,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 16-Oct-17
  */
+@ExtensionImpl
 public class PsiFileDataValidator implements DataValidator<PsiFile> {
   @Nonnull
   @Override

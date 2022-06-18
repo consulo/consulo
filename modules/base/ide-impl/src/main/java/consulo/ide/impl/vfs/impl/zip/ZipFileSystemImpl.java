@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.vfs.impl.zip;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ZipArchiveFileType;
@@ -28,6 +29,7 @@ import java.io.IOException;
  * @author VISTALL
  * @since 16:43/14.07.13
  */
+@ExtensionImpl
 public class ZipFileSystemImpl extends ArchiveFileSystemBase {
   public ZipFileSystemImpl() {
     super(ZipArchiveFileType.PROTOCOL);

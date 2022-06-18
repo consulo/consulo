@@ -15,6 +15,8 @@
  */
 package consulo.project.content;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.ReadAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
@@ -25,8 +27,9 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class GeneratedSourcesFilter {
-  public static final ExtensionPointName<GeneratedSourcesFilter> EP_NAME = ExtensionPointName.create("consulo.generatedSourcesFilter");
+  public static final ExtensionPointName<GeneratedSourcesFilter> EP_NAME = ExtensionPointName.create(GeneratedSourcesFilter.class);
 
   @RequiredReadAction
   public abstract boolean isGeneratedSource(@Nonnull VirtualFile file, @Nonnull Project project);

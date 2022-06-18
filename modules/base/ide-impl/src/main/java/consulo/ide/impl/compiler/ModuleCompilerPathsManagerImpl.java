@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
@@ -40,6 +41,7 @@ import java.util.Map;
  * @since 18:28/20.10.13
  */
 @Singleton
+@ServiceImpl
 public class ModuleCompilerPathsManagerImpl extends ModuleCompilerPathsManager implements PersistentStateComponent<Element>, Disposable {
   @NonNls
   private static final String MODULE_OUTPUT_TAG = "module";

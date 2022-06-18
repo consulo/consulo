@@ -15,10 +15,13 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
-import javax.annotation.Nonnull;
+import consulo.annotation.component.ServiceImpl;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+
 @Singleton
+@ServiceImpl
 public class FindPopupScopeUIProviderImpl implements FindPopupScopeUIProvider {
   @Nonnull
   @Override

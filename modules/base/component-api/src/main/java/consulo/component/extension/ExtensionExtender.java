@@ -25,11 +25,10 @@ import java.util.function.Consumer;
  * <p>
  * You can't removed those items from extensions later
  *
- * <extensionExtender key='com.intellij.someExtension' implementationClass='SomeExtender' />
- *
  * @author VISTALL
  * @since 2019-02-25
  */
+// TODO not work
 public interface ExtensionExtender<T> {
   ExtensionPointName<KeyedLazyInstanceEP<ExtensionExtender>> EP_NAME = ExtensionPointName.create("consulo.extensionExtender");
 

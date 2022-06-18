@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.compiler;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.compiler.impl.TranslatingCompilerFilesMonitorImpl;
 import consulo.ide.impl.idea.compiler.impl.TranslationOutputFileInfo;
 import consulo.ide.impl.idea.compiler.impl.TranslationSourceFileInfo;
@@ -57,6 +58,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 2019-10-26
  */
+@ExtensionImpl
 public class TranslationCompilerFilesMonitorVfsListener implements AsyncFileListener {
   private static final Logger LOG = Logger.getInstance(TranslationCompilerFilesMonitorVfsListener.class);
 

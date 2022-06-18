@@ -16,6 +16,8 @@
 
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -24,6 +26,7 @@ import javax.annotation.Nullable;
 /**
  * @author yole
  */
+@Service(ComponentScope.PROJECT)
 public abstract class PsiPackageHelper {
   public static PsiPackageHelper getInstance(Project project) {
     return project.getInstance( PsiPackageHelper.class);

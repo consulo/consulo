@@ -27,11 +27,6 @@
     </component>
 
     <component>
-      <interface-class>consulo.ide.impl.idea.ui.EditorNotifications</interface-class>
-      <implementation-class>consulo.ide.impl.idea.ui.EditorNotificationsImpl</implementation-class>
-    </component>
-
-    <component>
       <implementation-class>consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl$ProjectNotificationsComponent</implementation-class>
       <skipForDefaultProject/>
     </component>

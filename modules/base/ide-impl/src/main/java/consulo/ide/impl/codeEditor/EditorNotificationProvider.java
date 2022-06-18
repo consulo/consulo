@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.codeEditor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.fileEditor.FileEditor;
 import consulo.util.dataholder.Key;
@@ -30,8 +32,9 @@ import javax.swing.*;
  * @author VISTALL
  * @since 12.11.2015
  */
+@Extension(ComponentScope.PROJECT)
 public interface EditorNotificationProvider<T extends JComponent> {
-  ExtensionPointName<EditorNotificationProvider<?>> EP_NAME = ExtensionPointName.create("consulo.editorNotificationProvider");
+  ExtensionPointName<EditorNotificationProvider> EP_NAME = ExtensionPointName.create(EditorNotificationProvider.class);
 
   @Nonnull
   @Deprecated

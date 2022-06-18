@@ -61,23 +61,7 @@
 
   <extensions defaultExtensionNs="consulo">
 
-    <backgroundPostStartupActivity implementation="consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemStartupActivity"/>
-
-    <!--Generic services-->
-    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.ExternalSystemFacadeManager"/>
-    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.RemoteExternalSystemCommunicationManager"/>
-    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.InProcessExternalSystemCommunicationManager"/>
-    <applicationService
-        serviceInterface="consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemProgressNotificationManager"
-        serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.remote.ExternalSystemProgressNotificationManagerImpl"/>
-    <applicationService serviceInterface="consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalLibraryPathTypeMapper"
-                        serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.ExternalLibraryPathTypeMapperImpl"/>
-    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.internal.ExternalSystemProcessingManager"/>
-    <projectService
-        serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.notification.ExternalSystemNotificationManager"/>
-
     <!--Project structure management services-->
-    <applicationService serviceImplementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataManager"/>
     <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ProjectDataServiceImpl"/>
     <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.LibraryDataService"/>
     <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.project.manage.ModuleDataService"/>

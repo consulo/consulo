@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.fileEditor.impl;
+package consulo.fileEditor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -22,13 +24,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Created by IntelliJ IDEA.
  * User: angus
  * Date: 3/6/12
  * Time: 1:37 PM
  */
+@Extension(ComponentScope.APPLICATION)
 public interface FileEditorAssociateFinder {
-  ExtensionPointName<FileEditorAssociateFinder> EP_NAME = ExtensionPointName.create("consulo.editorFileAssociateFinder");
+  ExtensionPointName<FileEditorAssociateFinder> EP_NAME = ExtensionPointName.create(FileEditorAssociateFinder.class);
 
   @Nullable
   VirtualFile getAssociatedFileToOpen(@Nonnull Project project, @Nonnull VirtualFile original);

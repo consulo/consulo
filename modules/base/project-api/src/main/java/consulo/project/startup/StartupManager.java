@@ -57,7 +57,6 @@ public abstract class StartupManager {
    * progress bar is displayed. You may access the PSI structures from the activity.
    *
    * @param runnable the activity to execute.
-   * @see StartupActivity#POST_STARTUP_ACTIVITY
    */
   public abstract void registerPostStartupActivity(@Nonnull StartupActivity activity);
 
@@ -66,8 +65,6 @@ public abstract class StartupManager {
    * The runnable will be executed in current thread if project is already opened.</p>
    * <p>
    * See https://github.com/JetBrains/intellij-community/blob/master/platform/service-container/overview.md#startup-activity.
-   *
-   * @see StartupActivity#POST_STARTUP_ACTIVITY
    */
   public abstract void runAfterOpened(@Nonnull StartupActivity activity);
 
@@ -143,7 +140,7 @@ public abstract class StartupManager {
    * progress bar is displayed. You may access the PSI structures from the activity.
    *
    * @param runnable the activity to execute.
-   * @see StartupActivity#POST_STARTUP_ACTIVITY
+   * @see PostStartupActivity
    */
   @Deprecated
   public final void registerPostStartupActivity(@Nonnull Consumer<UIAccess> consumer) {
