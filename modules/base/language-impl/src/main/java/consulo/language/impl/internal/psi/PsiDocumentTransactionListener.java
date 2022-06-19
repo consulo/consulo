@@ -19,14 +19,15 @@
  */
 package consulo.language.impl.internal.psi;
 
+import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.document.Document;
 import consulo.language.psi.PsiFile;
-import consulo.component.messagebus.Topic;
+
 import javax.annotation.Nonnull;
 
+@Topic(direction = TopicBroadcastDirection.TO_PARENT)
 public interface PsiDocumentTransactionListener {
-  Topic<PsiDocumentTransactionListener> TOPIC = new Topic<PsiDocumentTransactionListener>("psi.DocumentTransactionListener", PsiDocumentTransactionListener.class, Topic.BroadcastDirection.TO_PARENT);
-
   void transactionStarted(@Nonnull Document document, @Nonnull PsiFile file);
 
   default void transactionCompleted(@Nonnull Document document, @Nonnull PsiFile file) {

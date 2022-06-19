@@ -15,6 +15,7 @@
  */
 package consulo.module.extension.event;
 
+import consulo.annotation.component.Topic;
 import consulo.module.extension.ModuleExtension;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,7 @@ import java.util.EventListener;
  * @author VISTALL
  * @since 2:20/10.09.13
  */
+@Topic
 public interface ModuleExtensionChangeListener extends EventListener {
   void beforeExtensionChanged(@Nonnull ModuleExtension<?> oldExtension, @Nonnull ModuleExtension<?> newExtension);
 }

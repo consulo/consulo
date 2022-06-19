@@ -115,8 +115,10 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentAnnotationClass").addModifiers(Modifier.PUBLIC).returns(Class.class)
                                         .addCode(CodeBlock.of("return $T.class;", apiInfo.annotation().annotationType())).build());
 
-          bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentScope").addModifiers(Modifier.PUBLIC).returns(ComponentScope.class)
-                                        .addCode(CodeBlock.of("return $T.$L;", ComponentScope.class, getScope(apiInfo.annotation()).name())).build());
+          ComponentScope scope = getScope(apiInfo.annotation());
+          bindBuilder.addMethod(
+                  MethodSpec.methodBuilder("getComponentScope").addModifiers(Modifier.PUBLIC).returns(ComponentScope.class).addCode(CodeBlock.of("return $T.$L;", ComponentScope.class, scope.name()))
+                          .build());
 
           if (!isLazy(apiInfo.annotation())) {
             bindBuilder.addMethod(MethodSpec.methodBuilder("isLazy").addModifiers(Modifier.PUBLIC).returns(boolean.class).addCode(CodeBlock.of("return false;")).build());
@@ -337,7 +339,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     }
 
     if (annotation instanceof Topic) {
-      return ((Topic)annotation).value();
+      return ComponentScope.APPLICATION;
     }
 
     throw new UnsupportedOperationException(annotation.getClass().getName());

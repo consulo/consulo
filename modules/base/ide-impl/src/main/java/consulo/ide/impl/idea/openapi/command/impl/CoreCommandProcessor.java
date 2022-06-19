@@ -69,7 +69,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
 
   public CoreCommandProcessor() {
     MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
-    messageBus.connect().subscribe(CommandListener.TOPIC, new CommandListener() {
+    messageBus.connect().subscribe(CommandListener.class, new CommandListener() {
       @Override
       public void commandStarted(@Nonnull CommandEvent event) {
         for (CommandListener listener : myListeners) {
@@ -144,7 +144,7 @@ public class CoreCommandProcessor extends CommandProcessorEx {
     });
 
     // will, command events occurred quite often, let's cache publisher
-    eventPublisher = messageBus.syncPublisher(CommandListener.TOPIC);
+    eventPublisher = messageBus.syncPublisher(CommandListener.class);
   }
 
   @Override

@@ -72,7 +72,6 @@ import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectRootManager;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.layer.ModifiableRootModel;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
@@ -241,7 +240,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
     myFileEditorManager = fileEditorManager;
 
     myConnection = project.getMessageBus().connect();
-    myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    myConnection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         refresh();
@@ -271,7 +270,7 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
         setAutoscrollToSource(state, myCurrentViewId);
       }
     };
-    project.getMessageBus().connect(this).subscribe(ToolWindowManagerListener.TOPIC, new ToolWindowManagerListener() {
+    project.getMessageBus().connect(this).subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
       private boolean toolWindowVisible;
 
       @Override

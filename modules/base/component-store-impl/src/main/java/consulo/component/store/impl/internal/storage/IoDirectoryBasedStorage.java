@@ -54,7 +54,7 @@ public class IoDirectoryBasedStorage extends StateStorageBase<DirectoryStorageDa
                                  @Nonnull String dir,
                                  @Nonnull StateSplitterEx splitter,
                                  @Nonnull Disposable parentDisposable,
-                                 @Nullable final Listener listener,
+                                 @Nullable final StateStorageListener listener,
                                  @Nonnull PathMacrosService pathMacrosService) {
     super(pathMacroSubstitutor, pathMacrosService);
 

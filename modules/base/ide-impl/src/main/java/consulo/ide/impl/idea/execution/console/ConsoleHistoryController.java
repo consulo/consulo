@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
-import consulo.ide.impl.AppTopics;
+import consulo.document.event.FileDocumentManagerListener;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.language.editor.scratch.ScratchFileService;
 import consulo.ide.impl.idea.openapi.actionSystem.*;
 import consulo.language.editor.WriteCommandAction;
+import consulo.project.internal.ProjectExListener;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.codeEditor.CaretModel;
 import consulo.codeEditor.Editor;
@@ -29,12 +30,10 @@ import consulo.ide.impl.idea.openapi.editor.actions.ContentChooser;
 import consulo.codeEditor.EditorEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.language.editor.highlight.LexerEditorHighlighter;
-import consulo.document.event.FileDocumentManagerAdapter;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.internal.ProjectEx;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
@@ -150,7 +149,7 @@ public class ConsoleHistoryController {
   }
 
   public void install() {
-    class Listener extends FileDocumentManagerAdapter implements ProjectEx.ProjectSaved {
+    class Listener implements ProjectExListener, FileDocumentManagerListener {
       @Override
       public void beforeDocumentSaving(@Nonnull Document document) {
         if (document == myConsole.getEditorDocument()) {
@@ -164,8 +163,8 @@ public class ConsoleHistoryController {
       }
     }
     Listener listener = new Listener();
-    ApplicationManager.getApplication().getMessageBus().connect(myConsole).subscribe(ProjectEx.ProjectSaved.TOPIC, listener);
-    myConsole.getProject().getMessageBus().connect(myConsole).subscribe(AppTopics.FILE_DOCUMENT_SYNC, listener);
+    ApplicationManager.getApplication().getMessageBus().connect(myConsole).subscribe(ProjectExListener.class, listener);
+    myConsole.getProject().getMessageBus().connect(myConsole).subscribe(FileDocumentManagerListener.class, listener);
 
     myConsole.getVirtualFile().putUserData(CONTROLLER_KEY, this);
     Disposer.register(myConsole, new Disposable() {

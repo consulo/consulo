@@ -15,19 +15,17 @@
  */
 package consulo.ide.impl.idea.notification;
 
-import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
 import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.Trinity;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.Topic;
 import consulo.ui.ex.awt.UIUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.util.lang.Trinity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,15 +33,14 @@ import java.util.*;
 
 /**
  * @author peter
+ * @see LogModelListener
  */
 public class LogModel implements Disposable {
-  public static final Topic<Runnable> LOG_MODEL_CHANGED = Topic.create("LOG_MODEL_CHANGED", Runnable.class, Topic.BroadcastDirection.NONE);
-
-  private final List<Notification> myNotifications = new ArrayList<Notification>();
+  private final List<Notification> myNotifications = new ArrayList<>();
   private final Map<Notification, Long> myStamps = Collections.synchronizedMap(new WeakHashMap<Notification, Long>());
   private Trinity<Notification, String, Long> myStatusMessage;
   private final Project myProject;
-  final Map<Notification, Runnable> removeHandlers = new HashMap<Notification, Runnable>();
+  final Map<Notification, Runnable> removeHandlers = new HashMap<>();
 
   LogModel(@Nullable Project project, @Nonnull Disposable parentDisposable) {
     myProject = project;
@@ -64,7 +61,7 @@ public class LogModel implements Disposable {
   }
 
   private static void fireModelChanged() {
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(LOG_MODEL_CHANGED).run();
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(LogModelListener.class).modelChanged();
   }
 
   List<Notification> takeNotifications() {
@@ -105,7 +102,7 @@ public class LogModel implements Disposable {
 
   public ArrayList<Notification> getNotifications() {
     synchronized (myNotifications) {
-      return new ArrayList<Notification>(myNotifications);
+      return new ArrayList<>(myNotifications);
     }
   }
 
@@ -134,15 +131,11 @@ public class LogModel implements Disposable {
   private void setStatusToImportant() {
     ArrayList<Notification> notifications = getNotifications();
     Collections.reverse(notifications);
-    Notification message = ContainerUtil.find(notifications, new Condition<Notification>() {
-      @Override
-      public boolean value(Notification notification) {
-        return notification.isImportant();
-      }
-    });
+    Notification message = ContainerUtil.find(notifications, Notification::isImportant);
     if (message == null) {
       setStatusMessage(message, 0);
-    } else {
+    }
+    else {
       Long notificationTime = getNotificationTime(message);
       assert notificationTime != null;
       setStatusMessage(message, notificationTime);

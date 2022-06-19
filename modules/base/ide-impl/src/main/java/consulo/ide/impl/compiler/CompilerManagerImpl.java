@@ -102,7 +102,7 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
       return;
     }
 
-    myEventPublisher = project.getMessageBus().syncPublisher(CompilerTopics.COMPILATION_STATUS);
+    myEventPublisher = project.getMessageBus().syncPublisher(CompilationStatusListener.class);
 
     List<TranslatingCompiler> translatingCompilers = new ArrayList<>();
     for (Compiler compiler : Compiler.EP_NAME.getExtensionList(project)) {
@@ -296,12 +296,12 @@ public class CompilerManagerImpl extends CompilerManager implements PersistentSt
 
   @Override
   public void addCompilationStatusListener(@Nonnull final CompilationStatusListener listener) {
-    myProject.getMessageBus().connect().subscribe(CompilerTopics.COMPILATION_STATUS, listener);
+    myProject.getMessageBus().connect().subscribe(CompilationStatusListener.class, listener);
   }
 
   @Override
   public void addCompilationStatusListener(@Nonnull CompilationStatusListener listener, @Nonnull Disposable parentDisposable) {
-    myProject.getMessageBus().connect(parentDisposable).subscribe(CompilerTopics.COMPILATION_STATUS, listener);
+    myProject.getMessageBus().connect(parentDisposable).subscribe(CompilationStatusListener.class, listener);
   }
 
   @Override

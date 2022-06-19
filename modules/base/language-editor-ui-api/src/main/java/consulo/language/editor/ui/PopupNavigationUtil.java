@@ -26,6 +26,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.resolve.PsiElementProcessor;
 import consulo.language.psi.util.EditSourceUtil;
 import consulo.navigation.Navigatable;
+import consulo.project.event.DumbModeListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.popup.IPopupChooserBuilder;
@@ -100,7 +101,7 @@ public final class PopupNavigationUtil {
 
   public static void hidePopupIfDumbModeStarts(@Nonnull JBPopup popup, @Nonnull Project project) {
     if (!DumbService.isDumb(project)) {
-      project.getMessageBus().connect(popup).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+      project.getMessageBus().connect(popup).subscribe(DumbModeListener.class, new DumbModeListener() {
         @Override
         public void enteredDumbMode() {
           popup.cancel();

@@ -31,7 +31,6 @@ import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersi
 import consulo.ide.impl.idea.openapi.application.PermanentInstallationID;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
@@ -63,7 +62,7 @@ public class StatisticsSendManager implements Disposable {
   StatisticsSendManager(Application application, Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent) {
     myUsageStatisticsComponent = usageStatisticsComponent;
 
-    application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         runStatisticsService();

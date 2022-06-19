@@ -44,7 +44,7 @@ public class AnnotationsPreloader {
     myProject = project;
     myUpdateQueue = new MergingUpdateQueue("Annotations preloader queue", 1000, true, null, project, null, false);
 
-    project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         if (!isEnabled()) return;

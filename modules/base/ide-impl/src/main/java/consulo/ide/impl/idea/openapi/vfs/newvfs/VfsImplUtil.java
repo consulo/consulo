@@ -223,7 +223,7 @@ public class VfsImplUtil {
     if (ourSubscribed.getAndSet(true)) return;
 
     Application app = ApplicationManager.getApplication();
-    app.getMessageBus().connect(app).subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
+    app.getMessageBus().connect(app).subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         InvalidationState state = null;

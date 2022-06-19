@@ -1,10 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorEx;
@@ -17,7 +13,7 @@ import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.codeEditor.internal.InternalEditorFactory;
 import consulo.codeEditor.internal.RealEditor;
-import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.event.EditorColorsListener;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
@@ -26,6 +22,10 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.impl.DocumentImpl;
 import consulo.document.internal.DocumentEx;
+import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.idea.util.text.CharArrayCharSequence;
 import consulo.language.editor.highlight.EditorHighlighterFactory;
 import consulo.language.file.inject.DocumentWindow;
 import consulo.logging.Logger;
@@ -54,7 +54,7 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
   @Inject
   public EditorFactoryImpl(Application application) {
     MessageBusConnection busConnection = application.getMessageBus().connect();
-    busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         // validate all editors are disposed after fireProjectClosed() was called, because it's the place where editor should be released
@@ -66,7 +66,7 @@ public abstract class EditorFactoryImpl extends InternalEditorFactory {
         });
       }
     });
-    busConnection.subscribe(EditorColorsManager.TOPIC, scheme -> refreshAllEditors());
+    busConnection.subscribe(EditorColorsListener.class, scheme -> refreshAllEditors());
   }
 
   @Nonnull

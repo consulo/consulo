@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
 import consulo.util.lang.function.PairProcessor;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import javax.annotation.Nonnull;
 
 import javax.swing.*;
@@ -28,8 +29,9 @@ import java.awt.*;
 /**
 * User: spLeaner
 */
+@consulo.annotation.component.Topic(direction = TopicBroadcastDirection.NONE)
 public interface ConfigurationErrors {
-  Topic<ConfigurationErrors> TOPIC = Topic.create("Configuration Error", ConfigurationErrors.class, Topic.BroadcastDirection.NONE);
+  TopicImpl<ConfigurationErrors> TOPIC = TopicImpl.create("Configuration Error", ConfigurationErrors.class, TopicBroadcastDirection.NONE);
 
   void addError(@Nonnull ConfigurationError error);
   void removeError(@Nonnull ConfigurationError error);

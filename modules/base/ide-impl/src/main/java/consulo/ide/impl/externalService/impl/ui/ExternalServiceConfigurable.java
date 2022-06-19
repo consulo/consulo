@@ -64,7 +64,7 @@ public class ExternalServiceConfigurable extends SimpleConfigurableByProperties 
   protected void afterApply() {
     super.afterApply();
 
-    myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.TOPIC).configurationChanged(myExternalServiceConfigurationProvider.get());
+    myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.class).configurationChanged(myExternalServiceConfigurationProvider.get());
   }
 
   @RequiredUIAccess

@@ -2,14 +2,14 @@
 package consulo.ide.impl.idea.openapi.editor.actionSystem;
 
 import consulo.codeEditor.Editor;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.component.messagebus.MessageBus;
 
 /**
  * Reports typing latency measurements on the application-level {@link MessageBus}.
  */
 public interface LatencyListener {
-  Topic<LatencyListener> TOPIC = new Topic<>("Typing latency notifications", LatencyListener.class);
+  TopicImpl<LatencyListener> TOPIC = new TopicImpl<>("Typing latency notifications", LatencyListener.class);
 
   /**
    * Record latency for a single key typed.

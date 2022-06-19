@@ -15,10 +15,13 @@
  */
 package consulo.language.file.event;
 
+import consulo.annotation.component.Topic;
+
 import javax.annotation.Nonnull;
 
 import java.util.EventListener;
 
+@Topic
 public interface FileTypeListener extends EventListener {
   default void beforeFileTypesChanged(@Nonnull FileTypeEvent event) {
   }

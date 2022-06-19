@@ -77,7 +77,7 @@ public class BraceHighlighter implements PostStartupActivity {
     };
     eventMulticaster.addDocumentListener(documentListener, project);
 
-    project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    project.getMessageBus().connect().subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
         myAlarm.cancelAllRequests();

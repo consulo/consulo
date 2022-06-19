@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ui;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.module.content.ProjectTopics;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.fileEditor.FileEditor;
@@ -29,6 +28,7 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
 import consulo.application.impl.internal.progress.ReadTask;
+import consulo.project.event.DumbModeListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
@@ -68,13 +68,13 @@ public class EditorNotificationsImpl extends EditorNotifications {
     myProject = project;
     myUpdateMerger = new MergingUpdateQueue("EditorNotifications update merger", 100, true, null, project);
     MessageBusConnection connection = project.getMessageBus().connect(project);
-    connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    connection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         updateNotifications(file);
       }
     });
-    connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void enteredDumbMode() {
         updateAllNotifications();
@@ -85,7 +85,7 @@ public class EditorNotificationsImpl extends EditorNotifications {
         updateAllNotifications();
       }
     });
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         updateAllNotifications();

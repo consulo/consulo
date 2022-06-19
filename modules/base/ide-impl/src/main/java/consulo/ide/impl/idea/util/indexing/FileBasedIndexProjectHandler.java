@@ -31,14 +31,12 @@ import consulo.application.progress.ProgressIndicator;
 import consulo.ide.impl.idea.openapi.project.*;
 import consulo.content.ContentIterator;
 import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
+import consulo.project.*;
+import consulo.project.event.DumbModeListener;
 import consulo.project.startup.StartupManager;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.project.DumbModeTask;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
@@ -66,7 +64,7 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
     }
 
     if (ApplicationManager.getApplication().isInternal()) {
-      project.getMessageBus().connect(this).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+      project.getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
 
         @Override
         public void exitDumbMode() {
@@ -87,7 +85,7 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
       });
 
       myIndex.registerIndexableSet(this, project);
-      project.getMessageBus().connect(this).subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      project.getMessageBus().connect(this).subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
         private boolean removed;
 
         @Override

@@ -28,7 +28,6 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.module.Module;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.ProjectFileIndex;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
@@ -88,7 +87,7 @@ public class PsiPackageManagerImpl extends PsiPackageManager implements Disposab
       }
     }, this);
 
-    project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    project.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myPackageCache.clear();

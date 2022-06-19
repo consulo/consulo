@@ -35,7 +35,7 @@ public class ServerConnectionEventDispatcher {
   }
 
   public void fireConnectionCreated(ServerConnection<?> connection) {
-    myMessageBus.syncPublisher(ServerConnectionListener.TOPIC).onConnectionCreated(connection);
+    myMessageBus.syncPublisher(ServerConnectionListener.class).onConnectionCreated(connection);
   }
 
   public void queueConnectionStatusChanged(final ServerConnectionImpl<?> connection) {
@@ -43,7 +43,7 @@ public class ServerConnectionEventDispatcher {
     myEventsQueue.queue(new Update(connection) {
       @Override
       public void run() {
-        myMessageBus.syncPublisher(ServerConnectionListener.TOPIC).onConnectionStatusChanged(connection);
+        myMessageBus.syncPublisher(ServerConnectionListener.class).onConnectionStatusChanged(connection);
       }
     });
   }
@@ -53,7 +53,7 @@ public class ServerConnectionEventDispatcher {
     myEventsQueue.queue(new Update(connection) {
       @Override
       public void run() {
-        myMessageBus.syncPublisher(ServerConnectionListener.TOPIC).onDeploymentsChanged(connection);
+        myMessageBus.syncPublisher(ServerConnectionListener.class).onDeploymentsChanged(connection);
       }
     });
   }

@@ -198,7 +198,7 @@ public class ConsoleExecutionEditor implements Disposable {
         }
       }
     };
-    myBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, fileEditorListener);
+    myBusConnection.subscribe(FileEditorManagerListener.class, fileEditorListener);
     FileEditorManager editorManager = FileEditorManager.getInstance(getProject());
     if (editorManager.isFileOpen(getVirtualFile())) {
       fileEditorListener.fileOpened(editorManager, getVirtualFile());

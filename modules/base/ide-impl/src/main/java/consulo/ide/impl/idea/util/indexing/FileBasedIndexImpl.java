@@ -28,7 +28,6 @@ import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.FileDocumentManagerListener;
-import consulo.ide.impl.AppTopics;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
@@ -206,7 +205,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     myIsUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
-    connection.subscribe(PsiDocumentTransactionListener.TOPIC, new PsiDocumentTransactionListener() {
+    connection.subscribe(PsiDocumentTransactionListener.class, new PsiDocumentTransactionListener() {
       @Override
       public void transactionStarted(@Nonnull final Document doc, @Nonnull final PsiFile file) {
         myTransactionMap = myTransactionMap.plus(doc, file);
@@ -219,7 +218,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       }
     });
 
-    connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
+    connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Nullable
       private Map<FileType, Set<String>> myTypeToExtensionMap;
 
@@ -287,7 +286,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       }
     });
 
-    connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerListener() {
+    connection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
       @Override
       public void fileContentReloaded(@Nonnull VirtualFile file, @Nonnull Document document) {
         cleanupMemoryStorage(true);

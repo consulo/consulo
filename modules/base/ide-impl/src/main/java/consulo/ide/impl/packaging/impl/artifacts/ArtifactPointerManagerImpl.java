@@ -18,17 +18,16 @@ package consulo.ide.impl.packaging.impl.artifacts;
 import consulo.annotation.component.ServiceImpl;
 import consulo.compiler.artifact.*;
 import consulo.compiler.artifact.event.ArtifactListener;
-import consulo.project.Project;
-import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactPointerImpl;
 import consulo.component.impl.util.NamedPointerImpl;
 import consulo.component.impl.util.NamedPointerManagerImpl;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.ide.impl.idea.packaging.impl.artifacts.ArtifactPointerImpl;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ public class ArtifactPointerManagerImpl extends NamedPointerManagerImpl<Artifact
   @Inject
   public ArtifactPointerManagerImpl(Project project, Provider<ArtifactManager> artifactManagerProvider) {
     myArtifactManagerProvider = artifactManagerProvider;
-    project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactListener() {
+    project.getMessageBus().connect().subscribe(ArtifactListener.class, new ArtifactListener() {
       @Override
       public void artifactRemoved(@Nonnull Artifact artifact) {
         unregisterPointer(artifact);

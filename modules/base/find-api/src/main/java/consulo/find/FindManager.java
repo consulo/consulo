@@ -15,16 +15,16 @@
  */
 package consulo.find;
 
-import consulo.language.findUsage.FindUsagesProvider;
-import consulo.navigation.NavigationItem;
 import consulo.codeEditor.Editor;
+import consulo.content.scope.SearchScope;
 import consulo.fileEditor.FileEditor;
+import consulo.language.findUsage.FindUsagesProvider;
+import consulo.language.psi.PsiElement;
+import consulo.navigation.NavigationItem;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiElement;
-import consulo.content.scope.SearchScope;
-import consulo.component.messagebus.Topic;
 import org.intellij.lang.annotations.MagicConstant;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -32,8 +32,6 @@ import javax.annotation.Nullable;
  * Allows to invoke and control Find, Replace and Find Usages operations.
  */
 public abstract class FindManager {
-  public static final Topic<FindModelListener> FIND_MODEL_TOPIC = new Topic<FindModelListener>("FindManager's model changes", FindModelListener.class);
-
   public abstract FindModel createReplaceInFileModel();
 
   @Nullable

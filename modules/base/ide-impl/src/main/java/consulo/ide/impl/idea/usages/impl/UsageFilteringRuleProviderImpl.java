@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.language.editor.CommonDataKeys;
@@ -41,6 +42,7 @@ import java.util.List;
 /**
  * @author max
  */
+@ExtensionImpl
 public class UsageFilteringRuleProviderImpl implements UsageFilteringRuleProvider {
   private final ReadWriteState myReadWriteState = new ReadWriteState();
 

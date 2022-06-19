@@ -25,7 +25,7 @@ import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
-import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiModificationTrackerListener;
 import consulo.language.sem.*;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -64,7 +64,7 @@ public class SemServiceImpl extends SemService {
   public SemServiceImpl(Project project, PsiManager psiManager) {
     myProject = project;
     final MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
+    connection.subscribe(PsiModificationTrackerListener.class, new PsiModificationTrackerListener() {
       @Override
       public void modificationCountChanged() {
         if (!isInsideAtomicChange()) {

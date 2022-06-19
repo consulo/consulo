@@ -15,16 +15,19 @@
  */
 package consulo.execution.event;
 
+import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.execution.configuration.RunProfile;
-import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
-import javax.annotation.Nonnull;
+import consulo.process.ProcessHandler;
 
+import javax.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
  * @author nik
  */
+@Topic(direction = TopicBroadcastDirection.TO_PARENT)
 public interface ExecutionListener extends EventListener {
 
   default void processStartScheduled(@Nonnull String executorId, @Nonnull ExecutionEnvironment env) {

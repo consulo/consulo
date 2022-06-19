@@ -306,7 +306,7 @@ public final class LanguageConsoleBuilder {
       scrollPane.setViewportView(layeredPane);
 
       GutterUpdateScheduler gutterUpdateScheduler = new GutterUpdateScheduler(lineStartGutter, lineEndGutter);
-      getProject().getMessageBus().connect(this).subscribe(DocumentBulkUpdateListener.TOPIC, gutterUpdateScheduler);
+      getProject().getMessageBus().connect(this).subscribe(DocumentBulkUpdateListener.class, gutterUpdateScheduler);
       editor.getDocument().addDocumentListener(gutterUpdateScheduler);
     }
 

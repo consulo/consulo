@@ -104,7 +104,7 @@ public class LocalHistoryImpl extends LocalHistory implements Disposable {
     CommandProcessor.getInstance().addCommandListener(myEventDispatcher, this);
 
     myConnection = myBus.connect();
-    myConnection.subscribe(VirtualFileManager.VFS_CHANGES, myEventDispatcher);
+    myConnection.subscribe(BulkFileListener.class, myEventDispatcher);
 
     VirtualFileManager fm = VirtualFileManager.getInstance();
     fm.addVirtualFileManagerListener(myEventDispatcher, this);

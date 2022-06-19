@@ -14,7 +14,6 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
-import consulo.language.file.FileTypeManager;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.project.Project;
@@ -41,8 +40,8 @@ public final class BreadcrumbsInitializingActivity implements PostStartupActivit
     }
 
     MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new MyFileEditorManagerListener());
-    connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
+    connection.subscribe(FileEditorManagerListener.class, new MyFileEditorManagerListener());
+    connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
       public void fileTypesChanged(@Nonnull FileTypeEvent event) {
         reinitBreadcrumbsInAllEditors(project);
@@ -50,7 +49,7 @@ public final class BreadcrumbsInitializingActivity implements PostStartupActivit
     });
 
     VirtualFileManager.getInstance().addVirtualFileListener(new MyVirtualFileListener(project), project);
-    connection.subscribe(UISettingsListener.TOPIC, uiSettings -> reinitBreadcrumbsInAllEditors(project));
+    connection.subscribe(UISettingsListener.class, uiSettings -> reinitBreadcrumbsInAllEditors(project));
 
     UIUtil.invokeLaterIfNeeded(() -> reinitBreadcrumbsInAllEditors(project));
   }

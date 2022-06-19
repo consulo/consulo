@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
+import consulo.application.PowerSaveModeListener;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.HectorComponent;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.FileHighlightingSettingListener;
@@ -85,8 +86,8 @@ public class TogglePopupHintsPanel extends EditorBasedWidget implements StatusBa
   @Override
   public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
-    myConnection.subscribe(PowerSaveMode.TOPIC, this::updateStatus);
-    myConnection.subscribe(ProfileChangeAdapter.TOPIC, new ProfileChangeAdapter() {
+    myConnection.subscribe(PowerSaveModeListener.class, this::updateStatus);
+    myConnection.subscribe(ProfileChangeAdapter.class, new ProfileChangeAdapter() {
       @Override
       public void profilesInitialized() {
         updateStatus();

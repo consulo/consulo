@@ -15,11 +15,11 @@
  */
 package consulo.component.store.impl.internal;
 
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
+import consulo.component.messagebus.TopicImpl;
 
+@Topic
 public interface BatchUpdateListener {
-  Topic<BatchUpdateListener> TOPIC = new Topic<>("batch update listener", BatchUpdateListener.class);
-
   void onBatchUpdateStarted();
 
   void onBatchUpdateFinished();

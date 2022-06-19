@@ -211,11 +211,11 @@ public class DvcsUtil {
 
   @Nonnull
   public static AccessToken workingTreeChangeStarted(@Nonnull Project project, @Nullable String activityName) {
-    BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.TOPIC).batchChangeStarted(project, activityName);
+    BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.class).batchChangeStarted(project, activityName);
     return new AccessToken() {
       @Override
       public void finish() {
-        BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.TOPIC).batchChangeCompleted(project);
+        BackgroundTaskUtil.syncPublisher(BatchFileChangeListener.class).batchChangeCompleted(project);
       }
     };
   }
@@ -251,12 +251,7 @@ public class DvcsUtil {
 
   @Nonnull
   public static String tryLoadFile(@Nonnull final File file, @Nullable String encoding) throws RepoStateException {
-    return tryOrThrow(new Callable<String>() {
-      @Override
-      public String call() throws Exception {
-        return StringUtil.convertLineSeparators(FileUtil.loadFile(file, encoding)).trim();
-      }
-    }, file);
+    return tryOrThrow(() -> consulo.util.lang.StringUtil.convertLineSeparators(FileUtil.loadFile(file, encoding)).trim(), file);
   }
 
   @Nullable

@@ -18,15 +18,12 @@ package consulo.language.editor;
 
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
-import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
-import consulo.fileEditor.FileEditor;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
 
 /**
  * Manages the background highlighting and auto-import for files displayed in editors.
@@ -70,44 +67,4 @@ public abstract class DaemonCodeAnalyzer {
   public abstract void restart(@Nonnull PsiFile file);
 
   public abstract void autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
-
-  public static final Topic<DaemonListener> DAEMON_EVENT_TOPIC = Topic.create("DAEMON_EVENT_TOPIC", DaemonListener.class);
-
-  public interface DaemonListener {
-    /**
-     * Fired when the background code analysis is being scheduled for the specified set of files.
-     *
-     * @param fileEditors The list of files that will be analyzed during the current execution of the daemon.
-     */
-    default void daemonStarting(@Nonnull Collection<FileEditor> fileEditors) {
-    }
-
-    /**
-     * Fired when the background code analysis is done.
-     */
-    default void daemonFinished() {
-    }
-
-    /**
-     * Fired when the background code analysis is done.
-     *
-     * @param fileEditors The list of files analyzed during the current execution of the daemon.
-     */
-    default void daemonFinished(@Nonnull Collection<FileEditor> fileEditors) {
-      daemonFinished();
-    }
-
-    default void daemonCancelEventOccurred(@Nonnull String reason) {
-    }
-  }
-
-  public abstract static class DaemonListenerAdapter implements DaemonListener {
-    @Override
-    public void daemonFinished() {
-    }
-
-    @Override
-    public void daemonCancelEventOccurred(@Nonnull String reason) {
-    }
-  }
 }

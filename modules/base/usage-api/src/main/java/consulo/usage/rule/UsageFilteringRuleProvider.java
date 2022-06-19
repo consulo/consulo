@@ -15,18 +15,21 @@
  */
 package consulo.usage.rule;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.project.Project;
 import consulo.ui.ex.action.AnAction;
 import consulo.usage.UsageView;
 
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.APPLICATION)
 public interface UsageFilteringRuleProvider {
-  ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create("consulo.usageFilteringRuleProvider");
+  ExtensionPointName<UsageFilteringRuleProvider> EP_NAME = ExtensionPointName.create(UsageFilteringRuleProvider.class);
 
-  Topic<Runnable> RULES_CHANGED = new Topic<Runnable>("usave view rules changed", Runnable.class);
+  TopicImpl<Runnable> RULES_CHANGED = new TopicImpl<Runnable>("usave view rules changed", Runnable.class);
 
   @Nonnull
   UsageFilteringRule[] getActiveRules(@Nonnull Project project);

@@ -16,8 +16,8 @@ import consulo.codeEditor.action.TypedActionHandler;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 import consulo.codeEditor.markup.*;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.event.EditorColorsListener;
 import consulo.content.scope.SearchScope;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
@@ -39,9 +39,10 @@ import consulo.execution.ui.console.Filter.ResultItem;
 import consulo.ide.impl.idea.codeInsight.navigation.IncrementalSearchHandler;
 import consulo.ide.impl.idea.codeInsight.template.impl.editorActions.TypedActionHandlerBase;
 import consulo.ide.impl.idea.execution.actions.ClearConsoleAction;
-import consulo.execution.ui.console.ConsoleActionsPostProcessor;
 import consulo.ide.impl.idea.execution.actions.EOFAction;
-import consulo.ide.impl.idea.execution.filters.*;
+import consulo.ide.impl.idea.execution.filters.BrowserHyperlinkInfo;
+import consulo.ide.impl.idea.execution.filters.CompositeFilter;
+import consulo.ide.impl.idea.execution.filters.CompositeInputFilter;
 import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
@@ -56,6 +57,7 @@ import consulo.language.psi.scope.GlobalSearchScope;
 import consulo.logging.Logger;
 import consulo.navigation.OpenFileDescriptor;
 import consulo.process.ProcessHandler;
+import consulo.project.event.DumbModeListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.OccurenceNavigator;
@@ -194,7 +196,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
       myInputMessageFilter = (text, contentType) -> null;
     }
 
-    project.getMessageBus().connect(this).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    project.getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
       private long myLastStamp;
 
       @Override
@@ -216,7 +218,7 @@ public class ConsoleViewImpl extends JPanel implements ConsoleView, ObservableCo
         });
       }
     });
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(EditorColorsManager.TOPIC, scheme -> {
+    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(EditorColorsListener.class, scheme -> {
       ApplicationManager.getApplication().assertIsDispatchThread();
       if (isDisposed() || myEditor == null) return;
       MarkupModel model = DocumentMarkupModel.forDocument(myEditor.getDocument(), project, false);

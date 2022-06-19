@@ -90,7 +90,7 @@ public class ExternalStorageManager {
     myPluginManager = pluginManager;
     myApplication = (ApplicationEx)application;
     myStorage = storage;
-    application.getMessageBus().connect().subscribe(ExternalServiceConfigurationListener.TOPIC, this::configurationChanged);
+    application.getMessageBus().connect().subscribe(ExternalServiceConfigurationListener.class, this::configurationChanged);
   }
 
   public void startChecking() {

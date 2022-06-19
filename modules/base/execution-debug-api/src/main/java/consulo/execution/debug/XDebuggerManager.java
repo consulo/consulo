@@ -18,8 +18,6 @@ package consulo.execution.debug;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
-import consulo.component.messagebus.Topic;
-import consulo.execution.debug.event.XDebuggerManagerListener;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
 import consulo.execution.ui.ExecutionConsole;
@@ -37,7 +35,6 @@ import java.util.List;
  */
 @Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class XDebuggerManager {
-  public static final Topic<XDebuggerManagerListener> TOPIC = new Topic<XDebuggerManagerListener>("XDebuggerManager events", XDebuggerManagerListener.class);
 
   public static XDebuggerManager getInstance(@Nonnull Project project) {
     return project.getComponent(XDebuggerManager.class);

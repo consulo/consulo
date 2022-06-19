@@ -19,6 +19,9 @@
  */
 package consulo.find;
 
+import consulo.annotation.component.Topic;
+
+@Topic
 public interface FindModelListener {
   void findNextModelChanged();
 }

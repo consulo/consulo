@@ -15,6 +15,7 @@
  */
 package consulo.content.bundle.event;
 
+import consulo.annotation.component.Topic;
 import consulo.content.bundle.Sdk;
 import javax.annotation.Nonnull;
 
@@ -22,48 +23,22 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 22.05.2015
  */
+@Topic
 public interface SdkTableListener {
-  class Adapter implements SdkTableListener {
-    @Override
-    public void beforeSdkAdded(@Nonnull Sdk sdk) {
+  default void beforeSdkAdded(@Nonnull Sdk sdk){}
 
-    }
-
-    @Override
-    public void sdkAdded(@Nonnull Sdk sdk) {
-
-    }
-
-    @Override
-    public void beforeSdkRemoved(@Nonnull Sdk sdk) {
-
-    }
-
-    @Override
-    public void sdkRemoved(@Nonnull Sdk sdk) {
-
-    }
-
-    @Override
-    public void beforeSdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
-
-    }
-
-    @Override
-    public void sdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
-
-    }
+  default void sdkAdded(@Nonnull Sdk sdk) {
   }
 
-  void beforeSdkAdded(@Nonnull Sdk sdk);
+  default void beforeSdkRemoved(@Nonnull Sdk sdk) {
+  }
 
-  void sdkAdded(@Nonnull Sdk sdk);
+  default void sdkRemoved(@Nonnull Sdk sdk) {
+  }
 
-  void beforeSdkRemoved(@Nonnull Sdk sdk);
+  default void beforeSdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
+  }
 
-  void sdkRemoved(@Nonnull Sdk sdk);
-
-  void beforeSdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName);
-
-  void sdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName);
+  default void sdkNameChanged(@Nonnull Sdk sdk, @Nonnull String previousName) {
+  }
 }

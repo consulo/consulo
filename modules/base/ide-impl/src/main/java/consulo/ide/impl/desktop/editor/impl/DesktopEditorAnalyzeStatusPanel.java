@@ -875,7 +875,7 @@ public class DesktopEditorAnalyzeStatusPanel implements Disposable {
     };
 
     MessageBusConnection connection = Application.get().getMessageBus().connect(this);
-    connection.subscribe(AnActionListener.TOPIC, new AnActionListener() {
+    connection.subscribe(AnActionListener.class, new AnActionListener() {
       @Override
       public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
         if (action instanceof HintManagerImpl.ActionToIgnore) {

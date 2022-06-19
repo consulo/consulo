@@ -90,7 +90,7 @@ public final class QuickDocOnMouseOverManager {
       factory.addEditorFactoryListener(new MyEditorFactoryListener(), app);
     }
 
-    app.getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
+    app.getMessageBus().connect().subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
       @Override
       public void applicationActivated(@Nonnull IdeFrame ideFrame) {
         myApplicationActive = true;

@@ -190,7 +190,7 @@ public final class SettingsEntryPointAction extends DumbAwareAction implements R
   private static void initUISettingsListener() {
     if (mySettingsListener == null) {
       mySettingsListener = uiSettings -> updateWidgets();
-      ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.TOPIC, mySettingsListener);
+      ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.class, mySettingsListener);
     }
   }
 

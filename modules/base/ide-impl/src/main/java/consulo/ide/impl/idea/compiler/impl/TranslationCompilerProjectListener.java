@@ -26,10 +26,9 @@ import consulo.ide.impl.compiler.TranslatingCompilerFilesMonitor;
 import consulo.ide.impl.compiler.TranslationCompilerProjectMonitor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.logging.Logger;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
@@ -68,7 +67,7 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
 
     monitor.watchProject(project);
 
-    conn.subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> {
+    conn.subscribe(ModuleExtensionChangeListener.class, (oldExtension, newExtension) -> {
       for (TranslatingCompilerFilesMonitorHelper helper : TranslatingCompilerFilesMonitorHelper.EP_NAME.getExtensionList()) {
         if (helper.isModuleExtensionAffectToCompilation(newExtension)) {
           monitor.myForceCompiling = true;
@@ -77,7 +76,7 @@ class TranslationCompilerProjectListener implements ProjectManagerListener {
       }
     });
 
-    conn.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    conn.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       private VirtualFile[] myRootsBefore;
       private Alarm myAlarm = new Alarm(Alarm.ThreadToUse.SWING_THREAD, project);
 

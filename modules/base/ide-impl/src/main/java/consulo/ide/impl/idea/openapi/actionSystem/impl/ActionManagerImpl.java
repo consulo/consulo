@@ -169,7 +169,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
 
   @Nonnull
   private static AnActionListener publisher() {
-    return ApplicationManager.getApplication().getMessageBus().syncPublisher(AnActionListener.TOPIC);
+    return ApplicationManager.getApplication().getMessageBus().syncPublisher(AnActionListener.class);
   }
 
   @Nullable
@@ -1384,7 +1384,7 @@ public final class ActionManagerImpl extends ActionManagerEx implements Disposab
       addActionListener(this);
       setRepeats(true);
       final MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
-      connection.subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
+      connection.subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
         @Override
         public void applicationActivated(@Nonnull IdeFrame ideFrame) {
           setDelay(TIMER_DELAY);

@@ -15,14 +15,14 @@
  */
 package consulo.project.ui.wm.event;
 
+import consulo.annotation.component.Topic;
 import consulo.project.ui.wm.IdeFrame;
-import consulo.component.messagebus.Topic;
 
 /**
  * @author yole
  */
+@Topic
 public interface ApplicationActivationListener {
-  Topic<ApplicationActivationListener> TOPIC = Topic.create("Application activation notifications", ApplicationActivationListener.class);
 
   /**
    * Called when app is activated by transferring focus to it.

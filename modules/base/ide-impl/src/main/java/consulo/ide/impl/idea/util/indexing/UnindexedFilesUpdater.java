@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import consulo.language.psi.stub.FileBasedIndex;
-import consulo.module.content.ProjectTopics;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.ide.IdeBundle;
 import consulo.application.Application;
@@ -18,7 +17,6 @@ import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdater;
 import consulo.project.DumbModeTask;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
@@ -43,7 +41,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
   public UnindexedFilesUpdater(final Project project) {
     myProject = project;
     myPusher = PushedFilePropertiesUpdater.getInstance(myProject);
-    project.getMessageBus().connect(this).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    project.getMessageBus().connect(this).subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@Nonnull ModuleRootEvent event) {
         DumbService.getInstance(project).cancelTask(UnindexedFilesUpdater.this);
@@ -102,7 +100,7 @@ public class UnindexedFilesUpdater extends DumbModeTask {
     if (!app.isCommandLine()) {
       long sessionId = VirtualFileManager.getInstance().asyncRefresh(null);
       MessageBusConnection connection = app.getMessageBus().connect();
-      connection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
         @Override
         public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
           if (project == myProject) {

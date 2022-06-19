@@ -15,55 +15,54 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
-import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
-import consulo.ui.ex.action.IdeActions;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.document.Document;
-import consulo.document.event.DocumentAdapter;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.EditorKind;
-import consulo.colorScheme.event.EditorColorsListener;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.ide.impl.idea.openapi.editor.event.*;
-import consulo.codeEditor.EditorEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.event.EditorEventMulticaster;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.document.FileDocumentManager;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseListener;
-import consulo.project.Project;
-import consulo.project.startup.StartupManager;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.event.EditorColorsListener;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.util.concurrent.AsyncResult;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.VirtualFileEvent;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.event.VirtualFileUrlChangeAdapter;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.util.collection.SmartList;
-import consulo.util.collection.BidirectionalMap;
-import consulo.ui.ex.awt.util.MergingUpdateQueue;
-import consulo.ui.ex.awt.util.Update;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.SuspendPolicy;
 import consulo.execution.debug.breakpoint.XBreakpoint;
 import consulo.execution.debug.breakpoint.XLineBreakpoint;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewUtil;
+import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ide.impl.idea.openapi.editor.event.EditorMouseMotionAdapter;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.xdebugger.impl.XSourcePositionImpl;
 import consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerUIUtil;
-import consulo.disposer.Disposer;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
+import consulo.ui.ex.action.IdeActions;
+import consulo.ui.ex.awt.util.MergingUpdateQueue;
+import consulo.ui.ex.awt.util.Update;
+import consulo.util.collection.BidirectionalMap;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntSet;
 import consulo.util.collection.primitive.ints.IntSets;
+import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileUrlChangeAdapter;
 
 import javax.annotation.Nonnull;
 import java.awt.event.MouseEvent;
@@ -121,7 +120,7 @@ public class XLineBreakpointManager {
     myBreakpointsUpdateQueue = new MergingUpdateQueue("XLine breakpoints", 300, true, null, project);
 
     // Update breakpoints colors if global color schema was changed
-    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, new MyEditorColorsListener());
+    project.getMessageBus().connect().subscribe(EditorColorsListener.class, new MyEditorColorsListener());
   }
 
   public void updateBreakpointsUI() {

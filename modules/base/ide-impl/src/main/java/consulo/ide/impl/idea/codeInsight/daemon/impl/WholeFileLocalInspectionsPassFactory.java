@@ -55,7 +55,7 @@ public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlight
   public WholeFileLocalInspectionsPassFactory(Project project) {
     myProject = project;
 
-    myProject.getMessageBus().connect().subscribe(ProfileChangeAdapter.TOPIC, new ProfileChangeAdapter() {
+    myProject.getMessageBus().connect().subscribe(ProfileChangeAdapter.class, new ProfileChangeAdapter() {
       @Override
       public void profileChanged(@Nullable Profile profile) {
         myFileToolsCache.clear();

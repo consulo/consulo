@@ -26,7 +26,7 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.application.progress.ProgressIndicatorEx;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import javax.annotation.Nonnull;
 
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ import java.util.Set;
  */
 public class ProgressSuspender implements AutoCloseable {
   private static final Key<ProgressSuspender> PROGRESS_SUSPENDER = Key.create("PROGRESS_SUSPENDER");
-  public static final Topic<SuspenderListener> TOPIC = Topic.create("ProgressSuspender", SuspenderListener.class);
+  public static final TopicImpl<SuspenderListener> TOPIC = TopicImpl.create("ProgressSuspender", SuspenderListener.class);
 
   private final Object myLock = new Object();
   private static final Application ourApp = ApplicationManager.getApplication();

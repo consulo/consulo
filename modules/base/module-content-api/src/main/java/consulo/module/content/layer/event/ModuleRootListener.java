@@ -15,15 +15,15 @@
  */
 package consulo.module.content.layer.event;
 
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
 
 import java.util.EventListener;
 
 /**
  * @author dsl
  */
+@Topic
 public interface ModuleRootListener extends EventListener {
-  Topic<ModuleRootListener> TOPIC = Topic.create("project root changes", ModuleRootListener.class);
 
   default void beforeRootsChange(ModuleRootEvent event) {
   }

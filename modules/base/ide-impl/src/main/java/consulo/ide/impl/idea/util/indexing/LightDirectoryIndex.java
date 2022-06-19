@@ -18,9 +18,7 @@ package consulo.ide.impl.idea.util.indexing;
 import consulo.application.ApplicationManager;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -49,14 +47,14 @@ public final class LightDirectoryIndex<T> {
     myInitializer = initializer;
     resetIndex();
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(parentDisposable);
-    connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
+    connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
       public void fileTypesChanged(@Nonnull FileTypeEvent event) {
         resetIndex();
       }
     });
 
-    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void before(@Nonnull List<? extends VFileEvent> events) {
       }

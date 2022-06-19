@@ -18,7 +18,6 @@ package consulo.language.psi;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
-import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
 import consulo.language.file.FileViewProvider;
 import consulo.language.psi.event.PsiTreeChangeListener;
@@ -35,7 +34,6 @@ import javax.annotation.Nullable;
  */
 @Service(ComponentScope.PROJECT)
 public abstract class PsiManager extends UserDataHolderBase {
-  public static final Topic<AnyPsiChangeListener> ANY_PSI_CHANGE_TOPIC = Topic.create("ANY_PSI_CHANGE_TOPIC", AnyPsiChangeListener.class, Topic.BroadcastDirection.TO_PARENT);
 
   /**
    * Returns the PSI manager instance for the specified project.

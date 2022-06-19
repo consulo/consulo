@@ -51,7 +51,7 @@ import consulo.application.progress.Task;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.application.util.function.Processor;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.component.persist.RoamingType;
 import consulo.component.util.text.UniqueNameGenerator;
 import consulo.disposer.Disposable;
@@ -112,7 +112,7 @@ public class ShelveChangesManager implements ProjectComponent, JDOMExternalizabl
   @Nonnull
   private final CompoundShelfFileProcessor myFileProcessor;
 
-  public static final Topic<ChangeListener> SHELF_TOPIC = new Topic<>("shelf updates", ChangeListener.class);
+  public static final TopicImpl<ChangeListener> SHELF_TOPIC = new TopicImpl<>("shelf updates", ChangeListener.class);
   private boolean myShowRecycled;
   private final Project myProject;
 

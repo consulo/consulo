@@ -33,7 +33,7 @@ abstract class CurrentFileTodosPanel extends TodoPanel {
     VirtualFile[] files = FileEditorManager.getInstance(project).getSelectedFiles();
     setFile(files.length == 0 ? null : PsiManager.getInstance(myProject).findFile(files[0]), true);
     // It's important to remove this listener. It prevents invocation of setFile method after the tree builder is disposed
-    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
         VirtualFile file = e.getNewFile();

@@ -35,7 +35,7 @@ import consulo.language.util.IncorrectOperationException;
 import consulo.util.lang.function.PairConsumer;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.logging.Logger;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.application.AccessRule;
@@ -266,14 +266,14 @@ public class BackgroundTaskUtil {
   }
 
   /**
-   * Wraps {@link MessageBus#syncPublisher(Topic)} in a dispose check,
+   * Wraps {@link MessageBus#syncPublisher(Class)} in a dispose check,
    * and throws a {@link ProcessCanceledException} if the project is disposed,
    * instead of throwing an assertion which would happen otherwise.
    *
-   * @see #syncPublisher(Topic)
+   * @see #syncPublisher(Class)
    */
   @Nonnull
-  public static <L> L syncPublisher(@Nonnull Project project, @Nonnull Topic<L> topic) throws ProcessCanceledException {
+  public static <L> L syncPublisher(@Nonnull Project project, @Nonnull Class<L> topic) throws ProcessCanceledException {
     ThrowableComputable<L, RuntimeException> action = () -> {
       if (project.isDisposed()) throw new ProcessCanceledException();
       return project.getMessageBus().syncPublisher(topic);
@@ -282,14 +282,14 @@ public class BackgroundTaskUtil {
   }
 
   /**
-   * Wraps {@link MessageBus#syncPublisher(Topic)} in a dispose check,
+   * Wraps {@link MessageBus#syncPublisher(Class)} in a dispose check,
    * and throws a {@link ProcessCanceledException} if the application is disposed,
    * instead of throwing an assertion which would happen otherwise.
    *
-   * @see #syncPublisher(Project, Topic)
+   * @see #syncPublisher(Project, Class)
    */
   @Nonnull
-  public static <L> L syncPublisher(@Nonnull Topic<L> topic) throws ProcessCanceledException {
+  public static <L> L syncPublisher(@Nonnull Class<L> topic) throws ProcessCanceledException {
     ThrowableComputable<L,RuntimeException> action = () -> {
       if (ApplicationManager.getApplication().isDisposed()) throw new ProcessCanceledException();
       return ApplicationManager.getApplication().getMessageBus().syncPublisher(topic);

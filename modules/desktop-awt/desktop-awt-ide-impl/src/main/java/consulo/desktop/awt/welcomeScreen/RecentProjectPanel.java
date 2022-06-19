@@ -20,6 +20,7 @@
 package consulo.desktop.awt.welcomeScreen;
 
 import consulo.application.AllIcons;
+import consulo.application.PowerSaveModeListener;
 import consulo.ide.impl.idea.ide.*;
 import consulo.application.PowerSaveMode;
 import consulo.ui.ex.action.ActionPlaces;
@@ -500,7 +501,7 @@ public class RecentProjectPanel {
     return fullText;
   }
 
-  private static class FilePathChecker implements Disposable, ApplicationActivationListener, PowerSaveMode.Listener {
+  private static class FilePathChecker implements Disposable, ApplicationActivationListener, PowerSaveModeListener {
     private static final int MIN_AUTO_UPDATE_MILLIS = 2500;
     private ScheduledExecutorService myService = null;
     private final Set<String> myInvalidPaths = Collections.synchronizedSet(new HashSet<>());
@@ -512,8 +513,8 @@ public class RecentProjectPanel {
       myCallback = callback;
       myPaths = paths;
       MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(this);
-      connection.subscribe(ApplicationActivationListener.TOPIC, this);
-      connection.subscribe(PowerSaveMode.TOPIC, this);
+      connection.subscribe(ApplicationActivationListener.class, this);
+      connection.subscribe(PowerSaveModeListener.class, this);
       onAppStateChanged();
     }
 

@@ -22,7 +22,7 @@ import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -38,7 +38,7 @@ import java.util.List;
 @Deprecated
 public abstract class LogicalRootsManager {
 
-  public static final Topic<LogicalRootListener> LOGICAL_ROOTS = new Topic<LogicalRootListener>("logical root changes", LogicalRootListener.class);
+  public static final TopicImpl<LogicalRootListener> LOGICAL_ROOTS = new TopicImpl<LogicalRootListener>("logical root changes", LogicalRootListener.class);
 
   public static LogicalRootsManager getLogicalRootsManager(@Nonnull final Project project) {
     return ServiceManager.getService(project, LogicalRootsManager.class);

@@ -3,6 +3,7 @@ package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.application.AllIcons;
 import consulo.application.PowerSaveMode;
+import consulo.application.PowerSaveModeListener;
 import consulo.ui.ex.action.ActionsBundle;
 import consulo.ide.impl.idea.notification.EventLog;
 import consulo.application.util.SystemInfo;
@@ -157,7 +158,7 @@ public class InfoAndProgressPanel extends JPanel implements CustomStatusBarWidge
     synchronized (myOriginals) {
       if (!myDisposed) {
         MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(parentDisposable);
-        connection.subscribe(PowerSaveMode.TOPIC, () -> UIUtil.invokeLaterIfNeeded(runnable));
+        connection.subscribe(PowerSaveModeListener.class, () -> UIUtil.invokeLaterIfNeeded(runnable));
         connection.subscribe(ProgressSuspender.TOPIC, new ProgressSuspender.SuspenderListener() {
           @Override
           public void suspendableProgressAppeared(@Nonnull ProgressSuspender suspender) {

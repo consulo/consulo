@@ -55,7 +55,7 @@ public abstract class GeneralTestEventsProcessor implements Disposable {
 
   public GeneralTestEventsProcessor(Project project, @Nonnull String testFrameworkName, @Nonnull SMTestProxy.SMRootTestProxy testsRootProxy) {
     myProject = project;
-    myEventPublisher = project.getMessageBus().syncPublisher(SMTRunnerEventsListener.TEST_STATUS);
+    myEventPublisher = project.getMessageBus().syncPublisher(SMTRunnerEventsListener.class);
     myTestFrameworkName = testFrameworkName;
     myTransferToEDTQueue = new TransferToEDTQueue<>("SM queue", runnable -> {
       runnable.run();

@@ -21,13 +21,14 @@ import consulo.application.progress.PerformInBackgroundOption;
 import consulo.application.progress.Task;
 import consulo.application.progress.TaskInfo;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.project.ui.wm.IdeFrame;
-import consulo.project.ui.wm.WindowManager;
 import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
 import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
-import consulo.project.DumbService;
 import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
+import consulo.project.ui.wm.IdeFrame;
+import consulo.project.ui.wm.WindowManager;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -45,7 +46,7 @@ public class BackgroundableProcessIndicator extends ProgressWindow {
 
     myDumbModeAction = task.getDumbModeAction();
     if (myDumbModeAction == DumbModeAction.CANCEL) {
-      task.getProject().getMessageBus().connect(this).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+      task.getProject().getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
 
         @Override
         public void enteredDumbMode() {

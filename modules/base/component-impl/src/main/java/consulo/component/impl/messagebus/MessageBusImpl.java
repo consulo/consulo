@@ -1,10 +1,11 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.component.impl.messagebus;
 
+import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.component.ProcessCanceledException;
 import consulo.component.impl.extension.MessageDeliveryListener;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
 import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
@@ -41,17 +42,17 @@ public class MessageBusImpl implements MessageBus, Disposable {
    */
   private final int[] myOrder;
 
-  private final ConcurrentMap<Topic<?>, Object> myPublishers = new ConcurrentHashMap<>();
+  private final ConcurrentMap<Class, Object> myPublishers = new ConcurrentHashMap<>();
 
   /**
    * This bus's subscribers
    */
-  private final ConcurrentMap<Topic<?>, List<MessageBusConnectionImpl>> mySubscribers = new ConcurrentHashMap<>();
+  private final ConcurrentMap<Class, List<MessageBusConnectionImpl>> mySubscribers = new ConcurrentHashMap<>();
 
   /**
    * Caches subscribers for this bus and its children or parent, depending on the topic's broadcast policy
    */
-  private final Map<Topic<?>, List<MessageBusConnectionImpl>> mySubscriberCache = new ConcurrentHashMap<>();
+  private final Map<Class, List<MessageBusConnectionImpl>> mySubscriberCache = new ConcurrentHashMap<>();
   private final List<MessageBusImpl> myChildBuses = Lists.newLockFreeCopyOnWriteList();
 
   @Nonnull
@@ -167,18 +168,20 @@ public class MessageBusImpl implements MessageBus, Disposable {
 
   @Override
   @Nonnull
-  public <L> L syncPublisher(@Nonnull Topic<L> topic) {
+  public <L> L syncPublisher(@Nonnull Class<L> topicClass) {
     checkNotDisposed();
-    @SuppressWarnings("unchecked") L publisher = (L)myPublishers.get(topic);
+    @SuppressWarnings("unchecked") L publisher = (L)myPublishers.get(topicClass);
     if (publisher != null) {
       return publisher;
     }
 
-    Class<L> listenerClass = topic.getListenerClass();
+    if (!topicClass.isAnnotationPresent(Topic.class)) {
+      throw new IllegalArgumentException(topicClass + " is not annotated by @Topic");
+    }
 
     if (myTopicClassToListenerClass.isEmpty()) {
-      Object newInstance = Proxy.newProxyInstance(listenerClass.getClassLoader(), new Class[]{listenerClass}, createTopicHandler(topic));
-      Object prev = myPublishers.putIfAbsent(topic, newInstance);
+      Object newInstance = Proxy.newProxyInstance(topicClass.getClassLoader(), new Class[]{topicClass}, createTopicHandler(topicClass));
+      Object prev = myPublishers.putIfAbsent(topicClass, newInstance);
       //noinspection unchecked
       return (L)(prev == null ? newInstance : prev);
     }
@@ -186,14 +189,14 @@ public class MessageBusImpl implements MessageBus, Disposable {
       // remove is atomic operation, so, even if topic concurrently created and our topic instance will be not used, still, listeners will be added,
       // but problem is that if another topic will be returned earlier, then these listeners will not get fired event
       //noinspection SynchronizationOnLocalVariableOrMethodParameter
-      synchronized (topic) {
-        return subscribeLazyListeners(topic, listenerClass);
+      synchronized (topicClass) {
+        return subscribeLazyListeners(topicClass, topicClass);
       }
     }
   }
 
   @Nonnull
-  private <L> L subscribeLazyListeners(@Nonnull Topic<L> topic, @Nonnull Class<L> listenerClass) {
+  private <L> L subscribeLazyListeners(@Nonnull Class<L> topic, @Nonnull Class<L> listenerClass) {
     //noinspection unchecked
     L publisher = (L)myPublishers.get(topic);
     if (publisher != null) {
@@ -229,12 +232,12 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   @Nonnull
-  private <L> InvocationHandler createTopicHandler(@Nonnull Topic<L> topic) {
+  private <L> InvocationHandler createTopicHandler(@Nonnull Class<L> topicClass) {
     return (proxy, method, args) -> {
       if (method.getDeclaringClass().getName().equals("java.lang.Object")) {
         return EventDispatcher.handleObjectMethod(proxy, args, method.getName());
       }
-      sendMessage(new Message(topic, method, args));
+      sendMessage(new Message<>(topicClass, method, args));
       return NA;
     };
   }
@@ -269,7 +272,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   @Override
-  public boolean hasUndeliveredEvents(@Nonnull Topic<?> topic) {
+  public boolean hasUndeliveredEvents(@Nonnull Class<?> topic) {
     if (myDisposed) return false;
     if (!isDispatchingAnything()) return false;
 
@@ -298,28 +301,33 @@ public class MessageBusImpl implements MessageBus, Disposable {
     return myOwner.toString();
   }
 
-  private void calcSubscribers(@Nonnull Topic<?> topic, @Nonnull List<? super MessageBusConnectionImpl> result) {
-    final List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topic);
+  private void calcSubscribers(@Nonnull Class<?> topicClass, @Nonnull List<? super MessageBusConnectionImpl> result) {
+    final List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topicClass);
     if (topicSubscribers != null) {
       result.addAll(topicSubscribers);
     }
 
-    Topic.BroadcastDirection direction = topic.getBroadcastDirection();
+    Topic annotation = topicClass.getAnnotation(Topic.class);
+    if (annotation == null) {
+      throw new IllegalArgumentException(topicClass + " is not annotated by @Topic");
+    }
 
-    if (direction == Topic.BroadcastDirection.TO_CHILDREN) {
+    TopicBroadcastDirection direction = annotation.direction();
+
+    if (direction == TopicBroadcastDirection.TO_CHILDREN) {
       for (MessageBusImpl childBus : myChildBuses) {
-        childBus.calcSubscribers(topic, result);
+        childBus.calcSubscribers(topicClass, result);
       }
     }
 
-    if (direction == Topic.BroadcastDirection.TO_PARENT && myParentBus != null) {
-      myParentBus.calcSubscribers(topic, result);
+    if (direction == TopicBroadcastDirection.TO_PARENT && myParentBus != null) {
+      myParentBus.calcSubscribers(topicClass, result);
     }
   }
 
   private void postMessage(@Nonnull Message message) {
     checkNotDisposed();
-    List<MessageBusConnectionImpl> topicSubscribers = getTopicSubscribers(message.getTopic());
+    List<MessageBusConnectionImpl> topicSubscribers = getTopicSubscribers(message.getTopicClass());
     if (!topicSubscribers.isEmpty()) {
       for (MessageBusConnectionImpl subscriber : topicSubscribers) {
         subscriber.getBus().myMessageQueue.get().offer(new DeliveryJob(subscriber, message));
@@ -330,7 +338,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
   }
 
   @Nonnull
-  private List<MessageBusConnectionImpl> getTopicSubscribers(@Nonnull Topic<?> topic) {
+  private List<MessageBusConnectionImpl> getTopicSubscribers(@Nonnull Class<?> topic) {
     List<MessageBusConnectionImpl> topicSubscribers = mySubscriberCache.get(topic);
     if (topicSubscribers == null) {
       topicSubscribers = new ArrayList<>();
@@ -444,7 +452,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
     return exceptions;
   }
 
-  void notifyOnSubscription(@Nonnull MessageBusConnectionImpl connection, @Nonnull Topic<?> topic) {
+  void notifyOnSubscription(@Nonnull MessageBusConnectionImpl connection, @Nonnull Class<?> topic) {
     checkNotDisposed();
     List<MessageBusConnectionImpl> topicSubscribers = mySubscribers.get(topic);
     if (topicSubscribers == null) {
@@ -512,7 +520,7 @@ public class MessageBusImpl implements MessageBus, Disposable {
 
     long startTime = System.nanoTime();
     method.invoke(handler, message.getArgs());
-    listener.messageDelivered(message.getTopic(), method.getName(), handler, System.nanoTime() - startTime);
+    listener.messageDelivered(message.getTopicClass(), method.getName(), handler, System.nanoTime() - startTime);
   }
 
   static final class RootBus extends MessageBusImpl {

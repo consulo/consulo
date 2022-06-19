@@ -21,7 +21,7 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vcs.*;
@@ -50,7 +50,7 @@ import java.util.Map;
 public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>>, VcsListener {
   private static final Logger LOG = Logger.getInstance(RemoteRevisionsCache.class);
 
-  public static Topic<Runnable> REMOTE_VERSION_CHANGED = new Topic<>("REMOTE_VERSION_CHANGED", Runnable.class);
+  public static TopicImpl<Runnable> REMOTE_VERSION_CHANGED = new TopicImpl<>("REMOTE_VERSION_CHANGED", Runnable.class);
   public static final int DEFAULT_REFRESH_INTERVAL = 3 * 60 * 1000;
 
   private final RemoteRevisionsNumbersCache myRemoteRevisionsNumbersCache;

@@ -352,7 +352,7 @@ public class ArtifactManagerImpl extends ArtifactManager implements Disposable, 
 
       myModel.setArtifactsList(allArtifacts);
       myModificationCount++;
-      final ArtifactListener publisher = myProject.getMessageBus().syncPublisher(TOPIC);
+      final ArtifactListener publisher = myProject.getMessageBus().syncPublisher(ArtifactListener.class);
       hasChanges = !removed.isEmpty() || !added.isEmpty() || !changed.isEmpty();
       ProjectRootManagerEx.getInstanceEx(myProject).mergeRootsChangesDuring(new Runnable() {
         @Override

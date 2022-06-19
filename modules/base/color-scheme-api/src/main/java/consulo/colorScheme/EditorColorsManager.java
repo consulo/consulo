@@ -20,7 +20,7 @@ import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.event.EditorColorsListener;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.disposer.Disposable;
 
 import javax.annotation.Nonnull;
@@ -28,8 +28,6 @@ import java.util.Map;
 
 @Service(ComponentScope.APPLICATION)
 public abstract class EditorColorsManager {
-  public static final Topic<EditorColorsListener> TOPIC = Topic.create("EditorColorsListener", EditorColorsListener.class);
-
   public static final String DEFAULT_SCHEME_NAME = "Default";
 
   public static EditorColorsManager getInstance() {
@@ -61,21 +59,21 @@ public abstract class EditorColorsManager {
   public abstract boolean isDefaultScheme(EditorColorsScheme scheme);
 
   /**
-   * @deprecated use {@link #TOPIC} instead
+   * @deprecated use {@link EditorColorsListener.class} instead
    */
   @SuppressWarnings("MethodMayBeStatic")
   @Deprecated
   public final void addEditorColorsListener(@Nonnull EditorColorsListener listener) {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(TOPIC, listener);
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(EditorColorsListener.class, listener);
   }
 
   /**
-   * @deprecated use {@link #TOPIC} instead
+   * @deprecated use {@link EditorColorsListener.class} instead
    */
   @SuppressWarnings("MethodMayBeStatic")
   @Deprecated
   public final void addEditorColorsListener(@Nonnull EditorColorsListener listener, @Nonnull Disposable disposable) {
-    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(TOPIC, listener);
+    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(EditorColorsListener.class, listener);
   }
 
   @Nonnull

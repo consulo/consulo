@@ -15,7 +15,7 @@
  */
 package consulo.execution.event;
 
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.annotation.DeprecationInfo;
 import consulo.execution.RunnerAndConfigurationSettings;
 
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.EventListener;
 
 public interface RunManagerListener extends EventListener {
-  Topic<RunManagerListener> TOPIC = new Topic<>("RunManager", RunManagerListener.class);
+  TopicImpl<RunManagerListener> TOPIC = new TopicImpl<>("RunManager", RunManagerListener.class);
 
   @SuppressWarnings("deprecation")
   default void runConfigurationSelected(@Nullable RunnerAndConfigurationSettings settings) {

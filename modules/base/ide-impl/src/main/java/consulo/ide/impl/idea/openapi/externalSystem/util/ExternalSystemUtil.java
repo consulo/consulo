@@ -87,7 +87,6 @@ import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.StandardFileSystems;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ide.impl.idea.openapi.wm.ToolWindowEP;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ui.ex.awt.CheckBoxList;
@@ -595,7 +594,7 @@ public class ExternalSystemUtil {
         final Ref<Boolean> result = new Ref<Boolean>(false);
         final Disposable disposable = Disposable.newDisposable();
 
-        project.getMessageBus().connect(disposable).subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionListener() {
+        project.getMessageBus().connect(disposable).subscribe(ExecutionListener.class, new ExecutionListener() {
           public void processStartScheduled(final String executorIdLocal, final ExecutionEnvironment environmentLocal) {
             if (executorId.equals(executorIdLocal) && environment.equals(environmentLocal)) {
               targetDone.down();

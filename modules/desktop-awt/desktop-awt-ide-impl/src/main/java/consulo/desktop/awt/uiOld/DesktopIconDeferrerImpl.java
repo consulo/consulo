@@ -24,14 +24,12 @@ import consulo.application.Application;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
-import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiModificationTrackerListener;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.ex.IconDeferrer;
 import consulo.ui.image.Image;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import jakarta.inject.Inject;
@@ -61,14 +59,14 @@ public class DesktopIconDeferrerImpl extends IconDeferrer implements Disposable 
   @Inject
   public DesktopIconDeferrerImpl(Application application) {
     final MessageBusConnection connection = application.getMessageBus().connect();
-    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         clear();
       }
     });
-    connection.subscribe(PsiModificationTracker.TOPIC, this::clear);
-    connection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    connection.subscribe(PsiModificationTrackerListener.class, this::clear);
+    connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosed(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         clear();

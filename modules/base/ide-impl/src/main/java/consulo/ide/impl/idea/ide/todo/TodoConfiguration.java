@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.ide.todo;
 
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -47,7 +47,7 @@ import java.util.List;
 @Singleton
 @State(name = "TodoConfiguration", storages = @Storage("editor.xml"))
 public class TodoConfiguration implements PersistentStateComponent<Element> {
-  public static final Topic<PropertyChangeListener> PROPERTY_CHANGE = new Topic<>("TodoConfiguration changes", PropertyChangeListener.class);
+  public static final TopicImpl<PropertyChangeListener> PROPERTY_CHANGE = new TopicImpl<>("TodoConfiguration changes", PropertyChangeListener.class);
 
   private TodoPattern[] myTodoPatterns;
   private TodoFilter[] myTodoFilters;

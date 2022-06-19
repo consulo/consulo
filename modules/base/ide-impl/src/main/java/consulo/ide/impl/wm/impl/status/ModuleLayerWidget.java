@@ -83,7 +83,7 @@ public class ModuleLayerWidget extends EditorBasedStatusBarPopup implements Cust
   public void install(@Nonnull StatusBar statusBar) {
     super.install(statusBar);
 
-    myProject.getMessageBus().connect().subscribe(ModuleRootLayerListener.TOPIC, new ModuleRootLayerListener.Adapter() {
+    myProject.getMessageBus().connect().subscribe(ModuleRootLayerListener.class, new ModuleRootLayerListener() {
       @Override
       public void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
         update();

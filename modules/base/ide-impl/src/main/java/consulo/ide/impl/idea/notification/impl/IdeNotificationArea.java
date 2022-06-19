@@ -16,23 +16,23 @@
 package consulo.ide.impl.idea.notification.impl;
 
 import consulo.application.AllIcons;
+import consulo.application.Application;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.ide.impl.idea.notification.EventLog;
-import consulo.ide.impl.idea.notification.LogModel;
+import consulo.ide.impl.idea.notification.LogModelListener;
+import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
+import consulo.project.Project;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationType;
-import consulo.ide.impl.idea.notification.impl.ui.NotificationsUtil;
-import consulo.application.Application;
-import consulo.project.Project;
 import consulo.project.ui.wm.CustomStatusBarWidget;
 import consulo.project.ui.wm.IconLikeCustomStatusBarWidget;
 import consulo.project.ui.wm.StatusBar;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.component.messagebus.MessageBusConnection;
 import consulo.ui.Component;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.font.Font;
 import consulo.ui.font.FontManager;
 import consulo.ui.image.Image;
@@ -59,8 +59,8 @@ public class IdeNotificationArea implements CustomStatusBarWidget, IconLikeCusto
     myLabel.addClickListener(event -> EventLog.toggleLog(getProject(), null));
 
     MessageBusConnection connection = Application.get().getMessageBus().connect(this);
-    connection.subscribe(UISettingsListener.TOPIC, source -> updateStatus());
-    connection.subscribe(LogModel.LOG_MODEL_CHANGED, () -> Application.get().invokeLater(IdeNotificationArea.this::updateStatus));
+    connection.subscribe(UISettingsListener.class, source -> updateStatus());
+    connection.subscribe(LogModelListener.class, () -> Application.get().invokeLater(IdeNotificationArea.this::updateStatus));
   }
 
   @Override

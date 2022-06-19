@@ -91,7 +91,7 @@ public class ApplicationActivationStateManager {
 
         IdeFrame ideFrame = getIdeFrameFromWindow(windowEvent.getWindow());
         if (ideFrame != null) {
-          application.getMessageBus().syncPublisher(ApplicationActivationListener.TOPIC).applicationDeactivated(ideFrame);
+          application.getMessageBus().syncPublisher(ApplicationActivationListener.class).applicationDeactivated(ideFrame);
         }
       }
 
@@ -111,7 +111,7 @@ public class ApplicationActivationStateManager {
 
             IdeFrame ideFrame = getIdeFrameFromWindow(windowEvent.getWindow());
             if (ideFrame != null) {
-              application.getMessageBus().syncPublisher(ApplicationActivationListener.TOPIC).delayedApplicationDeactivated(ideFrame);
+              application.getMessageBus().syncPublisher(ApplicationActivationListener.class).delayedApplicationDeactivated(ideFrame);
             }
           }
 
@@ -132,7 +132,7 @@ public class ApplicationActivationStateManager {
     LOG.debug("The app is in the active state");
 
     if (ideFrame != null) {
-      application.getMessageBus().syncPublisher(ApplicationActivationListener.TOPIC).applicationActivated(ideFrame);
+      application.getMessageBus().syncPublisher(ApplicationActivationListener.class).applicationActivated(ideFrame);
       return true;
     }
     return false;

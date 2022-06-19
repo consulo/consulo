@@ -15,14 +15,13 @@
  */
 package consulo.language.editor.inspection.scheme.event;
 
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
 import consulo.language.editor.inspection.scheme.Profile;
 
 import javax.annotation.Nullable;
 
+@Topic
 public interface ProfileChangeAdapter {
-  Topic<ProfileChangeAdapter> TOPIC = new Topic<>("ProfileChangeAdapter", ProfileChangeAdapter.class);
-
   default void profileChanged(@Nullable Profile profile) {
   }
 

@@ -17,11 +17,11 @@ package consulo.ide.impl.idea.openapi.project;
 
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.logging.Logger;
-import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.language.impl.DebugUtil;
-import consulo.language.psi.PsiModificationTracker;
 import consulo.component.messagebus.MessageBus;
+import consulo.language.impl.DebugUtil;
+import consulo.language.psi.PsiModificationTrackerListener;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.event.BulkFileListener;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -44,6 +44,6 @@ public class NoAccessDuringPsiEvents {
     if (!application.isWriteAccessAllowed()) return false;
 
     MessageBus bus = application.getMessageBus();
-    return bus.hasUndeliveredEvents(VirtualFileManager.VFS_CHANGES) || bus.hasUndeliveredEvents(PsiModificationTracker.TOPIC);
+    return bus.hasUndeliveredEvents(BulkFileListener.class) || bus.hasUndeliveredEvents(PsiModificationTrackerListener.class);
   }
 }

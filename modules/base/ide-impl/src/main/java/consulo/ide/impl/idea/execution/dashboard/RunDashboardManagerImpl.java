@@ -19,7 +19,6 @@ import consulo.execution.RunManager;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.ide.impl.idea.execution.dashboard.tree.DashboardGrouper;
 import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
-import consulo.execution.ExecutionManager;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.event.ExecutionListener;
 import consulo.execution.event.RunManagerListener;
@@ -31,7 +30,7 @@ import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.project.DumbService;
+import consulo.project.event.DumbModeListener;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.disposer.Disposer;
@@ -111,7 +110,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
       }
     });
     MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
-    connection.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionListener() {
+    connection.subscribe(ExecutionListener.class, new ExecutionListener() {
       @Override
       public void processStarted(@Nonnull String executorId, @Nonnull ExecutionEnvironment env, final @Nonnull ProcessHandler handler) {
         updateDashboardIfNeeded(env.getRunnerAndConfigurationSettings());
@@ -128,7 +127,7 @@ public class RunDashboardManagerImpl implements RunDashboardManager, PersistentS
         updateDashboard(withStructure);
       }
     });
-    connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void enteredDumbMode() {
       }

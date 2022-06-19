@@ -24,45 +24,55 @@ import javax.annotation.Nullable;
 
 /**
  * Aggregates multiple topic subscriptions for particular {@link MessageBus message bus}. I.e. every time a client wants to
- * listen for messages it should grab appropriate connection (or create a new one) and {@link #subscribe(Topic, Object) subscribe}
+ * listen for messages it should grab appropriate connection (or create a new one) and {@link #subscribe(TopicImpl, Object) subscribe}
  * to particular endpoint.
  */
 public interface MessageBusConnection {
 
+  @Deprecated
+  default <L> void subscribe(@Nonnull TopicImpl<L> topic, @Nonnull L handler) throws IllegalStateException {
+    subscribe(topic.getListenerClass(), handler);
+  }
+
+  @Deprecated
+  default <L> void subscribe(@Nonnull TopicImpl<L> topic) throws IllegalStateException {
+    subscribe(topic.getListenerClass());
+  }
+
   /**
    * Subscribes given handler to the target endpoint within the current connection.
    *
-   * @param topic    target endpoint
-   * @param handler  target handler to use for incoming messages
-   * @param <L>      interface for working with the target topic
-   * @throws IllegalStateException    if there is already registered handler for the target endpoint within the current connection.
-   *                                  Note that that previously registered handler is not replaced by the given one then
-   * @see MessageBus#syncPublisher(Topic)
+   * @param topicClass   target endpoint
+   * @param handler target handler to use for incoming messages
+   * @param <L>     interface for working with the target topic
+   * @throws IllegalStateException if there is already registered handler for the target endpoint within the current connection.
+   *                               Note that that previously registered handler is not replaced by the given one then
+   * @see MessageBus#syncPublisher(Class)
    */
-  <L> void subscribe(@Nonnull Topic<L> topic, @Nonnull L handler) throws IllegalStateException;
+  <L> void subscribe(@Nonnull Class<L> topicClass, @Nonnull L handler) throws IllegalStateException;
 
   /**
    * Subscribes to the target topic within the current connection using {@link #setDefaultHandler(MessageHandler) default handler}.
    *
-   * @param topic  target endpoint
-   * @param <L>    interface for working with the target topic
-   * @throws IllegalStateException    if {@link #setDefaultHandler(MessageHandler) default handler} hasn't been defined or
-   *                                  has incompatible type with the {@link Topic#getListenerClass() topic's business interface}
-   *                                  or if target topic is already subscribed within the current connection
+   * @param topicClass target endpoint
+   * @param <L>   interface for working with the target topic
+   * @throws IllegalStateException if {@link #setDefaultHandler(MessageHandler) default handler} hasn't been defined or
+   *                               has incompatible type with the {@link topicClass} topic's business interface}
+   *                               or if target topic is already subscribed within the current connection
    */
-  <L> void subscribe(@Nonnull Topic<L> topic) throws IllegalStateException;
+  <L> void subscribe(@Nonnull Class<L> topicClass) throws IllegalStateException;
 
   /**
-   * Allows to specify default handler to use during {@link #subscribe(Topic) anonymous subscriptions}.
+   * Allows to specify default handler to use during {@link #subscribe(Class) anonymous subscriptions}.
    *
-   * @param handler  handler to use
+   * @param handler handler to use
    */
   void setDefaultHandler(@Nullable MessageHandler handler);
 
   /**
    * Forces to process any queued but not delivered events.
    *
-   * @see MessageBus#syncPublisher(Topic)
+   * @see MessageBus#syncPublisher(Class)
    */
   void deliverImmediately();
 

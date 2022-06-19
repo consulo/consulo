@@ -38,7 +38,6 @@ import consulo.logging.Logger;
 import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -76,7 +75,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
     myActionManager = actionManager;
 
     MessageBusConnection connection = application.getMessageBus().connect(this);
-    connection.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionListener() {
+    connection.subscribe(ExecutionListener.class, new ExecutionListener() {
       @Override
       public void processStartScheduled(@Nonnull String executorId, @Nonnull ExecutionEnvironment environment) {
         myInProgress.add(createExecutionId(executorId, environment));
@@ -93,7 +92,7 @@ public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable
       }
     });
 
-    connection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosed(@Nonnull final Project project, @Nonnull UIAccess uiAccess) {
         // perform cleanup

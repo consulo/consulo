@@ -125,7 +125,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
     });
 
     IdeEventQueue.getInstance().addActivityListener(this::onActivity, this);
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, new MyActionListener());
+    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, new MyActionListener());
   }
 
   @Override

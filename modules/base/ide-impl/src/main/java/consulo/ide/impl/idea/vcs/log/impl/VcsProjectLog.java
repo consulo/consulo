@@ -27,7 +27,7 @@ import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogData;
 import consulo.ide.impl.idea.vcs.log.data.VcsLogTabsProperties;
 import consulo.ide.impl.idea.vcs.log.ui.VcsLogPanel;
@@ -45,8 +45,8 @@ import java.util.Collection;
 
 @Singleton
 public class VcsProjectLog {
-  public static final Topic<ProjectLogListener> VCS_PROJECT_LOG_CHANGED =
-          Topic.create("Project Vcs Log Created or Disposed", ProjectLogListener.class);
+  public static final TopicImpl<ProjectLogListener> VCS_PROJECT_LOG_CHANGED =
+          TopicImpl.create("Project Vcs Log Created or Disposed", ProjectLogListener.class);
   @Nonnull
   private final Project myProject;
   @Nonnull

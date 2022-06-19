@@ -46,7 +46,7 @@ public class ResolveCacheImpl implements ResolveCache {
 
   @Inject
   public ResolveCacheImpl(@Nonnull Project project) {
-    project.getMessageBus().connect().subscribe(PsiManager.ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
+    project.getMessageBus().connect().subscribe(AnyPsiChangeListener.class, new AnyPsiChangeListener() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
         clearCache(isPhysical);

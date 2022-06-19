@@ -16,25 +16,29 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.module.content.ProjectTopics;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.ProjectComponent;
-import consulo.project.Project;
-import consulo.module.content.layer.event.ModuleRootAdapter;
-import consulo.module.content.layer.event.ModuleRootEvent;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.wolfAnalyzer.ProblemListener;
 import consulo.component.messagebus.MessageBusConnection;
-
-import javax.annotation.Nonnull;
+import consulo.language.editor.wolfAnalyzer.ProblemListener;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.project.Project;
+import consulo.project.ProjectComponent;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 @Singleton
+@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public class VcsEventWatcher implements ProjectComponent {
   private Project myProject;
 
@@ -46,7 +50,7 @@ public class VcsEventWatcher implements ProjectComponent {
   @Override
   public void projectOpened() {
     MessageBusConnection connection = myProject.getMessageBus().connect(myProject);
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         ApplicationManager.getApplication().invokeLater(new Runnable() {
@@ -58,7 +62,7 @@ public class VcsEventWatcher implements ProjectComponent {
         }, IdeaModalityState.NON_MODAL);
       }
     });
-    connection.subscribe(ProblemListener.TOPIC, new MyProblemListener());
+    connection.subscribe(ProblemListener.class, new MyProblemListener());
   }
 
   private class MyProblemListener implements ProblemListener {

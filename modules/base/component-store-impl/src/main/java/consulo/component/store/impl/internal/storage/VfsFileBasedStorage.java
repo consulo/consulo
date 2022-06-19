@@ -59,7 +59,7 @@ public final class VfsFileBasedStorage extends XmlElementStorage {
                              @Nullable TrackingPathMacroSubstitutor pathMacroManager,
                              @Nonnull String rootElementName,
                              @Nonnull Disposable parentDisposable,
-                             @Nullable final Listener listener,
+                             @Nullable final StateStorageListener listener,
                              @Nullable StreamProvider streamProvider,
                              boolean useXmlProlog,
                              @Nonnull PathMacrosService pathMacrosService) {

@@ -10,6 +10,7 @@ import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettingsImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.ReferenceImporter;
+import consulo.language.editor.DaemonListener;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.intention.impl.FileLevelIntentionComponent;
 import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
@@ -393,11 +394,11 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   private boolean waitInOtherThread(int millis, boolean canChangeDocument) throws Throwable {
     Disposable disposable = Disposable.newDisposable();
     // last hope protection against PsiModificationTrackerImpl.incCounter() craziness (yes, Kotlin)
-    myProject.getMessageBus().connect(disposable).subscribe(PsiModificationTracker.TOPIC, () -> {
+    myProject.getMessageBus().connect(disposable).subscribe(PsiModificationTrackerListener.class, () -> {
       throw new IllegalStateException("You must not perform PSI modifications from inside highlighting");
     });
     if (!canChangeDocument) {
-      myProject.getMessageBus().connect(disposable).subscribe(DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC, new DaemonListener() {
+      myProject.getMessageBus().connect(disposable).subscribe(DaemonListener.class, new DaemonListener() {
         @Override
         public void daemonCancelEventOccurred(@Nonnull String reason) {
           throw new IllegalStateException("You must not cancel daemon inside highlighting test: " + reason);
@@ -821,7 +822,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     DaemonProgressIndicator progress = new MyDaemonProgressIndicator(myProject, fileEditors);
     progress.setModalityProgress(null);
     progress.start();
-    myProject.getMessageBus().syncPublisher(DAEMON_EVENT_TOPIC).daemonStarting(fileEditors);
+    myProject.getMessageBus().syncPublisher(DaemonListener.class).daemonStarting(fileEditors);
     myUpdateProgress = progress;
     return progress;
   }
@@ -838,7 +839,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
     @Override
     public void stopIfRunning() {
       super.stopIfRunning();
-      myProject.getMessageBus().syncPublisher(DAEMON_EVENT_TOPIC).daemonFinished(myFileEditors);
+      myProject.getMessageBus().syncPublisher(DaemonListener.class).daemonFinished(myFileEditors);
       myFileEditors = null;
       HighlightingSessionImpl.clearProgressIndicator(this);
     }

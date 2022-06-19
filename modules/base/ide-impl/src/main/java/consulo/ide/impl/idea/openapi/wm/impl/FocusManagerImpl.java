@@ -81,7 +81,7 @@ public final class FocusManagerImpl implements ApplicationIdeFocusManager, Dispo
     myForcedFocusRequestsAlarm = new EdtAlarm();
 
     final AppListener listener = new AppListener();
-    application.getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC, listener);
+    application.getMessageBus().connect().subscribe(ApplicationActivationListener.class, listener);
 
     IdeEventQueue.getInstance().addDispatcher(e -> {
       if (e instanceof FocusEvent) {

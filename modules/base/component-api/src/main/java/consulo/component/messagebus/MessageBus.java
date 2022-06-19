@@ -9,9 +9,9 @@ import javax.annotation.Nullable;
  * Core of IntelliJ IDEA messaging infrastructure. Basic functions:
  * <pre>
  * <ul>
- *   <li>allows to {@link #syncPublisher(Topic) push messages};</li>
+ *   <li>allows to {@link #syncPublisher(TopicImpl) push messages};</li>
  *   <li>
- *     allows to {@link #connect() create connections} for further {@link MessageBusConnection#subscribe(Topic, Object) subscriptions};
+ *     allows to {@link #connect() create connections} for further {@link MessageBusConnection#subscribe(TopicImpl, Object) subscriptions};
  *   </li>
  * </ul>
  * </pre>
@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 public interface MessageBus {
 
   /**
-   * Messages buses can be organised into hierarchies. That allows facilities {@link Topic#getBroadcastDirection() broadcasting}.
+   * Messages buses can be organised into hierarchies. That allows facilities {@link TopicImpl#getBroadcastDirection() broadcasting}.
    * <p/>
    * Current method exposes parent bus (if any is defined).
    *
@@ -50,6 +50,12 @@ public interface MessageBus {
   @Nonnull
   MessageBusConnection connect(@Nonnull Disposable parentDisposable);
 
+  @Deprecated
+  @Nonnull
+  default <L> L syncPublisher(@Nonnull TopicImpl<L> topic) {
+    return syncPublisher(topic.getListenerClass());
+  }
+
   /**
    * Allows to retrieve an interface for publishing messages to the target topic.
    * <p/>
@@ -58,13 +64,13 @@ public interface MessageBus {
    * <ol>
    *   <li>
    *     Messaging clients create new {@link MessageBusConnection connections} within the target message bus and
-   *     {@link MessageBusConnection#subscribe(Topic, Object) subscribe} to the target {@link Topic topics};
+   *     {@link MessageBusConnection#subscribe(TopicImpl, Object) subscribe} to the target {@link TopicImpl topics};
    *   </li>
    *   <li>
    *     Every time somebody wants to send a message for particular topic, he or she calls current method and receives object
-   *     that conforms to the {@link Topic#getListenerClass() business interface} of the target topic. Every method call on that
+   *     that conforms to the {@link TopicImpl#getListenerClass() business interface} of the target topic. Every method call on that
    *     object is dispatched by the messaging infrastructure to the subscribers.
-   *     {@link Topic#getBroadcastDirection() broadcasting} is performed if necessary as well;
+   *     {@link TopicImpl#getBroadcastDirection() broadcasting} is performed if necessary as well;
    *   </li>
    * </ol>
    * </pre>
@@ -106,12 +112,11 @@ public interface MessageBus {
    * further publishing. It's enough to keep reference to the message bus only and publish
    * like {@code 'messageBus.syncPublisher(targetTopic).targetMethod()'}.
    *
-   * @param topic target topic
-   * @param <L>   {@link Topic#getListenerClass() business interface} of the target topic
+   * @param topicClass target topic
    * @return publisher for target topic
    */
   @Nonnull
-  <L> L syncPublisher(@Nonnull Topic<L> topic);
+  <L> L syncPublisher(@Nonnull Class<L> topicClass);
 
   /**
    * Returns true if this bus is disposed.
@@ -122,5 +127,5 @@ public interface MessageBus {
    * @return true when events in the given topic are being dispatched in the current thread,
    * and not all listeners have received the events yet.
    */
-  boolean hasUndeliveredEvents(@Nonnull Topic<?> topic);
+  boolean hasUndeliveredEvents(@Nonnull Class<?> topic);
 }

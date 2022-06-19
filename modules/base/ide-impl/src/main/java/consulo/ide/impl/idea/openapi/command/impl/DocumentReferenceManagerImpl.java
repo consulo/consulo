@@ -10,7 +10,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
@@ -43,7 +42,7 @@ public final class DocumentReferenceManagerImpl extends DocumentReferenceManager
 
   @Inject
   DocumentReferenceManagerImpl(@Nonnull Application application) {
-    application.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void before(@Nonnull List<? extends VFileEvent> events) {
         for (VFileEvent event : events) {

@@ -35,7 +35,7 @@ import java.util.List;
  * @author VISTALL
  * @since 31.07.14
  */
-public class ExtensionListenerByLayerListenerInvoker extends ModuleRootLayerListener.Adapter {
+public class ExtensionListenerByLayerListenerInvoker implements ModuleRootLayerListener {
   @Override
   public void currentLayerChanged(@Nonnull final Module module,
                                   @Nonnull final String oldName,
@@ -58,7 +58,7 @@ public class ExtensionListenerByLayerListenerInvoker extends ModuleRootLayerList
     }
 
     ApplicationManager.getApplication().invokeLater(() -> {
-      ModuleExtensionChangeListener moduleExtensionChangeListener = module.getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC);
+      ModuleExtensionChangeListener moduleExtensionChangeListener = module.getProject().getMessageBus().syncPublisher(ModuleExtensionChangeListener.class);
 
       for (Couple<ModuleExtension> couple : list) {
         moduleExtensionChangeListener.beforeExtensionChanged(couple.getFirst(), couple.getSecond());

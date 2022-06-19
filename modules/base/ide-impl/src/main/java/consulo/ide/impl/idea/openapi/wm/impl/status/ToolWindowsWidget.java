@@ -102,7 +102,7 @@ public class ToolWindowsWidget implements CustomStatusBarWidget, StatusBarWidget
 
     Disposer.register(this, FocusManager.get().addListener(this::updateIcon));
 
-    Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, this);
+    Application.get().getMessageBus().connect(this).subscribe(UISettingsListener.class, this);
     
     myAlarm = new Alarm(parent);
   }

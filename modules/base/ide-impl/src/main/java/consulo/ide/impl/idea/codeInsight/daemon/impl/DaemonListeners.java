@@ -1,41 +1,20 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.undoRedo.ProjectUndoManager;
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
-import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
-import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
-import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.language.editor.scratch.ScratchUtil;
-import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
-import consulo.language.editor.CommonDataKeys;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.ModalityStateListener;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.undoRedo.UndoManager;
-import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
-import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.ide.impl.idea.openapi.vcs.*;
-import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.PowerSaveMode;
+import consulo.application.PowerSaveModeListener;
 import consulo.application.event.ApplicationListener;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.LaterInvocator;
+import consulo.application.impl.internal.ModalityStateListener;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.event.*;
 import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.event.EditorColorsListener;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.dataContext.DataContext;
@@ -48,34 +27,55 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
+import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
+import consulo.ide.impl.idea.codeInsight.folding.impl.FoldingUtil;
+import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
+import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
+import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
+import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
+import consulo.ide.impl.idea.openapi.project.ProjectUtil;
+import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
+import consulo.ide.impl.idea.openapi.vcs.FilePath;
+import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager;
+import consulo.ide.impl.idea.vcsUtil.VcsUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.ide.impl.psi.RefResolveService;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonListener;
 import consulo.language.editor.Pass;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
+import consulo.language.editor.scratch.ScratchUtil;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.util.ModuleUtilCore;
 import consulo.logging.Logger;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
-import consulo.module.extension.ModuleExtension;
-import consulo.project.DumbService;
+import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.IdeActions;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.undoRedo.ProjectUndoManager;
+import consulo.undoRedo.UndoManager;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
@@ -101,7 +101,7 @@ public final class DaemonListeners implements Disposable {
   private boolean myEscPressed;
 
   private volatile boolean cutOperationJustHappened;
-  private final DaemonCodeAnalyzer.DaemonListener myDaemonEventPublisher;
+  private final DaemonListener myDaemonEventPublisher;
   private List<Editor> myActiveEditors = Collections.emptyList();
 
   private static final Key<Boolean> DAEMON_INITIALIZED = Key.create("DAEMON_INITIALIZED");
@@ -120,7 +120,7 @@ public final class DaemonListeners implements Disposable {
     }
 
     MessageBus messageBus = myProject.getMessageBus();
-    myDaemonEventPublisher = messageBus.syncPublisher(DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC);
+    myDaemonEventPublisher = messageBus.syncPublisher(DaemonListener.class);
     if (project.isDefault()) {
       return;
     }
@@ -230,14 +230,14 @@ public final class DaemonListeners implements Disposable {
     Disposer.register(this, changeHandler);
     PsiManager.getInstance(myProject).addPsiTreeChangeListener(changeHandler, changeHandler);
 
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@Nonnull ModuleRootEvent event) {
         stopDaemonAndRestartAllFiles("Project roots changed");
       }
     });
 
-    connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void enteredDumbMode() {
         stopDaemonAndRestartAllFiles("Dumb mode started");
@@ -249,17 +249,17 @@ public final class DaemonListeners implements Disposable {
       }
     });
 
-    connection.subscribe(PowerSaveMode.TOPIC, () -> stopDaemon(true, "Power save mode change"));
-    connection.subscribe(EditorColorsManager.TOPIC, __ -> stopDaemonAndRestartAllFiles("Editor color scheme changed"));
-    connection.subscribe(CommandListener.TOPIC, new MyCommandListener());
-    connection.subscribe(ProfileChangeAdapter.TOPIC, new MyProfileChangeListener());
+    connection.subscribe(PowerSaveModeListener.class, () -> stopDaemon(true, "Power save mode change"));
+    connection.subscribe(EditorColorsListener.class, __ -> stopDaemonAndRestartAllFiles("Editor color scheme changed"));
+    connection.subscribe(CommandListener.class, new MyCommandListener());
+    connection.subscribe(ProfileChangeAdapter.class, new MyProfileChangeListener());
 
     project.getApplication().addApplicationListener(new MyApplicationListener(), this);
 
     connection.subscribe(TodoConfiguration.PROPERTY_CHANGE, new MyTodoListener());
 
-    connection.subscribe(AnActionListener.TOPIC, new MyAnActionListener());
-    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    connection.subscribe(AnActionListener.class, new MyAnActionListener());
+    connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         boolean isDaemonShouldBeStopped = false;
@@ -303,7 +303,7 @@ public final class DaemonListeners implements Disposable {
         UpdateHighlightersUtil.setHighlightersToEditor(myProject, document, 0, document.getTextLength(), Collections.emptyList(), null, Pass.UPDATE_ALL);
       }
     });
-    connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
+    connection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
       public void fileTypesChanged(@Nonnull FileTypeEvent event) {
         IntentionsUI.getInstance(project).invalidate();
@@ -340,7 +340,7 @@ public final class DaemonListeners implements Disposable {
         }
       });
     }
-    connection.subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> {
+    connection.subscribe(ModuleExtensionChangeListener.class, (oldExtension, newExtension) -> {
       stopDaemonAndRestartAllFiles("extension changed: " + newExtension.getId());
     });
   }

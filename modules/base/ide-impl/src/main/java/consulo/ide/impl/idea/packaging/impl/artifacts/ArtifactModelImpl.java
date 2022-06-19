@@ -15,17 +15,12 @@
  */
 package consulo.ide.impl.idea.packaging.impl.artifacts;
 
-import consulo.compiler.artifact.ModifiableArtifact;
-import consulo.compiler.artifact.ModifiableArtifactModel;
+import consulo.annotation.access.RequiredWriteAction;
+import consulo.compiler.artifact.*;
 import consulo.compiler.artifact.element.CompositePackagingElement;
 import consulo.compiler.artifact.element.PackagingElementFactory;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.annotation.access.RequiredWriteAction;
-import consulo.compiler.artifact.Artifact;
-import consulo.compiler.artifact.ArtifactType;
-import consulo.compiler.artifact.event.ArtifactAdapter;
 import consulo.compiler.artifact.event.ArtifactListener;
-import consulo.compiler.artifact.ArtifactPointerUtil;
+import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.ide.impl.packaging.impl.artifacts.ArtifactPointerManagerImpl;
 
 import javax.annotation.Nonnull;
@@ -48,7 +43,7 @@ public class ArtifactModelImpl extends ArtifactModelBase implements ModifiableAr
   public ArtifactModelImpl(ArtifactManagerImpl artifactManager, List<ArtifactImpl> originalArtifacts) {
     myArtifactManager = artifactManager;
     myOriginalArtifacts = new ArrayList<>(originalArtifacts);
-    addListener(new ArtifactAdapter() {
+    addListener(new ArtifactListener() {
       @Override
       public void artifactChanged(@Nonnull Artifact artifact, @Nonnull String oldName) {
         artifactsChanged();

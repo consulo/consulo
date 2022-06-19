@@ -40,7 +40,7 @@ import consulo.ui.image.Image;
 import consulo.util.dataholder.Key;
 import consulo.util.lang.ObjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.BulkVirtualFileListenerAdapter;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
@@ -155,7 +155,7 @@ public abstract class EditorBasedStatusBarPopup extends EditorBasedWidget implem
       }
     }, this);
     if (myWriteableFileRequired) {
-      ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
+      ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
         @Override
         public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
           if (VirtualFile.PROP_WRITABLE.equals(event.getPropertyName())) {

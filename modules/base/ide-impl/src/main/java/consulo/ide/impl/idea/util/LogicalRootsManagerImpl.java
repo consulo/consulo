@@ -16,7 +16,7 @@
 
 package consulo.ide.impl.idea.util;
 
-import consulo.module.content.ProjectTopics;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -62,7 +62,7 @@ public class LogicalRootsManagerImpl extends LogicalRootsManager {
         //updateCache(moduleManager);
       }
     });
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootAdapter() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootAdapter() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         project.getMessageBus().syncPublisher(LOGICAL_ROOTS).logicalRootsChanged();

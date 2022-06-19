@@ -21,7 +21,6 @@ import consulo.dataContext.DataProvider;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.module.content.ProjectTopics;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.CommonActionsManager;
@@ -115,7 +114,7 @@ public class ModulesDependenciesPanel extends JPanel implements ModuleRootListen
     add(mySplitter, BorderLayout.CENTER);
     add(createNorthPanel(), BorderLayout.NORTH);
 
-    project.getMessageBus().connect(this).subscribe(ProjectTopics.PROJECT_ROOTS, this);
+    project.getMessageBus().connect(this).subscribe(ModuleRootListener.class, this);
   }
 
   private void setSplitterProportion() {

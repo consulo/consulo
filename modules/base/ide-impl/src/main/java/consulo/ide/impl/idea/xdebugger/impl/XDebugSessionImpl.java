@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl;
 
+import consulo.execution.debug.event.XDebuggerManagerListener;
 import consulo.ide.impl.idea.execution.filters.OpenFileHyperlinkInfo;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.ui.AppUIUtil;
@@ -879,7 +880,7 @@ public class XDebugSessionImpl implements XDebugSession {
       //noinspection unchecked
       myDebugProcess.stopAsync().doWhenDone(value -> {
         if (!myProject.isDisposed()) {
-          myProject.getMessageBus().syncPublisher(XDebuggerManager.TOPIC).processStopped(myDebugProcess);
+          myProject.getMessageBus().syncPublisher(XDebuggerManagerListener.class).processStopped(myDebugProcess);
         }
 
         if (mySessionTab != null) {

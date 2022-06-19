@@ -20,6 +20,7 @@ import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.navigation.OpenFileDescriptor;
+import consulo.project.event.ProjectManagerListener;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.codeEditor.*;
@@ -37,7 +38,6 @@ import consulo.language.psi.PsiManager;
 import consulo.language.util.IncorrectOperationException;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -70,7 +70,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     myProject = project;
     registerExtraEditorDataProvider(new TextEditorPsiDataProvider(), null);
 
-    project.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
+    project.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerAdapter() {
       @Override
       public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProject) {
@@ -125,7 +125,7 @@ final class TestEditorManagerImpl extends FileEditorManagerEx implements Disposa
     FileEditorProvider newProvider = myTestEditorSplitter.getProviderFromFocused();
 
     final FileEditorManagerEvent event = new FileEditorManagerEvent(this, lastFocusedFile, lastFocusedEditor, oldProvider, currentlyFocusedFile, currentlyFocusedEditor, newProvider);
-    final FileEditorManagerListener publisher = getProject().getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
+    final FileEditorManagerListener publisher = getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class);
 
     notifyPublisher(new Runnable() {
       @Override

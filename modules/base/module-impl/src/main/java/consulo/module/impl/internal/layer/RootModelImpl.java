@@ -262,7 +262,7 @@ public class RootModelImpl extends RootModelBase implements ModifiableRootModel 
 
     RootModelImpl sourceModel = getSourceModel();
 
-    ModuleRootLayerListener layerListener = getModule().getProject().getMessageBus().syncPublisher(ModuleRootLayerListener.TOPIC);
+    ModuleRootLayerListener layerListener = getModule().getProject().getMessageBus().syncPublisher(ModuleRootLayerListener.class);
 
     boolean extensionListenerAlreadyCalled = false;
     if (!Comparing.equal(sourceModel.myCurrentLayerName, myCurrentLayerName)) {

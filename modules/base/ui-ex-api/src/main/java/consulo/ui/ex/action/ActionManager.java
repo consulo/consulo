@@ -174,7 +174,7 @@ public abstract class ActionManager {
    * @deprecated Use {@link AnActionListener#TOPIC}
    */
   public void addAnActionListener(AnActionListener listener, Disposable parentDisposable) {
-    Application.get().getMessageBus().connect(parentDisposable).subscribe(AnActionListener.TOPIC, listener);
+    Application.get().getMessageBus().connect(parentDisposable).subscribe(AnActionListener.class, listener);
   }
 
   @Nullable

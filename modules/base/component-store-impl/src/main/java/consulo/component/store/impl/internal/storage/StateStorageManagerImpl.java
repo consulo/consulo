@@ -247,9 +247,9 @@ public abstract class StateStorageManagerImpl implements StateStorageManager, Di
   }
 
   @Nullable
-  protected StateStorage.Listener createStorageTopicListener() {
+  protected StateStorageListener createStorageTopicListener() {
     MessageBus messageBus = myMessageBusSupplier.get();
-    return messageBus == null ? null : messageBus.syncPublisher(StateStorage.STORAGE_TOPIC);
+    return messageBus == null ? null : messageBus.syncPublisher(StateStorageListener.class);
   }
 
   protected boolean isUseXmlProlog() {

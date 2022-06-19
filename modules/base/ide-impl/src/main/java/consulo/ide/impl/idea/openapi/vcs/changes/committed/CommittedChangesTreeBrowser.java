@@ -32,7 +32,7 @@ import consulo.ui.ex.awt.tree.Tree;
 import consulo.ui.ex.awt.tree.action.CollapseAllAction;
 import consulo.ui.ex.awt.tree.action.ExpandAllAction;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.ui.ex.awt.tree.TreeUtil;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -71,8 +71,8 @@ public class CommittedChangesTreeBrowser extends JPanel implements TypeSafeDataP
   private final TreeExpander myTreeExpander;
   private String myHelpId;
 
-  public static final Topic<CommittedChangesReloadListener> ITEMS_RELOADED =
-          new Topic<CommittedChangesReloadListener>("ITEMS_RELOADED", CommittedChangesReloadListener.class);
+  public static final TopicImpl<CommittedChangesReloadListener> ITEMS_RELOADED =
+          new TopicImpl<CommittedChangesReloadListener>("ITEMS_RELOADED", CommittedChangesReloadListener.class);
 
   private final List<CommittedChangeListDecorator> myDecorators;
 

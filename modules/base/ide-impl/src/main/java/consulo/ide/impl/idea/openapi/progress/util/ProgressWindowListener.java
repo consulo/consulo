@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.compiler;
+package consulo.ide.impl.idea.openapi.progress.util;
 
-import consulo.compiler.event.CompilationStatusListener;
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
 
-/**
- * @author yole
- */
-@Deprecated
-public class CompilerTopics {
-  public static final Topic<CompilationStatusListener> COMPILATION_STATUS = CompilationStatusListener.TOPIC;
+import javax.annotation.Nonnull;
 
-  private CompilerTopics() {
-  }
+@Topic
+@FunctionalInterface
+public interface ProgressWindowListener {
+  void progressWindowCreated(@Nonnull ProgressWindow pw);
 }

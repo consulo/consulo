@@ -1,20 +1,6 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.actions;
 
-import consulo.ide.impl.idea.ide.actions.searcheverywhere.ActionSearchEverywhereContributor;
-import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
-import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
-import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
-import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
-import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
-import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
-import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.application.dumb.DumbAware;
@@ -27,6 +13,20 @@ import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.actions.searcheverywhere.ActionSearchEverywhereContributor;
+import consulo.ide.impl.idea.ide.ui.search.BooleanOptionDescription;
+import consulo.ide.impl.idea.ide.ui.search.OptionDescription;
+import consulo.ide.impl.idea.ide.util.gotoByName.ChooseByNamePopup;
+import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionItemProvider;
+import consulo.ide.impl.idea.ide.util.gotoByName.GotoActionModel;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
+import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
+import consulo.ide.impl.idea.openapi.keymap.impl.ActionShortcutRestrictions;
+import consulo.ide.impl.idea.openapi.keymap.impl.ui.KeymapPanel;
+import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.language.editor.CommonDataKeys;
 import consulo.project.Project;
@@ -200,7 +200,7 @@ public class GotoActionAction extends GotoActionBase implements DumbAware {
       }
     };
 
-    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(ProgressWindow.TOPIC, pw -> Disposer.register(pw, new Disposable() {
+    ApplicationManager.getApplication().getMessageBus().connect(disposable).subscribe(ProgressWindowListener.class, pw -> Disposer.register(pw, new Disposable() {
       @Override
       public void dispose() {
         if (!popup.checkDisposed()) {

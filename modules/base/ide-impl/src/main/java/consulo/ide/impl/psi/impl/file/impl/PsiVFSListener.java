@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.file.impl;
 
-import consulo.ide.impl.AppTopics;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.language.file.event.FileTypeEvent;
@@ -37,7 +36,6 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.virtualFileSystem.RawFileLoader;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.*;
 import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
@@ -60,14 +58,14 @@ public class PsiVFSListener implements BulkFileListener {
       PsiVFSListener psiVFSListener = project.getInstance(PsiVFSListener.class);
 
       MessageBusConnection connection = project.getMessageBus().connect();
-      connection.subscribe(ModuleRootListener.TOPIC, psiVFSListener.new MyModuleRootListener());
-      connection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
+      connection.subscribe(ModuleRootListener.class, psiVFSListener.new MyModuleRootListener());
+      connection.subscribe(FileTypeListener.class, new FileTypeListener() {
         @Override
         public void fileTypesChanged(@Nonnull FileTypeEvent e) {
           psiVFSListener.myFileManager.processFileTypesChanged(e.getRemovedFileType() != null);
         }
       });
-      connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, psiVFSListener.new MyFileDocumentManagerAdapter());
+      connection.subscribe(FileDocumentManagerListener.class, psiVFSListener.new MyFileDocumentManagerAdapter());
 
       installGlobalListener();
     }
@@ -102,7 +100,7 @@ public class PsiVFSListener implements BulkFileListener {
     }
 
     Application application = Application.get();
-    application.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void before(@Nonnull List<? extends VFileEvent> events) {
         for (Project project : ProjectManager.getInstance().getOpenProjects()) {

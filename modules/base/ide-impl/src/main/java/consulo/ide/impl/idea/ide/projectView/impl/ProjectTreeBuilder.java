@@ -16,7 +16,6 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.module.content.ProjectTopics;
 import consulo.ide.impl.idea.ide.CopyPasteUtil;
 import consulo.ide.impl.idea.ide.bookmarks.Bookmark;
 import consulo.ide.impl.idea.ide.bookmarks.BookmarksListener;
@@ -59,7 +58,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
 
     final MessageBusConnection connection = project.getMessageBus().connect(this);
 
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         queueUpdate();
@@ -72,7 +71,7 @@ public class ProjectTreeBuilder extends BaseProjectTreeBuilder {
     FileStatusManager.getInstance(project).addFileStatusListener(new MyFileStatusListener(), this);
     CopyPasteManager.getInstance().addContentChangedListener(new CopyPasteUtil.DefaultCopyPasteListener(getUpdater()), this);
 
-    connection.subscribe(ProblemListener.TOPIC, new MyProblemListener());
+    connection.subscribe(ProblemListener.class, new MyProblemListener());
 
     setCanYieldUpdate(true);
 

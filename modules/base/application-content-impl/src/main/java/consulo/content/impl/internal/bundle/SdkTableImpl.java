@@ -25,12 +25,12 @@ import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.content.bundle.*;
+import consulo.content.bundle.event.SdkTableListener;
 import consulo.util.collection.SmartHashSet;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.Comparing;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.archive.ArchiveFileType;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileCreateEvent;
@@ -64,7 +64,7 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
     final MessageBusConnection connection = myApplication.getMessageBus().connect();
 
     // support external changes to sdk libraries (Endorsed Standards Override)
-    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         if (!events.isEmpty()) {
@@ -184,18 +184,18 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
   @RequiredWriteAction
   public void addSdk(@Nonnull Sdk sdk) {
     myApplication.assertWriteAccessAllowed();
-    myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).beforeSdkAdded(sdk);
+    myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkAdded(sdk);
     mySdks.add((SdkImpl)sdk);
-    myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).sdkAdded(sdk);
+    myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkAdded(sdk);
   }
 
   @Override
   @RequiredWriteAction
   public void removeSdk(@Nonnull Sdk sdk) {
     myApplication.assertWriteAccessAllowed();
-    myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).beforeSdkRemoved(sdk);
+    myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkRemoved(sdk);
     mySdks.remove(sdk);
-    myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).sdkRemoved(sdk);
+    myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkRemoved(sdk);
   }
 
   @Override
@@ -207,13 +207,13 @@ public class SdkTableImpl extends SdkTable implements PersistentStateComponent<E
 
     boolean nameChanged = !previousName.equals(newName);
     if (nameChanged) {
-      myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).beforeSdkNameChanged(originalSdk, previousName);
+      myApplication.getMessageBus().syncPublisher(SdkTableListener.class).beforeSdkNameChanged(originalSdk, previousName);
     }
 
     ((SdkImpl)modifiedSdk).copyTo((SdkImpl)originalSdk);
 
     if (nameChanged) {
-      myApplication.getMessageBus().syncPublisher(SDK_TABLE_TOPIC).sdkNameChanged(originalSdk, previousName);
+      myApplication.getMessageBus().syncPublisher(SdkTableListener.class).sdkNameChanged(originalSdk, previousName);
     }
   }
 

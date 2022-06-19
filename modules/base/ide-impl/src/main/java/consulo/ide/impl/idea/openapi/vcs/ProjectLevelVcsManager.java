@@ -30,7 +30,7 @@ import consulo.ide.impl.idea.openapi.vcs.impl.VcsDescriptor;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdatedFiles;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.function.Processor;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NonNls;
 
@@ -45,8 +45,8 @@ import java.util.List;
 @Service(ComponentScope.PROJECT)
 public abstract class ProjectLevelVcsManager {
 
-  public static final Topic<VcsListener> VCS_CONFIGURATION_CHANGED = Topic.create("VCS configuration changed", VcsListener.class);
-  public static final Topic<VcsListener> VCS_CONFIGURATION_CHANGED_IN_PLUGIN = Topic.create("VCS configuration changed in VCS plugin", VcsListener.class);
+  public static final TopicImpl<VcsListener> VCS_CONFIGURATION_CHANGED = TopicImpl.create("VCS configuration changed", VcsListener.class);
+  public static final TopicImpl<VcsListener> VCS_CONFIGURATION_CHANGED_IN_PLUGIN = TopicImpl.create("VCS configuration changed in VCS plugin", VcsListener.class);
 
   public abstract void iterateVfUnderVcsRoot(VirtualFile file, Processor<VirtualFile> processor);
 

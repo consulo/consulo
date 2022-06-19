@@ -19,11 +19,11 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
 
+@Topic
 public interface NavBarModelListener {
-  Topic<NavBarModelListener> NAV_BAR = Topic.create("Navigation Bar model changes", NavBarModelListener.class);
-
   void modelChanged();
+
   void selectionChanged();
 }

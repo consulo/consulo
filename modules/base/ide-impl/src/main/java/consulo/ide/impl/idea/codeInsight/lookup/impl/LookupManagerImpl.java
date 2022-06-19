@@ -2,38 +2,38 @@
 
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.language.editor.completion.CompletionProcess;
-import consulo.language.editor.completion.CompletionService;
-import consulo.language.editor.internal.matcher.CamelHumpMatcher;
-import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
-import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
-import consulo.language.editor.hint.HintManager;
-import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
+import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
+import consulo.ide.impl.idea.codeInsight.hint.EditorHintListener;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.completion.CompletionProcess;
+import consulo.language.editor.completion.CompletionService;
 import consulo.language.editor.completion.lookup.*;
 import consulo.language.editor.completion.lookup.event.LookupEvent;
 import consulo.language.editor.completion.lookup.event.LookupListener;
-import consulo.project.DumbService;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.project.Project;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.util.lang.BitUtil;
+import consulo.language.editor.hint.HintManager;
+import consulo.language.editor.internal.matcher.CamelHumpMatcher;
 import consulo.logging.Logger;
-import kava.beans.PropertyChangeListener;
-import kava.beans.PropertyChangeSupport;
-import javax.annotation.Nonnull;
-import org.jetbrains.annotations.TestOnly;
-
+import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.BitUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import kava.beans.PropertyChangeListener;
+import kava.beans.PropertyChangeSupport;
+import org.jetbrains.annotations.TestOnly;
+
+import javax.annotation.Nonnull;
 
 @Singleton
 public class LookupManagerImpl extends LookupManager {
@@ -76,7 +76,7 @@ public class LookupManagerImpl extends LookupManager {
       }
     });
 
-    project.getMessageBus().connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    project.getMessageBus().connect().subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void enteredDumbMode() {
         hideActiveLookup();

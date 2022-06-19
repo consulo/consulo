@@ -71,7 +71,7 @@ public class VcsAnnotationLocalChangesListenerImpl implements Disposable, VcsAnn
     myVcsManager = vcsManager;
     myVcsKeySet = new HashSet<>();
 
-    myConnection.subscribe(VcsAnnotationRefresher.LOCAL_CHANGES_CHANGED, handler);
+    myConnection.subscribe(VcsAnnotationRefresher.class, handler);
   }
 
   private Runnable createUpdateStuff() {

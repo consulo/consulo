@@ -41,6 +41,7 @@ import consulo.application.progress.ProgressManager;
 import consulo.application.progress.Task;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.language.editor.CommonDataKeys;
+import consulo.project.event.DumbModeListener;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -186,7 +187,7 @@ class EditorGutterComponentImpl extends JComponent implements EditorGutterCompon
 
     Project project = myEditor.getProject();
     if (project != null) {
-      project.getMessageBus().connect(myEditor.getDisposable()).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+      project.getMessageBus().connect(myEditor.getDisposable()).subscribe(DumbModeListener.class, new DumbModeListener() {
 
         @Override
         public void exitDumbMode() {

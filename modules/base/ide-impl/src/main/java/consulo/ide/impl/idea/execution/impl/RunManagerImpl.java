@@ -21,7 +21,6 @@ import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.event.RunManagerListener;
 import consulo.execution.executor.Executor;
-import consulo.module.content.ProjectTopics;
 import consulo.ide.impl.idea.execution.*;
 import consulo.ide.impl.idea.execution.configurations.*;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -104,7 +103,7 @@ public class RunManagerImpl extends RunManagerEx implements PersistentStateCompo
     myConfig = new RunManagerConfig(propertiesComponent);
     myProject = project;
 
-    myProject.getMessageBus().connect(myProject).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    myProject.getMessageBus().connect(myProject).subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         RunnerAndConfigurationSettings configuration = getSelectedConfiguration();

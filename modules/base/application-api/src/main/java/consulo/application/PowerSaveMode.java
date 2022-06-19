@@ -19,7 +19,7 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -47,14 +47,9 @@ public class PowerSaveMode {
     final PowerSaveMode instance = Application.get().getInstance(PowerSaveMode.class);
     if (instance.myEnabled != value) {
       instance.myEnabled = value;
-      instance.myBus.syncPublisher(TOPIC).powerSaveStateChanged();
+      instance.myBus.syncPublisher(PowerSaveModeListener.class).powerSaveStateChanged();
+
       ApplicationPropertiesComponent.getInstance().setValue(POWER_SAVE_MODE, String.valueOf(value));
     }
   }
-
-  public interface Listener {
-    void powerSaveStateChanged();
-  }
-
-  public static Topic<Listener> TOPIC = Topic.create("PowerSaveMode.Listener", Listener.class);
 }

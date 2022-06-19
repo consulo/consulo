@@ -346,20 +346,20 @@ public abstract class ModuleManagerImpl extends ModuleManager implements Persist
   }
 
   protected void fireModuleAdded(Module module) {
-    myMessageBus.syncPublisher(ModuleListener.TOPIC).moduleAdded(myProject, module);
+    myMessageBus.syncPublisher(ModuleListener.class).moduleAdded(myProject, module);
   }
 
   protected void fireModuleRemoved(Module module) {
-    myMessageBus.syncPublisher(ModuleListener.TOPIC).moduleRemoved(myProject, module);
+    myMessageBus.syncPublisher(ModuleListener.class).moduleRemoved(myProject, module);
   }
 
   protected void fireBeforeModuleRemoved(Module module) {
-    myMessageBus.syncPublisher(ModuleListener.TOPIC).beforeModuleRemoved(myProject, module);
+    myMessageBus.syncPublisher(ModuleListener.class).beforeModuleRemoved(myProject, module);
   }
 
   protected void fireModulesRenamed(List<Module> modules) {
     if (!modules.isEmpty()) {
-      myMessageBus.syncPublisher(ModuleListener.TOPIC).modulesRenamed(myProject, modules);
+      myMessageBus.syncPublisher(ModuleListener.class).modulesRenamed(myProject, modules);
     }
   }
 

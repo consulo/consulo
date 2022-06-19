@@ -2,48 +2,47 @@
 package consulo.ide.impl.idea.find.impl.livePreview;
 
 
-import consulo.language.editor.highlight.HighlightManager;
+import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.SelectionModel;
+import consulo.codeEditor.event.SelectionEvent;
+import consulo.codeEditor.event.SelectionListener;
+import consulo.codeEditor.event.VisibleAreaEvent;
+import consulo.codeEditor.event.VisibleAreaListener;
+import consulo.codeEditor.markup.MarkupModelEx;
+import consulo.codeEditor.markup.RangeHighlighter;
+import consulo.codeEditor.markup.RangeHighlighterEx;
+import consulo.colorScheme.EditorColorsScheme;
+import consulo.colorScheme.EffectType;
+import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.event.EditorColorsListener;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.event.DocumentListener;
+import consulo.document.util.Segment;
+import consulo.document.util.TextRange;
 import consulo.find.FindManager;
 import consulo.find.FindModel;
 import consulo.find.FindResult;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
-import consulo.application.ApplicationManager;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
-import consulo.codeEditor.EditorColors;
-import consulo.colorScheme.event.EditorColorsListener;
-import consulo.colorScheme.EditorColorsManager;
-import consulo.colorScheme.EditorColorsScheme;
-import consulo.codeEditor.markup.MarkupModelEx;
-import consulo.codeEditor.markup.RangeHighlighterEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
-import consulo.codeEditor.event.VisibleAreaEvent;
-import consulo.codeEditor.event.VisibleAreaListener;
-import consulo.colorScheme.EffectType;
-import consulo.codeEditor.markup.RangeHighlighter;
-import consulo.colorScheme.TextAttributes;
-import consulo.codeEditor.event.SelectionEvent;
-import consulo.codeEditor.event.SelectionListener;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.highlight.HighlightManager;
 import consulo.project.Project;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.PositionTracker;
+import consulo.ui.ex.RelativePoint;
 import consulo.ui.ex.popup.Balloon;
 import consulo.ui.ex.popup.BalloonBuilder;
 import consulo.ui.ex.popup.JBPopupFactory;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.util.lang.Pair;
-import consulo.document.event.DocumentListener;
-import consulo.document.util.Segment;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
-import consulo.ui.ex.RelativePoint;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.ui.ex.PositionTracker;
-import consulo.ui.color.ColorValue;
 import consulo.ui.style.StandardColors;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
+import consulo.util.lang.Pair;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.PrintStream;
@@ -219,7 +218,7 @@ public class LivePreview implements SearchResults.SearchResultsListener, Selecti
     searchResultsUpdated(searchResults);
     searchResults.addListener(this);
     EditorUtil.addBulkSelectionListener(mySearchResults.getEditor(), this, myDisposable);
-    ApplicationManager.getApplication().getMessageBus().connect(myDisposable).subscribe(EditorColorsManager.TOPIC, this);
+    ApplicationManager.getApplication().getMessageBus().connect(myDisposable).subscribe(EditorColorsListener.class, this);
   }
 
   public Delegate getDelegate() {

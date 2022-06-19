@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.project.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
 import consulo.ide.impl.idea.openapi.components.impl.ProjectPathMacroManager;
+import consulo.project.internal.ProjectExListener;
 import consulo.project.ui.wm.FrameTitleBuilder;
 import consulo.ide.impl.idea.util.TimedReference;
 import consulo.application.AccessRule;
@@ -337,7 +338,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
     finally {
       mySavingInProgress.set(false);
-      application.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+      application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
     }
   }
 
@@ -385,7 +386,7 @@ public class ProjectImpl extends PlatformComponentManagerImpl implements Project
     }
     finally {
       mySavingInProgress.set(false);
-      application.getMessageBus().syncPublisher(ProjectSaved.TOPIC).saved(this);
+      application.getMessageBus().syncPublisher(ProjectExListener.class).saved(this);
     }
   }
 

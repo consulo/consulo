@@ -66,7 +66,7 @@ public class ActionTracer implements UiDebuggerExtension, AnActionListener {
       myComponent.add(log);
 
       myListenerDisposable = Disposable.newDisposable();
-      Application.get().getMessageBus().connect(myListenerDisposable).subscribe(AnActionListener.TOPIC, this);
+      Application.get().getMessageBus().connect(myListenerDisposable).subscribe(AnActionListener.class, this);
     }
 
     return myComponent;

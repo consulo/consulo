@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import consulo.module.event.ModuleAdapter;
@@ -32,7 +35,6 @@ import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
@@ -49,6 +51,8 @@ import java.util.*;
  * @author yole
  */
 @Singleton
+@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public class ModuleVcsDetector implements ProjectComponent, Disposable {
   private final Project myProject;
   private final MessageBus myMessageBus;
@@ -59,7 +63,7 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
   public ModuleVcsDetector(final Project project, final ProjectLevelVcsManager vcsManager) {
     myProject = project;
     myMessageBus = project.getMessageBus();
-    myVcsManager = (ProjectLevelVcsManagerImpl) vcsManager;
+    myVcsManager = (ProjectLevelVcsManagerImpl)vcsManager;
   }
 
   @Override
@@ -81,8 +85,8 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
       public void run() {
         myConnection = myMessageBus.connect();
         final MyModulesListener listener = new MyModulesListener();
-        myConnection.subscribe(ModuleListener.TOPIC, listener);
-        myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, listener);
+        myConnection.subscribe(ModuleListener.class, listener);
+        myConnection.subscribe(ModuleRootListener.class, listener);
       }
     });
   }
@@ -130,9 +134,9 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
     Set<AbstractVcs> usedVcses = new HashSet<AbstractVcs>();
     Map<VirtualFile, AbstractVcs> vcsMap = new HashMap<VirtualFile, AbstractVcs>();
     final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
-    for(Module module: moduleManager.getModules()) {
+    for (Module module : moduleManager.getModules()) {
       final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
-      for(VirtualFile file: files) {
+      for (VirtualFile file : files) {
         AbstractVcs contentRootVcs = myVcsManager.findVersioningVcs(file);
         if (contentRootVcs != null) {
           vcsMap.put(file, contentRootVcs);
@@ -152,15 +156,15 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
         }
       }
 
-      if (abstractVcses [0] != null) {
+      if (abstractVcses[0] != null) {
         final List<VcsDirectoryMapping> vcsDirectoryMappings = new ArrayList<VcsDirectoryMapping>(myVcsManager.getDirectoryMappings());
-        for (Iterator<VcsDirectoryMapping> iterator = vcsDirectoryMappings.iterator(); iterator.hasNext();) {
+        for (Iterator<VcsDirectoryMapping> iterator = vcsDirectoryMappings.iterator(); iterator.hasNext(); ) {
           final VcsDirectoryMapping mapping = iterator.next();
-          if (! contentRoots.contains(mapping.getDirectory())) {
+          if (!contentRoots.contains(mapping.getDirectory())) {
             iterator.remove();
           }
         }
-        myVcsManager.setAutoDirectoryMapping("", abstractVcses [0].getName());
+        myVcsManager.setAutoDirectoryMapping("", abstractVcses[0].getName());
         for (VcsDirectoryMapping mapping : vcsDirectoryMappings) {
           myVcsManager.removeDirectoryMapping(mapping);
         }
@@ -168,7 +172,7 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
       }
     }
     else if (tryMapPieces) {
-      for(Map.Entry<VirtualFile, AbstractVcs> entry: vcsMap.entrySet()) {
+      for (Map.Entry<VirtualFile, AbstractVcs> entry : vcsMap.entrySet()) {
         myVcsManager.setAutoDirectoryMapping(entry.getKey().getPath(), entry.getValue() == null ? "" : entry.getValue().getName());
       }
       myVcsManager.cleanupMappings();
@@ -178,7 +182,7 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
   private void autoDetectModuleVcsMapping(final Module module) {
     boolean mappingsUpdated = false;
     final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
-    for(VirtualFile file: files) {
+    for (VirtualFile file : files) {
       AbstractVcs vcs = myVcsManager.findVersioningVcs(file);
       if (vcs != null && vcs != myVcsManager.getVcsFor(file)) {
         myVcsManager.setAutoDirectoryMapping(file.getPath(), vcs.getName());
@@ -194,8 +198,8 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
     List<Pair<String, VcsDirectoryMapping>> result = new ArrayList<Pair<String, VcsDirectoryMapping>>();
     final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
     final String moduleName = module.getName();
-    for(final VirtualFile file: files) {
-      for(final VcsDirectoryMapping mapping: myVcsManager.getDirectoryMappings()) {
+    for (final VirtualFile file : files) {
+      for (final VcsDirectoryMapping mapping : myVcsManager.getDirectoryMappings()) {
         if (FileUtil.toSystemIndependentName(mapping.getDirectory()).equals(file.getPath())) {
           result.add(new Pair<String, VcsDirectoryMapping>(moduleName, mapping));
           break;

@@ -15,29 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
-import consulo.dataContext.DataManager;
-import consulo.document.DocumentRunnable;
-import consulo.document.impl.DocumentImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.ui.wm.IdeFocusManager;
 import consulo.codeEditor.Caret;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.VisualPosition;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.editor.CommonDataKeys;
-import consulo.dataContext.DataContext;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.document.FileDocumentManager;
-import consulo.document.event.FileDocumentManagerAdapter;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.project.ProjectUtil;
-import consulo.util.lang.ShutDownTracker;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataManager;
 import consulo.document.Document;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.application.ui.wm.IdeFocusManager;
+import consulo.document.DocumentRunnable;
+import consulo.document.FileDocumentManager;
+import consulo.document.event.FileDocumentManagerListener;
+import consulo.document.impl.DocumentImpl;
+import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.file.inject.DocumentWindow;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.ShutDownTracker;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -45,7 +45,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.*;
 
-public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
+public final class TrailingSpacesStripper implements FileDocumentManagerListener {
   public static final Key<String> OVERRIDE_STRIP_TRAILING_SPACES_KEY = Key.create("OVERRIDE_TRIM_TRAILING_SPACES_KEY");
   public static final Key<Boolean> OVERRIDE_ENSURE_NEWLINE_KEY = Key.create("OVERRIDE_ENSURE_NEWLINE_KEY");
 
@@ -74,7 +74,6 @@ public final class TrailingSpacesStripper extends FileDocumentManagerAdapter {
     if (file == null || !file.isValid() || Boolean.TRUE.equals(DISABLE_FOR_FILE_KEY.get(file))) return;
 
     final EditorSettingsExternalizable settings = EditorSettingsExternalizable.getInstance();
-    if (settings == null) return;
 
     final String overrideStripTrailingSpacesData = file.getUserData(OVERRIDE_STRIP_TRAILING_SPACES_KEY);
     final Boolean overrideEnsureNewlineData = file.getUserData(OVERRIDE_ENSURE_NEWLINE_KEY);

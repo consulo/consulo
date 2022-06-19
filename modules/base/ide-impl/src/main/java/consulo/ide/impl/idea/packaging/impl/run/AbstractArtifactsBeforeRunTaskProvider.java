@@ -49,7 +49,7 @@ public abstract class AbstractArtifactsBeforeRunTaskProvider<T extends AbstractA
   public AbstractArtifactsBeforeRunTaskProvider(Project project, Key<T> id) {
     myProject = project;
     myId = id;
-    project.getMessageBus().connect().subscribe(ArtifactManager.TOPIC, new ArtifactListener() {
+    project.getMessageBus().connect().subscribe(ArtifactListener.class, new ArtifactListener() {
       @Override
       public void artifactRemoved(@Nonnull Artifact artifact) {
         final RunManager runManager = RunManager.getInstance(myProject);

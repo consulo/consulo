@@ -16,10 +16,8 @@
 package consulo.module.extension;
 
 import consulo.annotation.access.RequiredReadAction;
-import consulo.component.messagebus.Topic;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.module.Module;
-import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.project.Project;
 import org.jdom.Element;
 
@@ -31,8 +29,6 @@ import javax.annotation.Nonnull;
  */
 public interface ModuleExtension<T extends ModuleExtension> extends PersistentStateComponent<Element> {
   ModuleExtension[] EMPTY_ARRAY = new ModuleExtension[0];
-
-  Topic<ModuleExtensionChangeListener> CHANGE_TOPIC = Topic.create("module extension change topic", ModuleExtensionChangeListener.class);
 
   @Nonnull
   String getId();

@@ -47,7 +47,7 @@ public class AutoPopupControllerImpl extends AutoPopupController {
   public AutoPopupControllerImpl(Application application, Project project) {
     myProject = project;
 
-    application.getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, new AnActionListener() {
+    application.getMessageBus().connect(this).subscribe(AnActionListener.class, new AnActionListener() {
       @Override
       public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
         cancelAllRequests();

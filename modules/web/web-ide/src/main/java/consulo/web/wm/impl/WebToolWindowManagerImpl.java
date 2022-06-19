@@ -29,7 +29,6 @@ import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.WindowManager;
@@ -73,7 +72,7 @@ public class WebToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     MessageBusConnection busConnection = project.getMessageBus().connect();
-    busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {

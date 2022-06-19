@@ -15,14 +15,14 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.annotation.DeprecationInfo;
 
 /**
  * @author yole
  */
 public interface AppLifecycleListener {
-  Topic<AppLifecycleListener> TOPIC = Topic.create("Application lifecycle notifications", AppLifecycleListener.class);
+  TopicImpl<AppLifecycleListener> TOPIC = TopicImpl.create("Application lifecycle notifications", AppLifecycleListener.class);
 
   default void projectFrameClosed() {
   }

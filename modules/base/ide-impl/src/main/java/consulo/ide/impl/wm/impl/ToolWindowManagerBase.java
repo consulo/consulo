@@ -37,7 +37,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.module.extension.ModuleExtension;
+import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -182,7 +182,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     myInternalDecoratorListener = createInternalDecoratorListener();
 
     MessageBusConnection busConnection = project.getMessageBus().connect(this);
-    busConnection.subscribe(ToolWindowManagerListener.TOPIC, myDispatcher.getMulticaster());
+    busConnection.subscribe(ToolWindowManagerListener.class, myDispatcher.getMulticaster());
   }
 
   // region Factory Abstract Group
@@ -287,7 +287,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @RequiredUIAccess
   protected void connectModuleExtensionListener() {
-    myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> {
+    myProject.getMessageBus().connect().subscribe(ModuleExtensionChangeListener.class, (oldExtension, newExtension) -> {
       boolean extensionVal = newExtension.isEnabled();
       for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
         boolean value = factory.validate(myProject);
@@ -380,11 +380,11 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   }
 
   protected void fireToolWindowRegistered(final String id) {
-    myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.TOPIC).toolWindowRegistered(id);
+    myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.class).toolWindowRegistered(id);
   }
 
   protected void fireStateChanged() {
-    myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.TOPIC).stateChanged(this);
+    myProject.getMessageBus().syncPublisher(ToolWindowManagerListener.class).stateChanged(this);
   }
 
   public ToolWindowAnchor getToolWindowAnchor(final String id) {
@@ -1126,7 +1126,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @Override
   public void addToolWindowManagerListener(@Nonnull ToolWindowManagerListener l, @Nonnull Disposable parentDisposable) {
-    myProject.getMessageBus().connect(parentDisposable).subscribe(ToolWindowManagerListener.TOPIC, l);
+    myProject.getMessageBus().connect(parentDisposable).subscribe(ToolWindowManagerListener.class, l);
   }
 
   @Override

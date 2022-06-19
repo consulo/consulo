@@ -399,14 +399,14 @@ public abstract class ComponentStoreImpl implements IComponentStore {
 
   private void reinitComponents(@Nonnull Set<String> componentNames, @Nonnull Collection<? extends StateStorage> changedStorages) {
     MessageBus messageBus = getMessageBus();
-    messageBus.syncPublisher(BatchUpdateListener.TOPIC).onBatchUpdateStarted();
+    messageBus.syncPublisher(BatchUpdateListener.class).onBatchUpdateStarted();
     try {
       for (String componentName : componentNames) {
         reinitComponent(componentName, changedStorages);
       }
     }
     finally {
-      messageBus.syncPublisher(BatchUpdateListener.TOPIC).onBatchUpdateFinished();
+      messageBus.syncPublisher(BatchUpdateListener.class).onBatchUpdateFinished();
     }
   }
 }

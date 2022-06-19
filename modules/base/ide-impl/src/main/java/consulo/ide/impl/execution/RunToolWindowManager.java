@@ -70,7 +70,7 @@ public class RunToolWindowManager {
     myProject = project;
     myToolWindowManager = toolWindowManager;
     myParentDisposable = parentDisposable;
-    project.getMessageBus().connect().subscribe(ToolWindowManagerListener.TOPIC, new ToolWindowManagerListener() {
+    project.getMessageBus().connect().subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
       @Override
       public void stateChanged(ToolWindowManager tw) {
         if (project.isDisposed()) {

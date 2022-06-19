@@ -593,7 +593,7 @@ public abstract class SpeedSearchBase<Comp extends JComponent> extends SpeedSear
 
     if (project != null) {
       myListenerDisposable = Disposable.newDisposable();
-      project.getMessageBus().connect(myListenerDisposable).subscribe(ToolWindowManagerListener.TOPIC, myWindowManagerListener);
+      project.getMessageBus().connect(myListenerDisposable).subscribe(ToolWindowManagerListener.class, myWindowManagerListener);
     }
     JRootPane rootPane = myComponent.getRootPane();
     myPopupLayeredPane = rootPane == null ? null : rootPane.getLayeredPane();

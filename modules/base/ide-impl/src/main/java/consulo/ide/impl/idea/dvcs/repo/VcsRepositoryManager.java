@@ -19,8 +19,8 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
@@ -29,12 +29,11 @@ import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.component.messagebus.Topic;
-import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -67,8 +66,6 @@ public class VcsRepositoryManager implements Disposable {
   public static VcsRepositoryManager getInstance(@Nonnull Project project) {
     return project.getInstance(VcsRepositoryManager.class);
   }
-
-  public static final Topic<VcsRepositoryMappingListener> VCS_REPOSITORY_MAPPING_UPDATED = Topic.create("VCS repository mapping updated", VcsRepositoryMappingListener.class);
 
   @Nonnull
   private final ProjectLevelVcsManager myVcsManager;
@@ -278,7 +275,7 @@ public class VcsRepositoryManager implements Disposable {
       finally {
         REPO_LOCK.writeLock().unlock();
       }
-      BackgroundTaskUtil.syncPublisher(myProject, VCS_REPOSITORY_MAPPING_UPDATED).mappingChanged();
+      BackgroundTaskUtil.syncPublisher(myProject, VcsRepositoryMappingListener.class).mappingChanged();
     }
     finally {
       MODIFY_LOCK.unlock();

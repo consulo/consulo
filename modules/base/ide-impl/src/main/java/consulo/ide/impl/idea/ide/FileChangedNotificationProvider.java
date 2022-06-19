@@ -26,7 +26,6 @@ import consulo.project.Project;
 import consulo.util.io.FileAttributes;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.VirtualFileSystem;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -66,7 +65,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
     }, project);
 
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(myProject);
-    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {

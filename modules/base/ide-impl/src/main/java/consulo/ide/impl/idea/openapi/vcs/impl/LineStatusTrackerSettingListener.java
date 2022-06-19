@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 
 public interface LineStatusTrackerSettingListener {
-  Topic<LineStatusTrackerSettingListener> TOPIC = Topic.create("line status tracker settings changed", LineStatusTrackerSettingListener.class);
+  TopicImpl<LineStatusTrackerSettingListener> TOPIC = TopicImpl.create("line status tracker settings changed", LineStatusTrackerSettingListener.class);
 
   void settingsUpdated();
 }

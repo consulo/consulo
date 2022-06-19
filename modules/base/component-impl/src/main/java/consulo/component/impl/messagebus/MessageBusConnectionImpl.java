@@ -4,7 +4,6 @@ package consulo.component.impl.messagebus;
 import consulo.component.ProcessCanceledException;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.messagebus.MessageHandler;
-import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.logging.Logger;
@@ -24,19 +23,19 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
   private final ThreadLocal<Queue<Message>> myPendingMessages = MessageBusImpl.createThreadLocalQueue();
 
   private MessageHandler myDefaultHandler;
-  private volatile SmartFMap<Topic<?>, Object> mySubscriptions = SmartFMap.emptyMap();
+  private volatile SmartFMap<Class<?>, Object> mySubscriptions = SmartFMap.emptyMap();
 
   MessageBusConnectionImpl(@Nonnull MessageBusImpl bus) {
     myBus = bus;
   }
 
   @Override
-  public <L> void subscribe(@Nonnull Topic<L> topic, @Nonnull L handler) {
+  public <L> void subscribe(@Nonnull Class<L> topicClass, @Nonnull L handler) {
     boolean notifyBusAboutTopic = false;
     synchronized (myPendingMessages) {
-      Object currentHandler = mySubscriptions.get(topic);
+      Object currentHandler = mySubscriptions.get(topicClass);
       if (currentHandler == null) {
-        mySubscriptions = mySubscriptions.plus(topic, handler);
+        mySubscriptions = mySubscriptions.plus(topicClass, handler);
         notifyBusAboutTopic = true;
       }
       else if (currentHandler instanceof List<?>) {
@@ -47,17 +46,17 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
         List<Object> newList = new ArrayList<>();
         newList.add(currentHandler);
         newList.add(handler);
-        mySubscriptions = mySubscriptions.plus(topic, newList);
+        mySubscriptions = mySubscriptions.plus(topicClass, newList);
       }
     }
 
     if (notifyBusAboutTopic) {
-      myBus.notifyOnSubscription(this, topic);
+      myBus.notifyOnSubscription(this, topicClass);
     }
   }
 
   // avoid notifyOnSubscription and map modification for each handler
-  <L> void subscribe(@Nonnull Topic<L> topic, @Nonnull List<Object> handlers) {
+  <L> void subscribe(@Nonnull Class<L> topic, @Nonnull List<Object> handlers) {
     boolean notifyBusAboutTopic = false;
     synchronized (myPendingMessages) {
       Object currentHandler = mySubscriptions.get(topic);
@@ -83,18 +82,18 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
   }
 
   @Override
-  public <L> void subscribe(@Nonnull Topic<L> topic) throws IllegalStateException {
+  public <L> void subscribe(@Nonnull Class<L> topicClass) throws IllegalStateException {
     MessageHandler defaultHandler = myDefaultHandler;
     if (defaultHandler == null) {
-      throw new IllegalStateException("Connection must have default handler installed prior to any anonymous subscriptions. " + "Target topic: " + topic);
+      throw new IllegalStateException("Connection must have default handler installed prior to any anonymous subscriptions. " + "Target topic: " + topicClass);
     }
-    if (topic.getListenerClass().isInstance(defaultHandler)) {
+    if (topicClass.isInstance(defaultHandler)) {
       throw new IllegalStateException(
-              "Can't subscribe to the topic '" + topic + "'. Default handler has incompatible type - expected: '" + topic.getListenerClass() + "', actual: '" + defaultHandler.getClass() + "'");
+              "Can't subscribe to the topic '" + topicClass + "'. Default handler has incompatible type - expected: '" + topicClass + "', actual: '" + defaultHandler.getClass() + "'");
     }
 
     //noinspection unchecked
-    subscribe(topic, (L)defaultHandler);
+    subscribe(topicClass, (L)defaultHandler);
   }
 
   @Override
@@ -126,7 +125,7 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
     final Message messageOnLocalQueue = myPendingMessages.get().poll();
     assert messageOnLocalQueue == message;
 
-    Topic<?> topic = message.getTopic();
+    Class<?> topic = message.getTopicClass();
     Object handler = mySubscriptions.get(topic);
     try {
       if (handler == myDefaultHandler) {
@@ -164,12 +163,12 @@ final class MessageBusConnectionImpl implements MessageBusConnection, Disposable
     myPendingMessages.get().offer(message);
   }
 
-  boolean containsMessage(@Nonnull Topic<?> topic) {
+  boolean containsMessage(@Nonnull Class<?> topic) {
     Queue<Message> pendingMessages = myPendingMessages.get();
     if (pendingMessages.isEmpty()) return false;
 
     for (Message message : pendingMessages) {
-      if (message.getTopic() == topic) {
+      if (message.getTopicClass() == topic) {
         return true;
       }
     }

@@ -19,7 +19,6 @@ import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileContentChangeEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -46,7 +45,7 @@ public class IgnoredFilesComponent {
     myFilesMap = new HashMap<>();
 
     if (registerListener) {
-      project.getMessageBus().connect(project).subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener.Adapter() {
+      project.getMessageBus().connect(project).subscribe(BulkFileListener.class, new BulkFileListener() {
         @Override
         public void after(@Nonnull List<? extends VFileEvent> events) {
           if (hasSignificantChanges(events)) {

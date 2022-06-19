@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.remoteServer.runtime;
 
-import consulo.component.messagebus.Topic;
-import javax.annotation.Nonnull;
+import consulo.annotation.component.Topic;
 
+import javax.annotation.Nonnull;
 import java.util.EventListener;
 
 /**
  * @author nik
  */
+@Topic
 public interface ServerConnectionListener extends EventListener {
-  Topic<ServerConnectionListener> TOPIC = Topic.create("server connections", ServerConnectionListener.class);
 
   void onConnectionCreated(@Nonnull ServerConnection<?> connection);
 

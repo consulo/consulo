@@ -66,7 +66,7 @@ public final class ToggleReadOnlyAttributePanel implements StatusBarWidget.Multi
       return;
     }
 
-    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         if (myStatusBar != null) {

@@ -15,9 +15,11 @@
  */
 package consulo.project.ui.notification;
 
+import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.application.Application;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -27,14 +29,18 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author spleaner
  */
+@Topic(direction = TopicBroadcastDirection.NONE)
 public interface Notifications {
-  Topic<Notifications> TOPIC = Topic.create("Notifications", Notifications.class, Topic.BroadcastDirection.NONE);
+  TopicImpl<Notifications> TOPIC = TopicImpl.create("Notifications", Notifications.class, TopicBroadcastDirection.NONE);
 
   String SYSTEM_MESSAGES_GROUP_ID = "System Messages";
 
   void notify(@Nonnull Notification notification);
+
   void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType);
+
   void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType, boolean shouldLog);
+
   void register(@Nonnull final String groupDisplayName, @Nonnull final NotificationDisplayType defaultDisplayType, boolean shouldLog, boolean shouldReadAloud);
 
   class Bus {
@@ -61,7 +67,8 @@ public interface Notifications {
     private static void doNotify(Notification notification, @Nullable Project project) {
       if (project != null && !project.isDisposed()) {
         project.getMessageBus().syncPublisher(TOPIC).notify(notification);
-      } else {
+      }
+      else {
         Application app = Application.get();
         if (!app.isDisposed()) {
           app.getMessageBus().syncPublisher(TOPIC).notify(notification);

@@ -69,7 +69,7 @@ public abstract class FileEditorsSplittersBase<W extends FileEditorWindowBase> i
     myProject = project;
     myManager = manager;
 
-    project.getApplication().getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, source -> {
+    project.getApplication().getMessageBus().connect(this).subscribe(UISettingsListener.class, source -> {
       if (!myManager.getProject().isOpen()) {
         return;
       }

@@ -56,7 +56,6 @@ import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.navigation.Navigatable;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -253,7 +252,7 @@ public class FindPopupPanel extends JBPanel<FindPopupPanel> implements FindUI {
         }
       };
       myDialog.setUndecorated(!Registry.is("ide.find.as.popup.decorated"));
-      ApplicationManager.getApplication().getMessageBus().connect(myDialog.getDisposable()).subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+      ApplicationManager.getApplication().getMessageBus().connect(myDialog.getDisposable()).subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
         @Override
         public void projectClosed(@Nonnull Project project) {
           closeImmediately();

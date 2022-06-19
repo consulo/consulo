@@ -15,26 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.project.impl;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.conversion.ConversionResult;
-import consulo.ide.impl.idea.conversion.ConversionService;
-import consulo.ide.impl.idea.ide.AppLifecycleListener;
-import consulo.ide.impl.idea.ide.impl.ProjectUtil;
-import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
-import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
-import consulo.ide.impl.idea.openapi.module.impl.ModuleManagerComponent;
-import consulo.module.impl.internal.ModuleManagerImpl;
-import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
-import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerAdapter;
-import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.EventDispatcher;
-import consulo.ide.impl.idea.util.SingleAlarm;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.annotation.access.RequiredWriteAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.TransactionGuard;
 import consulo.application.WriteAction;
@@ -51,18 +33,33 @@ import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.store.impl.internal.StateStorageManager;
 import consulo.component.store.impl.internal.TrackingPathMacroSubstitutor;
-import consulo.component.store.impl.internal.storage.StateStorage;
-import consulo.component.store.impl.internal.storage.StateStorageBase;
-import consulo.component.store.impl.internal.storage.StorageUtil;
-import consulo.component.store.impl.internal.storage.VfsFileBasedStorage;
-import consulo.ide.impl.components.impl.stores.IProjectStore;
-import consulo.ide.impl.components.impl.stores.ProjectStorageUtil;
+import consulo.component.store.impl.internal.storage.*;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
+import consulo.ide.impl.components.impl.stores.IProjectStore;
+import consulo.ide.impl.components.impl.stores.ProjectStorageUtil;
+import consulo.ide.impl.idea.conversion.ConversionResult;
+import consulo.ide.impl.idea.conversion.ConversionService;
+import consulo.ide.impl.idea.ide.AppLifecycleListener;
+import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.ide.impl.idea.ide.startup.StartupManagerEx;
+import consulo.ide.impl.idea.ide.startup.impl.StartupManagerImpl;
+import consulo.ide.impl.idea.openapi.module.impl.ModuleManagerComponent;
+import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.ex.VirtualFileManagerAdapter;
+import consulo.ide.impl.idea.openapi.vfs.impl.ZipHandler;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.EventDispatcher;
+import consulo.ide.impl.idea.util.SingleAlarm;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.language.impl.internal.psi.SingleProjectHolder;
 import consulo.logging.Logger;
 import consulo.module.ModuleManager;
+import consulo.module.impl.internal.ModuleManagerImpl;
 import consulo.project.Project;
 import consulo.project.ProjectBundle;
 import consulo.project.event.ProjectManagerListener;
@@ -71,9 +68,9 @@ import consulo.project.startup.StartupManager;
 import consulo.project.ui.notification.NotificationsManager;
 import consulo.project.ui.wm.WindowManager;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
-import consulo.ide.impl.start.WelcomeFrameManager;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.internal.GuiUtils;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
@@ -147,10 +144,10 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
 
     MessageBusConnection connection = messageBus.connect();
     myExcludeRootsCache = new ExcludeRootsCache(connection);
-    connection.subscribe(TOPIC, new ProjectManagerListener() {
+    connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-        project.getMessageBus().connect(project).subscribe(StateStorage.STORAGE_TOPIC, (event, storage) -> projectStorageFileChanged(event, storage, project));
+        project.getMessageBus().connect(project).subscribe(StateStorageListener.class, (event, storage) -> projectStorageFileChanged(event, storage, project));
 
         myDeprecatedListenerDispatcher.getMulticaster().projectOpened(project, uiAccess);
 
@@ -357,7 +354,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
     }
 
     Runnable process = () -> {
-      TransactionGuard.getInstance().submitTransactionAndWait(() -> myApplication.getMessageBus().syncPublisher(TOPIC).projectOpened(project, uiAccess));
+      TransactionGuard.getInstance().submitTransactionAndWait(() -> myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectOpened(project, uiAccess));
 
       final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
       startupManager.runStartupActivities(uiAccess);
@@ -607,14 +604,14 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
         return false;
       }
 
-      myApplication.getMessageBus().syncPublisher(TOPIC).projectClosing(project); // somebody can start progress here, do not wrap in write action
+      myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectClosing(project); // somebody can start progress here, do not wrap in write action
 
       UIAccess uiAccess = UIAccess.current();
 
       myApplication.runWriteAction(() -> {
         removeFromOpened(project);
 
-        myApplication.getMessageBus().syncPublisher(TOPIC).projectClosed(project, uiAccess);
+        myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectClosed(project, uiAccess);
 
         if (dispose) {
           Disposer.dispose(project);
@@ -788,12 +785,12 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
           });
         }
 
-        myApplication.getMessageBus().syncPublisher(TOPIC).projectClosing(project); // somebody can start progress here, do not wrap in write action
+        myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectClosing(project); // somebody can start progress here, do not wrap in write action
 
         WriteAction.runAndWait(() -> {
           removeFromOpened(project);
 
-          myApplication.getMessageBus().syncPublisher(TOPIC).projectClosed(project, uiAccess);
+          myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectClosed(project, uiAccess);
 
           if (dispose) {
             Disposer.dispose(project);
@@ -902,7 +899,7 @@ public class ProjectManagerImpl extends ProjectManagerEx implements Disposable {
   }
 
   private void openProjectRequireBackgroundTask(Project project, UIAccess uiAccess) {
-    myApplication.getMessageBus().syncPublisher(TOPIC).projectOpened(project, uiAccess);
+    myApplication.getMessageBus().syncPublisher(ProjectManagerListener.class).projectOpened(project, uiAccess);
 
     final StartupManagerImpl startupManager = (StartupManagerImpl)StartupManager.getInstance(project);
     startupManager.runStartupActivities(uiAccess);

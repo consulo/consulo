@@ -5,8 +5,6 @@ import consulo.annotation.DeprecationInfo;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -25,7 +23,7 @@ import javax.annotation.Nonnull;
  * dependencies.
  * <p>
  * <li/> Subscribe to any PSI change (for example, to drop caches in the listener manually).
- * See {@link PsiModificationTracker.Listener}
+ * See {@link PsiModificationTrackerListener}
  *
  * </ol>
  */
@@ -85,13 +83,6 @@ public interface PsiModificationTracker extends ModificationTracker {
   Key JAVA_STRUCTURE_MODIFICATION_COUNT = Key.create("JAVA_STRUCTURE_MODIFICATION_COUNT");
 
   /**
-   * A topic to subscribe for all PSI modification count changes.
-   *
-   * @see MessageBus
-   */
-  Topic<Listener> TOPIC = new Topic<>("modification tracker", Listener.class, Topic.BroadcastDirection.TO_PARENT);
-
-  /**
    * Tracks any PSI modification.
    *
    * @return current counter value. Increased whenever any physical PSI is changed.
@@ -137,18 +128,4 @@ public interface PsiModificationTracker extends ModificationTracker {
    */
   @RequiredWriteAction
   void incCounter();
-
-  /**
-   * A listener to be notified on any PSI modification count change (which happens on any physical PSI change).
-   *
-   * @see #TOPIC
-   */
-  @FunctionalInterface
-  interface Listener {
-
-    /**
-     * A method invoked on Swing EventDispatchThread each time any physical PSI change is detected
-     */
-    void modificationCountChanged();
-  }
 }

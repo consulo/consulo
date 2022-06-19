@@ -43,7 +43,6 @@ import consulo.project.Project;
 import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ui.ex.awt.util.Alarm;
@@ -166,7 +165,7 @@ public class ExternalSystemAutoImporter implements BulkFileListener, DocumentLis
       entries
     );
     final MessageBus messageBus = project.getMessageBus();
-    messageBus.connect().subscribe(VirtualFileManager.VFS_CHANGES, autoImporter);
+    messageBus.connect().subscribe(BulkFileListener.class, autoImporter);
 
     EditorFactory.getInstance().getEventMulticaster().addDocumentListener(autoImporter, project);
   }

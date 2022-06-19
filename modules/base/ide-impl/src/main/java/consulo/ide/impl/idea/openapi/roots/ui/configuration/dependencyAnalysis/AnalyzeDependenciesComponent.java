@@ -99,7 +99,7 @@ public class AnalyzeDependenciesComponent extends MasterDetailsComponent {
     init();
     getSplitter().setProportion(0.3f);
     myMessageBusConnection = myModule.getProject().getMessageBus().connect();
-    myMessageBusConnection.subscribe(ModuleRootListener.TOPIC, new ModuleRootListener() {
+    myMessageBusConnection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myClasspaths.clear();

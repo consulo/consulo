@@ -17,13 +17,13 @@ package consulo.ide.impl.idea.codeInsight.hint;
 
 import consulo.project.Project;
 import consulo.ide.impl.idea.ui.LightweightHint;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 
 /**
  * @author yole
  */
 public interface EditorHintListener {
-  Topic<EditorHintListener> TOPIC = Topic.create("Notification about showing editor hints", EditorHintListener.class);
+  TopicImpl<EditorHintListener> TOPIC = TopicImpl.create("Notification about showing editor hints", EditorHintListener.class);
 
   void hintShown(Project project, LightweightHint hint, int flags);
 }

@@ -15,7 +15,7 @@
  */
 package consulo.module.event;
 
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
 import consulo.module.Module;
 import consulo.project.Project;
 
@@ -25,9 +25,8 @@ import java.util.List;
 /**
  * @author max
  */
+@Topic
 public interface ModuleListener extends EventListener {
-  Topic<ModuleListener> TOPIC = Topic.create("modules added or removed from project", ModuleListener.class);
-
   void moduleAdded(Project project, Module module);
 
   void beforeModuleRemoved(Project project, Module module);

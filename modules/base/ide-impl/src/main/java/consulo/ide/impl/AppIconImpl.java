@@ -48,7 +48,7 @@ public class AppIconImpl implements AppIcon {
         setOkBadge(ideFrame.getProject(), false);
       }
     };
-    application.getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC, listener);
+    application.getMessageBus().connect().subscribe(ApplicationActivationListener.class, listener);
   }
 
   @Override

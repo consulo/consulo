@@ -2,9 +2,27 @@
 package consulo.ide.impl.idea.ide.actions.searcheverywhere;
 
 import com.google.common.collect.Lists;
-import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.application.AllIcons;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.progress.Task;
+import consulo.application.util.diff.Diff;
+import consulo.application.util.diff.FilesTooBigForDiffException;
+import consulo.application.util.function.Processor;
+import consulo.application.util.matcher.MatcherHolder;
+import consulo.application.util.matcher.MinusculeMatcher;
+import consulo.application.util.matcher.NameUtil;
+import consulo.component.ProcessCanceledException;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.dataContext.DataContext;
+import consulo.dataContext.DataProvider;
+import consulo.disposer.Disposer;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.ide.impl.idea.ide.SearchTopHitProvider;
 import consulo.ide.impl.idea.ide.actions.BigPopupUI;
 import consulo.ide.impl.idea.ide.actions.SearchEverywhereClassifier;
@@ -12,65 +30,46 @@ import consulo.ide.impl.idea.ide.actions.bigPopup.ShowFilterAction;
 import consulo.ide.impl.idea.ide.util.ElementsChooser;
 import consulo.ide.impl.idea.ide.util.gotoByName.QuickSearchComponent;
 import consulo.ide.impl.idea.ide.util.gotoByName.SearchEverywhereConfiguration;
-import consulo.language.editor.CommonDataKeys;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.awt.*;
-import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ui.ex.JBColor;
-import consulo.ui.ex.awt.JBCurrentTheme;
-import consulo.ui.ex.SimpleTextAttributes;
-import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ide.impl.idea.openapi.actionSystem.impl.ActionMenu;
-import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.application.ReadAction;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.progress.Task;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
+import consulo.ide.impl.idea.openapi.progress.util.ProgressWindowListener;
 import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.dataContext.DataContext;
-import consulo.dataContext.DataProvider;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.ui.ex.action.*;
-import consulo.ui.ex.popup.JBPopup;
-import consulo.disposer.Disposer;
-import consulo.logging.Logger;
-import consulo.ui.image.Image;
-import consulo.usage.*;
-import consulo.util.dataholder.Key;
-import consulo.project.ui.wm.ToolWindowId;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
-import consulo.language.psi.PsiElement;
-import consulo.application.util.matcher.MinusculeMatcher;
-import consulo.application.util.matcher.NameUtil;
-import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.ui.*;
-import consulo.ui.ex.awt.JBList;
+import consulo.ide.impl.idea.ui.AppUIUtil;
+import consulo.ide.impl.idea.ui.CellRendererPanel;
+import consulo.ide.impl.idea.ui.IdeUICustomization;
+import consulo.ide.impl.idea.ui.SeparatorComponent;
 import consulo.ide.impl.idea.ui.popup.PopupUpdateProcessor;
-import consulo.ide.impl.idea.usages.*;
+import consulo.ide.impl.idea.usages.UsageLimitUtil;
 import consulo.ide.impl.idea.usages.impl.UsageViewManagerImpl;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.application.util.function.Processor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.util.diff.Diff;
-import consulo.application.util.diff.FilesTooBigForDiffException;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.application.util.matcher.MatcherHolder;
-import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiUtilCore;
+import consulo.logging.Logger;
+import consulo.project.event.DumbModeListener;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.TextBoxWithExtensions;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.action.*;
+import consulo.ui.ex.action.event.AnActionListener;
+import consulo.ui.ex.awt.*;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.image.Image;
+import consulo.usage.*;
+import consulo.util.dataholder.Key;
 import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -664,13 +663,13 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
     });
 
     MessageBusConnection projectBusConnection = myProject.getMessageBus().connect(this);
-    projectBusConnection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    projectBusConnection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void exitDumbMode() {
         ApplicationManager.getApplication().invokeLater(() -> rebuildList());
       }
     });
-    projectBusConnection.subscribe(AnActionListener.TOPIC, new AnActionListener() {
+    projectBusConnection.subscribe(AnActionListener.class, new AnActionListener() {
       @Override
       public void afterActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
         if (action == mySelectedTab.everywhereAction && event.getInputEvent() != null) {
@@ -679,7 +678,7 @@ public class SearchEverywhereUI extends BigPopupUI implements DataProvider, Quic
       }
     });
 
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(ProgressWindow.TOPIC, pw -> Disposer.register(pw, () -> myResultsList.repaint()));
+    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(ProgressWindowListener.class, pw -> Disposer.register(pw, () -> myResultsList.repaint()));
 
     TargetAWT.to(mySearchField).addFocusListener(new FocusAdapter() {
       @Override

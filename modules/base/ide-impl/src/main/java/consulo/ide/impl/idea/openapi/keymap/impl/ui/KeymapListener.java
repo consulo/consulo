@@ -15,17 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl.ui;
 
+import consulo.annotation.component.Topic;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.QuickList;
-import consulo.component.messagebus.Topic;
 
 /**
  * @author Dmitry Avdeev
  *         Date: 9/20/12
  */
+@Topic
 public interface KeymapListener {
-
-  Topic<KeymapListener> CHANGE_TOPIC = new Topic<KeymapListener>("KEYMAP_CHANGED", KeymapListener.class);
-
   void quickListRenamed(QuickList oldQuickList, QuickList newQuickList);
 
   void processCurrentKeymapChanged(QuickList[] ids);

@@ -16,7 +16,7 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.psi.event.PsiTreeChangePreprocessor;
 import consulo.logging.Logger;
-import consulo.project.DumbService;
+import consulo.project.event.DumbModeListener;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import jakarta.inject.Inject;
@@ -39,13 +39,13 @@ public class PsiModificationTrackerImpl implements PsiModificationTracker, PsiTr
   private final SimpleModificationTracker myAllLanguagesTracker = new SimpleModificationTracker();
   private final Map<Language, SimpleModificationTracker> myLanguageTrackers = ConcurrentFactoryMap.createWeakMap(language -> new SimpleModificationTracker());
 
-  private final Listener myPublisher;
+  private final PsiModificationTrackerListener myPublisher;
 
   @Inject
   public PsiModificationTrackerImpl(@Nonnull Application application, @Nonnull Project project) {
     MessageBus bus = project.getMessageBus();
-    myPublisher = bus.syncPublisher(TOPIC);
-    bus.connect().subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    myPublisher = bus.syncPublisher(PsiModificationTrackerListener.class);
+    bus.connect().subscribe(DumbModeListener.class, new DumbModeListener() {
       private void doIncCounter() {
         application.runWriteAction(() -> incCounter());
       }

@@ -16,7 +16,8 @@
 package consulo.ide.impl.idea.xdebugger.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.AppTopics;
+import consulo.document.event.FileDocumentManagerListener;
+import consulo.execution.debug.event.XDebuggerManagerListener;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionManager;
 import consulo.execution.executor.Executor;
@@ -34,7 +35,6 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.document.Document;
 import consulo.codeEditor.markup.GutterIconRenderer;
-import consulo.document.event.FileDocumentManagerAdapter;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.project.Project;
@@ -93,7 +93,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
     myExecutionPointHighlighter = new ExecutionPointHighlighter(project);
 
     MessageBusConnection messageBusConnection = project.getMessageBus().connect();
-    messageBusConnection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
+    messageBusConnection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
       @Override
       public void fileContentLoaded(@Nonnull VirtualFile file, @Nonnull Document document) {
         updateExecutionPoint(file, true);
@@ -104,7 +104,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
         updateExecutionPoint(file, true);
       }
     });
-    messageBusConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    messageBusConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         updateExecutionPoint(file, false);
@@ -213,7 +213,7 @@ public class XDebuggerManagerImpl extends XDebuggerManager implements Persistent
 
   private XDebugSessionImpl startSession(@Nullable RunContentDescriptor contentToReuse, @Nonnull XDebugProcessStarter processStarter, @Nonnull XDebugSessionImpl session) throws ExecutionException {
     XDebugProcess process = processStarter.start(session);
-    myProject.getMessageBus().syncPublisher(TOPIC).processStarted(process);
+    myProject.getMessageBus().syncPublisher(XDebuggerManagerListener.class).processStarted(process);
 
     // Perform custom configuration of session data for XDebugProcessConfiguratorStarter classes
     if (processStarter instanceof XDebugProcessConfiguratorStarter) {

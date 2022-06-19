@@ -9,8 +9,8 @@ import consulo.ui.ex.popup.ListPopup;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VirtualFileListener;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.ide.impl.idea.openapi.vfs.encoding.ChangeFileEncodingAction;
 import consulo.ide.impl.idea.openapi.vfs.encoding.EncodingManagerImpl;
@@ -68,7 +68,7 @@ public class EncodingPanel extends EditorBasedStatusBarPopup {
       }
     });
 
-    connection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
+    connection.subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(new VirtualFileListener() {
       @Override
       public void propertyChanged(@Nonnull VirtualFilePropertyEvent event) {
         if (VirtualFile.PROP_ENCODING.equals(event.getPropertyName())) {

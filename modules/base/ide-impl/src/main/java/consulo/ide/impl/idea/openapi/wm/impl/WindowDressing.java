@@ -21,7 +21,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.Application;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
@@ -38,7 +37,7 @@ import javax.annotation.Nonnull;
 public class WindowDressing {
   @Inject
   public WindowDressing(@Nonnull Application application, @Nonnull ActionManager actionManager) {
-    application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         getWindowActionGroup(actionManager).addProject(project);

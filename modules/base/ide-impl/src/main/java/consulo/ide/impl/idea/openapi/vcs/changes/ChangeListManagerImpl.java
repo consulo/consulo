@@ -54,7 +54,7 @@ import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.Processor;
 import consulo.application.util.registry.Registry;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -136,7 +136,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
   @Nonnull
   private volatile ProgressIndicator myUpdateChangesProgressIndicator = createProgressIndicator();
 
-  public static final Topic<LocalChangeListsLoadedListener> LISTS_LOADED = new Topic<>("LOCAL_CHANGE_LISTS_LOADED", LocalChangeListsLoadedListener.class);
+  public static final TopicImpl<LocalChangeListsLoadedListener> LISTS_LOADED = new TopicImpl<>("LOCAL_CHANGE_LISTS_LOADED", LocalChangeListsLoadedListener.class);
 
   private boolean myShowLocalChangesInvalidated;
   private final AtomicReference<String> myFreezeName;
@@ -1692,7 +1692,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
           myRevisionsCache.plus(Pair.create(was.getPath().getPath(), vcs));
         }
         // maybe define modify method?
-        myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.LOCAL_CHANGES_CHANGED).dirty(become);
+        myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.class).dirty(become);
       });
     }
 
@@ -1703,7 +1703,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
         if (vcs != null) {
           myRevisionsCache.plus(Pair.create(baseRevision.getPath().getPath(), vcs));
         }
-        myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.LOCAL_CHANGES_CHANGED).dirty(baseRevision);
+        myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.class).dirty(baseRevision);
       });
     }
 
@@ -1714,7 +1714,7 @@ public class ChangeListManagerImpl extends ChangeListManagerEx implements Projec
         if (vcs != null) {
           myRevisionsCache.minus(Pair.create(baseRevision.getPath().getPath(), vcs));
         }
-        myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.LOCAL_CHANGES_CHANGED).dirty(baseRevision.getPath().getPath());
+        myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.class).dirty(baseRevision.getPath().getPath());
       });
     }
 

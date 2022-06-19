@@ -226,7 +226,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
     if (pair == null) {
       final PsiFile psiFile = scope.getContainingFile();
       pair = new Pair<>(new DocumentChangeTransaction(doc, psiFile), 0);
-      myBus.syncPublisher(PsiDocumentTransactionListener.TOPIC).transactionStarted(doc, psiFile);
+      myBus.syncPublisher(PsiDocumentTransactionListener.class).transactionStarted(doc, psiFile);
     }
     else {
       pair = new Pair<>(pair.getFirst(), pair.getSecond().intValue() + 1);
@@ -247,7 +247,7 @@ public class PsiToDocumentSynchronizer extends PsiTreeChangeAdapter {
       fakeEvent.setFile(changeScope);
       checkPsiModificationAllowed(fakeEvent);
       doSync(fakeEvent, true, (document1, event) -> doCommitTransaction(document1, documentChangeTransaction));
-      myBus.syncPublisher(PsiDocumentTransactionListener.TOPIC).transactionCompleted(document, changeScope);
+      myBus.syncPublisher(PsiDocumentTransactionListener.class).transactionCompleted(document, changeScope);
     }
     catch (Throwable e) {
       myPsiDocumentManager.forceReload(changeScope.getViewProvider().getVirtualFile(), changeScope.getViewProvider());

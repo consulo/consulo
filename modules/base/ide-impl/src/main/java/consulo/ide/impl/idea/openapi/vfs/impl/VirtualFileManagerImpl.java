@@ -67,7 +67,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
       addVirtualFileListener(new LoggingListener());
     }
 
-    application.getMessageBus().connect().subscribe(VFS_CHANGES, new BulkVirtualFileListenerAdapter(myVirtualFileListenerMulticaster.getMulticaster()));
+    application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(myVirtualFileListenerMulticaster.getMulticaster()));
   }
 
   private void registerFileSystem(@Nonnull VirtualFileSystem fileSystem) {
@@ -215,7 +215,7 @@ public class VirtualFileManagerImpl extends VirtualFileManagerEx {
             @Override
             public void run() {
               List<VFilePropertyChangeEvent> events = Collections.singletonList(new VFilePropertyChangeEvent(this, virtualFile, property, oldValue, newValue, false));
-              BulkFileListener listener = application.getMessageBus().syncPublisher(VirtualFileManager.VFS_CHANGES);
+              BulkFileListener listener = application.getMessageBus().syncPublisher(BulkFileListener.class);
               listener.before(events);
               listener.after(events);
             }

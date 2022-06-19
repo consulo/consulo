@@ -33,7 +33,7 @@ public final class AsyncEventSupport {
   private static boolean ourSuppressAppliers;
 
   public static void startListening() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
       Pair<List<? extends VFileEvent>, List<AsyncFileListener.ChangeApplier>> appliersFromBefore;
 
       @Override

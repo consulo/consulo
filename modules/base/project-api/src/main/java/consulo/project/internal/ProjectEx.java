@@ -15,18 +15,11 @@
  */
 package consulo.project.internal;
 
-import consulo.component.messagebus.Topic;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
 public interface ProjectEx extends Project {
-  interface ProjectSaved {
-    Topic<ProjectSaved> TOPIC = Topic.create("SaveProjectTopic", ProjectSaved.class, Topic.BroadcastDirection.NONE);
-
-    void saved(@Nonnull final Project project);
-  }
-
   boolean isOptimiseTestLoadSpeed();
 
   void setOptimiseTestLoadSpeed(boolean optimiseTestLoadSpeed);

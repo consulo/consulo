@@ -43,7 +43,7 @@ public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implemen
   @Inject
   public SdkPointerManagerImpl(@Nonnull Application application, @Nonnull Provider<SdkTable> sdkTableProvider) {
     mySdkTableProvider = sdkTableProvider;
-    application.getMessageBus().connect().subscribe(SdkTable.SDK_TABLE_TOPIC, new SdkTableListener.Adapter() {
+    application.getMessageBus().connect().subscribe(SdkTableListener.class, new SdkTableListener() {
       @Override
       public void sdkAdded(@Nonnull Sdk sdk) {
         updatePointers(sdk);

@@ -244,7 +244,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
 
     initStandardFileTypes();
 
-    myMessageBus.connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    myMessageBus.connect().subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         Collection<VirtualFile> files = ContainerUtil.map2Set(events, (Function<VFileEvent, VirtualFile>)event -> {
@@ -1342,7 +1342,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Override
   public void fireBeforeFileTypesChanged() {
     FileTypeEvent event = new FileTypeEvent(this, null, null);
-    myMessageBus.syncPublisher(TOPIC).beforeFileTypesChanged(event);
+    myMessageBus.syncPublisher(FileTypeListener.class).beforeFileTypesChanged(event);
   }
 
   private final AtomicInteger fileTypeChangedCount;
@@ -1355,7 +1355,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   public void fireFileTypesChanged(@Nullable FileType addedFileType, @Nullable FileType removedFileType) {
     clearCaches();
     clearPersistentAttributes();
-    myMessageBus.syncPublisher(TOPIC).fileTypesChanged(new FileTypeEvent(this, addedFileType, removedFileType));
+    myMessageBus.syncPublisher(FileTypeListener.class).fileTypesChanged(new FileTypeEvent(this, addedFileType, removedFileType));
   }
 
   private final Map<FileTypeListener, MessageBusConnection> myAdapters = new HashMap<>();
@@ -1363,7 +1363,7 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
   @Override
   public void addFileTypeListener(@Nonnull FileTypeListener listener) {
     final MessageBusConnection connection = myMessageBus.connect();
-    connection.subscribe(TOPIC, listener);
+    connection.subscribe(FileTypeListener.class, listener);
     myAdapters.put(listener, connection);
   }
 

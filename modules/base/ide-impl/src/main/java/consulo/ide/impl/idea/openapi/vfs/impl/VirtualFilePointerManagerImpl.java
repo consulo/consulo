@@ -560,7 +560,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
         }
 
         if (allPointers.length != 0) {
-          ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFilePointerListener.TOPIC).beforeValidityChanged(allPointers);
+          ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFilePointerListener.class).beforeValidityChanged(allPointers);
         }
 
         assertConsistency();
@@ -664,7 +664,7 @@ public final class VirtualFilePointerManagerImpl extends SimpleModificationTrack
     }
 
     if (allPointers.length != 0) {
-      ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFilePointerListener.TOPIC).validityChanged(allPointers);
+      ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFilePointerListener.class).validityChanged(allPointers);
     }
 
     assertConsistency();

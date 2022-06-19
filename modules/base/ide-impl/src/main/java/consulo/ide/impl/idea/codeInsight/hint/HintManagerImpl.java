@@ -132,8 +132,8 @@ public class HintManagerImpl extends HintManager {
     }
 
     MessageBusConnection busConnection = ApplicationManager.getApplication().getMessageBus().connect();
-    busConnection.subscribe(ProjectManager.TOPIC, projectManagerListener);
-    busConnection.subscribe(AnActionListener.TOPIC, new MyAnActionListener());
+    busConnection.subscribe(ProjectManagerListener.class, projectManagerListener);
+    busConnection.subscribe(AnActionListener.class, new MyAnActionListener());
 
     myEditorMouseListener = new EditorMouseListener() {
       @Override
@@ -892,7 +892,7 @@ public class HintManagerImpl extends HintManager {
   private final class MyProjectManagerListener implements ProjectManagerListener {
     @Override
     public void projectOpened(@Nonnull Project project) {
-      project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, myEditorManagerListener);
+      project.getMessageBus().connect().subscribe(FileEditorManagerListener.class, myEditorManagerListener);
     }
 
     @Override

@@ -5,12 +5,11 @@ import consulo.document.Document;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
-import consulo.component.messagebus.Topic;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface PsiDocumentListener {
-  Topic<PsiDocumentListener> TOPIC = new Topic<>(PsiDocumentListener.class);
 
   /**
    * Called when a document instance is created for a file.

@@ -278,7 +278,7 @@ public class FindManagerImpl extends FindManager {
   @Override
   public void setFindNextModel(FindModel findNextModel) {
     myFindNextModel = findNextModel;
-    myBus.syncPublisher(FIND_MODEL_TOPIC).findNextModelChanged();
+    myBus.syncPublisher(FindModelListener.class).findNextModelChanged();
   }
 
   @Override

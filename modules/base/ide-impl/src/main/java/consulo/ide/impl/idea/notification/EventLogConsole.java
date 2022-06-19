@@ -40,13 +40,13 @@ import consulo.ide.impl.idea.openapi.editor.ex.*;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.codeEditor.ContextMenuPopupHandler;
 import consulo.language.editor.CommonDataKeys;
+import consulo.project.event.ProjectManagerListener;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.markup.*;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.util.lang.Pair;
@@ -117,7 +117,7 @@ class EventLogConsole {
     editor.getSettings().setFoldingOutlineShown(true);
     editor.getSettings().setWhitespacesShown(false);
     installNotificationsFont(editor);
-    myProjectModel.getProject().getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
+    myProjectModel.getProject().getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerAdapter() {
       @Override
       public void projectClosed(Project project, UIAccess uiAccess) {
         if (project == myProjectModel.getProject()) {

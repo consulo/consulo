@@ -9,7 +9,7 @@ import consulo.document.event.DocumentListener;
 import consulo.document.impl.event.DocumentEventImpl;
 import consulo.language.editor.completion.internal.OffsetTranslator;
 import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.PsiModificationTrackerListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -41,7 +41,7 @@ public class OffsetTranslatorImpl implements Disposable, OffsetTranslator {
       }
     }, this);
 
-    originalFile.getProject().getMessageBus().connect(this).subscribe(PsiModificationTracker.TOPIC, new PsiModificationTracker.Listener() {
+    originalFile.getProject().getMessageBus().connect(this).subscribe(PsiModificationTrackerListener.class, new PsiModificationTrackerListener() {
       final long lastModCount = originalFile.getViewProvider().getModificationStamp();
 
       @Override

@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
 import consulo.language.psi.*;
-import consulo.module.content.ProjectTopics;
 import consulo.ide.impl.idea.ide.CopyPasteUtil;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
 import consulo.ide.impl.idea.ide.projectView.ProjectViewPsiTreeChangeListener;
@@ -67,7 +66,7 @@ public class FavoritesViewTreeBuilder extends BaseProjectTreeBuilder {
         }
       }
     };
-    bus.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    bus.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@Nonnull ModuleRootEvent event) {
         queueUpdate(true);

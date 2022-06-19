@@ -110,7 +110,7 @@ public class ActionMacroManager implements JDOMExternalizable, Disposable {
   @Inject
   public ActionMacroManager(Application application, ActionManager actionManager) {
     myActionManager = actionManager;
-    application.getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, new AnActionListener() {
+    application.getMessageBus().connect(this).subscribe(AnActionListener.class, new AnActionListener() {
       @Override
       public void beforeActionPerformed(AnAction action, DataContext dataContext, final AnActionEvent event) {
         String id = myActionManager.getId(action);

@@ -85,7 +85,7 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
     mySynchronizer = new PsiToDocumentSynchronizer(this, project.getMessageBus());
     myPsiManager.addPsiTreeChangeListener(mySynchronizer);
 
-    project.getMessageBus().connect(this).subscribe(PsiDocumentTransactionListener.TOPIC, (document, file) -> {
+    project.getMessageBus().connect(this).subscribe(PsiDocumentTransactionListener.class, (document, file) -> {
       myUncommittedDocuments.remove(document);
     });
   }
@@ -711,14 +711,14 @@ public abstract class PsiDocumentManagerBase extends PsiDocumentManager implemen
   }
 
   protected void fireDocumentCreated(@Nonnull Document document, PsiFile file) {
-    myProject.getMessageBus().syncPublisher(PsiDocumentListener.TOPIC).documentCreated(document, file, myProject);
+    myProject.getMessageBus().syncPublisher(PsiDocumentListener.class).documentCreated(document, file, myProject);
     for (Listener listener : myListeners) {
       listener.documentCreated(document, file);
     }
   }
 
   private void fireFileCreated(@Nonnull Document document, @Nonnull PsiFile file) {
-    myProject.getMessageBus().syncPublisher(PsiDocumentListener.TOPIC).fileCreated(file, document);
+    myProject.getMessageBus().syncPublisher(PsiDocumentListener.class).fileCreated(file, document);
     for (Listener listener : myListeners) {
       listener.fileCreated(file, document);
     }

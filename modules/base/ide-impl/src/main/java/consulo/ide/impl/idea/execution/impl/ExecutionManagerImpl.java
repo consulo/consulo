@@ -17,6 +17,7 @@ package consulo.ide.impl.idea.execution.impl;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
+import consulo.execution.event.ExecutionListener;
 import consulo.ide.impl.idea.execution.*;
 import consulo.execution.configuration.CompatibilityAwareRunProfile;
 import consulo.execution.*;
@@ -266,7 +267,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     }
 
     final Executor executor = environment.getExecutor();
-    project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStartScheduled(executor.getId(), environment);
+    project.getMessageBus().syncPublisher(ExecutionListener.class).processStartScheduled(executor.getId(), environment);
 
     Runnable startRunnable;
     startRunnable = () -> {
@@ -275,7 +276,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       }
 
       RunProfile profile = environment.getRunProfile();
-      project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStarting(executor.getId(), environment);
+      project.getMessageBus().syncPublisher(ExecutionListener.class).processStarting(executor.getId(), environment);
 
       Consumer<Throwable> errorHandler = e -> {
         if (!(e instanceof ProcessCanceledException)) {
@@ -283,7 +284,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
           ExecutionUtil.handleExecutionError(project, ExecutionManager.getInstance(project).getContentManager().getToolWindowIdByEnvironment(environment), profile, error);
         }
         LOG.info(e);
-        project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
+        project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
       };
 
       try {
@@ -299,7 +300,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
               if (!processHandler.isStartNotified()) {
                 processHandler.startNotify();
               }
-              project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processStarted(executor.getId(), environment, processHandler);
+              project.getMessageBus().syncPublisher(ExecutionListener.class).processStarted(executor.getId(), environment, processHandler);
 
               ProcessExecutionListener listener = new ProcessExecutionListener(project, executor.getId(), environment, processHandler, descriptor);
               processHandler.addProcessListener(listener);
@@ -325,7 +326,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
             environment.setContentToReuse(descriptor);
           }
           else {
-            project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
+            project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
           }
         }, () -> project.isDisposed())).doWhenRejectedWithThrowable(errorHandler);
       }
@@ -340,7 +341,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
     else {
       compileAndRun(UIAccess.current(), () -> TransactionGuard.submitTransaction(project, startRunnable), environment, () -> {
         if (!project.isDisposed()) {
-          project.getMessageBus().syncPublisher(EXECUTION_TOPIC).processNotStarted(executor.getId(), environment);
+          project.getMessageBus().syncPublisher(ExecutionListener.class).processNotStarted(executor.getId(), environment);
         }
       });
     }
@@ -652,7 +653,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
         }
       }, IdeaModalityState.any());
 
-      myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminated(myExecutorId, myEnvironment, myProcessHandler, event.getExitCode());
+      myProject.getMessageBus().syncPublisher(ExecutionListener.class).processTerminated(myExecutorId, myEnvironment, myProcessHandler, event.getExitCode());
 
       SaveAndSyncHandler saveAndSyncHandler = SaveAndSyncHandler.getInstance();
       if (saveAndSyncHandler != null) {
@@ -665,7 +666,7 @@ public class ExecutionManagerImpl extends ExecutionManager implements Disposable
       if (myProject.isDisposed()) return;
       if (!myWillTerminateNotified.compareAndSet(false, true)) return;
 
-      myProject.getMessageBus().syncPublisher(EXECUTION_TOPIC).processTerminating(myExecutorId, myEnvironment, myProcessHandler);
+      myProject.getMessageBus().syncPublisher(ExecutionListener.class).processTerminating(myExecutorId, myEnvironment, myProcessHandler);
     }
   }
 }

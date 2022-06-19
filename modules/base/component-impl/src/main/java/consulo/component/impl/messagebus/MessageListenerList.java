@@ -3,7 +3,6 @@ package consulo.component.impl.messagebus;
 
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 
@@ -16,10 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MessageListenerList<T> {
   private final MessageBus myMessageBus;
-  private final Topic<T> myTopic;
+  private final Class<T> myTopic;
   private final Map<T, MessageBusConnection> myListenerToConnectionMap = new ConcurrentHashMap<>();
 
-  public MessageListenerList(@Nonnull MessageBus messageBus, @Nonnull Topic<T> topic) {
+  public MessageListenerList(@Nonnull MessageBus messageBus, @Nonnull Class<T> topic) {
     myTopic = topic;
     myMessageBus = messageBus;
   }
@@ -31,12 +30,7 @@ public class MessageListenerList<T> {
   }
 
   public void add(@Nonnull final T listener, @Nonnull Disposable parentDisposable) {
-    Disposer.register(parentDisposable, new Disposable() {
-      @Override
-      public void dispose() {
-        myListenerToConnectionMap.remove(listener);
-      }
-    });
+    Disposer.register(parentDisposable, () -> myListenerToConnectionMap.remove(listener));
     final MessageBusConnection connection = myMessageBus.connect(parentDisposable);
     connection.subscribe(myTopic, listener);
     myListenerToConnectionMap.put(listener, connection);

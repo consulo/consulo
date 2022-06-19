@@ -40,7 +40,7 @@ public class ClasspathEditor extends ModuleElementsEditor implements ModuleRootL
 
     final Disposable disposable = Disposable.newDisposable();
 
-    state.getProject().getMessageBus().connect(disposable).subscribe(ModuleRootListener.TOPIC, this);
+    state.getProject().getMessageBus().connect(disposable).subscribe(ModuleRootListener.class, this);
     registerDisposable(disposable);
   }
 

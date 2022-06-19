@@ -214,7 +214,7 @@ public class StructureViewComponent extends SimpleToolWindowPanel implements Tre
     myTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     myTree.setShowsRootHandles(true);
     registerPsiListener(myProject, this, this::queueUpdate);
-    myProject.getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, o -> rebuild());
+    myProject.getMessageBus().connect(this).subscribe(UISettingsListener.class, o -> rebuild());
 
     if (showScrollToFromSourceActions()) {
       myAutoScrollToSourceHandler.install(myTree);

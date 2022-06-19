@@ -23,6 +23,7 @@ import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.colorScheme.event.EditorColorsListener;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awtUnsafe.TargetAWT;
 
@@ -154,7 +155,7 @@ public interface Filter {
     static {
       Application application = ApplicationManager.getApplication();
       if (application != null) {
-        application.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, __ -> {
+        application.getMessageBus().connect().subscribe(EditorColorsListener.class, __ -> {
           // invalidate cache on Appearance Theme/Editor Scheme change
           GRAYED_BY_NORMAL_CACHE.clear();
         });

@@ -22,7 +22,6 @@ import consulo.document.event.DocumentEvent;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.document.util.Segment;
 import consulo.document.util.TextRange;
-import consulo.ide.impl.AppTopics;
 import consulo.ide.impl.psi.impl.source.PostprocessReformattingAspectImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.codeStyle.PostprocessReformattingAspect;
@@ -60,7 +59,7 @@ public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
     EditorFactory.getInstance().getEventMulticaster().addDocumentListener(this, this);
     ((EditorEventMulticasterImpl)EditorFactory.getInstance().getEventMulticaster()).addPrioritizedDocumentListener(new PriorityEventCollector(), this);
     MessageBusConnection connection = project.getMessageBus().connect(this);
-    connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerListener() {
+    connection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
       @Override
       public void fileContentLoaded(@Nonnull final VirtualFile virtualFile, @Nonnull Document document) {
         PsiFile psiFile = ReadAction.compute(() -> myProject.isDisposed() || !virtualFile.isValid() ? null : getCachedPsiFile(virtualFile));

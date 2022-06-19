@@ -97,7 +97,7 @@ public class PlaybackRunner {
     myPassedStages.clear();
     myContextTimestamp++;
 
-    ApplicationManager.getApplication().getMessageBus().connect(myOnStop).subscribe(ApplicationActivationListener.TOPIC, myAppListener);
+    ApplicationManager.getApplication().getMessageBus().connect(myOnStop).subscribe(ApplicationActivationListener.class, myAppListener);
 
     try {
       myActionCallback = new ActionCallback();

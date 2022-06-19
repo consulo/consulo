@@ -142,7 +142,7 @@ public class RenameProcessor extends BaseRefactoringProcessor {
 
       final RefactoringEventData conflictData = new RefactoringEventData();
       conflictData.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts.values());
-      myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC)
+      myProject.getMessageBus().syncPublisher(RefactoringEventListener.class)
               .conflictsDetected("refactoring.rename", conflictData);
 
       if (ApplicationManager.getApplication().isUnitTestMode()) {

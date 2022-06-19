@@ -18,10 +18,8 @@ package consulo.ide.impl.idea.openapi.roots.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.module.content.DirectoryIndex;
 import consulo.module.content.DirectoryInfo;
-import consulo.module.content.ProjectTopics;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
 import consulo.module.content.layer.event.ModuleRootEvent;
@@ -29,7 +27,6 @@ import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.application.util.LowMemoryWatcher;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -69,21 +66,21 @@ public class DirectoryIndexImpl extends DirectoryIndex implements Disposable  {
       return;
     }
 
-    myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
+    myConnection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
       public void fileTypesChanged(@Nonnull FileTypeEvent event) {
         myRootIndex = null;
       }
     });
 
-    myConnection.subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    myConnection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(ModuleRootEvent event) {
         myRootIndex = null;
       }
     });
 
-    myConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    myConnection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         RootIndex rootIndex = myRootIndex;

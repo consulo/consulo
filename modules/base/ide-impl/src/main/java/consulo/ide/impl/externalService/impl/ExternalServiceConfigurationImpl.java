@@ -126,7 +126,7 @@ public class ExternalServiceConfigurationImpl implements PersistentStateComponen
 
   @Override
   public void afterLoadState() {
-    myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.TOPIC).configurationChanged(this);
+    myApplication.getMessageBus().syncPublisher(ExternalServiceConfigurationListener.class).configurationChanged(this);
   }
 
   @Override

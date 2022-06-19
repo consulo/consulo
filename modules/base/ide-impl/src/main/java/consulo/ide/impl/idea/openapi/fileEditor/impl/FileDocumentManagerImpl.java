@@ -33,7 +33,6 @@ import consulo.document.internal.FileDocumentManagerEx;
 import consulo.document.internal.PrioritizedDocumentListener;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.ide.impl.AppTopics;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.virtualFileSystem.encoding.EncodingManager;
 import consulo.language.file.light.LightVirtualFile;
@@ -170,23 +169,13 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
   @SuppressWarnings("OverlyBroadCatchBlock")
   private void multiCast(@Nonnull Method method, Object[] args) {
     try {
-      method.invoke(myBus.syncPublisher(AppTopics.FILE_DOCUMENT_SYNC), args);
+      method.invoke(myBus.syncPublisher(FileDocumentManagerListener.class), args);
     }
     catch (ClassCastException e) {
       LOG.error("Arguments: " + Arrays.toString(args), e);
     }
     catch (Exception e) {
       unwrapAndRethrow(e);
-    }
-
-    // Allows pre-save document modification
-    for (FileDocumentManagerListener listener : getListeners()) {
-      try {
-        method.invoke(listener, args);
-      }
-      catch (Exception e) {
-        unwrapAndRethrow(e);
-      }
     }
 
     // stripping trailing spaces
@@ -800,11 +789,6 @@ public class FileDocumentManagerImpl implements FileDocumentManagerEx, SafeWrite
 
     myMultiCaster.beforeFileContentReload(file, document);
     return true;
-  }
-
-  @Nonnull
-  private static List<FileDocumentManagerListener> getListeners() {
-    return FileDocumentManagerListener.EP_NAME.getExtensionList();
   }
 
   private static int getPreviewCharCount(@Nonnull VirtualFile file) {

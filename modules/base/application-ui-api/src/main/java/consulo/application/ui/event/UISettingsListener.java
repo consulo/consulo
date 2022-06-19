@@ -19,13 +19,13 @@
  */
 package consulo.application.ui.event;
 
+import consulo.annotation.component.Topic;
 import consulo.application.ui.UISettings;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 
 import java.util.EventListener;
 
-public interface UISettingsListener extends EventListener{
-  Topic<UISettingsListener> TOPIC = Topic.create("UI settings", UISettingsListener.class);
-
+@Topic
+public interface UISettingsListener extends EventListener {
   void uiSettingsChanged(UISettings source);
 }

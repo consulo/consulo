@@ -15,8 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
-import consulo.ide.impl.idea.util.Consumer;
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
 
 import java.util.Set;
 
@@ -25,6 +24,7 @@ import java.util.Set;
  *         Date: 6/9/11
  *         Time: 7:38 PM
  */
-public interface UpdatedFilesListener extends Consumer<Set<String>> {
-  Topic<UpdatedFilesListener> UPDATED_FILES = new Topic<UpdatedFilesListener>("AbstractCommonUpdateAction.UpdatedFiles", UpdatedFilesListener.class);
+@Topic
+public interface UpdatedFilesListener {
+  void consume(Set<String> files);
 }

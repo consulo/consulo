@@ -39,7 +39,7 @@ public enum StateStorageFacade {
                                                @Nullable TrackingPathMacroSubstitutor pathMacroManager,
                                                @Nonnull String rootElementName,
                                                @Nonnull Disposable parentDisposable,
-                                               @Nullable StateStorage.Listener listener,
+                                               @Nullable StateStorageListener listener,
                                                @Nullable StreamProvider streamProvider,
                                                boolean useXmlProlog,
                                                @Nonnull PathMacrosService pathMacrosService) {
@@ -52,7 +52,7 @@ public enum StateStorageFacade {
                                                     @Nonnull String dir,
                                                     @Nonnull StateSplitterEx splitter,
                                                     @Nonnull Disposable parentDisposable,
-                                                    @Nullable StateStorage.Listener listener,
+                                                    @Nullable StateStorageListener listener,
                                                     @Nonnull PathMacrosService pathMacrosService) {
       return new IoDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
     }
@@ -66,7 +66,7 @@ public enum StateStorageFacade {
                                                @Nullable TrackingPathMacroSubstitutor pathMacroManager,
                                                @Nonnull String rootElementName,
                                                @Nonnull Disposable parentDisposable,
-                                               @Nullable StateStorage.Listener listener,
+                                               @Nullable StateStorageListener listener,
                                                @Nullable StreamProvider streamProvider,
                                                boolean useXmlProlog,
                                                @Nonnull PathMacrosService pathMacrosService) {
@@ -79,7 +79,7 @@ public enum StateStorageFacade {
                                                     @Nonnull String dir,
                                                     @Nonnull StateSplitterEx splitter,
                                                     @Nonnull Disposable parentDisposable,
-                                                    @Nullable StateStorage.Listener listener,
+                                                    @Nullable StateStorageListener listener,
                                                     @Nonnull PathMacrosService pathMacrosService) {
       return new VfsDirectoryBasedStorage(pathMacroSubstitutor, dir, splitter, parentDisposable, listener, pathMacrosService);
     }
@@ -92,7 +92,7 @@ public enum StateStorageFacade {
                                                       @Nullable TrackingPathMacroSubstitutor pathMacroManager,
                                                       @Nonnull String rootElementName,
                                                       @Nonnull Disposable parentDisposable,
-                                                      @Nullable StateStorage.Listener listener,
+                                                      @Nullable StateStorageListener listener,
                                                       @Nullable StreamProvider streamProvider,
                                                       boolean useXmlProlog,
                                                       @Nonnull PathMacrosService pathMacrosService);
@@ -102,6 +102,6 @@ public enum StateStorageFacade {
                                                            @Nonnull String dir,
                                                            @Nonnull StateSplitterEx splitter,
                                                            @Nonnull Disposable parentDisposable,
-                                                           @Nullable StateStorage.Listener listener,
+                                                           @Nullable StateStorageListener listener,
                                                            @Nonnull PathMacrosService pathMacrosService);
 }

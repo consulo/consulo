@@ -16,11 +16,12 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.colorScheme.TextAttributes;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
+import consulo.ide.impl.idea.util.concurrency.AtomicFieldUpdater;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
@@ -53,7 +54,7 @@ public class SeverityRegistrarImpl implements JDOMExternalizable, Comparator<Hig
 
   private final Map<String, SeverityBasedTextAttributes> myMap = new ConcurrentHashMap<>();
   private final Map<String, ColorValue> myRendererColors = new ConcurrentHashMap<>();
-  public static final Topic<Runnable> SEVERITIES_CHANGED_TOPIC = Topic.create("SEVERITIES_CHANGED_TOPIC", Runnable.class, Topic.BroadcastDirection.TO_PARENT);
+  public static final TopicImpl<Runnable> SEVERITIES_CHANGED_TOPIC = TopicImpl.create("SEVERITIES_CHANGED_TOPIC", Runnable.class, TopicBroadcastDirection.TO_PARENT);
   @Nonnull
   private final MessageBus myMessageBus;
 

@@ -44,7 +44,7 @@ public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> im
   @Inject
   public ModulePointerManagerImpl(Project project) {
     myProject = project;
-    project.getMessageBus().connect().subscribe(ModuleListener.TOPIC, new ModuleAdapter() {
+    project.getMessageBus().connect().subscribe(ModuleListener.class, new ModuleAdapter() {
       @Override
       public void beforeModuleRemoved(Project project, Module module) {
         unregisterPointer(module);

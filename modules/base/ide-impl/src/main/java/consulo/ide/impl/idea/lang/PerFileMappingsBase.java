@@ -322,7 +322,7 @@ public abstract class PerFileMappingsBase<T> implements PersistentStateComponent
   private void installDeleteUndo() {
     Application app = ApplicationManager.getApplication();
     if (app == null) return;
-    app.getMessageBus().connect(this).subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    app.getMessageBus().connect(this).subscribe(BulkFileListener.class, new BulkFileListener() {
       WeakReference<MyUndoableAction> lastAction;
 
       @Override

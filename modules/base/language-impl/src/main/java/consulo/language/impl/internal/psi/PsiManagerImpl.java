@@ -413,7 +413,7 @@ public class PsiManagerImpl extends PsiManagerEx {
 
   @Override
   public void registerRunnableToRunOnChange(@Nonnull final Runnable runnable) {
-    myProject.getMessageBus().connect().subscribe(ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
+    myProject.getMessageBus().connect().subscribe(AnyPsiChangeListener.class, new AnyPsiChangeListener() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
         if (isPhysical) runnable.run();
@@ -423,7 +423,7 @@ public class PsiManagerImpl extends PsiManagerEx {
 
   @Override
   public void registerRunnableToRunOnAnyChange(@Nonnull final Runnable runnable) { // includes non-physical changes
-    myProject.getMessageBus().connect().subscribe(ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
+    myProject.getMessageBus().connect().subscribe(AnyPsiChangeListener.class, new AnyPsiChangeListener() {
       @Override
       public void beforePsiChanged(boolean isPhysical) {
         runnable.run();
@@ -433,7 +433,7 @@ public class PsiManagerImpl extends PsiManagerEx {
 
   @Override
   public void registerRunnableToRunAfterAnyChange(@Nonnull final Runnable runnable) { // includes non-physical changes
-    myProject.getMessageBus().connect().subscribe(ANY_PSI_CHANGE_TOPIC, new AnyPsiChangeListener() {
+    myProject.getMessageBus().connect().subscribe(AnyPsiChangeListener.class, new AnyPsiChangeListener() {
       @Override
       public void afterPsiChanged(boolean isPhysical) {
         runnable.run();
@@ -443,12 +443,12 @@ public class PsiManagerImpl extends PsiManagerEx {
 
   @Override
   public void beforeChange(boolean isPhysical) {
-    myProject.getMessageBus().syncPublisher(ANY_PSI_CHANGE_TOPIC).beforePsiChanged(isPhysical);
+    myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).beforePsiChanged(isPhysical);
   }
 
   @Override
   public void afterChange(boolean isPhysical) {
-    myProject.getMessageBus().syncPublisher(ANY_PSI_CHANGE_TOPIC).afterPsiChanged(isPhysical);
+    myProject.getMessageBus().syncPublisher(AnyPsiChangeListener.class).afterPsiChanged(isPhysical);
   }
 
   @Override

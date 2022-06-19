@@ -22,7 +22,7 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.configurable.ConfigurationException;
 import consulo.project.Project;
-import consulo.project.internal.ProjectEx;
+import consulo.project.internal.ProjectExListener;
 import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.Splitter;
@@ -60,7 +60,7 @@ public class RunConfigurationFileEditor extends UserDataHolderBase implements Fi
     myRunConfigurable = new RunConfigurable(project);
     myRunConfigurable.setEditorMode();
 
-    project.getApplication().getMessageBus().connect(this).subscribe(ProjectEx.ProjectSaved.TOPIC, targetProject -> {
+    project.getApplication().getMessageBus().connect(this).subscribe(ProjectExListener.class, targetProject -> {
       if (project == targetProject) {
         project.getApplication().getLastUIAccess().give(this::save);
       }

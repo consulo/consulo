@@ -19,7 +19,7 @@ import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.ProcessCanceledException;
 import consulo.project.Project;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +28,7 @@ import consulo.component.messagebus.Topic;
  * Time: 1:29 PM
  */
 public class MessageBusUtil {
-  public static <T> void runOnSyncPublisher(final Project project, final Topic<T> topic, final Consumer<T> listener) {
+  public static <T> void runOnSyncPublisher(final Project project, final TopicImpl<T> topic, final Consumer<T> listener) {
     final Application application = ApplicationManager.getApplication();
     final Runnable runnable = createPublisherRunnable(project, topic, listener);
     if (application.isDispatchThread()) {
@@ -38,7 +38,7 @@ public class MessageBusUtil {
     }
   }
 
-  private static <T> Runnable createPublisherRunnable(final Project project, final Topic<T> topic, final Consumer<T> listener) {
+  private static <T> Runnable createPublisherRunnable(final Project project, final TopicImpl<T> topic, final Consumer<T> listener) {
     return new Runnable() {
       @Override
       public void run() {
@@ -48,7 +48,7 @@ public class MessageBusUtil {
     };
   }
 
-  public static <T> void invokeLaterIfNeededOnSyncPublisher(final Project project, final Topic<T> topic, final Consumer<T> listener) {
+  public static <T> void invokeLaterIfNeededOnSyncPublisher(final Project project, final TopicImpl<T> topic, final Consumer<T> listener) {
     final Application application = ApplicationManager.getApplication();
     final Runnable runnable = createPublisherRunnable(project, topic, listener);
     if (application.isDispatchThread()) {

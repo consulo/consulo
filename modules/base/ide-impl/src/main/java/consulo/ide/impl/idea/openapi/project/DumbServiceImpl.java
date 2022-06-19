@@ -17,6 +17,7 @@ import consulo.application.impl.internal.progress.ProgressIndicatorBase;
 import consulo.ide.impl.idea.openapi.progress.util.ProgressWindow;
 import consulo.application.progress.*;
 import consulo.component.ProcessCanceledException;
+import consulo.project.event.DumbModeListener;
 import consulo.project.startup.StartupManager;
 import consulo.component.util.ModificationTracker;
 import consulo.util.lang.Pair;
@@ -87,9 +88,9 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   @Inject
   public DumbServiceImpl(Application application, Project project) {
     myProject = project;
-    myPublisher = project.getMessageBus().syncPublisher(DUMB_MODE);
+    myPublisher = project.getMessageBus().syncPublisher(DumbModeListener.class);
 
-    application.getMessageBus().connect(project).subscribe(BatchFileChangeListener.TOPIC, new BatchFileChangeListener() {
+    application.getMessageBus().connect(project).subscribe(BatchFileChangeListener.class, new BatchFileChangeListener() {
       @SuppressWarnings("UnnecessaryFullyQualifiedName")
       final // synchronized, can be accessed from different threads
               java.util.Stack<AccessToken> stack = new Stack<>();
@@ -433,7 +434,7 @@ public class DumbServiceImpl extends DumbService implements Disposable, Modifica
   public JComponent wrapGently(@Nonnull JComponent dumbUnawareContent, @Nonnull Disposable parentDisposable) {
     final DumbUnawareHider wrapper = new DumbUnawareHider(dumbUnawareContent);
     wrapper.setContentVisible(!isDumb());
-    getProject().getMessageBus().connect(parentDisposable).subscribe(DUMB_MODE, new DumbModeListener() {
+    getProject().getMessageBus().connect(parentDisposable).subscribe(DumbModeListener.class, new DumbModeListener() {
 
       @Override
       public void enteredDumbMode() {

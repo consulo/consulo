@@ -15,16 +15,17 @@
  */
 package consulo.fileEditor.event;
 
+import consulo.annotation.component.Topic;
+import consulo.annotation.component.TopicBroadcastDirection;
+import consulo.component.messagebus.TopicImpl;
 import consulo.fileEditor.FileEditorManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.component.messagebus.Topic;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.EventListener;
 
-public interface FileEditorManagerListener extends EventListener{
-  Topic<FileEditorManagerListener> FILE_EDITOR_MANAGER =
-          new Topic<>("file editor events", FileEditorManagerListener.class, Topic.BroadcastDirection.TO_PARENT);
+@Topic(direction = TopicBroadcastDirection.TO_PARENT)
+public interface FileEditorManagerListener extends EventListener {
 
   default void fileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
   }
@@ -36,18 +37,20 @@ public interface FileEditorManagerListener extends EventListener{
   }
 
   interface Before extends EventListener {
-    Topic<Before> FILE_EDITOR_MANAGER =
-            new Topic<>("file editor before events", Before.class, Topic.BroadcastDirection.TO_PARENT);
+    TopicImpl<Before> FILE_EDITOR_MANAGER = new TopicImpl<>("file editor before events", Before.class, TopicBroadcastDirection.TO_PARENT);
 
     void beforeFileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file);
+
     void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file);
 
     class Adapter implements Before {
       @Override
-      public void beforeFileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) { }
+      public void beforeFileOpened(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+      }
 
       @Override
-      public void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) { }
+      public void beforeFileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
+      }
     }
   }
 }

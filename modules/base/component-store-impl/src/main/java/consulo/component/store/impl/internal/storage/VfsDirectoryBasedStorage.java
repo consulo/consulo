@@ -59,7 +59,7 @@ public final class VfsDirectoryBasedStorage extends StateStorageBase<DirectorySt
                                   @Nonnull String dir,
                                   @Nonnull StateSplitterEx splitter,
                                   @Nonnull Disposable parentDisposable,
-                                  @Nullable final Listener listener,
+                                  @Nullable final StateStorageListener listener,
                                   @Nonnull PathMacrosService pathMacrosService) {
     super(pathMacroSubstitutor, pathMacrosService);
 

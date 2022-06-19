@@ -15,13 +15,13 @@
  */
 package consulo.undoRedo.event;
 
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
+import consulo.component.messagebus.TopicImpl;
 
 import java.util.EventListener;
 
+@Topic
 public interface CommandListener extends EventListener {
-  Topic<CommandListener> TOPIC = new Topic<>("command events", CommandListener.class);
-
   default void commandStarted(CommandEvent event) {
   }
 

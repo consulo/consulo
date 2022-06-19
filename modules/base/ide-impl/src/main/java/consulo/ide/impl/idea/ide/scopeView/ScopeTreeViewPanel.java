@@ -20,6 +20,7 @@ import consulo.localHistory.LocalHistory;
 import consulo.localHistory.LocalHistoryAction;
 import consulo.ide.impl.idea.ide.CopyPasteDelegator;
 import consulo.content.scope.*;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.ui.ex.DeleteProvider;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.IdeView;
@@ -80,7 +81,6 @@ import consulo.language.psi.*;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.logging.Logger;
 import consulo.module.Module;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.layer.event.ModuleRootAdapter;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.application.dumb.IndexNotReadyException;
@@ -206,8 +206,8 @@ public class ScopeTreeViewPanel extends JPanel implements Disposable {
 
   public void initListeners() {
     final MessageBusConnection connection = myProject.getMessageBus().connect(this);
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new MyModuleRootListener());
-    connection.subscribe(ProblemListener.TOPIC, myProblemListener);
+    connection.subscribe(ModuleRootListener.class, new MyModuleRootListener());
+    connection.subscribe(ProblemListener.class, myProblemListener);
     PsiManager.getInstance(myProject).addPsiTreeChangeListener(myPsiTreeChangeAdapter);
     ChangeListManager.getInstance(myProject).addChangeListListener(myChangesListListener);
     FileStatusManager.getInstance(myProject).addFileStatusListener(myFileStatusListener, myProject);

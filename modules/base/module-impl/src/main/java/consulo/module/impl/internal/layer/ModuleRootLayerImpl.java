@@ -316,7 +316,7 @@ public class ModuleRootLayerImpl implements ModifiableModuleRootLayer, ModuleRoo
   @RequiredReadAction
   public boolean copy(@Nonnull ModuleRootLayerImpl toSet, boolean notifyExtensionListener) {
     boolean changed = false;
-    ModuleExtensionChangeListener moduleExtensionChangeListener = getModule().getProject().getMessageBus().syncPublisher(ModuleExtension.CHANGE_TOPIC);
+    ModuleExtensionChangeListener moduleExtensionChangeListener = getModule().getProject().getMessageBus().syncPublisher(ModuleExtensionChangeListener.class);
 
     for (ModuleExtension extension : myExtensions) {
       if (extension == null) {

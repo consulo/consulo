@@ -24,8 +24,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-import static consulo.module.content.ProjectTopics.PROJECT_ROOTS;
-import static consulo.virtualFileSystem.VirtualFileManager.VFS_CHANGES;
 import static consulo.language.psi.PsiUtilCore.getVirtualFile;
 
 public abstract class ProjectFileNodeUpdater {
@@ -39,13 +37,13 @@ public abstract class ProjectFileNodeUpdater {
   public ProjectFileNodeUpdater(@Nonnull Project project, @Nonnull InvokerImpl invoker) {
     this.invoker = invoker;
     MessageBusConnection connection = project.getMessageBus().connect(invoker);
-    connection.subscribe(PROJECT_ROOTS, new ModuleRootListener() {
+    connection.subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@Nonnull ModuleRootEvent event) {
         updateFromRoot();
       }
     });
-    connection.subscribe(VFS_CHANGES, new BulkFileListener() {
+    connection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         for (VFileEvent event : events) {

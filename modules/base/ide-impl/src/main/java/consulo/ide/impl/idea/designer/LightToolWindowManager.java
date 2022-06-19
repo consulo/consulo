@@ -125,7 +125,7 @@ public abstract class LightToolWindowManager implements ProjectComponent {
 
   private void initListeners() {
     myConnection = myProject.getMessageBus().connect(myProject);
-    myConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, myListener);
+    myConnection.subscribe(FileEditorManagerListener.class, myListener);
   }
 
   private void removeListeners() {

@@ -48,7 +48,6 @@ import static consulo.application.ApplicationManager.getApplication;
 import static consulo.disposer.Disposer.register;
 import static consulo.ide.impl.idea.openapi.util.io.FileUtil.toSystemIndependentName;
 import static consulo.ide.impl.idea.openapi.util.text.StringUtil.naturalCompare;
-import static consulo.virtualFileSystem.VirtualFileManager.VFS_CHANGES;
 import static consulo.ide.impl.idea.util.ReflectionUtil.getDeclaredMethod;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -68,7 +67,7 @@ public final class FileTreeModel extends AbstractTreeModel implements Identifiab
   public FileTreeModel(@Nonnull FileChooserDescriptor descriptor, FileRefresher refresher, boolean sortDirectories, boolean sortArchives) {
     if (refresher != null) register(this, refresher);
     state = new State(descriptor, refresher, sortDirectories, sortArchives);
-    getApplication().getMessageBus().connect(this).subscribe(VFS_CHANGES, new BulkFileListener() {
+    getApplication().getMessageBus().connect(this).subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         invoker.invoke(() -> process(events));

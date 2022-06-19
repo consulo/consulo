@@ -27,6 +27,8 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.NullUtils;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.navigation.OpenFileDescriptor;
+import consulo.project.event.DumbModeListener;
+import consulo.project.event.ProjectManagerListener;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusListener;
 import consulo.virtualFileSystem.status.FileStatusManager;
@@ -71,17 +73,14 @@ import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.ide.impl.fileEditor.FileEditorsSplittersBase;
 import consulo.fileEditor.text.TextEditorProvider;
-import consulo.language.file.FileTypeManager;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.logging.Logger;
-import consulo.module.content.ProjectTopics;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerAdapter;
 import consulo.project.startup.StartupManager;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -166,7 +165,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
   public FileEditorManagerImpl(@Nonnull Project project, DockManager dockManager) {
     myProject = project;
     myDockManager = dockManager;
-    myListenerList = new MessageListenerList<>(myProject.getMessageBus(), FileEditorManagerListener.FILE_EDITOR_MANAGER);
+    myListenerList = new MessageListenerList<>(myProject.getMessageBus(), FileEditorManagerListener.class);
 
     if (myProject.isDefault()) {
       return;
@@ -185,7 +184,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     myQueue.setTrackUiActivity(true);
 
     final MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void exitDumbMode() {
         // can happen under write action, so postpone to avoid deadlock on FileEditorProviderManager.getProviders()
@@ -194,7 +193,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
         });
       }
     });
-    connection.subscribe(ProjectManager.TOPIC, new ProjectManagerAdapter() {
+    connection.subscribe(ProjectManagerListener.class, new ProjectManagerAdapter() {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         if (project == myProject) {
@@ -904,7 +903,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       if (newEditor) {
         notifyPublisher(() -> {
           if (isFileOpen(file)) {
-            getProject().getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER).fileOpened(this, file);
+            getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class).fileOpened(this, file);
           }
         });
         ourOpenFilesSetModificationCount.incrementAndGet();
@@ -1387,8 +1386,8 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
      */
     final MyFileStatusListener myFileStatusListener = new MyFileStatusListener();
     fileStatusManager.addFileStatusListener(myFileStatusListener, myProject);
-    connection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
-    connection.subscribe(ProjectTopics.PROJECT_ROOTS, new MyRootsListener());
+    connection.subscribe(FileTypeListener.class, new MyFileTypeListener());
+    connection.subscribe(ModuleRootListener.class, new MyRootsListener());
 
     /*
       Updates tabs names
@@ -1398,7 +1397,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
     /*
       Extends/cuts number of opened tabs. Also updates location of tabs.
      */
-    connection.subscribe(UISettingsListener.TOPIC, new MyUISettingsListener());
+    connection.subscribe(UISettingsListener.class, new MyUISettingsListener());
 
     StartupManager.getInstance(myProject).registerPostStartupActivity((DumbAwareRunnable)() -> {
       if (myProject.isDisposed()) return;
@@ -1496,7 +1495,7 @@ public abstract class FileEditorManagerImpl extends FileEditorManagerEx implemen
       }
 
       final FileEditorManagerEvent event = new FileEditorManagerEvent(this, oldData.first, oldData.second, oldData.third, newData.first, newData.second, newData.third);
-      final FileEditorManagerListener publisher = getProject().getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
+      final FileEditorManagerListener publisher = getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class);
 
       if (newData.first != null) {
         DataContext context = DataManager.getInstance().getDataContext(newData.second.getUIComponent());

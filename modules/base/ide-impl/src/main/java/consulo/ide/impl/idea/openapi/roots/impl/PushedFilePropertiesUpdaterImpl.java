@@ -1,10 +1,10 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.WriteAction;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.module.content.ModuleRootManager;
-import consulo.module.content.ProjectTopics;
 import consulo.component.extension.ExtensionException;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
@@ -35,6 +35,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.TransactionGuard;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.event.*;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,6 +45,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+@ServiceImpl
 public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesUpdater {
   private static final Logger LOG = Logger.getInstance(PushedFilePropertiesUpdater.class);
 
@@ -56,6 +58,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
 
   private final Queue<Runnable> myTasks = new ConcurrentLinkedQueue<>();
 
+  @Inject
   public PushedFilePropertiesUpdaterImpl(@Nonnull Project project) {
     myProject = project;
 
@@ -63,7 +66,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
       return;
     }
 
-    project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    project.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@Nonnull ModuleRootEvent event) {
         if (LOG.isTraceEnabled()) {
@@ -195,7 +198,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
         performPushTasks();
       }
     };
-    myProject.getMessageBus().connect(task).subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+    myProject.getMessageBus().connect(task).subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@Nonnull ModuleRootEvent event) {
         DumbService.getInstance(myProject).cancelTask(task);

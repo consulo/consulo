@@ -206,7 +206,7 @@ public class SafeDeleteProcessor extends BaseRefactoringProcessor {
     if (!conflicts.isEmpty()) {
       final RefactoringEventData conflictData = new RefactoringEventData();
       conflictData.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts);
-      myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).conflictsDetected("refactoring.safeDelete", conflictData);
+      myProject.getMessageBus().syncPublisher(RefactoringEventListener.class).conflictsDetected("refactoring.safeDelete", conflictData);
       if (ApplicationManager.getApplication().isUnitTestMode()) {
         if (!ConflictsInTestsException.isTestIgnore()) throw new ConflictsInTestsException(conflicts);
       }

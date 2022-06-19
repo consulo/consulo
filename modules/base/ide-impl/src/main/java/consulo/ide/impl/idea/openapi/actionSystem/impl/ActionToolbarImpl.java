@@ -1256,7 +1256,7 @@ public class ActionToolbarImpl extends JPanel implements ActionToolbar, QuickAct
 
     PopupToolbar(@Nonnull String place, @Nonnull ActionGroup actionGroup, final boolean horizontal, @Nonnull JComponent parent) {
       super(place, actionGroup, horizontal, false, true);
-      ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, this);
+      ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, this);
       myParent = parent;
       setBorder(myParent.getBorder());
     }

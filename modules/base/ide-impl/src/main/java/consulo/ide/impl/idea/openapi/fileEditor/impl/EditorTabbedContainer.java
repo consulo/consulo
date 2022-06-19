@@ -169,7 +169,7 @@ public final class EditorTabbedContainer implements Disposable, CloseAction.Clos
       }
     });
 
-    project.getMessageBus().connect().subscribe(UISettingsListener.TOPIC, uiSettings -> updateTabBorder());
+    project.getMessageBus().connect().subscribe(UISettingsListener.class, uiSettings -> updateTabBorder());
 
     Disposer.register(project, this);
   }

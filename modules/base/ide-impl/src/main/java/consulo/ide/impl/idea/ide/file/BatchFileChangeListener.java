@@ -15,8 +15,9 @@
  */
 package consulo.ide.impl.idea.ide.file;
 
+import consulo.annotation.component.Topic;
 import consulo.project.Project;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.component.messagebus.MessageBus;
 
 import javax.annotation.Nonnull;
@@ -28,9 +29,10 @@ import javax.annotation.Nullable;
  * To subscribe to such batch file changes, connect to the Project's {@link MessageBus}
  * via the {@link #TOPIC} defined below.
  */
+@Topic
 public interface BatchFileChangeListener {
 
-  Topic<BatchFileChangeListener> TOPIC = Topic.create("Batch File Update", BatchFileChangeListener.class);
+  TopicImpl<BatchFileChangeListener> TOPIC = TopicImpl.create("Batch File Update", BatchFileChangeListener.class);
 
   /**
    * @param project      Project where many file changes are expected to happen

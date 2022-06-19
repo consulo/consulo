@@ -15,7 +15,6 @@
  */
 package consulo.module.content.layer.event;
 
-import consulo.component.messagebus.Topic;
 import consulo.module.Module;
 import consulo.module.content.layer.ModuleRootLayer;
 
@@ -26,35 +25,15 @@ import javax.annotation.Nonnull;
  * @since 30.07.14
  */
 public interface ModuleRootLayerListener {
-  Topic<ModuleRootLayerListener> TOPIC = Topic.create("module layers added or removed or changed current from module", ModuleRootLayerListener.class);
-
-  class Adapter implements ModuleRootLayerListener {
-    @Override
-    public void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
-
-    }
-
-    @Override
-    public void layerAdded(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
-
-    }
-
-    @Override
-    public void layerChanged(@Nonnull Module module, @Nonnull ModuleRootLayer added) {
-
-    }
-
-    @Override
-    public void currentLayerChanged(@Nonnull Module module, @Nonnull String oldName, @Nonnull ModuleRootLayer oldLayer, @Nonnull String newName, @Nonnull ModuleRootLayer newLayer) {
-
-    }
+  default void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
   }
 
-  void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed);
+  default void layerAdded(@Nonnull Module module, @Nonnull ModuleRootLayer added) {
+  }
 
-  void layerAdded(@Nonnull Module module, @Nonnull ModuleRootLayer added);
+  default void layerChanged(@Nonnull Module module, @Nonnull ModuleRootLayer added) {
+  }
 
-  void layerChanged(@Nonnull Module module, @Nonnull ModuleRootLayer added);
-
-  void currentLayerChanged(@Nonnull Module module, @Nonnull String oldName, @Nonnull ModuleRootLayer oldLayer, @Nonnull String newName, @Nonnull ModuleRootLayer newLayer);
+  default void currentLayerChanged(@Nonnull Module module, @Nonnull String oldName, @Nonnull ModuleRootLayer oldLayer, @Nonnull String newName, @Nonnull ModuleRootLayer newLayer) {
+  }
 }

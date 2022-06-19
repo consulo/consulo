@@ -148,7 +148,7 @@ public final class DesktopActionPopupMenuImpl implements ApplicationActivationLi
             myFrame = uiWindow.getUserData(IdeFrame.KEY);
           }
           myConnection = myApp.getMessageBus().connect();
-          myConnection.subscribe(ApplicationActivationListener.TOPIC, DesktopActionPopupMenuImpl.this);
+          myConnection.subscribe(ApplicationActivationListener.class, DesktopActionPopupMenuImpl.this);
         }
       }
 

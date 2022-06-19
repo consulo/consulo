@@ -4,7 +4,6 @@ package consulo.language.file;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.application.util.PerApplicationInstance;
-import consulo.component.messagebus.Topic;
 import consulo.language.Language;
 import consulo.language.file.event.FileTypeListener;
 import consulo.project.Project;
@@ -23,9 +22,6 @@ import java.util.function.Supplier;
 @Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class FileTypeManager extends FileTypeRegistry {
   private static Supplier<FileTypeManager> ourInstance = PerApplicationInstance.of(FileTypeManager.class);
-
-  @Nonnull
-  public static final Topic<FileTypeListener> TOPIC = new Topic<>("File types change", FileTypeListener.class);
 
   /**
    * Returns the singleton instance of the FileTypeManager component.

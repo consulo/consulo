@@ -140,12 +140,8 @@ public abstract class AbstractProjectViewPane extends UserDataHolderBase impleme
         queueUpdateByProblem();
       }
     };
-    project.getMessageBus().connect(this).subscribe(ProblemListener.TOPIC, problemListener);
+    project.getMessageBus().connect(this).subscribe(ProblemListener.class, problemListener);
     Disposer.register(project, this);
-  }
-
-  @Deprecated
-  protected final void fireTreeChangeListener() {
   }
 
   @Nonnull

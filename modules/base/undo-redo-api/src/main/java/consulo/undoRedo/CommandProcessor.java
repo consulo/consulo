@@ -100,21 +100,21 @@ public abstract class CommandProcessor {
   public abstract void addAffectedFiles(@Nullable Project project, @Nonnull VirtualFile... files);
 
   /**
-   * @deprecated use {@link CommandListener#TOPIC}
+   * @deprecated use {@link CommandListener#class}
    */
   @Deprecated
   public abstract void addCommandListener(@Nonnull CommandListener listener);
 
   /**
-   * @deprecated use {@link CommandListener#TOPIC}
+   * @deprecated use {@link CommandListener#class}
    */
   @Deprecated
   public void addCommandListener(@Nonnull CommandListener listener, @Nonnull Disposable parentDisposable) {
-    ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(CommandListener.TOPIC, listener);
+    ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(CommandListener.class, listener);
   }
 
   /**
-   * @deprecated use {@link CommandListener#TOPIC}
+   * @deprecated use {@link CommandListener#class}
    */
   @Deprecated
   public abstract void removeCommandListener(@Nonnull CommandListener listener);

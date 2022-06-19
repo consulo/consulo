@@ -15,12 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.progress.util;
 
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.application.impl.internal.LaterInvocator;
-import consulo.application.impl.internal.IdeaModalityStateEx;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.impl.internal.IdeaModalityStateEx;
+import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.impl.internal.progress.AbstractProgressIndicatorBase;
 import consulo.application.impl.internal.progress.BlockingProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
@@ -29,14 +28,14 @@ import consulo.application.progress.ProgressIndicatorEx;
 import consulo.application.progress.ProgressManager;
 import consulo.application.progress.TaskInfo;
 import consulo.application.ui.wm.IdeFocusManager;
-import consulo.component.messagebus.Topic;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.progress.util.ProgressDialog;
+import consulo.ide.impl.progress.util.ProgressDialogFactory;
 import consulo.language.util.IncorrectOperationException;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
-import consulo.ide.impl.progress.util.ProgressDialog;
-import consulo.ide.impl.progress.util.ProgressDialogFactory;
 import consulo.project.Project;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.ex.awt.UIUtil;
@@ -74,13 +73,6 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
   int myDelayInMillis = DEFAULT_PROGRESS_DIALOG_POSTPONE_TIME_MILLIS;
   private boolean myModalityEntered;
 
-  @FunctionalInterface
-  public interface Listener {
-    void progressWindowCreated(@Nonnull ProgressWindow pw);
-  }
-
-  public static final Topic<Listener> TOPIC = Topic.create("progress window", Listener.class);
-
   public ProgressWindow(boolean shouldShowCancel, Project project) {
     this(shouldShowCancel, false, project);
   }
@@ -108,7 +100,7 @@ public class ProgressWindow extends ProgressIndicatorBase implements BlockingPro
     Disposer.register(this, myDialog);
 
     addStateDelegate(new MyDelegate());
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(TOPIC).progressWindowCreated(this);
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(ProgressWindowListener.class).progressWindowCreated(this);
 
     if (myProject != null) {
       Disposer.register(myProject, this);

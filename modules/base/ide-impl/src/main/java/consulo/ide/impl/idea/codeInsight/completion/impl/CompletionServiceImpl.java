@@ -14,7 +14,6 @@ import consulo.language.editor.impl.internal.completion.CompletionData;
 import consulo.logging.Logger;
 import consulo.application.progress.ProgressManager;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.disposer.Disposer;
 import consulo.document.util.TextRange;
@@ -45,7 +44,7 @@ public final class CompletionServiceImpl extends CompletionService {
   private CompletionProcess myApiCompletionProcess;
 
   public CompletionServiceImpl() {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosing(@Nonnull Project project) {
         CompletionProgressIndicator indicator = getCurrentCompletionProgressIndicator();

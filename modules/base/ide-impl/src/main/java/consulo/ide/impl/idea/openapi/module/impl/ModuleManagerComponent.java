@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.module.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.module.content.ProjectTopics;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.State;
@@ -24,6 +23,7 @@ import consulo.component.persist.Storage;
 import consulo.module.Module;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.impl.internal.ModuleEx;
 import consulo.module.impl.internal.ModuleImpl;
 import consulo.module.impl.internal.ModuleManagerImpl;
@@ -58,7 +58,7 @@ public class ModuleManagerComponent extends ModuleManagerImpl {
     myProgressManager = progressManager;
     myConnection.setDefaultHandler((event, params) -> cleanCachedStuff());
 
-    myConnection.subscribe(ProjectTopics.PROJECT_ROOTS);
+    myConnection.subscribe(ModuleRootListener.class);
 
     if(project.isDefault()) {
       myReady = true;

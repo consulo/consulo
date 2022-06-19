@@ -61,7 +61,7 @@ public class ApplicationStatisticsListeners {
       }
     });
 
-    connection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosing(@Nonnull Project project) {
         if (project.isInitialized()) {

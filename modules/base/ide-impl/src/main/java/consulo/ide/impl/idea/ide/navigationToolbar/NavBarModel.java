@@ -44,7 +44,7 @@ public class NavBarModel {
   private boolean isFixedComponent = false;
 
   public NavBarModel(final Project project) {
-    this(project, project.getMessageBus().syncPublisher(NavBarModelListener.NAV_BAR), NavBarModelBuilder.getInstance());
+    this(project, project.getMessageBus().syncPublisher(NavBarModelListener.class), NavBarModelBuilder.getInstance());
   }
 
   protected NavBarModel(Project project, NavBarModelListener notificator, NavBarModelBuilder builder) {

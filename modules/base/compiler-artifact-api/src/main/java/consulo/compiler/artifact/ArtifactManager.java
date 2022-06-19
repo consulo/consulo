@@ -19,8 +19,6 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.compiler.artifact.element.PackagingElement;
 import consulo.compiler.artifact.element.PackagingElementResolvingContext;
-import consulo.compiler.artifact.event.ArtifactListener;
-import consulo.component.messagebus.Topic;
 import consulo.component.util.ModificationTracker;
 import consulo.project.Project;
 
@@ -38,7 +36,6 @@ public abstract class ArtifactManager implements ArtifactModel {
     return project.getInstance(ArtifactManager.class);
   }
 
-  public static final Topic<ArtifactListener> TOPIC = Topic.create("artifacts changes", ArtifactListener.class);
   public static final Comparator<Artifact> ARTIFACT_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 
   public abstract Artifact[] getSortedArtifacts();

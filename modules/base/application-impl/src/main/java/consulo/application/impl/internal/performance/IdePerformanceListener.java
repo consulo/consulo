@@ -1,15 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.impl.internal.performance;
 
+import consulo.annotation.component.Topic;
 import consulo.application.util.concurrent.ThreadDump;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import javax.annotation.Nonnull;
 
 import java.io.File;
 
+@Topic
 public interface IdePerformanceListener {
-  Topic<IdePerformanceListener> TOPIC = Topic.create("IdePerformanceListener", IdePerformanceListener.class);
-
   /**
    * Invoked after thread state has been dumped to a file.
    */

@@ -475,7 +475,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
           if (data != null) {
             data.addUsages(usageInfoSet);
           }
-          myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).refactoringStarted(refactoringId, data);
+          myProject.getMessageBus().syncPublisher(RefactoringEventListener.class).refactoringStarted(refactoringId, data);
         }
 
         try {
@@ -488,7 +488,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
         }
         finally {
           if (refactoringId != null) {
-            myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).refactoringDone(refactoringId, getAfterData(writableUsageInfos));
+            myProject.getMessageBus().syncPublisher(RefactoringEventListener.class).refactoringDone(refactoringId, getAfterData(writableUsageInfos));
           }
         }
       };
@@ -632,7 +632,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
       if (refactoringId != null) {
         RefactoringEventData conflictUsages = new RefactoringEventData();
         conflictUsages.putUserData(RefactoringEventData.CONFLICTS_KEY, conflicts.values());
-        myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).conflictsDetected(refactoringId, conflictUsages);
+        myProject.getMessageBus().syncPublisher(RefactoringEventListener.class).conflictsDetected(refactoringId, conflictUsages);
       }
       final ConflictsDialog conflictsDialog = prepareConflictsDialog(conflicts, usages);
       if (!conflictsDialog.showAndGet()) {
@@ -701,7 +701,7 @@ public abstract class BaseRefactoringProcessor implements Runnable {
 
     @Override
     public void undo() {
-      myProject.getMessageBus().syncPublisher(RefactoringEventListener.REFACTORING_EVENT_TOPIC).undoRefactoring(myRefactoringId);
+      myProject.getMessageBus().syncPublisher(RefactoringEventListener.class).undoRefactoring(myRefactoringId);
     }
 
     @Override

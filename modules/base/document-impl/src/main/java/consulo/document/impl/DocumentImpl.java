@@ -1142,7 +1142,7 @@ public class DocumentImpl extends UserDataHolderBase implements DocumentEx {
   }
 
   private static class DocumentBulkUpdateListenerHolder {
-    private static final DocumentBulkUpdateListener ourBulkChangePublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(DocumentBulkUpdateListener.TOPIC);
+    private static final DocumentBulkUpdateListener ourBulkChangePublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(DocumentBulkUpdateListener.class);
   }
 
   @Nonnull

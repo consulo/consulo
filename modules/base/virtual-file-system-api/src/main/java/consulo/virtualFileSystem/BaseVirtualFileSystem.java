@@ -37,8 +37,7 @@ public abstract class BaseVirtualFileSystem implements VirtualFileSystem {
       return;
     }
 
-    application.getMessageBus().connect().subscribe(
-            VirtualFileManager.VFS_CHANGES, new BulkVirtualFileListenerAdapter(myEventDispatcher.getMulticaster(), this));
+    application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkVirtualFileListenerAdapter(myEventDispatcher.getMulticaster(), this));
   }
 
   @Override

@@ -24,7 +24,6 @@ import consulo.application.impl.internal.IdeaModalityState;
 import consulo.ide.ServiceManager;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.project.ui.wm.WindowManager;
@@ -65,7 +64,7 @@ public abstract class WelcomeFrameManager {
   protected WelcomeFrameManager(Application application) {
     myApplication = application;
 
-    application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project, UIAccess uiAccess) {
         uiAccess.give(() -> closeFrame());

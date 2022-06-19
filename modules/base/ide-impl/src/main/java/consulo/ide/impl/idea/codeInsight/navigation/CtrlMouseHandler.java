@@ -213,7 +213,7 @@ public final class CtrlMouseHandler {
           }
         }, project);
       });
-      project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+      project.getMessageBus().connect().subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
         @Override
         public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
           disposeHighlighter();
@@ -831,7 +831,7 @@ public final class CtrlMouseHandler {
       if (!hint.isVisible()) return;
       Disposable hintDisposable = Disposable.newDisposable("CtrlMouseHandler.TooltipProvider.updateOnPsiChanges");
       hint.addHintListener(__ -> Disposer.dispose(hintDisposable));
-      myProject.getMessageBus().connect(hintDisposable).subscribe(PsiModificationTracker.TOPIC, () -> ReadAction.nonBlocking(() -> {
+      myProject.getMessageBus().connect(hintDisposable).subscribe(PsiModificationTrackerListener.class, () -> ReadAction.nonBlocking(() -> {
         try {
           DocInfo newDocInfo = info.getInfo();
           return (Runnable)() -> {

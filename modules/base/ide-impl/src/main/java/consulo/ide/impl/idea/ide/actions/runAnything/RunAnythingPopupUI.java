@@ -33,6 +33,7 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.project.event.DumbModeListener;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -901,7 +902,7 @@ public class RunAnythingPopupUI extends BigPopupUI {
       });
     }).registerCustomShortcutSet(CustomShortcutSet.fromString("shift BACK_SPACE"), (JComponent)TargetAWT.to(mySearchField), this);
 
-    myProject.getMessageBus().connect(this).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    myProject.getMessageBus().connect(this).subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void exitDumbMode() {
         Application.get().invokeLater(() -> rebuildList());

@@ -229,7 +229,7 @@ public abstract class DesktopEditorComposite implements FileEditorComposite {
     if ((!EventQueue.isDispatchThread() || !myFileEditorManager.isInsideChange()) && !Comparing.equal(oldSelectedEditor, newSelectedEditor)) {
       myFileEditorManager.notifyPublisher(() -> {
         final FileEditorManagerEvent event = new FileEditorManagerEvent(myFileEditorManager, myFile, oldSelectedEditor, myFile, newSelectedEditor);
-        final FileEditorManagerListener publisher = myFileEditorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
+        final FileEditorManagerListener publisher = myFileEditorManager.getProject().getMessageBus().syncPublisher(FileEditorManagerListener.class);
         publisher.selectionChanged(event);
       });
       final JComponent component = newSelectedEditor.getComponent();

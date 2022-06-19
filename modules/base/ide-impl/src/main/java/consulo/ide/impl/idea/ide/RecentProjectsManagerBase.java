@@ -15,8 +15,8 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.module.content.ProjectTopics;
 import consulo.ide.impl.idea.ide.impl.ProjectUtil;
+import consulo.project.event.ProjectManagerListener;
 import consulo.ui.ex.action.AnAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -97,7 +97,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
     MessageBusConnection connection = application.getMessageBus().connect();
     connection.subscribe(AppLifecycleListener.TOPIC, new MyAppLifecycleListener());
     if (!application.isHeadlessEnvironment()) {
-      connection.subscribe(ProjectManager.TOPIC, new MyProjectListener());
+      connection.subscribe(ProjectManagerListener.class, new MyProjectListener());
     }
   }
 
@@ -403,7 +403,7 @@ public class RecentProjectsManagerBase extends RecentProjectsManager implements 
       }
       SystemDock.getInstance().updateMenu();
 
-      project.getMessageBus().connect().subscribe(ProjectTopics.PROJECT_ROOTS, new ModuleRootListener() {
+      project.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
         @Override
         public void rootsChanged(ModuleRootEvent event) {
           updateProjectModuleExtensions(project);

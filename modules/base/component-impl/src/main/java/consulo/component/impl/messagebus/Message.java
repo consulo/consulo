@@ -5,26 +5,24 @@
  */
 package consulo.component.impl.messagebus;
 
-import consulo.component.messagebus.Topic;
 import javax.annotation.Nonnull;
-
 import java.lang.reflect.Method;
 
-public final class Message {
-  private final Topic myTopic;
+public final class Message<T> {
+  private final Class<T> myTopicClass;
   private final Method myListenerMethod;
   private final Object[] myArgs;
 
-  public Message(@Nonnull Topic topic, @Nonnull Method listenerMethod, Object[] args) {
-    myTopic = topic;
+  public Message(@Nonnull Class<T> topicClass, @Nonnull Method listenerMethod, Object[] args) {
+    myTopicClass = topicClass;
     listenerMethod.setAccessible(true);
     myListenerMethod = listenerMethod;
     myArgs = args;
   }
 
   @Nonnull
-  public Topic getTopic() {
-    return myTopic;
+  public Class<T> getTopicClass() {
+    return myTopicClass;
   }
 
   @Nonnull
@@ -38,6 +36,6 @@ public final class Message {
 
   @Override
   public String toString() {
-    return myTopic + ":" + myListenerMethod.getName();
+    return myTopicClass.getName() + ":" + myListenerMethod.getName();
   }
 }

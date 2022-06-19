@@ -1,15 +1,10 @@
 package consulo.ide.impl.idea.coverage;
 
-import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.coverage.view.CoverageViewSuiteListener;
-import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineCoverage;
 import com.intellij.rt.coverage.data.LineData;
 import com.intellij.rt.coverage.data.ProjectData;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.CommonBundle;
 import consulo.application.util.function.Computable;
@@ -17,7 +12,7 @@ import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.event.EditorFactoryEvent;
 import consulo.codeEditor.event.EditorFactoryListener;
-import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.event.EditorColorsListener;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
@@ -31,6 +26,11 @@ import consulo.execution.coverage.*;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
+import consulo.ide.impl.idea.coverage.view.CoverageViewSuiteListener;
+import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
@@ -101,7 +101,7 @@ public class CoverageDataManagerImpl extends CoverageDataManager implements JDOM
       return;
     }
 
-    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, scheme -> chooseSuitesBundle(myCurrentSuitesBundle));
+    project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> chooseSuitesBundle(myCurrentSuitesBundle));
 
     EditorFactory.getInstance().addEditorFactoryListener(new CoverageEditorFactoryListener(), myProject);
     ProjectManagerAdapter projectManagerListener = new ProjectManagerAdapter() {

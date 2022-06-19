@@ -20,7 +20,6 @@ import consulo.ide.impl.idea.openapi.editor.ex.EditorMarkupModel;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.EditorHistoryManagerImpl;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
 import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
@@ -109,7 +108,7 @@ public class TextEditorComponent implements DataProvider, Disposable {
     myFile.getFileSystem().addVirtualFileListener(myVirtualFileListener);
     Disposer.register(this, () -> myFile.getFileSystem().removeVirtualFileListener(myVirtualFileListener));
     MessageBusConnection myConnection = project.getMessageBus().connect(this);
-    myConnection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
+    myConnection.subscribe(FileTypeListener.class, new MyFileTypeListener());
 
     myEditorHighlighterUpdater = new EditorHighlighterUpdater(myProject, this, (EditorEx)myEditor, myFile);
   }

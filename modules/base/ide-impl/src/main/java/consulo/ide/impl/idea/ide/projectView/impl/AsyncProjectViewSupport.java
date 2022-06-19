@@ -134,7 +134,7 @@ class AsyncProjectViewSupport {
       }
     }, parent);
     CopyPasteUtil.addDefaultListener(parent, element -> updateByElement(element, false));
-    project.getMessageBus().connect(parent).subscribe(ProblemListener.TOPIC, new ProblemListener() {
+    project.getMessageBus().connect(parent).subscribe(ProblemListener.class, new ProblemListener() {
       @Override
       public void problemsAppeared(@Nonnull VirtualFile file) {
         updatePresentationsFromRootTo(file);

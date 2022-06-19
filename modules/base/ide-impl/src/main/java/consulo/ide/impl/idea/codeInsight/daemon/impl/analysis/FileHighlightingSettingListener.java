@@ -32,7 +32,7 @@
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
 import consulo.language.psi.PsiElement;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import javax.annotation.Nonnull;
 
 /**
@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * Doesn't get called during the initial settings load
  */
 public interface FileHighlightingSettingListener {
-  Topic<FileHighlightingSettingListener> SETTING_CHANGE = Topic.create("File Highlighting Setting", FileHighlightingSettingListener.class);
+  TopicImpl<FileHighlightingSettingListener> SETTING_CHANGE = TopicImpl.create("File Highlighting Setting", FileHighlightingSettingListener.class);
 
   /**
    * @param root    element in the PSI tree for which the settings has changed

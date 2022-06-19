@@ -57,7 +57,6 @@ import consulo.language.psi.LanguageSubstitutors;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiUtilCore;
 import consulo.language.psi.scope.LocalSearchScope;
-import consulo.language.psi.stub.IndexableSetContributor;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -76,9 +75,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
 
@@ -148,7 +145,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     ProjectManagerListener projectListener = new ProjectManagerListener() {
       @Override
       public void projectOpened(Project project, @Nonnull UIAccess uiAccess) {
-        project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, editorListener);
+        project.getMessageBus().connect(project).subscribe(FileEditorManagerListener.class, editorListener);
         FileEditorManager editorManager = FileEditorManager.getInstance(project);
         for (VirtualFile virtualFile : editorManager.getOpenFiles()) {
           editorListener.fileOpened(editorManager, virtualFile);
@@ -158,7 +155,7 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     for (Project project : ProjectManager.getInstance().getOpenProjects()) {
       projectListener.projectOpened(project, project.getApplication().getLastUIAccess());
     }
-    messageBus.connect().subscribe(ProjectManager.TOPIC, projectListener);
+    messageBus.connect().subscribe(ProjectManagerListener.class, projectListener);
   }
 
   @Nonnull

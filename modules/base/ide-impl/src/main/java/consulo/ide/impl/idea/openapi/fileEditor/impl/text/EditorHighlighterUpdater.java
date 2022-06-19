@@ -2,26 +2,25 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
 import consulo.application.ApplicationManager;
-import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ReadAction;
-import consulo.ide.impl.idea.openapi.application.impl.NonBlockingReadActionImpl;
+import consulo.application.impl.internal.IdeaModalityState;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorHighlighter;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.EditorColorsManager;
-import consulo.codeEditor.EditorEx;
-import consulo.language.editor.highlight.EmptyEditorHighlighter;
-import consulo.codeEditor.EditorHighlighter;
-import consulo.language.editor.highlight.EditorHighlighterFactory;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.application.impl.NonBlockingReadActionImpl;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.AbstractFileType;
+import consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor;
+import consulo.language.editor.highlight.EditorHighlighterFactory;
+import consulo.language.editor.highlight.EmptyEditorHighlighter;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
+import consulo.project.Project;
+import consulo.project.event.DumbModeListener;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
@@ -43,8 +42,8 @@ public class EditorHighlighterUpdater {
     myEditor = editor;
     myFile = file;
     MessageBusConnection connection = project.getMessageBus().connect(parentDisposable);
-    connection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
-    connection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    connection.subscribe(FileTypeListener.class, new MyFileTypeListener());
+    connection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void enteredDumbMode() {
         updateHighlighters();

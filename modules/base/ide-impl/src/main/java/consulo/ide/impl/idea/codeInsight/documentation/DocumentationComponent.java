@@ -880,7 +880,7 @@ public class DocumentationComponent extends JPanel implements Disposable, DataPr
     if (hint == null || mySizeTrackerRegistered) return;
     mySizeTrackerRegistered = true;
     hint.addResizeListener(this::onManualResizing, this);
-    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, new AnActionListener() {
+    ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, new AnActionListener() {
       @Override
       public void afterActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
         if (action instanceof WindowAction) onManualResizing();

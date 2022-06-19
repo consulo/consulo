@@ -31,7 +31,7 @@ import java.lang.reflect.Method;
 public interface MessageHandler {
 
   /**
-   * Is called on new message arrival. Given method identifies method used by publisher (see {@link Topic#getListenerClass()}),
+   * Is called on new message arrival. Given method identifies method used by publisher,
    * given parameters were used by the publisher during target method call.
    *
    * @param event   information about target method called by the publisher

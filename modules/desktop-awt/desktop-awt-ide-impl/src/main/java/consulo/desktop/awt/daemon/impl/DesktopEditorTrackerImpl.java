@@ -63,7 +63,7 @@ public class DesktopEditorTrackerImpl extends EditorTracker {
   public DesktopEditorTrackerImpl(@Nonnull Project project, @Nonnull Provider<WindowManager> windowManagerProvider) {
     super(project, windowManagerProvider);
 
-    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         JFrame frame = windowManagerProvider.get().getFrame(myProject);

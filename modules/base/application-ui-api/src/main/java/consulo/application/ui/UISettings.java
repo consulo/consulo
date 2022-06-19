@@ -170,15 +170,15 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public boolean FULL_PATHS_IN_WINDOW_HEADER;
 
   @Deprecated
-  @DeprecationInfo("Use UISettingsListener#TOPIC")
+  @DeprecationInfo("Use UISettingsListener.class")
   public void addUISettingsListener(UISettingsListener listener) {
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.TOPIC, listener);
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(UISettingsListener.class, listener);
   }
 
   @Deprecated
   @DeprecationInfo("Use UISettingsListener#TOPIC")
   public void addUISettingsListener(@Nonnull final UISettingsListener listener, @Nonnull Disposable parentDisposable) {
-    ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(UISettingsListener.TOPIC, listener);
+    ApplicationManager.getApplication().getMessageBus().connect(parentDisposable).subscribe(UISettingsListener.class, listener);
   }
 
   /**
@@ -187,7 +187,7 @@ public class UISettings extends SimpleModificationTracker implements PersistentS
   public void fireUISettingsChanged() {
     incModificationCount();
     notifyDispatcher();
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(UISettingsListener.TOPIC).uiSettingsChanged(this);
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(UISettingsListener.class).uiSettingsChanged(this);
   }
 
   protected void notifyDispatcher() {

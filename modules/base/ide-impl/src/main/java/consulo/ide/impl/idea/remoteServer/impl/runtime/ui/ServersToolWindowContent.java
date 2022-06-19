@@ -189,7 +189,7 @@ public class ServersToolWindowContent extends JPanel implements Disposable {
     };
     Disposer.register(this, myBuilder);
 
-    project.getMessageBus().connect().subscribe(ServerConnectionListener.TOPIC, new ServerConnectionListener() {
+    project.getMessageBus().connect().subscribe(ServerConnectionListener.class, new ServerConnectionListener() {
       @Override
       public void onConnectionCreated(@Nonnull ServerConnection<?> connection) {
         getBuilder().queueUpdate();

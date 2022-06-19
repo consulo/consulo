@@ -55,7 +55,6 @@ import consulo.fileEditor.FileEditorsSplitters;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.project.ui.wm.IdeFrame;
 import consulo.ui.ex.toolWindow.ToolWindow;
@@ -219,7 +218,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
     }
 
     MessageBusConnection busConnection = project.getMessageBus().connect();
-    busConnection.subscribe(AnActionListener.TOPIC, new AnActionListener() {
+    busConnection.subscribe(AnActionListener.class, new AnActionListener() {
       @Override
       public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
         if (myCurrentState != KeyState.hold) {
@@ -227,7 +226,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
         }
       }
     });
-    busConnection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    busConnection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
         if (project == myProject) {
@@ -245,7 +244,7 @@ public final class DesktopToolWindowManagerImpl extends ToolWindowManagerBase {
 
     myLayout.copyFrom(((WindowManagerEx)windowManager.get()).getLayout());
 
-    busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    busConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void fileClosed(@Nonnull FileEditorManager source, @Nonnull VirtualFile file) {
         getFocusManagerImpl(myProject).doWhenFocusSettlesDown(new ExpirableRunnable.ForProject(myProject) {

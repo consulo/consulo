@@ -36,7 +36,6 @@ import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -51,7 +50,7 @@ import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.ide.impl.idea.util.io.PersistentHashMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.text.TextEditorProvider;
@@ -104,13 +103,13 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     myProject = project;
 
     MessageBusConnection busConnection = project.getMessageBus().connect(this);
-    busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    busConnection.subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent e) {
         onSelectionChanged();
       }
     });
-    busConnection.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    busConnection.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         for (VFileEvent event : events) {
@@ -121,7 +120,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
         }
       }
     });
-    busConnection.subscribe(CommandListener.TOPIC, new CommandListener() {
+    busConnection.subscribe(CommandListener.class, new CommandListener() {
       @Override
       public void commandStarted(@Nonnull CommandEvent event) {
         onCommandStarted();
@@ -707,7 +706,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
    * {@link RecentPlacesListener} listens recently viewed or changed place adding and removing events.
    */
   public interface RecentPlacesListener {
-    Topic<RecentPlacesListener> TOPIC = Topic.create("RecentPlacesListener", RecentPlacesListener.class);
+    TopicImpl<RecentPlacesListener> TOPIC = TopicImpl.create("RecentPlacesListener", RecentPlacesListener.class);
 
     /**
      * Fires on a new place info adding into {@link #myChangePlaces} or {@link #myBackPlaces} infos list

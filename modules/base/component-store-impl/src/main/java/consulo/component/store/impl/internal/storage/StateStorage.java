@@ -15,18 +15,14 @@
  */
 package consulo.component.store.impl.internal.storage;
 
-import consulo.component.messagebus.Topic;
 import consulo.component.persist.Storage;
 import consulo.component.store.impl.internal.StateStorageException;
-import consulo.virtualFileSystem.event.VirtualFileEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
 public interface StateStorage {
-  Topic<Listener> STORAGE_TOPIC = Topic.create("STORAGE_LISTENER", Listener.class, Topic.BroadcastDirection.NONE);
-
   @Nullable
   <T> T getState(@Nullable Object component, @Nonnull String componentName, @Nonnull Class<T> stateClass) throws StateStorageException;
 
@@ -53,9 +49,5 @@ public interface StateStorage {
 
   interface SaveSession {
     void save(boolean force);
-  }
-
-  interface Listener {
-    void storageFileChanged(@Nonnull VirtualFileEvent event, @Nonnull StateStorage storage);
   }
 }

@@ -56,7 +56,7 @@ public class FrameStateManagerImpl extends FrameStateManager {
     myShouldSynchronize = false;
     mySyncAlarm = new Alarm();
 
-    app.getMessageBus().connect().subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener.Adapter() {
+    app.getMessageBus().connect().subscribe(ApplicationActivationListener.class, new ApplicationActivationListener.Adapter() {
       @Override
       public void applicationActivated(IdeFrame ideFrame) {
         myActive.onReady();

@@ -206,7 +206,7 @@ public class FileStructurePopup implements Disposable, TreeActionsOwner {
     myTreeModel.addModelListener(modelListener);
     Disposer.register(this, () -> myTreeModel.removeModelListener(modelListener));
     myTree.setCellRenderer(new NodeRenderer());
-    myProject.getMessageBus().connect(this).subscribe(UISettingsListener.TOPIC, o -> rebuild(false));
+    myProject.getMessageBus().connect(this).subscribe(UISettingsListener.class, o -> rebuild(false));
 
     myTree.setTransferHandler(new TransferHandler() {
       @Override

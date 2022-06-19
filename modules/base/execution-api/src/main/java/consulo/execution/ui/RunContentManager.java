@@ -15,7 +15,7 @@
  */
 package consulo.execution.ui;
 
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public interface RunContentManager {
-  Topic<RunContentWithExecutorListener> TOPIC = Topic.create("Run Content", RunContentWithExecutorListener.class);
+  TopicImpl<RunContentWithExecutorListener> TOPIC = TopicImpl.create("Run Content", RunContentWithExecutorListener.class);
 
   @Nullable
   RunContentDescriptor getSelectedContent();

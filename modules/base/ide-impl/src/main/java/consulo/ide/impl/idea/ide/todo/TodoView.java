@@ -12,7 +12,6 @@ import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
 import consulo.component.ProcessCanceledException;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -65,7 +64,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
     MessageBusConnection connection = project.getMessageBus().connect(this);
     connection.subscribe(TodoConfiguration.PROPERTY_CHANGE, new MyPropertyChangeListener());
-    connection.subscribe(FileTypeManager.TOPIC, new MyFileTypeListener());
+    connection.subscribe(FileTypeListener.class, new MyFileTypeListener());
     connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, myVcsListener);
   }
 

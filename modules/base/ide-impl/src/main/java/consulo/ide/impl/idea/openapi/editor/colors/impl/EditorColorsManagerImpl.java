@@ -253,7 +253,7 @@ public class EditorColorsManagerImpl extends EditorColorsManager implements Pers
 
   private void fireChanges(EditorColorsScheme scheme) {
     // we need to push events to components that use editor font, e.g. HTML editor panes
-    ApplicationManager.getApplication().getMessageBus().syncPublisher(TOPIC).globalSchemeChange(scheme);
+    ApplicationManager.getApplication().getMessageBus().syncPublisher(EditorColorsListener.class).globalSchemeChange(scheme);
 
     myTreeDispatcher.getMulticaster().globalSchemeChange(scheme);
   }

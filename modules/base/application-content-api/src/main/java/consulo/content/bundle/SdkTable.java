@@ -20,8 +20,6 @@ import consulo.annotation.access.RequiredWriteAction;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.application.Application;
-import consulo.component.messagebus.Topic;
-import consulo.content.bundle.event.SdkTableListener;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,8 +35,6 @@ public abstract class SdkTable implements BundleHolder {
   public static SdkTable getInstance() {
     return Application.get().getInstance(SdkTable.class);
   }
-
-  public static Topic<SdkTableListener> SDK_TABLE_TOPIC = Topic.create("Sdk table", SdkTableListener.class);
 
   @Nullable
   public abstract Sdk findSdk(String name);

@@ -21,14 +21,12 @@ import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 import consulo.component.internal.RootComponentHolder;
-import consulo.component.messagebus.Topic;
 import consulo.component.util.Iconable;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
 import consulo.ui.image.Image;
 import consulo.util.io.URLUtil;
 import consulo.virtualFileSystem.event.AsyncFileListener;
-import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFileManagerListener;
 
@@ -43,7 +41,6 @@ import java.nio.file.Path;
  */
 @Service(ComponentScope.APPLICATION)
 public abstract class VirtualFileManager implements ModificationTracker {
-  public static final Topic<BulkFileListener> VFS_CHANGES = new Topic<>("NewVirtualFileSystem changes", BulkFileListener.class);
 
   public static final ModificationTracker VFS_STRUCTURE_MODIFICATIONS = () -> getInstance().getStructureModificationCount();
 

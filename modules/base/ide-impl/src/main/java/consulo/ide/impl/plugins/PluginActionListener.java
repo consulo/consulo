@@ -15,7 +15,7 @@
  */
 package consulo.ide.impl.plugins;
 
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.container.plugin.PluginId;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * @since 13/09/2021
  */
 public interface PluginActionListener {
-  Topic<PluginActionListener> TOPIC = Topic.create(PluginActionListener.class.getName(), PluginActionListener.class);
+  TopicImpl<PluginActionListener> TOPIC = TopicImpl.create(PluginActionListener.class.getName(), PluginActionListener.class);
 
   void pluginInstalled(@Nonnull PluginId pluginId);
 

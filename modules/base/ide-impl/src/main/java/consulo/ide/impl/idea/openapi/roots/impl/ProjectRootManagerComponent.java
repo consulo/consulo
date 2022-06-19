@@ -16,14 +16,13 @@
 package consulo.ide.impl.idea.openapi.roots.impl;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.module.content.ProjectTopics;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
+import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.project.ProjectComponent;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.scope.ModuleScopeProvider;
@@ -88,7 +87,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
     super(project);
 
     myConnection = project.getMessageBus().connect(project);
-    myConnection.subscribe(FileTypeManager.TOPIC, new FileTypeListener() {
+    myConnection.subscribe(FileTypeListener.class, new FileTypeListener() {
       @Override
       public void beforeFileTypesChanged(@Nonnull FileTypeEvent event) {
         beforeRootsChange(true);
@@ -126,10 +125,10 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       }
     };
 
-    myConnection.subscribe(VirtualFilePointerListener.TOPIC, new MyVirtualFilePointerListener());
+    myConnection.subscribe(VirtualFilePointerListener.class, new MyVirtualFilePointerListener());
     myDoLogCachesUpdate = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
 
-    myConnection.subscribe(BatchUpdateListener.TOPIC, myHandler);
+    myConnection.subscribe(BatchUpdateListener.class, myHandler);
   }
 
   @Override
@@ -193,7 +192,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   protected void fireBeforeRootsChangeEvent(boolean fileTypes) {
     isFiringEvent = true;
     try {
-      myProject.getMessageBus().syncPublisher(ProjectTopics.PROJECT_ROOTS).beforeRootsChange(new ModuleRootEventImpl(myProject, fileTypes));
+      myProject.getMessageBus().syncPublisher(ModuleRootListener.class).beforeRootsChange(new ModuleRootEventImpl(myProject, fileTypes));
     }
     finally {
       isFiringEvent = false;
@@ -204,7 +203,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   protected void fireRootsChangedEvent(boolean fileTypes) {
     isFiringEvent = true;
     try {
-      myProject.getMessageBus().syncPublisher(ProjectTopics.PROJECT_ROOTS).rootsChanged(new ModuleRootEventImpl(myProject, fileTypes));
+      myProject.getMessageBus().syncPublisher(ModuleRootListener.class).rootsChanged(new ModuleRootEventImpl(myProject, fileTypes));
     }
     finally {
       isFiringEvent = false;
@@ -349,7 +348,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       if (--myInsideRefresh == 0) {
         if (myPointerChangesDetected) {
           myPointerChangesDetected = false;
-          myProject.getMessageBus().syncPublisher(ProjectTopics.PROJECT_ROOTS).rootsChanged(new ModuleRootEventImpl(myProject, false));
+          myProject.getMessageBus().syncPublisher(ModuleRootListener.class).rootsChanged(new ModuleRootEventImpl(myProject, false));
 
           doSynchronizeRoots();
 
@@ -373,7 +372,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
           //this is the first pointer changing validity
           if (affectsRoots(pointers)) {
             myPointerChangesDetected = true;
-            myProject.getMessageBus().syncPublisher(ProjectTopics.PROJECT_ROOTS).beforeRootsChange(new ModuleRootEventImpl(myProject, false));
+            myProject.getMessageBus().syncPublisher(ModuleRootListener.class).beforeRootsChange(new ModuleRootEventImpl(myProject, false));
             if (myDoLogCachesUpdate) LOG.debug(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
           }
         }
@@ -409,7 +408,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
       else if (!myPointerChangesDetected) {
         //this is the first pointer changing validity
         myPointerChangesDetected = true;
-        myProject.getMessageBus().syncPublisher(ProjectTopics.PROJECT_ROOTS).beforeRootsChange(new ModuleRootEventImpl(myProject, false));
+        myProject.getMessageBus().syncPublisher(ModuleRootListener.class).beforeRootsChange(new ModuleRootEventImpl(myProject, false));
         if (LOG_CACHES_UPDATE || LOG.isDebugEnabled()) {
           LOG.debug(new Throwable(pointers.length > 0 ? pointers[0].getPresentableUrl() : ""));
         }

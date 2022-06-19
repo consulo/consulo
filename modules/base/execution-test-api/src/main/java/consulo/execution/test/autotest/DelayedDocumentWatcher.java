@@ -26,7 +26,6 @@ import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentAdapter;
 import consulo.document.event.DocumentEvent;
-import consulo.document.event.FileDocumentManagerAdapter;
 import consulo.document.event.FileDocumentManagerListener;
 import consulo.language.editor.PsiErrorElementUtil;
 import consulo.project.Project;
@@ -80,7 +79,7 @@ public class DelayedDocumentWatcher implements AutoTestWatcher {
       Disposer.register(myProject, myListenerDisposable);
       EditorFactory.getInstance().getEventMulticaster().addDocumentListener(myListener, myListenerDisposable);
       myConnection = ApplicationManager.getApplication().getMessageBus().connect(myProject);
-      myConnection.subscribe(FileDocumentManagerListener.TOPIC, new FileDocumentManagerAdapter() {
+      myConnection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
         @Override
         public void beforeAllDocumentsSaving() {
           myDocumentSavingInProgress = true;

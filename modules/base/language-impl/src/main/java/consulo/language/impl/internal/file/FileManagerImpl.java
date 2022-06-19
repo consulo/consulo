@@ -32,7 +32,7 @@ import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.psi.event.PsiTreeChangeEvent;
 import consulo.language.util.LanguageUtil;
 import consulo.logging.Logger;
-import consulo.project.DumbService;
+import consulo.project.event.DumbModeListener;
 import consulo.util.collection.ContainerUtil;
 import consulo.util.collection.Maps;
 import consulo.util.concurrent.ConcurrencyUtil;
@@ -80,7 +80,7 @@ public final class FileManagerImpl implements FileManager {
     Disposer.register(manager.getProject(), this);
     LowMemoryWatcher.register(this::processQueue, this);
 
-    myConnection.subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+    myConnection.subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void enteredDumbMode() {
         processFileTypesChanged(false);

@@ -21,7 +21,7 @@ import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
 import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorKey;
-import consulo.colorScheme.EditorColorsManager;
+import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
@@ -95,7 +95,7 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
 
     if (project.isDefault()) return;
 
-    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, scheme -> fileStatusesChanged());
+    project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> fileStatusesChanged());
 
     startupManager.registerPreStartupActivity(() -> {
       DocumentAdapter documentListener = new DocumentAdapter() {

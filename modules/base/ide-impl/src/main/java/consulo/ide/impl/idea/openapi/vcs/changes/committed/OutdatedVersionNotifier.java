@@ -79,7 +79,7 @@ public class OutdatedVersionNotifier {
         updateAllEditorsLater();
       }
     });
-    busConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new MyFileEditorManagerListener());
+    busConnection.subscribe(FileEditorManagerListener.class, new MyFileEditorManagerListener());
   }
 
   private void requestLoadIncomingChanges() {

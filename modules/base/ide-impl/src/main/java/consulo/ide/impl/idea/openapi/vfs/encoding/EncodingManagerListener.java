@@ -2,12 +2,12 @@
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
 import consulo.document.Document;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public interface EncodingManagerListener {
-  Topic<EncodingManagerListener> ENCODING_MANAGER_CHANGES = new Topic<>("encoding manager changes", EncodingManagerListener.class);
+  TopicImpl<EncodingManagerListener> ENCODING_MANAGER_CHANGES = new TopicImpl<>("encoding manager changes", EncodingManagerListener.class);
 
   void propertyChanged(@Nullable Document document, @Nonnull String propertyName, final Object oldValue, final Object newValue);
 }

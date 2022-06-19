@@ -15,17 +15,17 @@
  */
 package consulo.compiler.event;
 
+import consulo.annotation.component.Topic;
 import consulo.compiler.CompileContext;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 
 import java.util.EventListener;
 
 /**
  * A listener for compiler events.
  */
+@Topic
 public interface CompilationStatusListener extends EventListener {
-  Topic<CompilationStatusListener> TOPIC = Topic.create("compilation status", CompilationStatusListener.class);
-
   /**
    * Invoked in a Swing dispatch thread after the compilation is finished.
    *

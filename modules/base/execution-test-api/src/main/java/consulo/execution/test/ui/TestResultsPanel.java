@@ -72,7 +72,7 @@ public abstract class TestResultsPanel extends JPanel implements Disposable, Dat
         repaint();
       }
     };
-    properties.getProject().getMessageBus().connect(this).subscribe(ToolWindowManagerListener.TOPIC, listener);
+    properties.getProject().getMessageBus().connect(this).subscribe(ToolWindowManagerListener.class, listener);
   }
 
   public void initUI() {

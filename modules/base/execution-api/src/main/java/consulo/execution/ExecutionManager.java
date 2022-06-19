@@ -17,9 +17,7 @@ package consulo.execution;
 
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
-import consulo.component.messagebus.Topic;
 import consulo.execution.configuration.RunProfileState;
-import consulo.execution.event.ExecutionListener;
 import consulo.execution.executor.Executor;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ProgramRunner;
@@ -37,9 +35,6 @@ import javax.annotation.Nullable;
  */
 @Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ExecutionManager {
-  public static final Topic<ExecutionListener> EXECUTION_TOPIC =
-          Topic.create("configuration executed", ExecutionListener.class, Topic.BroadcastDirection.TO_PARENT);
-
   public static ExecutionManager getInstance(@Nonnull Project project) {
     return project.getInstance(ExecutionManager.class);
   }

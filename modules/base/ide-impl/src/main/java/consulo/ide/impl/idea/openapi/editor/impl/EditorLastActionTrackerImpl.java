@@ -54,7 +54,7 @@ public class EditorLastActionTrackerImpl extends EditorLastActionTracker impleme
   @Inject
   EditorLastActionTrackerImpl(Application application, ActionManager actionManager, EditorFactory editorFactory) {
     myActionManager = actionManager;
-    application.getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, this);
+    application.getMessageBus().connect(this).subscribe(AnActionListener.class, this);
     myEditorEventMulticaster = editorFactory.getEventMulticaster();
     myEditorEventMulticaster.addEditorMouseListener(this, this);
   }

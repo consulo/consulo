@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -25,7 +24,7 @@ final class IgnoredFileCache {
   IgnoredFileCache(@Nonnull IgnoredPatternSet ignoredPatterns) {
     myIgnoredPatterns = ignoredPatterns;
     MessageBusConnection connect = ApplicationManager.getApplication().getMessageBus().connect();
-    connect.subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    connect.subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void before(@Nonnull List<? extends VFileEvent> events) {
         // during VFS event processing the system may be in inconsistent state, don't cache it

@@ -10,19 +10,19 @@ import consulo.application.ReadAction;
 import consulo.application.dumb.DumbAware;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.application.dumb.PossiblyDumbAware;
+import consulo.application.progress.ProgressIndicator;
 import consulo.application.util.function.Computable;
 import consulo.application.util.function.ThrowableComputable;
-import consulo.util.lang.function.ThrowableRunnable;
 import consulo.component.ComponentManager;
+import consulo.component.ProcessCanceledException;
 import consulo.component.extension.ExtensionList;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.messagebus.Topic;
 import consulo.component.util.ComponentUtil;
 import consulo.component.util.ModificationTracker;
 import consulo.disposer.Disposable;
-import consulo.component.ProcessCanceledException;
-import consulo.application.progress.ProgressIndicator;
+import consulo.project.event.DumbModeListener;
 import consulo.ui.ModalityState;
+import consulo.util.lang.function.ThrowableRunnable;
 import consulo.util.lang.ref.SimpleReference;
 
 import javax.annotation.Nonnull;
@@ -50,11 +50,6 @@ import java.util.function.Function;
  */
 @Service(ComponentScope.PROJECT)
 public abstract class DumbService {
-
-  /**
-   * @see Project#getMessageBus()
-   */
-  public static final Topic<DumbModeListener> DUMB_MODE = new Topic<>("dumb mode", DumbModeListener.class);
 
   /**
    * The tracker is advanced each time we enter/exit from dumb mode.
@@ -279,7 +274,7 @@ public abstract class DumbService {
    */
   public void makeDumbAware(@Nonnull final JComponent componentToDisable, @Nonnull Disposable parentDisposable) {
     componentToDisable.setEnabled(!isDumb());
-    getProject().getMessageBus().connect(parentDisposable).subscribe(DUMB_MODE, new DumbModeListener() {
+    getProject().getMessageBus().connect(parentDisposable).subscribe(DumbModeListener.class, new DumbModeListener() {
       @Override
       public void enteredDumbMode() {
         componentToDisable.setEnabled(false);
@@ -411,21 +406,4 @@ public abstract class DumbService {
    */
   public abstract boolean isSuspendedDumbMode();
 
-  /**
-   * @see #DUMB_MODE
-   */
-  public interface DumbModeListener {
-
-    /**
-     * The event arrives on EDT.
-     */
-    default void enteredDumbMode() {
-    }
-
-    /**
-     * The event arrives on EDT.
-     */
-    default void exitDumbMode() {
-    }
-  }
 }

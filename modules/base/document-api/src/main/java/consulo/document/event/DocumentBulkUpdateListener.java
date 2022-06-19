@@ -19,17 +19,17 @@
  */
 package consulo.document.event;
 
+import consulo.annotation.component.Topic;
 import consulo.document.Document;
-import consulo.component.messagebus.Topic;
+
 import javax.annotation.Nonnull;
 
 /**
  * @deprecated Use {@link DocumentListener} instead
  */
 @Deprecated
+@Topic
 public interface DocumentBulkUpdateListener {
-  Topic<DocumentBulkUpdateListener> TOPIC = Topic.create("Bulk document change notification like reformat, etc.", DocumentBulkUpdateListener.class);
-
   void updateStarted(@Nonnull Document doc);
 
   void updateFinished(@Nonnull Document doc);

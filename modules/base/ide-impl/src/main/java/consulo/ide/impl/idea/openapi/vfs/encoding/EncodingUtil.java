@@ -1,7 +1,6 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vfs.encoding;
 
-import consulo.ide.impl.AppTopics;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -159,7 +158,7 @@ public class EncodingUtil {
 
     final Disposable disposable = Disposable.newDisposable();
     MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect(disposable);
-    connection.subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerListener() {
+    connection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
       @Override
       public void beforeFileContentReload(@Nonnull VirtualFile file, @Nonnull Document document) {
         if (!file.equals(virtualFile)) return;

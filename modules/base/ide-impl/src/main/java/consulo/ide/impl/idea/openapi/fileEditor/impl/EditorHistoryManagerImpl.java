@@ -80,7 +80,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
 
     MessageBusConnection connection = project.getMessageBus().connect();
 
-    connection.subscribe(UISettingsListener.TOPIC, this::trimToSize);
+    connection.subscribe(UISettingsListener.class, this::trimToSize);
 
     connection.subscribe(FileEditorManagerListener.Before.FILE_EDITOR_MANAGER, new FileEditorManagerListener.Before.Adapter() {
       @Override
@@ -88,7 +88,7 @@ public final class EditorHistoryManagerImpl implements PersistentStateComponentW
         updateHistoryEntry(file, false);
       }
     });
-    connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new MyEditorManagerListener());
+    connection.subscribe(FileEditorManagerListener.class, new MyEditorManagerListener());
   }
 
   private synchronized void addEntry(HistoryEntry entry) {

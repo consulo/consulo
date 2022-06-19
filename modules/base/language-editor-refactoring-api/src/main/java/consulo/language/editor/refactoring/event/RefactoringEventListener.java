@@ -15,7 +15,7 @@
  */
 package consulo.language.editor.refactoring.event;
 
-import consulo.component.messagebus.Topic;
+import consulo.annotation.component.Topic;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,17 +25,13 @@ import javax.annotation.Nullable;
  *
  * RefactoringEventData depends on the refactoring performed. It should reflect state of the data before/after refactoring.
  */
+@Topic
 public interface RefactoringEventListener {
-  /**
-   * Entry point to attach a client listener. Events are posted on the project bus and its children so connection should be done as following
-   * {@code project.getMessageBus().connect(Disposable).subscribe(RefactoringEventListener.REFACTORING_EVENT_TOPIC, new Listener())}
-   */
-  Topic<RefactoringEventListener> REFACTORING_EVENT_TOPIC = Topic.create("REFACTORING_EVENT_TOPIC", RefactoringEventListener.class);
 
   /**
    * Is fired when refactoring enters its write phase (find usages, conflict detection phases are passed already)
    */
-  void refactoringStarted(@Nonnull String refactoringId, @javax.annotation.Nullable RefactoringEventData beforeData);
+  void refactoringStarted(@Nonnull String refactoringId, @Nullable RefactoringEventData beforeData);
 
   /**
    * Is fired when refactoring is completed, probably with conflicts.

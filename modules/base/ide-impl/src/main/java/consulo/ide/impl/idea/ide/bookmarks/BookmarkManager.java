@@ -73,7 +73,7 @@ public class BookmarkManager implements PersistentStateComponent<Element> {
   public static class MyStartupActivity implements StartupActivity.DumbAware {
     @Override
     public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
-      project.getMessageBus().connect().subscribe(PsiDocumentListener.TOPIC, BookmarkManager::documentCreated);
+      project.getMessageBus().connect().subscribe(PsiDocumentListener.class, BookmarkManager::documentCreated);
 
       // init
       BookmarkManager.getInstance(project);

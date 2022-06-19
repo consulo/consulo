@@ -16,27 +16,28 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.DaemonCodeAnalyzer;
-import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
-import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.document.Document;
+import consulo.application.dumb.DumbAwareRunnable;
 import consulo.codeEditor.Editor;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
 import consulo.document.internal.DocumentEx;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.application.dumb.DumbAwareRunnable;
+import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
+import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
+import consulo.language.editor.DaemonCodeAnalyzer;
+import consulo.language.editor.DaemonListener;
+import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.WindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.StatusBarEx;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.disposer.Disposable;
 import consulo.ui.Component;
 import consulo.ui.FocusableComponent;
+import consulo.ui.ex.awt.util.Alarm;
 
 import javax.annotation.Nonnull;
 
@@ -55,14 +56,14 @@ public class StatusBarUpdater implements Disposable {
   public StatusBarUpdater(Project project) {
     myProject = project;
 
-    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
+    project.getMessageBus().connect(this).subscribe(FileEditorManagerListener.class, new FileEditorManagerAdapter() {
       @Override
       public void selectionChanged(@Nonnull FileEditorManagerEvent event) {
         updateLater();
       }
     });
 
-    project.getMessageBus().connect(this).subscribe(DaemonCodeAnalyzer.DAEMON_EVENT_TOPIC, new DaemonCodeAnalyzer.DaemonListenerAdapter() {
+    project.getMessageBus().connect(this).subscribe(DaemonListener.class, new DaemonListener() {
       @Override
       public void daemonFinished() {
         updateLater();

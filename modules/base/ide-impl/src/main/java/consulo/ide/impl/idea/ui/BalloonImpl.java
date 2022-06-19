@@ -622,7 +622,7 @@ public class BalloonImpl implements Balloon, IdeTooltip.Ui, ScreenAreaConsumer {
     Toolkit.getDefaultToolkit().addAWTEventListener(myAwtActivityListener, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.KEY_EVENT_MASK);
 
     if (ApplicationManager.getApplication() != null) {
-      ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.TOPIC, new AnActionListener() {
+      ApplicationManager.getApplication().getMessageBus().connect(this).subscribe(AnActionListener.class, new AnActionListener() {
         @Override
         public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
           if (myHideOnAction && !(action instanceof HintManagerImpl.ActionToIgnore)) {

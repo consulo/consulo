@@ -351,7 +351,7 @@ public class FileChooserDialogImpl extends DialogWrapper implements FileChooserD
     hintLabel.setFont(JBUI.Fonts.smallFont());
     panel.add(hintLabel, BorderLayout.SOUTH);
 
-    ApplicationManager.getApplication().getMessageBus().connect(getDisposable()).subscribe(ApplicationActivationListener.TOPIC, new ApplicationActivationListener() {
+    ApplicationManager.getApplication().getMessageBus().connect(getDisposable()).subscribe(ApplicationActivationListener.class, new ApplicationActivationListener() {
       @Override
       public void applicationActivated(IdeFrame ideFrame) {
         ((DesktopSaveAndSyncHandlerImpl)SaveAndSyncHandler.getInstance()).maybeRefresh(IdeaModalityState.current());

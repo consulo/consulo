@@ -42,7 +42,6 @@ import consulo.module.Module;
 import consulo.project.Project;
 import consulo.util.lang.function.Condition;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
@@ -79,7 +78,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     }
     if (old != null) {
       // firing outside lock
-      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.TOPIC).problemsDisappeared(problemFile);
+      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsDisappeared(problemFile);
     }
   }
 
@@ -143,7 +142,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
       }
     };
     psiManager.addPsiTreeChangeListener(changeListener);
-    project.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    project.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         boolean dirChanged = false;
@@ -319,7 +318,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
 
   @Override
   public void addProblemListener(@Nonnull WolfTheProblemSolver.ProblemListener listener, @Nonnull Disposable parentDisposable) {
-    myProject.getMessageBus().connect(parentDisposable).subscribe(consulo.language.editor.wolfAnalyzer.ProblemListener.TOPIC, listener);
+    myProject.getMessageBus().connect(parentDisposable).subscribe(consulo.language.editor.wolfAnalyzer.ProblemListener.class, listener);
   }
 
   @Override
@@ -383,7 +382,7 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     }
     doQueue(virtualFile);
     if (fireListener) {
-      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.TOPIC).problemsAppeared(virtualFile);
+      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsAppeared(virtualFile);
     }
   }
 
@@ -426,10 +425,10 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
     }
     doQueue(file);
     if (!hasProblemsBefore) {
-      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.TOPIC).problemsAppeared(file);
+      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsAppeared(file);
     }
     else if (fireChanged) {
-      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.TOPIC).problemsChanged(file);
+      myProject.getMessageBus().syncPublisher(consulo.language.editor.wolfAnalyzer.ProblemListener.class).problemsChanged(file);
     }
   }
 

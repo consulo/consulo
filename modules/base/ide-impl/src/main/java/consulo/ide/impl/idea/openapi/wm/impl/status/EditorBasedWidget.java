@@ -136,7 +136,7 @@ public abstract class EditorBasedWidget implements StatusBarWidget, FileEditorMa
     myStatusBar = statusBar;
     Disposer.register(myStatusBar, this);
     myConnection = myProject.getMessageBus().connect(this);
-    myConnection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
+    myConnection.subscribe(FileEditorManagerListener.class, this);
   }
 
   @Override

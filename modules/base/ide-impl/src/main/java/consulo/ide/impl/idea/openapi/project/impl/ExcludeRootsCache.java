@@ -34,7 +34,7 @@ final class ExcludeRootsCache {
   }
 
   ExcludeRootsCache(@Nonnull MessageBusConnection connection) {
-    connection.subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    connection.subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectOpened(@Nonnull Project project) {
         myCache = null;

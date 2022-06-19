@@ -3,7 +3,6 @@ package consulo.ide.impl.idea.dvcs.ui;
 
 import consulo.ide.impl.idea.dvcs.branch.DvcsBranchUtil;
 import consulo.ide.impl.idea.dvcs.repo.Repository;
-import consulo.ide.impl.idea.dvcs.repo.VcsRepositoryManager;
 import consulo.ide.impl.idea.dvcs.repo.VcsRepositoryMappingListener;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
@@ -45,7 +44,7 @@ public abstract class DvcsStatusWidget<T extends Repository> extends EditorBased
     super(project);
     myVcsName = vcsName;
 
-    project.getMessageBus().connect(this).subscribe(VcsRepositoryManager.VCS_REPOSITORY_MAPPING_UPDATED, new VcsRepositoryMappingListener() {
+    project.getMessageBus().connect(this).subscribe(VcsRepositoryMappingListener.class, new VcsRepositoryMappingListener() {
       @Override
       public void mappingChanged() {
         LOG.debug("repository mappings changed");

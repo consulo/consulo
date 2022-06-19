@@ -15,9 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.Topic;
 import consulo.ide.impl.idea.openapi.vcs.VcsKey;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.component.messagebus.Topic;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,11 +25,13 @@ import consulo.component.messagebus.Topic;
  * Date: 11/19/12
  * Time: 4:30 PM
  */
+@Topic
 public interface VcsAnnotationRefresher {
-  Topic<VcsAnnotationRefresher> LOCAL_CHANGES_CHANGED = Topic.create("LOCAL_CHANGES_CHANGED", VcsAnnotationRefresher.class);
-
   void dirtyUnder(VirtualFile file);
+
   void dirty(BaseRevision currentRevision);
+
   void dirty(String path);
+
   void configurationChanged(final VcsKey key);
 }

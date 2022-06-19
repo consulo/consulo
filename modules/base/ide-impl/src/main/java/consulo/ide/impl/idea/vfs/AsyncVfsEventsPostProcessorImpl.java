@@ -19,7 +19,6 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.AsyncVfsEventsListener;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.virtualFileSystem.event.BulkFileListener;
@@ -73,7 +72,7 @@ public class AsyncVfsEventsPostProcessorImpl implements AsyncVfsEventsPostProces
 
   @Inject
   public AsyncVfsEventsPostProcessorImpl(Application application) {
-    application.getMessageBus().connect().subscribe(VirtualFileManager.VFS_CHANGES, new BulkFileListener() {
+    application.getMessageBus().connect().subscribe(BulkFileListener.class, new BulkFileListener() {
       @Override
       public void after(@Nonnull List<? extends VFileEvent> events) {
         myQueue.add(events);

@@ -939,8 +939,7 @@
     <extensionPoint name="completionData"
                     beanClass="consulo.language.editor.impl.internal.completion.CompletionDataEP"/>
 
-    <extensionPoint name="usageFilteringRuleProvider"
-                    interface="consulo.usage.rule.UsageFilteringRuleProvider"/>
+
     <extensionPoint name="importFilteringRule"
                     interface="consulo.usage.rule.ImportFilteringRule"/>
     <extensionPoint name="usageGroupingRuleProvider"
@@ -1408,7 +1407,6 @@
                             order="after compileBeforeRunNoErrorCheck"/>
     <stepsBeforeRunProvider implementation="consulo.ide.impl.idea.execution.impl.RunConfigurationBeforeRunProvider"/>
 
-    <usageFilteringRuleProvider implementation="consulo.ide.impl.idea.usages.impl.ImportUsageFilteringRuleProvider"/>
     <applicationService serviceInterface="consulo.ide.impl.idea.usages.impl.ImportFilteringUsageViewSetting"
                         serviceImplementation="consulo.ide.impl.idea.usages.impl.ImportFilteringUsageViewSetting"/>
 
@@ -2246,7 +2244,7 @@
   </applicationListeners>
 
   <projectListeners>
-    <listener class="consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="consulo.language.psi.PsiModificationTracker$Listener"/>
+    <listener class="consulo.ide.impl.idea.openapi.vfs.newvfs.impl.CachedFileType$PsiListener" topic="consulo.language.psi.PsiModificationTrackerListener"/>
     <listener class="consulo.module.impl.internal.ExtensionListenerByLayerListenerInvoker" topic="consulo.module.content.layer.event.ModuleRootLayerListener"/>
   </projectListeners>
 </consulo-plugin>

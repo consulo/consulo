@@ -16,37 +16,37 @@
 
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
-import consulo.application.PowerSaveMode;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.application.PowerSaveModeListener;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.EditorFactory;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.document.Document;
+import consulo.fileEditor.FileEditor;
+import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.language.editor.wolfAnalyzer.ProblemListener;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.event.PsiTreeChangeAdapter;
 import consulo.language.psi.event.PsiTreeChangeEvent;
-import consulo.logging.Logger;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
-import consulo.codeEditor.EditorEx;
-import consulo.fileEditor.FileEditor;
-import consulo.ide.impl.idea.openapi.fileEditor.impl.text.TextEditorPsiDataProvider;
-import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
+import consulo.logging.Logger;
+import consulo.module.Module;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.editor.wolfAnalyzer.ProblemListener;
-import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
 import consulo.project.ui.wm.dock.DockManager;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.UIAccess;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Provider;
 
 /**
  * @author yole
@@ -77,7 +77,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
 
     // reinit syntax highlighter for Groovy. In power save mode keywords are highlighted by GroovySyntaxHighlighter insteadof
     // GrKeywordAndDeclarationHighlighter. So we need to drop caches for token types attributes in LayeredLexerEditorHighlighter
-    project.getMessageBus().connect().subscribe(PowerSaveMode.TOPIC, new PowerSaveMode.Listener() {
+    project.getMessageBus().connect().subscribe(PowerSaveModeListener.class, new PowerSaveModeListener() {
       @Override
       public void powerSaveStateChanged() {
         UIUtil.invokeLaterIfNeeded(() -> {
@@ -94,7 +94,7 @@ public abstract class PsiAwareFileEditorManagerImpl extends FileEditorManagerImp
     super.projectOpened(connection);
 
     myPsiManager.addPsiTreeChangeListener(myPsiTreeChangeListener);
-    connection.subscribe(ProblemListener.TOPIC, myProblemListener);
+    connection.subscribe(ProblemListener.class, myProblemListener);
   }
 
   @Override

@@ -13,6 +13,7 @@ import consulo.codeEditor.markup.RangeHighlighter;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.event.EditorColorsListener;
 import consulo.document.Document;
 import consulo.document.util.DocumentUtil;
 import consulo.document.util.TextRange;
@@ -56,7 +57,7 @@ public class ExecutionPointHighlighter {
     myProject = project;
 
     // Update highlighter colors if global color schema was changed
-    project.getMessageBus().connect().subscribe(EditorColorsManager.TOPIC, scheme -> update(false));
+    project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> update(false));
   }
 
   public void show(final @Nonnull XSourcePosition position, final boolean notTopFrame, @Nullable final GutterIconRenderer gutterIconRenderer) {

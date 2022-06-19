@@ -97,7 +97,7 @@ public final class IdeTooltipManagerImpl implements Disposable, AWTEventListener
 
     Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK);
 
-    application.getMessageBus().connect(application).subscribe(AnActionListener.TOPIC, new AnActionListener() {
+    application.getMessageBus().connect(application).subscribe(AnActionListener.class, new AnActionListener() {
       @Override
       public void beforeActionPerformed(@Nonnull AnAction action, @Nonnull DataContext dataContext, @Nonnull AnActionEvent event) {
         hideCurrent(null, action, event);

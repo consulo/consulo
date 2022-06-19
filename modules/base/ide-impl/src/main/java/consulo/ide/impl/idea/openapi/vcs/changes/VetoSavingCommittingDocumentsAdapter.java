@@ -22,21 +22,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.ide.impl.AppTopics;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
-import consulo.document.event.FileDocumentManagerAdapter;
+import consulo.document.event.FileDocumentManagerListener;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitHelper;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.project.Project;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.dataholder.UserDataHolderEx;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitHelper;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
 import java.util.Map;
 
 @Singleton
@@ -49,7 +48,7 @@ public class VetoSavingCommittingDocumentsAdapter {
   public VetoSavingCommittingDocumentsAdapter(final FileDocumentManager fileDocumentManager) {
     myFileDocumentManager = fileDocumentManager;
 
-    ApplicationManager.getApplication().getMessageBus().connect().subscribe(AppTopics.FILE_DOCUMENT_SYNC, new FileDocumentManagerAdapter() {
+    ApplicationManager.getApplication().getMessageBus().connect().subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
       @Override
       public void beforeAllDocumentsSaving() {
         Map<Document, Project> documentsToWarn = getDocumentsBeingCommitted();

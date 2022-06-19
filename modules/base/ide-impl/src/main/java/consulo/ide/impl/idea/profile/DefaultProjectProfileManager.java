@@ -84,7 +84,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
     myHolder = holder;
     myApplicationProfileManager = applicationProfileManager;
 
-    myListenerPublisher = project.getMessageBus().syncPublisher(ProfileChangeAdapter.TOPIC);
+    myListenerPublisher = project.getMessageBus().syncPublisher(ProfileChangeAdapter.class);
   }
 
   @Nonnull
@@ -248,7 +248,7 @@ public abstract class DefaultProjectProfileManager implements ProjectProfileMana
 
   @Deprecated
   public void addProfileChangeListener(@Nonnull final ProfileChangeAdapter profilesListener, @Nonnull Disposable parent) {
-    myProject.getMessageBus().connect(parent).subscribe(ProfileChangeAdapter.TOPIC, profilesListener);
+    myProject.getMessageBus().connect(parent).subscribe(ProfileChangeAdapter.class, profilesListener);
   }
 
   public static class ProfileStateSplitter extends MainConfigurationStateSplitter {

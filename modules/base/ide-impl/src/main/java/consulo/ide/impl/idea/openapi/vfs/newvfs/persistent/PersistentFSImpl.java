@@ -89,7 +89,7 @@ public final class PersistentFSImpl extends PersistentFS implements Disposable {
     BulkFileListener publisher = myPublisher;
     if (publisher == null) {
       // cannot be in constructor, to ensure that lazy listeners will be not created too early
-      publisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFileManager.VFS_CHANGES);
+      publisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(BulkFileListener.class);
       myPublisher = publisher;
     }
     return publisher;

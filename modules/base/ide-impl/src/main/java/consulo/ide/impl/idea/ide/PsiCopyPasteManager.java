@@ -24,7 +24,6 @@ import consulo.ide.ServiceManager;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.language.psi.*;
 import consulo.project.Project;
-import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -66,7 +65,7 @@ public class PsiCopyPasteManager {
   @Inject
   public PsiCopyPasteManager(Application application, CopyPasteManager copyPasteManager) {
     myCopyPasteManager = (CopyPasteManagerEx) copyPasteManager;
-    application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+    application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
       @Override
       public void projectClosing(@Nonnull Project project) {
         if (myRecentData != null && myRecentData.getProject() == project) {

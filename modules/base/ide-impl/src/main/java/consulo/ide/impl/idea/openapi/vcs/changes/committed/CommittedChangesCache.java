@@ -38,7 +38,7 @@ import consulo.component.ProcessCanceledException;
 import consulo.application.util.function.Computable;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -128,7 +128,7 @@ public class CommittedChangesCache implements PersistentStateComponent<Committed
     }
   }
 
-  public static final Topic<CommittedChangesListener> COMMITTED_TOPIC = new Topic<CommittedChangesListener>("committed changes updates", CommittedChangesListener.class);
+  public static final TopicImpl<CommittedChangesListener> COMMITTED_TOPIC = new TopicImpl<CommittedChangesListener>("committed changes updates", CommittedChangesListener.class);
 
   public static CommittedChangesCache getInstance(Project project) {
     return project.getComponent(CommittedChangesCache.class);

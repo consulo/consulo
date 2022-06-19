@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.usages.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.CustomShortcutSet;
@@ -35,6 +36,7 @@ import java.util.List;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class ImportUsageFilteringRuleProvider implements UsageFilteringRuleProvider {
   @Override
   @Nonnull

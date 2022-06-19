@@ -230,7 +230,7 @@ public class UnifiedFileEditorWindow extends FileEditorWindowBase implements Fil
         editorManager.notifyPublisher(() -> {
           final Project project = editorManager.getProject();
           if (!project.isDisposed()) {
-            final FileEditorManagerListener afterPublisher = project.getMessageBus().syncPublisher(FileEditorManagerListener.FILE_EDITOR_MANAGER);
+            final FileEditorManagerListener afterPublisher = project.getMessageBus().syncPublisher(FileEditorManagerListener.class);
             afterPublisher.fileClosed(editorManager, file);
           }
         });

@@ -20,6 +20,7 @@ import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.extension.ModuleExtension;
 import consulo.module.extension.ModuleExtensionHelper;
+import consulo.module.extension.event.ModuleExtensionChangeListener;
 import consulo.module.impl.internal.layer.ModuleExtensionProviderEP;
 import consulo.project.Project;
 import consulo.module.content.ModuleRootManager;
@@ -49,7 +50,7 @@ public class ModuleExtensionHelperImpl implements ModuleExtensionHelper {
   @Inject
   public ModuleExtensionHelperImpl(Project project) {
     myProject = project;
-    project.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> myExtensions = null);
+    project.getMessageBus().connect().subscribe(ModuleExtensionChangeListener.class, (oldExtension, newExtension) -> myExtensions = null);
   }
 
   @Override

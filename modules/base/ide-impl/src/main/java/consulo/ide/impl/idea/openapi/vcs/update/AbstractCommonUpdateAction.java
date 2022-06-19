@@ -375,7 +375,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
         } finally {
           myProjectLevelVcsManager.stopBackgroundVcsOperation();
           if (!myProject.isDisposed()) {
-            myProject.getMessageBus().syncPublisher(UpdatedFilesListener.UPDATED_FILES).
+            myProject.getMessageBus().syncPublisher(UpdatedFilesListener.class).
                     consume(UpdatedFilesReverseSide.getPathsFromUpdatedFiles(myUpdatedFiles));
           }
         }
@@ -409,7 +409,7 @@ public abstract class AbstractCommonUpdateAction extends AbstractVcsAction imple
     }
 
     private void notifyAnnotations() {
-      final VcsAnnotationRefresher refresher = myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.LOCAL_CHANGES_CHANGED);
+      final VcsAnnotationRefresher refresher = myProject.getMessageBus().syncPublisher(VcsAnnotationRefresher.class);
       UpdateFilesHelper.iterateFileGroupFilesDeletedOnServerFirst(myUpdatedFiles, new UpdateFilesHelper.Callback() {
         @Override
         public void onFile(String filePath, String groupId) {

@@ -10,6 +10,7 @@ import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.dataContext.TypeSafeDataProvider;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.project.event.DumbModeListener;
 import consulo.ui.ex.OccurenceNavigator;
 import consulo.ui.ex.TreeExpander;
 import consulo.ui.ex.awt.Messages;
@@ -1952,7 +1953,7 @@ public class UsageViewImpl implements UsageViewEx {
   private final class ButtonPanel extends JPanel {
     private ButtonPanel() {
       setLayout(new FlowLayout(FlowLayout.LEFT, 6, 0));
-      getProject().getMessageBus().connect(UsageViewImpl.this).subscribe(DumbService.DUMB_MODE, new DumbService.DumbModeListener() {
+      getProject().getMessageBus().connect(UsageViewImpl.this).subscribe(DumbModeListener.class, new DumbModeListener() {
         @Override
         public void enteredDumbMode() {
           update();

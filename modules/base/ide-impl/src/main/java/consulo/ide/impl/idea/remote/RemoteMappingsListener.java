@@ -15,15 +15,15 @@
  */
 package consulo.ide.impl.idea.remote;
 
-import consulo.component.messagebus.Topic;
+import consulo.component.messagebus.TopicImpl;
 import javax.annotation.Nonnull;
 
 /**
  * @author Irina.Chernushina on 2/4/2016.
  */
 public interface RemoteMappingsListener {
-  Topic<RemoteMappingsListener> REMOTE_MAPPINGS_CHANGED =
-    new Topic<>("remotesdk.RemoteMappingsListener", RemoteMappingsListener.class);
+  TopicImpl<RemoteMappingsListener> REMOTE_MAPPINGS_CHANGED =
+    new TopicImpl<>("remotesdk.RemoteMappingsListener", RemoteMappingsListener.class);
 
   void mappingsChanged(@Nonnull String prefix, @Nonnull String serverId);
   void mappingsChanged();

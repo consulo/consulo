@@ -19,7 +19,6 @@ import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
@@ -49,7 +48,7 @@ public class FileContentUtilCore {
         saveOrReload(file, events);
       }
 
-      BulkFileListener publisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(VirtualFileManager.VFS_CHANGES);
+      BulkFileListener publisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(BulkFileListener.class);
       List<VFileEvent> eventList = new ArrayList<VFileEvent>(events);
       publisher.before(eventList);
       publisher.after(eventList);
