@@ -2,28 +2,29 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.application.util.registry.Registry;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.impl.ProjectPaneSelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.BaseProjectTreeBuilder;
-import consulo.project.ui.view.tree.ViewSettings;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.BaseProjectViewDirectoryHelper;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import consulo.language.editor.scratch.ScratchUtil;
-import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
-import consulo.project.DumbService;
-import consulo.project.Project;
+import consulo.language.psi.PsiDirectory;
 import consulo.module.content.ProjectFileIndex;
 import consulo.module.content.ProjectRootManager;
-import consulo.application.util.registry.Registry;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDirectory;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
+import consulo.ui.ex.awt.tree.AbstractTreeBuilder;
+import consulo.ui.ex.awt.tree.AbstractTreeUpdater;
 import consulo.ui.image.Image;
 import consulo.util.dataholder.KeyWithDefaultValue;
 import consulo.util.lang.Comparing;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.archive.ArchiveFileSystem;
 import consulo.virtualFileSystem.archive.ArchiveVfsUtil;
 import jakarta.inject.Inject;
@@ -33,6 +34,7 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 
+@ExtensionImpl
 public class ProjectViewPane extends AbstractProjectViewPSIPane {
   public static final String ID = "ProjectPane";
 

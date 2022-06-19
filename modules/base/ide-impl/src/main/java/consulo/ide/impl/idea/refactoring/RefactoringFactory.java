@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.refactoring;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.language.psi.PsiElement;
 import consulo.project.Project;
@@ -22,6 +24,7 @@ import consulo.project.Project;
 /**
  * @author dsl
  */
+@Service(ComponentScope.PROJECT)
 public abstract class RefactoringFactory {
   public static RefactoringFactory getInstance(Project project) {
     return ServiceManager.getService(project, RefactoringFactory.class);

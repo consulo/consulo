@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorPolicy;
 import consulo.fileEditor.FileEditorProvider;
@@ -31,6 +32,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class HttpFileEditorProvider implements FileEditorProvider, DumbAware {
   public boolean accept(@Nonnull final Project project, @Nonnull final VirtualFile file) {
     return file instanceof HttpVirtualFile && !file.isDirectory();

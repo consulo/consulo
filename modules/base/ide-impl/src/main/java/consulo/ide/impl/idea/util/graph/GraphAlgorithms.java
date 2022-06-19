@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.util.graph;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.component.util.graph.Graph;
 import consulo.application.progress.ProgressIndicator;
@@ -29,6 +31,7 @@ import java.util.Set;
 /**
  * @author nik
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class GraphAlgorithms {
   public static GraphAlgorithms getInstance() {
     return ServiceManager.getService(GraphAlgorithms.class);

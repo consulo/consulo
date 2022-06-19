@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.application.options.codeStyle.cache;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.language.codeStyle.internal.CodeStyleCachingService;
 import consulo.virtualFileSystem.VirtualFile;
@@ -10,6 +11,8 @@ import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolder;
 import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.ObjectUtil;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -18,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+@Singleton
+@ServiceImpl
 public class CodeStyleCachingServiceImpl implements CodeStyleCachingService, Disposable {
   public final static int MAX_CACHE_SIZE = 100;
 

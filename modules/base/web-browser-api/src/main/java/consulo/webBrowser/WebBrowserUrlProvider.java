@@ -15,6 +15,8 @@
  */
 package consulo.webBrowser;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.util.collection.ContainerUtil;
@@ -25,8 +27,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class WebBrowserUrlProvider {
-  public static final ExtensionPointName<WebBrowserUrlProvider> EP_NAME = ExtensionPointName.create("consulo.webBrowserUrlProvider");
+  public static final ExtensionPointName<WebBrowserUrlProvider> EP_NAME = ExtensionPointName.create(WebBrowserUrlProvider.class);
 
   /**
    * Browser exceptions are printed in Error Dialog when user presses any browser button

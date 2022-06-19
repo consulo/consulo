@@ -15,6 +15,8 @@
  */
 package consulo.virtualFileSystem.status;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.disposer.Disposable;
@@ -25,6 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author mike
  */
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class FileStatusManager {
   @Nonnull
   public static FileStatusManager getInstance(Project project) {

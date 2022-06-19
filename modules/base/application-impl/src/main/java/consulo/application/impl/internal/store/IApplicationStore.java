@@ -15,10 +15,13 @@
  */
 package consulo.application.impl.internal.store;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.store.impl.internal.IComponentStore;
 
 import javax.annotation.Nonnull;
 
+@Service(ComponentScope.APPLICATION)
 public interface IApplicationStore extends IComponentStore {
   void setOptionsPath(@Nonnull String path);
 

@@ -16,12 +16,16 @@
 
 package consulo.ide.impl.idea.ide.todo;
 
-import consulo.ide.ServiceManager;
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
@@ -29,9 +33,33 @@ import javax.annotation.Nonnull;
  * @author yole
  */
 public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
+  @Nonnull
+  @Override
+  public String getId() {
+    return ToolWindowId.TODO_VIEW;
+  }
+
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
-    ServiceManager.getService(project, TodoView.class).initToolWindow(toolWindow);
+    project.getInstance(TodoView.class).initToolWindow(toolWindow);
+  }
+
+  @Nonnull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.BOTTOM;
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.toolwindowsToolwindowtodo();
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("TODO");
   }
 }

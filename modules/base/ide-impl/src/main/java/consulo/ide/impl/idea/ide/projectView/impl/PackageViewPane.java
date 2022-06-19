@@ -19,6 +19,7 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
 import consulo.localHistory.LocalHistory;
@@ -67,6 +68,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.util.*;
 
+@ExtensionImpl
 public final class PackageViewPane extends AbstractProjectViewPSIPane {
   public static final String ID = "PackagesPane";
   private final MyDeletePSIElementProvider myDeletePSIElementProvider = new MyDeletePSIElementProvider();

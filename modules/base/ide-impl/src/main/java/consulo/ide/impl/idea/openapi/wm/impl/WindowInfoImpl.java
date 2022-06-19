@@ -15,14 +15,12 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl;
 
+import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.wm.*;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.ui.ex.toolWindow.ToolWindowContentUiType;
+import consulo.ui.ex.toolWindow.*;
 import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.ui.ex.toolWindow.ToolWindowType;
 import consulo.ui.Rectangle2D;
-import consulo.ui.ex.toolWindow.WindowInfo;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 import javax.annotation.Nonnull;
@@ -370,9 +368,8 @@ public final class WindowInfoImpl implements Cloneable, WindowInfo {
   }
 
   private static boolean canActivateOnStart(String id) {
-    for (ToolWindowEP ep : ToolWindowEP.EP_NAME.getExtensionList()) {
-      if (id.equals(ep.id)) {
-        ToolWindowFactory factory = ep.getToolWindowFactory();
+    for (ToolWindowFactory factory : Application.get().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+      if (id.equals(factory.getId())) {
         return !factory.isDoNotActivateOnStart();
       }
     }

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
@@ -53,6 +54,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 public class HighlightManagerImpl extends HighlightManager implements ProjectComponent {
   private final Project myProject;
 

@@ -15,6 +15,7 @@
  */
 package consulo.execution.debug;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.execution.executor.Executor;
 import consulo.execution.executor.ExecutorRegistry;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author spleaner
  */
+@ExtensionImpl
 public class DefaultDebugExecutor extends Executor {
   public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 

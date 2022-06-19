@@ -16,8 +16,10 @@
 
 package consulo.ide.impl.idea.tools;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.keymap.KeyMapBundle;
 
+@ExtensionImpl
 public class ToolKeymapExtension extends BaseToolKeymapExtension {
 
   private final ToolManager myToolManager;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.module.Module;
@@ -35,6 +36,7 @@ import java.util.List;
  * @author VISTALL
  * @since 27.09.14
  */
+@ExtensionImpl
 public class ModuleDependencyActionProvider implements AddModuleDependencyActionProvider<List<Module>, ModuleDependencyContext> {
   @Nonnull
   @Override

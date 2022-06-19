@@ -16,6 +16,9 @@
 package consulo.ide.impl.idea.dvcs.cherrypick;
 
 import com.google.common.collect.Lists;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
@@ -43,6 +46,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class VcsCherryPickManager {
   private static final Logger LOG = Logger.getInstance(VcsCherryPickManager.class);
   @Nonnull

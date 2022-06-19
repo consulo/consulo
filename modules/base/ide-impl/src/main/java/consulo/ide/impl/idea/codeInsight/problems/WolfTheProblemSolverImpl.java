@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.problems;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.GeneralHighlightingPass;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.ProgressableTextEditorHighlightingPass;
@@ -59,6 +60,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author cdr
  */
 @Singleton
+@ServiceImpl
 public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   private final Map<VirtualFile, ProblemFileInfo> myProblems = new HashMap<>(); // guarded by myProblems
   private final Collection<VirtualFile> myCheckingQueue = new HashSet<>(10);

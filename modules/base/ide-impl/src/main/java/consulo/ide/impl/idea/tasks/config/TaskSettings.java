@@ -15,24 +15,25 @@
  */
 package consulo.ide.impl.idea.tasks.config;
 
-import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
+import consulo.util.xml.serializer.XmlSerializerUtil;
+import jakarta.inject.Singleton;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 3/23/12
+ * Date: 3/23/12
  */
-@State(
-  name = "TaskSettings",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+@Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
+@State(name = "TaskSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
 public class TaskSettings implements PersistentStateComponent<TaskSettings> {
 
   public boolean ALWAYS_DISPLAY_COMBO = false;

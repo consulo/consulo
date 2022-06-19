@@ -56,7 +56,7 @@ public class GotoTypeDeclarationAction extends BaseCodeInsightAction implements 
   @RequiredUIAccess
   @Override
   public void update(final AnActionEvent event) {
-    if (Extensions.getExtensions(TypeDeclarationProvider.EP_NAME).length == 0) {
+    if (!TypeDeclarationProvider.EP_NAME.hasAnyExtensions()) {
       event.getPresentation().setVisible(false);
     }
     else {

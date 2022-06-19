@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.externalStorage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.event.ApplicationLoadListener;
 import consulo.application.Application;
 import consulo.application.impl.internal.store.IApplicationStore;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 11-Feb-17
  */
+@ExtensionImpl
 public class ExternalStorageAppListener implements ApplicationLoadListener {
   private final Application myApplication;
   @Nonnull

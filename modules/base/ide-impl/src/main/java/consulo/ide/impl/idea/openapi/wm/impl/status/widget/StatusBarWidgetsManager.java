@@ -1,6 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
@@ -21,6 +24,8 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public final class StatusBarWidgetsManager extends SimpleModificationTracker implements Disposable {
   @Nonnull
   public static StatusBarWidgetsManager getInstance(@Nonnull Project project) {

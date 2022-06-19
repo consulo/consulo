@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.util.ChooseElementsDialog;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
@@ -38,6 +39,7 @@ import java.util.List;
  * @author VISTALL
  * @since 27.09.14
  */
+@ExtensionImpl
 public class ProjectLibraryActionProvider implements AddModuleDependencyActionProvider<List<Library>, ProjectLibraryContext> {
   private static class ChooseLibrariesDialogImpl extends ChooseElementsDialog<Library> {
     private final LibrariesConfigurator myLibrariesConfigurator;

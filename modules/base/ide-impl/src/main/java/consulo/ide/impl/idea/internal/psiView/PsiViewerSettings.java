@@ -15,21 +15,24 @@
  */
 package consulo.ide.impl.idea.internal.psiView;
 
-import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.util.xml.serializer.XmlSerializerUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
 
 /**
  * @author Konstantin Bulenkov
  */
 @Singleton
-@State(
-  name = "PsiViewerSettings",
-  storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@State(name = "PsiViewerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PsiViewerSettings implements PersistentStateComponent<PsiViewerSettings> {
   public boolean showWhiteSpaces = true;
   public boolean showTreeNodes = true;

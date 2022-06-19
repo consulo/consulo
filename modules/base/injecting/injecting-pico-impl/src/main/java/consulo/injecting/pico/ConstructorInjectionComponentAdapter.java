@@ -184,13 +184,14 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
     }
 
     final Set<Constructor> conflicts = new HashSet<>();
-    final Set<List<Class>> unsatisfiableDependencyTypes = new HashSet<>();
+    final Set<List<Type>> unsatisfiableDependencyTypes = new HashSet<>();
     Constructor greediestConstructor = null;
     int lastSatisfiableConstructorSize = -1;
-    Class unsatisfiedDependencyType = null;
+    Type unsatisfiedDependencyType = null;
     for (Constructor constructor : constructors) {
       boolean failedDependency = false;
       Class[] parameterTypes = constructor.getParameterTypes();
+      Type[] genericParameterTypes = constructor.getGenericParameterTypes();
       Parameter[] currentParameters = createParameters(constructor);
 
       // remember: all constructors with less arguments than the given parameters are filtered out already
@@ -199,8 +200,8 @@ class ConstructorInjectionComponentAdapter<T> implements ComponentAdapter<T> {
         if (currentParameters[j].isResolvable(container, this, parameterTypes[j])) {
           continue;
         }
-        unsatisfiableDependencyTypes.add(Arrays.asList(parameterTypes));
-        unsatisfiedDependencyType = parameterTypes[j];
+        unsatisfiableDependencyTypes.add(Arrays.asList(genericParameterTypes));
+        unsatisfiedDependencyType = genericParameterTypes[j];
         failedDependency = true;
         break;
       }

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.ApplicationManager;
 import consulo.colorScheme.TextAttributes;
@@ -40,6 +42,7 @@ import java.util.List;
 /**
  * Manages the version control systems used by a specific project.
  */
+@Service(ComponentScope.PROJECT)
 public abstract class ProjectLevelVcsManager {
 
   public static final Topic<VcsListener> VCS_CONFIGURATION_CHANGED = Topic.create("VCS configuration changed", VcsListener.class);

@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.run;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.executor.Executor;
 import consulo.application.AllIcons;
 import consulo.project.Project;
@@ -28,6 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class SandExecutor extends Executor {
   @Override
   public String getToolWindowId() {

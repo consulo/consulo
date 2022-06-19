@@ -18,7 +18,7 @@ import java.util.function.Function;
 /**
  * @author max
  */
-@Service(ComponentScope.APPLICATION)
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class ManagingFS implements FileSystemInterface {
   private static class ManagingFSHolder {
     private static final ManagingFS ourInstance = ServiceManager.getService(ManagingFS.class);

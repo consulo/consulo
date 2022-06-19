@@ -15,16 +15,18 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.VcsKey;
 import consulo.ide.impl.idea.openapi.vcs.checkin.BaseCheckinHandlerFactory;
 import consulo.ide.impl.idea.openapi.vcs.checkin.CheckinHandlerFactory;
 import consulo.ide.impl.idea.openapi.vcs.checkin.VcsCheckinHandlerFactory;
-import consulo.util.collection.SmartList;
 import consulo.util.collection.MultiMap;
+import consulo.util.collection.SmartList;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -35,10 +37,12 @@ import java.util.List;
  * Time: 5:21 PM
  */
 @Singleton
+@ServiceImpl
 public class CheckinHandlersManagerImpl extends CheckinHandlersManager {
   private final List<BaseCheckinHandlerFactory> myRegisteredBeforeCheckinHandlers;
   private final MultiMap<VcsKey, VcsCheckinHandlerFactory> myVcsMap;
 
+  @Inject
   public CheckinHandlersManagerImpl() {
     myVcsMap = new MultiMap<>();
     myRegisteredBeforeCheckinHandlers = new ArrayList<>();

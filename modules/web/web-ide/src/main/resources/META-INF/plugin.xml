@@ -40,8 +40,6 @@
     <applicationService serviceInterface="consulo.ui.ex.content.ContentFactory"
                         serviceImplementation="consulo.ide.impl.wm.impl.UnifiedContentFactoryImpl"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.projectView.ProjectView" serviceImplementation="consulo.ide.impl.projectView.UnifiedProjectViewImpl"/>
-
     <applicationService serviceInterface="consulo.ui.ex.IconDeferrer"
                         serviceImplementation="consulo.ide.impl.idea.ui.DummyIconDeferrer"/>
 

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.search;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.stub.FileBasedIndex;
@@ -17,6 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
+@ServiceImpl
 public final class FileNameIndexServiceImpl implements FileNameIndexService {
   private final FileBasedIndex myIndex;
 

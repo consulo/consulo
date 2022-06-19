@@ -22,8 +22,6 @@ import consulo.ide.impl.idea.ide.fileTemplates.actions.CreateFromTemplateActionB
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.application.Application;
 import consulo.application.WriteAction;
-import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionType;
 import consulo.fileEditor.FileEditorManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -49,13 +47,6 @@ import java.util.Map;
  * @author Dmitry Avdeev
  */
 public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAction<PsiFile> {
-  @ExtensionType(value = "createFromTemplateActionModuleResolver", component = Application.class)
-  public static interface ModuleResolver {
-    ExtensionList<ModuleResolver, Application> EP = ExtensionList.of(ModuleResolver.class);
-
-    @Nullable
-    Module resolveModule(@Nonnull PsiDirectory directory, @Nonnull FileType fileType);
-  }
 
   protected CreateFileFromTemplateAction(String text, String description, Image icon) {
     super(text, description, icon);
@@ -136,7 +127,7 @@ public abstract class CreateFileFromTemplateAction extends CreateFromTemplateAct
     if (templateFileType != null) {
       PsiDirectory parent = createdElement.getParent();
       assert parent != null;
-      Module module = ModuleResolver.EP.computeSafeIfAny(Application.get(), it -> it.resolveModule(parent, templateFileType));
+      Module module = CreateFileFromTemplateModuleResolver.EP.computeSafeIfAny(Application.get(), it -> it.resolveModule(parent, templateFileType));
       if (module != null) {
         ModifiableRootModel rootModel = ModuleRootManager.getInstance(module).getModifiableModel();
 

@@ -15,15 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.bookmarks;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.favoritesTreeView.AbstractFavoritesListProvider;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.Project;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.awt.CommonActionsPanel;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.image.ImageEffects;
 import jakarta.inject.Inject;
 
@@ -38,6 +39,7 @@ import java.util.Set;
 /**
  * User: Vassiliy.Kudryashov
  */
+@ExtensionImpl
 public class BookmarksFavoriteListProvider extends AbstractFavoritesListProvider<Bookmark> implements BookmarksListener {
   private final BookmarkManager myBookmarkManager;
   private final FavoritesManager myFavoritesManager;

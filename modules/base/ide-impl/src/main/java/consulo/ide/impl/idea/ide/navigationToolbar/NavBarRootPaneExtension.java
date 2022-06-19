@@ -20,6 +20,7 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.navigationToolbar.ui.NavBarUIManager;
 import consulo.application.ui.UISettings;
 import consulo.application.ui.event.UISettingsListener;
@@ -48,10 +49,11 @@ import java.awt.*;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class NavBarRootPaneExtension extends IdeRootPaneNorthExtension {
-  private JComponent myWrapperPanel;
-  @NonNls
   public static final String NAV_BAR = "NavBar";
+
+  private JComponent myWrapperPanel;
   private Project myProject;
   private NavBarPanel myNavigationBar;
   private JPanel myRunPanel;

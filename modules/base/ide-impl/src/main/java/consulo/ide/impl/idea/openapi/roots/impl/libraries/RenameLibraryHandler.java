@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl.libraries;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.undoRedo.ProjectUndoManager;
@@ -41,6 +42,7 @@ import javax.annotation.Nullable;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class RenameLibraryHandler implements RenameHandler, TitledHandler {
   private static final Logger LOG = Logger.getInstance(RenameLibraryHandler.class);
 

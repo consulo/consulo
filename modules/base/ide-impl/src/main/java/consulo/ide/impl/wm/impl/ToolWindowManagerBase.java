@@ -27,7 +27,6 @@ import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.actions.ActivateToolWindowAction;
 import consulo.ide.impl.idea.internal.statistic.UsageTrigger;
-import consulo.ide.impl.idea.openapi.wm.ToolWindowEP;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowManagerEx;
 import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowActiveStack;
@@ -39,7 +38,6 @@ import consulo.ide.impl.idea.util.EventDispatcher;
 import consulo.localize.LocalizeValue;
 import consulo.logging.Logger;
 import consulo.module.extension.ModuleExtension;
-import consulo.module.extension.condition.ModuleExtensionCondition;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.DumbService;
 import consulo.project.Project;
@@ -52,11 +50,7 @@ import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.*;
 import consulo.ui.image.Image;
-import consulo.ui.image.ImageEffects;
-import consulo.ui.image.ImageKey;
-import consulo.ui.style.StandardColors;
 import consulo.util.concurrent.AsyncResult;
-import consulo.util.lang.function.Condition;
 import jakarta.inject.Provider;
 import kava.beans.PropertyChangeEvent;
 import kava.beans.PropertyChangeListener;
@@ -269,21 +263,20 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected AsyncResult<Void> registerToolWindowsFromBeans(@Nonnull UIAccess uiAccess) {
     List<AsyncResult<Void>> results = new ArrayList<>();
 
-    List<ToolWindowEP> beans = ToolWindowEP.EP_NAME.getExtensionList();
-    for (ToolWindowEP bean : beans) {
+    for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
       AsyncResult<Void> toolWindowResult = AsyncResult.undefined();
       results.add(toolWindowResult);
 
       uiAccess.give(() -> {
-        if (checkCondition(myProject, bean)) {
+        if (factory.validate(myProject)) {
           try {
-            initToolWindow(bean);
+            initToolWindow(factory);
           }
           catch (ProcessCanceledException e) {
             throw e;
           }
           catch (Throwable t) {
-            LOG.error("failed to init toolwindow " + bean.factoryClass, t);
+            LOG.error("failed to init toolwindow " + factory.getClass().getName(), t);
           }
         }
       }).notify(toolWindowResult);
@@ -296,17 +289,17 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   protected void connectModuleExtensionListener() {
     myProject.getMessageBus().connect().subscribe(ModuleExtension.CHANGE_TOPIC, (oldExtension, newExtension) -> {
       boolean extensionVal = newExtension.isEnabled();
-      for (final ToolWindowEP bean : ToolWindowEP.EP_NAME.getExtensionList()) {
-        boolean value = checkCondition(newExtension, bean);
+      for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+        boolean value = factory.validate(myProject);
 
         if (extensionVal && value) {
-          if (isToolWindowRegistered(bean.id)) {
+          if (isToolWindowRegistered(factory.getId())) {
             continue;
           }
-          initToolWindow(bean);
+          initToolWindow(factory);
         }
         else if (!extensionVal && !value) {
-          unregisterToolWindow(bean.id);
+          unregisterToolWindow(factory.getId());
         }
       }
     });
@@ -316,19 +309,17 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @RequiredUIAccess
   private void revalidateToolWindows() {
-    final List<ToolWindowEP> beans = ToolWindowEP.EP_NAME.getExtensionList();
-
-    for (ToolWindowEP bean : beans) {
-      boolean value = checkCondition(myProject, bean);
+    for (ToolWindowFactory factory : myProject.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+      boolean value = factory.validate(myProject);
 
       if (value) {
-        if (isToolWindowRegistered(bean.id)) {
+        if (isToolWindowRegistered(factory.getId())) {
           continue;
         }
-        initToolWindow(bean);
+        initToolWindow(factory);
       }
       else {
-        unregisterToolWindow(bean.id);
+        unregisterToolWindow(factory.getId());
       }
     }
   }
@@ -386,24 +377,6 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
   @Nullable
   protected ToolWindowStripeButton getStripeButton(final String id) {
     return myId2StripeButton.get(id);
-  }
-
-  private static boolean checkCondition(Project project, ToolWindowEP toolWindowEP) {
-    Condition<Project> condition = toolWindowEP.getCondition();
-    if (condition != null && !condition.value(project)) {
-      return false;
-    }
-    ModuleExtensionCondition moduleExtensionCondition = toolWindowEP.getModuleExtensionCondition();
-    return moduleExtensionCondition.value(project);
-  }
-
-  private static boolean checkCondition(ModuleExtension<?> extension, ToolWindowEP toolWindowEP) {
-    Condition<Project> condition = toolWindowEP.getCondition();
-    if (condition != null && !condition.value(extension.getProject())) {
-      return false;
-    }
-    ModuleExtensionCondition moduleExtensionCondition = toolWindowEP.getModuleExtensionCondition();
-    return moduleExtensionCondition.value(extension);
   }
 
   protected void fireToolWindowRegistered(final String id) {
@@ -937,30 +910,22 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
 
   @RequiredUIAccess
   @Override
-  public void initToolWindow(@Nonnull ToolWindowEP bean) {
-    WindowInfoImpl before = myLayout.getInfo(bean.id, false);
+  public void initToolWindow(@Nonnull ToolWindowFactory factory) {
+    WindowInfoImpl before = myLayout.getInfo(factory.getId(), false);
     boolean visible = before != null && before.isVisible();
     Object label = createInitializingLabel();
-    ToolWindowAnchor toolWindowAnchor = ToolWindowAnchor.fromText(bean.anchor);
-    final ToolWindowFactory factory = bean.getToolWindowFactory();
-    ToolWindow window = registerToolWindow(bean.id, bean.displayName, label, toolWindowAnchor, false, bean.canCloseContents, DumbService.isDumbAware(factory), factory.shouldBeAvailable(myProject));
-    final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(bean.id, myProject, window);
+    ToolWindowAnchor toolWindowAnchor = factory.getAnchor();
+    ToolWindow window = registerToolWindow(factory.getId(), factory.getDisplayName(), label, toolWindowAnchor, false, factory.canCloseContents(), DumbService.isDumbAware(factory),
+                                           factory.shouldBeAvailable(myProject));
+    final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(factory.getId(), myProject, window);
     toolWindow.setContentFactory(factory);
-    String beanIcon = bean.icon;
-    if (beanIcon != null && toolWindow.getIcon() == null) {
-      Image targetIcon;
-      ImageKey imageKey = ImageKey.fromString(beanIcon, 13, 13);
-      if (imageKey != null) {
-        targetIcon = imageKey;
-      }
-      else {
-        targetIcon = ImageEffects.colorFilled(13, 13, StandardColors.MAGENTA);
-      }
-      toolWindow.setIcon(targetIcon);
+
+    if (toolWindow.getIcon() == null) {
+      toolWindow.setIcon(factory.getIcon());
     }
 
-    WindowInfoImpl info = getInfo(bean.id);
-    if (!info.isSplit() && bean.secondary && !info.wasRead()) {
+    WindowInfoImpl info = getInfo(factory.getId());
+    if (!info.isSplit() && factory.isSecondary() && !info.wasRead()) {
       toolWindow.setSplitMode(true, null);
     }
 

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ReadAction;
 import consulo.component.persist.PersistentStateComponent;
@@ -39,6 +40,7 @@ import java.util.List;
 
 @State(name = "ExecutionTargetManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
+@ServiceImpl
 public class ExecutionTargetManagerImpl extends ExecutionTargetManager implements PersistentStateComponent<Element> {
   @Nonnull
   private final Application myApplication;

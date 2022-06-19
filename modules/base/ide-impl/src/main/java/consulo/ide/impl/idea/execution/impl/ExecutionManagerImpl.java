@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.ide.impl.idea.execution.*;
 import consulo.execution.configuration.CompatibilityAwareRunProfile;
@@ -81,6 +82,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 @Singleton
+@ServiceImpl
 public class ExecutionManagerImpl extends ExecutionManager implements Disposable {
   public static final Key<Object> EXECUTION_SESSION_ID_KEY = Key.create("EXECUTION_SESSION_ID_KEY");
 

@@ -15,6 +15,7 @@
  */
 package consulo.language.editor.impl.internal.psi.path;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.inspection.LocalQuickFix;
 import consulo.language.editor.inspection.PsiReferenceLocalQuickFixProvider;
 import consulo.language.psi.path.FileReference;
@@ -28,6 +29,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 27-Mar-22
  */
+@ExtensionImpl
 public class FileReferenceLocalQuickFixProvider implements PsiReferenceLocalQuickFixProvider {
   @Override
   public void addQuickFixes(@Nonnull PsiReference reference, @Nonnull Consumer<LocalQuickFix> consumer) {

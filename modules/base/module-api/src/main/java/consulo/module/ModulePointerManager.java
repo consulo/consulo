@@ -16,12 +16,15 @@
 package consulo.module;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.util.pointer.NamedPointer;
 import consulo.component.util.pointer.NamedPointerManager;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
+@Service(ComponentScope.PROJECT)
 public interface ModulePointerManager extends NamedPointerManager<Module> {
   @Nonnull
   static ModulePointerManager getInstance(@Nonnull Project project) {

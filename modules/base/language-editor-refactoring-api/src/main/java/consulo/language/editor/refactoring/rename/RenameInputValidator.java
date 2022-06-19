@@ -16,6 +16,8 @@
 
 package consulo.language.editor.refactoring.rename;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.pattern.ElementPattern;
 import consulo.language.psi.PsiElement;
@@ -24,9 +26,11 @@ import consulo.language.util.ProcessingContext;
 /**
  * @author Gregory.Shrago
  */
+@Extension(ComponentScope.APPLICATION)
 public interface RenameInputValidator {
-  ExtensionPointName<RenameInputValidator> EP_NAME = ExtensionPointName.create("consulo.renameInputValidator");
+  ExtensionPointName<RenameInputValidator> EP_NAME = ExtensionPointName.create(RenameInputValidator.class);
 
   ElementPattern<? extends PsiElement> getPattern();
+
   boolean isInputValid(final String newName, final PsiElement element, final ProcessingContext context);
 }

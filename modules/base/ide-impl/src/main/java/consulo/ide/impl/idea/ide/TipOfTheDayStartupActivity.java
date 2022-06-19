@@ -15,15 +15,18 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.tipOfDay.TipOfDayManager;
+import consulo.project.Project;
+import consulo.project.startup.PostStartupActivity;
+import consulo.project.startup.StartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 
-public class TipOfTheDayStartupActivity implements IdeaStartupActivity.DumbAware {
+@ExtensionImpl
+public class TipOfTheDayStartupActivity implements PostStartupActivity, StartupActivity.DumbAware {
   private final TipOfDayManager myManager;
   private final GeneralSettings myGeneralSettings;
 
@@ -34,7 +37,7 @@ public class TipOfTheDayStartupActivity implements IdeaStartupActivity.DumbAware
   }
 
   @Override
-  public void runActivity(@Nonnull UIAccess uiAccess, @Nonnull Project project) {
+  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     if (!myGeneralSettings.isShowTipsOnStartup()) {
       return;
     }

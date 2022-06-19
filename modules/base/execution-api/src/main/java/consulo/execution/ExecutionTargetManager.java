@@ -16,6 +16,8 @@
 package consulo.execution;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.messagebus.Topic;
 import consulo.execution.event.ExecutionTargetListener;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -27,6 +29,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
+@Service(ComponentScope.PROJECT)
 public abstract class ExecutionTargetManager {
   public static final Topic<ExecutionTargetListener> TOPIC = Topic.create("ExecutionTarget topic", ExecutionTargetListener.class);
 

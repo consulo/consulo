@@ -18,7 +18,6 @@ import consulo.container.plugin.PluginId;
 import consulo.disposer.Disposable;
 import consulo.document.util.FileContentUtilCore;
 import consulo.ide.impl.idea.ide.highlighter.custom.SyntaxTable;
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.fileTypes.*;
@@ -381,14 +380,8 @@ public class FileTypeManagerImpl extends FileTypeManagerEx implements Persistent
       }
     };
 
-    for (FileTypeFactory factory : FileTypeFactory.FILE_TYPE_FACTORY_EP.getExtensions()) {
-      try {
-        factory.createFileTypes(consumer);
-      }
-      catch (Throwable e) {
-        PluginManager.handleComponentError(e, factory.getClass(), null);
-      }
-    }
+    FileTypeFactory.FILE_TYPE_FACTORY_EP.forEachExtensionSafe(factory -> factory.createFileTypes(consumer));
+
     for (StandardFileType pair : myStandardFileTypes.values()) {
       registerFileTypeWithoutNotification(pair.fileType, pair.matchers, true);
     }

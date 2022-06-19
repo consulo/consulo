@@ -1,5 +1,8 @@
 package consulo.execution.coverage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -13,6 +16,8 @@ import jakarta.inject.Singleton;
  */
 @Singleton
 @State(name = "CoverageOptionsProvider", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class CoverageOptionsProvider implements PersistentStateComponent<CoverageOptionsProvider.State> {
   private State myState = new State();
 
@@ -31,7 +36,7 @@ public class CoverageOptionsProvider implements PersistentStateComponent<Coverag
   public boolean activateViewOnRun() {
     return myState.myActivateViewOnRun;
   }
-  
+
   public void setActivateViewOnRun(boolean state) {
     myState.myActivateViewOnRun = state;
   }

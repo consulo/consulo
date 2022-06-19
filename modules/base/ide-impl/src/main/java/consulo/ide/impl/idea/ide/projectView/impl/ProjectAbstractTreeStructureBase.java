@@ -16,10 +16,9 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.ide.impl.idea.ide.util.treeView.AbstractTreeStructureBase;
-import consulo.component.extension.Extensions;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.TreeStructureProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +33,7 @@ public abstract class ProjectAbstractTreeStructureBase extends AbstractTreeStruc
   @Override
   public List<TreeStructureProvider> getProviders() {
     if (myProviders == null) {
-      final TreeStructureProvider[] providers = Extensions.getExtensions(TreeStructureProvider.EP_NAME, myProject);
-      myProviders = Arrays.asList(providers);
+      myProviders = TreeStructureProvider.EP_NAME.getExtensionList(myProject);
     }
     return myProviders;
   }

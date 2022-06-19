@@ -21,9 +21,9 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>consulo</groupId>
-    <artifactId>arch.managment</artifactId>
+    <artifactId>arch.bind</artifactId>
     <version>3-SNAPSHOT</version>
-    <relativePath>../managment/pom.xml</relativePath>
+    <relativePath>../bind/pom.xml</relativePath>
   </parent>
 
   <artifactId>arch.ide-api-provided</artifactId>

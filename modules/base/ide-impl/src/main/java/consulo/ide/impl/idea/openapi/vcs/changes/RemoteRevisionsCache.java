@@ -15,24 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
 import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.util.lang.Couple;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.component.messagebus.Topic;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.ide.impl.idea.openapi.vcs.*;
+import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.RemoteStatusChangeNodeDecorator;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdateFilesHelper;
 import consulo.ide.impl.idea.openapi.vcs.update.UpdatedFiles;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.ide.impl.idea.openapi.vcs.changes.ui.PlusMinus;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.component.messagebus.Topic;
 import consulo.logging.Logger;
-
+import consulo.project.Project;
+import consulo.util.lang.Couple;
 import consulo.util.lang.Pair;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -43,10 +45,12 @@ import java.util.LinkedList;
 import java.util.Map;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>>, VcsListener {
   private static final Logger LOG = Logger.getInstance(RemoteRevisionsCache.class);
 
-  public static Topic<Runnable> REMOTE_VERSION_CHANGED  = new Topic<>("REMOTE_VERSION_CHANGED", Runnable.class);
+  public static Topic<Runnable> REMOTE_VERSION_CHANGED = new Topic<>("REMOTE_VERSION_CHANGED", Runnable.class);
   public static final int DEFAULT_REFRESH_INTERVAL = 3 * 60 * 1000;
 
   private final RemoteRevisionsNumbersCache myRemoteRevisionsNumbersCache;
@@ -65,7 +69,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
   }
 
   @Inject
-  private RemoteRevisionsCache(final Project project) {
+  RemoteRevisionsCache(final Project project) {
     myProject = project;
     myLock = new Object();
 
@@ -106,15 +110,14 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
 
     updateRoots();
 
-    if ((! myProject.isDefault()) && vcsConfiguration.isChangedOnServerEnabled()) {
-      ((ProjectLevelVcsManagerImpl) myVcsManager).addInitializationRequest(VcsInitObject.REMOTE_REVISIONS_CACHE,
-                                                                           new Runnable() {
-                                                                             public void run() {
-                                                                               // do not start if there're no vcses
-                                                                               if (! myVcsManager.hasActiveVcss() || ! vcsConfiguration. isChangedOnServerEnabled()) return;
-                                                                               myControlledCycle.startIfNotStarted(-1);
-                                                                             }
-                                                                           });
+    if ((!myProject.isDefault()) && vcsConfiguration.isChangedOnServerEnabled()) {
+      ((ProjectLevelVcsManagerImpl)myVcsManager).addInitializationRequest(VcsInitObject.REMOTE_REVISIONS_CACHE, new Runnable() {
+        public void run() {
+          // do not start if there're no vcses
+          if (!myVcsManager.hasActiveVcss() || !vcsConfiguration.isChangedOnServerEnabled()) return;
+          myControlledCycle.startIfNotStarted(-1);
+        }
+      });
     }
   }
 
@@ -124,11 +127,12 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
 
   private void manageAlarm() {
     final VcsConfiguration vcsConfiguration = VcsConfiguration.getInstance(myProject);
-    if ((! myProject.isDefault()) && myVcsManager.hasActiveVcss() && vcsConfiguration.isChangedOnServerEnabled()) {
+    if ((!myProject.isDefault()) && myVcsManager.hasActiveVcss() && vcsConfiguration.isChangedOnServerEnabled()) {
       // will check whether is already started inside
       // interval is checked further, this is small and constant
       myControlledCycle.startIfNotStarted(-1);
-    } else {
+    }
+    else {
       myControlledCycle.stop();
     }
   }
@@ -138,7 +142,7 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
     synchronized (myLock) {
       for (VcsRoot root : roots) {
         final AbstractVcs vcs = root.getVcs();
-        if (! myKinds.containsKey(vcs.getName())) {
+        if (!myKinds.containsKey(vcs.getName())) {
           myKinds.put(vcs.getName(), vcs.getRemoteDifferenceStrategy());
         }
       }
@@ -146,9 +150,10 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
   }
 
   public void directoryMappingChanged() {
-    if (! VcsConfiguration.getInstance(myProject).isChangedOnServerEnabled()) {
+    if (!VcsConfiguration.getInstance(myProject).isChangedOnServerEnabled()) {
       manageAlarm();
-    } else {
+    }
+    else {
       ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
         @Override
         public void run() {
@@ -157,7 +162,8 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
             myRemoteRevisionsNumbersCache.directoryMappingChanged();
             myRemoteRevisionsStateCache.directoryMappingChanged();
             manageAlarm();
-          } catch (ProcessCanceledException ignore) {
+          }
+          catch (ProcessCanceledException ignore) {
           }
         }
       });
@@ -168,7 +174,8 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
     final AbstractVcs vcs = pair.getSecond();
     if (RemoteDifferenceStrategy.ASK_TREE_PROVIDER.equals(vcs.getRemoteDifferenceStrategy())) {
       myRemoteRevisionsStateCache.plus(pair);
-    } else {
+    }
+    else {
       myRemoteRevisionsNumbersCache.plus(pair);
     }
   }
@@ -191,7 +198,8 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
         }
         if (RemoteDifferenceStrategy.ASK_TREE_PROVIDER.equals(strategy)) {
           newForTree.add(pair.getFirst());
-        } else {
+        }
+        else {
           newForUsual.add(pair.getFirst());
         }
       }
@@ -205,7 +213,8 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
     final AbstractVcs vcs = pair.getSecond();
     if (RemoteDifferenceStrategy.ASK_TREE_PROVIDER.equals(vcs.getRemoteDifferenceStrategy())) {
       myRemoteRevisionsStateCache.minus(pair);
-    } else {
+    }
+    else {
       myRemoteRevisionsNumbersCache.minus(pair);
     }
   }
@@ -219,7 +228,8 @@ public class RemoteRevisionsCache implements PlusMinus<Pair<String, AbstractVcs>
     final RemoteDifferenceStrategy strategy = vcs.getRemoteDifferenceStrategy();
     if (RemoteDifferenceStrategy.ASK_TREE_PROVIDER.equals(strategy)) {
       return myRemoteRevisionsStateCache.isUpToDate(change);
-    } else {
+    }
+    else {
       return myRemoteRevisionsNumbersCache.isUpToDate(change);
     }
   }

@@ -15,10 +15,11 @@
  */
 package consulo.ide.impl.externalService.impl.action;
 
-import consulo.ide.impl.idea.ide.actions.SettingsEntryPointActionProvider;
-import consulo.ui.ex.action.AnAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
 import consulo.ide.impl.externalService.ExternalServiceConfiguration;
+import consulo.ide.impl.idea.ide.actions.SettingsEntryPointActionProvider;
+import consulo.ui.ex.action.AnAction;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -30,6 +31,7 @@ import java.util.List;
  * @author VISTALL
  * @since 18/08/2021
  */
+@ExtensionImpl
 public class ServiceAuthSettingsEntryPointProvider implements SettingsEntryPointActionProvider {
   private LoginAction myLoginAction;
 

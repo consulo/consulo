@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.wm.impl.status.widget;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ui.UISettings;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.ide.ServiceManager;
@@ -34,6 +37,8 @@ import java.util.Map;
  */
 @Singleton
 @State(name = "StatusBar", storages = @Storage(value = "ide.general.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class StatusBarWidgetSettings implements PersistentStateComponent<StatusBarWidgetSettings.StatusBarState> {
   public static class StatusBarState {
     public Map<String, Boolean> widgets = new LinkedHashMap<>();
@@ -73,7 +78,7 @@ public class StatusBarWidgetSettings implements PersistentStateComponent<StatusB
   @Override
   public void afterLoadState() {
     UISettings uiSettings = UISettings.getInstance();
-    if(uiSettings.SHOW_MEMORY_INDICATOR) {
+    if (uiSettings.SHOW_MEMORY_INDICATOR) {
       uiSettings.SHOW_MEMORY_INDICATOR = false;
 
       myState.widgets.put(MemoryUsagePanel.WIDGET_ID, true);

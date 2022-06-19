@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.wm.ex;
 
-import consulo.disposer.Disposable;
-import consulo.project.Project;
-import consulo.project.ui.wm.ToolWindowManagerListener;
-import consulo.util.lang.function.Condition;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.ide.impl.idea.openapi.wm.ToolWindowEP;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
 import consulo.annotation.DeprecationInfo;
+import consulo.disposer.Disposable;
+import consulo.ide.impl.idea.openapi.wm.impl.ToolWindowLayout;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.util.lang.function.Condition;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,7 +32,7 @@ import java.util.List;
 
 public abstract class ToolWindowManagerEx extends ToolWindowManager {
   @RequiredUIAccess
-  public abstract void initToolWindow(@Nonnull ToolWindowEP bean);
+  public abstract void initToolWindow(@Nonnull ToolWindowFactory toolWindowFactory);
 
   public static ToolWindowManagerEx getInstanceEx(final Project project) {
     return (ToolWindowManagerEx)getInstance(project);

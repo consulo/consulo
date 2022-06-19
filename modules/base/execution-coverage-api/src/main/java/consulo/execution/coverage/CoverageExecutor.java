@@ -1,5 +1,6 @@
 package consulo.execution.coverage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.executor.Executor;
 import consulo.application.AllIcons;
 import consulo.project.ui.wm.ToolWindowId;
@@ -7,6 +8,7 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class CoverageExecutor extends Executor {
 
   public static final String EXECUTOR_ID = "Coverage";

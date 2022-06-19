@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.dvcs.push;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -33,6 +36,8 @@ import java.util.Set;
 
 @Singleton
 @State(name = "Push.Settings", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class PushSettings implements PersistentStateComponent<PushSettings.State> {
 
   private State myState = new State();
@@ -87,8 +92,10 @@ public class PushSettings implements PersistentStateComponent<PushSettings.State
 
   @Tag("force-push-target")
   private static class ForcePushTargetInfo {
-    @Attribute(value = "remote-path") public String targetRemoteName;
-    @Attribute(value = "branch") public String targetBranchName;
+    @Attribute(value = "remote-path")
+    public String targetRemoteName;
+    @Attribute(value = "branch")
+    public String targetBranchName;
 
     @SuppressWarnings("unused")
     ForcePushTargetInfo() {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.module.content.layer.DirectoryIndexExcludePolicy;
 import consulo.project.Project;
 import consulo.module.content.layer.ContentEntry;
@@ -34,6 +35,7 @@ import java.util.List;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class ExcludeCompilerOutputPolicy implements DirectoryIndexExcludePolicy {
   private final Project myProject;
 

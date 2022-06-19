@@ -14,22 +14,9 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <extensionPoints>
-    <extensionPoint name="coverageRunner" interface="consulo.execution.coverage.CoverageRunner"/>
-    <extensionPoint name="coverageEngine" interface="consulo.execution.coverage.CoverageEngine"/>
-    <extensionPoint name="coverageOptions" interface="consulo.ide.impl.idea.coverage.CoverageOptions" area="PROJECT"/>
-  </extensionPoints>
-
   <extensions defaultExtensionNs="consulo">
-    <testActionProvider implementation="consulo.ide.impl.idea.coverage.actions.TrackCoverageActionProvider"/>
-    <projectViewNodeDecorator implementation="consulo.ide.impl.idea.coverage.CoverageProjectViewDirectoryNodeDecorator"/>
     <projectConfigurable parentId="execution"
 						 instance="consulo.ide.impl.idea.coverage.CoverageOptionsConfigurable" id="coverage" displayName="Coverage"/>
-
-    <projectService serviceImplementation="consulo.execution.coverage.CoverageOptionsProvider"/>
-    <projectService serviceImplementation="consulo.execution.coverage.CoverageViewManager"/>
-    <projectService serviceInterface="consulo.execution.coverage.CoverageDataManager" serviceImplementation="consulo.ide.impl.idea.coverage.CoverageDataManagerImpl"/>
-    <executor implementation="consulo.execution.coverage.CoverageExecutor"/>
   </extensions>
   <actions>
     <group id="CoverageMenu">

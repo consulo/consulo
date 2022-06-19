@@ -17,6 +17,7 @@ package consulo.sandboxPlugin.ide.toolwindow;
 
 import consulo.application.AllIcons;
 import consulo.ide.impl.idea.ide.actions.ToolWindowTabRenameActionBase;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
@@ -29,6 +30,8 @@ import consulo.ui.ex.content.ContentFactory;
 import consulo.localize.LocalizeValue;
 import consulo.ui.Label;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
@@ -37,6 +40,12 @@ import javax.annotation.Nonnull;
  * @since 19.03.14
  */
 public class SandToolWindowFactory implements ToolWindowFactory {
+  @Nonnull
+  @Override
+  public String getId() {
+    return "Sand";
+  }
+
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
@@ -70,5 +79,28 @@ public class SandToolWindowFactory implements ToolWindowFactory {
   @Override
   public boolean isUnified() {
     return true;
+  }
+
+  @Override
+  public boolean canCloseContents() {
+    return true;
+  }
+
+  @Nonnull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.RIGHT;
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.toolwindowsToolwindowcommander();
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Sand");
   }
 }

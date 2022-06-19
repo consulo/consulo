@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.keymap.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
@@ -48,15 +51,18 @@ import static consulo.ide.impl.idea.openapi.keymap.KeymapUtil.getActiveKeymapSho
 
 /**
  * Support for keyboard shortcuts like Control-double-click or Control-double-click+A
- *
+ * <p>
  * Timings that are used in the implementation to detect double click were tuned for SearchEverywhere
  * functionality (invoked on double Shift), so if you need to change them, please make sure
  * SearchEverywhere behaviour remains intact.
  */
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class ModifierKeyDoubleClickHandler implements Disposable {
   private static final Logger LOG = Logger.getInstance(ModifierKeyDoubleClickHandler.class);
   private static final TIntIntHashMap KEY_CODE_TO_MODIFIER_MAP = new TIntIntHashMap();
+
   static {
     KEY_CODE_TO_MODIFIER_MAP.put(KeyEvent.VK_ALT, InputEvent.ALT_MASK);
     KEY_CODE_TO_MODIFIER_MAP.put(KeyEvent.VK_CONTROL, InputEvent.CTRL_MASK);
@@ -69,7 +75,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   private boolean myIsRunningAction;
 
   @Inject
-  private ModifierKeyDoubleClickHandler(ActionManager actionManager) {
+  ModifierKeyDoubleClickHandler(ActionManager actionManager) {
     myActionManager = actionManager;
 
     int modifierKeyCode = getMultiCaretActionModifier();
@@ -98,15 +104,12 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   }
 
   /**
-   * @param actionId Id of action to be triggered on modifier+modifier[+actionKey]
-   * @param modifierKeyCode keyCode for modifier, e.g. KeyEvent.VK_SHIFT
-   * @param actionKeyCode keyCode for actionKey, or -1 if action should be triggered on bare modifier double click
+   * @param actionId                Id of action to be triggered on modifier+modifier[+actionKey]
+   * @param modifierKeyCode         keyCode for modifier, e.g. KeyEvent.VK_SHIFT
+   * @param actionKeyCode           keyCode for actionKey, or -1 if action should be triggered on bare modifier double click
    * @param skipIfActionHasShortcut do not invoke action if a shortcut is already bound to it in keymap
    */
-  public void registerAction(@Nonnull String actionId,
-                             int modifierKeyCode,
-                             int actionKeyCode,
-                             boolean skipIfActionHasShortcut) {
+  public void registerAction(@Nonnull String actionId, int modifierKeyCode, int actionKeyCode, boolean skipIfActionHasShortcut) {
     final MyDispatcher dispatcher = new MyDispatcher(actionId, modifierKeyCode, actionKeyCode, skipIfActionHasShortcut);
     MyDispatcher oldDispatcher = myDispatchers.put(actionId, dispatcher);
     if (Application.get().isSwingApplication()) {
@@ -119,13 +122,11 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
   }
 
   /**
-   * @param actionId Id of action to be triggered on modifier+modifier[+actionKey]
+   * @param actionId        Id of action to be triggered on modifier+modifier[+actionKey]
    * @param modifierKeyCode keyCode for modifier, e.g. KeyEvent.VK_SHIFT
-   * @param actionKeyCode keyCode for actionKey, or -1 if action should be triggered on bare modifier double click
+   * @param actionKeyCode   keyCode for actionKey, or -1 if action should be triggered on bare modifier double click
    */
-  public void registerAction(@Nonnull String actionId,
-                             int modifierKeyCode,
-                             int actionKeyCode) {
+  public void registerAction(@Nonnull String actionId, int modifierKeyCode, int actionKeyCode) {
     registerAction(actionId, modifierKeyCode, actionKeyCode, true);
   }
 
@@ -179,7 +180,8 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
           }
           handleModifier((KeyEvent)event);
           return false;
-        } else if (ourPressed.first.get() && ourReleased.first.get() && ourPressed.second.get() && myActionKeyCode != -1) {
+        }
+        else if (ourPressed.first.get() && ourReleased.first.get() && ourPressed.second.get() && myActionKeyCode != -1) {
           if (keyCode == myActionKeyCode && !hasOtherModifiers(keyEvent)) {
             if (event.getID() == KeyEvent.KEY_PRESSED) {
               return run(keyEvent);
@@ -187,10 +189,11 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
             return true;
           }
           return false;
-        } else {
+        }
+        else {
           ourLastTimePressed.set(Clock.getTime());
           ourOtherKeyWasPressed.set(true);
-          if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_TAB)  {
+          if (keyCode == KeyEvent.VK_ESCAPE || keyCode == KeyEvent.VK_TAB) {
             ourLastTimePressed.set(0);
           }
         }
@@ -221,19 +224,22 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
           ourPressed.first.set(true);
           ourLastTimePressed.set(Clock.getTime());
           return;
-        } else {
+        }
+        else {
           if (ourPressed.first.get() && ourReleased.first.get()) {
             ourPressed.second.set(true);
             ourLastTimePressed.set(Clock.getTime());
             return;
           }
         }
-      } else if (event.getID() == KeyEvent.KEY_RELEASED) {
+      }
+      else if (event.getID() == KeyEvent.KEY_RELEASED) {
         if (ourPressed.first.get() && !ourReleased.first.get()) {
           ourReleased.first.set(true);
           ourLastTimePressed.set(Clock.getTime());
           return;
-        } else if (ourPressed.first.get() && ourReleased.first.get() && ourPressed.second.get()) {
+        }
+        else if (ourPressed.first.get() && ourReleased.first.get() && ourPressed.second.get()) {
           resetState();
           if (myActionKeyCode == -1 && !shouldSkipIfActionHasShortcut()) {
             run(event);
@@ -286,8 +292,7 @@ public class ModifierKeyDoubleClickHandler implements Disposable {
 
     @Override
     public String toString() {
-      return "modifier double-click dispatcher [modifierKeyCode=" + myModifierKeyCode +
-             ",actionKeyCode=" + myActionKeyCode + ",actionId=" + myActionId + "]";
+      return "modifier double-click dispatcher [modifierKeyCode=" + myModifierKeyCode + ",actionKeyCode=" + myActionKeyCode + ",actionId=" + myActionId + "]";
     }
   }
 }

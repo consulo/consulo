@@ -16,16 +16,14 @@
 
 package consulo.ide.impl.idea.tasks.context;
 
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.extension.Extensions;
+import consulo.container.boot.ContainerPathManager;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
-import consulo.util.xml.serializer.InvalidDataException;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.tasks.Task;
@@ -33,7 +31,13 @@ import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.io.zip.JBZipEntry;
 import consulo.ide.impl.idea.util.io.zip.JBZipFile;
-import consulo.container.boot.ContainerPathManager;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -43,8 +47,6 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -56,9 +58,11 @@ import java.util.List;
  * @author Dmitry Avdeev
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class WorkingContextManager {
 
-  private static final Logger LOG = Logger.getInstance("#consulo.ide.impl.idea.tasks.context.WorkingContextManager");
+  private static final Logger LOG = Logger.getInstance(WorkingContextManager.class);
   @NonNls private static final String TASKS_FOLDER = "tasks";
 
   private final Project myProject;

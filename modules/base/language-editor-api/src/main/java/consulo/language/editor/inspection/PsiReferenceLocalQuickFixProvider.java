@@ -15,8 +15,9 @@
  */
 package consulo.language.editor.inspection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionType;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
 
@@ -27,7 +28,7 @@ import java.util.function.Consumer;
  * @author VISTALL
  * @since 27-Mar-22
  */
-@ExtensionType(value = "psiReferenceLocalFixProvider", component = Project.class)
+@Extension(ComponentScope.PROJECT)
 public interface PsiReferenceLocalQuickFixProvider {
   ExtensionList<PsiReferenceLocalQuickFixProvider, Project> EP = ExtensionList.of(PsiReferenceLocalQuickFixProvider.class);
 

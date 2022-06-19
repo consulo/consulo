@@ -63,7 +63,7 @@ import java.util.function.Consumer;
  * @author yole
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class PerformanceWatcher implements Disposable {
   private static final Logger LOG = Logger.getInstance(PerformanceWatcher.class);

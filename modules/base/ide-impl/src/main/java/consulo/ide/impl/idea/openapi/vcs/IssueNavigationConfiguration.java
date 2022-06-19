@@ -16,15 +16,18 @@
 
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.document.util.TextRange;
+import consulo.ide.ServiceManager;
+import consulo.project.Project;
 import consulo.util.xml.serializer.XmlSerializerUtil;
-import consulo.component.persist.PersistentStateComponent;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
@@ -40,12 +43,12 @@ import java.util.regex.Pattern;
  * @author yole
  */
 @Singleton
-@State(name = "IssueNavigationConfiguration", storages = {
-        @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
+@State(name = "IssueNavigationConfiguration", storages = {@Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/vcs.xml")})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class IssueNavigationConfiguration extends SimpleModificationTracker implements PersistentStateComponent<IssueNavigationConfiguration> {
   @NonNls
-  private static final Pattern ourHtmlPattern =
-          Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
+  private static final Pattern ourHtmlPattern = Pattern.compile("(http:|https:)\\/\\/([^\\s()](?!&(gt|lt|nbsp)+;))+[^\\p{Pe}\\p{Pc}\\p{Pd}\\p{Ps}\\p{Po}\\s]/?");
 
   public static IssueNavigationConfiguration getInstance(Project project) {
     return ServiceManager.getService(project, IssueNavigationConfiguration.class);

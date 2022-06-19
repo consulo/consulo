@@ -16,7 +16,12 @@
 package consulo.ide.impl.idea.execution.dashboard;
 
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
 import consulo.util.lang.function.Condition;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
@@ -33,9 +38,33 @@ public class RunDashboardToolWindowFactory implements ToolWindowFactory, Conditi
     return RunDashboardManager.getInstance(project).isToolWindowAvailable();
   }
 
+  @Nonnull
+  @Override
+  public String getId() {
+    return ToolWindowId.RUN_DASHBOARD;
+  }
+
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
     RunDashboardManager.getInstance(project).createToolWindowContent(toolWindow);
+  }
+
+  @Nonnull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.BOTTOM;
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.toolwindowsToolwindowrun();
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Run Dashboard");
   }
 }

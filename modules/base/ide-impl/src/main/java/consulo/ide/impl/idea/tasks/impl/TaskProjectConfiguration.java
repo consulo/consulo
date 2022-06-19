@@ -15,12 +15,9 @@
  */
 package consulo.ide.impl.idea.tasks.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -31,12 +28,20 @@ import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @author Dmitry Avdeev
 */
 @Singleton
 @State(name = "TaskProjectConfiguration", storages = @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/misc.xml"))
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class TaskProjectConfiguration implements PersistentStateComponent<TaskProjectConfiguration> {
 
   @Tag("server")
@@ -59,7 +64,7 @@ public class TaskProjectConfiguration implements PersistentStateComponent<TaskPr
   }
 
   @Inject
-  public TaskProjectConfiguration(TaskManager manager) {
+  public TaskProjectConfiguration(@Nonnull TaskManager manager) {
     myManager = (TaskManagerImpl) manager;
   }
 

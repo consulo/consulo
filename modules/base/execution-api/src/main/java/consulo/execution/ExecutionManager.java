@@ -15,6 +15,8 @@
  */
 package consulo.execution;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.messagebus.Topic;
 import consulo.execution.configuration.RunProfileState;
 import consulo.execution.event.ExecutionListener;
@@ -33,6 +35,7 @@ import javax.annotation.Nullable;
 /**
  * Manages the execution of run configurations and the relationship between running processes and Run/Debug toolwindow tabs.
  */
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ExecutionManager {
   public static final Topic<ExecutionListener> EXECUTION_TOPIC =
           Topic.create("configuration executed", ExecutionListener.class, Topic.BroadcastDirection.TO_PARENT);

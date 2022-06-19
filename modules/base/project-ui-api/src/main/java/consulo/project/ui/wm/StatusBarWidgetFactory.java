@@ -1,9 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.project.ui.wm;
 
-import consulo.project.Project;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import consulo.container.plugin.PluginIds;
+import consulo.project.Project;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 
@@ -13,11 +14,11 @@ import javax.annotation.Nonnull;
  * Extension point for adding user-configurable widgets to the status bar.
  * <p>
  * By default, a widget would be available only in the main IDE, but not in Light Edit.
- * In order to make the widget available in Light Edit, the factory should implement {@link consulo.ide.impl.idea.ide.lightEdit.LightEditCompatible}.
  * Prohibiting the widget for the main IDE could be done in the {@link StatusBarWidgetFactory#isAvailable(Project)} method.
  */
+@Extension(ComponentScope.APPLICATION)
 public interface StatusBarWidgetFactory {
-  ExtensionPointName<StatusBarWidgetFactory> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".statusBarWidgetFactory");
+  ExtensionPointName<StatusBarWidgetFactory> EP_NAME = ExtensionPointName.create(StatusBarWidgetFactory.class);
 
   /**
    * @return Widget identifier. Used to store visibility settings.

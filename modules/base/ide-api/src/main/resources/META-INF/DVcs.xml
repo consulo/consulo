@@ -49,25 +49,13 @@
   </applicationListeners>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceInterface="consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor"
-                        serviceImplementation="consulo.ide.impl.idea.vfs.AsyncVfsEventsPostProcessorImpl"/>
+    
     <vcsStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.roots.VcsRootScanner$DetectRootsStartupActivity"/>
 
     <vcsStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl$ActivateVcsesStartupActivity"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager" serviceImplementation="consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.roots.VcsRootScanner"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.idea.dvcs.repo.VcsRepositoryManager"/>
-    <projectService serviceImplementation="consulo.ide.impl.idea.dvcs.push.PushSettings"/>
-    <projectService serviceImplementation="consulo.ide.impl.idea.dvcs.cherrypick.VcsCherryPickManager"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.idea.openapi.vcs.impl.VcsInitialization"/>
 
     <postStartupActivity implementation="consulo.ide.impl.idea.openapi.vcs.impl.VcsInitialization$StartUpActivity"/>
-
-    <projectService serviceInterface="consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentI" serviceImplementation="consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager"/>
 
     <vcsStartupActivity implementation="consulo.ide.impl.vcs.VcsToolWindowFactory$UpdateVcsStartupActivity"/>
 

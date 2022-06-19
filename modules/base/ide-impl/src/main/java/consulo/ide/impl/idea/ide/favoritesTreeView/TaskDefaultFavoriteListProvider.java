@@ -15,22 +15,24 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
-import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.ide.impl.idea.ide.dnd.aware.DnDAwareTree;
 import consulo.ide.impl.idea.openapi.keymap.KeymapUtil;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.application.ApplicationManager;
-import consulo.ui.ex.popup.ComponentPopupBuilder;
-import consulo.ui.ex.popup.JBPopupFactory;
 import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.CommonShortcuts;
 import consulo.ui.ex.awt.JBScrollPane;
 import consulo.ui.ex.awt.UIUtil;
 import consulo.ui.ex.awt.tree.Tree;
+import consulo.ui.ex.popup.ComponentPopupBuilder;
 import consulo.ui.ex.popup.JBPopup;
+import consulo.ui.ex.popup.JBPopupFactory;
+import jakarta.inject.Inject;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,9 +45,11 @@ import java.util.List;
  * Date: 6/7/12
  * Time: 4:33 PM
  */
+@ExtensionImpl
 public class TaskDefaultFavoriteListProvider extends AbstractFavoritesListProvider {
   public static final String CURRENT_TASK = "Current task";
 
+  @Inject
   public TaskDefaultFavoriteListProvider(Project project) {
     super(project, CURRENT_TASK);
   }

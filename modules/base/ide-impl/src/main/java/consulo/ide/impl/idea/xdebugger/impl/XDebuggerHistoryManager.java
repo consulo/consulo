@@ -15,22 +15,27 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl;
 
-import consulo.ide.ServiceManager;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.execution.debug.breakpoint.XExpression;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XExpressionImpl;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
-
 import java.util.*;
 
 /**
  * @author nik
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class XDebuggerHistoryManager {
   public static final int MAX_RECENT_EXPRESSIONS = 10;
   private final Map<String, LinkedList<XExpression>> myRecentExpressions = new HashMap<String, LinkedList<XExpression>>();

@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.ide;
 
-import consulo.ide.ServiceManager;
-import consulo.logging.Logger;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.SystemInfo;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
+import consulo.logging.Logger;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.awt.color.ColorSpace;
 import java.awt.color.ICC_ColorSpace;
 import java.awt.color.ICC_Profile;
@@ -32,6 +35,8 @@ import java.io.InputStream;
  * @author max
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class MacOSApplicationProvider {
   public static MacOSApplicationProvider getInstance() {
     return ServiceManager.getService(MacOSApplicationProvider.class);

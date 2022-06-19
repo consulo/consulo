@@ -16,16 +16,17 @@
 package consulo.language.editor.refactoring.rename;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionList;
-import consulo.component.extension.ExtensionType;
 import consulo.language.psi.PsiElement;
 
 /**
  * @author VISTALL
  * @since 16-Apr-22
  */
-@ExtensionType(value = "vetoRenameCondition", component = Application.class)
+@Extension(ComponentScope.APPLICATION)
 public interface VetoRenameCondition {
   ExtensionList<VetoRenameCondition, Application> EP = ExtensionList.of(VetoRenameCondition.class);
 

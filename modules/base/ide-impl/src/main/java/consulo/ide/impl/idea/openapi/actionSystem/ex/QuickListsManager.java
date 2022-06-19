@@ -15,23 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.ex;
 
-import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
-import consulo.ide.impl.idea.openapi.actionSystem.impl.BundledQuickListsProvider;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.StoragePathMacros;
+import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.actions.QuickSwitchSchemeAction;
+import consulo.ide.impl.idea.openapi.actionSystem.impl.BundledQuickListsProvider;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;
 import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
-import consulo.dataContext.DataContext;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.ide.impl.idea.util.PathUtil;
-import consulo.ide.impl.idea.util.ThrowableConvertor;
-import consulo.ui.ex.action.ActionPlaces;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.project.Project;
 import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -42,6 +44,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class QuickListsManager {
   public static QuickListsManager getInstance() {
     return ApplicationManager.getApplication().getComponent(QuickListsManager.class);
@@ -78,17 +82,14 @@ public class QuickListsManager {
       }
     }, RoamingType.DEFAULT);
 
-    for (BundledQuickListsProvider provider : BundledQuickListsProvider.EP_NAME.getExtensions()) {
+    for (BundledQuickListsProvider provider : BundledQuickListsProvider.EP_NAME.getExtensionList()) {
       for (final String path : provider.getBundledListsRelativePaths()) {
-        mySchemesManager.loadBundledScheme(path, provider, new ThrowableConvertor<Element, QuickList, Throwable>() {
-          @Override
-          public QuickList convert(Element element) throws Throwable {
-            QuickList item = createItem(element);
-            item.getExternalInfo().setHash(JDOMUtil.getTreeHash(element, true));
-            item.getExternalInfo().setPreviouslySavedName(item.getName());
-            item.getExternalInfo().setCurrentFileName(PathUtil.getFileName(path));
-            return item;
-          }
+        mySchemesManager.loadBundledScheme(path, provider, element -> {
+          QuickList item = createItem(element);
+          item.getExternalInfo().setHash(JDOMUtil.getTreeHash(element, true));
+          item.getExternalInfo().setPreviouslySavedName(item.getName());
+          item.getExternalInfo().setCurrentFileName(PathUtil.getFileName(path));
+          return item;
         });
       }
     }

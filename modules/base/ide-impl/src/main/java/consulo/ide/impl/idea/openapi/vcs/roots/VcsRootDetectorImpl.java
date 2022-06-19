@@ -15,24 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
-import consulo.project.Project;
-import consulo.module.content.ProjectRootManager;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
 import consulo.ide.impl.idea.openapi.vcs.VcsRootChecker;
+import consulo.module.content.ProjectRootManager;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
  * @author Nadya Zabrodina
  */
 @Singleton
+@ServiceImpl
 public class VcsRootDetectorImpl implements VcsRootDetector {
   private static final int MAXIMUM_SCAN_DEPTH = 2;
 

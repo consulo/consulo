@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.inspection.scheme;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.persist.StoragePathMacros;
 import consulo.disposer.Disposable;
@@ -34,6 +36,7 @@ import java.util.List;
  * User: anna
  * Date: 29-Nov-2005
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class InspectionProfileManager extends ApplicationProfileManager implements SeverityProvider {
   public static final String INSPECTION_DIR = "inspection";
   public static final String FILE_SPEC = StoragePathMacros.ROOT_CONFIG + '/' + INSPECTION_DIR;

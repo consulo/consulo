@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.document.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.Topic;
 import consulo.document.Document;
@@ -12,6 +14,7 @@ import java.util.EventListener;
 /**
  * @see #TOPIC
  */
+@Extension(ComponentScope.APPLICATION)
 public interface FileDocumentManagerListener extends EventListener {
   Topic<FileDocumentManagerListener> TOPIC = new Topic<FileDocumentManagerListener>("Document load, save and reload events", FileDocumentManagerListener.class);
 
@@ -23,7 +26,7 @@ public interface FileDocumentManagerListener extends EventListener {
    * That's why this interface is exposed via extension point as well - it's possible to modify document content from
    * the extension callback.
    */
-  ExtensionPointName<FileDocumentManagerListener> EP_NAME = ExtensionPointName.create("consulo.fileDocumentManagerListener");
+  ExtensionPointName<FileDocumentManagerListener> EP_NAME = ExtensionPointName.create(FileDocumentManagerListener.class);
 
   /**
    * Fired before processing FileDocumentManager.saveAllDocuments(). Can be used by plugins

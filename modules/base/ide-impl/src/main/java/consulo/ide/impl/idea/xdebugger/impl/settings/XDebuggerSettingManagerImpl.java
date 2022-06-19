@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.settings;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.component.persist.*;
 import consulo.util.collection.SmartList;
@@ -36,6 +37,7 @@ import java.util.*;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 @State(name = "XDebuggerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true), @Storage(file = StoragePathMacros.APP_CONFIG + "/debugger.xml")})
 public class XDebuggerSettingManagerImpl extends XDebuggerSettingsManager implements PersistentStateComponent<XDebuggerSettingManagerImpl.SettingsState> {
   private Map<String, XDebuggerSettings<?>> mySettingsById;

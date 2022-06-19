@@ -15,24 +15,27 @@
  */
 package consulo.ide.impl.idea.internal.statistic.updater;
 
-import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.project.ui.notification.NotificationType;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.impl.internal.ApplicationNamesInfo;
-import consulo.ide.impl.idea.openapi.application.PermanentInstallationID;
-import consulo.project.Project;
-import consulo.project.ProjectManager;
-import consulo.project.event.ProjectManagerListener;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.external.api.StatisticsBean;
 import consulo.ide.impl.externalService.impl.WebServiceApi;
 import consulo.ide.impl.externalService.impl.WebServiceApiSender;
 import consulo.ide.impl.externalService.impl.statistics.SendStatisticsUtil;
+import consulo.ide.impl.idea.internal.statistic.persistence.UsageStatisticsPersistenceComponent;
+import consulo.ide.impl.idea.openapi.application.PermanentInstallationID;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.event.ProjectManagerListener;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.event.NotificationListener;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -45,6 +48,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class StatisticsSendManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(StatisticsSendManager.class);
 
@@ -55,7 +60,7 @@ public class StatisticsSendManager implements Disposable {
   private Future<?> myFuture;
 
   @Inject
-  private StatisticsSendManager(Application application, Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent) {
+  StatisticsSendManager(Application application, Provider<UsageStatisticsPersistenceComponent> usageStatisticsComponent) {
     myUsageStatisticsComponent = usageStatisticsComponent;
 
     application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
@@ -84,7 +89,7 @@ public class StatisticsSendManager implements Disposable {
   }
 
   private void runStatisticsService() {
-    if(!myUsageStatisticsComponent.get().isAllowed()) {
+    if (!myUsageStatisticsComponent.get().isAllowed()) {
       if (myFuture != null) {
         myFuture.cancel(false);
         myFuture = null;
@@ -99,7 +104,7 @@ public class StatisticsSendManager implements Disposable {
     long oneDayAfterStart = PermanentInstallationID.date() + TimeUnit.DAYS.toMillis(1);
 
     // one day after installation
-    if(oneDayAfterStart > System.currentTimeMillis()) {
+    if (oneDayAfterStart > System.currentTimeMillis()) {
       return;
     }
 
@@ -112,7 +117,7 @@ public class StatisticsSendManager implements Disposable {
     myFuture = AppExecutorUtil.getAppScheduledExecutorService().schedule((Runnable)() -> {
       try {
         UsageStatisticsPersistenceComponent component = myUsageStatisticsComponent.get();
-        
+
         sendNow(component);
       }
       finally {

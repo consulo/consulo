@@ -15,6 +15,9 @@
  */
 package consulo.usage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import javax.annotation.Nonnull;
@@ -27,20 +30,15 @@ import javax.annotation.Nullable;
  *
  * @author Konstantin Bulenkov
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class UsageToPsiElementProvider {
-  public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = ExtensionPointName.create("consulo.usageToPsiElementProvider");
+  public static final ExtensionPointName<UsageToPsiElementProvider> EP_NAME = ExtensionPointName.create(UsageToPsiElementProvider.class);
 
   @Nullable
   public abstract PsiElement getAppropriateParentFrom(PsiElement element);
 
   @Nullable
   public static PsiElement findAppropriateParentFrom(@Nonnull PsiElement element) {
-    for (UsageToPsiElementProvider provider : EP_NAME.getExtensionList()) {
-      final PsiElement parent = provider.getAppropriateParentFrom(element);
-      if (parent != null) {
-        return parent;
-      }
-    }
-    return null;
+    return EP_NAME.computeSafeIfAny(Application.get(), p -> p.getAppropriateParentFrom(element));
   }
 }

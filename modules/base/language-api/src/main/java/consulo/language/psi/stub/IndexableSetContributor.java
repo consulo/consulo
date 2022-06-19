@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.stub;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -29,9 +31,11 @@ import java.util.Set;
 /**
  * @author peter
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class IndexableSetContributor {
 
-  public static final ExtensionPointName<IndexableSetContributor> EP_NAME = ExtensionPointName.create("consulo.indexedRootsContributor");
+  public static final ExtensionPointName<IndexableSetContributor> EP_NAME = ExtensionPointName.create(IndexableSetContributor.class);
+
   private static final Logger LOG = Logger.getInstance(IndexableSetContributor.class);
 
   @Nonnull
@@ -66,7 +70,11 @@ public abstract class IndexableSetContributor {
   private static Set<VirtualFile> filterOutNulls(@Nonnull IndexableSetContributor contributor, @Nonnull String methodInfo, @Nonnull Set<VirtualFile> roots) {
     for (VirtualFile root : roots) {
       if (root == null || !root.isValid()) {
-        LOG.error("Please fix " + contributor.getClass().getName() + "#" + methodInfo + ".\n" +
+        LOG.error("Please fix " +
+                  contributor.getClass().getName() +
+                  "#" +
+                  methodInfo +
+                  ".\n" +
                   (root == null ? "The returned set is not expected to contain nulls, but it is " + roots : "Invalid file returned: " + root));
         return new LinkedHashSet<>(ContainerUtil.filter(roots, virtualFile -> virtualFile != null && virtualFile.isValid()));
       }

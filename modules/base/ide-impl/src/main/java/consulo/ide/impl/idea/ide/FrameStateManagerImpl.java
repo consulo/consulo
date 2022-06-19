@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.project.ui.wm.event.ApplicationActivationListener;
 import consulo.application.internal.ApplicationEx;
@@ -32,6 +33,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class FrameStateManagerImpl extends FrameStateManager {
   private final List<FrameStateListener> myListeners = ContainerUtil.createLockFreeCopyOnWriteList();
 

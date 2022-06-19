@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.peer.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
@@ -35,6 +36,7 @@ import javax.annotation.Nonnull;
 import java.io.File;
 
 @Singleton
+@ServiceImpl
 public class VcsContextFactoryImpl implements VcsContextFactory {
   @Override
   @Nonnull

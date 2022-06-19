@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.text;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
@@ -8,6 +11,7 @@ import consulo.component.persist.Storage;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.util.xml.serializer.XmlSerializer;
 import consulo.util.xml.serializer.XmlSerializerUtil;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,7 +25,10 @@ import java.util.stream.Collectors;
 /**
  * @author Konstantin Bulenkov
  */
+@Singleton
 @State(name = "DateTimeFormatter", storages = @Storage("ui-datetime.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class DateTimeFormatManager implements PersistentStateComponent<Element> {
   private boolean myPrettyFormattingAllowed = true;
   private HashMap<String, String> myPatterns = new HashMap<>();

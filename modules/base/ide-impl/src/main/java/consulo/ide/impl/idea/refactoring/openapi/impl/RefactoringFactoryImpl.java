@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.refactoring.openapi.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.ide.impl.idea.refactoring.RefactoringFactory;
@@ -28,6 +29,7 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class RefactoringFactoryImpl extends RefactoringFactory {
   private final Project myProject;
 

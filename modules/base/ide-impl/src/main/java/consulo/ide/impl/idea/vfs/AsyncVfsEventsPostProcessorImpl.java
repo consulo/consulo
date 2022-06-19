@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vfs;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
@@ -39,6 +40,7 @@ import java.util.Objects;
  * from kotlin
  */
 @Singleton
+@ServiceImpl
 public class AsyncVfsEventsPostProcessorImpl implements AsyncVfsEventsPostProcessor, Disposable {
   private static class ListenerAndDisposable {
     private AsyncVfsEventsListener myListener;

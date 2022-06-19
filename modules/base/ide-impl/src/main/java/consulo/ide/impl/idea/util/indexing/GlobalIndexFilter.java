@@ -11,7 +11,6 @@ import javax.annotation.Nonnull;
  *
  * @author yole
  */
-//@ApiStatus.Experimental
 public interface GlobalIndexFilter {
   /**
    * Returns true if the given file should be excluded from indexing by the given index.
@@ -22,7 +21,7 @@ public interface GlobalIndexFilter {
 
   boolean affectsIndex(@Nonnull IndexId<?, ?> indexId);
 
-  ExtensionPointName<GlobalIndexFilter> EP_NAME = ExtensionPointName.create("consulo.globalIndexFilter");
+  ExtensionPointName<GlobalIndexFilter> EP_NAME = ExtensionPointName.create(GlobalIndexFilter.class);
 
   /**
    * Returns true if the given file should be excluded from indexing by any of the registered filters.

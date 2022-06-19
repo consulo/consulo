@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.projectView;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
@@ -35,6 +36,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09.05.2015
  */
+@ExtensionImpl
 public class ShowExcludedFilesProjectViewPaneOptionProvider extends ProjectViewPaneOptionProvider.BoolValue {
   public static final KeyWithDefaultValue<Boolean> KEY = KeyWithDefaultValue.create("show-excluded-files", Boolean.FALSE);
 

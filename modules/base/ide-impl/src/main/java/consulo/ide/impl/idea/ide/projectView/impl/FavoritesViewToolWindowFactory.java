@@ -15,23 +15,36 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesPanel;
 import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesTreeViewPanel;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAware {
+  @Nonnull
+  @Override
+  public String getId() {
+    return ToolWindowId.FAVORITES_VIEW;
+  }
+
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, ToolWindow toolWindow) {
@@ -40,5 +53,28 @@ public class FavoritesViewToolWindowFactory implements ToolWindowFactory, DumbAw
     panel.setupToolWindow((ToolWindowEx)toolWindow);
     final Content content = contentManager.getFactory().createContent(panel, null, false);
     contentManager.addContent(content);
+  }
+
+  @Override
+  public boolean isSecondary() {
+    return true;
+  }
+
+  @Nonnull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.LEFT;
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.toolwindowsToolwindowfavorites();
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Favorites");
   }
 }

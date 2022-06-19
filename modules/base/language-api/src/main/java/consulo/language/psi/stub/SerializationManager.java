@@ -1,12 +1,15 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.stub;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ApplicationManager;
 import consulo.application.util.function.Computable;
 import consulo.language.ast.IElementType;
 
 import java.util.List;
 
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class SerializationManager {
   private volatile boolean mySerializersLoaded;
 

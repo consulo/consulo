@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.notification.*;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
@@ -32,6 +35,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class VcsNotifier {
 
   public static final NotificationGroup NOTIFICATION_GROUP_ID = NotificationGroup.toolWindowGroup("Vcs Messages", ChangesViewContentManager.TOOLWINDOW_ID);

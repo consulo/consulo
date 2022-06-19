@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.actions;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
@@ -26,6 +28,7 @@ import javax.annotation.Nonnull;
 
 import java.io.File;
 
+@Service(ComponentScope.APPLICATION)
 public interface VcsContextFactory {
 
   @Nonnull

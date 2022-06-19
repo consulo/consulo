@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.vfs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.virtualFileSystem.BaseVirtualFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
@@ -23,7 +24,7 @@ import javax.annotation.Nonnull;
 
 import java.io.IOException;
 
-
+@ExtensionImpl
 public class VcsFileSystem extends BaseVirtualFileSystem {
 
   public static final String COULD_NOT_IMPLEMENT_MESSAGE = VcsBundle.message("exception.text.internal.errror.could.not.implement.method");

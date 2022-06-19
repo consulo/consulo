@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.ui;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.ui.customization.CustomizableActionGroupProvider;
 import consulo.ide.impl.idea.xdebugger.impl.actions.XDebuggerActions;
 
 /**
  * @author nik
  */
+@ExtensionImpl
 public class XDebugTabCustomizableActionGroupProvider extends CustomizableActionGroupProvider {
   @Override
   public void registerGroups(CustomizableActionGroupRegistrar registrar) {

@@ -15,12 +15,15 @@
  */
 package consulo.ide.impl.plugins.whatsNew;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.component.Orderable;
 import consulo.application.Application;
+import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorManager;
-import consulo.project.Project;
 import consulo.ide.impl.updateSettings.impl.UpdateHistory;
 import consulo.platform.base.localize.IdeLocalize;
-import consulo.project.startup.StartupActivity;
+import consulo.project.Project;
+import consulo.project.startup.PostStartupActivity;
 import consulo.ui.UIAccess;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -32,7 +35,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 21/11/2021
  */
-public class WhatsNewStartupActivity implements StartupActivity.DumbAware {
+@ExtensionImpl
+@Orderable(id = "WhatsNew", order = "after OpenFilesActivity")
+public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {
   private final Application myApplication;
   private final Provider<UpdateHistory> myUpdateHistoryProvider;
 

@@ -16,6 +16,8 @@
 
 package consulo.language.editor.wolfAnalyzer;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.module.Module;
@@ -30,6 +32,7 @@ import java.util.List;
 /**
  * @author cdr
  */
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class WolfTheProblemSolver {
   public static final ExtensionPointName<Condition<VirtualFile>> FILTER_EP_NAME = ExtensionPointName.create("consulo.problemFileHighlightFilter");
 

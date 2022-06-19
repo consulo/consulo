@@ -1,33 +1,43 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
-import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
-import consulo.application.ui.event.UISettingsListener;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.component.Orderable;
 import consulo.application.ApplicationManager;
+import consulo.application.dumb.DumbAware;
+import consulo.application.ui.event.UISettingsListener;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposer;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.event.FileEditorManagerListener;
 import consulo.fileEditor.TextEditor;
+import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
+import consulo.language.file.FileTypeManager;
 import consulo.language.file.event.FileTypeEvent;
 import consulo.language.file.event.FileTypeListener;
-import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
-import consulo.disposer.Disposer;
+import consulo.project.startup.PostStartupActivity;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.virtualFileSystem.event.VirtualFileListener;
 import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.awt.UIUtil;
+
 import javax.annotation.Nonnull;
 
-final class BreadcrumbsInitializingActivity implements IdeaStartupActivity.DumbAware {
+@ExtensionImpl
+@Orderable(id = "BreadcrumbsInitializing", order = "after InitToolWindows")
+public final class BreadcrumbsInitializingActivity implements PostStartupActivity, DumbAware {
+  public BreadcrumbsInitializingActivity() {
+  }
+
   @Override
-  public void runActivity(@Nonnull Project project) {
+  public void runActivity(@Nonnull Project project, UIAccess uiAccess) {
     if (project.isDefault() || ApplicationManager.getApplication().isUnitTestMode() || project.isDisposed()) {
       return;
     }

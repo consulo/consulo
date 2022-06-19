@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -37,6 +38,7 @@ import java.util.List;
  * @author VISTALL
  * @since 26.10.2015
  */
+@ExtensionImpl
 public class BackgroundTaskEditorNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private final Project myProject;
 

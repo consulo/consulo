@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.plugins.pluginsAdvertisement;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.plugins.PluginManager;
 import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
@@ -49,6 +50,7 @@ import java.util.stream.Collectors;
  * User: anna
  * Date: 10/11/13
  */
+@ExtensionImpl
 public class PluginAdvertiserEditorNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private final EditorNotifications myNotifications;
   private final Set<String> myEnabledExtensions = new HashSet<>();

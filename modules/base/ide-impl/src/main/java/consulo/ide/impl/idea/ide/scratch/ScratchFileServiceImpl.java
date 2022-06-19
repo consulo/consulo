@@ -33,7 +33,6 @@ import consulo.document.FileDocumentManager;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerAdapter;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.ide.impl.idea.ide.navigationToolbar.AbstractNavBarModelExtension;
 import consulo.ide.impl.idea.lang.PerFileMappingsBase;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.NonProjectFileWritingAccessExtension;
@@ -77,7 +76,6 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -258,36 +256,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     }
   }
 
-  public static class NavBarExtension extends AbstractNavBarModelExtension {
-
-    @Nullable
-    @Override
-    public String getPresentableText(Object object) {
-      if (!(object instanceof PsiElement)) return null;
-      Project project = ((PsiElement)object).getProject();
-      VirtualFile virtualFile = PsiUtilCore.getVirtualFile((PsiElement)object);
-      if (virtualFile == null || !virtualFile.isValid()) return null;
-      RootType rootType = ScratchFileService.getInstance().getRootType(virtualFile);
-      if (rootType == null) return null;
-      if (virtualFile.isDirectory() && additionalRoots(project).contains(virtualFile)) {
-        return rootType.getDisplayName();
-      }
-      return rootType.substituteName(project, virtualFile);
-    }
-
-    @Nonnull
-    @Override
-    public Collection<VirtualFile> additionalRoots(Project project) {
-      Set<VirtualFile> result = ContainerUtil.newLinkedHashSet();
-      LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-      ScratchFileService app = ScratchFileService.getInstance();
-      for (RootType r : RootType.getAllRootTypes()) {
-        ContainerUtil.addIfNotNull(result, fileSystem.findFileByPath(app.getRootPath(r)));
-      }
-      return result;
-    }
-  }
-
   @Override
   public VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException {
     ApplicationManager.getApplication().assertReadAccessAllowed();
@@ -343,19 +311,4 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     }
   }
 
-  public static class IndexSetContributor extends IndexableSetContributor {
-
-    @Nonnull
-    @Override
-    public Set<VirtualFile> getAdditionalRootsToIndex() {
-      ScratchFileService instance = ScratchFileService.getInstance();
-      LocalFileSystem fileSystem = LocalFileSystem.getInstance();
-      HashSet<VirtualFile> result = new HashSet<>();
-      for (RootType rootType : RootType.getAllRootTypes()) {
-        if (rootType.isHidden()) continue;
-        ContainerUtil.addIfNotNull(result, fileSystem.findFileByPath(instance.getRootPath(rootType)));
-      }
-      return result;
-    }
-  }
 }

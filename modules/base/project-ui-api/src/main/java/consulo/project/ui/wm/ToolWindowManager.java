@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * If you want to register a toolwindow, which will be enabled during the dumb mode, please use {@link ToolWindowManager}'s
  * registration methods which have 'canWorkInDumMode' parameter.
  */
-@Service(ComponentScope.PROJECT)
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class ToolWindowManager {
 
   public abstract boolean canShowNotification(@Nonnull String toolWindowId);

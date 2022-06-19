@@ -15,6 +15,8 @@
  */
 package consulo.sandboxPlugin.lang;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.impl.psi.ASTWrapperPsiElement;
 import consulo.language.ast.ASTNode;
 import consulo.language.file.FileViewProvider;
@@ -30,8 +32,15 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19.03.14
  */
+@ExtensionImpl
 public class SandParsingDefinition extends LanguageVersionableParserDefinition {
   private static IFileElementType FILE = new IFileElementType(SandLanguage.INSTANCE);
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return SandLanguage.INSTANCE;
+  }
 
   @Nonnull
   @Override

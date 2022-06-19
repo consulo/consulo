@@ -16,6 +16,7 @@
 package consulo.ide.impl.wm.impl;
 
 import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.component.Orderable;
 import consulo.application.CallChain;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -30,6 +31,7 @@ import javax.annotation.Nonnull;
  * @since 18-Jun-22
  */
 @ExtensionImpl
+@Orderable(id = "InitToolWindows", order = "before OpenFilesActivity")
 public class InitToolWindowsActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {

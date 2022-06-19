@@ -15,20 +15,24 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
-import consulo.project.Project;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.FilePathImpl;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
+import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
+@ExtensionImpl
 public class VcsHandleTypeFactory implements HandleTypeFactory {
   private final Project myProject;
 
+  @Inject
   public VcsHandleTypeFactory(final Project project) {
     myProject = project;
   }
@@ -36,7 +40,7 @@ public class VcsHandleTypeFactory implements HandleTypeFactory {
   @Override
   @Nullable
   public HandleType createHandleType(final VirtualFile file) {
-    if (! myProject.isInitialized()) return null;
+    if (!myProject.isInitialized()) return null;
     AbstractVcs vcs = ProjectLevelVcsManager.getInstance(myProject).getVcsFor(file);
     if (vcs != null) {
       boolean fileExistsInVcs = vcs.fileExistsInVcs(new FilePathImpl(file));

@@ -143,9 +143,6 @@
 
     <applicationService serviceImplementation="consulo.desktop.awt.uiOld.debugger.extensions.PlaybackDebugger$PlaybackDebuggerState"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.ide.projectView.ProjectView"
-                    serviceImplementation="consulo.ide.impl.idea.ide.projectView.impl.ProjectViewImpl"/>
-
     <applicationService serviceInterface="consulo.ide.impl.idea.ui.ColorChooserService"
                         serviceImplementation="consulo.desktop.awt.uiOld.DesktopColorChooserServiceImpl"/>
 

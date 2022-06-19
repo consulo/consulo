@@ -16,6 +16,8 @@
 package consulo.virtualFileSystem.fileWatcher;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -30,6 +32,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 1:15/07.10.13
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class BackgroundTaskByVfsChangeProvider {
   public static abstract class ByFileType extends BackgroundTaskByVfsChangeProvider {
     private final FileType myFileType;
@@ -44,7 +47,7 @@ public abstract class BackgroundTaskByVfsChangeProvider {
     }
   }
 
-  public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME = ExtensionPointName.create("consulo.taskByVfsChange");
+  public static final ExtensionPointName<BackgroundTaskByVfsChangeProvider> EP_NAME = ExtensionPointName.create(BackgroundTaskByVfsChangeProvider.class);
 
   public boolean validate(@Nonnull Project project, @Nonnull VirtualFile virtualFile) {
     return true;

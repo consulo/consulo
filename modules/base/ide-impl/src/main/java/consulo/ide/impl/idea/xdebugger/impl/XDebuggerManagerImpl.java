@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.AppTopics;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionManager;
@@ -74,6 +75,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @State(name = "XDebuggerManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Singleton
+@ServiceImpl
 public class XDebuggerManagerImpl extends XDebuggerManager implements PersistentStateComponent<XDebuggerManagerImpl.XDebuggerState> {
   private final Project myProject;
   private final XBreakpointManagerImpl myBreakpointManager;

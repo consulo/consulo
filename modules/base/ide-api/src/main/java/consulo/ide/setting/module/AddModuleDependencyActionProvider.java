@@ -15,8 +15,9 @@
  */
 package consulo.ide.setting.module;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.Application;
-import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
 import consulo.localize.LocalizeValue;
 import consulo.module.content.layer.ModuleRootLayer;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 27.09.14
  */
-@ExtensionType(value = "addModuleDependencyActionProvider", component = Application.class)
+@Extension(ComponentScope.APPLICATION)
 public interface AddModuleDependencyActionProvider<T, C extends AddModuleDependencyContext<T>> {
   ExtensionList<AddModuleDependencyActionProvider, Application> EP = ExtensionList.of(AddModuleDependencyActionProvider.class);
 

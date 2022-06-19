@@ -21,12 +21,6 @@
     </component>
 
     <component>
-      <interface-class>consulo.virtualFileSystem.status.FileStatusManager</interface-class>
-      <implementation-class>consulo.virtualFileSystem.status.impl.internal.FileStatusManagerImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-
-    <component>
       <implementation-class>consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl$ProjectNotificationsComponent</implementation-class>
       <skipForDefaultProject/>
     </component>
@@ -36,16 +30,6 @@
       <implementation-class>consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl</implementation-class>
     </component>
 
-    <component>
-      <interface-class>consulo.language.editor.highlight.HighlightManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.codeInsight.highlighting.HighlightManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.module.content.ProjectRootManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.roots.impl.ProjectRootManagerComponent</implementation-class>
-      <loadForDefaultProject/>
-    </component>
 
     <component>
       <interface-class>consulo.language.psi.PsiManager</interface-class>
@@ -115,10 +99,7 @@
       <option name="workspace" value="true"/>
       <skipForDefaultProject/>
     </component>
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl</implementation-class>
-    </component>
+
     <component>
       <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager</interface-class>
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManagerImpl</implementation-class>
@@ -157,16 +138,6 @@
     <component>
       <interface-class>consulo.ide.impl.idea.openapi.vcs.contentAnnotation.ContentAnnotationCache</interface-class>
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.contentAnnotation.ContentAnnotationCacheImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.execution.ExecutionTargetManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.execution.ExecutionTargetManagerImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-    <component>
-      <interface-class>consulo.execution.ExecutionManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl</implementation-class>
     </component>
   </project-components>
 </consulo-plugin>

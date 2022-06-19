@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.execution.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.execution.*;
 import consulo.execution.configuration.*;
 import consulo.execution.event.RunManagerListener;
@@ -60,6 +61,7 @@ import java.util.*;
 
 @State(name = "RunManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
+@ServiceImpl
 public class RunManagerImpl extends RunManagerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(RunManagerImpl.class);
 

@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.virtualFileSystem.VirtualFile;
 
 /**
  * @author irengrig
  */
+@Service(ComponentScope.PROJECT)
 public interface ChangesViewI {
   void scheduleRefresh();
   void selectFile(VirtualFile vFile);

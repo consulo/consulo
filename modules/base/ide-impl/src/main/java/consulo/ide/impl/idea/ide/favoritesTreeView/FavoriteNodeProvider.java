@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.dataContext.DataContext;
@@ -31,13 +33,12 @@ import java.util.Collection;
 
 /**
  * Returns the nodes which should be added to the Favorites for the given data context.
- * Implementations of this class must be registered as extensions for
- * <code>com.intellij.favoriteNodeProvider</code> extension point.
  *
  * @author yole
  */
+@Extension(ComponentScope.PROJECT)
 public abstract class FavoriteNodeProvider {
-  public static final ExtensionPointName<FavoriteNodeProvider> EP_NAME = ExtensionPointName.create("consulo.favoriteNodeProvider");
+  public static final ExtensionPointName<FavoriteNodeProvider> EP_NAME = ExtensionPointName.create(FavoriteNodeProvider.class);
 
   @Nullable
   public abstract Collection<AbstractTreeNode> getFavoriteNodes(DataContext context, final ViewSettings viewSettings);

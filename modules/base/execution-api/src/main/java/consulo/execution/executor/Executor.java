@@ -17,6 +17,8 @@
 package consulo.execution.executor;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.util.localize.BundleBase;
 import consulo.project.Project;
@@ -30,8 +32,9 @@ import javax.annotation.Nullable;
 /**
  * @author spleaner
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class Executor {
-  public static final ExtensionPointName<Executor> EP_NAME = ExtensionPointName.create("consulo.executor");
+  public static final ExtensionPointName<Executor> EP_NAME = ExtensionPointName.create(Executor.class);
 
   public abstract String getToolWindowId();
 

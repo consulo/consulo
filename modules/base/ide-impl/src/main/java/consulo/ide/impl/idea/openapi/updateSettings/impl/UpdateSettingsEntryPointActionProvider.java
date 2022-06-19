@@ -15,19 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.updateSettings.impl;
 
-import consulo.ide.impl.idea.ide.actions.SettingsEntryPointActionProvider;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.Application;
-import consulo.ui.ex.action.DumbAwareAction;
 import consulo.dataContext.DataContext;
+import consulo.ide.impl.idea.ide.actions.SettingsEntryPointActionProvider;
 import consulo.ide.impl.updateSettings.UpdateSettings;
 import consulo.ide.impl.updateSettings.impl.PlatformOrPluginUpdateResult;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.ui.ex.action.ActionManager;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -39,6 +36,7 @@ import java.util.List;
  * @author VISTALL
  * @since 01/04/2021
  */
+@ExtensionImpl
 public class UpdateSettingsEntryPointActionProvider implements SettingsEntryPointActionProvider {
   private static class IconifiedCheckForUpdateAction extends CheckForUpdateAction {
     private final boolean myIsPlatform;

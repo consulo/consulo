@@ -107,8 +107,8 @@ public class CreateNewLibraryAction extends DumbAwareAction {
   }
 
   public static AnAction[] createActionOrGroup(@Nonnull String text, @Nonnull BaseLibrariesConfigurable librariesConfigurable, final @Nonnull Project project) {
-    final List<LibraryType<?>> extensions = LibraryType.EP_NAME.getExtensionList();
-    List<LibraryType<?>> suitableTypes = new ArrayList<>();
+    final List<LibraryType> extensions = LibraryType.EP_NAME.getExtensionList();
+    List<LibraryType> suitableTypes = new ArrayList<>();
     if (librariesConfigurable instanceof ProjectLibrariesConfigurable) {
       for (LibraryType<?> extension : extensions) {
         if (!LibraryEditingUtil.getSuitableModules(project, extension.getKind(), null).isEmpty()) {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.filters.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.HyperlinkInfoFactory;
 import consulo.project.Project;
@@ -30,6 +31,7 @@ import java.util.List;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class HyperlinkInfoFactoryImpl extends HyperlinkInfoFactory {
   @Nonnull
   @Override

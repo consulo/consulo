@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.execution.debug.*;
 import consulo.execution.debug.breakpoint.*;
@@ -87,6 +88,7 @@ import java.util.*;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class XDebuggerUtilImpl extends XDebuggerUtil {
   private XLineBreakpointType<?>[] myLineBreakpointTypes;
   private Map<Class<? extends XBreakpointType>, XBreakpointType<?, ?>> myBreakpointTypeByClass;

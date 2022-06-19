@@ -16,6 +16,8 @@
 package consulo.language.parser;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.Language;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IFileElementType;
@@ -34,7 +36,14 @@ import javax.annotation.Nonnull;
  *
  * @see LanguageParserDefinitions#forLanguage(Language)
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ParserDefinition {
+  /**
+   * Language of parser definition
+   */
+  @Nonnull
+  Language getLanguage();
+
   /**
    * Returns the lexer for lexing files in the specified project. This lexer does not need to support incremental relexing - it is always
    * called for the entire file.

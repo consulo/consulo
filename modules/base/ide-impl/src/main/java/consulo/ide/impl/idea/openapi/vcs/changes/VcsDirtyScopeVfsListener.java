@@ -1,31 +1,29 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
-import consulo.ide.ServiceManager;
 import consulo.application.progress.ProgressManager;
-import consulo.project.Project;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.util.ZipperUpdater;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
-import consulo.virtualFileSystem.event.AsyncFileListener;
+import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.project.Project;
+import consulo.ui.ex.awt.util.Alarm;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.event.VFileCreateEvent;
-import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.event.VFileMoveEvent;
-import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
-import consulo.ui.ex.awt.util.Alarm;
-import consulo.ide.impl.idea.vcsUtil.VcsUtil;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.virtualFileSystem.event.*;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +34,8 @@ import java.util.concurrent.TimeUnit;
  * Listens to file system events and notifies VcsDirtyScopeManagers responsible for changed files to mark these files dirty.
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class VcsDirtyScopeVfsListener implements AsyncFileListener, Disposable {
   @Nonnull
   private final ProjectLevelVcsManager myVcsManager;

@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.project.content;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.FileIndex;
 import consulo.project.Project;
@@ -23,8 +25,9 @@ import javax.annotation.Nonnull;
  * @see FileIndex#isInTestSourceContent(VirtualFile)
  * @see JpsModuleSourceRootType#isForTests()
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class TestSourcesFilter {
-  private static final ExtensionPointName<TestSourcesFilter> EP_NAME = ExtensionPointName.create("consulo.testSourcesFilter");
+  private static final ExtensionPointName<TestSourcesFilter> EP_NAME = ExtensionPointName.create(TestSourcesFilter.class);
 
   public static boolean isTestSources(@Nonnull VirtualFile file, @Nonnull Project project) {
     for (TestSourcesFilter filter : EP_NAME.getExtensionList()) {

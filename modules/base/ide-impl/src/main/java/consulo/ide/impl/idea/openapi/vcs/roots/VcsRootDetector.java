@@ -1,5 +1,7 @@
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.impl.idea.openapi.vcs.VcsRoot;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
@@ -12,6 +14,7 @@ import java.util.Collection;
  *
  * @author Nadya Zabrodina
  */
+@Service(ComponentScope.PROJECT)
 public interface VcsRootDetector {
 
   /**

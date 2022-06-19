@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.inject.impl.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.util.SimpleModificationTracker;
 import consulo.language.impl.internal.psi.PsiManagerEx;
 import consulo.language.impl.internal.psi.PsiParameterizedCachedValue;
@@ -25,6 +28,8 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public final class ConcatenationInjectorManager extends SimpleModificationTracker {
   @Nonnull
   public static ConcatenationInjectorManager getInstance(@Nonnull Project project) {

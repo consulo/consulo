@@ -15,17 +15,18 @@
  */
 package consulo.ide.impl.idea.find.impl;
 
-import consulo.find.FindModel;
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.Application;
-import consulo.component.extension.ExtensionType;
 import consulo.component.extension.ExtensionList;
+import consulo.dataContext.DataContext;
+import consulo.find.FindModel;
 
 /**
  * @author VISTALL
  * @since 12/12/2021
  */
-@ExtensionType(value = "findInProjectExtension", component = Application.class)
+@Extension(ComponentScope.APPLICATION)
 public interface FindInProjectExtension {
   ExtensionList<FindInProjectExtension, Application> EP_NAME = ExtensionList.of(FindInProjectExtension.class);
 

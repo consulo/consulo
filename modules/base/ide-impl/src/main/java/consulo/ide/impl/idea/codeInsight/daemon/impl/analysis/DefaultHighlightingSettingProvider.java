@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -29,8 +31,9 @@ import javax.annotation.Nullable;
  * If implementation returns <code>null</code>, next one is checked. If nobody returns anything, "Inspections" level will be used
  * Implement {@link DumbAware} interface to allow implementation to be called in dumb mode
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class DefaultHighlightingSettingProvider {
-  public static final ExtensionPointName<DefaultHighlightingSettingProvider> EP_NAME = ExtensionPointName.create("consulo.defaultHighlightingSettingProvider");
+  public static final ExtensionPointName<DefaultHighlightingSettingProvider> EP_NAME = ExtensionPointName.create(DefaultHighlightingSettingProvider.class);
 
   @Nullable
   public abstract FileHighlightingSetting getDefaultSetting(@Nonnull Project project, @Nonnull VirtualFile file);

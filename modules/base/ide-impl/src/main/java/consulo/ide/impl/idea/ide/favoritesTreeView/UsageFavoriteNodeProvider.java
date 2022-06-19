@@ -15,52 +15,51 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
-import consulo.project.ui.view.tree.ViewSettings;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataContext;
-import consulo.logging.Logger;
-import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.usages.impl.NullUsage;
+import consulo.ide.impl.idea.util.ProxyComparator;
+import consulo.ide.impl.idea.util.containers.Convertor;
+import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.usage.UsageInfo;
+import consulo.logging.Logger;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.project.ui.view.tree.ViewSettings;
 import consulo.usage.Usage;
+import consulo.usage.UsageInfo;
 import consulo.usage.UsageInfo2UsageAdapter;
 import consulo.usage.UsageView;
-import consulo.ide.impl.idea.usages.impl.NullUsage;
 import consulo.usage.rule.UsageInFile;
 import consulo.usage.rule.UsageInFiles;
-import consulo.ide.impl.idea.util.ProxyComparator;
-import consulo.util.collection.SmartList;
-import consulo.ide.impl.idea.util.containers.Convertor;
 import consulo.util.collection.MultiMap;
-import javax.annotation.Nonnull;
+import consulo.util.collection.SmartList;
+import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 /**
- * Created with IntelliJ IDEA.
  * User: Irina.Chernushina
  * Date: 6/6/12
  * Time: 6:51 PM
  */
+@ExtensionImpl
 public class UsageFavoriteNodeProvider extends FavoriteNodeProvider {
-  private final static Map<String, TreeSet<WorkingSetSerializable>> ourSerializables =
-    new HashMap<String, TreeSet<WorkingSetSerializable>>();
-  private final static Comparator<VirtualFile> VIRTUAL_FILE_COMPARATOR =
-    new ProxyComparator<String, VirtualFile>(new Convertor<VirtualFile, String>() {
-      @Override
-      public String convert(VirtualFile o) {
-        return o.getPath();
-      }
-    });
+  private final static Map<String, TreeSet<WorkingSetSerializable>> ourSerializables = new HashMap<String, TreeSet<WorkingSetSerializable>>();
+  private final static Comparator<VirtualFile> VIRTUAL_FILE_COMPARATOR = new ProxyComparator<String, VirtualFile>(new Convertor<VirtualFile, String>() {
+    @Override
+    public String convert(VirtualFile o) {
+      return o.getPath();
+    }
+  });
   private static final Logger LOG = Logger.getInstance(UsageFavoriteNodeProvider.class);
 
   static {
@@ -125,8 +124,7 @@ public class UsageFavoriteNodeProvider extends FavoriteNodeProvider {
         final Collection<Usage> subUsages = map.get(key);
         for (Usage usage : subUsages) {
           if (usage instanceof UsageInfo2UsageAdapter) {
-            final UsageProjectTreeNode node =
-              new UsageProjectTreeNode(project, ((UsageInfo2UsageAdapter)usage).getUsageInfo(), viewSettings);
+            final UsageProjectTreeNode node = new UsageProjectTreeNode(project, ((UsageInfo2UsageAdapter)usage).getUsageInfo(), viewSettings);
             grouping.addChild(node);
           }
           else if (NullUsage.INSTANCE.equals(usage)) {
@@ -139,8 +137,7 @@ public class UsageFavoriteNodeProvider extends FavoriteNodeProvider {
       }
       for (Usage usage : nonMapped) {
         if (usage instanceof UsageInfo2UsageAdapter) {
-          final UsageProjectTreeNode node =
-            new UsageProjectTreeNode(project, ((UsageInfo2UsageAdapter)usage).getUsageInfo(), viewSettings);
+          final UsageProjectTreeNode node = new UsageProjectTreeNode(project, ((UsageInfo2UsageAdapter)usage).getUsageInfo(), viewSettings);
           result.add(node);
         }
         else if (NullUsage.INSTANCE.equals(usage)) {
@@ -300,8 +297,7 @@ public class UsageFavoriteNodeProvider extends FavoriteNodeProvider {
     return null;
   }
 
-  private Object[] readWithSerializable(Project project, String url, String is, WorkingSetSerializable serializable)
-    throws IOException {
+  private Object[] readWithSerializable(Project project, String url, String is, WorkingSetSerializable serializable) throws IOException {
     Object obj = serializable.deserializeMe(project, is);
     if (obj == null) {
       obj = serializable.deserializeMeInvalid(project, is);

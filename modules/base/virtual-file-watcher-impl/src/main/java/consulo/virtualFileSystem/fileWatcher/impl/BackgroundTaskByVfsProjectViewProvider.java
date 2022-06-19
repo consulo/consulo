@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
 import consulo.project.ui.view.tree.ViewSettings;
 import consulo.project.ui.view.tree.AbstractTreeNode;
@@ -35,6 +36,7 @@ import java.util.*;
  * @author VISTALL
  * @since 04.03.14
  */
+@ExtensionImpl
 public class BackgroundTaskByVfsProjectViewProvider implements SelectableTreeStructureProvider, DumbAware {
   private final Project myProject;
 

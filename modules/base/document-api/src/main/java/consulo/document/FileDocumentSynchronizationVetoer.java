@@ -19,16 +19,21 @@
  */
 package consulo.document;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class FileDocumentSynchronizationVetoer {
-  public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME = ExtensionPointName.create("consulo.fileDocumentSynchronizationVetoer");
+  public static final ExtensionPointName<FileDocumentSynchronizationVetoer> EP_NAME = ExtensionPointName.create(FileDocumentSynchronizationVetoer.class);
 
   public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {
     return true;
   }
+
   public boolean mayReloadFileContent(VirtualFile file, @Nonnull Document document) {
     return true;
   }

@@ -15,14 +15,17 @@
  */
 package consulo.document;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.VirtualFile;
 import javax.annotation.Nonnull;
 
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class DocumentReferenceManager {
   @Nonnull
   public static DocumentReferenceManager getInstance() {
-    return ApplicationManager.getApplication().getComponent(DocumentReferenceManager.class);
+    return ApplicationManager.getApplication().getInstance(DocumentReferenceManager.class);
   }
 
   @Nonnull

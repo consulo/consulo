@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.command.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.document.DocumentReference;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
+@ServiceImpl
 public final class DocumentReferenceManagerImpl extends DocumentReferenceManager {
   private static final Key<List<VirtualFile>> DELETED_FILES = Key.create(DocumentReferenceManagerImpl.class.getName() + ".DELETED_FILES");
 

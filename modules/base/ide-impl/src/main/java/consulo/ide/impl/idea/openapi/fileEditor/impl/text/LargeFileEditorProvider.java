@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.text;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.*;
 import consulo.fileEditor.structureView.StructureViewBuilder;
@@ -36,6 +37,7 @@ import javax.swing.*;
 /**
  * @author peter
  */
+@ExtensionImpl
 public class LargeFileEditorProvider implements FileEditorProvider, DumbAware {
 
   @Override

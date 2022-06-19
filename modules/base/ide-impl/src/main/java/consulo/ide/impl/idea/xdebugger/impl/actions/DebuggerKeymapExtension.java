@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
@@ -29,6 +30,7 @@ import java.util.Collections;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class DebuggerKeymapExtension implements KeymapExtension {
   public KeymapGroup createGroup(final Condition<AnAction> filtered, final Project project) {
     ActionManager actionManager = ActionManager.getInstance();

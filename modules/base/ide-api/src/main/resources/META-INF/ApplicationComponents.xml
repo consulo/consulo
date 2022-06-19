@@ -15,105 +15,10 @@
   -->
 <consulo-plugin>
   <application-components>
-    <component>
-      <interface-class>consulo.language.file.FileTypeManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl</implementation-class>
-    </component>
 
-    <component>
-      <interface-class>consulo.virtualFileSystem.VirtualFileManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.vfs.PlatformVirtualFileManager</implementation-class>
-    </component>
 
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFSImpl</implementation-class>
-    </component>
 
-    <component>
-      <interface-class>consulo.ui.ex.keymap.KeymapManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.keymap.impl.KeymapManagerImpl</implementation-class>
-    </component>
 
-    <component>
-      <interface-class>consulo.ui.ex.action.ActionManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.actionSystem.impl.ActionManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.document.FileDocumentManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.localHistory.LocalHistory</interface-class>
-      <implementation-class>consulo.ide.impl.idea.history.integration.LocalHistoryImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.undoRedo.ApplicationUndoManager</interface-class>
-      <implementation-class>consulo.ide.impl.command.ApplicationUndoManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.application.impl.internal.performance.PerformanceWatcher</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.application.Preloader</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.ide.impl.idea.notification.NotificationsConfiguration</interface-class>
-      <implementation-class>consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.project.ui.notification.NotificationsManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.ide.impl.idea.ide.ClipboardSynchronizer</interface-class>
-      <implementation-class>consulo.ide.impl.idea.ide.ClipboardSynchronizer</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.util.FoundationLoader</implementation-class>
-      <headless-implementation-class/>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.notification.EventLog</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.util.net.HttpConfigurable</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.ide.impl.idea.ide.FrameStateManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.ide.FrameStateManagerImpl</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.updateSettings.impl.UpdateCheckerComponent</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.ide.actionMacro.ActionMacroManager</implementation-class>
-    </component>
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.actionSystem.ex.QuickListsManager</implementation-class>
-    </component>
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.keymap.impl.ModifierKeyDoubleClickHandler</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.language.psi.stub.FileBasedIndex</interface-class>
-      <implementation-class>consulo.ide.impl.idea.util.indexing.FileBasedIndexImpl</implementation-class>
-    </component>
     <component>
       <interface-class>consulo.language.psi.stub.StubIndex</interface-class>
       <implementation-class>consulo.ide.impl.psi.stubs.StubIndexImpl</implementation-class>
@@ -125,11 +30,6 @@
     </component>
 
     <component>
-      <interface-class>consulo.language.psi.stub.SerializationManager</interface-class>
-      <implementation-class>consulo.ide.impl.psi.stubs.SerializationManagerImpl</implementation-class>
-    </component>
-
-    <component>
       <implementation-class>consulo.ide.impl.idea.openapi.roots.impl.libraries.LibraryKindLoader</implementation-class>
     </component>
 
@@ -137,10 +37,6 @@
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter</implementation-class>
     </component>
 
-    <component>
-      <interface-class>consulo.execution.executor.ExecutorRegistry</interface-class>
-      <implementation-class>consulo.ide.impl.idea.execution.ExecutorRegistryImpl</implementation-class>
-    </component>
 
     <component>
       <interface-class>consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker</interface-class>

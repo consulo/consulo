@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.notification.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.ide.impl.idea.notification.NotificationsConfiguration;
@@ -38,6 +39,7 @@ import java.util.*;
  */
 @State(name = "NotificationConfiguration", storages = @Storage("notifications.xml"))
 @Singleton
+@ServiceImpl
 public class NotificationsConfigurationImpl extends NotificationsConfiguration implements Disposable, PersistentStateComponent<Element> {
 
   private static final Logger LOG = Logger.getInstance(NotificationsConfiguration.class);

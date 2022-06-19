@@ -15,39 +15,37 @@
  */
 package consulo.ide.impl.idea.execution;
 
-import consulo.ide.impl.idea.execution.actions.RunContextAction;
-import consulo.execution.executor.DefaultRunExecutor;
-import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
-import consulo.execution.*;
-import consulo.execution.event.ExecutionListener;
-import consulo.execution.executor.Executor;
-import consulo.execution.executor.ExecutorRegistry;
-import consulo.language.editor.CommonDataKeys;
-import consulo.process.ProcessHandler;
-import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import consulo.execution.ExecutionUtil;
-import consulo.execution.runner.ProgramRunner;
-import consulo.execution.ui.RunContentDescriptor;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.Application;
-import consulo.ui.ex.action.*;
-import consulo.util.lang.Trinity;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import java.util.HashMap;
-
+import consulo.application.dumb.DumbAware;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.disposer.Disposable;
+import consulo.execution.*;
+import consulo.execution.event.ExecutionListener;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.executor.Executor;
+import consulo.execution.executor.ExecutorRegistry;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.ExecutionEnvironmentBuilder;
+import consulo.execution.runner.ProgramRunner;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.ide.impl.idea.execution.actions.RunContextAction;
+import consulo.ide.impl.idea.execution.impl.ExecutionManagerImpl;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.editor.CommonDataKeys;
 import consulo.logging.Logger;
-import consulo.application.dumb.DumbAware;
+import consulo.process.ProcessHandler;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.action.*;
 import consulo.ui.image.Image;
 import consulo.ui.image.ImageEffects;
+import consulo.util.lang.Trinity;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -56,6 +54,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 public class ExecutorRegistryImpl extends ExecutorRegistry implements Disposable {
   private static final Logger LOG = Logger.getInstance(ExecutorRegistryImpl.class);
 

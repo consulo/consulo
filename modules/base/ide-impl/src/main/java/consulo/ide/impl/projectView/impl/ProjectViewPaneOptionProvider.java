@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.projectView.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.component.extension.ExtensionPointName;
@@ -26,8 +28,9 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 09.05.2015
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ProjectViewPaneOptionProvider<T> {
-  ExtensionPointName<ProjectViewPaneOptionProvider> EX_NAME = ExtensionPointName.create("consulo.projectViewOptionProvider");
+  ExtensionPointName<ProjectViewPaneOptionProvider> EX_NAME = ExtensionPointName.create(ProjectViewPaneOptionProvider.class);
 
   abstract class BoolValue implements ProjectViewPaneOptionProvider<Boolean> {
     @Nonnull

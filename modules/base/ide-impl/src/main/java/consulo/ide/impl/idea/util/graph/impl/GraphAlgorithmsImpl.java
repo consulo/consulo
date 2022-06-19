@@ -15,19 +15,21 @@
  */
 package consulo.ide.impl.idea.util.graph.impl;
 
-import consulo.component.util.graph.*;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.progress.ProgressIndicator;
+import consulo.component.util.graph.*;
+import consulo.ide.impl.idea.util.graph.GraphAlgorithms;
 import consulo.util.collection.Chunk;
-import consulo.ide.impl.idea.util.graph.*;
-import javax.annotation.Nonnull;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class GraphAlgorithmsImpl extends GraphAlgorithms {
   @Override
   public <Node> List<Node> findShortestPath(@Nonnull Graph<Node> graph, @Nonnull Node start, @Nonnull Node finish) {

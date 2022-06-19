@@ -15,6 +15,8 @@
  */
 package consulo.process.local.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -22,6 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class OSProcessManager {
   public static OSProcessManager getInstance() {
     return Application.get().getInstance(OSProcessManager.class);

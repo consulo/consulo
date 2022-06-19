@@ -16,6 +16,8 @@
 
 package consulo.localHistory;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -24,6 +26,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class LocalHistory {
   public static final Object VFS_EVENT_REQUESTOR = new Object();
 

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.ui;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.ide.ServiceManager;
 import consulo.project.Project;
@@ -51,6 +52,7 @@ import java.util.*;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class ChangesViewContentManager implements ChangesViewContentI {
   public static ChangesViewContentI getInstance(Project project) {
     return ServiceManager.getService(project, ChangesViewContentI.class);

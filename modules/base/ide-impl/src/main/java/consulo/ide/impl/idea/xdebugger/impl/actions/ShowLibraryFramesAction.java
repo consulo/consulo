@@ -16,13 +16,16 @@
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
-import consulo.ui.ex.action.Presentation;
-import consulo.ui.ex.action.ToggleAction;
 import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.setting.XDebuggerSettingsManager;
 import consulo.ide.impl.idea.xdebugger.impl.XDebuggerUtilImpl;
 import consulo.ide.impl.idea.xdebugger.impl.settings.XDebuggerSettingManagerImpl;
+import consulo.language.editor.CommonDataKeys;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.Presentation;
+import consulo.ui.ex.action.ToggleAction;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import javax.annotation.Nonnull;
 
@@ -34,13 +37,15 @@ final class ShowLibraryFramesAction extends ToggleAction {
   // - we should avoid "jumping" (visible (start) - invisible (stop) - visible (start again))
   private static final String IS_LIBRARY_FRAME_FILTER_SUPPORTED = "isLibraryFrameFilterSupported";
 
-  private volatile boolean myShouldShow;
   private static final String ourTextWhenShowIsOn = "Hide Frames from Libraries";
   private static final String ourTextWhenShowIsOff = "Show All Frames";
 
-  public ShowLibraryFramesAction() {
+  private final Provider<XDebuggerSettingsManager> myXDebuggerSettingsManagerProvider;
+
+  @Inject
+  public ShowLibraryFramesAction(Provider<XDebuggerSettingsManager> provider) {
     super("", "", AllIcons.General.Filter);
-    myShouldShow = XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().isShowLibraryStackFrames();
+    myXDebuggerSettingsManagerProvider = provider;
   }
 
   @Override
@@ -72,15 +77,19 @@ final class ShowLibraryFramesAction extends ToggleAction {
     }
   }
 
+  private XDebuggerSettingManagerImpl getSettingsImpl() {
+    return (XDebuggerSettingManagerImpl)myXDebuggerSettingsManagerProvider.get();
+  }
+
   @Override
-  public boolean isSelected(AnActionEvent e) {
-    return !myShouldShow;
+  public boolean isSelected(@Nonnull AnActionEvent e) {
+    return !getSettingsImpl().getDataViewSettings().isShowLibraryStackFrames();
   }
 
   @Override
   public void setSelected(AnActionEvent e, boolean enabled) {
-    myShouldShow = !enabled;
-    XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setShowLibraryStackFrames(myShouldShow);
+    boolean newValue = !enabled;
+    XDebuggerSettingManagerImpl.getInstanceImpl().getDataViewSettings().setShowLibraryStackFrames(newValue);
     XDebuggerUtilImpl.rebuildAllSessionsViews(e.getData(CommonDataKeys.PROJECT));
   }
 }

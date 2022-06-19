@@ -9,6 +9,7 @@
  *****************************************************************************/
 package consulo.injecting.pico;
 
+import java.lang.reflect.Type;
 import java.util.Set;
 
 /**
@@ -22,7 +23,7 @@ class UnsatisfiableDependenciesException extends PicoIntrospectionException {
 
   private final ComponentAdapter instantiatingComponentAdapter;
   private final Set unsatisfiableDependencies;
-  private final Class unsatisfiedDependencyType;
+  private final Type unsatisfiedDependencyType;
   private final DefaultPicoContainer leafContainer;
 
   public UnsatisfiableDependenciesException(ComponentAdapter instantiatingComponentAdapter, Set unsatisfiableDependencies, DefaultPicoContainer leafContainer) {
@@ -38,7 +39,7 @@ class UnsatisfiableDependenciesException extends PicoIntrospectionException {
     this.leafContainer = leafContainer;
   }
 
-  public UnsatisfiableDependenciesException(ComponentAdapter instantiatingComponentAdapter, Class unsatisfiedDependencyType, Set unsatisfiableDependencies, DefaultPicoContainer leafContainer) {
+  public UnsatisfiableDependenciesException(ComponentAdapter instantiatingComponentAdapter, Type unsatisfiedDependencyType, Set unsatisfiableDependencies, DefaultPicoContainer leafContainer) {
     super(instantiatingComponentAdapter.getComponentImplementation().getName() +
           " has unsatisfied dependency: " +
           unsatisfiedDependencyType +
@@ -61,7 +62,7 @@ class UnsatisfiableDependenciesException extends PicoIntrospectionException {
     return unsatisfiableDependencies;
   }
 
-  public Class getUnsatisfiedDependencyType() {
+  public Type getUnsatisfiedDependencyType() {
     return unsatisfiedDependencyType;
   }
 

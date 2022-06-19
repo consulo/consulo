@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.formatting;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.formatting.engine.ExpandableIndent;
 import consulo.ide.impl.idea.util.SequentialTask;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
@@ -34,6 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static consulo.ide.impl.idea.formatting.FormatProcessor.FormatOptions;
 
 @Singleton
+@ServiceImpl
 public class FormatterImpl extends FormatterEx implements IndentFactory, WrapFactory, AlignmentFactory, SpacingFactory, FormattingModelFactory {
   private static final Logger LOG = Logger.getInstance(FormatterImpl.class);
 

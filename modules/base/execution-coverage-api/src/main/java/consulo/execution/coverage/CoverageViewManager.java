@@ -1,14 +1,17 @@
 package consulo.execution.coverage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.execution.coverage.view.CoverageView;
 import consulo.disposer.Disposer;
 import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.coverage.view.CoverageView;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -29,10 +32,9 @@ import java.util.Map;
  * Date: 1/2/12
  */
 @Singleton
-@State(
-    name = "CoverageViewManager",
-    storages = {@Storage( file = StoragePathMacros.WORKSPACE_FILE)}
-)
+@State(name = "CoverageViewManager", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class CoverageViewManager implements PersistentStateComponent<CoverageViewManager.StateBean> {
   private static final Logger LOG = Logger.getInstance(CoverageViewManager.class);
   public static final String TOOLWINDOW_ID = "Coverage";

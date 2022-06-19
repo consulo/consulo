@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.ide.IdeBundle;
 import consulo.logging.Logger;
@@ -42,6 +43,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
+@ExtensionImpl
 public class FileChangedNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Logger LOG = Logger.getInstance(FileChangedNotificationProvider.class);
 
@@ -51,7 +53,7 @@ public class FileChangedNotificationProvider implements EditorNotificationProvid
   public FileChangedNotificationProvider(@Nonnull Project project, @Nonnull FrameStateManager frameStateManager) {
     myProject = project;
 
-    frameStateManager.addListener(new FrameStateListener.Adapter() {
+    frameStateManager.addListener(new FrameStateListener() {
       @Override
       public void onFrameActivated() {
         if (!myProject.isDisposed() && !GeneralSettings.getInstance().isSyncOnFrameActivation()) {

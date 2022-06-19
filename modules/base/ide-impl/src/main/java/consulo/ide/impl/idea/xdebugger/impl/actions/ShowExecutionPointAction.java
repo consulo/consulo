@@ -15,13 +15,15 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.actions;
 
-import javax.annotation.Nonnull;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author nik
  */
 public class ShowExecutionPointAction extends XDebuggerActionBase {
+  @Override
   @Nonnull
   protected DebuggerActionHandler getHandler(@Nonnull final DebuggerSupport debuggerSupport) {
     return debuggerSupport.getShowExecutionPointHandler();

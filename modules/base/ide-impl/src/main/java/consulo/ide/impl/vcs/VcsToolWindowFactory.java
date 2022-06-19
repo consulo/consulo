@@ -16,7 +16,10 @@
 package consulo.ide.impl.vcs;
 
 import consulo.application.dumb.DumbAware;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.util.lang.Trinity;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentI;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
@@ -50,6 +53,12 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
     public int getOrder() {
       return VcsInitObject.AFTER_COMMON.getOrder();
     }
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return ToolWindowId.VCS;
   }
 
   @RequiredUIAccess
@@ -89,5 +98,23 @@ public class VcsToolWindowFactory implements ToolWindowFactory, DumbAware {
       return alreadyLoadedState != null && alreadyLoadedState.getThird();
     }
     return false;
+  }
+
+  @Nonnull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.BOTTOM;
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.toolwindowsToolwindowchanges();
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Version Control");
   }
 }

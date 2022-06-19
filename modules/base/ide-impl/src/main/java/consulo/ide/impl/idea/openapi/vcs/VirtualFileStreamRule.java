@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.GetDataRule;
 import consulo.language.editor.CommonDataKeys;
 import consulo.dataContext.DataProvider;
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
 
 import java.util.stream.Stream;
 
+@ExtensionImpl
 public class VirtualFileStreamRule implements GetDataRule<Stream<VirtualFile>> {
   @Nonnull
   @Override

@@ -15,6 +15,8 @@
  */
 package consulo.content.bundle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.util.pointer.NamedPointerManager;
 
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 17:17/15.06.13
  */
+@Service(ComponentScope.APPLICATION)
 public interface SdkPointerManager extends NamedPointerManager<Sdk> {
   @Nonnull
   static SdkPointerManager getInstance() {

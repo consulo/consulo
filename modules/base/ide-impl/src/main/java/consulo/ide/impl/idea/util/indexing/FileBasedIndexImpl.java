@@ -2,84 +2,55 @@
 package consulo.ide.impl.idea.util.indexing;
 
 import com.google.common.annotations.VisibleForTesting;
-import consulo.application.impl.internal.IdeaModalityState;
-import consulo.ide.impl.AppTopics;
-import consulo.localHistory.LocalHistory;
-import consulo.ide.impl.idea.ide.plugins.PluginManager;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.TransactionGuard;
 import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.util.function.*;
-import consulo.content.scope.SearchScope;
-import consulo.index.io.ID;
-import consulo.index.io.IndexExtension;
-import consulo.language.ast.ASTNode;
-import consulo.language.file.FileTypeManager;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.language.impl.internal.psi.stub.FileContentImpl;
-import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
-import consulo.application.impl.internal.LaterInvocator;
 import consulo.application.event.ApplicationListener;
-import consulo.document.Document;
-import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
-import consulo.document.FileDocumentManager;
-import consulo.document.event.FileDocumentManagerListener;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
-import consulo.application.*;
-import consulo.language.psi.stub.*;
-import consulo.component.ProcessCanceledException;
+import consulo.application.impl.internal.performance.HeavyProcessLatch;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
-import consulo.application.impl.internal.progress.ProgressIndicatorUtils;
-import consulo.ide.impl.idea.openapi.project.*;
+import consulo.application.util.function.Computable;
+import consulo.application.util.function.Processor;
+import consulo.application.util.function.Processors;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.application.util.registry.Registry;
+import consulo.component.ProcessCanceledException;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.container.boot.ContainerPathManager;
 import consulo.content.CollectingContentIterator;
 import consulo.content.ContentIterator;
+import consulo.content.scope.SearchScope;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.event.FileDocumentManagerListener;
+import consulo.ide.impl.AppTopics;
+import consulo.ide.impl.idea.ide.plugins.PluginManager;
+import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionUtil;
+import consulo.ide.impl.idea.openapi.editor.impl.EditorHighlighterCache;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.FileTypeManagerImpl;
+import consulo.ide.impl.idea.openapi.project.DumbServiceImpl;
+import consulo.ide.impl.idea.openapi.project.NoAccessDuringPsiEvents;
+import consulo.ide.impl.idea.openapi.project.ProjectUtil;
 import consulo.ide.impl.idea.openapi.roots.impl.PushedFilePropertiesUpdaterImpl;
-import consulo.ide.impl.idea.openapi.util.*;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
-import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.project.*;
-import consulo.project.content.scope.ProjectAwareSearchScope;
-import consulo.util.collection.SmartFMap;
-import consulo.util.collection.SmartList;
-import consulo.util.lang.ShutDownTracker;
-import consulo.util.lang.SystemProperties;
-import consulo.util.lang.function.Condition;
-import consulo.util.lang.ref.Ref;
-import consulo.virtualFileSystem.event.AsyncFileListener;
-import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.virtualFileSystem.fileType.FileNameMatcher;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.virtualFileSystem.VirtualFileWithId;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.AsyncEventSupport;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.ManagingFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
-import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.FlushingDaemon;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFS;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.persistent.PersistentFSImpl;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiManager;
-import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.language.impl.internal.psi.PsiDocumentTransactionListener;
-import consulo.language.impl.internal.psi.PsiManagerImpl;
-import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
-import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
-import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
-import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.psi.scope.EverythingGlobalScope;
-import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.ide.impl.psi.stubs.SerializationManagerEx;
-import consulo.ide.impl.idea.util.*;
-import consulo.util.concurrent.BoundedTaskExecutor;
-import consulo.application.util.concurrent.SequentialTaskExecutor;
+import consulo.ide.impl.idea.util.ArrayUtilRt;
+import consulo.ide.impl.idea.util.ConcurrencyUtil;
+import consulo.ide.impl.idea.util.ThrowableConvertor;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.gist.GistManager;
 import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndex;
@@ -87,24 +58,60 @@ import consulo.ide.impl.idea.util.indexing.hash.FileContentHashIndexExtension;
 import consulo.ide.impl.idea.util.indexing.impl.InvertedIndexValueIterator;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtension;
 import consulo.ide.impl.idea.util.indexing.provided.ProvidedIndexExtensionLocator;
+import consulo.ide.impl.psi.impl.cache.impl.id.IdIndex;
+import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
+import consulo.ide.impl.psi.stubs.SerializationManagerEx;
+import consulo.index.io.ID;
+import consulo.index.io.IndexExtension;
 import consulo.index.io.data.DataOutputStream;
 import consulo.index.io.data.IOUtil;
-import consulo.application.impl.internal.performance.HeavyProcessLatch;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.ui.ex.awt.UIUtil;
-import consulo.container.boot.ContainerPathManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
+import consulo.language.ast.ASTNode;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
+import consulo.language.impl.file.SingleRootFileViewProvider;
+import consulo.language.impl.internal.psi.PsiDocumentTransactionListener;
+import consulo.language.impl.internal.psi.PsiManagerImpl;
+import consulo.language.impl.internal.psi.PsiTreeChangeEventImpl;
+import consulo.language.impl.internal.psi.stub.FileContentImpl;
+import consulo.language.impl.internal.psi.stub.SubstitutedFileType;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.language.psi.scope.EverythingGlobalScope;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.stub.*;
 import consulo.logging.Logger;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ProjectCoreUtil;
+import consulo.project.ProjectManager;
+import consulo.project.content.scope.ProjectAwareSearchScope;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
+import consulo.ui.ex.awt.UIUtil;
+import consulo.util.collection.SmartFMap;
+import consulo.util.collection.SmartList;
 import consulo.util.collection.primitive.ints.IntList;
 import consulo.util.collection.primitive.ints.IntLists;
-import consulo.util.collection.primitive.ints.IntObjectMap;
 import consulo.util.collection.primitive.ints.IntSet;
+import consulo.util.concurrent.BoundedTaskExecutor;
 import consulo.util.dataholder.Key;
-
-import javax.annotation.Nonnull;
+import consulo.util.lang.ShutDownTracker;
+import consulo.util.lang.SystemProperties;
+import consulo.util.lang.function.Condition;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.VirtualFileWithId;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.*;
 import java.lang.ref.SoftReference;
@@ -124,6 +131,8 @@ import java.util.stream.Stream;
 /**
  * @author Eugene Zhuravlev
  */
+@Singleton
+@ServiceImpl
 public final class FileBasedIndexImpl extends FileBasedIndex {
   private static final ThreadLocal<VirtualFile> ourIndexedFile = new ThreadLocal<>();
   private static final ThreadLocal<VirtualFile> ourFileToBeIndexed = new ThreadLocal<>();
@@ -150,7 +159,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     return AsyncEventSupport.EP_NAME.findExtensionOrFail(ChangedFilesCollector.class);
   });
 
-  private final List<IndexableFileSet> myIndexableSets = ContainerUtil.createLockFreeCopyOnWriteList();
+  final List<IndexableFileSet> myIndexableSets = ContainerUtil.createLockFreeCopyOnWriteList();
   private final Map<IndexableFileSet, Project> myIndexableSetToProjectMap = new HashMap<>();
 
   private final MessageBusConnection myConnection;
@@ -163,12 +172,12 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   @Nullable
   private ScheduledFuture<?> myFlushingFuture;
   private final AtomicInteger myLocalModCount = new AtomicInteger();
-  private final AtomicInteger myFilesModCount = new AtomicInteger();
-  private final AtomicInteger myUpdatingFiles = new AtomicInteger();
+  final AtomicInteger myFilesModCount = new AtomicInteger();
+  final AtomicInteger myUpdatingFiles = new AtomicInteger();
   private final Set<Project> myProjectsBeingUpdated = ContainerUtil.newConcurrentSet();
   private final IndexAccessValidator myAccessValidator = new IndexAccessValidator();
 
-  private volatile boolean myInitialized;
+  volatile boolean myInitialized;
 
   private Future<IndexConfiguration> myStateFuture;
   private volatile IndexConfiguration myState;
@@ -349,7 +358,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
   }
 
-  private void waitUntilIndicesAreInitialized() {
+  void waitUntilIndicesAreInitialized() {
     try {
       myStateFuture.get();
     }
@@ -722,7 +731,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
   }
 
-  private static boolean isUpToDateCheckEnabled() {
+  static boolean isUpToDateCheckEnabled() {
     final Integer value = myUpToDateCheckState.get();
     return value == null || value.intValue() == 0;
   }
@@ -1114,10 +1123,10 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
   @Nullable
   private <K, V> IntSet collectFileIdsContainingAllKeys(@Nonnull final ID<K, V> indexId,
-                                                             @Nonnull final Collection<? extends K> dataKeys,
-                                                             @Nonnull final SearchScope filter,
-                                                             @Nullable final Condition<? super V> valueChecker,
-                                                             @Nullable final ProjectIndexableFilesFilter projectFilesFilter) {
+                                                        @Nonnull final Collection<? extends K> dataKeys,
+                                                        @Nonnull final SearchScope filter,
+                                                        @Nullable final Condition<? super V> valueChecker,
+                                                        @Nullable final ProjectIndexableFilesFilter projectFilesFilter) {
     ThrowableConvertor<UpdatableIndex<K, V, FileContent>, IntSet, StorageException> convertor = index -> InvertedIndexUtil.collectInputIdsContainingAllKeys(index, dataKeys, __ -> {
       ProgressManager.checkCanceled();
       return true;
@@ -1136,7 +1145,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
       VirtualFile file = IndexInfrastructure.findFileByIdIfCached(fs, id);
 
       if (file != null && filter.accept(file)) {
-        if(!processor.process(file)) {
+        if (!processor.process(file)) {
           return false;
         }
       }
@@ -1158,10 +1167,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   }
 
   @Override
-  public <K, V> boolean getFilesWithKey(@Nonnull final ID<K, V> indexId,
-                                        @Nonnull final Set<? extends K> dataKeys,
-                                        @Nonnull Processor<? super VirtualFile> processor,
-                                        @Nonnull SearchScope filter) {
+  public <K, V> boolean getFilesWithKey(@Nonnull final ID<K, V> indexId, @Nonnull final Set<? extends K> dataKeys, @Nonnull Processor<? super VirtualFile> processor, @Nonnull SearchScope filter) {
     return processFilesContainingAllKeys(indexId, dataKeys, filter, null, processor);
   }
 
@@ -1430,7 +1436,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
   }
 
-  private void cleanupMemoryStorage(boolean skipPsiBasedIndices) {
+  void cleanupMemoryStorage(boolean skipPsiBasedIndices) {
     myLastIndexedDocStamps.clear();
     IndexConfiguration state = myState;
     if (state == null) {
@@ -1762,7 +1768,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   }
 
   private final Lock myReadLock;
-  private final Lock myWriteLock;
+  final Lock myWriteLock;
 
   {
     ReadWriteLock lock = new ReentrantReadWriteLock();
@@ -1789,7 +1795,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
   }
 
   @Nullable
-  private IndexableFileSet getIndexableSetForFile(VirtualFile file) {
+  IndexableFileSet getIndexableSetForFile(VirtualFile file) {
     for (IndexableFileSet set : myIndexableSets) {
       if (set.isInSet(file)) {
         return set;
@@ -1798,7 +1804,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     return null;
   }
 
-  private void doTransientStateChangeForFile(int fileId, @Nonnull VirtualFile file) {
+  void doTransientStateChangeForFile(int fileId, @Nonnull VirtualFile file) {
     waitUntilIndicesAreInitialized();
     if (!clearUpToDateStateForPsiIndicesOfUnsavedDocuments(file, IndexingStamp.getNontrivialFileIndexedStates(fileId))) {
       // change in persistent file
@@ -1806,7 +1812,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
   }
 
-  private void doInvalidateIndicesForFile(int fileId, @Nonnull VirtualFile file, boolean contentChanged) {
+  void doInvalidateIndicesForFile(int fileId, @Nonnull VirtualFile file, boolean contentChanged) {
     waitUntilIndicesAreInitialized();
     cleanProcessedFlag(file);
 
@@ -1858,7 +1864,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
   }
 
-  private void scheduleFileForIndexing(Project project, int fileId, @Nonnull VirtualFile file, boolean contentChange) {
+  void scheduleFileForIndexing(Project project, int fileId, @Nonnull VirtualFile file, boolean contentChange) {
     // handle 'content-less' indices separately
     boolean fileIsDirectory = file.isDirectory();
 
@@ -1916,216 +1922,6 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
 
   private static FileTypeManagerImpl getFileTypeManager() {
     return (FileTypeManagerImpl)FileTypeManager.getInstance();
-  }
-
-  static final class ChangedFilesCollector extends IndexedFilesListener {
-    private final IntObjectMap<VirtualFile> myFilesToUpdate = ContainerUtil.createConcurrentIntObjectMap();
-    private final AtomicInteger myProcessedEventIndex = new AtomicInteger();
-    private final Phaser myWorkersFinishedSync = new Phaser() {
-      @Override
-      protected boolean onAdvance(int phase, int registeredParties) {
-        return false;
-      }
-    };
-
-    private final Executor myVfsEventsExecutor = SequentialTaskExecutor.createSequentialApplicationPoolExecutor("FileBasedIndex Vfs Event Processor");
-    private final AtomicInteger myScheduledVfsEventsWorkers = new AtomicInteger();
-    private final FileBasedIndexImpl myManager = (FileBasedIndexImpl)getInstance();
-
-    @Override
-    protected void buildIndicesForFileRecursively(@Nonnull VirtualFile file, boolean contentChange) {
-      cleanProcessedFlag(file);
-      if (!contentChange) {
-        myManager.myUpdatingFiles.incrementAndGet();
-      }
-
-      super.buildIndicesForFileRecursively(file, contentChange);
-
-      if (!contentChange) {
-        if (myManager.myUpdatingFiles.decrementAndGet() == 0) {
-          myManager.myFilesModCount.incrementAndGet();
-        }
-      }
-    }
-
-    @Override
-    protected void iterateIndexableFiles(@Nonnull VirtualFile file, @Nonnull ContentIterator iterator) {
-      for (IndexableFileSet set : myManager.myIndexableSets) {
-        if (set.isInSet(file)) {
-          set.iterateIndexableFilesIn(file, iterator);
-        }
-      }
-    }
-
-    void scheduleForUpdate(VirtualFile file) {
-      if (!(file instanceof DeletedVirtualFileStub)) {
-        IndexableFileSet setForFile = myManager.getIndexableSetForFile(file);
-        if (setForFile == null) {
-          return;
-        }
-      }
-      final int fileId = Math.abs(getIdMaskingNonIdBasedFile(file));
-      final VirtualFile previousVirtualFile = myFilesToUpdate.put(fileId, file);
-
-      if (previousVirtualFile instanceof DeletedVirtualFileStub && !previousVirtualFile.equals(file)) {
-        assert ((DeletedVirtualFileStub)previousVirtualFile).getOriginalFile().equals(file);
-        ((DeletedVirtualFileStub)previousVirtualFile).setResurrected(true);
-        myFilesToUpdate.put(fileId, previousVirtualFile);
-      }
-    }
-
-    private void removeScheduledFileFromUpdate(VirtualFile file) {
-      final int fileId = Math.abs(getIdMaskingNonIdBasedFile(file));
-      final VirtualFile previousVirtualFile = myFilesToUpdate.remove(fileId);
-
-      if (previousVirtualFile instanceof DeletedVirtualFileStub) {
-        assert ((DeletedVirtualFileStub)previousVirtualFile).getOriginalFile().equals(file);
-        ((DeletedVirtualFileStub)previousVirtualFile).setResurrected(false);
-        myFilesToUpdate.put(fileId, previousVirtualFile);
-      }
-    }
-
-    private void removeFileIdFromFilesScheduledForUpdate(int fileId) {
-      myFilesToUpdate.remove(fileId);
-    }
-
-    Collection<VirtualFile> getAllFilesToUpdate() {
-      ensureUpToDate();
-      if (myFilesToUpdate.isEmpty()) {
-        return Collections.emptyList();
-      }
-      return new ArrayList<>(myFilesToUpdate.values());
-    }
-
-    @Override
-    @Nonnull
-    public AsyncFileListener.ChangeApplier prepareChange(@Nonnull List<? extends VFileEvent> events) {
-      boolean shouldCleanup = ContainerUtil.exists(events, ChangedFilesCollector::memoryStorageCleaningNeeded);
-      ChangeApplier superApplier = super.prepareChange(events);
-
-      return new AsyncFileListener.ChangeApplier() {
-        @Override
-        public void beforeVfsChange() {
-          if (shouldCleanup) {
-            myManager.cleanupMemoryStorage(false);
-          }
-          superApplier.beforeVfsChange();
-        }
-
-        @Override
-        public void afterVfsChange() {
-          superApplier.afterVfsChange();
-          if (myManager.myInitialized) ensureUpToDateAsync();
-        }
-      };
-    }
-
-    private static boolean memoryStorageCleaningNeeded(@Nonnull VFileEvent event) {
-      Object requestor = event.getRequestor();
-      return requestor instanceof FileDocumentManager || requestor instanceof PsiManager || requestor == LocalHistory.VFS_EVENT_REQUESTOR;
-    }
-
-    boolean isScheduledForUpdate(VirtualFile file) {
-      return myFilesToUpdate.containsKey(Math.abs(getIdMaskingNonIdBasedFile(file)));
-    }
-
-    void ensureUpToDate() {
-      if (!isUpToDateCheckEnabled()) {
-        return;
-      }
-      //assert ApplicationManager.getApplication().isReadAccessAllowed() || ShutDownTracker.isShutdownHookRunning();
-      myManager.waitUntilIndicesAreInitialized();
-
-      if (ApplicationManager.getApplication().isReadAccessAllowed()) {
-        processFilesInReadAction(null);
-      }
-      else {
-        processFilesInReadActionWithYieldingToWriteAction();
-      }
-    }
-
-    void ensureUpToDateAsync() {
-      if (getEventMerger().getApproximateChangesCount() >= 20 && myScheduledVfsEventsWorkers.compareAndSet(0, 1)) {
-        myVfsEventsExecutor.execute(() -> {
-          try {
-            processFilesInReadActionWithYieldingToWriteAction();
-          }
-          finally {
-            myScheduledVfsEventsWorkers.decrementAndGet();
-          }
-        });
-
-        if (Registry.is("try.starting.dumb.mode.where.many.files.changed")) {
-          Runnable startDumbMode = () -> {
-            for (Project project : ProjectManager.getInstance().getOpenProjects()) {
-              DumbServiceImpl dumbService = DumbServiceImpl.getInstance(project);
-              DumbModeTask task = FileBasedIndexProjectHandler.createChangedFilesIndexingTask(project);
-
-              if (task != null) {
-                dumbService.queueTask(task);
-              }
-            }
-          };
-
-          Application app = ApplicationManager.getApplication();
-          if (!app.isHeadlessEnvironment()  /*avoid synchronous ensureUpToDate to prevent deadlock*/ && app.isDispatchThread() && !LaterInvocator.isInModalContext()) {
-            startDumbMode.run();
-          }
-          else {
-            app.invokeLater(startDumbMode, IdeaModalityState.NON_MODAL);
-          }
-        }
-      }
-    }
-
-    private void processFilesInReadAction(Project project) {
-      assert ApplicationManager.getApplication().isReadAccessAllowed(); // no vfs events -> event processing code can finish
-
-      int publishedEventIndex = getEventMerger().getPublishedEventIndex();
-      int processedEventIndex = myProcessedEventIndex.get();
-      if (processedEventIndex == publishedEventIndex) {
-        return;
-      }
-
-      myWorkersFinishedSync.register();
-      int phase = myWorkersFinishedSync.getPhase();
-      try {
-        getEventMerger().processChanges(info -> ConcurrencyUtil.withLock(myManager.myWriteLock, () -> {
-          try {
-            ProgressManager.getInstance().executeNonCancelableSection(() -> {
-              int fileId = info.getFileId();
-              VirtualFile file = info.getFile();
-              if (info.isTransientStateChanged()) myManager.doTransientStateChangeForFile(fileId, file);
-              if (info.isBeforeContentChanged()) myManager.doInvalidateIndicesForFile(fileId, file, true);
-              if (info.isContentChanged()) myManager.scheduleFileForIndexing(project, fileId, file, true);
-              if (info.isFileRemoved()) myManager.doInvalidateIndicesForFile(fileId, file, false);
-              if (info.isFileAdded()) myManager.scheduleFileForIndexing(project, fileId, file, false);
-            });
-          }
-          finally {
-            IndexingStamp.flushCache(info.getFileId());
-          }
-          return true;
-        }));
-      }
-      finally {
-        myWorkersFinishedSync.arriveAndDeregister();
-      }
-
-      myWorkersFinishedSync.awaitAdvance(phase);
-
-      if (getEventMerger().getPublishedEventIndex() == publishedEventIndex) {
-        myProcessedEventIndex.compareAndSet(processedEventIndex, publishedEventIndex);
-      }
-    }
-
-    private void processFilesInReadActionWithYieldingToWriteAction() {
-      while (getEventMerger().hasChanges()) {
-        if (!ProgressIndicatorUtils.runInReadActionWithWriteActionPriority(() -> processFilesInReadAction(null))) {
-          ProgressIndicatorUtils.yieldToPendingWriteActions();
-        }
-      }
-    }
   }
 
   private boolean clearUpToDateStateForPsiIndicesOfUnsavedDocuments(@Nonnull VirtualFile file, Collection<? extends ID<?, ?>> affectedIndices) {
@@ -2359,7 +2155,7 @@ public final class FileBasedIndexImpl extends FileBasedIndex {
     }
   }
 
-  private static void cleanProcessedFlag(@Nonnull final VirtualFile file) {
+  static void cleanProcessedFlag(@Nonnull final VirtualFile file) {
     if (!(file instanceof VirtualFileSystemEntry)) return;
 
     final VirtualFileSystemEntry nvf = (VirtualFileSystemEntry)file;

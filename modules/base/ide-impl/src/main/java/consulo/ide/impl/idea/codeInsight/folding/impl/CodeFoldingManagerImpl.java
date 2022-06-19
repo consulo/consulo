@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.folding.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.folding.CodeFoldingManager;
 import consulo.application.ApplicationManager;
@@ -28,6 +29,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class CodeFoldingManagerImpl extends CodeFoldingManager implements Disposable {
   private final Project myProject;
 

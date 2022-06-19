@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;
@@ -34,6 +35,7 @@ import java.util.HashSet;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class ChangelistConflictAccessProvider extends WritingAccessProvider {
 
   private final Project myProject;

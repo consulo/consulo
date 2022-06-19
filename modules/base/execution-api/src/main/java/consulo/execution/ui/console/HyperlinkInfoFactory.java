@@ -1,6 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.ui.console;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
@@ -12,6 +14,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class HyperlinkInfoFactory {
   @Nonnull
   public static HyperlinkInfoFactory getInstance() {

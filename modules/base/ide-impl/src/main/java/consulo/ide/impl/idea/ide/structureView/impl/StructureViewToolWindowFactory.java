@@ -18,20 +18,56 @@ package consulo.ide.impl.idea.ide.structureView.impl;
 
 import consulo.fileEditor.structureView.StructureViewFactory;
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author yole
  */
 public class StructureViewToolWindowFactory implements ToolWindowFactory, DumbAware {
+  @Nonnull
+  @Override
+  public String getId() {
+    return ToolWindowId.STRUCTURE_VIEW;
+  }
+
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(Project project, ToolWindow toolWindow) {
     StructureViewFactoryImpl factory = (StructureViewFactoryImpl)StructureViewFactory.getInstance(project);
     factory.initToolWindow((ToolWindowEx)toolWindow);
+  }
+
+  @Nonnull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.LEFT;
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.toolwindowsToolwindowstructure();
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Structure");
+  }
+
+  @Override
+  public boolean isSecondary() {
+    return true;
   }
 }

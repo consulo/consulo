@@ -18,7 +18,7 @@ package consulo.ide.impl.project;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
-import consulo.project.startup.BackgroundStartupActivity;
+import consulo.project.startup.PostStartupActivity;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.UIAccess;
@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @since 2020-10-22
  */
 @ExtensionImpl
-public class ReopenProjectToolWindowActivity implements BackgroundStartupActivity, DumbAware {
+public class ReopenProjectToolWindowActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
     ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);

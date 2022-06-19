@@ -15,6 +15,8 @@
  */
 package consulo.project.ui.notification.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
@@ -23,6 +25,7 @@ import consulo.ui.ex.action.AnActionEvent;
  * @author VISTALL
  * @since 12-Feb-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface NotificationActionInvoker {
   static NotificationActionInvoker getInstance() {
     return Application.get().getInstance(NotificationActionInvoker.class);

@@ -317,7 +317,7 @@ public class GotoDeclarationAction extends BaseCodeInsightAction implements Code
       }
     }
 
-    for (GotoDeclarationHandler handler : Extensions.getExtensions(GotoDeclarationHandler.EP_NAME)) {
+    for (GotoDeclarationHandler handler : GotoDeclarationHandler.EP_NAME.getExtensionList()) {
       try {
         String text = handler.getActionText(event.getDataContext());
         if (text != null) {

@@ -15,6 +15,8 @@
  */
 package consulo.execution;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationType;
 import consulo.execution.configuration.RunConfiguration;
@@ -39,6 +41,7 @@ import java.util.regex.Pattern;
  * @see RunnerRegistry
  * @see ExecutionManager
  */
+@Service(ComponentScope.PROJECT)
 public abstract class RunManager {
   public static final String UNNAMED = "Unnamed";
 

@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.status.impl.internal;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
@@ -53,6 +54,7 @@ import java.util.Map;
  * @author mike
  */
 @Singleton
+@ServiceImpl
 public class FileStatusManagerImpl extends FileStatusManager implements Disposable {
   private final Map<VirtualFile, FileStatus> myCachedStatuses = Collections.synchronizedMap(new HashMap<VirtualFile, FileStatus>());
   private final Map<VirtualFile, Boolean> myWhetherExactlyParentToChanged = Collections.synchronizedMap(new HashMap<VirtualFile, Boolean>());

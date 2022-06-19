@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.internal.statistic.persistence;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.internal.statistic.beans.ConvertUsagesUtil;
 import consulo.ide.impl.idea.internal.statistic.beans.UsageDescriptor;
 import consulo.ide.impl.idea.internal.statistic.configurable.SendPeriod;
@@ -38,6 +41,8 @@ import java.util.*;
 
 @State(name = "UsagesStatistic", storages = @Storage(value = "usage.statistics.xml", roamingType = RoamingType.DISABLED))
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class UsageStatisticsPersistenceComponent extends BasicSentUsagesPersistenceComponent implements PersistentStateComponent<Element> {
 
   @Nonnull

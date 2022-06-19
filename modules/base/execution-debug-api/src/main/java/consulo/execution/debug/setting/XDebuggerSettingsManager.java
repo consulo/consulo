@@ -15,10 +15,13 @@
  */
 package consulo.execution.debug.setting;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class XDebuggerSettingsManager {
   @Nonnull
   public static XDebuggerSettingsManager getInstance() {

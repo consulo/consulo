@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.process.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.process.local.internal.OSProcessManager;
 import consulo.ide.impl.idea.execution.process.RunnerWinProcess;
 import consulo.process.local.internal.UnixProcessManager;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class OSProcessManagerImpl extends OSProcessManager {
   private static final Logger LOG = Logger.getInstance(OSProcessManagerImpl.class);
 

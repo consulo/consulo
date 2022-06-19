@@ -16,6 +16,7 @@
 package consulo.module.impl.internal;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.impl.util.NamedPointerImpl;
 import consulo.component.impl.util.NamedPointerManagerImpl;
 import consulo.disposer.Disposer;
@@ -36,6 +37,7 @@ import java.util.List;
  * @author nik
  */
 @Singleton
+@ServiceImpl
 public class ModulePointerManagerImpl extends NamedPointerManagerImpl<Module> implements ModulePointerManager {
   private final Project myProject;
 

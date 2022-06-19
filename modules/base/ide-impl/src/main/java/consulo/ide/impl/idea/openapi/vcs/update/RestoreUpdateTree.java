@@ -15,24 +15,29 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.update;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.*;
 import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.project.ProjectReloadState;
-import consulo.project.startup.IdeaStartupActivity;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache;
 import consulo.ide.impl.idea.openapi.vcs.ex.ProjectLevelVcsManagerEx;
+import consulo.project.Project;
+import consulo.project.startup.IdeaStartupActivity;
 import consulo.ui.UIAccess;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 @Singleton
 @State(name = "RestoreUpdateTree", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE, roamingType = RoamingType.DISABLED))
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class RestoreUpdateTree implements PersistentStateComponent<Element> {
   @Nonnull
   public static RestoreUpdateTree getInstance(Project project) {

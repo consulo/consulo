@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.project.ProjectComponent;
 import consulo.component.persist.StoragePathMacros;
@@ -92,6 +93,7 @@ import static consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager.VCS_CONFI
 
 @State(name = "ChangeListManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
+@ServiceImpl
 public class ChangeListManagerImpl extends ChangeListManagerEx implements ProjectComponent, ChangeListOwner, PersistentStateComponent<Element> {
   static class Scheduler {
     private final AtomicReference<Future> myLastTask = new AtomicReference<>();

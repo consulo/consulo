@@ -16,16 +16,18 @@
 
 package consulo.ide.impl.idea.testIntegration;
 
-import consulo.component.extension.Extensions;
+import consulo.application.util.matcher.NameUtil;
 import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiNamedElement;
-import consulo.application.util.matcher.NameUtil;
-import javax.annotation.Nullable;
+import consulo.util.lang.Pair;
 
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class TestFinderHelper {
   public static PsiElement findSourceElement(PsiElement from) {
@@ -60,8 +62,8 @@ public class TestFinderHelper {
     return false;
   }
 
-  public static TestFinder[] getFinders() {
-    return Extensions.getExtensions(TestFinder.EP_NAME);
+  public static List<TestFinder> getFinders() {
+    return TestFinder.EP_NAME.getExtensionList();
   }
 
   public static Integer calcTestNameProximity(final String className, final String testName) {

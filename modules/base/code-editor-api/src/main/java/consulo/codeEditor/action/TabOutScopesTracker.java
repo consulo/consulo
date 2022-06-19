@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.action;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 
@@ -11,6 +13,7 @@ import javax.annotation.Nonnull;
  * quote/bracket) using Tab key. The scope is usually created (registered) when a pair of quotes/brackets is inserted into a document, and
  * lives until user 'tabs out' of this scope, or performs editing outside it.
  */
+@Service(ComponentScope.APPLICATION)
 public interface TabOutScopesTracker {
   static TabOutScopesTracker getInstance() {
     return Application.get().getInstance(TabOutScopesTracker.class);

@@ -15,6 +15,8 @@
  */
 package consulo.webBrowser;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.Application;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
@@ -27,8 +29,9 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 24-Apr-22
  */
+@Extension(ComponentScope.APPLICATION)
 public interface WebFileFilter {
-  ExtensionPointName<WebFileFilter> EP_NAME = ExtensionPointName.create("consulo.webFileFilter");
+  ExtensionPointName<WebFileFilter> EP_NAME = ExtensionPointName.create(WebFileFilter.class);
 
   static boolean isFileAllowed(@Nonnull PsiFile file) {
     return isFileAllowed(file.getProject(), file.getViewProvider().getVirtualFile());

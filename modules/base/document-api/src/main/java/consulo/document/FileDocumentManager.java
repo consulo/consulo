@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  * Tracks the correspondence between {@link VirtualFile} instances and corresponding {@link Document} instances.
  * Manages the saving of changes to disk.
  */
-@Service(ComponentScope.APPLICATION)
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public interface FileDocumentManager extends SavingRequestor {
   @Nonnull
   public static FileDocumentManager getInstance() {

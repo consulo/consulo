@@ -15,7 +15,10 @@
  */
 package consulo.ide.impl.idea.ide.ui.customization;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -24,8 +27,9 @@ import javax.annotation.Nonnull;
  *
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class CustomizableActionGroupProvider {
-  public static final ExtensionPointName<CustomizableActionGroupProvider> EP_NAME = ExtensionPointName.create("consulo.customizableActionGroupProvider");
+  public static final ExtensionPointName<CustomizableActionGroupProvider> EP_NAME = ExtensionPointName.create(CustomizableActionGroupProvider.class);
 
   public abstract void registerGroups(CustomizableActionGroupRegistrar registrar);
 

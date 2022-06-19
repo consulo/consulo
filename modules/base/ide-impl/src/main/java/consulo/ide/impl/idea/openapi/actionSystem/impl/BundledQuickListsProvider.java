@@ -15,17 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.actionSystem.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author Roman.Chernyatchik
  */
+@Extension(ComponentScope.APPLICATION)
 public interface BundledQuickListsProvider {
-    ExtensionPointName<BundledQuickListsProvider> EP_NAME = ExtensionPointName.create("consulo.bundledQuickListsProvider");
+  ExtensionPointName<BundledQuickListsProvider> EP_NAME = ExtensionPointName.create(BundledQuickListsProvider.class);
 
   /**
    * Provides custom bundled actions quick lists.
+   *
    * @return Array of relative paths without extensions for lists.
    * E.g. : ["/quickLists/myList", "otherList"] for quickLists/myList.xml, otherList.xml
    */

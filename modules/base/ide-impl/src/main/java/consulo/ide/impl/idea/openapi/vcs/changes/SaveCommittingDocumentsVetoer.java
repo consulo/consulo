@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
 import consulo.document.FileDocumentSynchronizationVetoer;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.CommitHelper;
-
-import javax.annotation.Nonnull;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 
 /**
  * @author yole
  */
+@ExtensionImpl
 public class SaveCommittingDocumentsVetoer extends FileDocumentSynchronizationVetoer {
   private final VetoSavingCommittingDocumentsAdapter myAdapter;
 

@@ -15,6 +15,7 @@
  */
 package consulo.content.impl.internal.bundle;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.impl.util.NamedPointerManagerImpl;
 import consulo.content.bundle.Sdk;
@@ -34,6 +35,7 @@ import java.util.List;
  * @since 17:53/15.06.13
  */
 @Singleton
+@ServiceImpl
 public class SdkPointerManagerImpl extends NamedPointerManagerImpl<Sdk> implements SdkPointerManager {
   @Nonnull
   private final Provider<SdkTable> mySdkTableProvider;

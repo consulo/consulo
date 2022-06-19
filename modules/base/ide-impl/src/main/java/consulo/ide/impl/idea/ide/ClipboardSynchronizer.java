@@ -1,6 +1,9 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.Patches;
 import consulo.application.Application;
 import consulo.ide.impl.idea.openapi.application.ex.ClipboardUtil;
@@ -48,6 +51,8 @@ import java.util.function.Supplier;
  * @author nik
  */
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class ClipboardSynchronizer implements Disposable {
   private static final Logger LOG = Logger.getInstance(ClipboardSynchronizer.class);
 

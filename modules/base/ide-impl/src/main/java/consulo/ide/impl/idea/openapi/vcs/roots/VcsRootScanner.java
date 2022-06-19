@@ -1,6 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.roots;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.ReadAction;
 import consulo.logging.Logger;
@@ -20,6 +23,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.virtualFileSystem.event.AsyncVfsEventsPostProcessor;
 import consulo.disposer.Disposable;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -34,6 +38,8 @@ import java.util.regex.PatternSyntaxException;
 import static consulo.virtualFileSystem.util.VirtualFileVisitor.*;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public final class VcsRootScanner implements Disposable {
   private static final Logger LOG = Logger.getInstance(VcsRootScanner.class);
 
@@ -51,6 +57,7 @@ public final class VcsRootScanner implements Disposable {
     return project.getInstance(VcsRootScanner.class);
   }
 
+  @Inject
   public VcsRootScanner(@Nonnull Project project) {
     myProject = project;
     myRootProblemNotifier = VcsRootProblemNotifier.createInstance(project);

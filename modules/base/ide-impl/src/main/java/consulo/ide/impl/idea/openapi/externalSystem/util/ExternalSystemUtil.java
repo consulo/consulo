@@ -28,6 +28,7 @@ import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
 import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.util.dataholder.Key;
 import consulo.util.rmi.RemoteUtil;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -168,9 +169,10 @@ public class ExternalSystemUtil {
     if (window != null) {
       return;
     }
-    for (final ToolWindowEP bean : ToolWindowEP.EP_NAME.getExtensionList()) {
-      if (id.equals(bean.id)) {
-        managerEx.initToolWindow(bean);
+    
+    for (ToolWindowFactory toolWindowFactory : project.getApplication().getExtensionPoint(ToolWindowFactory.class).getExtensionList()) {
+      if (id.equals(toolWindowFactory.getId())) {
+        managerEx.initToolWindow(toolWindowFactory);
       }
     }
   }

@@ -15,6 +15,8 @@
  */
 package consulo.content.bundle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 17:00/30.06.13
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class PredefinedBundlesProvider {
   public interface Context {
     @Nonnull
@@ -34,7 +37,7 @@ public abstract class PredefinedBundlesProvider {
     }
   }
 
-  public static final ExtensionPointName<PredefinedBundlesProvider> EP_NAME = ExtensionPointName.create("consulo.predefinedBundlesProvider");
+  public static final ExtensionPointName<PredefinedBundlesProvider> EP_NAME = ExtensionPointName.create(PredefinedBundlesProvider.class);
 
   public abstract void createBundles(@Nonnull Context context);
 }

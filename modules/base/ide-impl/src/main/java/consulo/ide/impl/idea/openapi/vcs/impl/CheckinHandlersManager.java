@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.checkin.BaseCheckinHandlerFactory;
@@ -28,6 +30,7 @@ import java.util.List;
  *         Date: 1/28/11
  *         Time: 6:00 PM
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class CheckinHandlersManager {
   public static CheckinHandlersManager getInstance() {
     return ServiceManager.getService(CheckinHandlersManager.class);

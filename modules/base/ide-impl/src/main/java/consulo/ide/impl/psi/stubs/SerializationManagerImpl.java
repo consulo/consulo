@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.stubs;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.util.lang.ShutDownTracker;
 import consulo.index.io.data.IOUtil;
 import consulo.ide.impl.idea.util.io.PersistentStringEnumerator;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author max
  */
 @Singleton
+@ServiceImpl
 public final class SerializationManagerImpl extends SerializationManagerEx implements Disposable {
   private static final Logger LOG = Logger.getInstance(SerializationManagerImpl.class);
 

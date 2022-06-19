@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.dvcs.repo;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.ProcessCanceledException;
 import consulo.ide.impl.idea.openapi.progress.util.BackgroundTaskUtil;
 import consulo.project.Project;
@@ -45,6 +48,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * extension point in a thread safe way.
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class VcsRepositoryManager implements Disposable {
   static final class MyStartupActivity implements VcsStartupActivity {
     @Override

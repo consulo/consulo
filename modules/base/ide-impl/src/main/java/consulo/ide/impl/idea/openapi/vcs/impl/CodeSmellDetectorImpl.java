@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.CodeSmellInfo;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
@@ -56,6 +57,7 @@ import java.util.*;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class CodeSmellDetectorImpl extends CodeSmellDetector {
   private final Project myProject;
   private static final Logger LOG = Logger.getInstance(CodeSmellDetectorImpl.class);

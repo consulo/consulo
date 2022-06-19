@@ -15,6 +15,7 @@
  */
 package consulo.content.base;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.OrderRootType;
 import javax.annotation.Nonnull;
 
@@ -22,6 +23,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 17.08.14
  */
+@ExtensionImpl
 public class BinariesOrderRootType extends OrderRootType {
   @Nonnull
   public static BinariesOrderRootType getInstance() {

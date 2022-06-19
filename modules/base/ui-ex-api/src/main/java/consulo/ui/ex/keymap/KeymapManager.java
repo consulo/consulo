@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-@Service(ComponentScope.APPLICATION)
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class KeymapManager {
   public static final String DEFAULT_IDEA_KEYMAP = "$default";
   public static final String MAC_OS_X_KEYMAP = "Mac OS X";

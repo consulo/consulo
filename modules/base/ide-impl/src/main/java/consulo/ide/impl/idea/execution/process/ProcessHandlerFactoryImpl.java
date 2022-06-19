@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.process;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.execution.configurations.PtyCommandLine;
 import consulo.platform.Platform;
 import consulo.process.ExecutionException;
@@ -28,6 +29,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nonnull;
 
 @Singleton
+@ServiceImpl
 public class ProcessHandlerFactoryImpl extends ProcessHandlerFactory {
   @Nonnull
   @Override

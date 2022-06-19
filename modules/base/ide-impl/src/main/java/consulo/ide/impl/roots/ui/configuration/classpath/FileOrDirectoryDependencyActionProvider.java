@@ -15,19 +15,20 @@
  */
 package consulo.ide.impl.roots.ui.configuration.classpath;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
+import consulo.fileChooser.FileChooser;
 import consulo.fileChooser.FileChooserDescriptor;
 import consulo.ide.setting.module.AddModuleDependencyActionProvider;
 import consulo.ide.setting.module.ClasspathPanel;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.localize.LocalizeValue;
-import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ide.setting.module.LibrariesConfigurator;
 import consulo.ide.setting.module.ModulesConfigurator;
+import consulo.localize.LocalizeValue;
+import consulo.module.content.layer.ModuleRootLayer;
 import consulo.ui.annotation.RequiredUIAccess;
-import consulo.fileChooser.FileChooser;
 import consulo.ui.image.Image;
 import consulo.util.concurrent.AsyncResult;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
@@ -35,6 +36,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 27.09.14
  */
+@ExtensionImpl
 public class FileOrDirectoryDependencyActionProvider implements AddModuleDependencyActionProvider<VirtualFile[], FileOrDirectoryDependencyContext> {
   @Override
   public boolean isAvailable(@Nonnull FileOrDirectoryDependencyContext context) {

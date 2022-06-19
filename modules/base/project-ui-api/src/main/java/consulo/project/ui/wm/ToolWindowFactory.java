@@ -16,25 +16,50 @@
 
 package consulo.project.ui.wm;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.dumb.DumbAware;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
 /**
- * Performs lazy initialization of a toolwindow registered in plugin.xml.
+ * Performs lazy initialization of a toolwindow.
  * Please implement {@link DumbAware} marker interface to indicate that the toolwindow content should be
  * available during indexing process.
  *
  * @author yole
  * @author Konstantin Bulenkov
- * @see ToolWindowEP
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ToolWindowFactory {
+  @Nonnull
+  String getId();
+
   @RequiredUIAccess
   void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow);
+
+  @Nonnull
+  ToolWindowAnchor getAnchor();
+
+  @Nonnull
+  Image getIcon();
+
+  @Nonnull
+  LocalizeValue getDisplayName();
+
+  default boolean isSecondary() {
+    return false;
+  }
+
+  default boolean canCloseContents() {
+    return false;
+  }
 
   /**
    * Perform additional initialisation routine here
@@ -67,5 +92,12 @@ public interface ToolWindowFactory {
 
   default boolean isUnified() {
     return false;
+  }
+
+  /**
+   * If return false - toolwindow will be unregistered
+   */
+  default boolean validate(@Nonnull Project project) {
+    return true;
   }
 }

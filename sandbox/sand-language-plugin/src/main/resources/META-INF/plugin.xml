@@ -92,8 +92,6 @@
 
     <webSocketAccepter implementation="consulo.sandboxPlugin.webSocket.TestWebSocketAccepter"/>
 
-    <coverageOptions implementation="consulo.sandboxPlugin.ide.coverage.SandCoverageOptions"/>
-
     <projectConfigurable id="sand.editor" parentId="editor" displayName="Sand Editor" instance="consulo.sandboxPlugin.ui.SandConfigurable"/>
 
     <tasks.repositoryType implementation="consulo.sandboxPlugin.tasks.SandRepositoryType"/>

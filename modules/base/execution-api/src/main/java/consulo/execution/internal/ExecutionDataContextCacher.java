@@ -15,6 +15,8 @@
  */
 package consulo.execution.internal;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.dataContext.DataContext;
 
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09-Feb-22
  */
+@Service(ComponentScope.APPLICATION)
 public interface ExecutionDataContextCacher {
   static ExecutionDataContextCacher getInstance() {
     return Application.get().getInstance(ExecutionDataContextCacher.class);

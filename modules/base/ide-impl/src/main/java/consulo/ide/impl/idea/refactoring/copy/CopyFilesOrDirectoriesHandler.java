@@ -18,7 +18,7 @@ package consulo.ide.impl.idea.refactoring.copy;
 import consulo.application.Application;
 import consulo.application.CommonBundle;
 import consulo.ide.impl.idea.ide.CopyPasteDelegator;
-import consulo.ide.impl.idea.ide.actions.CreateFileFromTemplateAction;
+import consulo.ide.impl.idea.ide.actions.CreateFileFromTemplateModuleResolver;
 import consulo.language.editor.impl.util.EditorHelper;
 import consulo.ide.impl.idea.ide.util.PlatformPackageUtil;
 import consulo.application.ApplicationManager;
@@ -298,7 +298,7 @@ public class CopyFilesOrDirectoriesHandler extends CopyHandlerDelegateBase {
         protected void run(@Nonnull Result<PsiFile> result) throws Throwable {
           PsiFile returnFile = targetDirectory.copyFileFrom(name, file);
 
-          Module module = CreateFileFromTemplateAction.ModuleResolver.EP.computeSafeIfAny(Application.get(), it -> it.resolveModule(targetDirectory, file.getFileType()));
+          Module module = CreateFileFromTemplateModuleResolver.EP.computeSafeIfAny(Application.get(), it -> it.resolveModule(targetDirectory, file.getFileType()));
           if (module != null) {
             ModuleRootManager manager = ModuleRootManager.getInstance(module);
             ModifiableRootModel modifiableModel = manager.getModifiableModel();

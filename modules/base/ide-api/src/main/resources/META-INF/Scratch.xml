@@ -23,13 +23,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceInterface="consulo.ide.impl.script.IdeScriptEngineManager"
-                        serviceImplementation="consulo.ide.impl.script.Jsr223IdeScriptEngineManagerImpl"/>
-
-    <applicationService serviceInterface="consulo.language.editor.scratch.ScratchFileService"
-                        serviceImplementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl"/>
-
-    <navbar implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$NavBarExtension"/>
     <nonProjectFileWritingAccessExtension implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$AccessExtension"/>
     <indexedRootsContributor implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$IndexSetContributor"/>
     <usageTypeProvider implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$UsageTypeExtension" order="last"/>

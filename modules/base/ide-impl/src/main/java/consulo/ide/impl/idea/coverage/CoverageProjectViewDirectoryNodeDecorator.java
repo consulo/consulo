@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.coverage;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
 import consulo.ide.impl.idea.packageDependencies.ui.PackageDependenciesNode;
 import consulo.execution.coverage.CoverageAnnotator;
@@ -16,6 +17,7 @@ import jakarta.inject.Inject;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class CoverageProjectViewDirectoryNodeDecorator extends AbstractCoverageProjectViewNodeDecorator {
   @Inject
   public CoverageProjectViewDirectoryNodeDecorator(final CoverageDataManager coverageDataManager) {

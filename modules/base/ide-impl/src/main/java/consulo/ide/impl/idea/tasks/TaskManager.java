@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.tasks;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
 import consulo.application.progress.ProgressIndicator;
@@ -29,6 +31,7 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
+@Service(ComponentScope.PROJECT)
 public abstract class TaskManager {
 
   public static TaskManager getManager(@Nonnull Project project) {

@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.psi.search;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.util.function.Processor;
 import consulo.content.scope.SearchScope;
 import consulo.language.psi.stub.IdFilter;
@@ -26,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
+@Service(ComponentScope.APPLICATION)
 interface FileNameIndexService {
   @Nonnull
   Collection<VirtualFile> getVirtualFilesByName(Project project, @Nonnull String name, @Nonnull SearchScope scope, @Nullable IdFilter idFilter);

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.history.integration;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.history.core.*;
 import consulo.ide.impl.idea.history.integration.ui.models.DirectoryHistoryDialogModel;
 import consulo.ide.impl.idea.history.integration.ui.models.EntireFileHistoryDialogModel;
@@ -50,6 +51,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static consulo.ide.impl.idea.history.integration.LocalHistoryUtil.findRevisionIndexToRevert;
 
 @Singleton
+@ServiceImpl
 public class LocalHistoryImpl extends LocalHistory implements Disposable {
   private final MessageBus myBus;
   private MessageBusConnection myConnection;

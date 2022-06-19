@@ -16,38 +16,14 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.localHistory.LocalHistory;
-import consulo.localHistory.LocalHistoryAction;
-import consulo.ide.impl.idea.ide.CopyPasteDelegator;
-import consulo.ide.impl.idea.ide.IdeView;
-import consulo.ide.impl.idea.ide.SelectInContext;
-import consulo.ide.impl.idea.ide.SelectInTarget;
-import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
-import consulo.ide.impl.idea.ide.projectView.HelpID;
-import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
-import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
-import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
-import consulo.ide.impl.idea.ide.util.DeleteHandler;
-import consulo.ide.impl.idea.ide.util.DirectoryChooserUtil;
-import consulo.language.editor.LangDataKeys;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
-import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
-import consulo.ide.impl.idea.openapi.ui.SimpleToolWindowPanel;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.project.ui.wm.ToolWindowManagerListener;
-import consulo.ide.impl.idea.ui.switcher.QuickActionProvider;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.ui.ex.awt.IJSwingUtilities;
-import consulo.ide.impl.idea.util.io.URLUtil;
+import consulo.annotation.component.ComponentProfiles;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.UISettings;
 import consulo.application.util.registry.Registry;
 import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
 import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -61,12 +37,36 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.ide.IdeBundle;
+import consulo.ide.impl.idea.ide.CopyPasteDelegator;
+import consulo.ide.impl.idea.ide.IdeView;
+import consulo.ide.impl.idea.ide.SelectInContext;
+import consulo.ide.impl.idea.ide.SelectInTarget;
+import consulo.ide.impl.idea.ide.impl.ProjectViewSelectInTarget;
+import consulo.ide.impl.idea.ide.projectView.HelpID;
+import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
+import consulo.ide.impl.idea.ide.projectView.impl.nodes.*;
+import consulo.ide.impl.idea.ide.scopeView.ScopeViewPane;
+import consulo.ide.impl.idea.ide.util.DeleteHandler;
+import consulo.ide.impl.idea.ide.util.DirectoryChooserUtil;
+import consulo.ide.impl.idea.openapi.fileEditor.ex.FileEditorManagerEx;
+import consulo.ide.impl.idea.openapi.roots.ui.configuration.actions.ModuleDeleteProvider;
+import consulo.ide.impl.idea.openapi.ui.SimpleToolWindowPanel;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.ui.switcher.QuickActionProvider;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.ide.impl.idea.util.io.URLUtil;
 import consulo.ide.impl.projectView.ProjectViewEx;
 import consulo.ide.impl.ui.impl.PopupChooserBuilder;
+import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.impl.util.EditorHelper;
 import consulo.language.psi.*;
 import consulo.language.util.ModuleUtilCore;
+import consulo.localHistory.LocalHistory;
+import consulo.localHistory.LocalHistoryAction;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.module.content.ModuleFileIndex;
@@ -83,6 +83,7 @@ import consulo.project.ui.view.ProjectViewAutoScrollFromSourceHandler;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.project.ui.wm.internal.ProjectIdeFocusManager;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.DeleteProvider;
@@ -109,7 +110,6 @@ import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.wm.impl.ToolWindowContentUI;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Attribute;
@@ -128,6 +128,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @Singleton
+@ServiceImpl(profiles = {ComponentProfiles.PROD, ComponentProfiles.AWT})
 @State(name = "ProjectView", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<Element>, Disposable, QuickActionProvider, BusyObject {
   private static final Logger LOG = Logger.getInstance(ProjectViewImpl.class);
@@ -596,8 +597,8 @@ public class ProjectViewImpl implements ProjectViewEx, PersistentStateComponent<
   private void ensurePanesLoaded() {
     if (myExtensionsLoaded) return;
     myExtensionsLoaded = true;
-    AbstractProjectViewPane[] extensions = Extensions.getExtensions(AbstractProjectViewPane.EP_NAME, myProject);
-    Arrays.sort(extensions, PANE_WEIGHT_COMPARATOR);
+    List<AbstractProjectViewPane> extensions = new ArrayList<>(AbstractProjectViewPane.EP_NAME.getExtensionList(myProject));
+    extensions.sort(PANE_WEIGHT_COMPARATOR);
     for (AbstractProjectViewPane pane : extensions) {
       if (myUninitializedPaneState.containsKey(pane.getId())) {
         try {

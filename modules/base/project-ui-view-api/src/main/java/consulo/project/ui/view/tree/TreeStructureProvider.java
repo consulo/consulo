@@ -15,6 +15,8 @@
  */
 package consulo.project.ui.view.tree;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
@@ -25,8 +27,9 @@ import java.util.Collection;
 /**
  * Allows a plugin to modify the structure of a project as displayed in the project view.
  */
+@Extension(ComponentScope.PROJECT)
 public interface TreeStructureProvider {
-  ExtensionPointName<TreeStructureProvider> EP_NAME = ExtensionPointName.create("consulo.treeStructureProvider");
+  ExtensionPointName<TreeStructureProvider> EP_NAME = ExtensionPointName.create(TreeStructureProvider.class);
 
   /**
    * Allows a plugin to modify the list of children displayed for the specified node in the

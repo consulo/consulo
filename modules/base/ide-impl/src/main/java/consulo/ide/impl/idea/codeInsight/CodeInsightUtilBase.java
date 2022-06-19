@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.CodeInsightUtilCore;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
@@ -43,6 +44,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
+@ServiceImpl
 public class CodeInsightUtilBase extends CodeInsightUtilCore {
   @Override
   public boolean prepareFileForWrite(@Nullable final PsiFile psiFile) {

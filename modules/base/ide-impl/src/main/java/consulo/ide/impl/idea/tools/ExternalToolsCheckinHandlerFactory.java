@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.CheckinProjectPanel;
@@ -42,6 +43,7 @@ import java.util.List;
  * @author lene
  *         Date: 06.08.12
  */
+@ExtensionImpl
 public class ExternalToolsCheckinHandlerFactory extends CheckinHandlerFactory {
 
   public static final Object NONE_TOOL = new Object();

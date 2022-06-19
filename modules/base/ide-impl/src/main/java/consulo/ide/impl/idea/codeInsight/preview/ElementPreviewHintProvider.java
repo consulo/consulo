@@ -1,21 +1,22 @@
 package consulo.ide.impl.idea.codeInsight.preview;
 
-import consulo.language.editor.hint.HintManager;
-import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
-import consulo.logging.Logger;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
+import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
+import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.language.editor.hint.HintManager;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
-import consulo.ide.impl.idea.ui.LightweightHint;
+import consulo.logging.Logger;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.swing.*;
 import java.awt.*;
 
 import static consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl.getHintPosition;
 
+@ExtensionImpl
 public class ElementPreviewHintProvider implements ElementPreviewProvider {
   private static final Logger LOG = Logger.getInstance(ElementPreviewHintProvider.class);
 
@@ -29,7 +30,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
 
   @Override
   public boolean isSupportedFile(@Nonnull PsiFile psiFile) {
-    for (PreviewHintProvider hintProvider : Extensions.getExtensions(PreviewHintProvider.EP_NAME)) {
+    for (PreviewHintProvider hintProvider : PreviewHintProvider.EP_NAME.getExtensionList()) {
       if (hintProvider.isSupportedFile(psiFile)) {
         return true;
       }
@@ -65,7 +66,7 @@ public class ElementPreviewHintProvider implements ElementPreviewProvider {
 
   @Nullable
   private static LightweightHint getHint(@Nonnull PsiElement element) {
-    for (PreviewHintProvider hintProvider : Extensions.getExtensions(PreviewHintProvider.EP_NAME)) {
+    for (PreviewHintProvider hintProvider : PreviewHintProvider.EP_NAME.getExtensionList()) {
       JComponent preview;
       try {
         preview = hintProvider.getPreviewComponent(element);

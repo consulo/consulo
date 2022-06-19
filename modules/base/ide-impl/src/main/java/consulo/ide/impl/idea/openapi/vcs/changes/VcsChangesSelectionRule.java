@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
@@ -26,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collections;
 
+@ExtensionImpl
 public class VcsChangesSelectionRule implements GetDataRule<ChangesSelection> {
   @Nonnull
   @Override

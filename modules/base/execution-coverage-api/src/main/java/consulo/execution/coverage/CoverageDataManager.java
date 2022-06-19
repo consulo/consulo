@@ -16,6 +16,8 @@
 
 package consulo.execution.coverage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunnerSettings;
 import consulo.process.ProcessHandler;
@@ -30,6 +32,7 @@ import java.util.List;
 /**
  * @author ven
  */
+@Service(ComponentScope.PROJECT)
 public abstract class CoverageDataManager {
 
   public static CoverageDataManager getInstance(Project project) {

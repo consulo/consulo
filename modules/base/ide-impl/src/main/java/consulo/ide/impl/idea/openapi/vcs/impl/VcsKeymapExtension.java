@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.keymap.KeyMapBundle;
 import consulo.ide.impl.idea.openapi.keymap.KeymapExtension;
 import consulo.ide.impl.idea.openapi.keymap.KeymapGroup;
@@ -29,6 +30,7 @@ import consulo.ide.impl.idea.util.containers.ContainerUtil;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class VcsKeymapExtension implements KeymapExtension {
   @Override
   public KeymapGroup createGroup(final Condition<AnAction> filtered, final Project project) {

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.language.editor.rawHighlight.SeverityProvider;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
@@ -67,6 +68,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         },
         additionalExportFile = InspectionProfileManager.FILE_SPEC
 )
+@ServiceImpl
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
   private final SchemesManager<Profile, InspectionProfileImpl> mySchemesManager;

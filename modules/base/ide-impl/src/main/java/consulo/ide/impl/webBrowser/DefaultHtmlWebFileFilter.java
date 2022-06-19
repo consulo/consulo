@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.webBrowser;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.annotation.component.Orderable;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.webBrowser.WebFileFilter;
@@ -27,6 +29,8 @@ import javax.annotation.Nonnull;
  *
  * This extension will show open in browser for HTML files without XML/HTML plugin
  */
+@ExtensionImpl
+@Orderable(id = "default", order = "last")
 public class DefaultHtmlWebFileFilter implements WebFileFilter {
   @Override
   public boolean isWebFile(@Nonnull Project project, @Nonnull VirtualFile file) {

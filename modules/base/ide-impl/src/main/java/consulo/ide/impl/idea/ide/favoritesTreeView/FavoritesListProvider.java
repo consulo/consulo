@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.ide.favoritesTreeView;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
@@ -32,8 +34,9 @@ import java.util.Set;
  * Date: 6/7/12
  * Time: 4:17 PM
  */
+@Extension(ComponentScope.PROJECT)
 public interface FavoritesListProvider extends Comparator<FavoritesTreeNodeDescriptor>, Comparable<FavoritesListProvider> {
-  ExtensionPointName<FavoritesListProvider> EP_NAME = ExtensionPointName.create("consulo.favoritesListProvider");
+  ExtensionPointName<FavoritesListProvider> EP_NAME = ExtensionPointName.create(FavoritesListProvider.class);
 
   String getListName(final Project project);
 

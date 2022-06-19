@@ -15,13 +15,16 @@
  */
 package consulo.content.base;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.content.OrderRootType;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 17.08.14
  */
+@ExtensionImpl
 public class DocumentationOrderRootType extends OrderRootType {
   @Nonnull
   public static DocumentationOrderRootType getInstance() {

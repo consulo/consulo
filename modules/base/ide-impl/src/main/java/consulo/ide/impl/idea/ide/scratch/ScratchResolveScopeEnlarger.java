@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author Eugene Zhuravlev
  */
+@ExtensionImpl
 public class ScratchResolveScopeEnlarger extends ResolveScopeEnlarger {
   @Nullable
   @Override

@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.coverage;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.coverage.view.CoverageViewSuiteListener;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
@@ -66,6 +67,7 @@ import java.util.*;
  */
 @Singleton
 @State(name = "CoverageDataManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl
 public class CoverageDataManagerImpl extends CoverageDataManager implements JDOMExternalizable {
   private static final String REPLACE_ACTIVE_SUITES = "&Replace active suites";
   private static final String ADD_TO_ACTIVE_SUITES = "&Add to active suites";

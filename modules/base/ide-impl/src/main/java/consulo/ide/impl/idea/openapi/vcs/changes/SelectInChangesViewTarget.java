@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.SelectInContext;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.application.dumb.DumbAware;
@@ -26,14 +27,18 @@ import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.ChangesViewContentManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.project.ui.wm.ToolWindowManager;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
+@ExtensionImpl
 public class SelectInChangesViewTarget implements SelectInTarget, DumbAware {
   private final Project myProject;
 
+  @Inject
   public SelectInChangesViewTarget(final Project project) {
     myProject = project;
   }

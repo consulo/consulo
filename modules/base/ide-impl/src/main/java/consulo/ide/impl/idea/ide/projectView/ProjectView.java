@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.ide.projectView;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPSIPane;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
@@ -29,6 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 
+@Service(ComponentScope.PROJECT)
 public interface ProjectView {
   @Nonnull
   static ProjectView getInstance(Project project) {

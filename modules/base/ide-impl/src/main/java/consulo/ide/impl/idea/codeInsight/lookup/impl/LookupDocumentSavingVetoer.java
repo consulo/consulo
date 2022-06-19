@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.completion.lookup.LookupEx;
 import consulo.language.editor.completion.lookup.LookupManager;
 import consulo.application.ApplicationManager;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
+@ExtensionImpl
 public class LookupDocumentSavingVetoer extends FileDocumentSynchronizationVetoer {
   @Override
   public boolean maySaveDocument(@Nonnull Document document, boolean isSaveExplicit) {

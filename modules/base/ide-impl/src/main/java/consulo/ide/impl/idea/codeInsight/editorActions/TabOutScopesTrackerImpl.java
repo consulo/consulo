@@ -1,28 +1,30 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
-import consulo.language.editor.CodeInsightSettings;
-import consulo.codeEditor.action.TabOutScopesTracker;
-import consulo.language.file.inject.DocumentWindow;
-import consulo.language.editor.inject.EditorWindow;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Caret;
-import consulo.document.Document;
 import consulo.codeEditor.Editor;
+import consulo.codeEditor.action.TabOutScopesTracker;
+import consulo.disposer.Disposable;
+import consulo.document.Document;
 import consulo.document.RangeMarker;
 import consulo.document.event.DocumentEvent;
 import consulo.document.event.DocumentListener;
 import consulo.ide.impl.idea.openapi.editor.impl.DesktopEditorImpl;
-import consulo.disposer.Disposable;
+import consulo.language.editor.CodeInsightSettings;
+import consulo.language.editor.inject.EditorWindow;
+import consulo.language.file.inject.DocumentWindow;
 import consulo.util.dataholder.Key;
-import javax.annotation.Nonnull;
-
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class TabOutScopesTrackerImpl implements TabOutScopesTracker {
   private static final Key<Integer> CARET_SHIFT = Key.create("tab.out.caret.shift");
 

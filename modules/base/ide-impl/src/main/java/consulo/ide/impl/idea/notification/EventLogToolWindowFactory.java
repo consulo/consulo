@@ -16,41 +16,67 @@
 package consulo.ide.impl.idea.notification;
 
 import consulo.application.AllIcons;
-import consulo.language.editor.PlatformDataKeys;
-import consulo.ui.ex.action.ContextHelpAction;
+import consulo.application.dumb.DumbAware;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurable;
 import consulo.ide.impl.idea.notification.impl.NotificationsConfigurationImpl;
-import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.openapi.editor.actions.ScrollToTheEndToolbarAction;
 import consulo.ide.impl.idea.openapi.editor.actions.ToggleUseSoftWrapsToolbarAction;
-import consulo.codeEditor.impl.SoftWrapAppliancePlaces;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.application.dumb.DumbAware;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.ui.SimpleToolWindowPanel;
+import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.action.*;
-import consulo.util.dataholder.Key;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowFactory;
-import consulo.ide.impl.idea.ui.AncestorListenerAdapter;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NonNls;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.event.AncestorEvent;
 
 /**
  * @author peter
  */
 public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
+  @Nonnull
+  @Override
+  public String getId() {
+    return EventLog.LOG_TOOL_WINDOW_ID;
+  }
+
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull final Project project, @Nonnull ToolWindow toolWindow) {
     EventLog.getProjectComponent(project).initDefaultContent();
+  }
+
+  @Nonnull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.BOTTOM;
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.ideNotificationNoevents();
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Event Log");
   }
 
   static void createContent(Project project, ToolWindow toolWindow, EventLogConsole console, String title) {

@@ -20,28 +20,33 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.evaluate.quick.common;
 
-import consulo.ide.ServiceManager;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.EditorFactory;
-import consulo.ide.impl.idea.openapi.editor.event.EditorMouseAdapter;
 import consulo.codeEditor.event.EditorMouseEvent;
 import consulo.codeEditor.event.EditorMouseEventArea;
 import consulo.codeEditor.event.EditorMouseMotionListener;
-import consulo.project.Project;
-import consulo.util.dataholder.Key;
-import consulo.ui.ex.awt.util.Alarm;
 import consulo.execution.debug.XDebuggerUtil;
-import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.execution.debug.setting.XDebuggerSettingsManager;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.openapi.editor.event.EditorMouseAdapter;
+import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
+import consulo.project.Project;
 import consulo.ui.annotation.RequiredUIAccess;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.awt.util.Alarm;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.List;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ValueLookupManager extends EditorMouseAdapter implements EditorMouseMotionListener {
   /**
    * @see XDebuggerUtil#disableValueLookup(Editor)

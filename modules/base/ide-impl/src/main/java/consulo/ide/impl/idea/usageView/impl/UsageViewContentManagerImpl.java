@@ -2,43 +2,44 @@
 
 package consulo.ide.impl.idea.usageView.impl;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.AllIcons;
 import consulo.find.FindBundle;
 import consulo.find.FindSettings;
-import consulo.application.AllIcons;
 import consulo.ide.IdeBundle;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
+import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.UIBundle;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
-import consulo.ide.impl.idea.openapi.project.DumbAwareToggleAction;
-import consulo.project.Project;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.content.event.ContentManagerAdapter;
 import consulo.ui.ex.content.event.ContentManagerEvent;
-import consulo.util.dataholder.Key;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ui.ex.toolWindow.ToolWindowAnchor;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
-import consulo.ui.ex.UIBundle;
+import consulo.usage.UsageView;
 import consulo.usage.UsageViewBundle;
 import consulo.usage.UsageViewContentManager;
-import consulo.usage.UsageView;
 import consulo.usage.UsageViewSettings;
 import consulo.usage.rule.UsageFilteringRuleProvider;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.dataholder.Key;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class UsageViewContentManagerImpl extends UsageViewContentManager {
   private final Key<Boolean> REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.REUSABLE_CONTENT_KEY");
   private final Key<Boolean> NOT_REUSABLE_CONTENT_KEY = Key.create("UsageTreeManager.NOT_REUSABLE_CONTENT_KEY");        //todo[myakovlev] dont use it

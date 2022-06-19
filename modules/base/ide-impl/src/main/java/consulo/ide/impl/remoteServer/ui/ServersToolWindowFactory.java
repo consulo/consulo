@@ -15,13 +15,17 @@
  */
 package consulo.ide.impl.remoteServer.ui;
 
-import consulo.project.Project;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.ide.impl.idea.remoteServer.impl.runtime.ui.ServersToolWindowContent;
+import consulo.localize.LocalizeValue;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.ui.annotation.RequiredUIAccess;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ui.annotation.RequiredUIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
@@ -30,6 +34,12 @@ import javax.annotation.Nonnull;
  * @since 2020-05-30
  */
 public class ServersToolWindowFactory implements ToolWindowFactory {
+  @Nonnull
+  @Override
+  public String getId() {
+    return "Application Servers";
+  }
+
   @RequiredUIAccess
   @Override
   public void createToolWindowContent(@Nonnull Project project, @Nonnull ToolWindow toolWindow) {
@@ -46,5 +56,23 @@ public class ServersToolWindowFactory implements ToolWindowFactory {
   @Override
   public boolean shouldBeAvailable(@Nonnull Project project) {
     return ServersToolWindowManager.getInstance(project).isAvailable();
+  }
+
+  @Nonnull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.BOTTOM;
+  }
+
+  @Nonnull
+  @Override
+  public Image getIcon() {
+    return PlatformIconGroup.remoteserversServerstoolwindow();
+  }
+
+  @Nonnull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Application Servers");
   }
 }

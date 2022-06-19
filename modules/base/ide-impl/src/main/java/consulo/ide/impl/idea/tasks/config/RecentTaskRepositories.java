@@ -15,20 +15,24 @@
  */
 package consulo.ide.impl.idea.tasks.config;
 
-import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.component.persist.PersistentStateComponent;
+import consulo.component.persist.State;
+import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
-import consulo.util.lang.function.Condition;
+import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.tasks.TaskRepository;
 import consulo.ide.impl.idea.tasks.impl.TaskManagerImpl;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.xml.serializer.XmlSerializer;
-import consulo.component.persist.PersistentStateComponent;
-import consulo.component.persist.State;
-import consulo.component.persist.Storage;
 import consulo.util.collection.HashingStrategy;
 import consulo.util.collection.Sets;
+import consulo.util.lang.function.Condition;
+import consulo.util.xml.serializer.XmlSerializer;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -38,13 +42,10 @@ import java.util.Set;
 /**
  * @author Dmitry Avdeev
  */
-@State(
-  name = "RecentTaskRepositories",
-  storages = {
-    @Storage(
-      file = StoragePathMacros.APP_CONFIG + "/other.xml"
-    )}
-)
+@Singleton
+@State(name = "RecentTaskRepositories", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")})
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class RecentTaskRepositories implements PersistentStateComponent<Element> {
 
   private final Set<TaskRepository> myRepositories = Sets.newHashSet(HASHING_STRATEGY);
@@ -64,7 +65,7 @@ public class RecentTaskRepositories implements PersistentStateComponent<Element>
   }
 
   public Set<TaskRepository> getRepositories() {
-    return Sets.newHashSet(ContainerUtil.findAll(myRepositories, (Condition<TaskRepository>) repository -> !StringUtil.isEmptyOrSpaces(repository.getUrl())), HASHING_STRATEGY);
+    return Sets.newHashSet(ContainerUtil.findAll(myRepositories, repository -> !StringUtil.isEmptyOrSpaces(repository.getUrl())), HASHING_STRATEGY);
   }
 
   public void addRepositories(Collection<TaskRepository> repositories) {

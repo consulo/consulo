@@ -28,5 +28,4 @@ public abstract class FileTypeFactory {
   public static final ExtensionPointName<FileTypeFactory> FILE_TYPE_FACTORY_EP = ExtensionPointName.create(FileTypeFactory.class);
 
   public abstract void createFileTypes(@Nonnull FileTypeConsumer consumer);
-
 }

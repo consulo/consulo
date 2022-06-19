@@ -19,6 +19,8 @@
  */
 package consulo.language.impl.plain;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.Language;
 import consulo.language.ast.*;
 import consulo.language.impl.ast.ASTFactory;
 import consulo.language.lexer.EmptyLexer;
@@ -35,6 +37,7 @@ import consulo.annotation.access.RequiredReadAction;
 import consulo.language.version.LanguageVersion;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class PlainTextParserDefinition implements ParserDefinition {
   public static final IFileElementType PLAIN_FILE_ELEMENT_TYPE = new IFileElementType(PlainTextLanguage.INSTANCE) {
     @Override
@@ -43,6 +46,12 @@ public class PlainTextParserDefinition implements ParserDefinition {
       return ASTFactory.leaf(PlainTextTokenTypes.PLAIN_TEXT, chars);
     }
   };
+
+  @Nonnull
+  @Override
+  public Language getLanguage() {
+    return PlainTextLanguage.INSTANCE;
+  }
 
   @Override
   @Nonnull

@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.ide.projectView.impl;
 
-import consulo.util.xml.serializer.XmlSerializerUtil;
-import javax.annotation.Nonnull;
-
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
@@ -30,6 +33,8 @@ import jakarta.inject.Singleton;
  *         from kotlin by @author Konstantin Bulenkov
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 @State(name = "ProjectViewSharedSettings", storages = @Storage("projectView.xml"))
 public class ProjectViewSharedSettings implements PersistentStateComponent<ProjectViewSharedSettings> {
   private boolean myFlattenPackages = false;

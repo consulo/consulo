@@ -16,24 +16,25 @@
 package consulo.ide.impl.idea.xdebugger.impl.breakpoints;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.favoritesTreeView.AbstractFavoritesListProvider;
-import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
-import consulo.ui.ex.tree.PresentationData;
-import consulo.project.ui.view.tree.AbstractTreeNode;
-import consulo.project.Project;
-import consulo.navigation.Navigatable;
-import consulo.ide.impl.idea.ui.CheckedTreeNode;
-import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
-import consulo.ui.ex.awt.CommonActionsPanel;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroup;
 import consulo.execution.debug.breakpoint.ui.XBreakpointGroupingRule;
+import consulo.ide.impl.idea.ide.favoritesTreeView.AbstractFavoritesListProvider;
+import consulo.ide.impl.idea.ide.favoritesTreeView.FavoritesManager;
+import consulo.ide.impl.idea.ui.CheckedTreeNode;
 import consulo.ide.impl.idea.xdebugger.impl.DebuggerSupport;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointItem;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.BreakpointPanelProvider;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointItemsTreeController;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.ui.tree.BreakpointsSimpleTree;
+import consulo.navigation.Navigatable;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.AbstractTreeNode;
+import consulo.ui.ex.awt.CommonActionsPanel;
+import consulo.ui.ex.awt.tree.ColoredTreeCellRenderer;
+import consulo.ui.ex.tree.PresentationData;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -48,6 +49,7 @@ import java.util.*;
 /**
  * User: Vassiliy.Kudryashov
  */
+@ExtensionImpl
 public class BreakpointsFavoriteListProvider extends AbstractFavoritesListProvider<Object>
   implements BreakpointPanelProvider.BreakpointsListener {
 

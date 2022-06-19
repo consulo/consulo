@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.openapi.roots.ui.configuration;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.module.Module;
 import consulo.ide.setting.ShowSettingsUtil;
@@ -40,6 +43,8 @@ import javax.annotation.Nullable;
 @Singleton
 @Deprecated
 @DeprecationInfo("This class was proxy between SmallIDE and IDEA, but we don't need this anymore")
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public final class ProjectSettingsService {
   public static ProjectSettingsService getInstance(Project project) {
     return ServiceManager.getService(project, ProjectSettingsService.class);

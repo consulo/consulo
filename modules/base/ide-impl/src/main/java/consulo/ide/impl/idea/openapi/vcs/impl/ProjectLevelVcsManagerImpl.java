@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.ui.ex.action.ActionManager;
@@ -88,6 +89,7 @@ import java.util.*;
 
 @State(name = "ProjectLevelVcsManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
 @Singleton
+@ServiceImpl
 public class ProjectLevelVcsManagerImpl extends ProjectLevelVcsManagerEx implements PersistentStateComponent<Element>, Disposable {
   static final class ActivateVcsesStartupActivity implements VcsStartupActivity {
     @Override

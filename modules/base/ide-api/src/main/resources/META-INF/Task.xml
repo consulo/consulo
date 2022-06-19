@@ -94,11 +94,6 @@
 
     <editChangelistSupport implementation="consulo.ide.impl.idea.tasks.impl.TaskChangelistSupport"/>
 
-    <projectService serviceImplementation="consulo.ide.impl.idea.tasks.impl.TaskProjectConfiguration"/>
-    <projectService serviceImplementation="consulo.ide.impl.idea.tasks.context.WorkingContextManager"/>
-    <applicationService serviceImplementation="consulo.ide.impl.idea.tasks.config.RecentTaskRepositories"/>
-    <applicationService serviceImplementation="consulo.ide.impl.idea.tasks.config.TaskSettings"/>
-
     <lang.documentationProvider language="TEXT" implementationClass="consulo.ide.impl.idea.tasks.doc.TaskDocumentationProvider"/>
 
     <!--context providers-->
@@ -122,9 +117,5 @@
                 conditionClass="consulo.ide.impl.idea.tasks.timeTracking.TasksToolWindowFactory"/>
 
     <changeListDecorator implementation="consulo.ide.impl.task.TaskChangeListDecorator"/>
-
-    <projectService serviceImplementation="consulo.ide.impl.idea.tasks.timeTracking.TimeTrackingManager" lazy="false"/>
-    <projectService serviceInterface="consulo.ide.impl.idea.tasks.TaskManager" serviceImplementation="consulo.ide.impl.idea.tasks.impl.TaskManagerImpl"/>
   </extensions>
-
 </consulo-plugin>

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.application.dumb.DumbAware;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
@@ -28,6 +29,7 @@ import jakarta.inject.Inject;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class ChangelistConflictNotificationProvider implements EditorNotificationProvider<ChangelistConflictNotificationPanel>, DumbAware {
 
   private final ChangelistConflictTracker myConflictTracker;

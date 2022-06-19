@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.history;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.dataContext.GetDataRule;
 import consulo.dataContext.DataProvider;
 import consulo.util.dataholder.Key;
@@ -35,6 +36,7 @@ import java.util.List;
 /**
  * @author Konstantin Kolosovsky.
  */
+@ExtensionImpl
 public class VcsRevisionNumberArrayRule implements GetDataRule<VcsRevisionNumber[]> {
 
   @Nonnull

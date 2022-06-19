@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.roots;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.content.TestSourcesFilter;
@@ -22,6 +23,7 @@ import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class ProjectRootTestSourcesFilter extends TestSourcesFilter {
   @Override
   public boolean isTestSource(@Nonnull VirtualFile file, @Nonnull Project project) {

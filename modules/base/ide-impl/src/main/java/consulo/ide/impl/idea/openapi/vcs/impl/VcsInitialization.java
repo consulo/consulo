@@ -1,6 +1,9 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -31,6 +34,8 @@ import java.util.concurrent.Future;
 import java.util.function.Predicate;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public final class VcsInitialization {
   private static final Logger LOG = Logger.getInstance(VcsInitialization.class);
   @Nonnull

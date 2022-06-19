@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.vcs.changes;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.find.FindModel;
 import consulo.ide.impl.idea.find.impl.FindInProjectExtension;
 import consulo.language.editor.CommonDataKeys;
@@ -33,6 +34,7 @@ import consulo.util.collection.ContainerUtil;
  * @author VISTALL
  * @since 12/12/2021
  */
+@ExtensionImpl
 public class ChangeListsFindInProjectExtension implements FindInProjectExtension {
   @Override
   public boolean initModelFromContext(FindModel model, DataContext dataContext) {

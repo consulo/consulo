@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.FileEditor;
 import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class GeneratedFileEditingNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private final Project myProject;
 

@@ -20,6 +20,8 @@
  */
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.dataContext.DataContext;
 import consulo.dataContext.DataProvider;
 import consulo.component.extension.ExtensionPointName;
@@ -40,8 +42,9 @@ import java.util.Collection;
  *
  * @author anna
  */
+@Extension(ComponentScope.APPLICATION)
 public interface NavBarModelExtension {
-  ExtensionPointName<NavBarModelExtension> EP_NAME = ExtensionPointName.create("consulo.navbar");
+  ExtensionPointName<NavBarModelExtension> EP_NAME = ExtensionPointName.create(NavBarModelExtension.class);
 
   @Nullable
   String getPresentableText(Object object);

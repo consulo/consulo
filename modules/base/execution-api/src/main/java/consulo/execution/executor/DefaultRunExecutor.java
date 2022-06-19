@@ -16,6 +16,7 @@
 
 package consulo.execution.executor;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.execution.ExecutionBundle;
 import consulo.project.ui.wm.ToolWindowId;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author spleaner
  */
+@ExtensionImpl
 public class DefaultRunExecutor extends Executor {
   public static final String EXECUTOR_ID = ToolWindowId.RUN;
 

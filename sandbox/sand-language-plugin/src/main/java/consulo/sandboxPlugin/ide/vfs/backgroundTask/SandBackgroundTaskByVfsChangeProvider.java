@@ -15,17 +15,20 @@
  */
 package consulo.sandboxPlugin.ide.vfs.backgroundTask;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import javax.annotation.Nonnull;
 import consulo.sandboxPlugin.lang.SandFileType;
+import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsChangeProvider;
 import consulo.virtualFileSystem.fileWatcher.BackgroundTaskByVfsParameters;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 30.04.14
  */
+@ExtensionImpl
 public class SandBackgroundTaskByVfsChangeProvider extends BackgroundTaskByVfsChangeProvider.ByFileType {
   public SandBackgroundTaskByVfsChangeProvider() {
     super(SandFileType.INSTANCE);

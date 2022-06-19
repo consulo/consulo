@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.projectView.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.TitledHandler;
 import consulo.dataContext.DataContext;
@@ -43,7 +44,7 @@ import javax.annotation.Nullable;
 /**
  * @author dsl
  */
-
+@ExtensionImpl
 public class RenameModuleHandler implements RenameHandler, TitledHandler {
   private static final Logger LOG = Logger.getInstance(RenameModuleHandler.class);
 

@@ -16,6 +16,8 @@
 package consulo.content;
 
 import consulo.annotation.DeprecationInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.lang.lazy.LazyValue;
 import org.jetbrains.annotations.NonNls;
@@ -32,8 +34,9 @@ import java.util.function.Supplier;
  * @author dsl
  * @see OrderEntry
  */
+@Extension(ComponentScope.APPLICATION)
 public class OrderRootType {
-  private static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create("consulo.orderRootType");
+  private static final ExtensionPointName<OrderRootType> EP_NAME = ExtensionPointName.create(OrderRootType.class);
 
   private static Supplier<List<OrderRootType>> ourSortExtensions = LazyValue.notNull(() -> {
     List<OrderRootType> extensions = new ArrayList<>(EP_NAME.getExtensionList());

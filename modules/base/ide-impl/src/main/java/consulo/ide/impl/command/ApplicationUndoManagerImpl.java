@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.command;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.undoRedo.CommandProcessor;
 import consulo.ide.impl.idea.openapi.command.impl.UndoManagerImpl;
 import consulo.undoRedo.ApplicationUndoManager;
@@ -27,6 +28,7 @@ import jakarta.inject.Singleton;
  * @since 2018-08-24
  */
 @Singleton
+@ServiceImpl
 public class ApplicationUndoManagerImpl extends UndoManagerImpl implements ApplicationUndoManager {
   @Inject
   public ApplicationUndoManagerImpl(CommandProcessor commandProcessor) {

@@ -15,6 +15,7 @@
  */
 package consulo.virtualFileSystem.fileWatcher.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.macro.ReplacePathToMacroMap;
 import consulo.ide.impl.idea.build.BuildViewManager;
 import consulo.ide.impl.idea.build.DefaultBuildDescriptor;
@@ -64,6 +65,7 @@ import java.util.function.Consumer;
  */
 @Singleton
 @State(name = "BackgroundTaskByVfsChangeManager", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl
 public class BackgroundTaskByVfsChangeManagerImpl extends BackgroundTaskByVfsChangeManager implements PersistentStateComponent<Element>, Disposable {
   private static final Key<Boolean> PROCESSING_BACKGROUND_TASK = Key.create("processing.background.task");
 

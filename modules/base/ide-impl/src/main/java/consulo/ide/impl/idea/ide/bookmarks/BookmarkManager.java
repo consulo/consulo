@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.ide.bookmarks;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.SystemInfo;
 import consulo.codeEditor.DocumentMarkupModel;
 import consulo.codeEditor.Editor;
@@ -64,6 +67,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @State(name = "BookmarkManager", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class BookmarkManager implements PersistentStateComponent<Element> {
   public static class MyStartupActivity implements StartupActivity.DumbAware {
     @Override

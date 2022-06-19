@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.ServiceManager;
 import consulo.logging.Logger;
 import consulo.module.Module;
@@ -53,6 +54,7 @@ import static consulo.ide.impl.idea.util.containers.ContainerUtil.newHashSet;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class ModuleDefaultVcsRootPolicy extends DefaultVcsRootPolicy {
   private static final Logger LOG = Logger.getInstance(ModuleDefaultVcsRootPolicy.class);
   private final Project myProject;

@@ -16,6 +16,8 @@
 
 package consulo.language.editor.refactoring.rename;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
@@ -25,8 +27,9 @@ import javax.annotation.Nonnull;
 /**
  * @author dsl
  */
+@Extension(ComponentScope.APPLICATION)
 public interface RenameHandler extends RefactoringActionHandler {
-  ExtensionPointName<RenameHandler> EP_NAME = ExtensionPointName.create("consulo.renameHandler");
+  ExtensionPointName<RenameHandler> EP_NAME = ExtensionPointName.create(RenameHandler.class);
 
   // called during rename action update. should not perform any user interactions
   boolean isAvailableOnDataContext(DataContext dataContext);

@@ -36,7 +36,7 @@ import java.awt.event.InputEvent;
  *
  * @see AnAction
  */
-@Service(ComponentScope.APPLICATION)
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class ActionManager {
 
   /**

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.index;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.psi.stubs.StubUpdatingIndex;
 import consulo.ide.impl.psi.stubs.provided.StubProvidedIndexExtension;
@@ -15,6 +16,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 
+@ExtensionImpl
 public class BasicProvidedExtensionLocator implements ProvidedIndexExtensionLocator {
   private static final String PREBUILT_INDEX_PATH_PROP = "prebuilt.hash.index.dir";
 

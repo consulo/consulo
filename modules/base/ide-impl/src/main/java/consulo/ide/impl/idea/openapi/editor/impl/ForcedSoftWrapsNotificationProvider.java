@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.ui.EditorNotificationPanel;
 import consulo.ide.impl.idea.ui.EditorNotifications;
@@ -15,16 +16,19 @@ import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl
 public final class ForcedSoftWrapsNotificationProvider implements EditorNotificationProvider<EditorNotificationPanel>, DumbAware {
   private static final Key<EditorNotificationPanel> KEY = Key.create("forced.soft.wraps.notification.panel");
   private static final String DISABLED_NOTIFICATION_KEY = "disable.forced.soft.wraps.notification";
 
   private final Project myProject;
 
+  @Inject
   public ForcedSoftWrapsNotificationProvider(Project project) {
     myProject = project;
   }

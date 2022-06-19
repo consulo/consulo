@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.externalService.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.ide.impl.idea.util.io.HttpRequests;
 import consulo.ui.ex.awt.JBUI;
@@ -46,6 +47,7 @@ import java.util.Map;
  */
 @Singleton
 @State(name = "ExternalServiceConfiguration", storages = @Storage(value = "externalService.xml", roamingType = RoamingType.DISABLED))
+@ServiceImpl
 public class ExternalServiceConfigurationImpl implements PersistentStateComponent<ExternalServiceConfigurationImpl.State>, ExternalServiceConfiguration {
   private static final Logger LOG = Logger.getInstance(ExternalServiceConfigurationImpl.class);
 

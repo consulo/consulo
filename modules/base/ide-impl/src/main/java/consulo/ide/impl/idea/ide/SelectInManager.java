@@ -15,21 +15,25 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.ServiceManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
-
-import javax.annotation.Nonnull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class SelectInManager {
   public static class SelectInTargetComparator implements Comparator<SelectInTarget> {
     public static final SelectInTargetComparator INSTANCE = new SelectInTargetComparator();
@@ -51,7 +55,7 @@ public class SelectInManager {
   public static final String SCOPE = IdeBundle.message("select.in.scope");
 
   public static SelectInManager getInstance(Project project) {
-    return ServiceManager.getService(project, SelectInManager.class);
+    return project.getInstance(SelectInManager.class);
   }
 
   private final Project myProject;

@@ -15,11 +15,14 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import java.util.List;
 
 /**
  * @author traff
  */
+@ExtensionImpl
 public class LocalToolsProvider extends ToolsProvider {
   @Override
   public List<Tool> getTools() {

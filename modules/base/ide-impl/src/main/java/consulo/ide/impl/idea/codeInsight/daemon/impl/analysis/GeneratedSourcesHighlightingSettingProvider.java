@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.project.content.GeneratedSourcesFilter;
 import consulo.virtualFileSystem.VirtualFile;
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class GeneratedSourcesHighlightingSettingProvider extends DefaultHighlightingSettingProvider {
   @Nullable
   @Override

@@ -2,63 +2,62 @@
 package consulo.ide.impl.idea.ide.scratch;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
-import consulo.ide.impl.idea.ide.projectView.*;
+import consulo.application.ApplicationManager;
+import consulo.application.ReadAction;
+import consulo.application.dumb.DumbAware;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.ConcurrentFactoryMap;
+import consulo.container.boot.ContainerPathManager;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.ide.impl.idea.ide.projectView.ProjectView;
+import consulo.ide.impl.idea.ide.projectView.ProjectViewNode;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.ProjectViewProjectNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiDirectoryNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiFileNode;
 import consulo.ide.impl.idea.ide.projectView.impl.nodes.PsiFileSystemItemFilter;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.Language;
+import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.scratch.RootType;
 import consulo.language.editor.scratch.ScratchFileService;
 import consulo.language.editor.scratch.ScratchUtil;
+import consulo.language.file.LanguageFileType;
+import consulo.language.psi.*;
+import consulo.language.psi.resolve.PsiElementProcessor;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
 import consulo.project.ui.view.tree.AbstractTreeNode;
 import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.project.ui.view.tree.ViewSettings;
-import consulo.language.Language;
-import consulo.language.editor.LangDataKeys;
-import consulo.application.ApplicationManager;
-import consulo.application.ReadAction;
-import consulo.language.file.LanguageFileType;
-import consulo.application.progress.ProgressManager;
-import consulo.language.psi.*;
-import consulo.application.dumb.DumbAware;
-import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ui.ex.tree.PresentationData;
 import consulo.ui.ex.tree.TreeHelper;
-import consulo.virtualFileSystem.event.AsyncFileListener;
+import consulo.util.collection.JBIterable;
+import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.virtualFileSystem.event.VFileCopyEvent;
-import consulo.virtualFileSystem.event.VFileCreateEvent;
-import consulo.virtualFileSystem.event.VFileEvent;
-import consulo.virtualFileSystem.event.VFileMoveEvent;
-import consulo.language.psi.resolve.PsiElementProcessor;
-import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.concurrency.NonUrgentExecutor;
-import consulo.application.util.ConcurrentFactoryMap;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.JBIterable;
-import consulo.container.boot.ContainerPathManager;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
-import consulo.platform.base.icon.PlatformIconGroup;
-import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.event.*;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author gregsh
  */
+@ExtensionImpl
 public class ScratchTreeStructureProvider implements TreeStructureProvider, DumbAware {
-
+  @Inject
   public ScratchTreeStructureProvider(Project project) {
     registerUpdaters(project, project, new Runnable() {
       AbstractProjectViewPane updateTarget;

@@ -1,30 +1,33 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileTypes.impl;
 
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.event.NotificationListener;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
-import consulo.virtualFileSystem.fileType.FileNameMatcher;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.application.util.registry.Registry;
 import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextFileType;
 import consulo.project.Project;
-import consulo.project.startup.IdeaStartupActivity;
-import consulo.application.util.registry.Registry;
+import consulo.project.startup.PostStartupActivity;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.project.ui.notification.event.NotificationListener;
+import consulo.ui.UIAccess;
 import consulo.ui.ex.awt.UIUtil;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.fileType.FileNameMatcher;
+import consulo.virtualFileSystem.fileType.FileType;
 
+import javax.annotation.Nonnull;
 import javax.swing.event.HyperlinkEvent;
 import java.util.List;
 
 /**
  * @author Dmitry Avdeev
  */
-public class ApproveRemovedMappingsActivity implements IdeaStartupActivity {
+@ExtensionImpl
+public class ApproveRemovedMappingsActivity implements PostStartupActivity {
   @Override
-  public void runActivity(@Nonnull final Project project) {
+  public void runActivity(@Nonnull final Project project, UIAccess uiAccess) {
     if (ApplicationManager.getApplication().isUnitTestMode() || !Registry.is("ide.restore.removed.mappings")) return;
 
     RemovedMappingTracker removedMappings = ((FileTypeManagerImpl)FileTypeManager.getInstance()).getRemovedMappingTracker();

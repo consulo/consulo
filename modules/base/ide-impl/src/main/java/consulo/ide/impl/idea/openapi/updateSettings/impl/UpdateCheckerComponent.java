@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.updateSettings.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.actions.SettingsEntryPointAction;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ide.impl.idea.util.text.DateFormatUtil;
@@ -34,6 +37,8 @@ import java.util.concurrent.TimeUnit;
  * @author yole
  */
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class UpdateCheckerComponent implements Disposable {
   private static final long ourCheckInterval = DateFormatUtil.DAY;
 

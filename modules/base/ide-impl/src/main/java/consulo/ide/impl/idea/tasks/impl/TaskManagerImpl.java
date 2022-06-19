@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.tasks.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.awt.Messages;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -90,6 +91,7 @@ import java.util.concurrent.TimeoutException;
  */
 @Singleton
 @State(name = "TaskManager", storages = {@Storage(StoragePathMacros.WORKSPACE_FILE)})
+@ServiceImpl
 public class TaskManagerImpl extends TaskManager implements PersistentStateComponent<TaskManagerImpl.Config>, Disposable {
   private static final Logger LOG = Logger.getInstance(TaskManagerImpl.class);
 

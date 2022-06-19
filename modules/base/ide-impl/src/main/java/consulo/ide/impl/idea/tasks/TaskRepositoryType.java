@@ -37,8 +37,8 @@ public abstract class TaskRepositoryType<T extends TaskRepository> implements Ta
 
   public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".tasks.repositoryType");
   
-  public static TaskRepositoryType[] getRepositoryTypes() {
-    return EP_NAME.getExtensions();
+  public static List<TaskRepositoryType> getRepositoryTypes() {
+    return EP_NAME.getExtensionList();
   }
 
   @Nonnull
