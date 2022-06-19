@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 19.03.14
  */
-@ExtensionImpl
+@ExtensionImpl(order = "last")
 public class SandExecutor extends Executor {
   @Override
   public String getToolWindowId() {

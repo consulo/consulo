@@ -16,7 +16,6 @@
 package consulo.ide.impl.plugins.whatsNew;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.application.Application;
 import consulo.application.dumb.DumbAware;
 import consulo.fileEditor.FileEditorManager;
@@ -35,8 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author VISTALL
  * @since 21/11/2021
  */
-@ExtensionImpl
-@Orderable(id = "WhatsNew", order = "after OpenFilesActivity")
+@ExtensionImpl(id = "WhatsNew", order = "after OpenFilesActivity")
 public class WhatsNewStartupActivity implements PostStartupActivity, DumbAware {
   private final Application myApplication;
   private final Provider<UpdateHistory> myUpdateHistoryProvider;

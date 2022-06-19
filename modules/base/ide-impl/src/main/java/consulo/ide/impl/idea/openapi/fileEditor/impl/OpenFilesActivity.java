@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.application.dumb.DumbAware;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -31,8 +30,7 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  * Date: 4/11/12
  */
-@ExtensionImpl
-@Orderable(id = "OpenFilesActivity")
+@ExtensionImpl(id = "OpenFilesActivity")
 public class OpenFilesActivity implements PostStartupActivity, DumbAware {
   @Override
   public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {

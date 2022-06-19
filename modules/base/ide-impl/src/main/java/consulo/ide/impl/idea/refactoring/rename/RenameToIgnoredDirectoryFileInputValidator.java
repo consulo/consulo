@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.refactoring.rename;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.language.editor.refactoring.rename.RenameInputValidatorEx;
 import consulo.language.file.FileTypeManager;
 import consulo.project.Project;
@@ -32,8 +31,7 @@ import javax.annotation.Nullable;
  * User: anna
  * Date: 4/5/11
  */
-@ExtensionImpl
-@Orderable(id = "RenameToIgnoredDirectoryFileInputValidator", order = "last")
+@ExtensionImpl(id = "RenameToIgnoredDirectoryFileInputValidator", order = "last")
 public class RenameToIgnoredDirectoryFileInputValidator implements RenameInputValidatorEx {
   @Nullable
   @Override

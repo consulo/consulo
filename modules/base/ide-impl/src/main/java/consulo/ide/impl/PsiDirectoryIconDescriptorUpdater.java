@@ -17,7 +17,6 @@ package consulo.ide.impl;
 
 import consulo.annotation.access.RequiredReadAction;
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.application.AllIcons;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectRootsUtil;
@@ -45,8 +44,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 09-Jan-17
  */
-@ExtensionImpl
-@Orderable(id = "directory")
+@ExtensionImpl(id = "directory")
 public class PsiDirectoryIconDescriptorUpdater implements IconDescriptorUpdater {
   private final ProjectFileIndex myProjectFileIndex;
   private final ProjectRootManager myProjectRootManager;

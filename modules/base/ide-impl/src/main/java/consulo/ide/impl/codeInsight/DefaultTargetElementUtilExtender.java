@@ -16,7 +16,6 @@
 package consulo.ide.impl.codeInsight;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.language.editor.TargetElementUtilExtender;
 
 import javax.annotation.Nonnull;
@@ -26,8 +25,7 @@ import java.util.Set;
  * @author VISTALL
  * @since 20.04.2015
  */
-@ExtensionImpl
-@Orderable(id = "default", order = "last")
+@ExtensionImpl(id = "default", order = "last")
 public class DefaultTargetElementUtilExtender implements TargetElementUtilExtender {
   @Override
   public void collectAllAccepted(@Nonnull Set<String> set) {

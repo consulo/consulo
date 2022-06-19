@@ -28,4 +28,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface ExtensionImpl {
   String[] profiles() default ComponentProfiles.PROD;
+
+  /**
+   * If value is empty used className
+   */
+  String id() default "";
+
+  String order() default "";
 }

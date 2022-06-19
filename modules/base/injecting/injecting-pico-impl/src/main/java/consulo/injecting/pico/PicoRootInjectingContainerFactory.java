@@ -22,8 +22,10 @@ import consulo.injecting.key.InjectingKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -46,6 +48,12 @@ public class PicoRootInjectingContainerFactory implements RootInjectingContainer
     @Nonnull
     @Override
     public <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Nonnull
+    @Override
+    public <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor) {
       throw new UnsupportedOperationException();
     }
 

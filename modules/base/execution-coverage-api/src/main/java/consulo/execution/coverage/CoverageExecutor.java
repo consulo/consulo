@@ -8,7 +8,7 @@ import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
 
-@ExtensionImpl
+@ExtensionImpl(id = "coverage", order = "after debug")
 public class CoverageExecutor extends Executor {
 
   public static final String EXECUTOR_ID = "Coverage";

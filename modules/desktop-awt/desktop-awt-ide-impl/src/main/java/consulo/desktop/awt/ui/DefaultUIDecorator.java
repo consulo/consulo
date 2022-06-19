@@ -16,7 +16,6 @@
 package consulo.desktop.awt.ui;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.application.util.SystemInfo;
 import consulo.ui.ex.awt.util.ColorUtil;
 import consulo.ui.ex.awt.JBUI;
@@ -36,8 +35,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 2018-07-23
  */
-@ExtensionImpl
-@Orderable(id = "default", order = "last")
+@ExtensionImpl(id = "default", order = "last")
 public class DefaultUIDecorator implements SwingUIDecorator {
   @Override
   public boolean isAvaliable() {

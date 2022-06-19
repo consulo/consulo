@@ -15,11 +15,16 @@
  */
 package consulo.component.impl.extension;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.ComponentManager;
 import consulo.component.bind.InjectingBinding;
 import consulo.component.extension.ExtensionPoint;
+import consulo.injecting.InjectingContainer;
+import consulo.logging.Logger;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,6 +34,35 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 17-Jun-22
  */
 public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
+  private static final Logger LOG = Logger.getInstance(NewExtensionPointImpl.class);
+
+  private static class ExtensionImplOrderable<K> implements LoadingOrder.Orderable {
+    private final String myOrderId;
+    private final K myValue;
+    private final LoadingOrder myLoadingOrder;
+
+    private ExtensionImplOrderable(K value) {
+      myValue = value;
+      Class<?> valueClass = value.getClass();
+      ExtensionImpl extensionImpl = valueClass.getAnnotation(ExtensionImpl.class);
+      assert extensionImpl != null;
+
+      myOrderId = StringUtil.isEmptyOrSpaces(extensionImpl.id()) ? valueClass.getSimpleName() : extensionImpl.id();
+      myLoadingOrder = LoadingOrder.readOrder(extensionImpl.order());
+    }
+
+    @Nullable
+    @Override
+    public String getOrderId() {
+      return myOrderId;
+    }
+
+    @Override
+    public LoadingOrder getOrder() {
+      return myLoadingOrder;
+    }
+  }
+
   private AtomicBoolean myInitialized = new AtomicBoolean();
 
   private Class<T> myApiClass;
@@ -57,12 +91,31 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
       return myExtensions;
     }
 
-    List<T> extensions = new ArrayList<T>(myInjectingBindings.size());
-    for (InjectingBinding binding : myInjectingBindings) {
-      // TODO change logic for creating extensions
-      T extensionInstance = (T)myComponentManager.getUnbindedInstance(binding.getImplClass());
+    InjectingContainer injectingContainer = myComponentManager.getInjectingContainer();
 
-      extensions.add(extensionInstance);
+    List<T> extensions = new ArrayList<>(myInjectingBindings.size());
+    for (InjectingBinding<T, T> binding : myInjectingBindings) {
+      T extensionInstance = null;
+      try {
+        extensionInstance = injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
+        extensions.add(extensionInstance);
+      }
+      catch (Exception e) {
+        LOG.error(e);
+      }
+    }
+
+    // prepare for sorting
+    List<ExtensionImplOrderable<T>> orders = new ArrayList<>(extensions.size());
+    for (T extension : extensions) {
+      orders.add(new ExtensionImplOrderable<>(extension));
+    }
+
+    LoadingOrder.sort(orders);
+
+    // set new order
+    for (int i = 0; i < orders.size(); i++) {
+      extensions.set(i, orders.get(i).myValue);
     }
 
     myExtensions = extensions;

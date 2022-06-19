@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.application.ui.event.UISettingsListener;
@@ -30,8 +29,7 @@ import consulo.virtualFileSystem.http.HttpVirtualFile;
 
 import javax.annotation.Nonnull;
 
-@ExtensionImpl
-@Orderable(id = "BreadcrumbsInitializing", order = "after InitToolWindows")
+@ExtensionImpl(id = "BreadcrumbsInitializing", order = "after InitToolWindows")
 public final class BreadcrumbsInitializingActivity implements PostStartupActivity, DumbAware {
   public BreadcrumbsInitializingActivity() {
   }

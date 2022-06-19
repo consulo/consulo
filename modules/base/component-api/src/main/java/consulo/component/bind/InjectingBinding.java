@@ -25,6 +25,8 @@ import java.lang.reflect.Type;
  * @since 13-Jun-22
  */
 public interface InjectingBinding<API, IMPL extends API> {
+  Type[] EMPTY_TYPES = new Type[0];
+
   @Nonnull
   String getApiClassName();
 

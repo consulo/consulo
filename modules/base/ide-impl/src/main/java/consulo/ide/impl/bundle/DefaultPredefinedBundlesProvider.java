@@ -16,7 +16,6 @@
 package consulo.ide.impl.bundle;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.content.bundle.Sdk;
 import consulo.content.bundle.SdkModificator;
 import consulo.content.bundle.SdkType;
@@ -31,8 +30,7 @@ import java.util.Collection;
  * @author VISTALL
  * @since 10.02.15
  */
-@ExtensionImpl
-@Orderable(id = "default", order = "first")
+@ExtensionImpl(id = "default", order = "first")
 public class DefaultPredefinedBundlesProvider extends PredefinedBundlesProvider {
   @Override
   public void createBundles(@Nonnull Context context) {

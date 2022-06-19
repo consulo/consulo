@@ -19,8 +19,10 @@ import consulo.injecting.key.InjectingKey;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -45,6 +47,9 @@ public interface InjectingContainer {
 
   @Nonnull
   <T> T getUnbindedInstance(@Nonnull Class<T> clazz);
+
+  @Nonnull
+  <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor);
 
   @Nonnull
   List<InjectingKey<?>> getKeys();

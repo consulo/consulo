@@ -16,7 +16,6 @@
 package consulo.ide.impl.packaging.impl.elements;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.application.AllIcons;
 import consulo.compiler.CompilerBundle;
 import consulo.ui.ex.awt.Messages;
@@ -39,8 +38,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 16:04/18.06.13
  */
-@ExtensionImpl
-@Orderable(id = "zip-archive-element")
+@ExtensionImpl(id = "zip-archive-element")
 public class ZipArchiveElementType extends CompositePackagingElementType<ZipArchivePackagingElement> {
   public static ZipArchiveElementType getInstance() {
     return getInstance(ZipArchiveElementType.class);

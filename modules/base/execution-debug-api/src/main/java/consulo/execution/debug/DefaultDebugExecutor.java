@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author spleaner
  */
-@ExtensionImpl
+@ExtensionImpl(id = "debug", order = "after run")
 public class DefaultDebugExecutor extends Executor {
   public static final String EXECUTOR_ID = ToolWindowId.DEBUG;
 

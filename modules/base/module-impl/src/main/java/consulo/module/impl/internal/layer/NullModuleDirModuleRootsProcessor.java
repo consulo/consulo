@@ -16,7 +16,6 @@
 package consulo.module.impl.internal.layer;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.application.util.function.Processor;
 import consulo.content.ContentFolderTypeProvider;
 import consulo.module.content.layer.ModuleRootModel;
@@ -30,8 +29,7 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 02.04.2015
  */
-@ExtensionImpl
-@Orderable(id = "null", order = "last")
+@ExtensionImpl(id = "null", order = "last")
 public class NullModuleDirModuleRootsProcessor extends ModuleRootsProcessor {
   @Override
   public boolean canHandle(@Nonnull ModuleRootModel moduleRootModel) {

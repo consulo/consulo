@@ -2,7 +2,6 @@
 package consulo.ide.impl.idea.openapi.wm.impl.status;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
@@ -12,8 +11,7 @@ import consulo.disposer.Disposer;
 import org.jetbrains.annotations.Nls;
 import javax.annotation.Nonnull;
 
-@ExtensionImpl
-@Orderable(id = "positionWidget", order = "first")
+@ExtensionImpl(id = "positionWidget", order = "first")
 public class PositionPanelWidgetFactory extends StatusBarEditorBasedWidgetFactory {
   @Override
   public

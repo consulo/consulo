@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * @author spleaner
  */
-@ExtensionImpl
+@ExtensionImpl(id = "run", order = "first")
 public class DefaultRunExecutor extends Executor {
   public static final String EXECUTOR_ID = ToolWindowId.RUN;
 

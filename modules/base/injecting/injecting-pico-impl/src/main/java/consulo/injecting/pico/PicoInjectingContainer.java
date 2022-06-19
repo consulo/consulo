@@ -23,11 +23,13 @@ import consulo.util.lang.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.function.Function;
 
 /**
  * @author VISTALL
@@ -87,10 +89,16 @@ public class PicoInjectingContainer implements InjectingContainer {
 
   @Nonnull
   @Override
-  @SuppressWarnings("unchecked")
   public <T> T getUnbindedInstance(@Nonnull Class<T> clazz) {
-    ConstructorInjectionComponentAdapter adapter = new ConstructorInjectionComponentAdapter(clazz.getName(), clazz);
-    return (T)adapter.getComponentInstance(myContainer);
+    ConstructorInjectionComponentAdapter<T> adapter = new ConstructorInjectionComponentAdapter<>(clazz.getName(), clazz);
+    return adapter.getComponentInstance(myContainer);
+  }
+
+  @Nonnull
+  @Override
+  public <T> T getUnbindedInstance(@Nonnull Class<T> clazz, @Nonnull Type[] constructorTypes, @Nonnull Function<Object[], T> constructor) {
+    NewConstructorInjectionComponentAdapter<T> adapter = new NewConstructorInjectionComponentAdapter<>(clazz.getName(), clazz, constructorTypes, constructor);
+    return adapter.getComponentInstance(myContainer);
   }
 
   @Nonnull

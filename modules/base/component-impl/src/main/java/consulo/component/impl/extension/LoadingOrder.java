@@ -202,7 +202,7 @@ public class LoadingOrder {
 
   @Nonnull
   public static LoadingOrder readOrder(@Nullable String orderAttr) {
-    if (orderAttr == null) {
+    if (StringUtil.isEmptyOrSpaces(orderAttr)) {
       return ANY;
     }
     else if (orderAttr.equals(FIRST_STR)) {

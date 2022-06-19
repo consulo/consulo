@@ -16,7 +16,6 @@
 package consulo.ide.impl.idea.ide.navigationToolbar;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
 import consulo.language.editor.scope.AnalysisScopeBundle;
 import consulo.application.ApplicationManager;
 import consulo.language.psi.*;
@@ -43,8 +42,7 @@ import javax.annotation.Nullable;
  * @author anna
  * @since 04-Feb-2008
  */
-@ExtensionImpl
-@Orderable(id = "defaultNavbar", order = "last")
+@ExtensionImpl(id = "defaultNavbar", order = "last")
 public class DefaultNavBarExtension extends AbstractNavBarModelExtension {
   @Override
   @Nullable

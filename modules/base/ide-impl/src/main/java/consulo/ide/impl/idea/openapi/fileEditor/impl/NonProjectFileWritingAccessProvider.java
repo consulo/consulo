@@ -16,7 +16,11 @@
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
 import consulo.annotation.component.ExtensionImpl;
-import consulo.annotation.component.Orderable;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.application.util.registry.Registry;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
 import consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
@@ -24,11 +28,6 @@ import consulo.ide.impl.idea.openapi.vfs.ex.temp.TempFileSystem;
 import consulo.ide.impl.idea.util.ArrayUtil;
 import consulo.ide.impl.idea.util.NullableFunction;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.application.Application;
-import consulo.application.ApplicationManager;
-import consulo.application.util.registry.Registry;
-import consulo.disposer.Disposable;
-import consulo.disposer.Disposer;
 import consulo.module.content.ProjectFileIndex;
 import consulo.project.Project;
 import consulo.util.dataholder.Key;
@@ -56,8 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@ExtensionImpl
-@Orderable(id = "nonProjectFile", order = "first")
+@ExtensionImpl(id = "nonProjectFile", order = "first")
 public class NonProjectFileWritingAccessProvider extends WritingAccessProvider {
   private static final Key<Boolean> ENABLE_IN_TESTS = Key.create("NON_PROJECT_FILE_ACCESS_ENABLE_IN_TESTS");
   private static final NotNullLazyKey<AtomicInteger, UserDataHolder> ACCESS_ALLOWED = NotNullLazyKey.create("NON_PROJECT_FILE_ACCESS", holder -> new AtomicInteger());
