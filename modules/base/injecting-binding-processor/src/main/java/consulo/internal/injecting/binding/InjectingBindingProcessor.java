@@ -118,6 +118,10 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           bindBuilder.addMethod(MethodSpec.methodBuilder("getComponentScope").addModifiers(Modifier.PUBLIC).returns(ComponentScope.class)
                                         .addCode(CodeBlock.of("return $T.$L;", ComponentScope.class, getScope(apiInfo.annotation()).name())).build());
 
+          if (!isLazy(apiInfo.annotation())) {
+            bindBuilder.addMethod(MethodSpec.methodBuilder("isLazy").addModifiers(Modifier.PUBLIC).returns(boolean.class).addCode(CodeBlock.of("return false;")).build());
+          }
+
           List<? extends VariableElement> injectParameters = null;
 
           List<? extends Element> allMembers = processingEnv.getElementUtils().getAllMembers(typeElement);
@@ -132,11 +136,22 @@ public class InjectingBindingProcessor extends AbstractProcessor {
                   injectParameters = parameters;
                   break;
                 }
+              }
+            }
+          }
 
-                // default constructor
-                if (parameters.size() == 0 && member.getModifiers().contains(Modifier.PUBLIC)) {
-                  injectParameters = parameters;
-                  break;
+          if (injectParameters == null) {
+            for (Element member : allMembers) {
+              if (member instanceof ExecutableElement) {
+                Name simpleName = member.getSimpleName();
+                if ("<init>".equals(simpleName.toString())) {
+                  List<? extends VariableElement> parameters = ((ExecutableElement)member).getParameters();
+
+                  // default constructor
+                  if (parameters.size() == 0 && member.getModifiers().contains(Modifier.PUBLIC)) {
+                    injectParameters = parameters;
+                    break;
+                  }
                 }
               }
             }
@@ -326,6 +341,13 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     }
 
     throw new UnsupportedOperationException(annotation.getClass().getName());
+  }
+
+  private static boolean isLazy(Annotation annotation) {
+    if (annotation instanceof Service) {
+      return ((Service)annotation).lazy();
+    }
+    return true;
   }
 
   private static <T extends Annotation> AnnotationResolveInfo findAnnotationInSuper(TypeElement typeElement, Class<T> annotationClass) {
