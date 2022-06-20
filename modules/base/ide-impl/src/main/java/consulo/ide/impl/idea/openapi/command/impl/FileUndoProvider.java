@@ -16,6 +16,7 @@ import consulo.document.DocumentReferenceManager;
 import consulo.document.util.FileContentUtilCore;
 import consulo.logging.Logger;
 import consulo.project.Project;
+import consulo.undoRedo.UndoProvider;
 import consulo.undoRedo.UnexpectedUndoException;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.util.dataholder.Key;

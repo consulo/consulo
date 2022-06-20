@@ -1198,8 +1198,6 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <undoProvider implementation="consulo.ide.impl.command.ApplicationFileUndoProvider"/>
-    <projectUndoProvider implementation="consulo.ide.impl.command.ProjectFileUndoProvider"/>
 
     <applicationService serviceInterface="consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"
                         serviceImplementation="consulo.ide.impl.idea.ide.passwordSafe.impl.providers.masterKey.PasswordDatabase"/>

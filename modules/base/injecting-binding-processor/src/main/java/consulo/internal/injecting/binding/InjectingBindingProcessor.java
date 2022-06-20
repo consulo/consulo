@@ -70,6 +70,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
     Map<String, Set<String>> providers = new HashMap<>();
 
     String injectingBindingClassName = "consulo.component.bind.InjectingBinding";
+    ClassName injectingBindingClass = ClassName.bestGuess(injectingBindingClassName);
 
     for (TypeElement annotation : annotations) {
       Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(annotation);
@@ -100,7 +101,7 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           TypeSpec.Builder bindBuilder = TypeSpec.classBuilder(typeElement.getSimpleName().toString() + "_Binding");
           bindBuilder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
           bindBuilder.addAnnotation(suppressWarning);
-          bindBuilder.addSuperinterface(ParameterizedTypeName.get(ClassName.bestGuess(injectingBindingClassName), toTypeName(apiInfo.typeElement()), toTypeName(typeElement)));
+          bindBuilder.addSuperinterface(injectingBindingClass);
 
           bindBuilder.addMethod(MethodSpec.methodBuilder("getApiClassName").returns(String.class).addModifiers(Modifier.PUBLIC)
                                         .addCode(CodeBlock.of("return $S;", apiInfo.typeElement().getQualifiedName().toString())).build());
@@ -170,49 +171,55 @@ public class InjectingBindingProcessor extends AbstractProcessor {
           bindBuilder.addMethod(MethodSpec.methodBuilder("getParametersCount").addModifiers(Modifier.PUBLIC).returns(int.class).addCode(CodeBlock.of("return $L;", injectParameters.size())).build());
 
           List<TypeName> paramTypes = new ArrayList<>();
-          for (VariableElement parameter : injectParameters) {
-            paramTypes.add(toTypeName(parameter.asType()));
-          }
 
-          List<TypeName> paramTypesForMethod = new ArrayList<>();
-          // array creation
-          paramTypesForMethod.add(TypeName.get(Type.class));
-
-          StringBuilder paramTypesBuilder = new StringBuilder();
-          paramTypesBuilder.append("return new $T[] {");
-          for (int i = 0; i < paramTypes.size(); i++) {
-            if (i != 0) {
-              paramTypesBuilder.append(", ");
+          if (!injectParameters.isEmpty()) {
+            for (VariableElement parameter : injectParameters) {
+              paramTypes.add(toTypeName(parameter.asType()));
             }
 
-            TypeName injectType = paramTypes.get(i);
-            // simple type
-            if (injectType instanceof ClassName) {
-              paramTypesBuilder.append("$T.class");
-              paramTypesForMethod.add(injectType);
-            }
-            else if (injectType instanceof ParameterizedTypeName parType) {
-              paramTypesBuilder.append("new $T(");
-              paramTypesForMethod.add(ClassName.bestGuess("consulo.component.bind.ParameterizedTypeImpl"));
-              paramTypesBuilder.append("$T.class, ");
-              paramTypesForMethod.add(parType.rawType);
+            List<TypeName> paramTypesForMethod = new ArrayList<>();
+            // array creation
+            paramTypesForMethod.add(TypeName.get(Type.class));
 
-              for (int j = 0; j < parType.typeArguments.size(); j++) {
-                if (j != 0) {
-                  paramTypesBuilder.append(", ");
-                }
-
-                paramTypesBuilder.append("$T.class");
-                paramTypesForMethod.add(parType.typeArguments.get(j));
+            StringBuilder paramTypesBuilder = new StringBuilder();
+            paramTypesBuilder.append("return new $T[] {");
+            for (int i = 0; i < paramTypes.size(); i++) {
+              if (i != 0) {
+                paramTypesBuilder.append(", ");
               }
-              paramTypesBuilder.append(")");
-            }
-          }
-          paramTypesBuilder.append("};");
 
-          bindBuilder.addMethod(
-                  MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of(paramTypesBuilder.toString(), paramTypesForMethod.toArray()))
-                          .build());
+              TypeName injectType = paramTypes.get(i);
+              // simple type
+              if (injectType instanceof ClassName) {
+                paramTypesBuilder.append("$T.class");
+                paramTypesForMethod.add(injectType);
+              }
+              else if (injectType instanceof ParameterizedTypeName parType) {
+                paramTypesBuilder.append("new $T(");
+                paramTypesForMethod.add(ClassName.bestGuess("consulo.component.bind.ParameterizedTypeImpl"));
+                paramTypesBuilder.append("$T.class, ");
+                paramTypesForMethod.add(parType.rawType);
+
+                for (int j = 0; j < parType.typeArguments.size(); j++) {
+                  if (j != 0) {
+                    paramTypesBuilder.append(", ");
+                  }
+
+                  paramTypesBuilder.append("$T.class");
+                  paramTypesForMethod.add(parType.typeArguments.get(j));
+                }
+                paramTypesBuilder.append(")");
+              }
+            }
+            paramTypesBuilder.append("};");
+
+            bindBuilder.addMethod(
+                    MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of(paramTypesBuilder.toString(), paramTypesForMethod.toArray()))
+                            .build());
+          }
+          else {
+            bindBuilder.addMethod(MethodSpec.methodBuilder("getParameterTypes").addModifiers(Modifier.PUBLIC).returns(Type[].class).addCode(CodeBlock.of("return EMPTY_TYPES;")).build());
+          }
 
           List<TypeName> argsTypes = new ArrayList<>();
           argsTypes.add(toTypeName(typeElement));

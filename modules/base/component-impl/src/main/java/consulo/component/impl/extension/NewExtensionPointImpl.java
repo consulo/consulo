@@ -94,10 +94,10 @@ public class NewExtensionPointImpl<T> implements ExtensionPoint<T> {
     InjectingContainer injectingContainer = myComponentManager.getInjectingContainer();
 
     List<T> extensions = new ArrayList<>(myInjectingBindings.size());
-    for (InjectingBinding<T, T> binding : myInjectingBindings) {
+    for (InjectingBinding binding : myInjectingBindings) {
       T extensionInstance = null;
       try {
-        extensionInstance = injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
+        extensionInstance = (T) injectingContainer.getUnbindedInstance(binding.getImplClass(), binding.getParameterTypes(), binding::create);
         extensions.add(extensionInstance);
       }
       catch (Exception e) {

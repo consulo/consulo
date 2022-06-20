@@ -15,8 +15,10 @@
  */
 package consulo.ide.impl.command;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.command.impl.FileUndoProvider;
 import consulo.project.Project;
+import consulo.undoRedo.ProjectUndoProvider;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -25,9 +27,10 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-08-24
  */
-public class ProjectFileUndoProvider extends FileUndoProvider {
+@ExtensionImpl
+public class ProjectFileUndoProviderImpl extends FileUndoProvider implements ProjectUndoProvider {
   @Inject
-  ProjectFileUndoProvider(@Nonnull Project project) {
+  ProjectFileUndoProviderImpl(@Nonnull Project project) {
     super(project);
   }
 }

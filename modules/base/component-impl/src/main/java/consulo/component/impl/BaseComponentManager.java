@@ -295,8 +295,8 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
       PluginDescriptor plugin = PluginManager.getPlugin(injectingBinding.getClass());
       descriptor.setPluginDescriptor(plugin);
       
-      InjectingKey<Object> key = InjectingKey.of(descriptor.getInterface(), getTargetClassLoader(descriptor.getPluginDescriptor()));
-      InjectingKey<Object> implKey = InjectingKey.of(descriptor.getImplementation(), getTargetClassLoader(descriptor.getPluginDescriptor()));
+      InjectingKey<Object> key = InjectingKey.of(injectingBinding.getApiClass());
+      InjectingKey<Object> implKey = InjectingKey.of(injectingBinding.getImplClass());
 
       InjectingPoint<Object> point = builder.bind(key);
       // bind to impl class
@@ -320,10 +320,10 @@ public abstract class BaseComponentManager extends UserDataHolderBase implements
           Disposer.register(this, (Disposable)instance);
         }
 
-        initializeIfStorableComponent(instance, true, descriptor.isLazy());
+        initializeIfStorableComponent(instance, true, injectingBinding.isLazy());
       });
 
-      if (!descriptor.isLazy()) {
+      if (!injectingBinding.isLazy()) {
         // if service is not lazy - add it for init at start
         notLazyServices.add(key.getTargetClass());
       }

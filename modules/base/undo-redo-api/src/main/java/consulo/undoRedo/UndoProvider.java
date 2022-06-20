@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.idea.openapi.command.impl;
+package consulo.undoRedo;
 
-import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 
+/**
+ * @see ApplicationUndoProvider
+ * @see ProjectUndoProvider
+ */
 public interface UndoProvider {
-  ExtensionPointName<UndoProvider> EP_NAME = ExtensionPointName.create("consulo.undoProvider");
-  ExtensionPointName<UndoProvider> PROJECT_EP_NAME = ExtensionPointName.create("consulo.projectUndoProvider");
-
   void commandStarted(Project project);
 
   void commandFinished(Project project);

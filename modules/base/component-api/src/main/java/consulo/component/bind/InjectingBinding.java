@@ -24,23 +24,23 @@ import java.lang.reflect.Type;
  * @author VISTALL
  * @since 13-Jun-22
  */
-public interface InjectingBinding<API, IMPL extends API> {
+public interface InjectingBinding {
   Type[] EMPTY_TYPES = new Type[0];
 
   @Nonnull
   String getApiClassName();
 
   @Nonnull
-  Class<API> getApiClass();
+  Class getApiClass();
 
   @Nonnull
   String getImplClassName();
 
   @Nonnull
-  Class<IMPL> getImplClass();
+  Class getImplClass();
 
   @Nonnull
-  Class<?> getComponentAnnotationClass();
+  Class getComponentAnnotationClass();
 
   @Nonnull
   ComponentScope getComponentScope();
@@ -54,7 +54,7 @@ public interface InjectingBinding<API, IMPL extends API> {
   Type[] getParameterTypes();
 
   @Nonnull
-  IMPL create(Object[] args);
+  Object create(Object[] args);
 
   default boolean isLazy() {
     // used only for services

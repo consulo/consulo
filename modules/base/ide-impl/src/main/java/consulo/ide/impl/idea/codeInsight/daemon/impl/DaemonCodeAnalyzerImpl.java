@@ -693,7 +693,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
 
   @Nullable
   public IntentionHintComponent getLastIntentionHint() {
-    return ((IntentionsUIImpl)IntentionsUI.getInstance(myProject)).getLastIntentionHint();
+    return (IntentionHintComponent)IntentionsUI.getInstance(myProject).getLastIntentionHint();
   }
 
   @Nullable

@@ -71,7 +71,6 @@
     <projectService serviceInterface="consulo.project.ui.wm.internal.ProjectIdeFocusManager" serviceImplementation="consulo.ide.impl.wm.impl.UnifiedProjectIdeFocusManagerImpl" lazy="false"/>
     <projectService serviceInterface="consulo.project.ui.wm.dock.DockManager" serviceImplementation="consulo.ide.impl.ui.docking.impl.UnifiedDockManagerImpl"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI" serviceImplementation="consulo.web.codeInsight.daemon.impl.WebIntentionsUIImpl"/>
 
     <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.ide.impl.codeInsight.daemon.impl.UnifiedEditorTrackerImpl"/>
     <applicationService serviceInterface="consulo.application.impl.internal.progress.ProgressActivityFactory" serviceImplementation="consulo.web.progress.WebProgressActivityFactory"/>

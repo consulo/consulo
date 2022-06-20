@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 consulo.io
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.command;
+package consulo.undoRedo;
 
-import consulo.ide.impl.idea.openapi.command.impl.FileUndoProvider;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 
 /**
  * @author VISTALL
- * @since 2018-08-24
+ * @since 20-Jun-22
  */
-public class ApplicationFileUndoProvider extends FileUndoProvider {
+@Extension(ComponentScope.PROJECT)
+public interface ProjectUndoProvider extends UndoProvider {
 }

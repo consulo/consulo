@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
-package consulo.ide.impl.idea.codeInsight.daemon.impl;
+package consulo.desktop.awt.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI;
 import consulo.language.editor.hint.HintManager;
 import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
 import consulo.ide.impl.idea.codeInsight.intention.impl.IntentionHintComponent;
@@ -16,6 +18,7 @@ import javax.annotation.Nonnull;
 import java.awt.*;
 
 @Singleton
+@ServiceImpl
 public class IntentionsUIImpl extends IntentionsUI {
 
   private volatile IntentionHintComponent myLastIntentionHint;
@@ -25,7 +28,8 @@ public class IntentionsUIImpl extends IntentionsUI {
     super(project);
   }
 
-  IntentionHintComponent getLastIntentionHint() {
+  @Override
+  public IntentionHintComponent getLastIntentionHint() {
     return myLastIntentionHint;
   }
 
@@ -36,12 +40,6 @@ public class IntentionsUIImpl extends IntentionsUI {
     if (editor == null) return;
     if (!ApplicationManager.getApplication().isUnitTestMode() && !editor.getContentComponent().hasFocus()) return;
     if (!actionsChanged) return;
-
-    //IntentionHintComponent hint = myLastIntentionHint;
-    //if (hint != null && hint.getPopupUpdateResult(actionsChanged) == IntentionHintComponent.PopupUpdateResult.CHANGED_INVISIBLE) {
-    //  hint.recreate();
-    //  return;
-    //}
 
     Project project = cachedIntentions.getProject();
     LogicalPosition caretPos = editor.getCaretModel().getLogicalPosition();

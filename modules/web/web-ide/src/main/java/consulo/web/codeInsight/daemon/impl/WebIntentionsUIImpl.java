@@ -31,6 +31,11 @@ public class WebIntentionsUIImpl extends IntentionsUI {
   }
 
   @Override
+  public Object getLastIntentionHint() {
+    return null;
+  }
+
+  @Override
   public void update(@Nonnull CachedIntentions cachedIntentions, boolean actionsChanged) {
 
   }

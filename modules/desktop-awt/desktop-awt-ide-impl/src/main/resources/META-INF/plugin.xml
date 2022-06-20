@@ -150,9 +150,6 @@
 
     <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.EditorTracker" serviceImplementation="consulo.desktop.awt.daemon.impl.DesktopEditorTrackerImpl"/>
 
-    <projectService serviceInterface="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUI"
-                    serviceImplementation="consulo.ide.impl.idea.codeInsight.daemon.impl.IntentionsUIImpl"/>
-
     <applicationService serviceInterface="consulo.ui.ex.errorTreeView.NewErrorTreeViewPanelFactory"
                         serviceImplementation="consulo.desktop.awt.ui.errorTreeView.DesktopAwtNewErrorTreeViewPanelFactoryImpl"/>
   </extensions>

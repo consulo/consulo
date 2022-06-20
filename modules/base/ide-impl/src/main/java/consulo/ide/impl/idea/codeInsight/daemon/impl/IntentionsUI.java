@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.impl.idea.codeInsight.intention.impl.CachedIntentions;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
@@ -11,6 +13,7 @@ import javax.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+@Service(ComponentScope.PROJECT)
 public abstract class IntentionsUI {
   private final Project myProject;
 
@@ -41,6 +44,8 @@ public abstract class IntentionsUI {
     myCachedIntentions.set(null);
     hide();
   }
+
+  public abstract Object getLastIntentionHint();
 
   public abstract void update(@Nonnull CachedIntentions cachedIntentions, boolean actionsChanged);
 

@@ -15,11 +15,6 @@
  */
 package consulo.ide.impl.idea.openapi.command.impl;
 
-import consulo.ui.ex.action.ActionsBundle;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.annotation.access.RequiredWriteAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -36,17 +31,19 @@ import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.FileEditorStateLevel;
 import consulo.fileEditor.TextEditor;
 import consulo.fileEditor.text.TextEditorProvider;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.wm.ex.WindowManagerEx;
+import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.language.editor.CommonDataKeys;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.internal.ExternalChangeAction;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
+import consulo.ui.ex.action.ActionsBundle;
 import consulo.ui.ex.awt.CopyPasteManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.undoRedo.UndoConfirmationPolicy;
-import consulo.undoRedo.UndoManager;
-import consulo.undoRedo.UndoableAction;
+import consulo.undoRedo.*;
 import consulo.undoRedo.event.CommandEvent;
 import consulo.undoRedo.event.CommandListener;
 import consulo.util.lang.EmptyRunnable;
@@ -72,7 +69,7 @@ public class UndoManagerImpl implements UndoManager, Disposable {
   private final ProjectEx myProject;
   private final CommandProcessor myCommandProcessor;
 
-  private List<UndoProvider> myUndoProviders;
+  private List<? extends UndoProvider> myUndoProviders;
   private CurrentEditorProvider myEditorProvider;
 
   private final UndoRedoStacksHolder myUndoStacksHolder = new UndoRedoStacksHolder(true);
@@ -171,7 +168,12 @@ public class UndoManagerImpl implements UndoManager, Disposable {
       }
     }, this);
 
-    myUndoProviders = myProject == null ? UndoProvider.EP_NAME.getExtensionList() : UndoProvider.PROJECT_EP_NAME.getExtensionList(myProject);
+    if (myProject == null) {
+      myUndoProviders = Application.get().getExtensionPoint(ApplicationUndoProvider.class).getExtensionList();
+    } else {
+      myUndoProviders = myProject.getExtensionPoint(ProjectUndoProvider.class).getExtensionList();
+    }
+
     for (UndoProvider undoProvider : myUndoProviders) {
       if (undoProvider instanceof Disposable) {
         Disposer.register(this, (Disposable)undoProvider);
