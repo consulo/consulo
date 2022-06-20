@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
 import consulo.virtualFileSystem.VirtualFile;
@@ -30,6 +32,7 @@ import java.util.Collection;
  * @author max
  * @since 6.0
  */
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class VcsDirtyScopeManager {
   @Nonnull
   public static VcsDirtyScopeManager getInstance(@Nonnull Project project) {

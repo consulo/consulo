@@ -16,6 +16,7 @@
 
 package consulo.execution.runner;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunConfigurationWithSuppressedDefaultRunAction;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.DefaultRunExecutor;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author AG
  */
+@ExtensionImpl(order = "last")
 public class BasicProgramRunner extends DefaultProgramRunner {
 
   @Nonnull

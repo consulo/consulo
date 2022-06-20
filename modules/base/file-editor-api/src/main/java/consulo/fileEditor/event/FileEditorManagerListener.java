@@ -36,6 +36,7 @@ public interface FileEditorManagerListener extends EventListener {
   default void selectionChanged(@Nonnull FileEditorManagerEvent event) {
   }
 
+  @Topic(direction = TopicBroadcastDirection.TO_PARENT)
   interface Before extends EventListener {
     TopicImpl<Before> FILE_EDITOR_MANAGER = new TopicImpl<>("file editor before events", Before.class, TopicBroadcastDirection.TO_PARENT);
 

@@ -45,7 +45,7 @@ import java.util.List;
 public abstract class EditorFactoryImpl extends InternalEditorFactory {
   private static final Logger LOG = Logger.getInstance(EditorFactoryImpl.class);
 
-  private static final ExtensionPointName<EditorFactoryListener> EP = ExtensionPointName.create("consulo.editorFactoryListener");
+  private static final ExtensionPointName<EditorFactoryListener> EP = ExtensionPointName.create(EditorFactoryListener.class);
 
   private final EditorEventMulticasterImpl myEditorEventMulticaster = new EditorEventMulticasterImpl();
   private final EventDispatcher<EditorFactoryListener> myEditorFactoryEventDispatcher = EventDispatcher.create(EditorFactoryListener.class);

@@ -44,6 +44,7 @@ import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.logging.Logger;
+import consulo.usage.*;
 import consulo.util.dataholder.Key;
 import consulo.document.util.TextRange;
 import consulo.application.util.registry.Registry;
@@ -52,11 +53,6 @@ import consulo.navigation.Navigatable;
 import consulo.ui.ex.Gray;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.RelativePoint;
-import consulo.usage.UsageInfo;
-import consulo.usage.UsageViewBundle;
-import consulo.usage.UsageContextPanel;
-import consulo.usage.UsageView;
-import consulo.usage.UsageViewPresentation;
 import consulo.ui.ex.PositionTracker;
 import consulo.ui.ex.awt.StatusText;
 import org.jetbrains.annotations.NonNls;
@@ -105,7 +101,7 @@ public class UsagePreviewPanel extends UsageContextPanelBase implements DataProv
     return null;
   }
 
-  public static class Provider implements UsageContextPanel.Provider {
+  public static class Provider implements UsageContextPanelProvider {
     @Nonnull
     @Override
     public UsageContextPanel create(@Nonnull UsageView usageView) {

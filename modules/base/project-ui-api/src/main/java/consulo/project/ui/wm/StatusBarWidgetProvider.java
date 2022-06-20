@@ -1,9 +1,10 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.project.ui.wm;
 
-import consulo.project.Project;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import consulo.container.plugin.PluginIds;
+import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -15,8 +16,9 @@ import javax.annotation.Nullable;
  * It provides configurable widgets that can be disabled or reordered.
  */
 @Deprecated
+@Extension(ComponentScope.APPLICATION)
 public interface StatusBarWidgetProvider {
-  ExtensionPointName<StatusBarWidgetProvider> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".statusBarWidgetProvider");
+  ExtensionPointName<StatusBarWidgetProvider> EP_NAME = ExtensionPointName.create(StatusBarWidgetProvider.class);
 
   /**
    * Returns a widget to be added to the status bar.

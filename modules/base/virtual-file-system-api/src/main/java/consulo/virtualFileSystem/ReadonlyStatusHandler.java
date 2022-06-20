@@ -15,12 +15,15 @@
  */
 package consulo.virtualFileSystem;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.ComponentManager;
 import consulo.virtualFileSystem.util.VirtualFileUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
 
+@Service(ComponentScope.PROJECT)
 public abstract class ReadonlyStatusHandler {
   public static boolean ensureFilesWritable(@Nonnull ComponentManager project, @Nonnull VirtualFile... files) {
     return !getInstance(project).ensureFilesWritable(files).hasReadonlyFiles();

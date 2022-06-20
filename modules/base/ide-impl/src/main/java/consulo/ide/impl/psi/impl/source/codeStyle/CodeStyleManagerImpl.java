@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.psi.codeStyle.ExternalFormatProcessor;
 import consulo.language.codeStyle.CodeStyle;
 import consulo.ide.impl.idea.formatting.*;
@@ -58,6 +59,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
+@ServiceImpl
 public class CodeStyleManagerImpl extends CodeStyleManager implements FormattingModeAwareIndentAdjuster {
   private static final Logger LOG = Logger.getInstance(CodeStyleManagerImpl.class);
   private static final ThreadLocal<ProcessingUnderProgressInfo> SEQUENTIAL_PROCESSING_ALLOWED = ThreadLocal.withInitial(() -> new ProcessingUnderProgressInfo());

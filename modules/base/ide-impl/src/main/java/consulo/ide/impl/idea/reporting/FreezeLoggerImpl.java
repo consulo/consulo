@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.reporting;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.ApplicationInfo;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.application.ApplicationManager;
@@ -34,6 +35,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 
 @Singleton
+@ServiceImpl
 public class FreezeLoggerImpl extends FreezeLogger {
 
   private static final Logger LOG = Logger.getInstance(FreezeLoggerImpl.class);

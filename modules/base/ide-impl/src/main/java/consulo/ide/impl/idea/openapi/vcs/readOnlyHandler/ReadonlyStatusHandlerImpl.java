@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.readOnlyHandler;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.CommonBundle;
 import consulo.ide.impl.idea.ide.IdeEventQueue;
 import consulo.language.file.inject.VirtualFileWindow;
@@ -39,6 +40,7 @@ import java.util.*;
 
 @Singleton
 @State(name = "ReadonlyStatusHandler", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl
 public class ReadonlyStatusHandlerImpl extends ReadonlyStatusHandler implements PersistentStateComponent<ReadonlyStatusHandlerImpl.State> {
   private final Project myProject;
   private final List<WritingAccessProvider> myAccessProviders;

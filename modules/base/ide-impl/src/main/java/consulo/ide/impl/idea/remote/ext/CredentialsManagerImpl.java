@@ -15,17 +15,19 @@
  */
 package consulo.ide.impl.idea.remote.ext;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.remote.CredentialsType;
 import consulo.ide.impl.idea.remote.RemoteSdkAdditionalData;
+import jakarta.inject.Singleton;
 import org.jdom.Element;
 
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class CredentialsManagerImpl extends CredentialsManager {
 
   @Override

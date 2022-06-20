@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2014 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.webBrowser;
+package consulo.usage;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-@Extension(ComponentScope.APPLICATION)
-public interface UrlOpener {
-  ExtensionPointName<UrlOpener> EP_NAME = ExtensionPointName.create(UrlOpener.class);
+public interface UsageContextPanelProvider {
+  ExtensionPointName<UsageContextPanelProvider> EP_NAME = ExtensionPointName.create("consulo.usageContextPanelProvider");
 
-  boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project);
+  @Nonnull
+  UsageContextPanel create(@Nonnull UsageView usageView);
+
+  /**
+   * E.g. Call hierarchy is not available for variable usages
+   */
+  boolean isAvailableFor(@Nonnull UsageView usageView);
+
+  @Nonnull
+  String getTabTitle();
 }
-

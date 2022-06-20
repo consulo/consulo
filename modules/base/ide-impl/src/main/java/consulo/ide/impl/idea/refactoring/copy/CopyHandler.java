@@ -16,20 +16,19 @@
 
 package consulo.ide.impl.idea.refactoring.copy;
 
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.ide.TwoPaneIdeView;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
 import consulo.language.editor.structureView.StructureViewFactoryEx;
-import consulo.component.extension.Extensions;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
+import consulo.project.Project;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.content.Content;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.swing.*;
 
@@ -39,8 +38,7 @@ public class CopyHandler {
 
   public static boolean canCopy(PsiElement[] elements) {
     if (elements.length > 0) {
-      final CopyHandlerDelegate[] copyHandlers = Extensions.getExtensions(CopyHandlerDelegate.EP_NAME);
-      for(CopyHandlerDelegate delegate: copyHandlers) {
+      for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
         if (delegate instanceof CopyHandlerDelegateBase ? ((CopyHandlerDelegateBase)delegate).canCopy(elements, true) : delegate.canCopy(elements)) return true;
       }
     }
@@ -50,7 +48,7 @@ public class CopyHandler {
 
   public static void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory) {
     if (elements.length == 0) return;
-    for(CopyHandlerDelegate delegate: Extensions.getExtensions(CopyHandlerDelegate.EP_NAME)) {
+    for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
       if (delegate.canCopy(elements)) {
         delegate.doCopy(elements, defaultTargetDirectory);
         break;
@@ -60,10 +58,9 @@ public class CopyHandler {
 
   public static boolean canClone(PsiElement[] elements) {
     if (elements.length > 0) {
-      final CopyHandlerDelegate[] copyHandlers = Extensions.getExtensions(CopyHandlerDelegate.EP_NAME);
-      for (CopyHandlerDelegate delegate : copyHandlers) {
+      for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
         if (delegate instanceof CopyHandlerDelegateBase ? ((CopyHandlerDelegateBase)delegate).canCopy(elements, true) : delegate.canCopy(elements)) {
-          if (delegate instanceof CopyHandlerDelegateBase && ((CopyHandlerDelegateBase)delegate).forbidToClone(elements, true)){
+          if (delegate instanceof CopyHandlerDelegateBase && ((CopyHandlerDelegateBase)delegate).forbidToClone(elements, true)) {
             return false;
           }
           return true;
@@ -75,7 +72,7 @@ public class CopyHandler {
 
   public static void doClone(PsiElement element) {
     PsiElement[] elements = new PsiElement[]{element};
-    for(CopyHandlerDelegate delegate: Extensions.getExtensions(CopyHandlerDelegate.EP_NAME)) {
+    for (CopyHandlerDelegate delegate : CopyHandlerDelegate.EP_NAME.getExtensionList()) {
       if (delegate.canCopy(elements)) {
         if (delegate instanceof CopyHandlerDelegateBase && ((CopyHandlerDelegateBase)delegate).forbidToClone(elements, false)) {
           return;
@@ -94,7 +91,7 @@ public class CopyHandler {
       if (selectedContent != null) {
         JComponent component = selectedContent.getComponent();
         if (component instanceof TwoPaneIdeView) {
-          ((TwoPaneIdeView) component).selectElement(newElement, selectInActivePanel);
+          ((TwoPaneIdeView)component).selectElement(newElement, selectInActivePanel);
           return;
         }
       }

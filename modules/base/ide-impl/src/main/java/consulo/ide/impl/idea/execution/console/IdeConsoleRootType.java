@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.execution.console;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.impl.internal.ApplicationNamesInfo;
 import consulo.fileEditor.FileEditorManager;
@@ -36,6 +37,7 @@ import javax.annotation.Nullable;
 /**
  * @author gregsh
  */
+@ExtensionImpl
 public class IdeConsoleRootType extends ConsoleRootType {
   @Inject
   IdeConsoleRootType() {

@@ -153,8 +153,8 @@ public class UsageViewImpl implements UsageViewEx {
   @NonNls
   public static final String HELP_ID = "ideaInterface.find";
   private UsageContextPanel myCurrentUsageContextPanel;
-  private List<UsageContextPanel.Provider> myUsageContextPanelProviders;
-  private UsageContextPanel.Provider myCurrentUsageContextProvider;
+  private List<UsageContextPanelProvider> myUsageContextPanelProviders;
+  private UsageContextPanelProvider myCurrentUsageContextProvider;
 
   private JPanel myCentralPanel; // accessed in EDT only
 
@@ -576,10 +576,10 @@ public class UsageViewImpl implements UsageViewEx {
       JBTabbedPane tabbedPane = new JBTabbedPane(SwingConstants.BOTTOM);
       tabbedPane.setTabComponentInsets(null);
 
-      UsageContextPanel.Provider[] extensions = UsageContextPanel.Provider.EP_NAME.getExtensions(myProject);
+      UsageContextPanelProvider[] extensions = UsageContextPanelProvider.EP_NAME.getExtensions(myProject);
       myUsageContextPanelProviders = ContainerUtil.filter(extensions, provider -> provider.isAvailableFor(this));
       Map<String, JComponent> components = new LinkedHashMap<>();
-      for (UsageContextPanel.Provider provider : myUsageContextPanelProviders) {
+      for (UsageContextPanelProvider provider : myUsageContextPanelProviders) {
         JComponent component;
         if (myCurrentUsageContextProvider == null || myCurrentUsageContextProvider == provider) {
           myCurrentUsageContextProvider = provider;
@@ -603,7 +603,7 @@ public class UsageViewImpl implements UsageViewEx {
         tabbedPane.setSelectedIndex(index);
         tabbedPane.addChangeListener(e -> {
           int currentIndex = tabbedPane.getSelectedIndex();
-          UsageContextPanel.Provider selectedProvider = myUsageContextPanelProviders.get(currentIndex);
+          UsageContextPanelProvider selectedProvider = myUsageContextPanelProviders.get(currentIndex);
           if (selectedProvider != myCurrentUsageContextProvider) {
             tabSelected(selectedProvider);
           }
@@ -621,7 +621,7 @@ public class UsageViewImpl implements UsageViewEx {
     myRootPanel.repaint();
   }
 
-  private void tabSelected(@Nonnull final UsageContextPanel.Provider provider) {
+  private void tabSelected(@Nonnull final UsageContextPanelProvider provider) {
     ApplicationManager.getApplication().assertIsDispatchThread();
     myCurrentUsageContextProvider = provider;
     updateUsagesContextPanels();

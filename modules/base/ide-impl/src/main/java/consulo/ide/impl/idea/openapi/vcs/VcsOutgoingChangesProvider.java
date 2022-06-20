@@ -15,21 +15,25 @@
  */
 package consulo.ide.impl.idea.openapi.vcs;
 
-import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.openapi.vcs.changes.Change;
 import consulo.ide.impl.idea.openapi.vcs.history.VcsRevisionNumber;
 import consulo.ide.impl.idea.openapi.vcs.versionBrowser.CommittedChangeList;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public interface VcsOutgoingChangesProvider <T extends CommittedChangeList> extends VcsProviderMarker {
+public interface VcsOutgoingChangesProvider<T extends CommittedChangeList> extends VcsProviderMarker {
   Pair<VcsRevisionNumber, List<T>> getOutgoingChanges(final VirtualFile vcsRoot, final boolean findRemote) throws VcsException;
-  @javax.annotation.Nullable
+
+  @Nullable
   VcsRevisionNumber getMergeBaseNumber(final VirtualFile anyFileUnderRoot) throws VcsException;
+
   Collection<Change> filterLocalChangesBasedOnLocalCommits(final Collection<Change> localChanges, final VirtualFile vcsRoot) throws VcsException;
-  @javax.annotation.Nullable
+
+  @Nullable
   Date getRevisionDate(final VcsRevisionNumber revision, FilePath file);
 }

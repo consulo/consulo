@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference.impl.providers;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.component.util.Iconable;
@@ -43,6 +44,7 @@ import java.util.Set;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class FileReferenceCompletionImpl extends FileReferenceCompletion {
   private static final HashingStrategy<PsiElement> VARIANTS_HASHING_STRATEGY = new HashingStrategy<PsiElement>() {
     @Override

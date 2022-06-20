@@ -16,6 +16,8 @@
 
 package consulo.language.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.disposer.Disposable;
@@ -28,6 +30,7 @@ import javax.annotation.Nullable;
 /**
  * Manages the background highlighting and auto-import for files displayed in editors.
  */
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class DaemonCodeAnalyzer {
   @Nonnull
   public static DaemonCodeAnalyzer getInstance(@Nonnull Project project) {

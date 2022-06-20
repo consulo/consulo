@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.externalSystem.service.execution;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.process.ExecutionException;
 import consulo.execution.ExecutionResult;
 import consulo.execution.configuration.RunProfile;
@@ -32,6 +33,7 @@ import javax.annotation.Nullable;
  * @author Denis Zhdanov
  * @since 5/26/13 11:20 PM
  */
+@ExtensionImpl
 public class ExternalSystemTaskRunner extends GenericProgramRunner {
 
   @Nonnull

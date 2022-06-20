@@ -15,57 +15,56 @@
  */
 package consulo.ide.impl.idea.pom.core.impl;
 
-import consulo.application.progress.*;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.EmptyProgressIndicator;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressIndicatorProvider;
+import consulo.application.progress.ProgressManager;
 import consulo.component.ProcessCanceledException;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.impl.ChangedPsiRangeUtil;
 import consulo.language.ast.ASTNode;
-import consulo.disposer.Disposable;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
-import consulo.document.Document;
-import consulo.language.impl.DebugUtil;
-import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
-import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
-import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
-import consulo.language.impl.internal.psi.diff.DiffLog;
-import consulo.language.impl.internal.psi.PsiManagerImpl;
-import consulo.language.psi.*;
-import consulo.project.Project;
-import consulo.util.lang.Pair;
-import consulo.document.util.TextRange;
-import consulo.disposer.Disposer;
-import consulo.util.dataholder.UserDataHolderBase;
-import consulo.language.pom.PomModel;
-import consulo.language.pom.PomModelAspect;
-import consulo.language.pom.PomTransaction;
-import consulo.language.pom.event.PomModelEvent;
-import consulo.language.pom.event.PomModelListener;
-import consulo.language.pom.PomTransactionBase;
-import consulo.language.pom.TreeAspect;
-import consulo.language.pom.TreeAspectEvent;
 import consulo.language.codeStyle.CodeStyleManager;
-import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
-import consulo.language.impl.psi.DummyHolder;
-import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.impl.DebugUtil;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.impl.ast.TreeElement;
 import consulo.language.impl.ast.TreeUtil;
+import consulo.language.impl.internal.psi.PsiDocumentManagerBase;
+import consulo.language.impl.internal.psi.PsiManagerImpl;
+import consulo.language.impl.internal.psi.PsiToDocumentSynchronizer;
 import consulo.language.impl.internal.psi.diff.BlockSupport;
+import consulo.language.impl.internal.psi.diff.BlockSupportImpl;
+import consulo.language.impl.internal.psi.diff.DiffLog;
+import consulo.language.impl.internal.psi.pointer.SmartPointerManagerImpl;
+import consulo.language.impl.psi.DummyHolder;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.pom.*;
+import consulo.language.pom.event.PomModelEvent;
+import consulo.language.pom.event.PomModelListener;
+import consulo.language.psi.*;
 import consulo.language.psi.util.PsiTreeUtil;
 import consulo.language.util.IncorrectOperationException;
-import consulo.util.lang.function.ThrowableRunnable;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.project.Project;
+import consulo.undoRedo.CommandProcessor;
 import consulo.util.collection.Stack;
+import consulo.util.dataholder.UserDataHolderBase;
 import consulo.util.lang.CompoundRuntimeException;
+import consulo.util.lang.Pair;
+import consulo.util.lang.function.ThrowableRunnable;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 public class PomModelImpl extends UserDataHolderBase implements PomModel {
   private final Project myProject;
   private final Map<Class<? extends PomModelAspect>, PomModelAspect> myAspects = new HashMap<>();

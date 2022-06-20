@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.util.function.Computable;
 import consulo.util.lang.function.ThrowableRunnable;
 import consulo.document.Document;
@@ -26,6 +28,7 @@ import java.util.List;
  * @see com.intellij.psi.impl.source.codeStyle.PreFormatProcessor
  * @see com.intellij.psi.impl.source.codeStyle.PostFormatProcessor
  */
+@Service(ComponentScope.PROJECT)
 public abstract class CodeStyleManager {
   /**
    * Returns the code style manager for the specified project.

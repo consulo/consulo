@@ -15,7 +15,6 @@
   -->
 <consulo-plugin>
   <extensionPoints>
-    <extensionPoint name="scratch.rootType" interface="consulo.language.editor.scratch.RootType"/>
 
     <extensionPoint name="scratch.creationHelper" beanClass="consulo.language.LanguageExtensionPoint">
       <with attribute="implementationClass" implements="consulo.ide.impl.idea.ide.scratch.ScratchFileCreationHelper"/>
@@ -24,18 +23,10 @@
 
   <extensions defaultExtensionNs="consulo">
     <nonProjectFileWritingAccessExtension implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$AccessExtension"/>
-    <indexedRootsContributor implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$IndexSetContributor"/>
     <usageTypeProvider implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$UsageTypeExtension" order="last"/>
     <useScopeEnlarger implementation="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$UseScopeExtension"/>
     <syntaxHighlighter factoryClass="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$Highlighter" order="first"/>
     <lang.substitutor language="TEXT" implementationClass="consulo.ide.impl.idea.ide.scratch.ScratchFileServiceImpl$Substitutor" order="first"/>
 
-    <scratch.rootType implementation="consulo.ide.impl.idea.ide.scratch.ScratchRootType" />
-    <scratch.rootType implementation="consulo.ide.impl.idea.execution.console.HistoryRootType"/>
-    <scratch.rootType implementation="consulo.ide.impl.idea.execution.console.IdeConsoleRootType"/>
-
-    <resolveScopeEnlarger implementation="consulo.ide.impl.idea.ide.scratch.ScratchResolveScopeEnlarger"/>
-
-    <treeStructureProvider implementation="consulo.ide.impl.idea.ide.scratch.ScratchTreeStructureProvider" order="last"/>
   </extensions>
 </consulo-plugin>

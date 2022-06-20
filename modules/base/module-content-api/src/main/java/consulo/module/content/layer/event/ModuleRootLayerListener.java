@@ -15,6 +15,7 @@
  */
 package consulo.module.content.layer.event;
 
+import consulo.annotation.component.Topic;
 import consulo.module.Module;
 import consulo.module.content.layer.ModuleRootLayer;
 
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 30.07.14
  */
+@Topic
 public interface ModuleRootLayerListener {
   default void layerRemove(@Nonnull Module module, @Nonnull ModuleRootLayer removed) {
   }

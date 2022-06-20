@@ -15,6 +15,8 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.document.util.TextRange;
 import consulo.project.Project;
 
@@ -24,6 +26,7 @@ import javax.annotation.Nonnull;
  * Allows to create references to PSI elements that can survive a reparse and return the corresponding
  * element in the PSI tree after the reparse.
  */
+@Service(ComponentScope.PROJECT)
 public abstract class SmartPointerManager {
   @Nonnull
   public abstract SmartPsiFileRange createSmartPsiFileRangePointer(@Nonnull PsiFile file, @Nonnull TextRange range);

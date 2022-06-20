@@ -39,7 +39,7 @@ import java.util.List;
 public class UsageContextCallHierarchyPanel extends UsageContextPanelBase {
   private HierarchyBrowser myBrowser;
 
-  public static class Provider implements UsageContextPanel.Provider {
+  public static class Provider implements UsageContextPanelProvider {
     @Nonnull
     @Override
     public UsageContextPanel create(@Nonnull UsageView usageView) {

@@ -1,6 +1,8 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.application.util;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.internal.util.CachedValueManagerHelper;
 import consulo.component.ComponentManager;
 import consulo.util.dataholder.Key;
@@ -20,6 +22,7 @@ import java.util.concurrent.ConcurrentMap;
  * @see #getCachedValue(PsiElement, CachedValueProvider)
  * @see #getCachedValue(UserDataHolder, CachedValueProvider)
  */
+@Service(ComponentScope.PROJECT)
 public abstract class CachedValuesManager {
   public static CachedValuesManager getManager(@Nonnull ComponentManager project) {
     return project.getInstance(CachedValuesManager.class);

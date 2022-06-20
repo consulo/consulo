@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.impl.source;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.NullableComputable;
 import consulo.util.lang.Pair;
 import consulo.ide.impl.idea.util.Function;
@@ -65,6 +66,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @Singleton
+@ServiceImpl
 public class PostprocessReformattingAspectImpl implements PostprocessReformattingAspect {
   private static final Logger LOG = Logger.getInstance(PostprocessReformattingAspectImpl.class);
   private final Project myProject;
@@ -84,9 +86,9 @@ public class PostprocessReformattingAspectImpl implements PostprocessReformattin
     myProject = project;
     myPsiManager = psiManager;
     myTreeAspect = treeAspect;
-    PomManager.getModel(psiManager.getProject()).registerAspect(PostprocessReformattingAspect.class, this, Collections.singleton(treeAspect));
+    PomManager.getModel(project).registerAspect(PostprocessReformattingAspect.class, this, Collections.singleton(treeAspect));
 
-    ApplicationManager.getApplication().addApplicationListener(new ApplicationListener() {
+    project.getApplication().addApplicationListener(new ApplicationListener() {
       @Override
       public void writeActionStarted(@Nonnull final Object action) {
         if (processor != null) {

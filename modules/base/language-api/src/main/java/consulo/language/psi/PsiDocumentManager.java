@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.TransactionGuard;
 import consulo.application.util.function.Computable;
 import consulo.document.Document;
@@ -18,6 +20,7 @@ import java.util.EventListener;
 /**
  * Manages the relationship between documents and PSI trees.
  */
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class PsiDocumentManager {
   /**
    * Returns the document manager instance for the specified project.

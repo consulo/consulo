@@ -21,22 +21,21 @@
  */
 package consulo.ide.impl.idea.refactoring.actions;
 
-import consulo.language.Language;
+import consulo.codeEditor.Editor;
+import consulo.dataContext.DataContext;
 import consulo.ide.impl.idea.lang.refactoring.InlineActionHandler;
 import consulo.ide.impl.idea.lang.refactoring.InlineHandler;
 import consulo.ide.impl.idea.lang.refactoring.InlineHandlers;
-import consulo.language.editor.refactoring.RefactoringSupportProvider;
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.Editor;
-import consulo.component.extension.Extensions;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
+import consulo.ide.impl.idea.refactoring.inline.InlineRefactoringActionHandler;
+import consulo.language.Language;
 import consulo.language.editor.internal.PsiUtilBase;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
-import consulo.ide.impl.idea.refactoring.inline.InlineRefactoringActionHandler;
+import consulo.language.editor.refactoring.RefactoringSupportProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class InlineAction extends BasePlatformRefactoringAction {
@@ -61,7 +60,7 @@ public class InlineAction extends BasePlatformRefactoringAction {
   }
 
   private static boolean hasInlineActionHandler(PsiElement element, @Nullable Language editorLanguage, Editor editor) {
-    for(InlineActionHandler handler: Extensions.getExtensions(InlineActionHandler.EP_NAME)) {
+    for(InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
       if (handler.isEnabledOnElement(element, editor)) {
         return true;
       }
@@ -86,7 +85,7 @@ public class InlineAction extends BasePlatformRefactoringAction {
 
   @Override
   protected boolean isAvailableForLanguage(Language language) {
-    for(InlineActionHandler handler: Extensions.getExtensions(InlineActionHandler.EP_NAME)) {
+    for(InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
       if (handler.isEnabledForLanguage(language)) {
         return true;
       }

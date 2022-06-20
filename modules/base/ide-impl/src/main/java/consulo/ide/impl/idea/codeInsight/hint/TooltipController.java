@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.ServiceManager;
 import consulo.codeEditor.Editor;
@@ -32,6 +35,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class TooltipController {
   private LightweightHint myCurrentTooltip;
   private TooltipRenderer myCurrentTooltipObject;

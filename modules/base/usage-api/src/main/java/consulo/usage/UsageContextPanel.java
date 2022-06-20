@@ -38,18 +38,4 @@ public interface UsageContextPanel extends Disposable {
   @Nonnull
   JComponent createComponent();
 
-  interface Provider {
-    ExtensionPointName<Provider> EP_NAME = ExtensionPointName.create("consulo.usageContextPanelProvider");
-
-    @Nonnull
-    UsageContextPanel create(@Nonnull UsageView usageView);
-
-    /**
-     * E.g. Call hierarchy is not available for variable usages
-     */
-    boolean isAvailableFor(@Nonnull UsageView usageView);
-
-    @Nonnull
-    String getTabTitle();
-  }
 }

@@ -120,7 +120,7 @@ public class RemoteFilePanel implements PropertyChangeListener {
   private void initToolbar(Project project) {
     DefaultActionGroup group = new DefaultActionGroup();
     group.add(new RefreshRemoteFileAction(myVirtualFile));
-    for (RemoteFileEditorActionProvider actionProvider : RemoteFileEditorActionProvider.EP_NAME.getExtensions()) {
+    for (RemoteFileEditorActionProvider actionProvider : RemoteFileEditorActionProvider.EP_NAME.getExtensionList()) {
       group.addAll(actionProvider.createToolbarActions(project, myVirtualFile));
     }
     final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, group, true);

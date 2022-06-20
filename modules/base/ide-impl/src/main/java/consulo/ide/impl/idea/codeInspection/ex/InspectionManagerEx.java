@@ -22,44 +22,46 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
-import consulo.ide.impl.idea.codeInspection.*;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.AllIcons;
-import consulo.ui.ex.toolWindow.ContentManagerWatcher;
-import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
-import consulo.language.Language;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.codeInspection.CustomSuppressableInspectionTool;
+import consulo.ide.impl.idea.codeInspection.InspectionManagerBase;
+import consulo.ide.impl.idea.ide.ui.search.SearchableOptionsRegistrar;
+import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
+import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
+import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
+import consulo.ide.impl.idea.util.Function;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.language.Language;
 import consulo.language.editor.inspection.*;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 import consulo.language.editor.inspection.scheme.InspectionToolWrapper;
 import consulo.language.editor.intention.HintAction;
 import consulo.language.editor.intention.SuppressIntentionAction;
+import consulo.language.psi.PsiElement;
 import consulo.project.Project;
-import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.ide.impl.idea.profile.codeInspection.ui.header.InspectionToolsConfigurable;
-import consulo.language.psi.PsiElement;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.ui.content.TabbedPaneContentUI;
-import consulo.ide.impl.idea.util.Function;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ui.ex.toolWindow.ContentManagerWatcher;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 @Singleton
+@ServiceImpl
 public class InspectionManagerEx extends InspectionManagerBase {
   private static final Pattern HTML_PATTERN = Pattern.compile("<[^<>]*>");
   private final NotNullLazyValue<ContentManager> myContentManager;

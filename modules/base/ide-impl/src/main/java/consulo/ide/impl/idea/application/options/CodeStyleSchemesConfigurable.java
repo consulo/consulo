@@ -242,7 +242,7 @@ public class CodeStyleSchemesConfigurable extends SearchableConfigurable.Parent.
 
     List<Configurable> result = new ArrayList<>();
 
-    for (CodeStyleSettingsProvider provider : CodeStyleSettingsProvider.EXTENSION_POINT_NAME.getExtensions()) {
+    for (CodeStyleSettingsProvider provider : CodeStyleSettingsProvider.EXTENSION_POINT_NAME.getExtensionList()) {
       boolean isGeneral = provider instanceof GeneralCodeStyleSettingsProvider;
 
       if (provider.hasSettingsPage()) {

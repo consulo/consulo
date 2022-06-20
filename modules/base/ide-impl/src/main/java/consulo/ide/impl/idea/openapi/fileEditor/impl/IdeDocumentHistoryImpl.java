@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.annotation.component.Topic;
 import consulo.application.ui.UISettings;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.*;
@@ -55,6 +58,7 @@ import consulo.ide.impl.idea.util.text.DateFormatUtil;
 import consulo.fileEditor.FileEditorWindow;
 import consulo.fileEditor.text.TextEditorProvider;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -65,6 +69,7 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 
 @State(name = "IdeDocumentHistory", storages = @Storage(value = StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl
 public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Disposable, PersistentStateComponent<IdeDocumentHistoryImpl.RecentlyChangedFilesState> {
   public interface SkipFromDocumentHistory {
   }
@@ -99,6 +104,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
 
   private RecentlyChangedFilesState myRecentlyChangedFiles = new RecentlyChangedFilesState();
 
+  @Inject
   public IdeDocumentHistoryImpl(@Nonnull Project project) {
     myProject = project;
 
@@ -287,7 +293,8 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     if (fileEditor instanceof TextEditor && fileEditor.isValid()) {
       VirtualFile file = fileEditor.getFile();
       if (file != null) {
-        return new PlaceInfo(file, fileEditor.getState(FileEditorStateLevel.NAVIGATION), TextEditorProvider.getInstance().getEditorTypeId(), null, getCaretPosition(fileEditor), System.currentTimeMillis());
+        return new PlaceInfo(file, fileEditor.getState(FileEditorStateLevel.NAVIGATION), TextEditorProvider.getInstance().getEditorTypeId(), null, getCaretPosition(fileEditor),
+                             System.currentTimeMillis());
       }
     }
     return null;
@@ -397,7 +404,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
     removeInvalidFilesFromStacks();
     if (myBackPlaces.isEmpty()) return;
     final PlaceInfo info = myBackPlaces.removeLast();
-    myProject.getMessageBus().syncPublisher(RecentPlacesListener.TOPIC).recentPlaceRemoved(info, false);
+    myProject.getMessageBus().syncPublisher(RecentPlacesListener.class).recentPlaceRemoved(info, false);
 
     PlaceInfo current = getCurrentPlaceInfo();
     if (current != null) myForwardPlaces.add(current);
@@ -493,7 +500,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   private void removePlaceInfo(@Nonnull PlaceInfo placeInfo, @Nonnull LinkedList<PlaceInfo> places, boolean changed) {
     boolean removed = places.remove(placeInfo);
     if (removed) {
-      myProject.getMessageBus().syncPublisher(RecentPlacesListener.TOPIC).recentPlaceRemoved(placeInfo, changed);
+      myProject.getMessageBus().syncPublisher(RecentPlacesListener.class).recentPlaceRemoved(placeInfo, changed);
     }
   }
 
@@ -593,7 +600,7 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   private void putLastOrMerge(@Nonnull PlaceInfo next, int limit, boolean isChanged) {
     LinkedList<PlaceInfo> list = isChanged ? myChangePlaces : myBackPlaces;
     MessageBus messageBus = myProject.getMessageBus();
-    RecentPlacesListener listener = messageBus.syncPublisher(RecentPlacesListener.TOPIC);
+    RecentPlacesListener listener = messageBus.syncPublisher(RecentPlacesListener.class);
     if (!list.isEmpty()) {
       PlaceInfo prev = list.getLast();
       if (isSame(prev, next)) {
@@ -705,9 +712,8 @@ public class IdeDocumentHistoryImpl extends IdeDocumentHistory implements Dispos
   /**
    * {@link RecentPlacesListener} listens recently viewed or changed place adding and removing events.
    */
+  @Topic
   public interface RecentPlacesListener {
-    TopicImpl<RecentPlacesListener> TOPIC = TopicImpl.create("RecentPlacesListener", RecentPlacesListener.class);
-
     /**
      * Fires on a new place info adding into {@link #myChangePlaces} or {@link #myBackPlaces} infos list
      *

@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.webSocket;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.builtInServer.websocket.WebSocketAccepter;
 import consulo.ide.impl.builtInServer.websocket.WebSocketConnection;
 
@@ -25,6 +26,7 @@ import java.nio.charset.StandardCharsets;
  * @author VISTALL
  * @since 2020-06-14
  */
+@ExtensionImpl
 public class TestWebSocketAccepter implements WebSocketAccepter {
   @Override
   public void accept(@Nonnull WebSocketConnection connection, @Nonnull byte[] array) {

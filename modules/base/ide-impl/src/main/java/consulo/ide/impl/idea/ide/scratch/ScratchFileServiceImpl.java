@@ -296,16 +296,4 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     }
   }
 
-  public static class UsageTypeExtension implements UsageTypeProvider {
-    private static final ConcurrentMap<RootType, UsageType> ourUsageTypes = ConcurrentFactoryMap.createMap(key -> new UsageType("Usage in " + key.getDisplayName()));
-
-    @Nullable
-    @Override
-    public UsageType getUsageType(PsiElement element) {
-      VirtualFile file = PsiUtilCore.getVirtualFile(element);
-      RootType rootType = ScratchFileService.getInstance().getRootType(file);
-      return rootType == null ? null : ourUsageTypes.get(rootType);
-    }
-  }
-
 }

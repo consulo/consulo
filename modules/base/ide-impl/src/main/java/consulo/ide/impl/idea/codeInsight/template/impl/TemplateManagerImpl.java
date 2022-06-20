@@ -16,26 +16,23 @@
 
 package consulo.ide.impl.idea.codeInsight.template.impl;
 
-import consulo.ide.impl.idea.codeInsight.completion.OffsetsInFile;
-import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate;
-import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplateBase;
-import consulo.ide.impl.idea.codeInsight.template.CustomTemplateCallback;
-import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
-import consulo.util.lang.Pair;
-import consulo.util.lang.function.PairProcessor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.util.CachedValueProvider;
 import consulo.application.util.ConcurrentFactoryMap;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.ScrollType;
-import consulo.codeEditor.event.EditorFactoryEvent;
-import consulo.codeEditor.event.EditorFactoryListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.codeInsight.completion.OffsetsInFile;
+import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplate;
+import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplateBase;
+import consulo.ide.impl.idea.codeInsight.template.CustomTemplateCallback;
+import consulo.ide.impl.idea.openapi.editor.EditorModificationUtil;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.Language;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.OffsetKey;
@@ -56,6 +53,8 @@ import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.project.Project;
 import consulo.undoRedo.CommandProcessor;
 import consulo.util.dataholder.Key;
+import consulo.util.lang.Pair;
+import consulo.util.lang.function.PairProcessor;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.TestOnly;
@@ -67,23 +66,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiPredicate;
 
 @Singleton
+@ServiceImpl
 public class TemplateManagerImpl extends TemplateManager implements Disposable {
-  public static class MyEditorFactoryListener implements EditorFactoryListener {
-    @Override
-    public void editorReleased(@Nonnull EditorFactoryEvent event) {
-      Editor editor = event.getEditor();
-      Project project = editor.getProject();
-      if (project == null || project.isDisposed() || !project.isOpen()) {
-        return;
-      }
-      
-      TemplateStateImpl state = getTemplateStateImpl(editor);
-      if (state != null) {
-        state.gotoEnd();
-      }
-      clearTemplateState(editor);
-    }
-  }
 
   private final Project myProject;
   private boolean myTemplateTesting;

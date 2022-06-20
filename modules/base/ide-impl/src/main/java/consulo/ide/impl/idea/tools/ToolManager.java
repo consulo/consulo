@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.tools;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ui.ex.action.ActionManager;
 import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.openapi.options.SchemeProcessor;
@@ -26,6 +29,8 @@ import jakarta.inject.Singleton;
  * @author traff
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class ToolManager extends BaseToolManager<Tool> {
   public static ToolManager getInstance() {
     return ApplicationManager.getApplication().getComponent(ToolManager.class);

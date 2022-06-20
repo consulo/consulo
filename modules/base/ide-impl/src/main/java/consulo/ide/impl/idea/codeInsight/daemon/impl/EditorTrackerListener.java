@@ -19,15 +19,12 @@ package consulo.ide.impl.idea.codeInsight.daemon.impl;
 import consulo.annotation.component.Topic;
 import consulo.annotation.component.TopicBroadcastDirection;
 import consulo.codeEditor.Editor;
-import consulo.component.messagebus.TopicImpl;
 
 import javax.annotation.Nonnull;
 import java.util.EventListener;
 import java.util.List;
 
 @Topic(direction = TopicBroadcastDirection.NONE)
-public interface EditorTrackerListener extends EventListener{
-  TopicImpl<EditorTrackerListener> TOPIC = new TopicImpl<>(EditorTrackerListener.class.getSimpleName(), EditorTrackerListener.class, TopicBroadcastDirection.NONE);
-
+public interface EditorTrackerListener extends EventListener {
   void activeEditorsChanged(@Nonnull List<Editor> activeEditors);
 }

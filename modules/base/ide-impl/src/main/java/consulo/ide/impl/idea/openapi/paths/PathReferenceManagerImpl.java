@@ -16,28 +16,30 @@
 
 package consulo.ide.impl.idea.openapi.paths;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.extension.Extensions;
-import consulo.language.psi.path.PsiDynaReference;
+import consulo.document.util.TextRange;
+import consulo.language.editor.impl.internal.psi.path.StaticPathReferenceProvider;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiReference;
 import consulo.language.psi.path.PathReference;
 import consulo.language.psi.path.PathReferenceManager;
 import consulo.language.psi.path.PathReferenceProvider;
-import consulo.language.editor.impl.internal.psi.path.StaticPathReferenceProvider;
-import consulo.virtualFileSystem.fileType.FileType;
+import consulo.language.psi.path.PsiDynaReference;
 import consulo.module.Module;
-import consulo.document.util.TextRange;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiReference;
 import consulo.util.collection.SmartList;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
  * @author Dmitry Avdeev
  */
 @Singleton
+@ServiceImpl
 public class PathReferenceManagerImpl extends PathReferenceManager {
   private final StaticPathReferenceProvider myStaticProvider = new StaticPathReferenceProvider(null);
   private final PathReferenceProvider myGlobalPathsProvider = new GlobalPathReferenceProvider();

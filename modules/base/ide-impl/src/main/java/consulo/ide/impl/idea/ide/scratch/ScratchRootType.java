@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.scratch;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.ObjectUtil;
 import consulo.application.AllIcons;
@@ -39,6 +40,7 @@ import javax.annotation.Nullable;
 /**
  * @author gregsh
  */
+@ExtensionImpl
 public final class ScratchRootType extends RootType {
   @Nonnull
   public static ScratchRootType getInstance() {

@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.ide.impl.idea.codeInsight.daemon.DaemonCodeAnalyzerSettings;
 import consulo.application.ApplicationManager;
@@ -13,9 +16,15 @@ import consulo.ide.impl.idea.openapi.editor.markup.ErrorStripeRenderer;
 import consulo.project.Project;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ErrorStripeUpdateManager {
   public static ErrorStripeUpdateManager getInstance(Project project) {
     return ServiceManager.getService(project, ErrorStripeUpdateManager.class);
@@ -24,6 +33,7 @@ public class ErrorStripeUpdateManager {
   private final Project myProject;
   private final PsiDocumentManager myPsiDocumentManager;
 
+  @Inject
   public ErrorStripeUpdateManager(Project project) {
     myProject = project;
     myPsiDocumentManager = PsiDocumentManager.getInstance(myProject);

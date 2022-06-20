@@ -16,6 +16,7 @@
 
 package consulo.language.impl.internal.psi.meta;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.application.util.CachedValue;
@@ -46,6 +47,7 @@ import java.util.List;
  * Time: 3:31:09
  */
 @Singleton
+@ServiceImpl
 public class MetaRegistryImpl implements MetaDataService {
   private static final List<MyBinding> ourBindings = Lists.newLockFreeCopyOnWriteList();
   private static volatile boolean ourContributorsLoaded = false;

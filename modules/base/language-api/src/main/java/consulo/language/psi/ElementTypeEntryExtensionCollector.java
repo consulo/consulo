@@ -15,6 +15,8 @@
  */
 package consulo.language.psi;
 
+import consulo.application.Application;
+import consulo.component.extension.ExtensionList;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.ast.IElementType;
 
@@ -29,14 +31,14 @@ import java.util.function.Predicate;
  */
 public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType>> {
   @Nonnull
-  public static <E extends Predicate<IElementType>> ElementTypeEntryExtensionCollector<E> create(@Nonnull String epName) {
-    return new ElementTypeEntryExtensionCollector<>(epName);
+  public static <E extends Predicate<IElementType>> ElementTypeEntryExtensionCollector<E> create(@Nonnull Class<E> clazz) {
+    return new ElementTypeEntryExtensionCollector<>(clazz);
   }
 
-  private ExtensionPointName<E> myExtensionPointName;
+  private ExtensionList<E, Application> myExtensionPointName;
 
-  private ElementTypeEntryExtensionCollector(@Nonnull String epName) {
-    myExtensionPointName = ExtensionPointName.create(epName);
+  private ElementTypeEntryExtensionCollector(@Nonnull Class<E> clazz) {
+    myExtensionPointName = ExtensionList.of(clazz);
   }
 
   private final Map<IElementType, E> myMap = new ConcurrentHashMap<>();
@@ -45,7 +47,7 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
   public E getValue(@Nonnull IElementType elementType) {
     return myMap.computeIfAbsent(elementType, it -> {
       E factory = null;
-      for (E e : myExtensionPointName.getExtensionList()) {
+      for (E e : myExtensionPointName.getExtensionList(Application.get())) {
         if (e.test(it)) {
           factory = e;
           break;
@@ -60,6 +62,6 @@ public class ElementTypeEntryExtensionCollector<E extends Predicate<IElementType
 
   @Nonnull
   public ExtensionPointName<E> getExtensionPointName() {
-    return myExtensionPointName;
+    throw new UnsupportedOperationException();
   }
 }

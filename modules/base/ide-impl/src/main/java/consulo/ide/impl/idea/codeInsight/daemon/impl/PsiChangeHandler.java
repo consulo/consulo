@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.component.extension.ExtensionPoint;
 import consulo.ide.impl.idea.codeInsight.daemon.ChangeLocalityDetector;
 import consulo.disposer.Disposable;
 import consulo.application.Application;
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable {
-  private static final ExtensionPointName<ChangeLocalityDetector> EP_NAME = ExtensionPointName.create("consulo.daemon.changeLocalityDetector");
+  private static final ExtensionPointName<ChangeLocalityDetector> EP_NAME = ExtensionPointName.create(ChangeLocalityDetector.class);
   private /*NOT STATIC!!!*/ final Key<Boolean> UPDATE_ON_COMMIT_ENGAGED = Key.create("UPDATE_ON_COMMIT_ENGAGED");
 
   private final Project myProject;
@@ -254,18 +255,11 @@ final class PsiChangeHandler extends PsiTreeChangeAdapter implements Disposable 
 
   @Nullable
   private static PsiElement getChangeHighlightingScope(@Nonnull PsiElement element) {
-    DefaultChangeLocalityDetector defaultDetector = null;
-    for (ChangeLocalityDetector detector : EP_NAME.getExtensionList()) {
-      if (detector instanceof DefaultChangeLocalityDetector) {
-        // run default detector last
-        assert defaultDetector == null : defaultDetector;
-        defaultDetector = (DefaultChangeLocalityDetector)detector;
-        continue;
-      }
+    for (ChangeLocalityDetector detector : element.getProject().getApplication().getExtensionPoint(ChangeLocalityDetector.class).getExtensionList()) {
       final PsiElement scope = detector.getChangeHighlightingDirtyScopeFor(element);
       if (scope != null) return scope;
     }
-    assert defaultDetector != null : "consulo.ide.impl.idea.codeInsight.daemon.impl.DefaultChangeLocalityDetector is unregistered";
-    return defaultDetector.getChangeHighlightingDirtyScopeFor(element);
+
+    return null;
   }
 }

@@ -15,14 +15,17 @@
  */
 package consulo.ide.impl.idea.codeInspection;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.annotation.DeprecationInfo;
 import consulo.language.editor.inspection.scheme.InspectionProfileEntry;
 
 @Deprecated
 @DeprecationInfo("Use globalInspection")
+@Extension(ComponentScope.APPLICATION)
 public interface InspectionToolProvider {
-  ExtensionPointName<InspectionToolProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.inspectionToolProvider");
+  ExtensionPointName<InspectionToolProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(InspectionToolProvider.class);
 
   /**
    * Query method for inspection tools provided by a plugin.

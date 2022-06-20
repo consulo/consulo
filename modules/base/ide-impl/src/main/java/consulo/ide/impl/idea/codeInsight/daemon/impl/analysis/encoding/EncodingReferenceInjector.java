@@ -15,16 +15,19 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis.encoding;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
+import consulo.language.inject.ReferenceInjector;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import consulo.language.inject.ReferenceInjector;
 import consulo.language.util.ProcessingContext;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author peter
  */
+@ExtensionImpl
 public class EncodingReferenceInjector extends ReferenceInjector {
   @Nonnull
   @Override

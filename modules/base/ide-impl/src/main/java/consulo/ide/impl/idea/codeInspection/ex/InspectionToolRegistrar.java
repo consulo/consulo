@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.codeInspection.ex;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInspection.InspectionToolProvider;
 import consulo.ide.impl.idea.codeInspection.InspectionToolsFactory;
 import consulo.language.editor.inspection.scheme.LocalInspectionEP;
@@ -45,6 +48,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author max
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class InspectionToolRegistrar {
   private static final Logger LOG = Logger.getInstance(InspectionToolRegistrar.class);
 
@@ -80,7 +85,7 @@ public class InspectionToolRegistrar {
     if (profileEntry instanceof GlobalInspectionTool) {
       return new GlobalInspectionToolWrapper((GlobalInspectionTool)profileEntry);
     }
-    throw new RuntimeException("unknown inspection class: " + profileEntry + "; "+profileEntry.getClass());
+    throw new RuntimeException("unknown inspection class: " + profileEntry + "; " + profileEntry.getClass());
   }
 
   public void registerTools(@Nonnull List<InspectionToolProvider> providers) {

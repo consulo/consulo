@@ -25,44 +25,6 @@
       <skipForDefaultProject/>
     </component>
 
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.fileEditor.ex.IdeDocumentHistory</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl</implementation-class>
-    </component>
-
-
-    <component>
-      <interface-class>consulo.language.psi.PsiManager</interface-class>
-      <implementation-class>consulo.ide.impl.language.psi.IdePsiManagerImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-
-    <component>
-      <interface-class>consulo.language.psi.PsiDocumentManager</interface-class>
-      <implementation-class>consulo.ide.impl.psi.impl.PsiDocumentManagerImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-
-    <component>
-      <interface-class>consulo.language.pom.TreeAspect</interface-class>
-      <implementation-class>consulo.language.pom.TreeAspect</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-
-    <component>
-      <interface-class>consulo.language.editor.DaemonCodeAnalyzer</interface-class>
-      <implementation-class>consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl</implementation-class>
-      <loadForDefaultProject/>
-    </component>
-    <component>
-      <implementation-class>consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonListeners</implementation-class>
-      <option name="workspace" value="true"/>
-      <!--<loadForDefaultProject/>-->
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.util.indexing.FileBasedIndexProjectHandler</implementation-class>
-    </component>
 
     <component>
       <interface-class>consulo.ide.impl.idea.codeInsight.navigation.CtrlMouseHandler</interface-class>
@@ -71,20 +33,12 @@
     </component>
 
     <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.VcsEventWatcher</implementation-class>
-    </component>
-
-
-    <component>
       <interface-class>consulo.language.editor.inspection.scheme.InspectionProjectProfileManager</interface-class>
       <implementation-class>consulo.ide.impl.idea.profile.codeInspection.InspectionProjectProfileManagerImpl</implementation-class>
       <loadForDefaultProject/>
     </component>
 
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.VcsDirectoryMappingStorage</implementation-class>
-      <skipForDefaultProject/>
-    </component>
+
     <component>
       <interface-class>consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManagerI</interface-class>
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.LineStatusTrackerManager</implementation-class>
@@ -92,11 +46,7 @@
       <skipForDefaultProject/>
     </component>
 
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.VcsDirtyScopeManagerImpl</implementation-class>
-      <option name="workspace" value="true"/>
-    </component>
+
     <component>
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor</implementation-class>
       <option name="workspace" value="true"/>
@@ -115,10 +65,7 @@
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.committed.CommittedChangesCache</implementation-class>
       <skipForDefaultProject/>
     </component>
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.VcsFileStatusProvider</implementation-class>
-      <skipForDefaultProject/>
-    </component>
+
     <component>
       <interface-class>consulo.ide.impl.idea.openapi.vcs.impl.VcsBaseContentProvider</interface-class>
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.impl.VcsFileStatusProvider</implementation-class>

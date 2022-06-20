@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.xdebugger.impl.evaluate;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.Document;
 import consulo.codeEditor.EditorLinePainter;
 import consulo.codeEditor.LineExtensionInfo;
@@ -52,6 +53,7 @@ import java.util.*;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class XDebuggerEditorLinePainter extends EditorLinePainter {
   private static class LightDarkEditorColor implements ColorValue {
     private final RGBColor myLightColor;

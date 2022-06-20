@@ -16,36 +16,36 @@
 package consulo.ide.impl.idea.profile.codeInspection;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.ServiceManager;
-import consulo.language.editor.rawHighlight.SeverityProvider;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
-import consulo.ide.impl.idea.codeInsight.daemon.InspectionProfileConvertor;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.SeveritiesProvider;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.language.editor.inspection.InspectionsBundle;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.ide.impl.idea.codeInspection.ex.InspectionToolRegistrar;
-import consulo.language.editor.annotation.HighlightSeverity;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.colorScheme.TextAttributesKey;
+import consulo.component.persist.*;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.idea.codeInsight.daemon.InspectionProfileConvertor;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionToolRegistrar;
 import consulo.ide.impl.idea.openapi.options.BaseSchemeProcessor;
 import consulo.ide.impl.idea.openapi.options.SchemesManager;
 import consulo.ide.impl.idea.openapi.options.SchemesManagerFactory;
-import consulo.component.persist.*;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.ArrayUtil;
+import consulo.language.editor.annotation.HighlightSeverity;
+import consulo.language.editor.inspection.InspectionsBundle;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.language.editor.inspection.scheme.Profile;
+import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.SeveritiesProvider;
+import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.ui.ex.awt.Messages;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.language.editor.inspection.scheme.Profile;
-import consulo.ide.impl.idea.util.ArrayUtil;
-import consulo.logging.Logger;
 import consulo.ui.image.Image;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
@@ -60,14 +60,8 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
-@State(
-        name = "InspectionProfileManager",
-        storages = {
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml"),
-                @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)
-        },
-        additionalExportFile = InspectionProfileManager.FILE_SPEC
-)
+@State(name = "InspectionProfileManager", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.xml"),
+        @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml", deprecated = true)}, additionalExportFile = InspectionProfileManager.FILE_SPEC)
 @ServiceImpl
 public class InspectionProfileManagerImpl extends InspectionProfileManager implements SeverityProvider, PersistentStateComponent<Element> {
   private final InspectionToolRegistrar myRegistrar;
@@ -99,8 +93,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
           ApplicationManager.getApplication().invokeLater(new Runnable() {
             @Override
             public void run() {
-              Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()),
-                                       InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
+              Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, profile.getName()), InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
             }
           }, IdeaModalityState.NON_MODAL);
         }
@@ -173,6 +166,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
   }
 
   private volatile boolean LOAD_PROFILES = !ApplicationManager.getApplication().isUnitTestMode();
+
   @TestOnly
   public void forceInitProfiles(boolean flag) {
     LOAD_PROFILES = flag;
@@ -225,8 +219,7 @@ public class InspectionProfileManagerImpl extends InspectionProfileManager imple
         ApplicationManager.getApplication().invokeLater(new Runnable() {
           @Override
           public void run() {
-            Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file),
-                                     InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
+            Messages.showErrorDialog(InspectionsBundle.message("inspection.error.loading.message", 0, file), InspectionsBundle.message("inspection.errors.occurred.dialog.title"));
           }
         }, IdeaModalityState.NON_MODAL);
       }

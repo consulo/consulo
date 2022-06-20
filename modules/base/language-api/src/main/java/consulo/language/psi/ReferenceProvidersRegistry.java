@@ -16,6 +16,8 @@
 
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.application.progress.ProgressIndicatorProvider;
 import consulo.language.Language;
@@ -24,12 +26,11 @@ import consulo.language.util.ProcessingContext;
 import javax.annotation.Nonnull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: ik
  * Date: 27.03.2003
  * Time: 17:13:45
- * To change this template use Options | File Templates.
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class ReferenceProvidersRegistry {
   public final static PsiReferenceProvider NULL_REFERENCE_PROVIDER = new PsiReferenceProvider() {
       @Nonnull

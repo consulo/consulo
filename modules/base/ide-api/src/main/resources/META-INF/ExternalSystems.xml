@@ -73,7 +73,5 @@
     <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.task.ToolWindowModuleService"/>
     <externalProjectDataService implementation="consulo.ide.impl.idea.openapi.externalSystem.service.task.ToolWindowTaskService"/>
 
-    <!--Execution-->
-    <programRunner implementation="consulo.ide.impl.idea.openapi.externalSystem.service.execution.ExternalSystemTaskRunner"/>
   </extensions>
 </consulo-plugin>

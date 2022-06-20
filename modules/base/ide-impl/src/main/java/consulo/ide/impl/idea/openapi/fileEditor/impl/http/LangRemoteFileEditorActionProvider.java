@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ui.ex.action.AnAction;
 import consulo.project.Project;
 import consulo.virtualFileSystem.http.HttpVirtualFile;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class LangRemoteFileEditorActionProvider extends RemoteFileEditorActionProvider {
   @Nonnull
   @Override

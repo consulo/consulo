@@ -15,15 +15,16 @@
  */
 package consulo.execution.runner;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.ExecutionResult;
-import consulo.execution.executor.Executor;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.configuration.*;
 import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.executor.Executor;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.process.ExecutionException;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,18 +33,13 @@ import javax.annotation.Nullable;
  * A ProgramRunner is responsible for the execution workflow of certain types of run configurations with a certain executor. For example,
  * one ProgramRunner can be responsible for debugging all Java-based run configurations (applications, JUnit tests, etc.); the run
  * configuration takes care of building a command line and the program runner takes care of how exactly it needs to be executed.
- * <p>
- * A newly created program runner should be registered in a corresponding plugin.xml:
- * <p>
- * &lt;extensions defaultExtensionNs="com.intellij"&gt;
- * &lt;programRunner implementation="RunnerClassFQN"/&gt;
- * &lt;/extensions&gt;
  *
  * @param <Settings>
  * @see GenericProgramRunner
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ProgramRunner<Settings extends RunnerSettings> {
-  ExtensionPointName<ProgramRunner> PROGRAM_RUNNER_EP = ExtensionPointName.create("consulo.programRunner");
+  ExtensionPointName<ProgramRunner> PROGRAM_RUNNER_EP = ExtensionPointName.create(ProgramRunner.class);
 
   interface Callback {
     void processStarted(RunContentDescriptor descriptor);
@@ -75,7 +71,6 @@ public interface ProgramRunner<Settings extends RunnerSettings> {
    * @return the program runner ID.
    */
   @Nonnull
-  @NonNls
   String getRunnerId();
 
   /**

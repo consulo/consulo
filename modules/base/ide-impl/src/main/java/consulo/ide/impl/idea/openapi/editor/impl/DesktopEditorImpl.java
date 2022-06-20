@@ -441,7 +441,7 @@ public final class DesktopEditorImpl extends CodeEditorBase implements RealEdito
     myFocusModeModel = new FocusModeModel(this);
     Disposer.register(myDisposable, myFocusModeModel);
 
-    myLatencyPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(LatencyListener.TOPIC);
+    myLatencyPublisher = ApplicationManager.getApplication().getMessageBus().syncPublisher(LatencyListener.class);
   }
 
   @Override

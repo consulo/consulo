@@ -51,8 +51,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
 
   private final Project myProject;
 
-  private final ClearableLazyValue<List<FilePropertyPusher<?>>> myFilePushers = ClearableLazyValue.create(() -> {
-    //noinspection CodeBlock2Expr
+  private final ClearableLazyValue<List<FilePropertyPusher>> myFilePushers = ClearableLazyValue.create(() -> {
     return ContainerUtil.findAll(FilePropertyPusher.EP_NAME.getExtensionList(), pusher -> !pusher.pushDirectoriesOnly());
   });
 
@@ -91,7 +90,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
     for (VFileEvent event : events) {
       if (event instanceof VFileCreateEvent) {
         boolean isDirectory = ((VFileCreateEvent)event).isDirectory();
-        List<FilePropertyPusher<?>> pushers = isDirectory ? FilePropertyPusher.EP_NAME.getExtensionList() : myFilePushers.getValue();
+        List<FilePropertyPusher> pushers = isDirectory ? FilePropertyPusher.EP_NAME.getExtensionList() : myFilePushers.getValue();
 
         if (!event.isFromRefresh()) {
           ContainerUtil.addIfNotNull(syncTasks, createRecursivePushTask(event, pushers));
@@ -107,7 +106,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
         VirtualFile file = getFile(event);
         if (file == null) continue;
         boolean isDirectory = file.isDirectory();
-        List<FilePropertyPusher<?>> pushers = isDirectory ? FilePropertyPusher.EP_NAME.getExtensionList() : myFilePushers.getValue();
+        List<FilePropertyPusher> pushers = isDirectory ? FilePropertyPusher.EP_NAME.getExtensionList() : myFilePushers.getValue();
         for (FilePropertyPusher<?> pusher : pushers) {
           file.putUserData(pusher.getFileDataKey(), null);
         }
@@ -168,7 +167,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
   }
 
   @Nullable
-  private Runnable createRecursivePushTask(@Nonnull VFileEvent event, @Nonnull List<? extends FilePropertyPusher<?>> pushers) {
+  private Runnable createRecursivePushTask(@Nonnull VFileEvent event, @Nonnull List<? extends FilePropertyPusher> pushers) {
     if (pushers.isEmpty()) {
       return null;
     }
@@ -183,7 +182,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
     };
   }
 
-  private void doPushRecursively(VirtualFile dir, @Nonnull List<? extends FilePropertyPusher<?>> pushers, ProjectFileIndex fileIndex) {
+  private void doPushRecursively(VirtualFile dir, @Nonnull List<? extends FilePropertyPusher> pushers, ProjectFileIndex fileIndex) {
     fileIndex.iterateContentUnderDirectory(dir, fileOrDir -> {
       applyPushersToFile(fileOrDir, pushers, null);
       return true;
@@ -279,7 +278,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
     queueTasks(Collections.singletonList(() -> doPushAll(Arrays.asList(pushers))));
   }
 
-  private void doPushAll(@Nonnull List<? extends FilePropertyPusher<?>> pushers) {
+  private void doPushAll(@Nonnull List<? extends FilePropertyPusher> pushers) {
     Module[] modules = ReadAction.compute(() -> ModuleManager.getInstance(myProject).getModules());
 
     List<Runnable> tasks = new ArrayList<>();
@@ -351,7 +350,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
     }
   }
 
-  private void applyPushersToFile(final VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher<?>> pushers, final Object[] moduleValues) {
+  private void applyPushersToFile(final VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher> pushers, final Object[] moduleValues) {
     ApplicationManager.getApplication().runReadAction(() -> {
       ProgressManager.checkCanceled();
       if (!fileOrDir.isValid()) return;
@@ -359,7 +358,7 @@ public final class PushedFilePropertiesUpdaterImpl extends PushedFilePropertiesU
     });
   }
 
-  private void doApplyPushersToFile(@Nonnull VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher<?>> pushers, Object[] moduleValues) {
+  private void doApplyPushersToFile(@Nonnull VirtualFile fileOrDir, @Nonnull List<? extends FilePropertyPusher> pushers, Object[] moduleValues) {
     FilePropertyPusher<Object> pusher = null;
     try {
       final boolean isDir = fileOrDir.isDirectory();

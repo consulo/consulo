@@ -15,11 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.project.ProjectComponent;
-import consulo.disposer.Disposable;
-import consulo.logging.Logger;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.FilePath;
@@ -28,24 +26,27 @@ import consulo.ide.impl.idea.openapi.vcs.VcsDirectoryMapping;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.util.collection.MultiMap;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectComponent;
+import consulo.util.collection.MultiMap;
 import consulo.util.lang.reflect.ReflectionUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import java.util.*;
 
 /**
  * @author max
  */
 @Singleton
+@ServiceImpl
 public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements ProjectComponent, Disposable {
   private static final Logger LOG = Logger.getInstance(VcsDirtyScopeManagerImpl.class);
 

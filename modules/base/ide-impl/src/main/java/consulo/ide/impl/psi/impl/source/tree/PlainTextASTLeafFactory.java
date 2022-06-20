@@ -19,6 +19,7 @@
  */
 package consulo.ide.impl.psi.impl.source.tree;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.impl.ast.LeafElement;
 import consulo.language.impl.ast.ASTLeafFactory;
 import consulo.language.version.LanguageVersion;
@@ -27,6 +28,7 @@ import consulo.language.ast.IElementType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl
 public class PlainTextASTLeafFactory implements ASTLeafFactory {
   @Nonnull
   @Override

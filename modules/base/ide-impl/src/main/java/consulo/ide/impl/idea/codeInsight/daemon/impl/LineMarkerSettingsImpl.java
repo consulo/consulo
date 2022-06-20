@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.gutter.GutterIconDescriptor;
 import consulo.language.editor.gutter.LineMarkerSettings;
 import consulo.component.persist.PersistentStateComponent;
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 @Singleton
 @State(name = "LineMarkerSettings", storages = @Storage("gutter.xml"))
+@ServiceImpl
 public class LineMarkerSettingsImpl extends LineMarkerSettings implements PersistentStateComponent<LineMarkerSettingsImpl> {
   @MapAnnotation
   public Map<String, Boolean> providers = new HashMap<>();

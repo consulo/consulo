@@ -20,6 +20,9 @@
  */
 package consulo.ui.ex.awt;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.ComponentManager;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
@@ -40,6 +43,8 @@ import java.util.*;
 
 @Singleton
 @State(name = "masterDetails", storages = {@Storage(file = StoragePathMacros.WORKSPACE_FILE)})
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class MasterDetailsStateService implements PersistentStateComponent<MasterDetailsStateService.States> {
   private final SkipDefaultValuesSerializationFilters mySerializationFilter = new SkipDefaultValuesSerializationFilters();
   private final Map<String, ComponentState> myStates = new HashMap<>();
@@ -49,7 +54,7 @@ public class MasterDetailsStateService implements PersistentStateComponent<Maste
   }
 
   @Nullable
-  public MasterDetailsState getComponentState(@Nonnull  String key, Class<? extends MasterDetailsState> stateClass) {
+  public MasterDetailsState getComponentState(@Nonnull String key, Class<? extends MasterDetailsState> stateClass) {
     ComponentState state = myStates.get(key);
     if (state == null) return null;
     final Element settings = state.mySettings;

@@ -15,6 +15,8 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 
 import javax.annotation.Nonnull;
@@ -25,8 +27,9 @@ import javax.annotation.Nullable;
  *
  * @author Dennis.Ushakov
  */
+@Extension(ComponentScope.APPLICATION)
 public interface SmartPointerAnchorProvider {
-  ExtensionPointName<SmartPointerAnchorProvider> EP_NAME = ExtensionPointName.create("consulo.smartPointerAnchorProvider");
+  ExtensionPointName<SmartPointerAnchorProvider> EP_NAME = ExtensionPointName.create(SmartPointerAnchorProvider.class);
 
   /**
    * Provides anchor used for restoring elements after stub-to-AST switch.

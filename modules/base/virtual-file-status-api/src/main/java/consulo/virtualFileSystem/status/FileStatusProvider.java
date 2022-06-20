@@ -15,6 +15,8 @@
  */
 package consulo.virtualFileSystem.status;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.Document;
 import consulo.util.lang.ThreeState;
@@ -25,9 +27,9 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@Extension(ComponentScope.PROJECT)
 public interface FileStatusProvider {
-
-  ExtensionPointName<FileStatusProvider> EP_NAME = ExtensionPointName.create("consulo.vcs.fileStatusProvider");
+  ExtensionPointName<FileStatusProvider> EP_NAME = ExtensionPointName.create(FileStatusProvider.class);
 
   FileStatus getFileStatus(@Nonnull VirtualFile virtualFile);
 

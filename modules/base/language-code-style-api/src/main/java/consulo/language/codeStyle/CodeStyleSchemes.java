@@ -15,12 +15,15 @@
  */
 package consulo.language.codeStyle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 /**
  * @author MYakovlev
  * Date: Jul 19, 2002
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class CodeStyleSchemes {
 
   public static CodeStyleSchemes getInstance() {

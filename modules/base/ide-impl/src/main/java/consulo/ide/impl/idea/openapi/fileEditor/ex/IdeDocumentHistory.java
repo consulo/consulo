@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.fileEditor.ex;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.IdeDocumentHistoryImpl;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -9,6 +11,7 @@ import javax.annotation.Nonnull;
 
 import java.util.List;
 
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class IdeDocumentHistory {
   public static IdeDocumentHistory getInstance(Project project) {
     return project.getComponent(IdeDocumentHistory.class);

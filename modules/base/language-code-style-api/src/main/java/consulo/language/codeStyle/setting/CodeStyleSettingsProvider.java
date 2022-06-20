@@ -15,6 +15,8 @@
  */
 package consulo.language.codeStyle.setting;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.Language;
 import consulo.configurable.Configurable;
 import consulo.component.extension.ExtensionPointName;
@@ -27,8 +29,9 @@ import javax.annotation.Nullable;
 /**
  * @author peter
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class CodeStyleSettingsProvider {
-  public static final ExtensionPointName<CodeStyleSettingsProvider> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.codeStyleSettingsProvider");
+  public static final ExtensionPointName<CodeStyleSettingsProvider> EXTENSION_POINT_NAME = ExtensionPointName.create(CodeStyleSettingsProvider.class);
 
   @Nullable
   public CustomCodeStyleSettings createCustomSettings(CodeStyleSettings settings) {

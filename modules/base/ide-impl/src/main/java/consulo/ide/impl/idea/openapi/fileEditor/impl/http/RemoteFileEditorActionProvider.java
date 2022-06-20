@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl.http;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.ui.ex.action.AnAction;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
@@ -24,10 +26,10 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class RemoteFileEditorActionProvider {
-  public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME = ExtensionPointName.create("consulo.http.fileEditorActionProvider");
+  public static final ExtensionPointName<RemoteFileEditorActionProvider> EP_NAME = ExtensionPointName.create(RemoteFileEditorActionProvider.class);
 
   @Nonnull
   public abstract AnAction[] createToolbarActions(@Nonnull Project project, @Nonnull HttpVirtualFile file);
-
 }

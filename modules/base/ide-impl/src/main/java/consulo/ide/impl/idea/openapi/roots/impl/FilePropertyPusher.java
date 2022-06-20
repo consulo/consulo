@@ -2,6 +2,8 @@
 
 package consulo.ide.impl.idea.openapi.roots.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -48,8 +50,9 @@ import java.io.IOException;
  * For example, instead of pushing <code>SomeLanguageDialect</code> instances, push <code>someLanguageDialect.getName()</code> and
  * restore <code>SomeLanguageDialect</code> by name where needed.
  */
+@Extension(ComponentScope.APPLICATION)
 public interface FilePropertyPusher<T> {
-  ExtensionPointName<FilePropertyPusher<?>> EP_NAME = ExtensionPointName.create("consulo.filePropertyPusher");
+  ExtensionPointName<FilePropertyPusher> EP_NAME = ExtensionPointName.create(FilePropertyPusher.class);
 
   default void initExtra(@Nonnull Project project) {
     initExtra(project, project.getMessageBus());

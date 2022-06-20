@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.module;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.impl.psi.PsiPackageBase;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.language.Language;
@@ -33,6 +34,7 @@ import java.util.function.IntFunction;
  * @author VISTALL
  * @since 30.08.14
  */
+@ExtensionImpl
 public class Sand2PackageProvider implements PsiPackageSupportProvider {
   @Override
   public boolean isSupported(@Nonnull ModuleExtension<?> moduleExtension) {

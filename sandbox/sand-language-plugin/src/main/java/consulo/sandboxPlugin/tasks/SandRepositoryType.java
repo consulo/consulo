@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.tasks;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.tasks.TaskRepository;
 import consulo.ide.impl.idea.tasks.impl.BaseRepositoryType;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -26,6 +27,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 15/12/2021
  */
+@ExtensionImpl
 public class SandRepositoryType extends BaseRepositoryType<SandTaskRepository> {
   @Nonnull
   @Override

@@ -15,12 +15,15 @@
  */
 package consulo.application.util;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.component.ComponentManager;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class FreezeLogger {
 
   public static FreezeLogger getInstance() {

@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.hint;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.ide.IdeTooltip;
 import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.colorScheme.TextAttributes;
@@ -61,6 +62,7 @@ import java.util.EventObject;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class HintManagerImpl extends HintManager {
   private static final Logger LOG = Logger.getInstance(HintManager.class);
 

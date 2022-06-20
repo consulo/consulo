@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.scratch;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditorManager;
@@ -37,9 +39,10 @@ import java.util.List;
  * <p>
  * Created on 1/19/15
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class RootType {
 
-  public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create("consulo.scratch.rootType");
+  public static final ExtensionPointName<RootType> ROOT_EP = ExtensionPointName.create(RootType.class);
 
   @Nonnull
   public static List<RootType> getAllRootTypes() {

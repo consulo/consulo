@@ -55,7 +55,7 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * @author gregsh
  */
-@ExtensionImpl
+@ExtensionImpl(id = "scratch", order = "last")
 public class ScratchTreeStructureProvider implements TreeStructureProvider, DumbAware {
   @Inject
   public ScratchTreeStructureProvider(Project project) {

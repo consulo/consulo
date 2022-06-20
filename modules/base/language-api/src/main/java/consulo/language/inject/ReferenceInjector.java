@@ -15,6 +15,8 @@
  */
 package consulo.language.inject;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.document.util.TextRange;
 import consulo.language.Language;
@@ -29,9 +31,10 @@ import javax.annotation.Nonnull;
  * @author Dmitry Avdeev
  *         Date: 01.08.13
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ReferenceInjector extends Injectable {
 
-  public final static ExtensionPointName<ReferenceInjector> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.referenceInjector");
+  public final static ExtensionPointName<ReferenceInjector> EXTENSION_POINT_NAME = ExtensionPointName.create(ReferenceInjector.class);
 
   @Override
   public final Language getLanguage() {

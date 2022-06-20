@@ -15,11 +15,14 @@
  */
 package consulo.project.ui.wm;
 
+import consulo.annotation.component.Topic;
+
 import javax.annotation.Nullable;
 
 /**
  * User: spLeaner
  */
+@Topic
 public interface StatusBarInfo {
 
   /**

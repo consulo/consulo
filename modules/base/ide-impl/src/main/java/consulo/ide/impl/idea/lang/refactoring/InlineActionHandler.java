@@ -16,17 +16,22 @@
 
 package consulo.ide.impl.idea.lang.refactoring;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 
+import javax.annotation.Nullable;
+
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class InlineActionHandler {
-  public static final ExtensionPointName<InlineActionHandler> EP_NAME = ExtensionPointName.create("consulo.inlineActionHandler");
+  public static final ExtensionPointName<InlineActionHandler> EP_NAME = ExtensionPointName.create(InlineActionHandler.class);
 
   /**
    * Fast check to see if the handler can possibly inline the element. Called from action update.
@@ -38,7 +43,7 @@ public abstract class InlineActionHandler {
     return canInlineElement(element);
   }
 
-  public boolean isEnabledOnElement(PsiElement element, @javax.annotation.Nullable Editor editor) {
+  public boolean isEnabledOnElement(PsiElement element, @Nullable Editor editor) {
     return isEnabledOnElement(element);
   }
 

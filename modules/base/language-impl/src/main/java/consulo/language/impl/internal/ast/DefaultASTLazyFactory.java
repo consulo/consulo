@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.internal.ast;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.*;
 import consulo.language.impl.ast.ASTLazyFactory;
 import consulo.language.impl.ast.FileElement;
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2:21/02.04.13
  */
+@ExtensionImpl(order = "last")
 public class DefaultASTLazyFactory implements ASTLazyFactory {
   @Nonnull
   @Override

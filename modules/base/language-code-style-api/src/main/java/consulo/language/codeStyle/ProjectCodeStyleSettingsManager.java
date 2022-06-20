@@ -16,6 +16,9 @@
 
 package consulo.language.codeStyle;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.project.Project;
@@ -25,6 +28,8 @@ import javax.annotation.Nonnull;
 
 @Singleton
 @State(name = "ProjectCodeStyleSettingsManager", storages = @Storage("codeStyleSettings.xml"))
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class ProjectCodeStyleSettingsManager extends CodeStyleSettingsManager {
   @Nonnull
   public static ProjectCodeStyleSettingsManager getInstance(@Nonnull Project project) {

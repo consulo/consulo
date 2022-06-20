@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.structureView.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.structureView.StructureViewFactory;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
@@ -34,6 +35,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class StructureViewToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Nonnull
   @Override

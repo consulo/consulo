@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.idea.tasks;
 
-import consulo.project.Project;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.tasks.config.TaskRepositoryEditor;
 import consulo.ide.impl.idea.util.Consumer;
-import consulo.component.extension.ExtensionPointName;
-import consulo.container.plugin.PluginIds;
+import consulo.project.Project;
 import consulo.ui.image.Image;
 
 import javax.annotation.Nonnull;
@@ -33,9 +34,10 @@ import java.util.List;
  *
  * @author Dmitry Avdeev
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class TaskRepositoryType<T extends TaskRepository> implements TaskRepositorySubtype {
 
-  public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(PluginIds.CONSULO_BASE + ".tasks.repositoryType");
+  public static final ExtensionPointName<TaskRepositoryType> EP_NAME = ExtensionPointName.create(TaskRepositoryType.class);
   
   public static List<TaskRepositoryType> getRepositoryTypes() {
     return EP_NAME.getExtensionList();

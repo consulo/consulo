@@ -24,9 +24,11 @@ import consulo.language.psi.PsiElement;
  * @author yole
  */
 public interface CopyHandlerDelegate {
-  ExtensionPointName<CopyHandlerDelegate> EP_NAME = ExtensionPointName.create("consulo.refactoring.copyHandler");
+  ExtensionPointName<CopyHandlerDelegate> EP_NAME = ExtensionPointName.create(CopyHandlerDelegate.class);
 
   boolean canCopy(PsiElement[] elements);
+
   void doCopy(PsiElement[] elements, PsiDirectory defaultTargetDirectory);
+
   void doClone(PsiElement element);
 }

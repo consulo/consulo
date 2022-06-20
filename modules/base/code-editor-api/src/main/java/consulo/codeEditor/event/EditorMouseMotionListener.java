@@ -15,6 +15,8 @@
  */
 package consulo.codeEditor.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.codeEditor.Editor;
 import consulo.ui.annotation.RequiredUIAccess;
 
@@ -27,6 +29,8 @@ import java.util.EventListener;
  * @see EditorEventMulticaster#addEditorMouseMotionListener(EditorMouseMotionListener)
  * @see EditorMouseListener
  */
+@Extension(ComponentScope.APPLICATION)
+// FIXME [VISTALL] use @Topic not @Extension?
 public interface EditorMouseMotionListener extends EventListener {
   /**
    * Called when the mouse is moved over the editor and no mouse buttons are pressed.

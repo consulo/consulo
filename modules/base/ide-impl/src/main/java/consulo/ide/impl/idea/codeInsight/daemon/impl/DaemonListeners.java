@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.PowerSaveModeListener;
@@ -81,6 +84,7 @@ import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFilePropertyChangeEvent;
 import consulo.virtualFileSystem.status.FileStatus;
 import consulo.virtualFileSystem.status.FileStatusManager;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
@@ -92,6 +96,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Singleton
+@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public final class DaemonListeners implements Disposable {
   private static final Logger LOG = Logger.getInstance(DaemonListeners.class);
 
@@ -110,6 +116,7 @@ public final class DaemonListeners implements Disposable {
     return project.getComponent(DaemonListeners.class);
   }
 
+  @Inject
   public DaemonListeners(@Nonnull Project project) {
     myProject = project;
     myDaemonCodeAnalyzer = (DaemonCodeAnalyzerImpl)DaemonCodeAnalyzer.getInstance(myProject);
@@ -126,7 +133,7 @@ public final class DaemonListeners implements Disposable {
     }
 
     MessageBusConnection connection = messageBus.connect(this);
-    connection.subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
+    connection.subscribe(AppLifecycleListener.class, new AppLifecycleListener() {
       @Override
       public void appClosing() {
         stopDaemon(false, "App closing");
@@ -170,7 +177,7 @@ public final class DaemonListeners implements Disposable {
     eventMulticaster.addEditorMouseMotionListener(new MyEditorMouseMotionListener(), this);
     eventMulticaster.addEditorMouseListener(new MyEditorMouseListener(TooltipController.getInstance()), this);
 
-    connection.subscribe(EditorTrackerListener.TOPIC, new EditorTrackerListener() {
+    connection.subscribe(EditorTrackerListener.class, new EditorTrackerListener() {
       @Override
       public void activeEditorsChanged(@Nonnull List<Editor> activeEditors) {
         if (myActiveEditors.equals(activeEditors)) {

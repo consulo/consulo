@@ -15,6 +15,8 @@
  */
 package consulo.language.pom;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.disposer.Disposable;
 import consulo.language.pom.event.PomModelListener;
 import consulo.language.util.IncorrectOperationException;
@@ -22,6 +24,7 @@ import consulo.util.dataholder.UserDataHolder;
 
 import java.util.Set;
 
+@Service(ComponentScope.PROJECT)
 public interface PomModel extends UserDataHolder {
   <T extends PomModelAspect> T getModelAspect(Class<T> aClass);
 

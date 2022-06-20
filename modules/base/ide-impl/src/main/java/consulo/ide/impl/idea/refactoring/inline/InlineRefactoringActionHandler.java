@@ -20,27 +20,26 @@
  */
 package consulo.ide.impl.idea.refactoring.inline;
 
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.ScrollType;
+import consulo.dataContext.DataContext;
 import consulo.dataContext.DataManager;
 import consulo.ide.impl.idea.lang.refactoring.InlineActionHandler;
 import consulo.ide.impl.idea.lang.refactoring.InlineHandler;
 import consulo.ide.impl.idea.lang.refactoring.InlineHandlers;
-import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
 import consulo.language.editor.PlatformDataKeys;
-import consulo.logging.Logger;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.ScrollType;
-import consulo.component.extension.Extensions;
-import consulo.project.Project;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
 import consulo.language.editor.refactoring.RefactoringActionHandler;
 import consulo.language.editor.refactoring.RefactoringBundle;
 import consulo.language.editor.refactoring.action.BaseRefactoringAction;
 import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.logging.Logger;
+import consulo.project.Project;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.List;
 
 public class InlineRefactoringActionHandler implements RefactoringActionHandler {
@@ -54,7 +53,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
       dataContext = DataManager.getInstance().getDataContext();
     }
     final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
-    for(InlineActionHandler handler: Extensions.getExtensions(InlineActionHandler.EP_NAME)) {
+    for(InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
       if (handler.canInlineElement(elements[0])) {
         handler.inlineElement(project, editor, elements [0]);
         return;
@@ -73,7 +72,7 @@ public class InlineRefactoringActionHandler implements RefactoringActionHandler 
       element = BaseRefactoringAction.getElementAtCaret(editor, file);
     }
     if (element != null) {
-      for(InlineActionHandler handler: Extensions.getExtensions(InlineActionHandler.EP_NAME)) {
+      for(InlineActionHandler handler: InlineActionHandler.EP_NAME.getExtensionList()) {
         if (handler.canInlineElementInEditor(element, editor)) {
           handler.inlineElement(project, editor, element);
           return;

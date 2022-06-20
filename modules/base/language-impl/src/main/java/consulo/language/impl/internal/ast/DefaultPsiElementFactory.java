@@ -16,6 +16,7 @@
 package consulo.language.impl.internal.ast;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IElementTypeAsPsiFactory;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 1:38/02.04.13
  */
+@ExtensionImpl(order = "last")
 public class DefaultPsiElementFactory implements PsiElementFactory {
   @RequiredReadAction
   @Nullable
@@ -41,7 +43,6 @@ public class DefaultPsiElementFactory implements PsiElementFactory {
       return ((IElementTypeAsPsiFactory)elementType).createElement(node);
     }
 
-    assert elementType != null;
     final ParserDefinition parserDefinition = LanguageParserDefinitions.INSTANCE.forLanguage(elementType.getLanguage());
     if (parserDefinition != null) {
       return parserDefinition.createElement(node);

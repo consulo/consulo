@@ -15,6 +15,9 @@
  */
 package consulo.codeEditor.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.logging.Logger;
@@ -29,6 +32,8 @@ import javax.annotation.Nonnull;
  * @author max
  */
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class DocumentMarkupModelManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(DocumentMarkupModelManager.class);
 

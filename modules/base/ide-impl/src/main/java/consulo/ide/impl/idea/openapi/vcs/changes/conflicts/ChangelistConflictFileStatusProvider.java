@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.conflicts;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManagerImpl;
 import consulo.document.Document;
@@ -33,6 +34,7 @@ import javax.annotation.Nullable;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class ChangelistConflictFileStatusProvider implements FileStatusProvider {
 
   private static final FileStatus MODIFIED_OUTSIDE = FileStatusFactory.getInstance().createFileStatus("modifiedOutside", LocalizeValue.localizeTODO("Modified in not active changelist"), null);

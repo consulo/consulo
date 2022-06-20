@@ -15,10 +15,11 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.ast.ASTNode;
 import consulo.language.ast.IElementType;
-import consulo.annotation.access.RequiredReadAction;
-import consulo.container.plugin.PluginIds;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,21 +29,14 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 17:38/30.03.13
  */
+@Extension(ComponentScope.APPLICATION)
 public interface PsiElementFactory extends Predicate<IElementType> {
-  ElementTypeEntryExtensionCollector<PsiElementFactory> EP = ElementTypeEntryExtensionCollector.create(PluginIds.CONSULO_BASE + ".lang.psi.elementFactory");
+  ElementTypeEntryExtensionCollector<PsiElementFactory> EP = ElementTypeEntryExtensionCollector.create(PsiElementFactory.class);
 
   @Nullable
   @RequiredReadAction
   PsiElement createElement(@Nonnull ASTNode node);
 
-  @Deprecated
-  default boolean apply(IElementType elementType) {
-    return false;
-  }
-
   @Override
-  @SuppressWarnings("deprecation")
-  default boolean test(IElementType elementType) {
-    return apply(elementType);
-  }
+  boolean test(IElementType elementType);
 }

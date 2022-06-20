@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.application.options.codeStyle;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.language.codeStyle.CodeStyleSettings;
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
  *
  * @author Rustam Vishnyakov
  */
+@ExtensionImpl(order = "last")
 public class OtherFileTypesCodeStyleOptionsProvider extends CodeStyleSettingsProvider {
 
   @Nonnull

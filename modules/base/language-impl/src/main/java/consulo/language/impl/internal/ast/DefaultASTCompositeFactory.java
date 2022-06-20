@@ -15,6 +15,7 @@
  */
 package consulo.language.impl.internal.ast;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.impl.ast.CompositeElement;
 import consulo.language.impl.ast.FileElement;
 import consulo.language.ast.ICompositeElementType;
@@ -28,6 +29,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 2:23/02.04.13
  */
+@ExtensionImpl(order = "last")
 public class DefaultASTCompositeFactory implements ASTCompositeFactory {
   @Nonnull
   @Override

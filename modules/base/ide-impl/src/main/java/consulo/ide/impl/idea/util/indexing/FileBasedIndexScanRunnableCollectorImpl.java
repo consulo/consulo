@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.extension.Extensions;
 import consulo.language.file.FileTypeManager;
 import consulo.content.ContentIterator;
@@ -45,6 +46,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Singleton
+@ServiceImpl
 public class FileBasedIndexScanRunnableCollectorImpl extends FileBasedIndexScanRunnableCollector {
   private final Project myProject;
   @Nonnull

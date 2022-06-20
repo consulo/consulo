@@ -16,15 +16,16 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl.analysis;
 
-import consulo.ide.ServiceManager;
-import consulo.component.persist.StoragePathMacros;
-import consulo.language.impl.file.SingleRootFileViewProvider;
-import consulo.language.editor.internal.PsiUtilBase;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
+import consulo.component.persist.StoragePathMacros;
+import consulo.ide.ServiceManager;
+import consulo.language.editor.internal.PsiUtilBase;
+import consulo.language.impl.file.SingleRootFileViewProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.module.content.ProjectFileIndex;
@@ -38,19 +39,19 @@ import consulo.virtualFileSystem.VirtualFileManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
 @Singleton
-@State(name="HighlightingSettingsPerFile", storages = @Storage( file = StoragePathMacros.WORKSPACE_FILE))
+@State(name = "HighlightingSettingsPerFile", storages = @Storage(file = StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl
 public class HighlightingSettingsPerFile extends HighlightingLevelManager implements PersistentStateComponent<Element> {
-  @NonNls private static final String SETTING_TAG = "setting";
-  @NonNls private static final String ROOT_ATT_PREFIX = "root";
-  @NonNls private static final String FILE_ATT = "file";
+  private static final String SETTING_TAG = "setting";
+  private static final String ROOT_ATT_PREFIX = "root";
+  private static final String FILE_ATT = "file";
 
-  public static HighlightingSettingsPerFile getInstance(Project project){
+  public static HighlightingSettingsPerFile getInstance(Project project) {
     return (HighlightingSettingsPerFile)ServiceManager.getService(project, HighlightingLevelManager.class);
   }
 
@@ -64,13 +65,13 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
   }
 
   @Nonnull
-  public FileHighlightingSetting getHighlightingSettingForRoot(@Nonnull PsiElement root){
+  public FileHighlightingSetting getHighlightingSettingForRoot(@Nonnull PsiElement root) {
     final PsiFile containingFile = root.getContainingFile();
     final VirtualFile virtualFile = containingFile.getVirtualFile();
     FileHighlightingSetting[] fileHighlightingSettings = myHighlightSettings.get(virtualFile);
     final int index = PsiUtilBase.getRootIndex(root);
 
-    if(fileHighlightingSettings == null || fileHighlightingSettings.length <= index) {
+    if (fileHighlightingSettings == null || fileHighlightingSettings.length <= index) {
       return getDefaultHighlightingSetting(root.getProject(), virtualFile);
     }
     return fileHighlightingSettings[index];
@@ -80,8 +81,7 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
   private static FileHighlightingSetting getDefaultHighlightingSetting(@Nonnull Project project, final VirtualFile virtualFile) {
     if (virtualFile != null) {
       DefaultHighlightingSettingProvider[] providers = DefaultHighlightingSettingProvider.EP_NAME.getExtensions();
-      List<DefaultHighlightingSettingProvider> filtered =
-        DumbService.getInstance(project).filterByDumbAwareness(Arrays.asList(providers));
+      List<DefaultHighlightingSettingProvider> filtered = DumbService.getInstance(project).filterByDumbAwareness(Arrays.asList(providers));
       for (DefaultHighlightingSettingProvider p : filtered) {
         FileHighlightingSetting setting = p.getDefaultSetting(project, virtualFile);
         if (setting != null) {
@@ -93,7 +93,7 @@ public class HighlightingSettingsPerFile extends HighlightingLevelManager implem
   }
 
   @Nonnull
-  private static FileHighlightingSetting[] getDefaults(@Nonnull PsiFile file){
+  private static FileHighlightingSetting[] getDefaults(@Nonnull PsiFile file) {
     final int rootsCount = file.getViewProvider().getLanguages().size();
     final FileHighlightingSetting[] fileHighlightingSettings = new FileHighlightingSetting[rootsCount];
     for (int i = 0; i < fileHighlightingSettings.length; i++) {

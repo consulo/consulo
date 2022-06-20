@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.psi.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.editor.impl.event.EditorEventMulticasterImpl;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileDocumentManagerImpl;
 import consulo.ide.impl.idea.openapi.project.impl.ProjectImpl;
@@ -38,6 +39,7 @@ import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.project.ProjectLocator;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -48,11 +50,13 @@ import java.util.*;
 
 //todo listen & notifyListeners readonly events?
 @Singleton
+@ServiceImpl
 public final class PsiDocumentManagerImpl extends PsiDocumentManagerBase {
   private static final Logger LOG = Logger.getInstance(PsiDocumentManagerImpl.class);
 
   private final boolean myUnitTestMode = ApplicationManager.getApplication().isUnitTestMode();
 
+  @Inject
   public PsiDocumentManagerImpl(@Nonnull Project project, @Nonnull DocumentCommitProcessor documentCommitProcessor) {
     super(project, documentCommitProcessor);
 

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.tools;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.executor.DefaultRunExecutor;
 import consulo.execution.runner.DefaultProgramRunner;
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
 /**
  * @author spleaner
  */
+@ExtensionImpl
 public class ToolProgramRunner extends DefaultProgramRunner {
 
   @Override

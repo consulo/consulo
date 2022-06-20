@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.UniqueNameBuilder;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
@@ -45,6 +46,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class UniqueVFilePathBuilderImpl extends UniqueVFilePathBuilder {
   @Nonnull
   @Override

@@ -15,14 +15,15 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl.projectlevelman;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.disposer.Disposable;
 import consulo.ide.ServiceManager;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.VcsException;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsDescriptor;
 import consulo.ide.impl.idea.openapi.vcs.impl.VcsEP;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -32,6 +33,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Singleton
+@ServiceImpl
 public class AllVcses implements AllVcsesI, Disposable {
   private final Logger LOG = Logger.getInstance(AllVcses.class);
   private final Map<String, AbstractVcs> myVcses;
@@ -41,7 +43,7 @@ public class AllVcses implements AllVcsesI, Disposable {
   private final Map<String, VcsEP> myExtensions;    // +-
 
   @Inject
-  private AllVcses(final Project project) {
+  AllVcses(final Project project) {
     myProject = project;
     myVcses = new HashMap<>();
     myLock = new Object();

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -35,6 +36,7 @@ import javax.annotation.Nullable;
  */
 @Singleton
 @State(name = "CodeStyleSchemeSettings", storages = @Storage("code.style.schemes.xml"), additionalExportFile = CodeStyleSchemesImpl.CODE_STYLES_DIR_PATH)
+@ServiceImpl
 public class PersistableCodeStyleSchemes extends CodeStyleSchemesImpl implements PersistentStateComponent<Element> {
   public String CURRENT_SCHEME_NAME = CodeStyleScheme.DEFAULT_SCHEME_NAME;
 

@@ -15,19 +15,21 @@
  */
 package consulo.ide.impl.intelliLang.references;
 
-import javax.annotation.Nonnull;
-
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.util.TextRange;
+import consulo.language.inject.ReferenceInjector;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
 import consulo.language.psi.path.FileReferenceSet;
-import consulo.language.inject.ReferenceInjector;
 import consulo.language.util.ProcessingContext;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
  *         Date: 01.08.13
  */
+@ExtensionImpl
 public class FileReferenceInjector extends ReferenceInjector {
 
   @Nonnull

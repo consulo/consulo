@@ -5,16 +5,15 @@ import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.event.EditorFactoryEvent;
-import consulo.codeEditor.event.EditorFactoryListener;
-import consulo.project.Project;
-import consulo.project.ui.wm.WindowManager;
+import consulo.disposer.Disposable;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.util.collection.SmartList;
-import consulo.disposer.Disposable;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ui.wm.WindowManager;
 import consulo.ui.Window;
 import consulo.ui.annotation.RequiredUIAccess;
+import consulo.util.collection.SmartList;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
@@ -46,24 +45,6 @@ public abstract class EditorTracker implements Disposable {
   @Inject
   public EditorTracker(@Nonnull Project project, @Nonnull Provider<WindowManager> windowManagerProvider) {
     myProject = project;
-  }
-
-  static final class MyAppLevelEditorFactoryListener implements EditorFactoryListener {
-    @Override
-    public void editorCreated(@Nonnull EditorFactoryEvent event) {
-      Project project = event.getEditor().getProject();
-      if (project != null) {
-        getInstance(project).editorCreated(event);
-      }
-    }
-
-    @Override
-    public void editorReleased(@Nonnull EditorFactoryEvent event) {
-      Project project = event.getEditor().getProject();
-      if (project != null) {
-        getInstance(project).editorReleased(event);
-      }
-    }
   }
 
   @Nonnull
@@ -109,7 +90,7 @@ public abstract class EditorTracker implements Disposable {
       }
     }
 
-    myProject.getMessageBus().syncPublisher(EditorTrackerListener.TOPIC).activeEditorsChanged(editors);
+    myProject.getMessageBus().syncPublisher(EditorTrackerListener.class).activeEditorsChanged(editors);
   }
 
   @RequiredUIAccess
@@ -117,7 +98,7 @@ public abstract class EditorTracker implements Disposable {
 
   protected abstract void unregisterEditor(Editor editor);
 
-  private void editorReleased(@Nonnull EditorFactoryEvent event) {
+  protected void editorReleased(@Nonnull EditorFactoryEvent event) {
     final Editor editor = event.getEditor();
     if (editor.getProject() != null && editor.getProject() != myProject) return;
     unregisterEditor(editor);

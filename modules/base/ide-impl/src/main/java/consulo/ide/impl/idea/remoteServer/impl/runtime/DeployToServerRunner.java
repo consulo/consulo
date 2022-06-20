@@ -1,5 +1,6 @@
 package consulo.ide.impl.idea.remoteServer.impl.runtime;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.debug.DefaultDebugExecutor;
 import consulo.execution.executor.DefaultRunExecutor;
@@ -10,6 +11,7 @@ import javax.annotation.Nonnull;
 /**
  * @author nik
  */
+@ExtensionImpl
 public class DeployToServerRunner extends DefaultProgramRunner {
   @Nonnull
   @Override

@@ -15,6 +15,9 @@
  */
 package consulo.language.pom;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.pom.event.PomModelEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -23,6 +26,8 @@ import javax.annotation.Nonnull;
 import java.util.Collections;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class TreeAspect implements PomModelAspect {
   @Inject
   public TreeAspect(@Nonnull PomModel model) {

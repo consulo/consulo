@@ -583,7 +583,6 @@ open module consulo.ide.impl {
   exports consulo.ide.impl.idea.openapi.command;
   exports consulo.ide.impl.idea.openapi.command.impl;
   exports consulo.ide.impl.idea.openapi.command.undo;
-  exports consulo.ide.impl.idea.openapi.components;
   exports consulo.ide.impl.idea.openapi.components.impl;
   exports consulo.ide.impl.idea.openapi.deployment;
   exports consulo.ide.impl.idea.openapi.diagnostic;

@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.hint;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 import consulo.codeEditor.Editor;
 import consulo.ui.ex.RelativePoint;
@@ -14,6 +16,7 @@ import javax.swing.event.HyperlinkListener;
 /**
  * @author cdr
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class HintManager {
   public static HintManager getInstance() {
     return Application.get().getInstance(HintManager.class);

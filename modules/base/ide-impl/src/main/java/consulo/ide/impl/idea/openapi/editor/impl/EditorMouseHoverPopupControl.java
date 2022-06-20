@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.ide.ServiceManager;
 import consulo.document.Document;
@@ -21,6 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * enabling requests must be performed to turn on hover popups again.
  */
 @Singleton
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class EditorMouseHoverPopupControl {
   @Nonnull
   public static EditorMouseHoverPopupControl getInstance() {

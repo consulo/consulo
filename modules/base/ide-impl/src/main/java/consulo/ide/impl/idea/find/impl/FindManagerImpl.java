@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.find.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.ide.impl.idea.codeInsight.highlighting.HighlightManagerImpl;
 import consulo.language.editor.hint.HintManager;
@@ -93,6 +94,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
+@ServiceImpl
 public class FindManagerImpl extends FindManager {
   private static final Logger LOG = Logger.getInstance(FindManagerImpl.class);
 

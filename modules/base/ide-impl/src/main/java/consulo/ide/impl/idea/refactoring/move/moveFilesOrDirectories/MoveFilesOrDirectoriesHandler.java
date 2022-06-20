@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.move.moveFilesOrDirectories;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.scratch.ScratchFileService;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.LangDataKeys;
@@ -32,6 +33,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashSet;
 
+@ExtensionImpl(id = "moveFileOrDir")
 public class MoveFilesOrDirectoriesHandler extends MoveHandlerDelegate {
   private static final Logger LOG = Logger.getInstance(MoveFilesOrDirectoriesHandler.class);
 

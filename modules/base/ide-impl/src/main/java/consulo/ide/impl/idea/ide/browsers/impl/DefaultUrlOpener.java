@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.browsers.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.webBrowser.UrlOpener;
 import consulo.webBrowser.WebBrowser;
@@ -24,6 +25,7 @@ import consulo.ide.impl.idea.util.ArrayUtil;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@ExtensionImpl(order = "last")
 public final class DefaultUrlOpener implements UrlOpener {
   @Override
   public boolean openUrl(@Nonnull WebBrowser browser, @Nonnull String url, @Nullable Project project) {

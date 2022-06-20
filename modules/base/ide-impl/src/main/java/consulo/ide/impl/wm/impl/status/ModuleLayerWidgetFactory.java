@@ -15,17 +15,20 @@
  */
 package consulo.ide.impl.wm.impl.status;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.project.ui.wm.StatusBar;
 import consulo.project.ui.wm.StatusBarWidget;
 import consulo.project.ui.wm.StatusBarWidgetFactory;
 import org.jetbrains.annotations.Nls;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
  * @since 2020-11-01
  */
+@ExtensionImpl(id = "moduleLayerWidget", order = "after encodingWidget")
 public class ModuleLayerWidgetFactory implements StatusBarWidgetFactory {
   @Nonnull
   @Override

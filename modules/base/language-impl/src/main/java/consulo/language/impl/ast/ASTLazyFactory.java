@@ -15,9 +15,10 @@
  */
 package consulo.language.impl.ast;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.ILazyParseableElementType;
-import consulo.container.plugin.PluginIds;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
 
 import javax.annotation.Nonnull;
@@ -28,20 +29,13 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2:10/02.04.13
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ASTLazyFactory extends Predicate<IElementType> {
-  ElementTypeEntryExtensionCollector<ASTLazyFactory> EP = ElementTypeEntryExtensionCollector.create(PluginIds.CONSULO_BASE + ".lang.ast.lazyFactory");
+  ElementTypeEntryExtensionCollector<ASTLazyFactory> EP = ElementTypeEntryExtensionCollector.create(ASTLazyFactory.class);
 
   @Nonnull
   LazyParseableElement createLazy(@Nonnull ILazyParseableElementType type, @Nullable CharSequence text);
 
-  @Deprecated
-  default boolean apply(IElementType elementType) {
-    return false;
-  }
-
   @Override
-  @SuppressWarnings("deprecation")
-  default boolean test(IElementType elementType) {
-    return apply(elementType);
-  }
+  boolean test(IElementType elementType);
 }

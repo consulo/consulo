@@ -15,12 +15,14 @@
  */
 package consulo.ide.impl.idea.ide;
 
+import consulo.annotation.component.Topic;
 import consulo.component.messagebus.TopicImpl;
 import consulo.annotation.DeprecationInfo;
 
 /**
  * @author yole
  */
+@Topic
 public interface AppLifecycleListener {
   TopicImpl<AppLifecycleListener> TOPIC = TopicImpl.create("Application lifecycle notifications", AppLifecycleListener.class);
 

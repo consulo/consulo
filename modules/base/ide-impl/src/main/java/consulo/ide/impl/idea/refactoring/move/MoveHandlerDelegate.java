@@ -16,27 +16,30 @@
 
 package consulo.ide.impl.idea.refactoring.move;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
-import consulo.dataContext.DataContext;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.codeEditor.Editor;
+import consulo.component.extension.ExtensionPointName;
+import consulo.dataContext.DataContext;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiReference;
-import javax.annotation.Nullable;
+import consulo.project.Project;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class MoveHandlerDelegate {
-  public static final ExtensionPointName<MoveHandlerDelegate> EP_NAME = ExtensionPointName.create("consulo.refactoring.moveHandler");
+  public static final ExtensionPointName<MoveHandlerDelegate> EP_NAME = ExtensionPointName.create(MoveHandlerDelegate.class);
 
   public boolean canMove(PsiElement[] elements, @Nullable final PsiElement targetContainer) {
     return targetContainer == null || isValidTarget(targetContainer, elements);
   }
 
-  public boolean canMove(DataContext dataContext){
+  public boolean canMove(DataContext dataContext) {
     return false;
   }
 
@@ -44,8 +47,7 @@ public abstract class MoveHandlerDelegate {
     return false;
   }
 
-  public void doMove(final Project project, final PsiElement[] elements,
-                     @Nullable final PsiElement targetContainer, @Nullable final MoveCallback callback) {
+  public void doMove(final Project project, final PsiElement[] elements, @Nullable final PsiElement targetContainer, @Nullable final MoveCallback callback) {
   }
 
   public PsiElement adjustTargetForMove(DataContext dataContext, PsiElement targetContainer) {
@@ -57,12 +59,11 @@ public abstract class MoveHandlerDelegate {
     return sourceElements;
   }
 
-  public boolean tryToMove(final PsiElement element, final Project project, final DataContext dataContext,
-                           @Nullable final PsiReference reference, final Editor editor) {
+  public boolean tryToMove(final PsiElement element, final Project project, final DataContext dataContext, @Nullable final PsiReference reference, final Editor editor) {
     return false;
   }
 
-  public void collectFilesOrDirsFromContext(DataContext dataContext, Set<PsiElement> filesOrDirs){
+  public void collectFilesOrDirsFromContext(DataContext dataContext, Set<PsiElement> filesOrDirs) {
   }
 
   public boolean isMoveRedundant(PsiElement source, PsiElement target) {

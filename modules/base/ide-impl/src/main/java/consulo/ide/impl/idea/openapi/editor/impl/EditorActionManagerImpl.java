@@ -15,23 +15,26 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.codeEditor.EditorBundle;
+import consulo.codeEditor.action.EditorActionHandler;
 import consulo.codeEditor.action.EditorActionManager;
 import consulo.codeEditor.action.TypedAction;
 import consulo.codeEditor.impl.action.EditorAction;
+import consulo.document.Document;
+import consulo.document.ReadOnlyFragmentModificationException;
 import consulo.document.ReadonlyFragmentModificationHandler;
 import consulo.document.impl.DocumentImpl;
-import consulo.codeEditor.action.EditorActionHandler;
-import consulo.ui.ex.action.ActionManager;
-import consulo.codeEditor.EditorBundle;
-import consulo.document.ReadOnlyFragmentModificationException;
-import consulo.document.Document;
-import consulo.ui.ex.awt.Messages;
 import consulo.language.file.inject.DocumentWindow;
-import javax.annotation.Nonnull;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.awt.Messages;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import javax.annotation.Nonnull;
+
 @Singleton
+@ServiceImpl
 public class EditorActionManagerImpl extends EditorActionManager {
   private ReadonlyFragmentModificationHandler myReadonlyFragmentsHandler = new DefaultReadOnlyFragmentModificationHandler();
   private final ActionManager myActionManager;

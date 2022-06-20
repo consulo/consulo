@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.fileEditor.highlight.BackgroundEditorHighlighter;
 import consulo.fileEditor.highlight.HighlightingPass;
@@ -69,6 +70,7 @@ import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
@@ -86,6 +88,7 @@ import java.util.stream.Collectors;
  */
 @Singleton
 @State(name = "DaemonCodeAnalyzer", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@ServiceImpl
 public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements PersistentStateComponent<Element>, Disposable {
   private static final Logger LOG = Logger.getInstance(DaemonCodeAnalyzerImpl.class);
 
@@ -119,6 +122,7 @@ public class DaemonCodeAnalyzerImpl extends DaemonCodeAnalyzerEx implements Pers
   private static final String URL_ATT = "url";
   private final PassExecutorService myPassExecutorService;
 
+  @Inject
   public DaemonCodeAnalyzerImpl(@Nonnull Project project) {
     // DependencyValidationManagerImpl adds scope listener, so, we need to force service creation
     DependencyValidationManager.getInstance(project);

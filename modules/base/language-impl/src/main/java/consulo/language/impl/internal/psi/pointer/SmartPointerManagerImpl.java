@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.impl.internal.psi.pointer;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
@@ -25,6 +26,7 @@ import java.lang.ref.Reference;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public final class SmartPointerManagerImpl extends SmartPointerManager {
   private static final Logger LOG = Logger.getInstance(SmartPointerManagerImpl.class);
   private final Project myProject;

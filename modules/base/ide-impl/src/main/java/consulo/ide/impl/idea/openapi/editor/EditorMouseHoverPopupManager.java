@@ -1,6 +1,22 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.application.impl.internal.progress.ProgressIndicatorBase;
+import consulo.application.progress.ProgressIndicator;
+import consulo.application.progress.ProgressManager;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.*;
+import consulo.codeEditor.event.*;
+import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.component.ProcessCanceledException;
+import consulo.dataContext.DataContext;
+import consulo.disposer.Disposable;
+import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.DaemonCodeAnalyzerImpl;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.tooltips.TooltipActionProvider;
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationComponent;
@@ -17,25 +33,11 @@ import consulo.ide.impl.idea.openapi.editor.ex.TooltipAction;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
 import consulo.ide.impl.idea.reference.SoftReference;
-import consulo.ui.ex.awt.HintHint;
 import consulo.ide.impl.idea.ui.LightweightHint;
 import consulo.ide.impl.idea.ui.MouseMovementTracker;
 import consulo.ide.impl.idea.ui.WidthBasedLayout;
 import consulo.ide.impl.idea.ui.popup.AbstractPopup;
 import consulo.ide.impl.idea.ui.popup.PopupPositionManager;
-import consulo.application.ApplicationManager;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.application.impl.internal.progress.ProgressIndicatorBase;
-import consulo.application.progress.ProgressIndicator;
-import consulo.application.progress.ProgressManager;
-import consulo.application.util.registry.Registry;
-import consulo.codeEditor.*;
-import consulo.codeEditor.event.*;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
-import consulo.component.ProcessCanceledException;
-import consulo.dataContext.DataContext;
-import consulo.disposer.Disposable;
-import consulo.ide.ServiceManager;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.language.editor.completion.lookup.LookupManager;
@@ -48,10 +50,7 @@ import consulo.project.ui.wm.ToolWindowManager;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.event.AnActionListener;
-import consulo.ui.ex.awt.IdeBorderFactory;
-import consulo.ui.ex.awt.JBUI;
-import consulo.ui.ex.awt.SideBorder;
-import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awt.*;
 import consulo.ui.ex.awt.util.Alarm;
 import consulo.ui.ex.popup.JBPopup;
 import consulo.ui.ex.popup.JBPopupFactory;
@@ -74,8 +73,9 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-//@Service
+@Service(ComponentScope.APPLICATION)
 @Singleton
+@ServiceImpl
 public final class EditorMouseHoverPopupManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(EditorMouseHoverPopupManager.class);
   private static final Key<Boolean> DISABLE_BINDING = Key.create("EditorMouseHoverPopupManager.disable.binding");
@@ -132,7 +132,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
   public void dispose() {
   }
 
-  private void handleMouseMoved(@Nonnull EditorMouseEvent e) {
+  protected void handleMouseMoved(@Nonnull EditorMouseEvent e) {
     cancelCurrentProcessing();
 
     if (ignoreEvent(e)) return;
@@ -753,17 +753,6 @@ public final class EditorMouseHoverPopupManager implements Disposable {
         highlightInfoComponent.setBounds(0, 0, width, h1);
         quickDocComponent.setBounds(0, h1, width, height - h1);
       }
-    }
-  }
-
-  static final class MyEditorMouseMotionEventListener implements EditorMouseMotionListener {
-    @Override
-    public void mouseMoved(@Nonnull EditorMouseEvent e) {
-      if (!Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-
-      getInstance().handleMouseMoved(e);
     }
   }
 

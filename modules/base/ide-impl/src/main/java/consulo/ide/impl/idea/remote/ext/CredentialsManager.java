@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.remote.ext;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import consulo.ide.impl.idea.remote.CredentialsType;
 import consulo.ide.impl.idea.remote.RemoteSdkAdditionalData;
@@ -23,6 +25,7 @@ import javax.annotation.Nullable;
 
 import java.util.List;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class CredentialsManager {
 
   public static CredentialsManager getInstance() {

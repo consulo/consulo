@@ -15,24 +15,21 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection;
 
-import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
-import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
-import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
-import consulo.ui.ex.awt.UIUtil;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.language.editor.inspection.scheme.InspectionProfile;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.language.editor.inspection.scheme.Profile;
-import consulo.language.editor.inspection.scheme.ProfileEx;
-import consulo.language.editor.scope.NamedScopeManager;
 import consulo.content.scope.NamedScopesHolder;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.SeverityRegistrarImpl;
+import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
+import consulo.language.editor.inspection.scheme.*;
+import consulo.language.editor.scope.NamedScopeManager;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
+import consulo.ui.ex.awt.UIUtil;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import jakarta.inject.Inject;
@@ -52,6 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @State(name = "InspectionProjectProfileManager", storages = {
         @Storage(file = StoragePathMacros.PROJECT_CONFIG_DIR + "/inspectionProfiles/", stateSplitter = InspectionProjectProfileManagerImpl.ProfileStateSplitter.class)})
 @Singleton
+@ServiceImpl
 public class InspectionProjectProfileManagerImpl extends InspectionProjectProfileManager {
   private final Map<String, InspectionProfileWrapper> myName2Profile = new ConcurrentHashMap<String, InspectionProfileWrapper>();
   private final SeverityRegistrarImpl mySeverityRegistrar;

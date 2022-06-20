@@ -16,7 +16,6 @@
 package consulo.usage;
 
 import consulo.codeEditor.Editor;
-import consulo.component.extension.ExtensionPointName;
 import consulo.dataContext.DataProvider;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
@@ -26,8 +25,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class UsageTargetUtil {
-  private static final ExtensionPointName<UsageTargetProvider> EP_NAME = ExtensionPointName.create("consulo.usageTargetProvider");
-
   public static UsageTarget[] findUsageTargets(DataProvider dataProvider) {
     Editor editor = dataProvider.getDataUnchecked(Editor.KEY);
     PsiFile file = dataProvider.getDataUnchecked(PsiFile.KEY);
@@ -48,7 +45,7 @@ public class UsageTargetUtil {
 
   public static UsageTarget[] findUsageTargets(Editor editor, PsiFile file) {
     List<UsageTarget> result = new ArrayList<>();
-    for (UsageTargetProvider provider : EP_NAME.getExtensionList()) {
+    for (UsageTargetProvider provider : UsageTargetProvider.EP_NAME.getExtensionList()) {
       UsageTarget[] targets = provider.getTargets(editor, file);
       if (targets != null) Collections.addAll(result, targets);
     }
@@ -57,7 +54,7 @@ public class UsageTargetUtil {
 
   public static UsageTarget[] findUsageTargets(PsiElement psiElement) {
     List<UsageTarget> result = new ArrayList<>();
-    for (UsageTargetProvider provider : EP_NAME.getExtensionList()) {
+    for (UsageTargetProvider provider : UsageTargetProvider.EP_NAME.getExtensionList()) {
       UsageTarget[] targets = provider.getTargets(psiElement);
       if (targets != null) Collections.addAll(result, targets);
     }

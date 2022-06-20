@@ -15,6 +15,8 @@
  */
 package consulo.language.editor.gutter;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.Application;
 
 import javax.annotation.Nonnull;
@@ -22,6 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class LineMarkerSettings {
   @Nonnull
   public static LineMarkerSettings getInstance() {

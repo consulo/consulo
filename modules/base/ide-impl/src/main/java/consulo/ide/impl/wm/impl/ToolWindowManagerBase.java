@@ -915,7 +915,7 @@ public abstract class ToolWindowManagerBase extends ToolWindowManagerEx implemen
     boolean visible = before != null && before.isVisible();
     Object label = createInitializingLabel();
     ToolWindowAnchor toolWindowAnchor = factory.getAnchor();
-    ToolWindow window = registerToolWindow(factory.getId(), factory.getDisplayName(), label, toolWindowAnchor, false, factory.canCloseContents(), DumbService.isDumbAware(factory),
+    ToolWindow window = registerToolWindow(factory.getId(), factory.getDisplayName(), label, toolWindowAnchor, factory.isSecondary(), factory.canCloseContents(), DumbService.isDumbAware(factory),
                                            factory.shouldBeAvailable(myProject));
     final ToolWindowBase toolWindow = (ToolWindowBase)registerDisposable(factory.getId(), myProject, window);
     toolWindow.setContentFactory(factory);

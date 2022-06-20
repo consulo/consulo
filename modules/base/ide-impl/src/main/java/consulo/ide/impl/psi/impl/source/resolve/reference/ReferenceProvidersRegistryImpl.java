@@ -15,16 +15,16 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference;
 
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.dumb.IndexNotReadyException;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.psi.PsiReferenceProviderBean;
 import consulo.language.Language;
 import consulo.language.LanguageExtension;
-import consulo.language.psi.*;
-import consulo.language.psi.ReferenceProvidersRegistry;
-import consulo.application.dumb.IndexNotReadyException;
-import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.language.pattern.ElementPattern;
+import consulo.language.psi.*;
 import consulo.language.util.ProcessingContext;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.util.collection.FactoryMap;
 import jakarta.inject.Singleton;
 
@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 @Singleton
+@ServiceImpl
 public class ReferenceProvidersRegistryImpl extends ReferenceProvidersRegistry {
   private static final LanguageExtension<PsiReferenceContributor> CONTRIBUTOR_EXTENSION = new LanguageExtension<PsiReferenceContributor>(PsiReferenceContributor.EP_NAME.getName());
   private static final LanguageExtension<PsiReferenceProviderBean> REFERENCE_PROVIDER_EXTENSION = new LanguageExtension<PsiReferenceProviderBean>(PsiReferenceProviderBean.EP_NAME.getName());

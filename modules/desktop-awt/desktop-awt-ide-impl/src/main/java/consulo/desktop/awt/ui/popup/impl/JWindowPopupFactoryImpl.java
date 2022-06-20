@@ -15,6 +15,7 @@
  */
 package consulo.desktop.awt.ui.popup.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.desktop.awt.ui.impl.window.JWindowAsUIWindow;
 import consulo.ide.impl.ui.popup.JWindowPopupFactory;
 import consulo.ui.Window;
@@ -27,7 +28,7 @@ import javax.swing.*;
  * @since 2019-07-27
  */
 @Singleton
-//@ServiceImpl
+@ServiceImpl
 public class JWindowPopupFactoryImpl implements JWindowPopupFactory {
   @Override
   public JWindow create(Window window) {

@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 /**
  * The main entry point for accessing the PSI services for a project.
  */
-@Service(ComponentScope.PROJECT)
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public abstract class PsiManager extends UserDataHolderBase {
 
   /**

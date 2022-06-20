@@ -1,29 +1,32 @@
 package consulo.ide.impl.idea.util.net.ssl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.application.util.registry.Registry;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
 import consulo.container.boot.ContainerPathManager;
 import consulo.ide.ServiceManager;
-import consulo.logging.Logger;
-import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.util.io.StreamUtil;
-import consulo.application.util.registry.Registry;
+import consulo.logging.Logger;
+import consulo.ui.ex.awt.DialogWrapper;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.AbstractCollection;
 import consulo.util.xml.serializer.annotation.Property;
 import consulo.util.xml.serializer.annotation.Tag;
+import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import javax.crypto.BadPaddingException;
-import jakarta.inject.Singleton;
 import javax.net.ssl.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -68,13 +71,14 @@ import static org.apache.http.conn.ssl.SSLConnectionSocketFactory.BROWSER_COMPAT
  */
 
 @Singleton
-@State(
-  name = "CertificateManager",
-  storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml")
-)
+@State(name = "CertificateManager", storages = @Storage(file = StoragePathMacros.APP_CONFIG + "/other.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class CertificateManager implements PersistentStateComponent<CertificateManager.Config> {
-  @NonNls private static final String DEFAULT_PATH = FileUtil.join(ContainerPathManager.get().getSystemPath(), "tasks", "cacerts");
-  @NonNls private static final String DEFAULT_PASSWORD = "changeit";
+  @NonNls
+  private static final String DEFAULT_PATH = FileUtil.join(ContainerPathManager.get().getSystemPath(), "tasks", "cacerts");
+  @NonNls
+  private static final String DEFAULT_PASSWORD = "changeit";
 
   private static final Logger LOG = Logger.getInstance(CertificateManager.class);
 
@@ -315,8 +319,7 @@ public class CertificateManager implements PersistentStateComponent<CertificateM
       if (!inTime) {
         DialogWrapper dialog = dialogRef.get();
         if (dialog == null || !dialog.isShowing()) {
-          LOG.debug("After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " +
-                    "Rejecting certificate. Current thread: " + Thread.currentThread().getName());
+          LOG.debug("After " + DIALOG_VISIBILITY_TIMEOUT + " ms dialog was not shown. " + "Rejecting certificate. Current thread: " + Thread.currentThread().getName());
           proceeded.countDown();
           return false;
         }

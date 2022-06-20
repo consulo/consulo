@@ -15,18 +15,14 @@
  */
 package consulo.ide.impl.idea.openapi.options;
 
+import consulo.annotation.DeprecationInfo;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.component.persist.RoamingType;
-import consulo.ide.impl.idea.openapi.components.ServiceBean;
 import consulo.ide.ServiceManager;
-import consulo.component.extension.ExtensionPointName;
-import consulo.annotation.DeprecationInfo;
 
 @Service(ComponentScope.APPLICATION)
 public abstract class SchemesManagerFactory {
-  public static ExtensionPointName<ServiceBean> SCHEME_OWNER = ExtensionPointName.create("consulo.schemeOwner");
-
   public abstract <T, E extends ExternalizableScheme> SchemesManager<T, E> createSchemesManager(String fileSpec, SchemeProcessor<T, E> processor, RoamingType roamingType);
 
   @Deprecated

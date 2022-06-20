@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.find.findUsages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.find.FindManager;
 import consulo.navigation.NavigationItem;
 import consulo.codeEditor.Editor;
@@ -25,6 +26,7 @@ import consulo.ide.impl.find.PsiElement2UsageTargetAdapter;
 import consulo.usage.UsageTarget;
 import consulo.usage.UsageTargetProvider;
 
+@ExtensionImpl(id = "default", order = "last")
 public class DefaultUsageTargetProvider implements UsageTargetProvider {
   @Override
   public UsageTarget[] getTargets(Editor editor, PsiFile file) {

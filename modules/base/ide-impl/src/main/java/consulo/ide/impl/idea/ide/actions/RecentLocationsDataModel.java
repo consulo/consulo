@@ -77,7 +77,7 @@ public class RecentLocationsDataModel {
     this.editorsToRelease = editorsToRelease;
     projectConnection = this.project.getMessageBus().connect();
 
-    projectConnection.subscribe(IdeDocumentHistoryImpl.RecentPlacesListener.TOPIC, new IdeDocumentHistoryImpl.RecentPlacesListener() {
+    projectConnection.subscribe(IdeDocumentHistoryImpl.RecentPlacesListener.class, new IdeDocumentHistoryImpl.RecentPlacesListener() {
       @Override
       public void recentPlaceAdded(@Nonnull IdeDocumentHistoryImpl.PlaceInfo changePlace, boolean isChanged) {
         resetPlaces(isChanged);

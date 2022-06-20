@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.application.options;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
 import consulo.configurable.Configurable;
 import consulo.language.codeStyle.CodeStyleSettings;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@ExtensionImpl(order = "first")
 public class GeneralCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
   @Override
   @Nonnull

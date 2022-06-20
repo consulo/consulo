@@ -19,6 +19,9 @@
  */
 package consulo.ide.impl.idea.util.indexing;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.impl.internal.performance.PerformanceWatcher;
 import consulo.ide.IdeBundle;
 import consulo.application.ApplicationManager;
@@ -41,6 +44,7 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.application.util.function.Processor;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
@@ -49,12 +53,15 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 @Singleton
+@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposable {
   private static final Logger LOG = Logger.getInstance(FileBasedIndexProjectHandler.class);
 
   private final FileBasedIndex myIndex;
   private final FileBasedIndexScanRunnableCollector myCollector;
 
+  @Inject
   public FileBasedIndexProjectHandler(@Nonnull Project project, FileBasedIndex index, FileBasedIndexScanRunnableCollector collector) {
     myIndex = index;
     myCollector = collector;
@@ -173,8 +180,12 @@ public class FileBasedIndexProjectHandler implements IndexableFileSet, Disposabl
 
             String filePath = file.getPath();
             String loggedPath = projectBasePath != null ? FileUtil.getRelativePath(projectBasePath, filePath, '/') : null;
-            if (loggedPath == null) loggedPath = filePath;
-            else loggedPath = "%project_path%/" + loggedPath;
+            if (loggedPath == null) {
+              loggedPath = filePath;
+            }
+            else {
+              loggedPath = "%project_path%/" + loggedPath;
+            }
             sampleOfChangedFilePathsToBeIndexed.append(loggedPath);
 
             return ++filesInProjectToBeIndexed < ourMinFilesToStartDumMode;

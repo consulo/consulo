@@ -17,7 +17,6 @@ package consulo.ide.impl.idea.openapi.options;
 
 import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.RoamingType;
-import consulo.ide.impl.idea.openapi.components.ServiceBean;
 import consulo.component.persist.SettingsSavingComponent;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.impl.internal.store.IApplicationStore;
@@ -57,7 +56,6 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
 
   @Override
   public void updateConfigFilesFromStreamProviders() {
-    ServiceBean.loadServicesFromBeans(SCHEME_OWNER, Object.class);
     for (SchemesManagerImpl registeredManager : myRegisteredManagers) {
       try {
         registeredManager.updateConfigFilesFromStreamProviders();
@@ -70,7 +68,6 @@ public class SchemesManagerFactoryImpl extends SchemesManagerFactory implements 
 
   @Override
   public void save() {
-    ServiceBean.loadServicesFromBeans(SCHEME_OWNER, Object.class);
     for (SchemesManager registeredManager : myRegisteredManagers) {
       try {
         registeredManager.save();

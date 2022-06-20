@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionPhase;
 import consulo.ide.impl.idea.codeInsight.completion.CompletionProgressIndicator;
 import consulo.language.editor.AutoPopupController;
@@ -39,6 +40,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.LockSupport;
 
 @Singleton
+@ServiceImpl
 public class AutoPopupControllerImpl extends AutoPopupController {
   private final Project myProject;
   private final Alarm myAlarm = new Alarm(this);

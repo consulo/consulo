@@ -16,25 +16,26 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon;
 
-import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.component.persist.StoragePathMacros;
+import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
+import consulo.ide.impl.idea.openapi.util.JDOMUtil;
+import consulo.ide.impl.idea.profile.codeInspection.InspectionProfileManagerImpl;
+import consulo.language.editor.inspection.scheme.InspectionProfileManager;
+import consulo.logging.Logger;
 import consulo.util.xml.serializer.DefaultJDOMExternalizer;
 import consulo.util.xml.serializer.InvalidDataException;
-import consulo.ide.impl.idea.openapi.util.JDOMUtil;
 import consulo.util.xml.serializer.WriteExternalException;
-import consulo.language.editor.inspection.scheme.InspectionProfileManager;
-import consulo.ide.impl.idea.profile.codeInspection.InspectionProfileManagerImpl;
-import consulo.logging.Logger;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
 import org.jetbrains.annotations.NonNls;
 
 @Singleton
-@State(name = "DaemonCodeAnalyzerSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/editor.codeinsight.xml")})
+@State(name = "DaemonCodeAnalyzerSettings", storages = {@Storage("editor.codeinsight.xml")})
+@ServiceImpl
 public class DaemonCodeAnalyzerSettingsImpl extends DaemonCodeAnalyzerSettings implements PersistentStateComponent<Element>, Cloneable {
   private static final Logger LOG = Logger.getInstance(DaemonCodeAnalyzerSettingsImpl.class);
   @NonNls

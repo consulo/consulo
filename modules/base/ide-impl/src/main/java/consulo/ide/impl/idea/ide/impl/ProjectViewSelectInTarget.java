@@ -15,31 +15,29 @@
  */
 package consulo.ide.impl.idea.ide.impl;
 
+import consulo.application.ApplicationManager;
 import consulo.ide.impl.idea.ide.CompositeSelectInTarget;
 import consulo.ide.impl.idea.ide.SelectInContext;
 import consulo.ide.impl.idea.ide.SelectInTarget;
 import consulo.ide.impl.idea.ide.projectView.ProjectView;
-import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
-import consulo.project.ui.view.tree.TreeStructureProvider;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.ide.impl.idea.ide.projectView.impl.ProjectViewPane;
-import consulo.application.ApplicationManager;
-import consulo.component.extension.Extensions;
-import consulo.project.DumbService;
-import consulo.project.Project;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.project.ui.wm.ToolWindowId;
-import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFileSystemItem;
 import consulo.language.psi.PsiUtilCore;
-import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.project.ui.view.tree.SelectableTreeStructureProvider;
+import consulo.project.ui.view.tree.TreeStructureProvider;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.concurrent.ActionCallback;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -133,10 +131,8 @@ public abstract class ProjectViewSelectInTarget extends SelectInTargetPsiWrapper
     }
   }
 
-  private TreeStructureProvider[] getProvidersDumbAware() {
-    TreeStructureProvider[] allProviders = Extensions.getExtensions(TreeStructureProvider.EP_NAME, myProject);
-    List<TreeStructureProvider> dumbAware = DumbService.getInstance(myProject).filterByDumbAwareness(allProviders);
-    return dumbAware.toArray(new TreeStructureProvider[dumbAware.size()]);
+  private List<TreeStructureProvider> getProvidersDumbAware() {
+    return DumbService.getInstance(myProject).filterByDumbAwareness(TreeStructureProvider.EP_NAME.getExtensionList(myProject));
   }
 
   @Override

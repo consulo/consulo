@@ -2,6 +2,7 @@
 
 package consulo.ide.impl.idea.codeInsight.lookup.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.IndexNotReadyException;
 import consulo.codeEditor.Editor;
@@ -36,6 +37,7 @@ import org.jetbrains.annotations.TestOnly;
 import javax.annotation.Nonnull;
 
 @Singleton
+@ServiceImpl
 public class LookupManagerImpl extends LookupManager {
   private static final Logger LOG = Logger.getInstance(LookupManagerImpl.class);
   private final Project myProject;

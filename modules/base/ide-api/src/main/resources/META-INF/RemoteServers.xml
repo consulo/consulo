@@ -39,7 +39,6 @@
     <applicationService serviceInterface="consulo.ide.impl.idea.remoteServer.agent.RemoteAgentManager"
                         serviceImplementation="consulo.ide.impl.idea.remoteServer.agent.impl.RemoteAgentManagerImpl"/>
     <applicationConfigurable parentId="execution" instance="consulo.ide.impl.idea.remoteServer.impl.configuration.RemoteServerListConfigurable"/>
-    <programRunner implementation="consulo.ide.impl.idea.remoteServer.impl.runtime.DeployToServerRunner"/>
 
     <toolWindow id="Application Servers" icon="consulo.platform.base.PlatformIconGroup@remoteservers.serverstoolwindow" factoryClass="consulo.ide.impl.remoteServer.ui.ServersToolWindowFactory" anchor="bottom" />
     <projectService serviceImplementation="consulo.ide.impl.remoteServer.ui.ServersToolWindowManager" />

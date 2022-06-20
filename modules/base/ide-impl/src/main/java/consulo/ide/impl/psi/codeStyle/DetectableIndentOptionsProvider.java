@@ -1,48 +1,50 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle;
 
-import consulo.language.codeStyle.*;
-import consulo.language.editor.scratch.ScratchUtil;
-import consulo.language.LangBundle;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationDisplayType;
-import consulo.project.ui.notification.NotificationGroup;
-import consulo.project.ui.notification.NotificationType;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.AnSeparator;
-import consulo.language.editor.CommonDataKeys;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationBundle;
 import consulo.application.ApplicationManager;
-import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
-import consulo.ide.setting.ShowSettingsUtil;
-import consulo.ui.ex.action.DumbAwareAction;
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.language.LangBundle;
+import consulo.language.codeStyle.*;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.scratch.ScratchUtil;
+import consulo.language.file.light.LightVirtualFile;
 import consulo.language.psi.PsiBinaryFile;
 import consulo.language.psi.PsiCompiledFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
-import consulo.language.file.light.LightVirtualFile;
-import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationDisplayType;
+import consulo.project.ui.notification.NotificationGroup;
+import consulo.project.ui.notification.NotificationType;
 import consulo.ui.ex.JBColor;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnSeparator;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.undoRedo.CommandProcessor;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.TestOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 import static consulo.ide.impl.psi.codeStyle.DetectAndAdjustIndentOptionsTask.getDefaultIndentOptions;
+import static consulo.language.codeStyle.CommonCodeStyleSettings.IndentOptions;
 
 /**
  * @author Rustam Vishnyakov
  */
+@ExtensionImpl(order = "last")
 public class DetectableIndentOptionsProvider extends FileIndentOptionsProvider {
   private static final NotificationGroup NOTIFICATION_GROUP = new NotificationGroup("Automatic indent detection", NotificationDisplayType.STICKY_BALLOON, true);
 

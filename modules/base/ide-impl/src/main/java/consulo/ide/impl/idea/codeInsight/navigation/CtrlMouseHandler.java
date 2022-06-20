@@ -1,6 +1,9 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.navigation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManager;
 import consulo.ide.impl.idea.codeInsight.documentation.DocumentationManagerProtocol;
 import consulo.ide.impl.idea.codeInsight.hint.HintManagerImpl;
@@ -84,6 +87,8 @@ import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 @Singleton
+@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public final class CtrlMouseHandler {
   private static final Logger LOG = Logger.getInstance(CtrlMouseHandler.class);
 

@@ -37,8 +37,6 @@
 
     <colorSettingsPage implementation="consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerColorsPage"/>
 
-    <editor.linePainter implementation="consulo.ide.impl.idea.xdebugger.impl.evaluate.XDebuggerEditorLinePainter"/>
-
     <copyPastePreProcessor implementation="consulo.ide.impl.idea.xdebugger.impl.ui.DebuggerCopyPastePreprocessor"/>
   </extensions>
 </consulo-plugin>

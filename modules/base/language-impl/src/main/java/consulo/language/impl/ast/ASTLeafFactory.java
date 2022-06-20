@@ -15,8 +15,9 @@
  */
 package consulo.language.impl.ast;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.ast.IElementType;
-import consulo.container.plugin.PluginIds;
 import consulo.language.psi.ElementTypeEntryExtensionCollector;
 import consulo.language.version.LanguageVersion;
 
@@ -27,20 +28,13 @@ import java.util.function.Predicate;
  * @author VISTALL
  * @since 2:13/02.04.13
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ASTLeafFactory extends Predicate<IElementType> {
-  ElementTypeEntryExtensionCollector<ASTLeafFactory> EP = ElementTypeEntryExtensionCollector.create(PluginIds.CONSULO_BASE + ".lang.ast.leafFactory");
+  ElementTypeEntryExtensionCollector<ASTLeafFactory> EP = ElementTypeEntryExtensionCollector.create(ASTLeafFactory.class);
 
   @Nonnull
   LeafElement createLeaf(@Nonnull IElementType type, @Nonnull LanguageVersion languageVersion, @Nonnull CharSequence text);
 
-  @Deprecated
-  default boolean apply(IElementType elementType) {
-    return false;
-  }
-
   @Override
-  @SuppressWarnings("deprecation")
-  default boolean test(IElementType elementType) {
-    return apply(elementType);
-  }
+  boolean test(IElementType elementType);
 }

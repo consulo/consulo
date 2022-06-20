@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.editor.scratch.ScratchUtil;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
@@ -44,6 +47,8 @@ import javax.annotation.Nullable;
  * @author yole
  */
 @Singleton
+@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public class VcsFileStatusProvider implements FileStatusProvider, VcsBaseContentProvider {
   private final Project myProject;
   private final FileStatusManagerImpl myFileStatusManager;

@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.FileIntPropertyPusher;
 import consulo.language.Language;
 import consulo.language.template.TemplateLanguage;
@@ -23,6 +24,7 @@ import java.io.IOException;
 /**
  * @author Konstantin.Ulitin
  */
+@ExtensionImpl
 public class TemplateDataLanguagePusher implements FileIntPropertyPusher<Language> {
 
   public static final Key<Language> KEY = Key.create("TEMPLATE_DATA_LANGUAGE");

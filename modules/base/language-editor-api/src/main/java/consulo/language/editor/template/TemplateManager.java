@@ -16,6 +16,8 @@
 
 package consulo.language.editor.template;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.template.event.TemplateEditingListener;
 import consulo.project.Project;
@@ -25,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.function.BiPredicate;
 
+@Service(ComponentScope.APPLICATION)
 public abstract class TemplateManager {
   public static TemplateManager getInstance(Project project) {
     return project.getInstance(TemplateManager.class);

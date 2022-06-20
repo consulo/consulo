@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.notification;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.AllIcons;
 import consulo.application.dumb.DumbAware;
 import consulo.codeEditor.Editor;
@@ -48,6 +49,7 @@ import javax.swing.event.AncestorEvent;
 /**
  * @author peter
  */
+@ExtensionImpl
 public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Nonnull
   @Override
@@ -65,6 +67,11 @@ public class EventLogToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Override
   public ToolWindowAnchor getAnchor() {
     return ToolWindowAnchor.BOTTOM;
+  }
+
+  @Override
+  public boolean isSecondary() {
+    return true;
   }
 
   @Nonnull
