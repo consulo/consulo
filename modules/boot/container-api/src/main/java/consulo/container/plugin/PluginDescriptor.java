@@ -83,12 +83,6 @@ public interface PluginDescriptor {
 
   List<SimpleExtension> getSimpleExtensions();
 
-  List<PluginListenerDescriptor> getApplicationListeners();
-
-  List<PluginListenerDescriptor> getProjectListeners();
-
-  List<PluginListenerDescriptor> getModuleListeners();
-
   PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType);
 
   /**

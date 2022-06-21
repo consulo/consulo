@@ -15,7 +15,6 @@
  */
 package consulo.container.impl.parser;
 
-import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.util.nodep.text.StringUtilRt;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
@@ -69,26 +68,6 @@ public class PluginBeanParser {
 
     pluginBean.imports = imports;
 
-    pluginBean.extensionPoints = expandChildren(rootTag, "extensionPoints");
-
-    List<SimpleXmlElement> extensionsTag = rootTag.getChildren("extensions");
-
-    List<ExtensionInfo> extensionInfos = new ArrayList<ExtensionInfo>();
-
-    for (SimpleXmlElement extensionElement : extensionsTag) {
-      // FIXME [VISTALL] rename later to pluginId?
-      String defaultExtensionNs = extensionElement.getAttributeValue("defaultExtensionNs");
-      if (defaultExtensionNs == null) {
-        defaultExtensionNs = pluginBean.id;
-      }
-
-      for (SimpleXmlElement childExtension : extensionElement.getChildren()) {
-        extensionInfos.add(new ExtensionInfo(defaultExtensionNs, childExtension));
-      }
-    }
-
-    pluginBean.extensions = extensionInfos;
-
     pluginBean.actions = expandChildren(rootTag, "actions");
 
     SimpleXmlElement vendorElement = rootTag.getChild("vendor");
@@ -127,10 +106,6 @@ public class PluginBeanParser {
     if (!pluginDependencies.isEmpty()) {
       pluginBean.dependencies = pluginDependencies;
     }
-
-    pluginBean.applicationListeners = readListeners(rootTag, "applicationListeners");
-    pluginBean.projectListeners = readListeners(rootTag, "projectListeners");
-    pluginBean.moduleListeners = readListeners(rootTag, "moduleListeners");
 
     Map<String, Set<String>> permissions = new HashMap<String, Set<String>>();
     for (SimpleXmlElement permissionsElement : rootTag.getChildren("permissions")) {
@@ -172,36 +147,6 @@ public class PluginBeanParser {
     }
 
    return pluginBean;
-  }
-
-  private static List<PluginListenerDescriptor> readListeners(SimpleXmlElement parent, String tagName) {
-    List<SimpleXmlElement> children = parent.getChildren(tagName);
-    if (children.isEmpty()) {
-      return Collections.emptyList();
-    }
-
-    List<PluginListenerDescriptor> list = new ArrayList<PluginListenerDescriptor>();
-
-    for (SimpleXmlElement listenersElement : children) {
-      for (SimpleXmlElement listenerElement : listenersElement.getChildren()) {
-        String implClass = listenerElement.getAttributeValue("class");
-        String topicClass = listenerElement.getAttributeValue("topic");
-        boolean activeInTestMode = Boolean.valueOf(listenerElement.getAttributeValue("activeInTestMode", "true"));
-        boolean activeInHeadlessMode = Boolean.valueOf(listenerElement.getAttributeValue("activeInHeadlessMode", "true"));
-
-        if (implClass == null) {
-          throw new IllegalArgumentException("'class' empty: " + listenerElement);
-        }
-
-        if (topicClass == null) {
-          throw new IllegalArgumentException("'topic' empty: " + listenerElement);
-        }
-
-        list.add(new PluginListenerDescriptor(implClass, topicClass, activeInTestMode, activeInHeadlessMode));
-      }
-    }
-
-    return list;
   }
 
   private static List<SimpleXmlElement> expandChildren(SimpleXmlElement element, String childTag) {

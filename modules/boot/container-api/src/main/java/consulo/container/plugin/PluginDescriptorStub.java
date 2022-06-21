@@ -106,21 +106,6 @@ public abstract class PluginDescriptorStub implements PluginDescriptor {
   }
 
   @Override
-  public List<PluginListenerDescriptor> getApplicationListeners() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public List<PluginListenerDescriptor> getProjectListeners() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public List<PluginListenerDescriptor> getModuleListeners() {
-    return Collections.emptyList();
-  }
-
-  @Override
   public PluginPermissionDescriptor getPermissionDescriptor(PluginPermissionType permissionType) {
     return null;
   }

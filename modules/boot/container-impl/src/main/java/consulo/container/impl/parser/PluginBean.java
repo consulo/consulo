@@ -15,7 +15,6 @@
  */
 package consulo.container.impl.parser;
 
-import consulo.container.plugin.PluginListenerDescriptor;
 import consulo.util.nodep.xml.node.SimpleXmlElement;
 
 import java.util.Collections;
@@ -41,12 +40,6 @@ public class PluginBean {
 
   //@Property(surroundWithTag = false)
   public PluginVendor vendor;
-
-  //@Tag("extensions")
-  public List<ExtensionInfo> extensions = Collections.emptyList();
-
-  //@Tag("extensionPoints")
-  public List<SimpleXmlElement> extensionPoints = Collections.emptyList();
 
   //@Tag("actions")
   public List<SimpleXmlElement> actions = Collections.emptyList();
@@ -78,12 +71,6 @@ public class PluginBean {
   public String url;
 
   public boolean experimental;
-
-  public List<PluginListenerDescriptor> applicationListeners = Collections.emptyList();
-
-  public List<PluginListenerDescriptor> projectListeners = Collections.emptyList();
-
-  public List<PluginListenerDescriptor> moduleListeners = Collections.emptyList();
 
   public Map<String, Set<String>> permissions = Collections.emptyMap();
 
