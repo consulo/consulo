@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.template.*;
 import consulo.language.editor.template.macro.Macro;
@@ -27,6 +28,7 @@ import javax.annotation.Nullable;
 /**
  * @author Nikolay Matveev
  */
+@ExtensionImpl
 public class FileNameMacro extends Macro {
 
   @Override

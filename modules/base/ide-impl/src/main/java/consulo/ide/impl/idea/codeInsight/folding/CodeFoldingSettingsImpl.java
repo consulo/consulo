@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.folding;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -27,7 +28,8 @@ import jakarta.inject.Singleton;
  * @author yole
  */
 @Singleton
-@State(name="CodeFoldingSettings", storages= @Storage("editor.codeinsight.xml"))
+@State(name = "CodeFoldingSettings", storages = @Storage("editor.codeinsight.xml"))
+@ServiceImpl
 public class CodeFoldingSettingsImpl extends CodeFoldingSettings implements PersistentStateComponent<CodeFoldingSettings> {
 
   @Override

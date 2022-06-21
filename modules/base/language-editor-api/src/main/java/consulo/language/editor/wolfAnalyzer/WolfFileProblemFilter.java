@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2009 JetBrains s.r.o.
+ * Copyright 2013-2022 consulo.io
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.ide.impl.psi.impl.search;
+package consulo.language.editor.wolfAnalyzer;
 
-import consulo.component.extension.ExtensionPointName;
-import consulo.project.Project;
-import consulo.content.scope.SearchScope;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.virtualFileSystem.VirtualFile;
 
-public interface CustomPropertyScopeProvider {
-  ExtensionPointName<CustomPropertyScopeProvider> EP_NAME = ExtensionPointName.create("consulo.customPropertyScopeProvider");
+import javax.annotation.Nonnull;
 
-  SearchScope getScope(final Project project);
+/**
+ * @author VISTALL
+ * @since 20-Jun-22
+ */
+@Extension(ComponentScope.PROJECT)
+public interface WolfFileProblemFilter {
+  boolean isToBeHighlighted(@Nonnull VirtualFile file);
 }

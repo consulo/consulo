@@ -16,10 +16,11 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.Pass;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.codeEditor.Editor;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
-import consulo.codeEditor.Editor;
+import consulo.language.editor.Pass;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 
@@ -28,8 +29,9 @@ import javax.annotation.Nullable;
 
 /**
  * @author cdr
-*/
-public class WolfPassFactory  implements TextEditorHighlightingPassFactory {
+ */
+@ExtensionImpl
+public class WolfPassFactory implements TextEditorHighlightingPassFactory {
   private long myPsiModificationCount;
 
   @Override
@@ -44,7 +46,7 @@ public class WolfPassFactory  implements TextEditorHighlightingPassFactory {
     if (psiModificationCount == myPsiModificationCount) {
       return null; //optimization
     }
-    return new WolfHighlightingPass(file.getProject(), editor.getDocument(), file){
+    return new WolfHighlightingPass(file.getProject(), editor.getDocument(), file) {
       @Override
       protected void applyInformationWithProgress() {
         super.applyInformationWithProgress();

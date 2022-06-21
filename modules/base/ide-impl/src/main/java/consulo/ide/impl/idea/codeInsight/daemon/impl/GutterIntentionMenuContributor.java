@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.util.function.Processor;
 import consulo.application.util.function.Processors;
 import consulo.codeEditor.DocumentMarkupModel;
@@ -29,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@ExtensionImpl(id = "gutter", order = "after dontShow")
 public class GutterIntentionMenuContributor implements IntentionMenuContributor {
   @Override
   public void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull ShowIntentionsPass.IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset) {

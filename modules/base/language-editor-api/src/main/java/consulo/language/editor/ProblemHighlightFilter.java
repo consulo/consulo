@@ -15,6 +15,8 @@
  */
 package consulo.language.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiFile;
 import javax.annotation.Nonnull;
@@ -27,8 +29,9 @@ import java.util.List;
  * Filter implementations should be permissive - i.e. should prevent highlighting only for files it absolutely knows about,
  * and return true otherwise.
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ProblemHighlightFilter {
-  public static final ExtensionPointName<ProblemHighlightFilter> EP_NAME = ExtensionPointName.create("consulo.problemHighlightFilter");
+  public static final ExtensionPointName<ProblemHighlightFilter> EP_NAME = ExtensionPointName.create(ProblemHighlightFilter.class);
 
   /**
    * @param psiFile file to decide about

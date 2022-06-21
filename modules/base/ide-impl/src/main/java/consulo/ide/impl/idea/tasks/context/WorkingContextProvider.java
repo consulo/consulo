@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.tasks.context;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
@@ -27,9 +29,10 @@ import javax.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
+@Extension(ComponentScope.PROJECT)
 public abstract class WorkingContextProvider {
 
-  public static final ExtensionPointName<WorkingContextProvider> EP_NAME = ExtensionPointName.create("consulo.tasks.contextProvider");
+  public static final ExtensionPointName<WorkingContextProvider> EP_NAME = ExtensionPointName.create(WorkingContextProvider.class);
 
   /**
    * Short unique name.

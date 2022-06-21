@@ -16,6 +16,8 @@
 
 package consulo.language.psi.include;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.fileType.FileType;
 import consulo.virtualFileSystem.VirtualFile;
@@ -29,9 +31,9 @@ import java.util.function.Consumer;
 /**
  * @author Dmitry Avdeev
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class FileIncludeProvider {
-
-  public static final ExtensionPointName<FileIncludeProvider> EP_NAME = ExtensionPointName.create("consulo.include.provider");
+  public static final ExtensionPointName<FileIncludeProvider> EP_NAME = ExtensionPointName.create(FileIncludeProvider.class);
 
   @Nonnull
   public abstract String getId();

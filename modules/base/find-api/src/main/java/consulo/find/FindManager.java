@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 /**
  * Allows to invoke and control Find, Replace and Find Usages operations.
  */
-@Service(ComponentScope.APPLICATION)
+@Service(ComponentScope.PROJECT)
 public abstract class FindManager {
   public abstract FindModel createReplaceInFileModel();
 

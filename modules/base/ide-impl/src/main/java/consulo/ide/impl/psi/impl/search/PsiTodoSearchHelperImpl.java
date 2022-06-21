@@ -16,25 +16,23 @@
 
 package consulo.ide.impl.psi.impl.search;
 
-import consulo.ide.impl.idea.ide.todo.TodoIndexPatternProvider;
+import consulo.annotation.component.ServiceImpl;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.ide.todo.TodoIndexPatternProvider;
+import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.psi.impl.cache.TodoCacheManager;
-import consulo.language.psi.search.IndexPatternOccurrence;
-import consulo.language.psi.search.PsiTodoSearchHelper;
-import consulo.language.psi.search.TodoItem;
-import consulo.language.psi.search.TodoPattern;
-import consulo.language.psi.search.IndexPatternSearch;
-
-import javax.annotation.Nonnull;
+import consulo.language.psi.search.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Singleton
+@ServiceImpl
 public class PsiTodoSearchHelperImpl extends PsiTodoSearchHelper {
   private final PsiManager myManager;
   private static final TodoItem[] EMPTY_TODO_ITEMS = new TodoItem[0];

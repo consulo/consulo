@@ -16,14 +16,16 @@
 
 package consulo.ide.impl.psi.search.scope.packageSet;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.content.scope.NamedScope;
 
 import javax.annotation.Nonnull;
 
-@FunctionalInterface
+@Extension(ComponentScope.APPLICATION)
 public interface CustomScopesFilter {
-  ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create("consulo.customScopesFilter");
+  ExtensionPointName<CustomScopesFilter> EP_NAME = ExtensionPointName.create(CustomScopesFilter.class);
 
   boolean excludeScope(@Nonnull NamedScope scope);
 }

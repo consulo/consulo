@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.Language;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
@@ -16,8 +18,9 @@ import java.util.List;
  * @author Alexey.Pegov
  * @author Sergey.Malenkov
  */
+@Extension(ComponentScope.APPLICATION)
 public interface BreadcrumbsProvider {
-  ExtensionPointName<BreadcrumbsProvider> EP_NAME = ExtensionPointName.create("consulo.breadcrumbsInfoProvider");
+  ExtensionPointName<BreadcrumbsProvider> EP_NAME = ExtensionPointName.create(BreadcrumbsProvider.class);
 
   /**
    * @return an array of languages supported by this provider

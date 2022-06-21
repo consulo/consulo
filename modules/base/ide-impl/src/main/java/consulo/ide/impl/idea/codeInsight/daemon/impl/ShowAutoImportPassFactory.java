@@ -22,11 +22,12 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.Pass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
 import consulo.codeEditor.Editor;
+import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
+import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
+import consulo.language.editor.Pass;
 import consulo.language.psi.PsiFile;
 
 import javax.annotation.Nonnull;
@@ -35,6 +36,7 @@ import javax.annotation.Nullable;
 /**
  * @author cdr
  */
+@ExtensionImpl
 public class ShowAutoImportPassFactory implements TextEditorHighlightingPassFactory {
   @Override
   public void register(@Nonnull Registrar registrar) {

@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.util.indexing;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.IndexId;
 import consulo.virtualFileSystem.VirtualFile;
@@ -11,6 +13,7 @@ import javax.annotation.Nonnull;
  *
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface GlobalIndexFilter {
   /**
    * Returns true if the given file should be excluded from indexing by the given index.

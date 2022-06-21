@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl.cache.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.file.inject.VirtualFileWindow;
 import consulo.application.ReadAction;
 import consulo.language.impl.internal.psi.stub.FileContentImpl;
@@ -52,6 +53,7 @@ import java.util.*;
  * Date: Jan 16, 2008
  */
 @Singleton
+@ServiceImpl
 public class IndexTodoCacheManagerImpl extends TodoCacheManager {
   private static final Logger LOG = Logger.getInstance(IndexTodoCacheManagerImpl.class);
 

@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.breadcrumbs;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
@@ -16,9 +18,10 @@ import javax.annotation.Nullable;
 /**
  * Allows to replace the mechanism of gathering breadcrumbs for a file.
  */
+@Extension(ComponentScope.PROJECT)
 public abstract class FileBreadcrumbsCollector {
 
-  public static final ExtensionPointName<FileBreadcrumbsCollector> EP_NAME = ExtensionPointName.create("consulo.fileBreadcrumbsCollector");
+  public static final ExtensionPointName<FileBreadcrumbsCollector> EP_NAME = ExtensionPointName.create(FileBreadcrumbsCollector.class);
 
   /**
    * Checks if this collector handles the given file.

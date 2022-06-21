@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.intelliLang.references;
 
-import consulo.language.psi.ElementManipulators;
-import consulo.language.psi.*;
-import consulo.util.lang.ref.Ref;
 import consulo.document.util.TextRange;
-import consulo.language.pattern.PlatformPatterns;
-import consulo.language.inject.impl.internal.InjectedLanguageUtil;
-import consulo.language.inject.impl.internal.InjectedReferenceVisitor;
-import consulo.language.inject.ReferenceInjector;
-import consulo.language.util.ProcessingContext;
-import consulo.util.collection.SmartList;
-import consulo.util.dataholder.Key;
 import consulo.ide.impl.intelliLang.Configuration;
 import consulo.ide.impl.intelliLang.inject.InjectedLanguage;
 import consulo.ide.impl.intelliLang.inject.InjectorUtils;
-import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
 import consulo.ide.impl.intelliLang.inject.TemporaryPlacesRegistry;
 import consulo.ide.impl.intelliLang.inject.config.BaseInjection;
+import consulo.ide.impl.psi.injection.LanguageInjectionSupport;
+import consulo.language.inject.ReferenceInjector;
+import consulo.language.inject.impl.internal.InjectedLanguageUtil;
+import consulo.language.inject.impl.internal.InjectedReferenceVisitor;
+import consulo.language.pattern.PlatformPatterns;
+import consulo.language.psi.*;
+import consulo.language.util.ProcessingContext;
+import consulo.util.collection.SmartList;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.ref.Ref;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

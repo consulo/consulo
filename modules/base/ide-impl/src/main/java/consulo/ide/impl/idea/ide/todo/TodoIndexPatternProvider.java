@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.search.IndexPattern;
 import consulo.language.psi.search.IndexPatternProvider;
 import jakarta.inject.Inject;
@@ -24,17 +25,13 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class TodoIndexPatternProvider implements IndexPatternProvider {
   private final TodoConfiguration myConfiguration;
 
+  @Nonnull
   public static TodoIndexPatternProvider getInstance() {
-    for (IndexPatternProvider provider : EP_NAME.getExtensionList()) {
-      if (provider instanceof TodoIndexPatternProvider) {
-        return (TodoIndexPatternProvider) provider;
-      }
-    }
-    assert false: "Couldn't find self in extensions list";
-    return null;
+    return EP_NAME.findExtensionOrFail(TodoIndexPatternProvider.class);
   }
 
   @Inject

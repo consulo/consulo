@@ -16,10 +16,10 @@
 package consulo.ide.impl.settings.impl;
 
 import consulo.application.ui.UISettings;
-import consulo.configurable.Configurable;
+import consulo.configurable.ApplicationConfigurable;
+import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.disposer.Disposable;
 import consulo.localize.LocalizeValue;
-import consulo.configurable.SimpleConfigurableByProperties;
 import consulo.platform.base.localize.ApplicationLocalize;
 import consulo.ui.*;
 import consulo.ui.annotation.RequiredUIAccess;
@@ -30,16 +30,29 @@ import consulo.ui.layout.VerticalLayout;
 import consulo.ui.util.LabeledBuilder;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author VISTALL
  * @since 2020-04-25
  */
-public class EditorTabsConfigurable extends SimpleConfigurableByProperties implements Configurable {
+public class EditorTabsConfigurable extends SimpleConfigurableByProperties implements ApplicationConfigurable {
   enum ActiveTabState {
     LEFT,
     RIGHT,
     MOST_RECENT
+  }
+
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editor.preferences.tabs";
+  }
+
+  @Nullable
+  @Override
+  public String getParentId() {
+    return "editor";
   }
 
   @RequiredUIAccess

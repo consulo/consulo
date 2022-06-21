@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.psi.stub;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.index.io.ID;
 import consulo.index.io.IndexExtension;
@@ -18,9 +20,10 @@ import java.util.List;
  *
  * @author Eugene Zhuravlev
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class FileBasedIndexExtension<K, V> extends IndexExtension<K, V, FileContent> {
 
-  public static final ExtensionPointName<FileBasedIndexExtension> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.fileBasedIndex");
+  public static final ExtensionPointName<FileBasedIndexExtension> EXTENSION_POINT_NAME = ExtensionPointName.create(FileBasedIndexExtension.class);
 
   private static final int DEFAULT_CACHE_SIZE = 1024;
 

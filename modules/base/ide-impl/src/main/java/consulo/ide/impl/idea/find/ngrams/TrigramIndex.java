@@ -19,6 +19,7 @@
  */
 package consulo.ide.impl.idea.find.ngrams;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.index.io.DataIndexer;
 import consulo.index.io.ID;
 import consulo.language.psi.stub.FileBasedIndex;
@@ -41,6 +42,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.util.*;
 
+@ExtensionImpl
 public class TrigramIndex extends ScalarIndexExtension<Integer> implements CustomInputsIndexFileBasedIndexExtension<Integer>, DocumentChangeDependentIndex {
   public static final boolean ENABLED = SystemProperties.getBooleanProperty("idea.internal.trigramindex.enabled", true);
 

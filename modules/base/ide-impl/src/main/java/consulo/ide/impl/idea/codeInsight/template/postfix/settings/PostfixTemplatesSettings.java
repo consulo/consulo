@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.postfix.settings;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeInsight.template.impl.TemplateSettings;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplate;
 import consulo.ide.impl.idea.codeInsight.template.postfix.templates.PostfixTemplateProvider;
@@ -38,6 +41,8 @@ import java.util.Set;
 
 @Singleton
 @State(name = "PostfixTemplatesSettings", storages = @Storage("postfixTemplates.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PostfixTemplatesSettings implements PersistentStateComponent<Element> {
 
   private Map<String, Set<String>> myLangToDisabledTemplates = ContainerUtil.newHashMap();

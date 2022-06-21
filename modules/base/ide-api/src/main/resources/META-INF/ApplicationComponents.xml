@@ -14,37 +14,5 @@
   - limitations under the License.
   -->
 <consulo-plugin>
-  <application-components>
 
-
-
-
-    <component>
-      <interface-class>consulo.language.psi.stub.StubIndex</interface-class>
-      <implementation-class>consulo.ide.impl.psi.stubs.StubIndexImpl</implementation-class>
-    </component>
-
-    <component>
-      <interface-class>consulo.ide.impl.idea.tools.ToolManager</interface-class>
-      <implementation-class>consulo.ide.impl.idea.tools.ToolManager</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.roots.impl.libraries.LibraryKindLoader</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.VetoSavingCommittingDocumentsAdapter</implementation-class>
-    </component>
-
-
-    <component>
-      <interface-class>consulo.ide.impl.idea.openapi.editor.EditorLastActionTracker</interface-class>
-      <implementation-class>consulo.ide.impl.idea.openapi.editor.impl.EditorLastActionTrackerImpl</implementation-class>
-    </component>
-
-    <component>
-      <implementation-class>consulo.ide.impl.idea.codeInsight.preview.ImageOrColorPreviewManager</implementation-class>
-    </component>
-  </application-components>
 </consulo-plugin>

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.refactoring.changeSignature.inplace;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.UpdateHighlightersUtil;
@@ -38,6 +39,7 @@ import java.awt.*;
 import java.util.Collection;
 import java.util.Collections;
 
+@ExtensionImpl
 public class ChangeSignaturePassFactory implements TextEditorHighlightingPassFactory {
   @Override
   public void register(@Nonnull Registrar registrar) {

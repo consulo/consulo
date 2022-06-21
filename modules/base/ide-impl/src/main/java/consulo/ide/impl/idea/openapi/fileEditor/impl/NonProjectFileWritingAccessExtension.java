@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.fileEditor.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.virtualFileSystem.VirtualFile;
+
 import javax.annotation.Nonnull;
 
+@Extension(ComponentScope.PROJECT)
 public interface NonProjectFileWritingAccessExtension {
-  ExtensionPointName<NonProjectFileWritingAccessExtension> EP_NAME =
-          ExtensionPointName.create("consulo.nonProjectFileWritingAccessExtension");
+  ExtensionPointName<NonProjectFileWritingAccessExtension> EP_NAME = ExtensionPointName.create(NonProjectFileWritingAccessExtension.class);
 
   /**
    * @return true if the file should not be protected from accidental writing. false to use default logic.

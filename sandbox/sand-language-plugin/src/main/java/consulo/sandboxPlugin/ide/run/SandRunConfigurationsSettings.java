@@ -15,6 +15,7 @@
  */
 package consulo.sandboxPlugin.ide.run;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.configuration.RunConfigurationsSettings;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.UnnamedConfigurable;
@@ -30,6 +31,7 @@ import javax.swing.*;
  *
  * just example for usage {@link RunConfigurationsSettings}
  */
+@ExtensionImpl
 public class SandRunConfigurationsSettings implements RunConfigurationsSettings {
   private static class TestConfiguration implements UnnamedConfigurable {
 

@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.attach;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.process.ProcessInfo;
 import consulo.project.Project;
@@ -14,8 +16,9 @@ import java.util.List;
  * @deprecated use {@link XAttachDebuggerProvider} instead
  */
 @Deprecated
+@Extension(ComponentScope.APPLICATION)
 public interface XLocalAttachDebuggerProvider extends XAttachDebuggerProvider {
-  ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create("consulo.xdebugger.localAttachDebuggerProvider");
+  ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create(XLocalAttachDebuggerProvider.class);
 
   /**
    * @deprecated use {@link XAttachDebuggerProvider#getAvailableDebuggers(Project, XAttachHost, ProcessInfo, UserDataHolder)} instead

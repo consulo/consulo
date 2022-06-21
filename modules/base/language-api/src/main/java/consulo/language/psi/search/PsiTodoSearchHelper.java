@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.search;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.language.psi.PsiFile;
 import consulo.project.Project;
 
@@ -25,6 +27,7 @@ import javax.annotation.Nonnull;
  *         Date: 2/24/11
  *         Time: 10:08 AM
  */
+@Service(ComponentScope.PROJECT)
 public abstract class PsiTodoSearchHelper {
   @Nonnull
   public static PsiTodoSearchHelper getInstance(@Nonnull Project project) {

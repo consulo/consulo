@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.wordSelection;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.CodeDocumentationAwareCommenter;
 import consulo.language.Commenter;
 import consulo.language.LanguageCommenters;
@@ -27,6 +29,7 @@ import consulo.language.psi.PsiWhiteSpace;
 
 import java.util.List;
 
+@ExtensionImpl
 public class LineCommentSelectioner extends WordSelectioner {
   @Override
   public boolean canSelect(PsiElement e) {
@@ -38,6 +41,7 @@ public class LineCommentSelectioner extends WordSelectioner {
     return false;
   }
 
+  @RequiredReadAction
   @Override
   public List<TextRange> select(PsiElement element, CharSequence editorText, int cursorOffset, Editor editor) {
     List<TextRange> result = super.select(element, editorText, cursorOffset, editor);

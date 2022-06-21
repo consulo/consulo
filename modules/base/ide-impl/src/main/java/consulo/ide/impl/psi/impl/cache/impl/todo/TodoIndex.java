@@ -16,28 +16,29 @@
 
 package consulo.ide.impl.psi.impl.cache.impl.todo;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
 import consulo.index.io.DataIndexer;
 import consulo.index.io.ID;
+import consulo.index.io.IntInlineKeyDescriptor;
+import consulo.index.io.KeyDescriptor;
+import consulo.index.io.data.DataExternalizer;
 import consulo.language.Language;
+import consulo.language.ast.TokenSet;
+import consulo.language.file.FileTypeManager;
+import consulo.language.file.LanguageFileType;
 import consulo.language.parser.LanguageParserDefinitions;
 import consulo.language.parser.ParserDefinition;
-import consulo.application.Application;
+import consulo.language.psi.search.IndexPatternChangeListener;
 import consulo.language.psi.stub.FileBasedIndex;
 import consulo.language.psi.stub.FileBasedIndexExtension;
 import consulo.language.psi.stub.FileContent;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.language.file.FileTypeManager;
-import consulo.language.file.LanguageFileType;
-import consulo.ide.impl.idea.openapi.fileTypes.impl.CustomSyntaxTableFileType;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.psi.impl.cache.impl.id.PlatformIdTableBuilding;
-import consulo.language.psi.search.IndexPatternProvider;
-import consulo.language.ast.TokenSet;
-import consulo.index.io.data.DataExternalizer;
-import consulo.index.io.IntInlineKeyDescriptor;
-import consulo.index.io.KeyDescriptor;
 import consulo.language.version.LanguageVersionUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.virtualFileSystem.fileType.FileType;
 import jakarta.inject.Inject;
 import org.jetbrains.annotations.NonNls;
 
@@ -52,6 +53,7 @@ import java.util.Collections;
  * @author Eugene Zhuravlev
  *         Date: Jan 20, 2008
  */
+@ExtensionImpl
 public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> {
   @NonNls
   public static final ID<TodoIndexEntry, Integer> NAME = ID.create("TodoIndex");
@@ -61,7 +63,7 @@ public class TodoIndex extends FileBasedIndexExtension<TodoIndexEntry, Integer> 
   @Inject
   public TodoIndex(Application application, FileTypeManager manager) {
     myFileTypeManager = manager;
-    application.getMessageBus().connect().subscribe(IndexPatternProvider.INDEX_PATTERNS_CHANGED, evt -> FileBasedIndex.getInstance().requestRebuild(NAME));
+    application.getMessageBus().connect().subscribe(IndexPatternChangeListener.class, (o, n) -> FileBasedIndex.getInstance().requestRebuild(NAME));
   }
 
   private final KeyDescriptor<TodoIndexEntry> myKeyDescriptor = new KeyDescriptor<>() {

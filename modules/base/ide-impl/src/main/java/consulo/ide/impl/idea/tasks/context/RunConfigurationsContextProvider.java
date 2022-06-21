@@ -16,10 +16,12 @@
 
 package consulo.ide.impl.idea.tasks.context;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.RunManager;
 import consulo.ide.impl.idea.execution.impl.RunManagerImpl;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -27,10 +29,12 @@ import javax.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class RunConfigurationsContextProvider extends WorkingContextProvider {
 
   private final RunManagerImpl myManager;
 
+  @Inject
   public RunConfigurationsContextProvider(RunManager manager) {
     myManager = (RunManagerImpl) manager;
   }

@@ -16,15 +16,17 @@
 
 package consulo.execution;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class ExecutionTargetProvider {
-  public static final ExtensionPointName<ExecutionTargetProvider> EXTENSION_NAME =
-    ExtensionPointName.create("consulo.executionTargetProvider");
+  public static final ExtensionPointName<ExecutionTargetProvider> EXTENSION_NAME = ExtensionPointName.create(ExecutionTargetProvider.class);
 
   @Nonnull
   public abstract List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration);

@@ -15,11 +15,13 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.LogicalPosition;
 import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.language.psi.PsiFile;
 
+@ExtensionImpl
 public class SimpleIndentingBackspaceHandler extends AbstractIndentingBackspaceHandler {
   private LogicalPosition myTargetPosition;
 

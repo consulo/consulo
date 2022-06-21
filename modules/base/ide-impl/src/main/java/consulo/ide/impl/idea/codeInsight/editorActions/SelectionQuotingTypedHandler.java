@@ -15,29 +15,27 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.Application;
+import consulo.application.util.registry.Registry;
+import consulo.codeEditor.CaretModel;
+import consulo.codeEditor.Editor;
+import consulo.codeEditor.EditorEx;
+import consulo.codeEditor.SelectionModel;
+import consulo.document.util.TextRange;
 import consulo.language.editor.CodeInsightSettings;
 import consulo.language.editor.action.TypedHandlerDelegate;
 import consulo.language.editor.inject.EditorWindow;
-import consulo.codeEditor.CaretModel;
-import consulo.codeEditor.Editor;
-import consulo.codeEditor.SelectionModel;
-import consulo.codeEditor.EditorEx;
-import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
-import consulo.application.util.registry.Registry;
 import consulo.language.psi.PsiFile;
-import javax.annotation.Nonnull;
+import consulo.project.Project;
+import consulo.virtualFileSystem.fileType.FileType;
 
 /**
  * @author AG
  * @author yole
  */
+@ExtensionImpl(id = "selectionQuoting")
 public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
-  public static final ExtensionPointName<DequotingFilter> EP_NAME =
-          ExtensionPointName.create("consulo.selectionDequotingFilter");
   private TextRange myReplacedTextRange;
   private boolean myRestoreStickySelection;
   private boolean myLtrSelection;
@@ -47,7 +45,7 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
     // TODO[oleg] provide adequate API not to use this hack
     // beforeCharTyped always works with removed selection
     SelectionModel selectionModel = editor.getSelectionModel();
-    if(CodeInsightSettings.getInstance().SURROUND_SELECTION_ON_QUOTE_TYPED &&  selectionModel.hasSelection() && isDelimiter(c)) {
+    if (CodeInsightSettings.getInstance().SURROUND_SELECTION_ON_QUOTE_TYPED && selectionModel.hasSelection() && isDelimiter(c)) {
       String selectedText = selectionModel.getSelectedText();
       if (selectedText.length() < 1) {
         return super.checkAutoPopup(c, project, editor, psiFile);
@@ -58,8 +56,10 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
       if (selectedText.length() > 1) {
         final char firstChar = selectedText.charAt(0);
         final char lastChar = selectedText.charAt(selectedText.length() - 1);
-        if (isSimilarDelimiters(firstChar, c) && lastChar == getMatchingDelimiter(firstChar) &&
-            (isQuote(firstChar) || firstChar != c) && !shouldSkipReplacementOfQuotesOrBraces(psiFile, editor, selectedText, c) &&
+        if (isSimilarDelimiters(firstChar, c) &&
+            lastChar == getMatchingDelimiter(firstChar) &&
+            (isQuote(firstChar) || firstChar != c) &&
+            !shouldSkipReplacementOfQuotesOrBraces(psiFile, editor, selectedText, c) &&
             selectedText.indexOf(lastChar, 1) == selectedText.length() - 1) {
           selectedText = selectedText.substring(1, selectedText.length() - 1);
         }
@@ -78,7 +78,8 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
       editor.getDocument().replaceString(selectionStart, selectionEnd, newText);
       if (Registry.is("editor.smarterSelectionQuoting")) {
         myReplacedTextRange = new TextRange(caretOffset + 1, caretOffset + newText.length() - 1);
-      } else {
+      }
+      else {
         myReplacedTextRange = new TextRange(caretOffset, caretOffset + newText.length());
       }
       return Result.STOP;
@@ -87,7 +88,7 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
   }
 
   private static boolean shouldSkipReplacementOfQuotesOrBraces(PsiFile psiFile, Editor editor, String selectedText, char c) {
-    for(DequotingFilter filter: Extensions.getExtensions(EP_NAME)) {
+    for (DequotingFilter filter : Application.get().getExtensionPoint(DequotingFilter.class).getExtensionList()) {
       if (filter.skipReplacementQuotesOrBraces(psiFile, editor, selectedText, c)) return true;
     }
     return false;
@@ -145,12 +146,5 @@ public class SelectionQuotingTypedHandler extends TypedHandlerDelegate {
       return Result.STOP;
     }
     return Result.CONTINUE;
-  }
-
-  public static abstract class DequotingFilter {
-    public abstract boolean skipReplacementQuotesOrBraces(@Nonnull PsiFile file,
-                                                          @Nonnull Editor editor,
-                                                          @Nonnull String selectedText,
-                                                          char c);
   }
 }

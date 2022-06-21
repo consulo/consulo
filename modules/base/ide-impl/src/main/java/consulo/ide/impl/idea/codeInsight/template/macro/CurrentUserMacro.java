@@ -16,20 +16,22 @@
 
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
-import consulo.util.lang.SystemProperties;
+import consulo.platform.Platform;
 
 /**
  * @author yole
  */
+@ExtensionImpl
 public class CurrentUserMacro extends SimpleMacro {
-  protected CurrentUserMacro() {
+  public CurrentUserMacro() {
     super("user");
   }
 
   @Override
   protected String evaluateSimpleMacro(Expression[] params, final ExpressionContext context) {
-    return SystemProperties.getUserName();
+    return Platform.current().user().name();
   }
 }

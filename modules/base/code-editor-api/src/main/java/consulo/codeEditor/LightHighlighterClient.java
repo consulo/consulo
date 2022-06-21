@@ -19,7 +19,6 @@ import consulo.document.Document;
 import consulo.project.Project;
 
 /**
- * Created by IntelliJ IDEA.
  * User: Irina.Chernushina
  * Date: 9/8/11
  * Time: 12:18 PM

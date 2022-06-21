@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.editor.documentation;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiManager;
@@ -20,12 +22,13 @@ import java.util.List;
  * @see ExternalDocumentationProvider
  * @see ExternalDocumentationHandler
  */
+@Extension(ComponentScope.APPLICATION)
 public interface DocumentationProvider {
 
   /**
    * Please use {@link consulo.ide.impl.idea.lang.LanguageDocumentation} instead of this for language-specific documentation
    */
-  ExtensionPointName<DocumentationProvider> EP_NAME = ExtensionPointName.create("consulo.documentationProvider");
+  ExtensionPointName<DocumentationProvider> EP_NAME = ExtensionPointName.create(DocumentationProvider.class);
 
   /**
    * Returns the text to show in the Ctrl-hover popup for the specified element.

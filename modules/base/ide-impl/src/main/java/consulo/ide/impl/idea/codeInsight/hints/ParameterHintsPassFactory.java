@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.hints;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeHighlighting.EditorBoundHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
@@ -46,6 +47,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@ExtensionImpl
 public class ParameterHintsPassFactory implements TextEditorHighlightingPassFactory {
   private static final Key<Boolean> REPEATED_PASS = Key.create("RepeatedParameterHintsPass");
 

@@ -1,6 +1,7 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.vcs.changes;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.application.util.registry.Registry;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
@@ -11,12 +12,15 @@ import consulo.ide.impl.idea.openapi.vcs.changes.LocalChangeList;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.content.scope.NamedScope;
 import consulo.localize.LocalizeValue;
+import jakarta.inject.Inject;
+
 import javax.annotation.Nonnull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@ExtensionImpl(order = "last")
 public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
   @Nonnull
   private final Project myProject;
@@ -25,6 +29,7 @@ public final class ChangeListsScopesProvider extends CustomScopesProviderEx {
     return CUSTOM_SCOPES_PROVIDER.findExtension(project, ChangeListsScopesProvider.class);
   }
 
+  @Inject
   public ChangeListsScopesProvider(@Nonnull Project project) {
     myProject = project;
   }

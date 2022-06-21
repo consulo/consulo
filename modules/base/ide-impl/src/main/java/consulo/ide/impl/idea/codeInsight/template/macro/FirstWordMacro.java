@@ -16,17 +16,20 @@
 
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
 import consulo.language.editor.template.TextResult;
+
 import javax.annotation.Nonnull;
 
 /**
  * @author ven
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class FirstWordMacro extends MacroBase {
   public FirstWordMacro() {
     super("firstWord", CodeInsightBundle.message("macro.firstWord.string"));

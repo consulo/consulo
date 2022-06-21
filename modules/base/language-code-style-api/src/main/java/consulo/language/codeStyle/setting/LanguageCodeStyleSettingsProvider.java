@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.language.codeStyle.setting;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.configurable.Configurable;
 import consulo.language.Language;
@@ -20,8 +22,9 @@ import java.util.Set;
 /**
  * Base class and extension point for common code style settings for a specific language.
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class LanguageCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
-  public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME = ExtensionPointName.create("consulo.langCodeStyleSettingsProvider");
+  public static final ExtensionPointName<LanguageCodeStyleSettingsProvider> EP_NAME = ExtensionPointName.create(LanguageCodeStyleSettingsProvider.class);
 
   public enum SettingsType {
     BLANK_LINES_SETTINGS,

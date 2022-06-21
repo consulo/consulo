@@ -16,6 +16,8 @@
 
 package consulo.language.editor.template.macro;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.template.Expression;
@@ -29,8 +31,9 @@ import javax.annotation.Nullable;
 /**
  * A macro which can be used in live templates.
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class Macro {
-  public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create("consulo.liveTemplateMacro");
+  public static final ExtensionPointName<Macro> EP_NAME = ExtensionPointName.create(Macro.class);
   
   @NonNls
   public abstract String getName();

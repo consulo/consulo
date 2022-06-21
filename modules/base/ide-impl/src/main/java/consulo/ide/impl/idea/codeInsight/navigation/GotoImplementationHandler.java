@@ -77,7 +77,7 @@ public class GotoImplementationHandler extends GotoTargetHandler {
 
 
   private static PsiElement getContainer(PsiElement refElement) {
-    for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensions()) {
+    for (ContainerProvider provider : ContainerProvider.EP_NAME.getExtensionList()) {
       final PsiElement container = provider.getContainer(refElement);
       if (container != null) return container;
     }

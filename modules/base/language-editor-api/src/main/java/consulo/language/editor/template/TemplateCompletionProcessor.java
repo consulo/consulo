@@ -16,14 +16,17 @@
 
 package consulo.language.editor.template;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.component.extension.ExtensionPointName;
 
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface TemplateCompletionProcessor {
-  ExtensionPointName<TemplateCompletionProcessor> EP_NAME = ExtensionPointName.create("consulo.templateCompletionProcessor");
+  ExtensionPointName<TemplateCompletionProcessor> EP_NAME = ExtensionPointName.create(TemplateCompletionProcessor.class);
 
   boolean nextTabOnItemSelected(ExpressionContext context, final LookupElement item);
 }

@@ -15,11 +15,12 @@
  */
 package consulo.ide.impl.psi.impl.source.resolve.reference;
 
+import consulo.ide.impl.psi.ReferenceProviderType;
 import consulo.language.pattern.PlatformPatterns;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiReferenceContributor;
 import consulo.language.psi.PsiReferenceRegistrar;
-import consulo.ide.impl.psi.ReferenceProviderType;
+
 import javax.annotation.Nonnull;
 
 public class CommentsReferenceContributor extends PsiReferenceContributor {

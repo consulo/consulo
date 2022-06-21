@@ -16,11 +16,13 @@
 
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.completion.CodeCompletionHandlerBase;
 import consulo.language.editor.completion.CompletionType;
 import consulo.codeEditor.Editor;
 import consulo.project.Project;
 
+@ExtensionImpl
 public class CompleteSmartMacro extends BaseCompleteMacro {
   public CompleteSmartMacro() {
     super("completeSmart");

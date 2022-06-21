@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.completion.lookup.LookupElementBuilder;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class EnumMacro extends Macro {
   @Override
   public String getName() {

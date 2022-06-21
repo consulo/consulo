@@ -15,20 +15,13 @@
  */
 package consulo.ide.impl.idea.openapi.editor;
 
-import consulo.dataContext.DataContext;
-import consulo.codeEditor.Editor;
-
-import javax.annotation.Nonnull;
+import consulo.annotation.DeprecationInfo;
 
 /**
  * @author Denis Zhdanov
  * @since 5/26/11 4:21 PM
  */
-public class EditorNavigationDelegateAdapter implements EditorNavigationDelegate {
-
-  @Nonnull
-  @Override
-  public Result navigateToLineEnd(@Nonnull Editor editor, @Nonnull DataContext dataContext) {
-    return Result.CONTINUE;
-  }
+@Deprecated
+@DeprecationInfo("Use EditorNavigationDelegate")
+public abstract class EditorNavigationDelegateAdapter implements EditorNavigationDelegate {
 }

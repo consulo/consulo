@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.template.Result;
@@ -29,9 +30,11 @@ import java.util.Date;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class CurrentDateMacro extends SimpleMacro {
   private static final Logger LOG = Logger.getInstance(CurrentDateMacro.class);
-  protected CurrentDateMacro() {
+
+  public CurrentDateMacro() {
     super("date");
   }
 

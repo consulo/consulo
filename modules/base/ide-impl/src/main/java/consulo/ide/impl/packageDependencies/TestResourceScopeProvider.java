@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.packageDependencies;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.project.Project;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
 import consulo.content.scope.NamedScope;
@@ -28,6 +29,7 @@ import java.util.List;
  * @author VISTALL
  * @since 23:43/19.09.13
  */
+@ExtensionImpl
 public class TestResourceScopeProvider extends CustomScopesProviderEx {
   private TestResourcesScope myTestResourcesScope = new TestResourcesScope();
 

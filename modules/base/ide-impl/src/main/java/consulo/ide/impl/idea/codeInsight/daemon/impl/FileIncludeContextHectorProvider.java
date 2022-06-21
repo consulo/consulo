@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.HectorComponentPanel;
 import consulo.language.editor.HectorComponentPanelsProvider;
 import consulo.project.DumbService;
@@ -29,6 +30,7 @@ import javax.annotation.Nullable;
 /**
  * @author mike
  */
+@ExtensionImpl
 public class FileIncludeContextHectorProvider implements HectorComponentPanelsProvider {
   private final FileIncludeManager myIncludeManager;
 

@@ -15,10 +15,10 @@
  */
 package consulo.ide.impl.builtInServer.impl.net.xml;
 
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.ide.impl.builtInServer.http.HttpRequestHandler;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.builtInServer.http.Responses;
 import consulo.ide.impl.builtInServer.xml.XmlRpcServer;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.logging.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
@@ -27,7 +27,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.QueryStringDecoder;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.XmlRpcHandler;
@@ -40,7 +40,6 @@ import org.xml.sax.SAXParseException;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -48,6 +47,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Singleton
+@ServiceImpl
 public class XmlRpcServerImpl implements XmlRpcServer {
   private static class ApacheXmlRpcImpl extends XmlRpcStreamServer {
     @Override
@@ -69,20 +69,9 @@ public class XmlRpcServerImpl implements XmlRpcServer {
 
   private final ApacheXmlRpcImpl myApacheXmlRpc = new ApacheXmlRpcImpl();
 
+  @Inject
   public XmlRpcServerImpl() {
     myXmlRpcConfig.setEncoding("UTF-8");
-  }
-
-  public static final class XmlRpcRequestHandler extends HttpRequestHandler {
-    @Override
-    public boolean isSupported(@Nonnull FullHttpRequest request) {
-      return request.method() == HttpMethod.POST || request.method() == HttpMethod.OPTIONS;
-    }
-
-    @Override
-    public boolean process(@Nonnull QueryStringDecoder urlDecoder, @Nonnull FullHttpRequest request, @Nonnull ChannelHandlerContext context) throws IOException {
-      return XmlRpcServer.getInstance().process(urlDecoder.path(), request, context, null);
-    }
   }
 
   @Override

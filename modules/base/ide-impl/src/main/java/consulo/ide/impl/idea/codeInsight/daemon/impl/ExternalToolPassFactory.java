@@ -16,28 +16,30 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.Pass;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.Editor;
+import consulo.document.util.TextRange;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
 import consulo.ide.impl.idea.lang.ExternalLanguageAnnotators;
 import consulo.language.Language;
+import consulo.language.editor.Pass;
 import consulo.language.editor.annotation.ExternalAnnotator;
-import consulo.application.ApplicationManager;
-import consulo.codeEditor.Editor;
-import consulo.project.Project;
-import consulo.document.util.TextRange;
 import consulo.language.psi.PsiFile;
+import consulo.project.Project;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Inject;
 import java.util.List;
 
 /**
  * @author cdr
  */
+@ExtensionImpl
 public class ExternalToolPassFactory implements TextEditorHighlightingPassFactory {
   private final MergingUpdateQueue myExternalActivitiesQueue;
 

@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.psi.codeStyle.modifier;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.codeStyle.CodeStyleStatusBarUIContributor;
 import consulo.project.Project;
@@ -18,8 +20,9 @@ import java.util.function.Consumer;
  * of {@code TransientCodeStyleSettings} object. The modifier can be registered via "com.intellij.codeStyleSettingsModifier" extension
  * point.
  */
+@Extension(ComponentScope.APPLICATION)
 public interface CodeStyleSettingsModifier {
-  ExtensionPointName<CodeStyleSettingsModifier> EP_NAME = ExtensionPointName.create("consulo.codeStyleSettingsModifier");
+  ExtensionPointName<CodeStyleSettingsModifier> EP_NAME = ExtensionPointName.create(CodeStyleSettingsModifier.class);
 
   /**
    * Modifies given settings. The modifier may add dependencies to the transient code style settings to update them if the dependencies

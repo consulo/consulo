@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.template.TextResult;
 import consulo.virtualFileSystem.VirtualFile;
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Nikolay Matveev
  */
+@ExtensionImpl
 public class FileNameWithoutExtensionMacro extends FileNameMacro {
 
   @Override

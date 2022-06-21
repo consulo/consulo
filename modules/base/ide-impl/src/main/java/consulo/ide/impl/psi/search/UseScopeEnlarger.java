@@ -15,18 +15,22 @@
  */
 package consulo.ide.impl.psi.search;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 import consulo.content.scope.SearchScope;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class UseScopeEnlarger {
-  public static final ExtensionPointName<UseScopeEnlarger> EP_NAME = ExtensionPointName.create("consulo.useScopeEnlarger");
+  public static final ExtensionPointName<UseScopeEnlarger> EP_NAME = ExtensionPointName.create(UseScopeEnlarger.class);
 
-  @javax.annotation.Nullable
+  @Nullable
   public abstract SearchScope getAdditionalUseScope(@Nonnull PsiElement element);
 }

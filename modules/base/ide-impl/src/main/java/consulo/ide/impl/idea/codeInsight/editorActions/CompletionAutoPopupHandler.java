@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.AutoPopupController;
 import consulo.ide.impl.idea.codeInsight.AutoPopupControllerImpl;
 import consulo.ide.impl.idea.codeInsight.completion.impl.CompletionServiceImpl;
@@ -20,6 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * @author peter
  */
+@ExtensionImpl(id = "completionAutoPopup", order = "first")
 public class CompletionAutoPopupHandler extends TypedHandlerDelegate {
   private static final Logger LOG = Logger.getInstance(CompletionAutoPopupHandler.class);
   public static volatile Key<Boolean> ourTestingAutopopup = Key.create("TestingAutopopup");

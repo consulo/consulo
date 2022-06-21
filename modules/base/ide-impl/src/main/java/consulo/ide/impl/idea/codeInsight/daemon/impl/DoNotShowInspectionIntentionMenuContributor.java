@@ -1,6 +1,7 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.impl.internal.progress.DaemonProgressIndicator;
 import consulo.language.editor.rawHighlight.HighlightDisplayLevel;
 import consulo.language.editor.rawHighlight.HighlightDisplayKey;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@ExtensionImpl(id = "dontShow")
 public class DoNotShowInspectionIntentionMenuContributor implements IntentionMenuContributor {
   private static final Logger LOG = Logger.getInstance(DoNotShowInspectionIntentionMenuContributor.class);
 

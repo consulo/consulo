@@ -1,33 +1,27 @@
 package consulo.ide.impl.builtInServer.impl.ide;
 
-import consulo.project.ui.notification.NotificationType;
-import consulo.application.impl.internal.ApplicationNamesInfo;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
-import consulo.ide.ServiceManager;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
-import consulo.configurable.Configurable;
+import consulo.ide.ServiceManager;
+import consulo.ide.impl.builtInServer.BuiltInServerManager;
+import consulo.ide.impl.builtInServer.custom.CustomPortServerManager;
 import consulo.ide.impl.idea.openapi.util.Getter;
 import consulo.util.xml.serializer.XmlSerializerUtil;
 import consulo.util.xml.serializer.annotation.Attribute;
-import consulo.execution.debug.setting.DebuggerSettingsCategory;
-import consulo.execution.debug.setting.XDebuggerSettings;
-import consulo.ide.impl.builtInServer.BuiltInServerManager;
-import consulo.ide.impl.builtInServer.custom.CustomPortServerManager;
-import consulo.ide.impl.builtInServer.custom.CustomPortServerManagerBase;
-import consulo.ide.impl.builtInServer.impl.BuiltInServerManagerImpl;
 import jakarta.inject.Singleton;
-import org.jdom.Element;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
 
 @Singleton
 @State(name = "BuiltInServerOptions", storages = @Storage("other.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class BuiltInServerOptions implements PersistentStateComponent<BuiltInServerOptions>, Getter<BuiltInServerOptions> {
-  private static final int DEFAULT_PORT = 63342;
+  public static final int DEFAULT_PORT = 63342;
 
   @Attribute
   public int builtInServerPort = DEFAULT_PORT;
@@ -46,31 +40,6 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
     return this;
   }
 
-  static final class BuiltInServerDebuggerConfigurableProvider extends XDebuggerSettings<Element> {
-    public BuiltInServerDebuggerConfigurableProvider() {
-      super("buildin-server");
-    }
-
-    @Nonnull
-    @Override
-    public Collection<? extends Configurable> createConfigurables(@Nonnull DebuggerSettingsCategory category) {
-      if (category == DebuggerSettingsCategory.GENERAL) {
-        return List.of(new BuiltInServerConfigurable());
-      }
-      return List.of();
-    }
-
-    @Override
-    public Element getState() {
-      return null;
-    }
-
-    @Override
-    public void loadState(Element state) {
-
-    }
-  }
-
   @Nullable
   @Override
   public BuiltInServerOptions getState() {
@@ -83,37 +52,14 @@ public class BuiltInServerOptions implements PersistentStateComponent<BuiltInSer
   }
 
   public int getEffectiveBuiltInServerPort() {
-    MyCustomPortServerManager portServerManager = CustomPortServerManager.EP_NAME.findExtension(MyCustomPortServerManager.class);
+    DefaultCustomPortServerManager portServerManager = CustomPortServerManager.EP_NAME.findExtension(DefaultCustomPortServerManager.class);
     if (!portServerManager.isBound()) {
       return BuiltInServerManager.getInstance().getPort();
     }
     return builtInServerPort;
   }
 
-  public static final class MyCustomPortServerManager extends CustomPortServerManagerBase {
-    @Override
-    public void cannotBind(Exception e, int port) {
-      BuiltInServerManagerImpl.NOTIFICATION_GROUP.getValue().createNotification("Cannot start built-in HTTP server on custom port " +
-                                                                                port +
-                                                                                ". " +
-                                                                                "Please ensure that port is free (or check your firewall settings) and restart " +
-                                                                                ApplicationNamesInfo.getInstance().getFullProductName(), NotificationType.ERROR)
-              .notify(null);
-    }
-
-    @Override
-    public int getPort() {
-      int port = getInstance().builtInServerPort;
-      return port == DEFAULT_PORT ? -1 : port;
-    }
-
-    @Override
-    public boolean isAvailableExternally() {
-      return getInstance().builtInServerAvailableExternally;
-    }
-  }
-
   public static void onBuiltInServerPortChanged() {
-    CustomPortServerManager.EP_NAME.findExtension(MyCustomPortServerManager.class).portChanged();
+    CustomPortServerManager.EP_NAME.findExtension(DefaultCustomPortServerManager.class).portChanged();
   }
 }

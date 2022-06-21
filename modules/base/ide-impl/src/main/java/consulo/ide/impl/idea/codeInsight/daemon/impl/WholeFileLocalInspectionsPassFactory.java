@@ -16,24 +16,25 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.language.editor.Pass;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.progress.ProgressIndicator;
+import consulo.codeEditor.Editor;
+import consulo.disposer.Disposer;
+import consulo.document.util.ProperTextRange;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.language.editor.DaemonBundle;
+import consulo.language.editor.Pass;
 import consulo.language.editor.inspection.scheme.InspectionManager;
 import consulo.language.editor.inspection.scheme.InspectionProfileWrapper;
 import consulo.language.editor.inspection.scheme.LocalInspectionToolWrapper;
-import consulo.codeEditor.Editor;
-import consulo.application.progress.ProgressIndicator;
-import consulo.project.Project;
-import consulo.document.util.ProperTextRange;
 import consulo.language.editor.inspection.scheme.Profile;
 import consulo.language.editor.inspection.scheme.event.ProfileChangeAdapter;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
-import consulo.disposer.Disposer;
+import consulo.project.Project;
 import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
@@ -45,6 +46,7 @@ import java.util.stream.Collectors;
 /**
  * @author cdr
  */
+@ExtensionImpl
 public class WholeFileLocalInspectionsPassFactory implements TextEditorHighlightingPassFactory {
   private final Map<PsiFile, Boolean> myFileToolsCache = ContainerUtil.createConcurrentWeakMap();
   private final Project myProject;

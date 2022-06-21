@@ -30,7 +30,6 @@
 
     <applicationService serviceInterface="consulo.application.ui.RemoteDesktopService" serviceImplementation="consulo.desktop.swt.ide.DesktopSwtRemoteDesktopService"/>
 
-    <applicationService serviceInterface="consulo.codeEditor.EditorFactory" serviceImplementation="consulo.desktop.swt.editor.impl.DesktopSwtEditorFactoryImpl"/>
 
     <applicationService serviceInterface="consulo.ide.setting.ShowSettingsUtil" serviceImplementation="consulo.ide.impl.options.impl.UnifiedShowSettingsUtil"/>
 

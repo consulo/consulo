@@ -30,11 +30,11 @@ import consulo.codeEditor.impl.TextChangeImpl;
 import consulo.project.Project;
 import consulo.document.Document;
 import consulo.util.dataholder.Key;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.codeStyle.CodeStyleSettings;
 import consulo.language.codeStyle.WhiteSpaceFormattingStrategy;
 import consulo.language.codeStyle.WhiteSpaceFormattingStrategyFactory;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
+import consulo.util.lang.StringUtil;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

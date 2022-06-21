@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.builtInServer.xml;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.ServiceManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
 
+@Service(ComponentScope.APPLICATION)
 public interface XmlRpcServer {
   static XmlRpcServer getInstance() {
     return ServiceManager.getService(XmlRpcServer.class);

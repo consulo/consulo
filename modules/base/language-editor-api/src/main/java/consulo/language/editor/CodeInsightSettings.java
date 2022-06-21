@@ -16,6 +16,9 @@
 
 package consulo.language.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.component.persist.PersistentStateComponent;
@@ -37,9 +40,10 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-
 @Singleton
 @State(name = "CodeInsightSettings", storages = @Storage("editor.codeinsight.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class CodeInsightSettings implements PersistentStateComponent<Element>, Cloneable {
   private static final Logger LOG = Logger.getInstance(CodeInsightSettings.class);
 

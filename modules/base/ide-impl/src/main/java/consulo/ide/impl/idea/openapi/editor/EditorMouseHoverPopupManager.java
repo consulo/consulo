@@ -163,7 +163,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
     scheduleProcessing(editor, context, relation == Context.Relation.SIMILAR, false, false);
   }
 
-  private void cancelCurrentProcessing() {
+  void cancelCurrentProcessing() {
     myAlarm.cancelAllRequests();
     if (myCurrentProgress != null) {
       myCurrentProgress.cancel();
@@ -171,7 +171,7 @@ public final class EditorMouseHoverPopupManager implements Disposable {
     }
   }
 
-  private void skipNextMovement() {
+  void skipNextMovement() {
     mySkipNextMovement = true;
   }
 
@@ -272,7 +272,8 @@ public final class EditorMouseHoverPopupManager implements Disposable {
 
   private static AbstractPopup createHint(JComponent component, PopupBridge popupBridge, boolean requestFocus) {
     WrapperPanel wrapper = new WrapperPanel(component);
-    AbstractPopup popup = (AbstractPopup)JBPopupFactory.getInstance().createComponentPopupBuilder(wrapper, component).setResizable(true).setFocusable(requestFocus).setRequestFocus(requestFocus).createPopup();
+    AbstractPopup popup =
+            (AbstractPopup)JBPopupFactory.getInstance().createComponentPopupBuilder(wrapper, component).setResizable(true).setFocusable(requestFocus).setRequestFocus(requestFocus).createPopup();
     popupBridge.setPopup(popup);
     return popup;
   }
@@ -753,27 +754,6 @@ public final class EditorMouseHoverPopupManager implements Disposable {
         highlightInfoComponent.setBounds(0, 0, width, h1);
         quickDocComponent.setBounds(0, h1, width, height - h1);
       }
-    }
-  }
-
-  static final class MyEditorMouseEventListener implements EditorMouseListener {
-    @Override
-    public void mouseEntered(@Nonnull EditorMouseEvent event) {
-      if (!Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-      // we receive MOUSE_MOVED event after MOUSE_ENTERED even if mouse wasn't physically moved,
-      // e.g. if a popup overlapping editor has been closed
-      getInstance().skipNextMovement();
-    }
-
-    @Override
-    public void mouseExited(@Nonnull EditorMouseEvent event) {
-      if (!Registry.is("editor.new.mouse.hover.popups")) {
-        return;
-      }
-
-      getInstance().cancelCurrentProcessing();
     }
   }
 

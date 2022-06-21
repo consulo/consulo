@@ -1,6 +1,8 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.codeEditor.event;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.disposer.Disposable;
 import consulo.codeEditor.Editor;
 
@@ -15,6 +17,7 @@ import java.util.EventListener;
  * @see EditorEventMulticaster#addEditorMouseListener(EditorMouseListener, Disposable)
  * @see EditorMouseMotionListener
  */
+@Extension(ComponentScope.APPLICATION)
 public interface EditorMouseListener extends EventListener {
 
   /**

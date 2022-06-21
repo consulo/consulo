@@ -19,14 +19,12 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.AccessToken;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.application.util.ConcurrentFactoryMap;
 import consulo.component.messagebus.MessageBus;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.RoamingType;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.container.boot.ContainerPathManager;
-import consulo.content.scope.SearchScope;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.FileDocumentManager;
@@ -42,7 +40,6 @@ import consulo.ide.impl.idea.openapi.vfs.VfsUtil;
 import consulo.ide.impl.idea.util.PathUtil;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.indexing.LightDirectoryIndex;
-import consulo.ide.impl.psi.search.UseScopeEnlarger;
 import consulo.language.Language;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
@@ -54,16 +51,11 @@ import consulo.language.file.FileTypeManager;
 import consulo.language.plain.PlainTextLanguage;
 import consulo.language.psi.LanguageSubstitutor;
 import consulo.language.psi.LanguageSubstitutors;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiUtilCore;
-import consulo.language.psi.scope.LocalSearchScope;
 import consulo.language.util.LanguageUtil;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
 import consulo.project.event.ProjectManagerListener;
 import consulo.ui.UIAccess;
-import consulo.usage.UsageType;
-import consulo.usage.UsageTypeProvider;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.fileType.FileType;
@@ -76,7 +68,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ConcurrentMap;
 
 
 @Singleton
@@ -245,14 +236,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
     }
   }
 
-  public static class AccessExtension implements NonProjectFileWritingAccessExtension {
-
-    @Override
-    public boolean isWritable(@Nonnull VirtualFile file) {
-      return ScratchUtil.isScratch(file);
-    }
-  }
-
   @Override
   public VirtualFile findFile(@Nonnull RootType rootType, @Nonnull String pathName, @Nonnull Option option) throws IOException {
     ApplicationManager.getApplication().assertReadAccessAllowed();
@@ -284,16 +267,6 @@ public class ScratchFileServiceImpl extends ScratchFileService implements Persis
   @Nullable
   private static Language getLanguageByFileName(@Nullable VirtualFile file) {
     return file == null ? null : LanguageUtil.getFileTypeLanguage(FileTypeManager.getInstance().getFileTypeByFileName(file.getName()));
-  }
-
-  public static class UseScopeExtension extends UseScopeEnlarger {
-    @Nullable
-    @Override
-    public SearchScope getAdditionalUseScope(@Nonnull PsiElement element) {
-      SearchScope useScope = element.getUseScope();
-      if (useScope instanceof LocalSearchScope) return null;
-      return ScratchesSearchScope.getScratchesScope(element.getProject());
-    }
   }
 
 }

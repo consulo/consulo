@@ -15,23 +15,22 @@
  */
 package consulo.ide.impl.idea.openapi.options.colors.pages;
 
-import consulo.ide.impl.idea.application.options.colors.InspectionColorSettingsPage;
-import consulo.language.editor.rawHighlight.HighlightInfoType;
-import consulo.language.editor.rawHighlight.SeveritiesProvider;
-import consulo.ide.impl.idea.codeInsight.template.impl.TemplateColors;
-import consulo.codeEditor.HighlighterColors;
 import consulo.codeEditor.CodeInsightColors;
 import consulo.codeEditor.EditorColors;
+import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.TextAttributesKey;
-import consulo.component.extension.Extensions;
-import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
-import consulo.language.editor.highlight.SyntaxHighlighter;
-import consulo.configurable.OptionsBundle;
 import consulo.colorScheme.setting.AttributesDescriptor;
 import consulo.colorScheme.setting.ColorDescriptor;
-import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
-import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.configurable.OptionsBundle;
 import consulo.configurable.internal.ConfigurableWeight;
+import consulo.ide.impl.idea.application.options.colors.InspectionColorSettingsPage;
+import consulo.ide.impl.idea.codeInsight.template.impl.TemplateColors;
+import consulo.ide.impl.idea.openapi.util.io.FileUtil;
+import consulo.language.editor.colorScheme.setting.ColorSettingsPage;
+import consulo.language.editor.highlight.DefaultSyntaxHighlighter;
+import consulo.language.editor.highlight.SyntaxHighlighter;
+import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.rawHighlight.SeveritiesProvider;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -152,7 +151,7 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("weak_warning", CodeInsightColors.WEAK_WARNING_ATTRIBUTES);
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("server_error", CodeInsightColors.GENERIC_SERVER_ERROR_OR_WARNING);
     ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put("server_duplicate", CodeInsightColors.DUPLICATE_FROM_SERVER);
-    for (SeveritiesProvider provider : Extensions.getExtensions(SeveritiesProvider.EP_NAME)) {
+    for (SeveritiesProvider provider : SeveritiesProvider.EP_NAME.getExtensionList()) {
       for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
         ADDITIONAL_HIGHLIGHT_DESCRIPTORS.put(getHighlightDescTagName(highlightInfoType), highlightInfoType.getAttributesKey());
       }
@@ -207,7 +206,7 @@ public class GeneralColorsPage implements ColorSettingsPage, InspectionColorSett
   private static String getCustomSeveritiesDemoText() {
     final StringBuilder buff = new StringBuilder();
 
-    for (SeveritiesProvider provider : Extensions.getExtensions(SeveritiesProvider.EP_NAME)) {
+    for (SeveritiesProvider provider : SeveritiesProvider.EP_NAME.getExtensionList()) {
       for (HighlightInfoType highlightInfoType : provider.getSeveritiesHighlightInfoTypes()) {
         final String tag = getHighlightDescTagName(highlightInfoType);
         buff.append("  <").append(tag).append(">");

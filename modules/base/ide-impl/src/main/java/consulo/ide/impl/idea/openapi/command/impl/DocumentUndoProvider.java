@@ -1,29 +1,33 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.openapi.command.impl;
 
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
+import consulo.codeEditor.event.EditorDocumentListener;
+import consulo.document.Document;
 import consulo.document.DocumentReference;
 import consulo.document.DocumentReferenceManager;
-import consulo.application.ApplicationManager;
-import consulo.undoRedo.ApplicationUndoManager;
-import consulo.undoRedo.ProjectUndoManager;
-import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.event.DocumentEvent;
-import consulo.document.event.DocumentListener;
 import consulo.language.impl.file.AbstractFileViewProvider;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
+import consulo.undoRedo.ApplicationUndoManager;
+import consulo.undoRedo.ProjectUndoManager;
 import consulo.undoRedo.util.UndoConstants;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public final class DocumentUndoProvider implements DocumentListener {
+@ExtensionImpl
+public final class DocumentUndoProvider implements EditorDocumentListener {
   private static final Key<Boolean> UNDOING_EDITOR_CHANGE = Key.create("DocumentUndoProvider.UNDOING_EDITOR_CHANGE");
 
-  private DocumentUndoProvider() {
+  @Inject
+  DocumentUndoProvider() {
   }
 
   @Nonnull

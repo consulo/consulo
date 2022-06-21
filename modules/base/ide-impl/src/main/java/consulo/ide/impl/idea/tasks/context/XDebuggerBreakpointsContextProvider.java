@@ -15,29 +15,29 @@
  */
 package consulo.ide.impl.idea.tasks.context;
 
-import javax.annotation.Nonnull;
-
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ApplicationManager;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.WriteExternalException;
-import consulo.util.xml.serializer.Accessor;
-import consulo.util.xml.serializer.SerializationFilter;
-import consulo.util.xml.serializer.XmlSerializer;
 import consulo.execution.debug.XDebuggerManager;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointBase;
 import consulo.ide.impl.idea.xdebugger.impl.breakpoints.XBreakpointManagerImpl;
+import consulo.util.xml.serializer.*;
+import jakarta.inject.Inject;
 import org.jdom.Element;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author Dmitry Avdeev
- *         Date: 7/12/13
+ * Date: 7/12/13
  */
+@ExtensionImpl
 public class XDebuggerBreakpointsContextProvider extends WorkingContextProvider {
 
   private final XBreakpointManagerImpl myBreakpointManager;
 
-  public XDebuggerBreakpointsContextProvider(XDebuggerManager xDebuggerManager) {
-    myBreakpointManager = (XBreakpointManagerImpl)xDebuggerManager.getBreakpointManager();
+  @Inject
+  public XDebuggerBreakpointsContextProvider(XDebuggerManager debuggerManager) {
+    myBreakpointManager = (XBreakpointManagerImpl)debuggerManager.getBreakpointManager();
   }
 
   @Nonnull
@@ -55,25 +55,19 @@ public class XDebuggerBreakpointsContextProvider extends WorkingContextProvider 
   @Override
   public void saveContext(Element toElement) throws WriteExternalException {
     XBreakpointManagerImpl.BreakpointManagerState state = myBreakpointManager.getState();
-    Element serialize = XmlSerializer.serialize(state, new SerializationFilter() {
-      @Override
-      public boolean accepts(Accessor accessor, Object bean) {
-        return accessor.read(bean) != null;
-      }
-    });
+    Element serialize = XmlSerializer.serialize(state, (accessor, bean) -> accessor.read(bean) != null);
     toElement.addContent(serialize.removeContent());
   }
 
   @Override
   public void loadContext(Element fromElement) throws InvalidDataException {
-    XBreakpointManagerImpl.BreakpointManagerState state =
-      XmlSerializer.deserialize(fromElement, XBreakpointManagerImpl.BreakpointManagerState.class);
+    XBreakpointManagerImpl.BreakpointManagerState state = XmlSerializer.deserialize(fromElement, XBreakpointManagerImpl.BreakpointManagerState.class);
     myBreakpointManager.loadState(state);
   }
 
   @Override
   public void clearContext() {
-    XBreakpointBase<?,?,?>[] breakpoints = myBreakpointManager.getAllBreakpoints();
+    XBreakpointBase<?, ?, ?>[] breakpoints = myBreakpointManager.getAllBreakpoints();
     for (final XBreakpointBase<?, ?, ?> breakpoint : breakpoints) {
       ApplicationManager.getApplication().runWriteAction(new Runnable() {
         public void run() {

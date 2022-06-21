@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.editorActions;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeStyle.CodeStyleFacade;
 import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.logging.Logger;
@@ -30,6 +31,7 @@ import consulo.language.codeStyle.CodeStyleManager;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import javax.annotation.Nonnull;
 
+@ExtensionImpl
 public class SmartIndentingBackspaceHandler extends AbstractIndentingBackspaceHandler {
   private static final Logger LOG = Logger.getInstance(SmartIndentingBackspaceHandler.class);
 

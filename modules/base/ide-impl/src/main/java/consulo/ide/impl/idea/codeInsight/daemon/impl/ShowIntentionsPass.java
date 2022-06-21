@@ -261,7 +261,7 @@ public class ShowIntentionsPass extends TextEditorHighlightingPass {
    */
   private static void getActionsToShowSync(@Nonnull final Editor hostEditor, @Nonnull final PsiFile hostFile, @Nonnull final IntentionsInfo intentions, int passIdToShowIntentionsFor) {
     ApplicationManager.getApplication().assertIsDispatchThread();
-    new EditorNotificationActions().collectActions(hostEditor, hostFile, intentions, passIdToShowIntentionsFor, hostEditor.getCaretModel().getOffset());
+    EditorNotificationActions.collectActions(hostEditor, hostFile, intentions, passIdToShowIntentionsFor, hostEditor.getCaretModel().getOffset());
     intentions.filterActions(hostFile);
   }
 

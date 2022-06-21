@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.codeStyle;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.document.SmartStripTrailingSpacesFilter;
 import consulo.component.ComponentManager;
 import consulo.document.Document;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
 
 import static consulo.document.StripTrailingSpacesFilter.ALL_LINES;
 
+@ExtensionImpl
 public class KeepTrailingSpacesOnEmptyLinesFilterFactory extends StripTrailingSpacesFilterFactory {
 
   private static class KeepTrailingSpacesOnEmptyLinesFilter extends SmartStripTrailingSpacesFilter {

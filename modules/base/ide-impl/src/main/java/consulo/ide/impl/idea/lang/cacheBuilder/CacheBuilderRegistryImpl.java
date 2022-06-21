@@ -16,18 +16,20 @@
 
 package consulo.ide.impl.idea.lang.cacheBuilder;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.cacheBuilder.CacheBuilderRegistry;
 import consulo.language.cacheBuilder.WordsScanner;
 import consulo.virtualFileSystem.fileType.FileType;
+import jakarta.inject.Singleton;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import jakarta.inject.Singleton;
 
 /**
  * @author yole
  */
 @Singleton
+@ServiceImpl
 public class CacheBuilderRegistryImpl extends CacheBuilderRegistry {
   @Override
   @Nullable

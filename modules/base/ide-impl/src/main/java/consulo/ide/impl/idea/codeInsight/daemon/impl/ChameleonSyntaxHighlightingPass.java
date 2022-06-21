@@ -2,25 +2,21 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
-import consulo.ide.impl.idea.codeHighlighting.MainHighlightingPassFactory;
-import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
-import consulo.language.psi.SyntaxTraverser;
-import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.application.progress.ProgressIndicator;
 import consulo.codeEditor.Editor;
 import consulo.codeEditor.HighlighterColors;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.colorScheme.EditorColorsScheme;
-import consulo.colorScheme.TextAttributesKey;
 import consulo.colorScheme.TextAttributes;
+import consulo.colorScheme.TextAttributesKey;
 import consulo.document.Document;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.ide.impl.idea.util.ObjectUtils;
 import consulo.language.Language;
 import consulo.language.ast.IElementType;
 import consulo.language.ast.IFileElementType;
 import consulo.language.ast.ILazyParseableElementType;
-import consulo.language.editor.Pass;
 import consulo.language.editor.highlight.SyntaxHighlighter;
 import consulo.language.editor.highlight.SyntaxHighlighterFactory;
 import consulo.language.editor.rawHighlight.HighlightInfo;
@@ -28,6 +24,7 @@ import consulo.language.editor.rawHighlight.HighlightInfoType;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiUtilCore;
+import consulo.language.psi.SyntaxTraverser;
 import consulo.project.Project;
 import consulo.util.collection.TreeTraversal;
 
@@ -37,37 +34,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ChameleonSyntaxHighlightingPass extends GeneralHighlightingPass {
-  final static class Factory implements MainHighlightingPassFactory {
-    @Override
-    public void register(@Nonnull Registrar registrar) {
-      registrar.registerTextEditorHighlightingPass(this, null, new int[]{Pass.UPDATE_ALL}, false, -1);
-    }
 
-    @Nonnull
-    @Override
-    public TextEditorHighlightingPass createHighlightingPass(@Nonnull PsiFile file, @Nonnull Editor editor) {
-      Project project = file.getProject();
-      TextRange restrict = FileStatusMap.getDirtyTextRange(editor, Pass.UPDATE_ALL);
-      if (restrict == null) return new ProgressableTextEditorHighlightingPass.EmptyPass(project, editor.getDocument());
-      ProperTextRange priority = VisibleHighlightingPassFactory.calculateVisibleRange(editor);
-      return new ChameleonSyntaxHighlightingPass(project, file, editor.getDocument(), ProperTextRange.create(restrict), priority, editor, new DefaultHighlightInfoProcessor());
-    }
-
-    @Nonnull
-    @Override
-    public TextEditorHighlightingPass createMainHighlightingPass(@Nonnull PsiFile file, @Nonnull Document document, @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
-      ProperTextRange range = ProperTextRange.from(0, document.getTextLength());
-      return new ChameleonSyntaxHighlightingPass(file.getProject(), file, document, range, range, null, highlightInfoProcessor);
-    }
-  }
-
-  private ChameleonSyntaxHighlightingPass(@Nonnull Project project,
-                                          @Nonnull PsiFile file,
-                                          @Nonnull Document document,
-                                          @Nonnull ProperTextRange restrictRange,
-                                          @Nonnull ProperTextRange priorityRange,
-                                          @Nullable Editor editor,
-                                          @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
+  ChameleonSyntaxHighlightingPass(@Nonnull Project project,
+                                  @Nonnull PsiFile file,
+                                  @Nonnull Document document,
+                                  @Nonnull ProperTextRange restrictRange,
+                                  @Nonnull ProperTextRange priorityRange,
+                                  @Nullable Editor editor,
+                                  @Nonnull HighlightInfoProcessor highlightInfoProcessor) {
     super(project, file, document, restrictRange.getStartOffset(), restrictRange.getEndOffset(), true, priorityRange, editor, highlightInfoProcessor);
   }
 

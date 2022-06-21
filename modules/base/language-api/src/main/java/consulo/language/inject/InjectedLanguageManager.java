@@ -16,6 +16,8 @@
 
 package consulo.language.inject;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.component.util.ComponentUtil;
 import consulo.document.Document;
 import consulo.document.util.TextRange;
@@ -33,6 +35,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Function;
 
+@Service(ComponentScope.PROJECT)
 public abstract class InjectedLanguageManager {
   private static final Function<Project, InjectedLanguageManager> LAZY_INJECT = ComponentUtil.createLazyInject(InjectedLanguageManager.class);
 

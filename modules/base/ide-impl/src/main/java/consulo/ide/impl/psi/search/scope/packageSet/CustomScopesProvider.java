@@ -20,6 +20,8 @@
  */
 package consulo.ide.impl.psi.search.scope.packageSet;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.content.scope.NamedScope;
@@ -28,8 +30,9 @@ import javax.annotation.Nonnull;
 
 import java.util.List;
 
+@Extension(ComponentScope.PROJECT)
 public interface CustomScopesProvider {
-  ExtensionPointName<CustomScopesProvider> CUSTOM_SCOPES_PROVIDER = ExtensionPointName.create("consulo.customScopesProvider");
+  ExtensionPointName<CustomScopesProvider> CUSTOM_SCOPES_PROVIDER = ExtensionPointName.create(CustomScopesProvider.class);
 
   @Nonnull
   List<NamedScope> getCustomScopes();

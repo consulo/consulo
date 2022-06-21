@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.codeEditor.Editor;
 import consulo.language.editor.intention.HintAction;
@@ -25,8 +27,9 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@Extension(ComponentScope.APPLICATION)
 public interface ReferenceImporter {
-  ExtensionPointName<ReferenceImporter> EP_NAME = ExtensionPointName.create("consulo.referenceImporter");
+  ExtensionPointName<ReferenceImporter> EP_NAME = ExtensionPointName.create(ReferenceImporter.class);
 
   boolean autoImportReferenceAtCursor(@Nonnull Editor editor, @Nonnull PsiFile file);
 

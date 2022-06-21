@@ -2,6 +2,7 @@
 
 package consulo.language.impl.internal.psi.include;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.index.io.DataIndexer;
 import consulo.index.io.EnumeratorStringDescriptor;
 import consulo.index.io.ID;
@@ -34,6 +35,7 @@ import java.util.function.Consumer;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class FileIncludeIndex extends FileBasedIndexExtension<String, List<FileIncludeInfoImpl>> {
 
   public static final ID<String, List<FileIncludeInfoImpl>> INDEX_ID = ID.create("fileIncludes");

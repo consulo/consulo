@@ -16,15 +16,18 @@
 
 package consulo.language.psi.path;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
 /**
  * @author Dmitry Avdeev
  */
+@Extension(ComponentScope.APPLICATION)
 public interface DynamicContextProvider {
 
-  ExtensionPointName<DynamicContextProvider> EP_NAME = ExtensionPointName.create("consulo.dynamicContextProvider");
+  ExtensionPointName<DynamicContextProvider> EP_NAME = ExtensionPointName.create(DynamicContextProvider.class);
 
   /**
    * Returns starting position for file references

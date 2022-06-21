@@ -70,8 +70,7 @@ public class EndHandler extends EditorActionHandler {
       return;
     }
 
-    final EditorNavigationDelegate[] extensions = EditorNavigationDelegate.EP_NAME.getExtensions();
-    for (EditorNavigationDelegate delegate : extensions) {
+    for (EditorNavigationDelegate delegate : EditorNavigationDelegate.EP_NAME.getExtensionList()) {
       if (delegate.navigateToLineEnd(editor, dataContext) == EditorNavigationDelegate.Result.STOP) {
         return;
       }

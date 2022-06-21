@@ -16,6 +16,8 @@
 
 package consulo.execution.debug.breakpoint;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.application.AllIcons;
 import consulo.component.extension.ExtensionPointName;
 import consulo.execution.debug.XSourcePosition;
@@ -48,8 +50,9 @@ import java.util.List;
  *
  * @author nik
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class XBreakpointType<B extends XBreakpoint<P>, P extends XBreakpointProperties> {
-  public static final ExtensionPointName<XBreakpointType> EXTENSION_POINT_NAME = ExtensionPointName.create("consulo.xdebugger.breakpointType");
+  public static final ExtensionPointName<XBreakpointType> EXTENSION_POINT_NAME = ExtensionPointName.create(XBreakpointType.class);
   @Nonnull
   private final String myId;
   @Nonnull

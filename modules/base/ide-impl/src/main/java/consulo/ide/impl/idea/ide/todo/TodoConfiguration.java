@@ -16,27 +16,23 @@
 
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.TopicImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.ide.ServiceManager;
-import consulo.ide.impl.psi.search.*;
-import consulo.language.psi.search.IndexPattern;
-import consulo.language.psi.search.IndexPatternProvider;
-import consulo.language.psi.search.TodoAttributes;
-import consulo.language.psi.search.TodoPattern;
+import consulo.ide.impl.psi.search.TodoAttributesUtil;
+import consulo.language.psi.search.*;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,43 +42,39 @@ import java.util.List;
  */
 @Singleton
 @State(name = "TodoConfiguration", storages = @Storage("editor.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class TodoConfiguration implements PersistentStateComponent<Element> {
-  public static final TopicImpl<PropertyChangeListener> PROPERTY_CHANGE = new TopicImpl<>("TodoConfiguration changes", PropertyChangeListener.class);
-
   private TodoPattern[] myTodoPatterns;
   private TodoFilter[] myTodoFilters;
   private IndexPattern[] myIndexPatterns;
 
-  @NonNls
   public static final String PROP_MULTILINE = "multiLine";
-  @NonNls public static final String PROP_TODO_PATTERNS = "todoPatterns";
-  @NonNls public static final String PROP_TODO_FILTERS = "todoFilters";
-  @NonNls private static final String ELEMENT_PATTERN = "pattern";
-  @NonNls private static final String ELEMENT_FILTER = "filter";
+  public static final String PROP_TODO_PATTERNS = "todoPatterns";
+  public static final String PROP_TODO_FILTERS = "todoFilters";
+  private static final String ELEMENT_PATTERN = "pattern";
+  private static final String ELEMENT_FILTER = "filter";
   private final MessageBus myMessageBus;
 
-  private final PropertyChangeListener myTopic;
+  private final TodoConfigurationListener myTopic;
 
   @Inject
   public TodoConfiguration(@Nonnull Application application) {
     myMessageBus = application.getMessageBus();
     resetToDefaultTodoPatterns();
-    myTopic = myMessageBus.syncPublisher(PROPERTY_CHANGE);
+    myTopic = myMessageBus.syncPublisher(TodoConfigurationListener.class);
   }
 
   public void resetToDefaultTodoPatterns() {
-    myTodoPatterns = new TodoPattern[]{
-      new TodoPattern("\\btodo\\b.*", TodoAttributesUtil.createDefault(), false),
-      new TodoPattern("\\bfixme\\b.*", TodoAttributesUtil.createDefault(), false),
-    };
+    myTodoPatterns = new TodoPattern[]{new TodoPattern("\\btodo\\b.*", TodoAttributesUtil.createDefault(), false), new TodoPattern("\\bfixme\\b.*", TodoAttributesUtil.createDefault(), false),};
     myTodoFilters = new TodoFilter[]{};
     buildIndexPatterns();
   }
 
   private void buildIndexPatterns() {
     myIndexPatterns = new IndexPattern[myTodoPatterns.length];
-    for(int i=0; i<myTodoPatterns.length; i++) {
-      myIndexPatterns [i] = myTodoPatterns [i].getIndexPattern();
+    for (int i = 0; i < myTodoPatterns.length; i++) {
+      myIndexPatterns[i] = myTodoPatterns[i].getIndexPattern();
     }
   }
 
@@ -114,20 +106,18 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
 
     // only trigger index refresh actual index patterns have changed
     if (shouldNotifyIndices && !Arrays.deepEquals(myIndexPatterns, oldIndexPatterns)) {
-      final kava.beans.PropertyChangeEvent event =
-        new kava.beans.PropertyChangeEvent(this, IndexPatternProvider.PROP_INDEX_PATTERNS, oldTodoPatterns, todoPatterns);
-      myMessageBus.syncPublisher(IndexPatternProvider.INDEX_PATTERNS_CHANGED).propertyChange(event);
+      myMessageBus.syncPublisher(IndexPatternChangeListener.class).patternsChanged(oldTodoPatterns, todoPatterns);
     }
 
     // only trigger gui and code daemon refresh when either the index patterns or presentation attributes have changed
     if (!Arrays.deepEquals(myTodoPatterns, oldTodoPatterns)) {
-      myTopic.propertyChange(new PropertyChangeEvent(this, PROP_TODO_PATTERNS, oldTodoPatterns, todoPatterns));
+      myTopic.propertyChanged(PROP_TODO_PATTERNS, oldTodoPatterns, todoPatterns);
     }
   }
 
   /**
    * @return <code>TodoFilter</code> with specified <code>name</code>. Method returns
-   *         <code>null</code> if there is no filter with <code>name</code>.
+   * <code>null</code> if there is no filter with <code>name</code>.
    */
   public TodoFilter getTodoFilter(String name) {
     for (TodoFilter filter : myTodoFilters) {
@@ -149,7 +139,7 @@ public class TodoConfiguration implements PersistentStateComponent<Element> {
   public void setTodoFilters(@Nonnull TodoFilter[] filters) {
     TodoFilter[] oldFilters = myTodoFilters;
     myTodoFilters = filters;
-    myTopic.propertyChange(new PropertyChangeEvent(this, PROP_TODO_FILTERS, oldFilters, filters));
+    myTopic.propertyChanged(PROP_TODO_FILTERS, oldFilters, filters);
   }
 
   @Override

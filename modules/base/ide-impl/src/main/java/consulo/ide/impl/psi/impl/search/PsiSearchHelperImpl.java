@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.impl.search;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.progress.util.TooManyUsagesStatus;
 import consulo.ide.impl.idea.openapi.util.Comparing;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -76,6 +77,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Singleton
+@ServiceImpl
 public class PsiSearchHelperImpl implements PsiSearchHelper {
   private static final Logger LOG = Logger.getInstance(PsiSearchHelperImpl.class);
   private final PsiManagerEx myManager;

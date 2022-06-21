@@ -1,47 +1,45 @@
 // Copyright 2000-2020 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.template.postfix.templates;
 
-import consulo.language.editor.CodeInsightBundle;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.ApplicationManager;
+import consulo.application.progress.ProgressManager;
+import consulo.application.statistic.FeatureUsageTracker;
+import consulo.codeEditor.Editor;
+import consulo.disposer.Disposable;
+import consulo.disposer.Disposer;
+import consulo.document.Document;
 import consulo.ide.impl.idea.codeInsight.completion.OffsetTranslatorImpl;
 import consulo.ide.impl.idea.codeInsight.template.CustomLiveTemplateBase;
 import consulo.ide.impl.idea.codeInsight.template.CustomTemplateCallback;
 import consulo.ide.impl.idea.codeInsight.template.impl.CustomLiveTemplateLookupElement;
 import consulo.ide.impl.idea.codeInsight.template.postfix.completion.PostfixTemplateLookupElement;
 import consulo.ide.impl.idea.codeInsight.template.postfix.settings.PostfixTemplatesSettings;
-import consulo.language.util.AttachmentFactoryUtil;
-import consulo.application.statistic.FeatureUsageTracker;
+import consulo.ide.impl.idea.openapi.diagnostic.Logger;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.Language;
+import consulo.language.editor.CodeInsightBundle;
+import consulo.language.impl.psi.PsiFileImpl;
+import consulo.language.psi.*;
+import consulo.language.template.TemplateLanguageUtil;
+import consulo.language.util.AttachmentFactoryUtil;
 import consulo.language.util.LanguageUtil;
-import consulo.application.ApplicationManager;
+import consulo.project.DumbService;
 import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.util.UndoUtil;
-import consulo.ide.impl.idea.openapi.diagnostic.Logger;
-import consulo.document.Document;
-import consulo.codeEditor.Editor;
-import consulo.virtualFileSystem.fileType.FileType;
-import consulo.application.progress.ProgressManager;
-import consulo.project.DumbService;
 import consulo.util.lang.function.Condition;
 import consulo.util.lang.function.Conditions;
-import consulo.disposer.Disposer;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.language.psi.PsiDocumentManager;
-import consulo.language.psi.PsiElement;
-import consulo.language.psi.PsiFile;
-import consulo.language.psi.PsiFileFactory;
-import consulo.language.impl.psi.PsiFileImpl;
-import consulo.language.template.TemplateLanguageUtil;
-import consulo.language.psi.PsiUtilCore;
-import consulo.disposer.Disposable;
+import consulo.virtualFileSystem.fileType.FileType;
 import org.jetbrains.annotations.NonNls;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+@ExtensionImpl
 public class PostfixLiveTemplate extends CustomLiveTemplateBase {
   public static final
   @NonNls

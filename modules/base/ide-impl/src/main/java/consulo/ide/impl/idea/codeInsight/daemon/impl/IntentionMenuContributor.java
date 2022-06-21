@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.intention.IntentionAction;
@@ -13,9 +15,9 @@ import javax.annotation.Nonnull;
  * be used by plugins. Plugin developers should implement {@link IntentionAction} or
  * {@link QuickFix} instead.
  */
-//@ApiStatus.Internal
+@Extension(ComponentScope.APPLICATION)
 public interface IntentionMenuContributor {
-  ExtensionPointName<IntentionMenuContributor> EP_NAME = ExtensionPointName.create("consulo.intentionMenuContributor");
+  ExtensionPointName<IntentionMenuContributor> EP_NAME = ExtensionPointName.create(IntentionMenuContributor.class);
 
   void collectActions(@Nonnull Editor hostEditor, @Nonnull PsiFile hostFile, @Nonnull final ShowIntentionsPass.IntentionsInfo intentions, int passIdToShowIntentionsFor, int offset);
 }

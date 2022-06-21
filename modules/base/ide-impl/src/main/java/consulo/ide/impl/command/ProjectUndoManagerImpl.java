@@ -15,9 +15,11 @@
  */
 package consulo.ide.impl.command;
 
-import consulo.undoRedo.CommandProcessor;
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.command.impl.UndoManagerImpl;
+import consulo.project.Project;
 import consulo.project.internal.ProjectEx;
+import consulo.undoRedo.CommandProcessor;
 import consulo.undoRedo.ProjectUndoManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -29,9 +31,10 @@ import javax.annotation.Nullable;
  * @since 2018-08-24
  */
 @Singleton
+@ServiceImpl
 public class ProjectUndoManagerImpl extends UndoManagerImpl implements ProjectUndoManager {
   @Inject
-  public ProjectUndoManagerImpl(@Nullable ProjectEx project, CommandProcessor commandProcessor) {
-    super(project, commandProcessor);
+  public ProjectUndoManagerImpl(@Nullable Project project, CommandProcessor commandProcessor) {
+    super((ProjectEx)project, commandProcessor);
   }
 }

@@ -15,6 +15,8 @@
  */
 package consulo.language.psi;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -25,8 +27,9 @@ import javax.annotation.Nullable;
 /**
  * @author peter
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class ResolveScopeProvider {
-  public static final ExtensionPointName<ResolveScopeProvider> EP_NAME = ExtensionPointName.create("consulo.resolveScopeProvider");
+  public static final ExtensionPointName<ResolveScopeProvider> EP_NAME = ExtensionPointName.create(ResolveScopeProvider.class);
 
   @Nullable
   public abstract GlobalSearchScope getResolveScope(@Nonnull VirtualFile file, Project project);

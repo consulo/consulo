@@ -15,10 +15,6 @@
   -->
 <consulo-plugin>
   <project-components>
-    <component>
-      <interface-class>consulo.undoRedo.ProjectUndoManager</interface-class>
-      <implementation-class>consulo.ide.impl.command.ProjectUndoManagerImpl</implementation-class>
-    </component>
 
     <component>
       <implementation-class>consulo.ide.impl.idea.notification.impl.NotificationsManagerImpl$ProjectNotificationsComponent</implementation-class>

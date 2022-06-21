@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.psi.search;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.impl.VirtualFileSystemEntry;
 import consulo.index.io.DataIndexer;
 import consulo.index.io.EnumeratorStringDescriptor;
@@ -29,6 +30,7 @@ import javax.annotation.Nonnull;
 
 import java.util.Collections;
 
+@ExtensionImpl
 public class FilenameIndexImpl extends ScalarIndexExtension<String> {
   @NonNls
   static final ID<String, Void> NAME = FilenameIndex.NAME;

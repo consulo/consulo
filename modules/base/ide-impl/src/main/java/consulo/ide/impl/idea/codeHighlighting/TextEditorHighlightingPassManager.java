@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeHighlighting;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
 import consulo.ide.ServiceManager;
 import consulo.document.Document;
@@ -30,6 +32,7 @@ import java.util.List;
  * User: anna
  * Date: 20-Apr-2006
  */
+@Service(ComponentScope.PROJECT)
 public abstract class TextEditorHighlightingPassManager {
   public static TextEditorHighlightingPassManager getInstance(Project project) {
     return ServiceManager.getService(project, TextEditorHighlightingPassManager.class);

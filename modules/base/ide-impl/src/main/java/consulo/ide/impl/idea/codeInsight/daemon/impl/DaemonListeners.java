@@ -36,6 +36,7 @@ import consulo.ide.impl.idea.codeInsight.hint.TooltipController;
 import consulo.ide.impl.idea.ide.AppLifecycleListener;
 import consulo.ide.impl.idea.ide.IdeTooltipManagerImpl;
 import consulo.ide.impl.idea.ide.todo.TodoConfiguration;
+import consulo.ide.impl.idea.ide.todo.TodoConfigurationListener;
 import consulo.ide.impl.idea.openapi.editor.ex.EditorEventMulticasterEx;
 import consulo.ide.impl.idea.openapi.editor.ex.util.EditorUtil;
 import consulo.ide.impl.idea.openapi.editor.impl.EditorMouseHoverPopupControl;
@@ -90,8 +91,6 @@ import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 
@@ -263,7 +262,7 @@ public final class DaemonListeners implements Disposable {
 
     project.getApplication().addApplicationListener(new MyApplicationListener(), this);
 
-    connection.subscribe(TodoConfiguration.PROPERTY_CHANGE, new MyTodoListener());
+    connection.subscribe(TodoConfigurationListener.class, new MyTodoListener());
 
     connection.subscribe(AnActionListener.class, new MyAnActionListener());
     connection.subscribe(BulkFileListener.class, new BulkFileListener() {
@@ -488,13 +487,13 @@ public final class DaemonListeners implements Disposable {
     }
   }
 
-  private class MyTodoListener implements PropertyChangeListener {
+  private class MyTodoListener implements TodoConfigurationListener {
     @Override
-    public void propertyChange(@Nonnull PropertyChangeEvent evt) {
-      if (TodoConfiguration.PROP_TODO_PATTERNS.equals(evt.getPropertyName())) {
+    public void propertyChanged(String propertyName, Object oldValue, Object newValue) {
+      if (TodoConfiguration.PROP_TODO_PATTERNS.equals(propertyName)) {
         stopDaemonAndRestartAllFiles("Todo patterns changed");
       }
-      else if (TodoConfiguration.PROP_MULTILINE.equals(evt.getPropertyName())) {
+      else if (TodoConfiguration.PROP_MULTILINE.equals(propertyName)) {
         stopDaemonAndRestartAllFiles("Todo multi-line detection changed");
       }
     }

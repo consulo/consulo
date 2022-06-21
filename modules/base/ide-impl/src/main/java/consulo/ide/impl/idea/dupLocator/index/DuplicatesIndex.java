@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.dupLocator.index;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.dupLocator.DuplicatesProfile;
 import consulo.ide.impl.idea.dupLocator.DuplocateVisitor;
 import consulo.ide.impl.idea.dupLocator.DuplocatorState;
@@ -53,6 +54,7 @@ import java.util.Map;
 /**
  * @author Maxim.Mossienko on 12/11/13.
  */
+@ExtensionImpl
 public class DuplicatesIndex extends FileBasedIndexExtension<Integer, IntList> {
   static boolean ourEnabled = SystemProperties.getBooleanProperty("idea.enable.duplicates.online.calculation",
                                                                   true);

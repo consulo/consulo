@@ -42,7 +42,7 @@ public class ExtensionPointName<T> {
   private static final Logger LOG = Logger.getInstance(ExtensionPointName.class);
 
   private final ExtensionPointId<T> myId;
-  private final Class<T> myIdClass;
+  private final Class<? extends T> myIdClass;
 
 
   @SuppressWarnings("deprecation")
@@ -51,7 +51,7 @@ public class ExtensionPointName<T> {
   }
 
   @SuppressWarnings("deprecation")
-  public static <T> ExtensionPointName<T> create(@Nonnull Class<T> idClass) {
+  public static <T> ExtensionPointName<T> create(@Nonnull Class<? extends T> idClass) {
     return new ExtensionPointName<>(idClass.getName(), idClass);
   }
 
@@ -64,7 +64,7 @@ public class ExtensionPointName<T> {
 
   @Deprecated
   @DeprecationInfo("Use #create()")
-  public ExtensionPointName(@Nonnull String name, @Nonnull Class<T> idClass) {
+  public ExtensionPointName(@Nonnull String name, @Nonnull Class<? extends T> idClass) {
     myId = ExtensionPointId.of(name);
     myIdClass = idClass;
   }
@@ -104,9 +104,10 @@ public class ExtensionPointName<T> {
   }
 
   @Nonnull
+  @SuppressWarnings("unchecked")
   private ExtensionPoint<T> getExtensionPoint(@Nonnull ComponentManager componentManager) {
     if (myIdClass != null) {
-      return componentManager.getExtensionPoint(myIdClass);
+      return componentManager.getExtensionPoint((Class<T>)myIdClass);
     }
     return componentManager.getExtensionPoint(this);
   }

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.paths;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.language.editor.documentation.AbstractDocumentationProvider;
 import consulo.language.psi.PsiElement;
@@ -23,6 +24,7 @@ import consulo.language.impl.psi.path.WebReference;
 /**
  * @author Eugene.Kudelevsky
  */
+@ExtensionImpl
 public class WebReferenceDocumentationProvider extends AbstractDocumentationProvider {
   @Override
   public String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {

@@ -15,6 +15,8 @@
  */
 package consulo.document;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.ComponentManager;
 import consulo.component.extension.ExtensionPointName;
 
@@ -24,8 +26,9 @@ import javax.annotation.Nullable;
 /**
  * An extension point to create filters which may put restrictions on how trailing spaces will be handled in a document.
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class StripTrailingSpacesFilterFactory {
-  public static final ExtensionPointName<StripTrailingSpacesFilterFactory> EXTENSION_POINT = ExtensionPointName.create("consulo.stripTrailingSpacesFilterFactory");
+  public static final ExtensionPointName<StripTrailingSpacesFilterFactory> EXTENSION_POINT = ExtensionPointName.create(StripTrailingSpacesFilterFactory.class);
 
   /**
    * Creates a filter which may restrict trailing spaces removal.

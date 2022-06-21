@@ -16,6 +16,8 @@
 
 package consulo.ide.impl.idea.codeHighlighting;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.codeEditor.Editor;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.editor.Pass;
@@ -28,6 +30,7 @@ import javax.annotation.Nullable;
  * User: anna
  * Date: 19-Apr-2006
  */
+@Extension(ComponentScope.PROJECT)
 public interface TextEditorHighlightingPassFactory {
   interface Registrar {
     public enum Anchor {
@@ -73,7 +76,7 @@ public interface TextEditorHighlightingPassFactory {
 
   }
 
-  ExtensionPointName<TextEditorHighlightingPassFactory> EP_NAME = ExtensionPointName.create("consulo.textEditorHighlightingPassFactory");
+  ExtensionPointName<TextEditorHighlightingPassFactory> EP_NAME = ExtensionPointName.create(TextEditorHighlightingPassFactory.class);
 
   void register(@Nonnull Registrar registrar);
 

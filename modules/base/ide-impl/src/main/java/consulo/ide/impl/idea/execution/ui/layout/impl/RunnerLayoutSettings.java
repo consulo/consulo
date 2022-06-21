@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.execution.ui.layout.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
@@ -23,17 +26,16 @@ import consulo.component.persist.StoragePathMacros;
 import consulo.ide.ServiceManager;
 import jakarta.inject.Singleton;
 import org.jdom.Element;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Singleton
-@State(
-  name = "RunnerLayoutSettings",
-  storages = {@Storage(
-    file = StoragePathMacros.APP_CONFIG + "/runner.layout.xml")})
+@State(name = "RunnerLayoutSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/runner.layout.xml")})
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class RunnerLayoutSettings implements PersistentStateComponent<Element> {
   public static RunnerLayoutSettings getInstance() {
     return ServiceManager.getService(RunnerLayoutSettings.class);

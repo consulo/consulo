@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.builtInServer;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.disposer.Disposable;
 import consulo.application.ApplicationManager;
 import consulo.util.io.Url;
@@ -23,6 +25,7 @@ import javax.annotation.Nullable;
 
 import java.net.URLConnection;
 
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 public abstract class BuiltInServerManager {
   @Nonnull
   public static BuiltInServerManager getInstance() {

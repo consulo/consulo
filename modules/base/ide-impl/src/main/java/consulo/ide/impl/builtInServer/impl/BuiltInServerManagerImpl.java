@@ -1,5 +1,6 @@
 package consulo.ide.impl.builtInServer.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.openapi.util.NotNullLazyValue;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.util.net.NetUtils;
@@ -37,6 +38,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Singleton
+@ServiceImpl
 public class BuiltInServerManagerImpl extends BuiltInServerManager {
   private static final Logger LOG = Logger.getInstance(BuiltInServerManager.class);
 

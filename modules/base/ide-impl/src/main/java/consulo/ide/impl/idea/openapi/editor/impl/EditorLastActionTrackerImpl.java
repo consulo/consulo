@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.idea.openapi.editor.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.dataContext.DataContext;
 import consulo.disposer.Disposable;
 import consulo.language.editor.CommonDataKeys;
@@ -39,6 +40,7 @@ import jakarta.inject.Singleton;
 import javax.annotation.Nullable;
 
 @Singleton
+@ServiceImpl
 public class EditorLastActionTrackerImpl extends EditorLastActionTracker implements Disposable,
                                                                                     AnActionListener,
                                                                                     EditorMouseListener {

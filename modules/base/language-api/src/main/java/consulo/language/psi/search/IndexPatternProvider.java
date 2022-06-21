@@ -15,6 +15,8 @@
  */
 package consulo.language.psi.search;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.component.messagebus.TopicImpl;
 import kava.beans.PropertyChangeListener;
@@ -30,10 +32,9 @@ import javax.annotation.Nonnull;
  * @see IndexPatternSearch
  * @since 5.1
  */
+@Extension(ComponentScope.APPLICATION)
 public interface IndexPatternProvider {
-  ExtensionPointName<IndexPatternProvider> EP_NAME = ExtensionPointName.create("consulo.indexPatternProvider");
-
-  TopicImpl<PropertyChangeListener> INDEX_PATTERNS_CHANGED = new TopicImpl<PropertyChangeListener>("index patterns changed", PropertyChangeListener.class);
+  ExtensionPointName<IndexPatternProvider> EP_NAME = ExtensionPointName.create(IndexPatternProvider.class);
 
   /**
    * The property the change of which should be reported to the property change listener

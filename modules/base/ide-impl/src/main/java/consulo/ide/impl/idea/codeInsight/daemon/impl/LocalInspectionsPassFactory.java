@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeHighlighting.MainHighlightingPassFactory;
 import consulo.language.editor.Pass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
@@ -38,6 +39,7 @@ import java.util.List;
 /**
  * @author cdr
  */
+@ExtensionImpl
 public class LocalInspectionsPassFactory implements MainHighlightingPassFactory {
   private static final Logger LOG = Logger.getInstance(LocalInspectionsPassFactory.class);
 

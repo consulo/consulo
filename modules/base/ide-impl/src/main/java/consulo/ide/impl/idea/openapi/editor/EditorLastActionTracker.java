@@ -15,7 +15,11 @@
  */
 package consulo.ide.impl.idea.openapi.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.application.ApplicationManager;
+
+import javax.annotation.Nullable;
 
 /**
  * This component provides the notion of last editor action.
@@ -23,6 +27,7 @@ import consulo.application.ApplicationManager;
  * <p>
  * It's supposed to be used from EDT only.
  */
+@Service(ComponentScope.APPLICATION)
 public abstract class EditorLastActionTracker {
   public static EditorLastActionTracker getInstance() {
     return ApplicationManager.getApplication().getComponent(EditorLastActionTracker.class);
@@ -32,6 +37,6 @@ public abstract class EditorLastActionTracker {
    * Returns the id of the previously invoked action or <code>null</code>, if no history exists yet, or last user activity was of
    * non-action type, like mouse clicking in editor or text typing, or previous action was invoked for a different editor.
    */
-  @javax.annotation.Nullable
+  @Nullable
   public abstract String getLastActionId();
 }

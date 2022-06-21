@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.ide.todo;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.dumb.DumbAware;
 import consulo.localize.LocalizeValue;
 import consulo.platform.base.icon.PlatformIconGroup;
@@ -32,6 +33,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class TodoToolWindowFactory implements ToolWindowFactory, DumbAware {
   @Nonnull
   @Override

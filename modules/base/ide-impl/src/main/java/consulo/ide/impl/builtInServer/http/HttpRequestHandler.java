@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.builtInServer.http;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.ide.impl.builtInServer.http.util.HttpRequestUtil;
 import io.netty.channel.ChannelHandlerContext;
@@ -26,8 +28,9 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class HttpRequestHandler {
-  public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create("consulo.httpRequestHandler");
+  public static final ExtensionPointName<HttpRequestHandler> EP_NAME = ExtensionPointName.create(HttpRequestHandler.class);
 
   public static boolean checkPrefix(String uri, String prefix) {
     if (uri.length() > prefix.length() && uri.charAt(0) == '/' && uri.regionMatches(true, 1, prefix, 0, prefix.length())) {

@@ -3,34 +3,33 @@
 package consulo.ide.impl.idea.codeInsight.problems;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.GeneralHighlightingPass;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
-import consulo.ide.impl.idea.codeInsight.daemon.impl.ProgressableTextEditorHighlightingPass;
-import consulo.fileEditor.FileEditor;
-import consulo.fileEditor.FileEditorManager;
-import consulo.fileEditor.TextEditor;
-import consulo.ide.impl.idea.openapi.util.Comparing;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
-import consulo.virtualFileSystem.status.FileStatusListener;
-import consulo.virtualFileSystem.status.FileStatusManager;
-import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
-import consulo.language.editor.wolfAnalyzer.Problem;
-import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
-import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.application.ReadAction;
-import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
 import consulo.application.progress.ProgressManager;
+import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.document.util.ProperTextRange;
 import consulo.document.util.TextRange;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.TextEditor;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.GeneralHighlightingPass;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.HighlightInfoProcessor;
+import consulo.ide.impl.idea.codeInsight.daemon.impl.ProgressableTextEditorHighlightingPass;
+import consulo.ide.impl.idea.openapi.util.Comparing;
+import consulo.ide.impl.idea.openapi.util.text.StringUtil;
+import consulo.ide.impl.idea.openapi.vfs.VfsUtilCore;
+import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.language.editor.rawHighlight.HighlightInfoImpl;
 import consulo.language.editor.annotation.HighlightSeverity;
 import consulo.language.editor.rawHighlight.HighlightInfo;
 import consulo.language.editor.rawHighlight.HighlightInfoHolder;
 import consulo.language.editor.rawHighlight.HighlightInfoType;
+import consulo.language.editor.wolfAnalyzer.Problem;
+import consulo.language.editor.wolfAnalyzer.WolfFileProblemFilter;
+import consulo.language.editor.wolfAnalyzer.WolfTheProblemSolver;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
@@ -46,6 +45,8 @@ import consulo.virtualFileSystem.event.BulkFileListener;
 import consulo.virtualFileSystem.event.VFileDeleteEvent;
 import consulo.virtualFileSystem.event.VFileEvent;
 import consulo.virtualFileSystem.event.VFileMoveEvent;
+import consulo.virtualFileSystem.status.FileStatusListener;
+import consulo.virtualFileSystem.status.FileStatusManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -65,8 +66,6 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   private final Collection<VirtualFile> myCheckingQueue = new HashSet<>(10);
 
   private final Project myProject;
-  private final List<Condition<VirtualFile>> myFilters = ContainerUtil.createLockFreeCopyOnWriteList();
-  private boolean myFiltersLoaded;
 
   private void doRemove(@Nonnull VirtualFile problemFile) {
     ProblemFileInfo old;
@@ -343,15 +342,9 @@ public class WolfTheProblemSolverImpl extends WolfTheProblemSolver {
   private boolean isToBeHighlighted(@Nullable VirtualFile virtualFile) {
     if (virtualFile == null) return false;
 
-    synchronized (myFilters) {
-      if (!myFiltersLoaded) {
-        myFiltersLoaded = true;
-        myFilters.addAll(Arrays.asList(FILTER_EP_NAME.getExtensions(myProject)));
-      }
-    }
-    for (final Condition<VirtualFile> filter : myFilters) {
+    for (final WolfFileProblemFilter filter : myProject.getExtensionPoint(WolfFileProblemFilter.class).getExtensionList()) {
       ProgressManager.checkCanceled();
-      if (filter.value(virtualFile)) {
+      if (filter.isToBeHighlighted(virtualFile)) {
         return true;
       }
     }

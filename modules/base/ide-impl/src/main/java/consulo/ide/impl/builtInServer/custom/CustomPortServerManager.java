@@ -15,13 +15,16 @@
  */
 package consulo.ide.impl.builtInServer.custom;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import javax.annotation.Nullable;
 
 import java.util.Map;
 
+@Extension(ComponentScope.APPLICATION)
 public abstract class CustomPortServerManager {
-  public static final ExtensionPointName<CustomPortServerManager> EP_NAME = ExtensionPointName.create("consulo.customPortServerManager");
+  public static final ExtensionPointName<CustomPortServerManager> EP_NAME = ExtensionPointName.create(CustomPortServerManager.class);
 
   public abstract void cannotBind(Exception e, int port);
 

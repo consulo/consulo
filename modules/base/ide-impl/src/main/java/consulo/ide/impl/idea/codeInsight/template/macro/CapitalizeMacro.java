@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.CodeInsightBundle;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
 /**
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class CapitalizeMacro extends MacroBase {
   public CapitalizeMacro() {
     super("capitalize", CodeInsightBundle.message("macro.capitalize.string"));

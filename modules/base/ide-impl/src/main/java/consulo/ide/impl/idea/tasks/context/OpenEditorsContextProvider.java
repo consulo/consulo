@@ -16,13 +16,15 @@
 
 package consulo.ide.impl.idea.tasks.context;
 
-import consulo.fileEditor.FileEditorManager;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.fileEditor.DockableEditorTabbedContainer;
+import consulo.fileEditor.FileEditorManager;
 import consulo.ide.impl.idea.openapi.fileEditor.impl.FileEditorManagerImpl;
+import consulo.ide.impl.ui.docking.BaseDockManager;
 import consulo.project.ui.wm.dock.DockContainer;
 import consulo.project.ui.wm.dock.DockManager;
 import consulo.ui.UIAccess;
-import consulo.ide.impl.ui.docking.BaseDockManager;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -30,72 +32,60 @@ import javax.annotation.Nonnull;
 /**
  * @author Dmitry Avdeev
  */
-public class OpenEditorsContextProvider extends WorkingContextProvider
-{
+@ExtensionImpl
+public class OpenEditorsContextProvider extends WorkingContextProvider {
+  private final FileEditorManagerImpl myFileEditorManager;
+  private final BaseDockManager myDockManager;
 
-	private final FileEditorManagerImpl myFileEditorManager;
-	private final BaseDockManager myDockManager;
+  @Inject
+  public OpenEditorsContextProvider(FileEditorManager fileEditorManager, DockManager dockManager) {
+    myDockManager = (BaseDockManager)dockManager;
+    myFileEditorManager = fileEditorManager instanceof FileEditorManagerImpl ? (FileEditorManagerImpl)fileEditorManager : null;
+  }
 
-	public OpenEditorsContextProvider(FileEditorManager fileEditorManager, DockManager dockManager)
-	{
-		myDockManager = (BaseDockManager) dockManager;
-		myFileEditorManager = fileEditorManager instanceof FileEditorManagerImpl ? (FileEditorManagerImpl) fileEditorManager : null;
-	}
+  @Nonnull
+  @Override
+  public String getId() {
+    return "editors";
+  }
 
-	@Nonnull
-	@Override
-	public String getId()
-	{
-		return "editors";
-	}
+  @Nonnull
+  @Override
+  public String getDescription() {
+    return "Open editors and positions";
+  }
 
-	@Nonnull
-	@Override
-	public String getDescription()
-	{
-		return "Open editors and positions";
-	}
+  @Override
+  public void saveContext(Element element) {
+    if (myFileEditorManager != null) {
+      myFileEditorManager.getMainSplitters().writeExternal(element);
+    }
+    element.addContent(myDockManager.getState());
+  }
 
-	@Override
-	public void saveContext(Element element)
-	{
-		if(myFileEditorManager != null)
-		{
-			myFileEditorManager.getMainSplitters().writeExternal(element);
-		}
-		element.addContent(myDockManager.getState());
-	}
+  @Override
+  public void loadContext(Element element) {
+    if (myFileEditorManager != null) {
+      myFileEditorManager.loadState(element);
+      myFileEditorManager.getMainSplitters().openFiles(UIAccess.current());
+    }
+    Element dockState = element.getChild("DockManager");
+    if (dockState != null) {
+      myDockManager.loadState(dockState);
+      myDockManager.readState();
+    }
+  }
 
-	@Override
-	public void loadContext(Element element)
-	{
-		if(myFileEditorManager != null)
-		{
-			myFileEditorManager.loadState(element);
-			myFileEditorManager.getMainSplitters().openFiles(UIAccess.current());
-		}
-		Element dockState = element.getChild("DockManager");
-		if(dockState != null)
-		{
-			myDockManager.loadState(dockState);
-			myDockManager.readState();
-		}
-	}
-
-	@Override
-	public void clearContext()
-	{
-		if(myFileEditorManager != null)
-		{
-			myFileEditorManager.closeAllFiles();
-			myFileEditorManager.getMainSplitters().clear();
-		}
-		for(DockContainer container : myDockManager.getContainers())
-		{
-			if(container instanceof DockableEditorTabbedContainer)
-			{
-				container.closeAll();
-			}
-		}
-	}
+  @Override
+  public void clearContext() {
+    if (myFileEditorManager != null) {
+      myFileEditorManager.closeAllFiles();
+      myFileEditorManager.getMainSplitters().clear();
+    }
+    for (DockContainer container : myDockManager.getContainers()) {
+      if (container instanceof DockableEditorTabbedContainer) {
+        container.closeAll();
+      }
+    }
+  }
 }

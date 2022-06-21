@@ -15,6 +15,8 @@
  */
 package consulo.language.pom;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.psi.PsiElement;
 
@@ -24,8 +26,9 @@ import java.util.function.Consumer;
 /**
  * @author peter
  */
+@Extension(ComponentScope.APPLICATION)
 public abstract class PomDeclarationSearcher {
-  public static final ExtensionPointName<PomDeclarationSearcher> EP_NAME = ExtensionPointName.create("consulo.pom.declarationSearcher");
+  public static final ExtensionPointName<PomDeclarationSearcher> EP_NAME = ExtensionPointName.create(PomDeclarationSearcher.class);
 
   public abstract void findDeclarationsAt(@Nonnull PsiElement element, int offsetInElement, Consumer<PomTarget> consumer);
 }

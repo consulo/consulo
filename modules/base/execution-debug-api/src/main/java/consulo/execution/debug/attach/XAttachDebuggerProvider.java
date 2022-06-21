@@ -1,6 +1,8 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.execution.debug.attach;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.process.ProcessInfo;
 import consulo.project.Project;
@@ -14,8 +16,9 @@ import java.util.List;
 /**
  * This provider used to obtain debuggers, which can debug the process with specified {@link XAttachHost} and {@link ProcessInfo}
  */
+@Extension(ComponentScope.APPLICATION)
 public interface XAttachDebuggerProvider {
-  ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create("consulo.xdebugger.attachDebuggerProvider");
+  ExtensionPointName<XAttachDebuggerProvider> EP = ExtensionPointName.create(XAttachDebuggerProvider.class);
 
   /**
    * will be removed in 2020.1, right after {@link XLocalAttachDebuggerProvider}

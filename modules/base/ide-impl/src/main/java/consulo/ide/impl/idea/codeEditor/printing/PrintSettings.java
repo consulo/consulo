@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.codeEditor.printing;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.component.persist.StoragePathMacros;
 import consulo.colorScheme.EditorColorsManager;
 import consulo.ide.ServiceManager;
@@ -27,9 +30,12 @@ import jakarta.inject.Singleton;
 import org.jetbrains.annotations.NonNls;
 
 @Singleton
-@State(name="PrintSettings", storages= { @Storage(file = StoragePathMacros.APP_CONFIG + "/print.xml")})
+@State(name = "PrintSettings", storages = {@Storage(file = StoragePathMacros.APP_CONFIG + "/print.xml")})
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class PrintSettings implements PersistentStateComponent<PrintSettings> {
-  @NonNls public String PAPER_SIZE = "A4";
+  @NonNls
+  public String PAPER_SIZE = "A4";
 
   public boolean COLOR_PRINTING = false;
   public boolean SYNTAX_PRINTING = true;
@@ -37,7 +43,8 @@ public class PrintSettings implements PersistentStateComponent<PrintSettings> {
 
   public boolean PORTRAIT_LAYOUT = true;
 
-  @NonNls public String FONT_NAME = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName();
+  @NonNls
+  public String FONT_NAME = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontName();
   public int FONT_SIZE = EditorColorsManager.getInstance().getGlobalScheme().getEditorFontSize();
 
   public boolean PRINT_LINE_NUMBERS = true;
@@ -58,7 +65,8 @@ public class PrintSettings implements PersistentStateComponent<PrintSettings> {
   public String FOOTER_HEADER_PLACEMENT2 = FOOTER;
   public String FOOTER_HEADER_ALIGNMENT2 = CENTER;
   public int FOOTER_HEADER_FONT_SIZE = 8;
-  @NonNls public String FOOTER_HEADER_FONT_NAME = "Arial";
+  @NonNls
+  public String FOOTER_HEADER_FONT_NAME = "Arial";
 
   public static final int PRINT_FILE = 1;
   public static final int PRINT_SELECTED_TEXT = 2;
@@ -66,12 +74,17 @@ public class PrintSettings implements PersistentStateComponent<PrintSettings> {
   private int myPrintScope;
   private boolean myIncludeSubdirectories;
 
-  @NonNls public static final String HEADER = "Header";
-  @NonNls public static final String FOOTER = "Footer";
+  @NonNls
+  public static final String HEADER = "Header";
+  @NonNls
+  public static final String FOOTER = "Footer";
 
-  @NonNls public static final String LEFT = "Left";
-  @NonNls public static final String CENTER = "Center";
-  @NonNls public static final String RIGHT = "Right";
+  @NonNls
+  public static final String LEFT = "Left";
+  @NonNls
+  public static final String CENTER = "Center";
+  @NonNls
+  public static final String RIGHT = "Right";
 
   public static PrintSettings getInstance() {
     return ServiceManager.getService(PrintSettings.class);

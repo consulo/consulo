@@ -15,6 +15,8 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -24,8 +26,9 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 20:22/12.06.13
  */
+@Extension(ComponentScope.APPLICATION)
 public interface AdditionalOutputDirectoriesProvider {
-  ExtensionPointName<AdditionalOutputDirectoriesProvider> EP_NAME = ExtensionPointName.create("consulo.compiler.additionalOutputDirectoriesProvider");
+  ExtensionPointName<AdditionalOutputDirectoriesProvider> EP_NAME = ExtensionPointName.create(AdditionalOutputDirectoriesProvider.class);
 
   @Nonnull
   String[] getOutputDirectories(@Nonnull Project project, @Nonnull Module modules);

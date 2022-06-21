@@ -5,6 +5,7 @@
  */
 package consulo.ide.impl.psi.stubs;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
 import consulo.component.persist.PersistentStateComponent;
@@ -60,6 +61,7 @@ import java.util.function.Supplier;
 
 @Singleton
 @State(name = "FileBasedIndex", storages = @Storage(value = "stubIndex.xml", roamingType = RoamingType.DISABLED))
+@ServiceImpl
 public final class StubIndexImpl extends StubIndex implements PersistentStateComponent<StubIndexState> {
   private static final AtomicReference<Boolean> ourForcedClean = new AtomicReference<>(null);
   private static final Logger LOG = Logger.getInstance(StubIndexImpl.class);
@@ -588,7 +590,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
 
   static void initExtensions() {
     // initialize stub index keys
-    for (StubIndexExtension<?, ?> extension : StubIndexExtension.EP_NAME.getExtensionList()) {
+    for (StubIndexExtension extension : StubIndexExtension.EP_NAME.getExtensionList()) {
       extension.getKey();
     }
   }
@@ -715,7 +717,7 @@ public final class StubIndexImpl extends StubIndex implements PersistentStateCom
 
     @Override
     protected void prepare() {
-      Iterator<StubIndexExtension<?, ?>> extensionsIterator = IndexInfrastructure.hasIndices() ? StubIndexExtension.EP_NAME.getExtensionList().iterator() : Collections.emptyIterator();
+      Iterator<StubIndexExtension> extensionsIterator = IndexInfrastructure.hasIndices() ? StubIndexExtension.EP_NAME.getExtensionList().iterator() : Collections.emptyIterator();
 
       boolean forceClean = Boolean.TRUE == ourForcedClean.getAndSet(Boolean.FALSE);
       while (extensionsIterator.hasNext()) {

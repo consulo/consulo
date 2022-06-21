@@ -15,6 +15,8 @@
  */
 package consulo.undoRedo;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-08-24
  */
+@Service(value = ComponentScope.PROJECT, lazy = false)
 public interface ProjectUndoManager extends UndoManager {
   static UndoManager getInstance(@Nonnull Project project) {
     return project.getInstance(ProjectUndoManager.class);

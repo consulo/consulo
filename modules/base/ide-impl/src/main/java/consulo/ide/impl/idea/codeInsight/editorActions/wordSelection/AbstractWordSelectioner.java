@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.wordSelection;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.language.editor.action.ExtendWordSelectionHandlerBase;
 import consulo.language.editor.action.SelectWordUtil;
 import consulo.codeEditor.Editor;
@@ -35,6 +36,7 @@ public abstract class AbstractWordSelectioner extends ExtendWordSelectionHandler
   }
 
   @Override
+  @RequiredReadAction
   public List<TextRange> select(PsiElement e, CharSequence editorText, int cursorOffset, Editor editor) {
     List<TextRange> ranges;
     if (canSelect(e)) {

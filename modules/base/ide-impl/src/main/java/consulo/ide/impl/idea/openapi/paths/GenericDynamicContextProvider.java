@@ -16,14 +16,16 @@
 
 package consulo.ide.impl.idea.openapi.paths;
 
-import consulo.language.psi.PsiElement;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.psi.OuterLanguageElement;
+import consulo.language.psi.PsiElement;
 import consulo.language.psi.path.DynamicContextProvider;
 import consulo.language.psi.path.PathReferenceProviderBase;
 
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class GenericDynamicContextProvider implements DynamicContextProvider {
 
   @Override
@@ -38,7 +40,8 @@ public class GenericDynamicContextProvider implements DynamicContextProvider {
             return -1;
           }
           offset = next.getStartOffsetInParent();
-        } else {
+        }
+        else {
           final int pos = PathReferenceProviderBase.getLastPosOfURL(offset, elementText);
           if (pos == -1 || pos > i) {
             return -1;

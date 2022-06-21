@@ -1,6 +1,7 @@
 // Copyright 2000-2019 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ui.breadcrumbs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.codeInsight.breadcrumbs.FileBreadcrumbsCollector;
 import consulo.language.Language;
 import consulo.disposer.Disposable;
@@ -20,6 +21,7 @@ import consulo.ide.impl.idea.ui.components.breadcrumbs.Crumb;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.util.text.CharArrayUtil;
 import consulo.logging.Logger;
+import jakarta.inject.Inject;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,11 +33,13 @@ import java.util.PriorityQueue;
 
 import static consulo.ide.impl.idea.ui.breadcrumbs.BreadcrumbsUtilEx.findProvider;
 
+@ExtensionImpl
 public class PsiFileBreadcrumbsCollector extends FileBreadcrumbsCollector {
   private final static Logger LOG = Logger.getInstance(PsiFileBreadcrumbsCollector.class);
 
   private final Project myProject;
 
+  @Inject
   public PsiFileBreadcrumbsCollector(Project project) {
     myProject = project;
   }

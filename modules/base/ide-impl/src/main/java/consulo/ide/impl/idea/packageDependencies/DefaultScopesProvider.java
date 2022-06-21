@@ -15,6 +15,8 @@
  */
 package consulo.ide.impl.idea.packageDependencies;
 
+import consulo.annotation.component.Extension;
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.ide.scratch.ScratchesNamedScope;
 import consulo.ide.impl.psi.search.scope.packageSet.CustomScopesProviderEx;
@@ -37,6 +39,7 @@ import java.util.List;
  * @author anna
  * @author Konstantin Bulenkov
  */
+@ExtensionImpl
 public class DefaultScopesProvider extends CustomScopesProviderEx {
   private final NamedScope myProblemsScope;
   private final Project myProject;

@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
 import consulo.language.impl.ast.CompositeElement;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-09-26
  */
+@ExtensionImpl(id = "default", order = "last")
 public class DefaultIndentHelperExtension implements IndentHelperExtension {
   @Override
   public boolean isAvailable(@Nonnull PsiFile file) {

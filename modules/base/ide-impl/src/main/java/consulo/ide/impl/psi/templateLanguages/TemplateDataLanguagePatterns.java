@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.psi.templateLanguages;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.Language;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.ide.ServiceManager;
@@ -38,6 +41,8 @@ import java.util.Map;
  */
 @Singleton
 @State(name = "TemplateDataLanguagePatterns", storages = @Storage("templateLanguages.xml"))
+@Service(ComponentScope.APPLICATION)
+@ServiceImpl
 public class TemplateDataLanguagePatterns implements PersistentStateComponent<Element> {
   private FileTypeAssocTable<Language> myAssocTable = new FileTypeAssocTable<Language>();
 

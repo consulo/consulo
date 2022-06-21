@@ -16,14 +16,16 @@
 
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.template.Expression;
 import consulo.language.editor.template.ExpressionContext;
 
 /**
  * @author yole
  */
+@ExtensionImpl
 public class CurrentTimeMacro extends SimpleMacro {
-  protected CurrentTimeMacro() {
+  public CurrentTimeMacro() {
     super("time");
   }
 

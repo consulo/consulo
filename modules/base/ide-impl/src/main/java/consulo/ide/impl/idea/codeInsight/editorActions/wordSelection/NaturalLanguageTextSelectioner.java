@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.wordSelection;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.action.ExtendWordSelectionHandlerBase;
 import consulo.codeEditor.Editor;
 import consulo.document.util.TextRange;
@@ -30,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+@ExtensionImpl
 public class NaturalLanguageTextSelectioner extends ExtendWordSelectionHandlerBase {
   private static final Set<Character> NATURAL = ContainerUtil.newTroveSet(
     '(', ')', '.', ',', ':', ';', '!', '?', '$', '@', '%', '\"', '\'', '<', '>', '[', ']', '_'

@@ -16,6 +16,8 @@
 package consulo.ide.impl.psi.impl.source.codeStyle;
 
 import consulo.annotation.access.RequiredReadAction;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.language.ast.ASTNode;
 import consulo.language.psi.PsiFile;
@@ -26,8 +28,9 @@ import javax.annotation.Nonnull;
  * @author VISTALL
  * @since 2018-09-26
  */
+@Extension(ComponentScope.APPLICATION)
 public interface IndentHelperExtension {
-  ExtensionPointName<IndentHelperExtension> EP_NAME = ExtensionPointName.create("consulo.codeStyleIndentHelperExtension");
+  ExtensionPointName<IndentHelperExtension> EP_NAME = ExtensionPointName.create(IndentHelperExtension.class);
 
   int TOO_BIG_WALK_THRESHOLD = 450;
 

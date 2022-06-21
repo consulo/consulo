@@ -15,6 +15,9 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.language.Language;
 import consulo.ide.impl.idea.lang.LanguageAnnotators;
 import consulo.language.editor.annotation.Annotator;
@@ -26,6 +29,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class CachedAnnotators {
   private final ThreadLocalAnnotatorMap<String, Annotator> cachedAnnotators = new ThreadLocalAnnotatorMap<String, Annotator>() {
     @Nonnull

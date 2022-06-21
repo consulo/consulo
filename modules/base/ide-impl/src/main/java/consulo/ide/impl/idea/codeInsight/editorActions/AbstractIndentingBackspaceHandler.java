@@ -19,10 +19,10 @@ import consulo.language.editor.CodeInsightSettings;
 import consulo.codeEditor.action.SmartBackspaceMode;
 import consulo.language.Language;
 import consulo.codeEditor.Editor;
-import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.language.editor.action.BackspaceHandlerDelegate;
 import consulo.codeEditor.action.BackspaceModeOverride;
 import consulo.language.psi.PsiFile;
+import consulo.util.lang.StringUtil;
 
 abstract class AbstractIndentingBackspaceHandler extends BackspaceHandlerDelegate {
   private final SmartBackspaceMode myMode;

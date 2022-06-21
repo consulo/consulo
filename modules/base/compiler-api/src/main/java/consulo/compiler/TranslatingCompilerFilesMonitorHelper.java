@@ -15,6 +15,8 @@
  */
 package consulo.compiler;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
 import consulo.component.extension.ExtensionPointName;
 import consulo.module.Module;
 import consulo.virtualFileSystem.VirtualFile;
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
  * @author VISTALL
  * @since 16.01.14
  */
+@Extension(ComponentScope.APPLICATION)
 public interface TranslatingCompilerFilesMonitorHelper {
   ExtensionPointName<TranslatingCompilerFilesMonitorHelper> EP_NAME = ExtensionPointName.create(TranslatingCompilerFilesMonitorHelper.class);
 

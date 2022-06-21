@@ -22,6 +22,7 @@
  */
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.Pass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPass;
 import consulo.ide.impl.idea.codeHighlighting.TextEditorHighlightingPassFactory;
@@ -34,6 +35,7 @@ import javax.annotation.Nullable;
 /**
  * @author cdr
  */
+@ExtensionImpl
 public class ShowIntentionsPassFactory implements TextEditorHighlightingPassFactory {
   @Override
   public void register(@Nonnull Registrar registrar) {

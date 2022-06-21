@@ -16,6 +16,9 @@
 
 package consulo.language.impl.internal.pom;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.document.Document;
 import consulo.document.FileDocumentManager;
 import consulo.language.ast.ASTNode;
@@ -39,6 +42,8 @@ import jakarta.inject.Singleton;
 import java.util.Collections;
 
 @Singleton
+@Service(value = ComponentScope.PROJECT, lazy = false)
+@ServiceImpl
 public class PsiEventWrapperAspect implements PomModelAspect {
   private final TreeAspect myTreeAspect;
 

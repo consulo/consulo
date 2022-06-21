@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.template.macro;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.language.editor.template.ExpressionContext;
 import consulo.language.editor.completion.lookup.LookupElement;
 import consulo.language.editor.template.TemplateCompletionProcessor;
@@ -24,6 +25,7 @@ import consulo.language.psi.PsiFileSystemItem;
 /**
  * @author yole
  */
+@ExtensionImpl
 public class DirectoryTemplateCompletionProcessor implements TemplateCompletionProcessor {
   @Override
   public boolean nextTabOnItemSelected(final ExpressionContext context, final LookupElement item) {

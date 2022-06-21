@@ -1,45 +1,49 @@
 // Copyright 2000-2018 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package consulo.ide.impl.idea.ide.todo;
 
-import consulo.ide.IdeBundle;
-import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
+import consulo.application.AccessRule;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
+import consulo.component.ProcessCanceledException;
+import consulo.component.messagebus.MessageBusConnection;
 import consulo.component.persist.PersistentStateComponent;
 import consulo.component.persist.State;
 import consulo.component.persist.Storage;
 import consulo.component.persist.StoragePathMacros;
-import consulo.language.file.event.FileTypeEvent;
-import consulo.language.file.event.FileTypeListener;
-import consulo.component.ProcessCanceledException;
-import consulo.project.DumbService;
-import consulo.project.Project;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
+import consulo.ide.IdeBundle;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsListener;
 import consulo.ide.impl.idea.openapi.vcs.changes.ChangeListManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
+import consulo.ide.impl.idea.util.ObjectUtils;
+import consulo.language.file.event.FileTypeEvent;
+import consulo.language.file.event.FileTypeListener;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentFactory;
 import consulo.ui.ex.content.ContentManager;
-import consulo.ide.impl.idea.util.ObjectUtils;
-import consulo.component.messagebus.MessageBusConnection;
+import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.util.xml.serializer.annotation.Attribute;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import consulo.application.AccessRule;
-import javax.annotation.Nonnull;
+import consulo.virtualFileSystem.VirtualFile;
+import jakarta.inject.Inject;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.*;
 
 @State(name = "TodoView", storages = @Storage(StoragePathMacros.WORKSPACE_FILE))
+@Service(ComponentScope.PROJECT)
+@ServiceImpl
 public class TodoView implements PersistentStateComponent<TodoView.State>, Disposable {
   private final Project myProject;
 
@@ -54,6 +58,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
 
   private final MyVcsListener myVcsListener = new MyVcsListener();
 
+  @Inject
   public TodoView(@Nonnull Project project) {
     myProject = project;
 
@@ -63,7 +68,7 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     state.current.isAutoScrollToSource = true;
 
     MessageBusConnection connection = project.getMessageBus().connect(this);
-    connection.subscribe(TodoConfiguration.PROPERTY_CHANGE, new MyPropertyChangeListener());
+    connection.subscribe(TodoConfigurationListener.class, new MyTodoConfigurationListener());
     connection.subscribe(FileTypeListener.class, new MyFileTypeListener());
     connection.subscribe(ProjectLevelVcsManager.VCS_CONFIGURATION_CHANGED, myVcsListener);
   }
@@ -221,10 +226,10 @@ public class TodoView implements PersistentStateComponent<TodoView.State>, Dispo
     }
   }
 
-  private final class MyPropertyChangeListener implements PropertyChangeListener {
+  private final class MyTodoConfigurationListener implements TodoConfigurationListener {
     @Override
-    public void propertyChange(PropertyChangeEvent e) {
-      if (TodoConfiguration.PROP_TODO_PATTERNS.equals(e.getPropertyName()) || TodoConfiguration.PROP_TODO_FILTERS.equals(e.getPropertyName())) {
+    public void propertyChanged(String propertyName, Object oldValue, Object newValue) {
+      if (TodoConfiguration.PROP_TODO_PATTERNS.equals(propertyName) || TodoConfiguration.PROP_TODO_FILTERS.equals(propertyName)) {
         _updateFilters();
       }
     }

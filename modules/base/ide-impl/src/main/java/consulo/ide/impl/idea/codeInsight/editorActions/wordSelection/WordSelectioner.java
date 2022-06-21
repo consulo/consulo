@@ -16,23 +16,24 @@
 
 package consulo.ide.impl.idea.codeInsight.editorActions.wordSelection;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.component.extension.ExtensionPointName;
-import consulo.component.extension.Extensions;
-import consulo.util.lang.function.Condition;
 import consulo.language.psi.PsiComment;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiWhiteSpace;
 
+@ExtensionImpl
 public class WordSelectioner extends AbstractWordSelectioner {
-  private static final ExtensionPointName<Condition<PsiElement>> EP_NAME = ExtensionPointName.create("consulo.basicWordSelectionFilter");
+  private static final ExtensionPointName<WordSelectionerFilter> EP_NAME = ExtensionPointName.create(WordSelectionerFilter.class);
 
   @Override
   public boolean canSelect(PsiElement e) {
     if (e instanceof PsiComment || e instanceof PsiWhiteSpace) {
       return false;
+
     }
-    for (Condition<PsiElement> filter : Extensions.getExtensions(EP_NAME)) {
-      if (!filter.value(e)) {
+    for (WordSelectionerFilter filter : EP_NAME.getExtensionList()) {
+      if (!filter.canSelect(e)) {
         return false;
       }
     }

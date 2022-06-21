@@ -16,11 +16,13 @@
 
 package consulo.ide.impl.idea.tasks.context;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.ide.projectView.impl.AbstractProjectViewPane;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ui.ex.awt.tree.TreeUtil;
+import jakarta.inject.Inject;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -30,10 +32,12 @@ import java.util.List;
 /**
  * @author Dmitry Avdeev
  */
+@ExtensionImpl
 public class ProjectViewContextProvider extends WorkingContextProvider {
 
   private final List<AbstractProjectViewPane> myPanes;
 
+  @Inject
   public ProjectViewContextProvider(Project project) {
     myPanes = AbstractProjectViewPane.EP_NAME.getExtensionList(project);
   }

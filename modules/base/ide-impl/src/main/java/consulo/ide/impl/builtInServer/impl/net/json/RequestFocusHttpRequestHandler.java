@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.builtInServer.impl.net.json;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.ui.wm.FocusableFrame;
 import consulo.application.ui.wm.IdeFocusManager;
 import consulo.ide.impl.builtInServer.json.JsonGetRequestHandler;
@@ -30,6 +31,7 @@ import java.awt.*;
  * @author VISTALL
  * @since 27.10.2015
  */
+@ExtensionImpl
 public class RequestFocusHttpRequestHandler extends JsonGetRequestHandler {
   public static boolean activateFrame(@Nullable final FocusableFrame ideFrame) {
     if (ideFrame == null) {

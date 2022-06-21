@@ -16,6 +16,9 @@
 
 package consulo.ide.impl.idea.codeInsight.preview;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Service;
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -52,6 +55,8 @@ import java.util.Collections;
 import java.util.Set;
 
 @Singleton
+@Service(value = ComponentScope.APPLICATION, lazy = false)
+@ServiceImpl
 public class ImageOrColorPreviewManager implements Disposable, EditorMouseMotionListener {
   private static final Logger LOG = Logger.getInstance(ImageOrColorPreviewManager.class);
 

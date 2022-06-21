@@ -2,6 +2,7 @@
 
 package consulo.language.inject.impl.internal;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.application.util.function.Processor;
 import consulo.disposer.Disposable;
 import consulo.document.Document;
@@ -34,6 +35,7 @@ import java.util.*;
  * @author cdr
  */
 @Singleton
+@ServiceImpl
 public class InjectedLanguageManagerImpl extends InjectedLanguageManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(InjectedLanguageManagerImpl.class);
   @SuppressWarnings("RedundantStringConstructorCall")

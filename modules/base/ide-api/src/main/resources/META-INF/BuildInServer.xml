@@ -21,15 +21,7 @@
   </extensionPoints>
 
   <extensions defaultExtensionNs="consulo">
-    <applicationService serviceImplementation="consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions"/>
-    <applicationService serviceInterface="consulo.ide.impl.builtInServer.BuiltInServerManager" serviceImplementation="consulo.ide.impl.builtInServer.impl.BuiltInServerManagerImpl" lazy="false" />
-    <applicationService serviceInterface="consulo.ide.impl.builtInServer.xml.XmlRpcServer" serviceImplementation="consulo.ide.impl.builtInServer.impl.net.xml.XmlRpcServerImpl"/>
-
-    <xdebugger.settings implementation="consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions$BuiltInServerDebuggerConfigurableProvider"/>
-
     <httpRequestHandler implementation="consulo.ide.impl.builtInServer.impl.net.xml.XmlRpcServerImpl$XmlRpcRequestHandler"/>
-    <httpRequestHandler implementation="consulo.ide.impl.builtInServer.impl.net.json.RequestFocusHttpRequestHandler"/>
-    <httpRequestHandler implementation="consulo.ide.impl.builtInServer.impl.net.json.AboutRestHandler" />
 
     <customPortServerManager implementation="consulo.ide.impl.builtInServer.impl.ide.BuiltInServerOptions$MyCustomPortServerManager"/>
   </extensions>

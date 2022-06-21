@@ -15,20 +15,21 @@
  */
 package consulo.ide.impl.idea.execution;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.execution.DefaultExecutionTarget;
 import consulo.execution.ExecutionTarget;
 import consulo.execution.ExecutionTargetProvider;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.project.Project;
-import javax.annotation.Nonnull;
 
-import java.util.Collections;
+import javax.annotation.Nonnull;
 import java.util.List;
 
+@ExtensionImpl
 public class DefaultExecutionTargetProvider extends ExecutionTargetProvider {
   @Nonnull
   @Override
   public List<ExecutionTarget> getTargets(@Nonnull Project project, @Nonnull RunnerAndConfigurationSettings configuration) {
-    return Collections.singletonList(DefaultExecutionTarget.INSTANCE);
+    return List.of(DefaultExecutionTarget.INSTANCE);
   }
 }

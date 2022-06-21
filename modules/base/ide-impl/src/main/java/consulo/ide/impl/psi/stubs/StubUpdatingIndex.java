@@ -15,6 +15,7 @@
  */
 package consulo.ide.impl.psi.stubs;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.FileAttribute;
 import consulo.ide.impl.idea.openapi.vfs.newvfs.NewVirtualFile;
 import consulo.util.lang.BitUtil;
@@ -54,6 +55,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+@ExtensionImpl
 public class StubUpdatingIndex extends SingleEntryFileBasedIndexExtension<SerializedStubTree> implements CustomImplementationFileBasedIndexExtension<Integer, SerializedStubTree> {
   static final Logger LOG = Logger.getInstance(StubUpdatingIndex.class);
   private static final int VERSION = 43 + (PersistentHashMapValueStorage.COMPRESSION_ENABLED ? 1 : 0);

@@ -16,6 +16,7 @@
 
 package consulo.ide.impl.idea.codeInsight.daemon.impl;
 
+import consulo.annotation.component.ServiceImpl;
 import consulo.ide.impl.idea.codeHighlighting.*;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -45,6 +46,7 @@ import java.util.*;
  * Date: 19-Apr-2006
  */
 @Singleton
+@ServiceImpl
 public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightingPassManager {
   private static class PassConfig {
     private final TextEditorHighlightingPassFactory passFactory;
@@ -97,7 +99,7 @@ public class TextEditorHighlightingPassManagerImpl extends TextEditorHighlightin
 
     RegistrarImpl impl = new RegistrarImpl();
 
-    for (TextEditorHighlightingPassFactory factory : TextEditorHighlightingPassFactory.EP_NAME.getExtensions(myProject)) {
+    for (TextEditorHighlightingPassFactory factory : TextEditorHighlightingPassFactory.EP_NAME.getExtensionList(myProject)) {
       int old = myRegisteredPassFactories.size();
       factory.register(impl);
       if (old == myRegisteredPassFactories.size()) {

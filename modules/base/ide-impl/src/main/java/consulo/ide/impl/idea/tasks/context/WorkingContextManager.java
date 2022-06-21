@@ -85,7 +85,7 @@ public class WorkingContextManager {
   }
 
   private void loadContext(Element fromElement) {
-    for (WorkingContextProvider provider : Extensions.getExtensions(WorkingContextProvider.EP_NAME, myProject)) {
+    for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
       try {
         Element child = fromElement.getChild(provider.getId());
         if (child != null) {
@@ -99,7 +99,7 @@ public class WorkingContextManager {
   }
 
   public void saveContext(Element toElement) {
-    for (WorkingContextProvider provider : Extensions.getExtensions(WorkingContextProvider.EP_NAME, myProject)) {
+    for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
       try {
         Element child = new Element(provider.getId());
         provider.saveContext(child);
@@ -112,7 +112,7 @@ public class WorkingContextManager {
   }
 
   public void clearContext() {
-    for (WorkingContextProvider provider : Extensions.getExtensions(WorkingContextProvider.EP_NAME, myProject)) {
+    for (WorkingContextProvider provider : WorkingContextProvider.EP_NAME.getExtensionList(myProject)) {
       provider.clearContext();
     }
   }

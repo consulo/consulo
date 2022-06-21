@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
  * @author traff
  */
 @Singleton
-@Service(ComponentScope.APPLICATION)
+@Service(value = ComponentScope.APPLICATION, lazy = false)
 @ServiceImpl
 public class ToolManager extends BaseToolManager<Tool> {
   public static ToolManager getInstance() {
