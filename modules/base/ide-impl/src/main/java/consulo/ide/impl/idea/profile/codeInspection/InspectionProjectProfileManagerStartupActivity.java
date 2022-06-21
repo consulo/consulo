@@ -13,31 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.inspection.scheme;
+package consulo.ide.impl.idea.profile.codeInspection;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
-import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.language.editor.inspection.scheme.InspectionProjectProfileManager;
 import consulo.project.Project;
+import consulo.project.startup.PostStartupActivity;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 17-Feb-22
+ * @since 21-Jun-22
  */
-@Service(ComponentScope.PROJECT)
-public interface InspectionProjectProfileManager extends SeverityProvider, ProjectProfileManager {
-  @Nonnull
-  static InspectionProjectProfileManager getInstance(Project project) {
-    return project.getInstance(InspectionProjectProfileManager.class);
-  }
+@ExtensionImpl
+public class InspectionProjectProfileManagerStartupActivity implements PostStartupActivity {
+  @Override
+  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    InspectionProjectProfileManagerImpl projectProfileManager = (InspectionProjectProfileManagerImpl)InspectionProjectProfileManager.getInstance(project);
 
-  @Nonnull
-  default InspectionProfile getCurrentProfile() {
-    return getInspectionProfile();
+    projectProfileManager.initProfiles();
   }
-
-  @Nonnull
-  InspectionProfile getInspectionProfile();
 }

@@ -13,31 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.inspection.scheme;
+package consulo.ide.impl.idea.openapi.vcs.impl;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
-import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.application.dumb.DumbAware;
 import consulo.project.Project;
+import consulo.project.startup.PostStartupActivity;
+import consulo.ui.UIAccess;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 17-Feb-22
+ * @since 21-Jun-22
  */
-@Service(ComponentScope.PROJECT)
-public interface InspectionProjectProfileManager extends SeverityProvider, ProjectProfileManager {
-  @Nonnull
-  static InspectionProjectProfileManager getInstance(Project project) {
-    return project.getInstance(InspectionProjectProfileManager.class);
-  }
+@ExtensionImpl
+public class ModuleVcsDetectorStartupActivity implements PostStartupActivity, DumbAware {
+  @Override
+  public void runActivity(@Nonnull Project project, @Nonnull UIAccess uiAccess) {
+    ModuleVcsDetector detector = project.getInstance(ModuleVcsDetector.class);
 
-  @Nonnull
-  default InspectionProfile getCurrentProfile() {
-    return getInspectionProfile();
+    detector.startDetecting();
   }
-
-  @Nonnull
-  InspectionProfile getInspectionProfile();
 }

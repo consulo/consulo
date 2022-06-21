@@ -15,11 +15,10 @@
  */
 package consulo.ide.impl.idea.profile.codeInspection;
 
+import consulo.component.persist.PersistentStateComponent;
 import consulo.ide.impl.idea.codeInspection.ex.InspectionProfileImpl;
-import consulo.project.ProjectComponent;
 import consulo.ide.impl.idea.packageDependencies.DependencyValidationManager;
 import consulo.ide.impl.idea.profile.DefaultProjectProfileManager;
-import consulo.component.persist.PersistentStateComponent;
 import consulo.language.editor.inspection.scheme.InspectionProfile;
 import consulo.language.editor.inspection.scheme.InspectionProfileManager;
 import consulo.language.editor.inspection.scheme.Profile;
@@ -37,7 +36,7 @@ import javax.annotation.Nonnull;
  * Date: 30-Nov-2005
  */
 public abstract class InspectionProjectProfileManager extends DefaultProjectProfileManager
-        implements ProjectComponent, SeverityProvider, PersistentStateComponent<Element>, consulo.language.editor.inspection.scheme.InspectionProjectProfileManager {
+        implements SeverityProvider, PersistentStateComponent<Element>, consulo.language.editor.inspection.scheme.InspectionProjectProfileManager {
   public InspectionProjectProfileManager(@Nonnull Project project, @Nonnull InspectionProfileManager inspectionProfileManager, @Nonnull DependencyValidationManager holder) {
     super(project, inspectionProfileManager, holder);
   }

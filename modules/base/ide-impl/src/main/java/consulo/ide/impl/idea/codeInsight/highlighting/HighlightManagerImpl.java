@@ -17,19 +17,11 @@
 package consulo.ide.impl.idea.codeInsight.highlighting;
 
 import consulo.annotation.component.ServiceImpl;
-import consulo.ide.impl.idea.openapi.actionSystem.ex.ActionManagerEx;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorFactory;
 import consulo.codeEditor.ScrollType;
 import consulo.codeEditor.markup.*;
 import consulo.colorScheme.TextAttributes;
-import consulo.dataContext.DataContext;
-import consulo.document.Document;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
-import consulo.document.event.DocumentListener;
 import consulo.document.util.TextRange;
-import consulo.language.editor.PlatformDataKeys;
 import consulo.language.editor.highlight.HighlightManager;
 import consulo.language.editor.inject.EditorWindow;
 import consulo.language.editor.inject.InjectedEditorManager;
@@ -38,11 +30,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiReference;
 import consulo.project.Project;
-import consulo.project.ProjectComponent;
 import consulo.ui.color.ColorValue;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.ui.ex.action.event.AnActionListener;
 import consulo.ui.util.ColorValueUtil;
 import consulo.util.dataholder.Key;
 import consulo.util.dataholder.UserDataHolderEx;
@@ -55,44 +43,12 @@ import java.util.*;
 
 @Singleton
 @ServiceImpl
-public class HighlightManagerImpl extends HighlightManager implements ProjectComponent {
+public class HighlightManagerImpl extends HighlightManager {
   private final Project myProject;
 
   @Inject
   public HighlightManagerImpl(Project project) {
     myProject = project;
-  }
-
-  @Override
-  public void projectOpened() {
-    AnActionListener anActionListener = new MyAnActionListener();
-    ActionManagerEx.getInstanceEx().addAnActionListener(anActionListener, myProject);
-
-    DocumentListener documentListener = new DocumentAdapter() {
-      @Override
-      public void documentChanged(DocumentEvent event) {
-        Document document = event.getDocument();
-        Editor[] editors = EditorFactory.getInstance().getEditors(document);
-        for (Editor editor : editors) {
-          Map<RangeHighlighter, HighlightInfo> map = getHighlightInfoMap(editor, false);
-          if (map == null) return;
-
-          ArrayList<RangeHighlighter> highlightersToRemove = new ArrayList<RangeHighlighter>();
-          for (RangeHighlighter highlighter : map.keySet()) {
-            HighlightInfo info = map.get(highlighter);
-            if (!info.editor.getDocument().equals(document)) continue;
-            if ((info.flags & HIDE_BY_TEXT_CHANGE) != 0) {
-              highlightersToRemove.add(highlighter);
-            }
-          }
-
-          for (RangeHighlighter highlighter : highlightersToRemove) {
-            removeSegmentHighlighter(editor, highlighter);
-          }
-        }
-      }
-    };
-    EditorFactory.getInstance().getEventMulticaster().addDocumentListener(documentListener, myProject);
   }
 
   @Nullable
@@ -277,30 +233,6 @@ public class HighlightManagerImpl extends HighlightManager implements ProjectCom
 
     return done;
   }
-
-  private class MyAnActionListener implements AnActionListener {
-    @Override
-    public void beforeActionPerformed(AnAction action, final DataContext dataContext, AnActionEvent event) {
-      requestHideHighlights(dataContext);
-    }
-
-
-    @Override
-    public void afterActionPerformed(final AnAction action, final DataContext dataContext, AnActionEvent event) {
-    }
-
-    @Override
-    public void beforeEditorTyping(char c, DataContext dataContext) {
-      requestHideHighlights(dataContext);
-    }
-
-    private void requestHideHighlights(final DataContext dataContext) {
-      final Editor editor = dataContext.getData(PlatformDataKeys.EDITOR);
-      if (editor == null) return;
-      hideHighlights(editor, HIDE_BY_ANY_KEY);
-    }
-  }
-
 
   private final Key<Map<RangeHighlighter, HighlightInfo>> HIGHLIGHT_INFO_MAP_KEY = Key.create("HIGHLIGHT_INFO_MAP_KEY");
 

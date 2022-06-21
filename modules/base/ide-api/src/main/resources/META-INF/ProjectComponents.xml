@@ -43,10 +43,7 @@
     </component>
 
 
-    <component>
-      <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor</implementation-class>
-      <option name="workspace" value="true"/>
-    </component>
+
     <component>
       <implementation-class>consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager</implementation-class>
       <option name="workspace" value="true"/>

@@ -16,6 +16,7 @@
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ReadAction;
 import consulo.component.ProcessCanceledException;
 import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.text.StringUtil;
@@ -25,13 +26,11 @@ import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsDirectoryMapping;
 import consulo.ide.impl.idea.openapi.vcs.impl.DefaultVcsRootPolicy;
 import consulo.ide.impl.idea.openapi.vcs.impl.ProjectLevelVcsManagerImpl;
-import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
 import consulo.ide.impl.idea.util.Function;
 import consulo.ide.impl.idea.util.containers.ContainerUtil;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
 import consulo.logging.Logger;
 import consulo.project.Project;
-import consulo.project.ProjectComponent;
 import consulo.util.collection.MultiMap;
 import consulo.util.lang.reflect.ReflectionUtil;
 import consulo.virtualFileSystem.VirtualFile;
@@ -47,7 +46,7 @@ import java.util.*;
  */
 @Singleton
 @ServiceImpl
-public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements ProjectComponent, Disposable {
+public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Disposable {
   private static final Logger LOG = Logger.getInstance(VcsDirtyScopeManagerImpl.class);
 
   private final Project myProject;
@@ -56,7 +55,8 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
   private final VcsGuess myGuess;
 
   private final DirtBuilder myDirtBuilder;
-  @Nullable private DirtBuilder myDirtInProgress;
+  @Nullable
+  private DirtBuilder myDirtInProgress;
 
   private boolean myReady;
   private final Object LOCK = new Object();
@@ -69,32 +69,26 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
 
     myGuess = new VcsGuess(myProject);
     myDirtBuilder = new DirtBuilder(myGuess);
-
-    ((ChangeListManagerImpl) myChangeListManager).setDirtyScopeManager(this);
   }
 
-  @Override
-  public void projectOpened() {
-    myVcsManager.addInitializationRequest(VcsInitObject.DIRTY_SCOPE_MANAGER, new Runnable() {
-      @Override
-      public void run() {
-        boolean ready = false;
-        synchronized (LOCK) {
-          if (!myProject.isDisposed()) {
-            myReady = ready = true;
-          }
+  void startListenForChanges() {
+    ReadAction.run(() -> {
+      boolean ready = false;
+      synchronized (LOCK) {
+        if (!myProject.isDisposed()) {
+          myReady = ready = true;
         }
-        if (ready) {
-          VcsDirtyScopeVfsListener.install(myProject);
-          markEverythingDirty();
-        }
+      }
+      if (ready) {
+        VcsDirtyScopeVfsListener.install(myProject);
+        markEverythingDirty();
       }
     });
   }
 
   @Override
   public void markEverythingDirty() {
-    if ((! myProject.isOpen()) || myProject.isDisposed() || myVcsManager.getAllActiveVcss().length == 0) return;
+    if ((!myProject.isOpen()) || myProject.isDisposed() || myVcsManager.getAllActiveVcss().length == 0) return;
 
     if (LOG.isDebugEnabled()) {
       LOG.debug("everything dirty: " + findFirstInterestingCallerClass());
@@ -158,9 +152,7 @@ public class VcsDirtyScopeManagerImpl extends VcsDirtyScopeManager implements Pr
     }
   }
 
-  private static void markDirty(@Nonnull DirtBuilder dirtBuilder,
-                                @Nonnull MultiMap<AbstractVcs, FilePath> filesOrDirs,
-                                boolean recursively) {
+  private static void markDirty(@Nonnull DirtBuilder dirtBuilder, @Nonnull MultiMap<AbstractVcs, FilePath> filesOrDirs, boolean recursively) {
     for (AbstractVcs vcs : filesOrDirs.keySet()) {
       for (FilePath path : filesOrDirs.get(vcs)) {
         if (recursively) {

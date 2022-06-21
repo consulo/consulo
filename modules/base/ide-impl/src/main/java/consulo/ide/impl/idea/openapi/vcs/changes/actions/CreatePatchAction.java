@@ -16,17 +16,19 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.actions;
 
-import consulo.project.Project;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.actions.VcsContext;
 import consulo.ide.impl.idea.openapi.vcs.changes.CommitExecutor;
 import consulo.ide.impl.idea.openapi.vcs.changes.patch.CreatePatchCommitExecutor;
+import consulo.project.Project;
+
 import javax.annotation.Nullable;
 
 /**
  * @author yole
  */
 public class CreatePatchAction extends AbstractCommitChangesAction {
+  @Override
   protected String getActionName(VcsContext dataContext) {
     return VcsBundle.message("create.patch.commit.action.title");
   }
@@ -36,8 +38,9 @@ public class CreatePatchAction extends AbstractCommitChangesAction {
     return getActionName(context);
   }
 
-  @Override @Nullable
+  @Override
+  @Nullable
   protected CommitExecutor getExecutor(Project project) {
-    return CreatePatchCommitExecutor.getInstance(project);
+    return new CreatePatchCommitExecutor(project);
   }
 }

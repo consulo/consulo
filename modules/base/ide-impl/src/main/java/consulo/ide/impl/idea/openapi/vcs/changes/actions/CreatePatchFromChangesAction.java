@@ -75,7 +75,7 @@ public class CreatePatchFromChangesAction extends AnAction implements DumbAware 
 
   public static void createPatch(Project project, String commitMessage, List<Change> changeCollection) {
     project = project == null ? ProjectManager.getInstance().getDefaultProject() : project;
-    final CreatePatchCommitExecutor executor = CreatePatchCommitExecutor.getInstance(project);
+    final CreatePatchCommitExecutor executor = new CreatePatchCommitExecutor(project);
     CommitSession commitSession = executor.createCommitSession();
     if (commitSession instanceof CommitSessionContextAware) {
       ((CommitSessionContextAware)commitSession).setContext(new CommitContext());

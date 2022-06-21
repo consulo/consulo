@@ -16,20 +16,14 @@
 
 package consulo.ide.impl.idea.openapi.vcs.changes.patch;
 
+import consulo.annotation.component.ExtensionImpl;
 import consulo.application.CommonBundle;
-import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.ProjectComponent;
+import consulo.component.ProcessCanceledException;
+import consulo.container.boot.ContainerPathManager;
+import consulo.ide.impl.idea.ide.actions.ShowFilePathAction;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.FilePatch;
 import consulo.ide.impl.idea.openapi.diff.impl.patch.IdeaTextPatchBuilder;
-import consulo.component.ProcessCanceledException;
-import consulo.project.Project;
-import consulo.ui.ex.awt.Messages;
-import consulo.ui.ex.awt.ValidationInfo;
-import consulo.util.xml.serializer.DefaultJDOMExternalizer;
-import consulo.util.xml.serializer.InvalidDataException;
-import consulo.util.xml.serializer.JDOMExternalizable;
-import consulo.util.xml.serializer.WriteExternalException;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.VcsApplicationSettings;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
@@ -37,43 +31,37 @@ import consulo.ide.impl.idea.openapi.vcs.VcsConfiguration;
 import consulo.ide.impl.idea.openapi.vcs.changes.*;
 import consulo.ide.impl.idea.openapi.vcs.changes.shelf.ShelveChangesManager;
 import consulo.ide.impl.idea.openapi.vcs.changes.ui.SessionDialog;
-import consulo.virtualFileSystem.VirtualFile;
 import consulo.ide.impl.idea.util.WaitForProgressToShow;
 import consulo.ide.impl.idea.vcsUtil.VcsUtil;
-import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectPropertiesComponent;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.ValidationInfo;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
-import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.NonNls;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import jakarta.inject.Singleton;
 import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-@Singleton
-public class CreatePatchCommitExecutor extends LocalCommitExecutor implements ProjectComponent, JDOMExternalizable {
+@ExtensionImpl
+public class CreatePatchCommitExecutor extends LocalCommitExecutor {
   private static final Logger LOG = Logger.getInstance(CreatePatchCommitExecutor.class);
 
+  private static final String VCS_PATCH_PATH_KEY = "vcs.patch.path";
+
   private final Project myProject;
-  private final ChangeListManager myChangeListManager;
-
-  public String PATCH_PATH = "";
-
-  public static CreatePatchCommitExecutor getInstance(Project project) {
-    return project.getComponent(CreatePatchCommitExecutor.class);
-  }
 
   @Inject
-  public CreatePatchCommitExecutor(final Project project, final ChangeListManager changeListManager) {
+  public CreatePatchCommitExecutor(final Project project) {
     myProject = project;
-    myChangeListManager = changeListManager;
   }
 
   @Override
@@ -90,36 +78,17 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
   @Override
   @Nonnull
   public CommitSession createCommitSession() {
-    return new CreatePatchCommitSession();
-  }
-
-  @Override
-  public void projectOpened() {
-    myChangeListManager.registerCommitExecutor(this);
-  }
-
-  @Override
-  @NonNls
-  @Nonnull
-  public String getComponentName() {
-    return "CreatePatchCommitExecutor";
-  }
-
-  @Override
-  public void readExternal(Element element) throws InvalidDataException {
-    DefaultJDOMExternalizer.readExternal(this, element);
-  }
-
-  @Override
-  public void writeExternal(Element element) throws WriteExternalException {
-    DefaultJDOMExternalizer.writeExternal(this, element);
+    return new CreatePatchCommitSession(myProject);
   }
 
   private class CreatePatchCommitSession implements CommitSession, CommitSessionContextAware {
-    private final CreatePatchConfigurationPanel myPanel = new CreatePatchConfigurationPanel(myProject);
+    private final CreatePatchConfigurationPanel myPanel;
     private CommitContext myCommitContext;
+    private final Project myProject;
 
-    public CreatePatchCommitSession() {
+    public CreatePatchCommitSession(Project project) {
+      myProject = project;
+      myPanel = new CreatePatchConfigurationPanel(myProject);
     }
 
     @Override
@@ -135,14 +104,16 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
 
     @Override
     public JComponent getAdditionalConfigurationUI(final Collection<Change> changes, final String commitMessage) {
-      if (PATCH_PATH.length() == 0) {
+      String patchPath = ProjectPropertiesComponent.getInstance(myProject).getValue(VCS_PATCH_PATH_KEY);
+      if (StringUtil.isEmptyOrSpaces(patchPath)) {
         VcsApplicationSettings settings = VcsApplicationSettings.getInstance();
-        PATCH_PATH = settings.PATCH_STORAGE_LOCATION;
-        if (PATCH_PATH == null) {
-          PATCH_PATH = myProject.getBaseDir() == null ? ContainerPathManager.get().getHomePath() : myProject.getBaseDir().getPresentableUrl();
+        patchPath = settings.PATCH_STORAGE_LOCATION;
+        if (patchPath == null) {
+          patchPath = myProject.getBaseDir() == null ? ContainerPathManager.get().getHomePath() : myProject.getBaseDir().getPresentableUrl();
         }
       }
-      myPanel.setFileName(ShelveChangesManager.suggestPatchName(myProject, commitMessage, new File(PATCH_PATH), null));
+
+      myPanel.setFileName(ShelveChangesManager.suggestPatchName(myProject, commitMessage, new File(patchPath), null));
       File commonAncestor = ChangesUtil.findCommonAncestor(changes);
       myPanel.setCommonParentPath(commonAncestor);
       Set<AbstractVcs> affectedVcses = ChangesUtil.getAffectedVcses(changes, myProject);
@@ -210,8 +181,9 @@ public class CreatePatchCommitExecutor extends LocalCommitExecutor implements Pr
       try {
         file.getParentFile().mkdirs();
         VcsConfiguration.getInstance(myProject).acceptLastCreatedPatchName(file.getName());
-        PATCH_PATH = file.getParent();
-        VcsApplicationSettings.getInstance().PATCH_STORAGE_LOCATION = PATCH_PATH;
+        String patchPath = file.getParent();
+        VcsApplicationSettings.getInstance().PATCH_STORAGE_LOCATION = patchPath;
+        ProjectPropertiesComponent.getInstance(myProject).setValue(VCS_PATCH_PATH_KEY, patchPath);
         final boolean reversePatch = myPanel.isReversePatch();
 
         String baseDirName = myPanel.getBaseDirName();

@@ -19,30 +19,29 @@ package consulo.ide.impl.idea.openapi.vcs.impl;
 import consulo.annotation.component.ComponentScope;
 import consulo.annotation.component.Service;
 import consulo.annotation.component.ServiceImpl;
+import consulo.application.ApplicationManager;
 import consulo.application.impl.internal.IdeaModalityState;
-import consulo.project.ProjectComponent;
-import consulo.module.event.ModuleAdapter;
-import consulo.ui.ex.awt.Messages;
-import consulo.util.lang.Pair;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
 import consulo.ide.impl.idea.openapi.util.io.FileUtil;
 import consulo.ide.impl.idea.openapi.vcs.AbstractVcs;
 import consulo.ide.impl.idea.openapi.vcs.ProjectLevelVcsManager;
 import consulo.ide.impl.idea.openapi.vcs.VcsBundle;
 import consulo.ide.impl.idea.openapi.vcs.VcsDirectoryMapping;
-import consulo.application.ApplicationManager;
-import consulo.component.messagebus.MessageBus;
-import consulo.component.messagebus.MessageBusConnection;
-import consulo.disposer.Disposable;
 import consulo.module.Module;
 import consulo.module.ModuleManager;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.module.event.ModuleAdapter;
 import consulo.module.event.ModuleListener;
 import consulo.project.Project;
-import consulo.project.startup.StartupManager;
+import consulo.ui.ex.awt.Messages;
+import consulo.util.lang.Pair;
 import consulo.virtualFileSystem.VirtualFile;
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.util.*;
@@ -51,48 +50,30 @@ import java.util.*;
  * @author yole
  */
 @Singleton
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@Service(value = ComponentScope.PROJECT)
 @ServiceImpl
-public class ModuleVcsDetector implements ProjectComponent, Disposable {
+public class ModuleVcsDetector implements Disposable {
   private final Project myProject;
   private final MessageBus myMessageBus;
-  private final ProjectLevelVcsManagerImpl myVcsManager;
+  private final Provider<ProjectLevelVcsManager> myVcsManager;
   private MessageBusConnection myConnection;
 
   @Inject
-  public ModuleVcsDetector(final Project project, final ProjectLevelVcsManager vcsManager) {
+  public ModuleVcsDetector(final Project project, final Provider<ProjectLevelVcsManager> vcsManager) {
     myProject = project;
     myMessageBus = project.getMessageBus();
-    myVcsManager = (ProjectLevelVcsManagerImpl)vcsManager;
+    myVcsManager = vcsManager;
   }
 
-  @Override
-  public void projectOpened() {
-    if (ApplicationManager.getApplication().isUnitTestMode()) return;
-
-    final StartupManager manager = StartupManager.getInstance(myProject);
-    manager.registerStartupActivity(new Runnable() {
-      @Override
-      public void run() {
-        if (myVcsManager.needAutodetectMappings()) {
-          autoDetectVcsMappings(true);
-        }
-        myVcsManager.updateActiveVcss();
-      }
-    });
-    manager.registerPostStartupActivity(new Runnable() {
-      @Override
-      public void run() {
-        myConnection = myMessageBus.connect();
-        final MyModulesListener listener = new MyModulesListener();
-        myConnection.subscribe(ModuleListener.class, listener);
-        myConnection.subscribe(ModuleRootListener.class, listener);
-      }
-    });
+  public void startDetecting() {
+    myConnection = myMessageBus.connect();
+    final MyModulesListener listener = new MyModulesListener();
+    myConnection.subscribe(ModuleListener.class, listener);
+    myConnection.subscribe(ModuleRootListener.class, listener);
   }
 
   private class MyModulesListener extends ModuleAdapter implements ModuleRootListener {
-    private final List<Pair<String, VcsDirectoryMapping>> myMappingsForRemovedModules = new ArrayList<Pair<String, VcsDirectoryMapping>>();
+    private final List<Pair<String, VcsDirectoryMapping>> myMappingsForRemovedModules = new ArrayList<>();
 
     @Override
     public void beforeRootsChange(ModuleRootEvent event) {
@@ -104,9 +85,12 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
       for (Pair<String, VcsDirectoryMapping> mapping : myMappingsForRemovedModules) {
         promptRemoveMapping(mapping.first, mapping.second);
       }
+
+      ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)myVcsManager.get();
+
       // the check calculates to true only before user has done any change to mappings, i.e. in case modules are detected/added automatically
       // on start etc (look inside)
-      if (myVcsManager.needAutodetectMappings()) {
+      if (vcsManager.needAutodetectMappings()) {
         autoDetectVcsMappings(false);
       }
     }
@@ -131,13 +115,15 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
   }
 
   private void autoDetectVcsMappings(final boolean tryMapPieces) {
-    Set<AbstractVcs> usedVcses = new HashSet<AbstractVcs>();
-    Map<VirtualFile, AbstractVcs> vcsMap = new HashMap<VirtualFile, AbstractVcs>();
+    ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)myVcsManager.get();
+
+    Set<AbstractVcs> usedVcses = new HashSet<>();
+    Map<VirtualFile, AbstractVcs> vcsMap = new HashMap<>();
     final ModuleManager moduleManager = ModuleManager.getInstance(myProject);
     for (Module module : moduleManager.getModules()) {
       final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
       for (VirtualFile file : files) {
-        AbstractVcs contentRootVcs = myVcsManager.findVersioningVcs(file);
+        AbstractVcs contentRootVcs = vcsManager.findVersioningVcs(file);
         if (contentRootVcs != null) {
           vcsMap.put(file, contentRootVcs);
         }
@@ -148,7 +134,7 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
       // todo I doubt this is correct, see IDEA-50527
       final AbstractVcs[] abstractVcses = usedVcses.toArray(new AbstractVcs[1]);
       final Module[] modules = moduleManager.getModules();
-      final Set<String> contentRoots = new HashSet<String>();
+      final Set<String> contentRoots = new HashSet<>();
       for (Module module : modules) {
         final VirtualFile[] roots = ModuleRootManager.getInstance(module).getContentRoots();
         for (VirtualFile root : roots) {
@@ -157,51 +143,55 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
       }
 
       if (abstractVcses[0] != null) {
-        final List<VcsDirectoryMapping> vcsDirectoryMappings = new ArrayList<VcsDirectoryMapping>(myVcsManager.getDirectoryMappings());
+        final List<VcsDirectoryMapping> vcsDirectoryMappings = new ArrayList<>(vcsManager.getDirectoryMappings());
         for (Iterator<VcsDirectoryMapping> iterator = vcsDirectoryMappings.iterator(); iterator.hasNext(); ) {
           final VcsDirectoryMapping mapping = iterator.next();
           if (!contentRoots.contains(mapping.getDirectory())) {
             iterator.remove();
           }
         }
-        myVcsManager.setAutoDirectoryMapping("", abstractVcses[0].getName());
+        vcsManager.setAutoDirectoryMapping("", abstractVcses[0].getName());
         for (VcsDirectoryMapping mapping : vcsDirectoryMappings) {
-          myVcsManager.removeDirectoryMapping(mapping);
+          vcsManager.removeDirectoryMapping(mapping);
         }
-        myVcsManager.cleanupMappings();
+        vcsManager.cleanupMappings();
       }
     }
     else if (tryMapPieces) {
       for (Map.Entry<VirtualFile, AbstractVcs> entry : vcsMap.entrySet()) {
-        myVcsManager.setAutoDirectoryMapping(entry.getKey().getPath(), entry.getValue() == null ? "" : entry.getValue().getName());
+        vcsManager.setAutoDirectoryMapping(entry.getKey().getPath(), entry.getValue() == null ? "" : entry.getValue().getName());
       }
-      myVcsManager.cleanupMappings();
+      vcsManager.cleanupMappings();
     }
   }
 
   private void autoDetectModuleVcsMapping(final Module module) {
+    ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)myVcsManager.get();
+
     boolean mappingsUpdated = false;
     final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
     for (VirtualFile file : files) {
-      AbstractVcs vcs = myVcsManager.findVersioningVcs(file);
-      if (vcs != null && vcs != myVcsManager.getVcsFor(file)) {
-        myVcsManager.setAutoDirectoryMapping(file.getPath(), vcs.getName());
+      AbstractVcs vcs = vcsManager.findVersioningVcs(file);
+      if (vcs != null && vcs != vcsManager.getVcsFor(file)) {
+        vcsManager.setAutoDirectoryMapping(file.getPath(), vcs.getName());
         mappingsUpdated = true;
       }
     }
     if (mappingsUpdated) {
-      myVcsManager.cleanupMappings();
+      vcsManager.cleanupMappings();
     }
   }
 
   private List<Pair<String, VcsDirectoryMapping>> getMappings(final Module module) {
-    List<Pair<String, VcsDirectoryMapping>> result = new ArrayList<Pair<String, VcsDirectoryMapping>>();
+    ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)myVcsManager.get();
+
+    List<Pair<String, VcsDirectoryMapping>> result = new ArrayList<>();
     final VirtualFile[] files = ModuleRootManager.getInstance(module).getContentRoots();
     final String moduleName = module.getName();
     for (final VirtualFile file : files) {
-      for (final VcsDirectoryMapping mapping : myVcsManager.getDirectoryMappings()) {
+      for (final VcsDirectoryMapping mapping : vcsManager.getDirectoryMappings()) {
         if (FileUtil.toSystemIndependentName(mapping.getDirectory()).equals(file.getPath())) {
-          result.add(new Pair<String, VcsDirectoryMapping>(moduleName, mapping));
+          result.add(new Pair<>(moduleName, mapping));
           break;
         }
       }
@@ -210,6 +200,8 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
   }
 
   private void promptRemoveMapping(final String moduleName, final VcsDirectoryMapping mapping) {
+    ProjectLevelVcsManagerImpl vcsManager = (ProjectLevelVcsManagerImpl)myVcsManager.get();
+
     ApplicationManager.getApplication().invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -217,7 +209,7 @@ public class ModuleVcsDetector implements ProjectComponent, Disposable {
         final String msg = VcsBundle.message("vcs.root.remove.prompt", FileUtil.toSystemDependentName(mapping.getDirectory()), moduleName);
         int rc = Messages.showYesNoDialog(myProject, msg, VcsBundle.message("vcs.root.remove.title"), Messages.getQuestionIcon());
         if (rc == Messages.YES) {
-          myVcsManager.removeDirectoryMapping(mapping);
+          vcsManager.removeDirectoryMapping(mapping);
         }
       }
     }, IdeaModalityState.NON_MODAL);

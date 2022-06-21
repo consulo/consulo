@@ -15,29 +15,29 @@
  */
 package consulo.ide.impl.idea.designer;
 
-import consulo.ide.impl.idea.ide.util.PropertiesComponent;
-import consulo.ui.ex.action.ActionGroup;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.project.ProjectComponent;
+import consulo.application.dumb.DumbAwareRunnable;
+import consulo.component.messagebus.MessageBusConnection;
+import consulo.disposer.Disposable;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
-import consulo.application.dumb.DumbAwareRunnable;
-import consulo.project.Project;
-import consulo.project.startup.StartupManager;
-import consulo.virtualFileSystem.VirtualFile;
-import consulo.ui.ex.toolWindow.ToolWindow;
-import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ide.impl.idea.ide.util.PropertiesComponent;
 import consulo.ide.impl.idea.openapi.wm.ex.ToolWindowEx;
 import consulo.ide.impl.idea.util.ParameterizedRunnable;
-import consulo.component.messagebus.MessageBusConnection;
+import consulo.project.Project;
+import consulo.project.startup.StartupManager;
+import consulo.ui.UIAccess;
+import consulo.ui.ex.action.ActionGroup;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.awt.util.MergingUpdateQueue;
 import consulo.ui.ex.awt.util.Update;
-import consulo.ui.UIAccess;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.virtualFileSystem.VirtualFile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,10 +46,10 @@ import javax.swing.*;
 /**
  * @author Alexander Lobas
  */
-public abstract class LightToolWindowManager implements ProjectComponent {
+public abstract class LightToolWindowManager implements Disposable {
   public static final String EDITOR_MODE = "UI_DESIGNER_EDITOR_MODE.";
 
-  private final MergingUpdateQueue myWindowQueue = new MergingUpdateQueue(getComponentName(), 200, true, null);
+  private final MergingUpdateQueue myWindowQueue = new MergingUpdateQueue(getClass().getSimpleName(), 200, true, null);
   protected final Project myProject;
   protected final FileEditorManager myFileEditorManager;
   protected volatile ToolWindow myToolWindow;
@@ -93,10 +93,9 @@ public abstract class LightToolWindowManager implements ProjectComponent {
     myProject = project;
     myFileEditorManager = fileEditorManager;
     myPropertiesComponent = PropertiesComponent.getInstance(myProject);
-    myEditorModeKey = EDITOR_MODE + getComponentName() + ".STATE";
+    myEditorModeKey = EDITOR_MODE + getClass().getSimpleName() + ".STATE";
   }
 
-  @Override
   public void projectOpened() {
     UIAccess lastUIAccess = Application.get().getLastUIAccess();
     lastUIAccess.giveAndWaitIfNeed(this::initToolWindow);
@@ -111,8 +110,7 @@ public abstract class LightToolWindowManager implements ProjectComponent {
     });
   }
 
-  @Override
-  public void projectClosed() {
+  public void dispose() {
     if (!myToolWindowDisposed) {
       disposeComponent();
       myToolWindowDisposed = true;
@@ -215,7 +213,7 @@ public abstract class LightToolWindowManager implements ProjectComponent {
   }
 
   protected final Object getContent(@Nonnull DesignerEditorPanelFacade designer) {
-    LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getComponentName());
+    LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getClass().getSimpleName());
     return toolWindow.getContent();
   }
 
@@ -229,12 +227,12 @@ public abstract class LightToolWindowManager implements ProjectComponent {
                                                 @Nonnull JComponent focusedComponent,
                                                 int defaultWidth,
                                                 @Nullable AnAction[] actions) {
-    return new LightToolWindow(content, title, icon, component, focusedComponent, designer.getContentSplitter(), getEditorMode(), this, myProject, myPropertiesComponent, getComponentName(),
+    return new LightToolWindow(content, title, icon, component, focusedComponent, designer.getContentSplitter(), getEditorMode(), this, myProject, myPropertiesComponent, getClass().getSimpleName(),
                                defaultWidth, actions);
   }
 
   protected final void disposeContent(DesignerEditorPanelFacade designer) {
-    String key = getComponentName();
+    String key = getClass().getSimpleName();
     LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(key);
     designer.putClientProperty(key, null);
     toolWindow.dispose();
@@ -243,14 +241,14 @@ public abstract class LightToolWindowManager implements ProjectComponent {
   private final ParameterizedRunnable<DesignerEditorPanelFacade> myCreateAction = new ParameterizedRunnable<DesignerEditorPanelFacade>() {
     @Override
     public void run(DesignerEditorPanelFacade designer) {
-      designer.putClientProperty(getComponentName(), createContent(designer));
+      designer.putClientProperty(getClass().getSimpleName(), createContent(designer));
     }
   };
 
   private final ParameterizedRunnable<DesignerEditorPanelFacade> myUpdateAnchorAction = new ParameterizedRunnable<DesignerEditorPanelFacade>() {
     @Override
     public void run(DesignerEditorPanelFacade designer) {
-      LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getComponentName());
+      LightToolWindow toolWindow = (LightToolWindow)designer.getClientProperty(getClass().getSimpleName());
       toolWindow.updateAnchor(getEditorMode());
     }
   };

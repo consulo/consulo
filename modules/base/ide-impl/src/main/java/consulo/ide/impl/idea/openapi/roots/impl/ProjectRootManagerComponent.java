@@ -18,6 +18,7 @@ package consulo.ide.impl.idea.openapi.roots.impl;
 import consulo.annotation.component.ServiceImpl;
 import consulo.application.event.ApplicationListener;
 import consulo.application.ApplicationManager;
+import consulo.disposer.Disposable;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.module.impl.internal.ProjectRootManagerImpl;
 import consulo.project.ProjectComponent;
@@ -70,7 +71,7 @@ import java.util.Set;
  */
 @Singleton
 @ServiceImpl
-public class ProjectRootManagerComponent extends ProjectRootManagerImpl implements ProjectComponent {
+public class ProjectRootManagerComponent extends ProjectRootManagerImpl implements ProjectComponent, Disposable {
   private static final Logger LOG = Logger.getInstance(ProjectRootManagerComponent.class);
   private static final boolean LOG_CACHES_UPDATE = ApplicationManager.getApplication().isInternal() && !ApplicationManager.getApplication().isUnitTestMode();
 
@@ -138,7 +139,7 @@ public class ProjectRootManagerComponent extends ProjectRootManagerImpl implemen
   }
 
   @Override
-  public void projectClosed() {
+  public void dispose() {
     LocalFileSystem.getInstance().removeWatchedRoots(myRootsToWatch);
   }
 

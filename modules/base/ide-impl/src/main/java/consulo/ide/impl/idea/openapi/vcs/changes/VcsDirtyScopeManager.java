@@ -32,7 +32,7 @@ import java.util.Collection;
  * @author max
  * @since 6.0
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@Service(value = ComponentScope.PROJECT)
 public abstract class VcsDirtyScopeManager {
   @Nonnull
   public static VcsDirtyScopeManager getInstance(@Nonnull Project project) {

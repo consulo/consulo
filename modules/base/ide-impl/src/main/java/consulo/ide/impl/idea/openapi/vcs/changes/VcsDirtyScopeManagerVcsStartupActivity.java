@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package consulo.language.editor.inspection.scheme;
+package consulo.ide.impl.idea.openapi.vcs.changes;
 
-import consulo.annotation.component.ComponentScope;
-import consulo.annotation.component.Service;
-import consulo.language.editor.rawHighlight.SeverityProvider;
+import consulo.annotation.component.ExtensionImpl;
+import consulo.ide.impl.idea.openapi.vcs.impl.VcsInitObject;
+import consulo.ide.impl.idea.openapi.vcs.impl.VcsStartupActivity;
 import consulo.project.Project;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author VISTALL
- * @since 17-Feb-22
+ * @since 21-Jun-22
  */
-@Service(ComponentScope.PROJECT)
-public interface InspectionProjectProfileManager extends SeverityProvider, ProjectProfileManager {
-  @Nonnull
-  static InspectionProjectProfileManager getInstance(Project project) {
-    return project.getInstance(InspectionProjectProfileManager.class);
+@ExtensionImpl
+public class VcsDirtyScopeManagerVcsStartupActivity implements VcsStartupActivity {
+  @Override
+  public void runActivity(@Nonnull Project project) {
+    VcsDirtyScopeManagerImpl vcsDirtyScopeManager = (VcsDirtyScopeManagerImpl)VcsDirtyScopeManager.getInstance(project);
+
+    vcsDirtyScopeManager.startListenForChanges();
   }
 
-  @Nonnull
-  default InspectionProfile getCurrentProfile() {
-    return getInspectionProfile();
+  @Override
+  public int getOrder() {
+    return VcsInitObject.DIRTY_SCOPE_MANAGER.getOrder();
   }
-
-  @Nonnull
-  InspectionProfile getInspectionProfile();
 }

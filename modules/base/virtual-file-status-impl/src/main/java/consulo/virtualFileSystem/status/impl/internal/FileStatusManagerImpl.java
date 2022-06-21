@@ -19,15 +19,11 @@ import consulo.annotation.component.ServiceImpl;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAwareRunnable;
-import consulo.codeEditor.EditorFactory;
 import consulo.colorScheme.EditorColorKey;
 import consulo.colorScheme.event.EditorColorsListener;
 import consulo.disposer.Disposable;
 import consulo.disposer.Disposer;
 import consulo.document.Document;
-import consulo.document.FileDocumentManager;
-import consulo.document.event.DocumentAdapter;
-import consulo.document.event.DocumentEvent;
 import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.project.startup.StartupManager;
@@ -90,35 +86,10 @@ public class FileStatusManagerImpl extends FileStatusManager implements Disposab
   }
 
   @Inject
-  public FileStatusManagerImpl(Project project, StartupManager startupManager) {
+  public FileStatusManagerImpl(Project project) {
     myProject = project;
 
-    if (project.isDefault()) return;
-
     project.getMessageBus().connect().subscribe(EditorColorsListener.class, scheme -> fileStatusesChanged());
-
-    startupManager.registerPreStartupActivity(() -> {
-      DocumentAdapter documentListener = new DocumentAdapter() {
-        @Override
-        public void documentChanged(DocumentEvent event) {
-          if (event.getOldLength() == 0 && event.getNewLength() == 0) return;
-          VirtualFile file = FileDocumentManager.getInstance().getFile(event.getDocument());
-          if (file != null) {
-            refreshFileStatusFromDocument(file, event.getDocument());
-          }
-        }
-      };
-
-      final EditorFactory factory = EditorFactory.getInstance();
-      factory.getEventMulticaster().addDocumentListener(documentListener, myProject);
-    });
-
-    startupManager.registerPostStartupActivity(new DumbAwareRunnable() {
-      @Override
-      public void run() {
-        fileStatusesChanged();
-      }
-    });
   }
 
   public void setFileStatusProvider(final FileStatusProvider fileStatusProvider) {

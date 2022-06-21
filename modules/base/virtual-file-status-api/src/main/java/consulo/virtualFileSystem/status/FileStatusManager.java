@@ -27,11 +27,11 @@ import javax.annotation.Nonnull;
 /**
  * @author mike
  */
-@Service(value = ComponentScope.PROJECT, lazy = false)
+@Service(value = ComponentScope.PROJECT)
 public abstract class FileStatusManager {
   @Nonnull
   public static FileStatusManager getInstance(Project project) {
-    return project.getComponent(FileStatusManager.class);
+    return project.getInstance(FileStatusManager.class);
   }
 
   public abstract FileStatus getStatus(VirtualFile virtualFile);

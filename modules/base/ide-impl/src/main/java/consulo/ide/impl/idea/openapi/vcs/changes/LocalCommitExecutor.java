@@ -15,9 +15,16 @@
  */
 package consulo.ide.impl.idea.openapi.vcs.changes;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.Extension;
+import consulo.component.extension.ExtensionList;
+import consulo.project.Project;
+
 /**
  * User: anna
  * Date: 2/17/12
  */
+@Extension(ComponentScope.PROJECT)
 public abstract class LocalCommitExecutor implements CommitExecutorWithHelp {
+  public static final ExtensionList<LocalCommitExecutor, Project> EP = ExtensionList.of(LocalCommitExecutor.class);
 }
